@@ -139,6 +139,25 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Code gen  -->
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>3.18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>3.18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>3.18.0</version>
+        </dependency>
+
+        <!--        -->
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -237,6 +256,46 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.18.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-classes</phase> <!-- Change the phase to process-classes -->
+                    </execution>
+                </executions>
+                <configuration>
+                    <jdbc>
+                        <driver>com.mysql.cj.jdbc.Driver</driver>
+                        <url>jdbc:mysql://localhost:3306/ckroot</url>
+                        <user>root</user>
+                        <password>toor1234</password>
+                    </jdbc>
+                    <generator>
+                        <name>org.jooq.codegen.DefaultGenerator</name>
+                        <database>
+                            <name>org.jooq.meta.mysql.MySQLDatabase</name>
+                            <inputSchema>ckroot</inputSchema>
+                        </database>
+                        <generate>
+                            <pojos>true</pojos>
+                            <fluentSetters>true</fluentSetters>
+                        </generate>
+                        <target>
+                            <packageName>com.example.jooq.generated</packageName>
+                            <directory>target/generated-sources/jooq</directory>
+                        </target>
+                        <strategy>
+                            <name>com.salescode.dataintegration.CustomGeneratorStrategy</name>
+                        </strategy>
+                    </generator>
                 </configuration>
             </plugin>
         </plugins>
