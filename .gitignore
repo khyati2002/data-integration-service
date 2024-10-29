@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+/BOOT-INF
+/META-INF
+.DS_Store

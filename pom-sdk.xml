@@ -12,7 +12,7 @@
     </parent>
 
     <groupId>com.salescode</groupId>
-    <artifactId>dataintegration</artifactId>
+    <artifactId>dataintegration-sdk</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>dataintegration</name>
 
@@ -147,20 +147,20 @@
 
         <!-- Code gen  -->
 
-<!--        <dependency>-->
-<!--            <groupId>org.jooq</groupId>-->
-<!--            <artifactId>jooq</artifactId>-->
-<!--            <version>3.18.0</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>3.18.0</version>
+        </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-meta</artifactId>
-            <version>3.19.11</version>
+            <version>3.18.0</version>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-codegen</artifactId>
-            <version>3.19.7</version>
+            <version>3.18.0</version>
         </dependency>
 
         <!--        -->
@@ -219,107 +219,12 @@
 
     <build>
         <plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<compilerArgs>
-						<arg>-parameters</arg>
-					</compilerArgs>
-				</configuration>
-			</plugin>
-			<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-    					<id>shade-jar-with-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-								    <manifestEntries>
-										<Main-Class>com.salescode.dataintegration.DataIntegrationApplication</Main-Class>
-									</manifestEntries>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>3.18.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <phase>process-classes</phase> <!-- Change the phase to process-classes -->
-                    </execution>
-                </executions>
-                <configuration>
-                    <jdbc>
-                        <driver>com.mysql.cj.jdbc.Driver</driver>
-                        <url>jdbc:mysql://localhost:3306/ckroot</url>
-                        <user>root</user>
-                        <password>toor1234</password>
-                    </jdbc>
-                    <generator>
-                        <name>org.jooq.codegen.DefaultGenerator</name>
-                        <database>
-                            <name>org.jooq.meta.mysql.MySQLDatabase</name>
-                            <inputSchema>ckroot</inputSchema>
-                            <forcedTypes>
-                                <forcedType>
-                                    <userType>com.salescode.channelkart.converters.ActiveStatus</userType>
-                                    <converter>com.salescode.jooq.ActiveStatusConverter</converter>
-                                    <includeExpression>ACTIVE_STATUS</includeExpression>
-                                </forcedType>
-                                <forcedType>
-                                    <userType>java.util.Date</userType>
-                                    <converter>com.salescode.jooq.DateConverter</converter>
-                                    <includeExpression>(.*Time)|doo|(.*Date)|doa|dob</includeExpression>
-                                </forcedType>
-                                <forcedType>
-                                    <userType>com.fasterxml.jackson.databind.JsonNode</userType>
-                                    <converter>com.salescode.jooq.JsonNodeConverter</converter>
-                                    <includeExpression>(.*ATTRIBUTES)|code|domain_values</includeExpression>
-                                </forcedType>
-                            </forcedTypes>
-                        </database>
-                        <generate>
-                            <pojos>true</pojos>
-                            <records>false</records>
-<!--                            <fluentSetters>true</fluentSetters>-->
-                        </generate>
-                        <target>
-                            <packageName>com.salescode.jooq.generated</packageName>
-                            <directory>target/generated-sources/jooq</directory>
-                        </target>
-                        <strategy>
-                            <name>com.salescode.jooq.CustomGeneratorStrategy</name>
-                        </strategy>
-                    </generator>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>

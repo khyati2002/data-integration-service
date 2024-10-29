@@ -1,7 +1,6 @@
 package com.salescode.channelkart.utils;
 
 
-import com.salescode.channelkart.scanner.ExternalRegistryScanner;
 import com.salescode.channelkart.services.SpringContext;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.reflections.Reflections;
@@ -89,14 +88,14 @@ public class ReflectionUtils {
       }
    }
 
-   public static <T> T createInstance(String fullyQualifiedClassName) {
-      ExternalRegistryScanner scanner = ExternalRegistryScanner.getInstance();
-      if (scanner.isExternal(fullyQualifiedClassName)) {
-         return scanner.createObject(fullyQualifiedClassName);
-      }
-      Class<T> clazz = loadClass(fullyQualifiedClassName);
-      return createInstance(clazz);
-   }
+//   public static <T> T createInstance(String fullyQualifiedClassName) {
+//      ExternalRegistryScanner scanner = ExternalRegistryScanner.getInstance();
+//      if (scanner.isExternal(fullyQualifiedClassName)) {
+//         return scanner.createObject(fullyQualifiedClassName);
+//      }
+//      Class<T> clazz = loadClass(fullyQualifiedClassName);
+//      return createInstance(clazz);
+//   }
 
    @SuppressWarnings("unchecked")
    public static <T> T createInstance(String fullyQualifiedClassName, Object... args) {
