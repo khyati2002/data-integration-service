@@ -8,19 +8,19 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.salescode</groupId>
-  <artifactId>dataintegration</artifactId>
-  <name>dataintegration</name>
+  <artifactId>dis</artifactId>
+  <name>dis</name>
   <version>0.0.1-SNAPSHOT</version>
+  <description>Salescode data integration with flink</description>
+  <developers>
+    <developer />
+  </developers>
+  <licenses>
+    <license />
+  </licenses>
+  <scm />
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <compilerArgs>
-            <arg>-parameters</arg>
-          </compilerArgs>
-        </configuration>
-      </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.4</version>
@@ -33,20 +33,20 @@
             </goals>
             <configuration>
               <createDependencyReducedPom>false</createDependencyReducedPom>
-              <transformers>
-                <transformer>
-                  <manifestEntries>
-                    <Main-Class>com.salescode.dataintegration.DataIntegrationApplication</Main-Class>
-                  </manifestEntries>
-                </transformer>
-              </transformers>
+              <mainClass>com.salescode.dis.FlinkApplication</mainClass>
+              <excludes>
+                <exclude>
+                  <groupId>ch.qos.logback</groupId>
+                  <artifactId>logback-classic</artifactId>
+                </exclude>
+                <exclude>
+                  <groupId>ch.qos.logback</groupId>
+                  <artifactId>logback-core</artifactId>
+                </exclude>
+              </excludes>
             </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
@@ -76,172 +76,71 @@
       <artifactId>spring-boot-starter</artifactId>
       <version>3.4.0-M3</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>spring-boot-starter-logging</artifactId>
+          <groupId>org.springframework.boot</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <version>3.4.0-M3</version>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-streaming-java</artifactId>
+      <version>1.20.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-      <version>3.4.0-M3</version>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-connector-files</artifactId>
+      <version>1.20.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-registry-prometheus</artifactId>
-      <version>1.14.0-M3</version>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-json</artifactId>
+      <version>1.20.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-registry-otlp</artifactId>
-      <version>1.14.0-M3</version>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-connector-jdbc</artifactId>
+      <version>3.2.0-1.19</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework.kafka</groupId>
-      <artifactId>spring-kafka</artifactId>
-      <version>3.3.0-M3</version>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-s3-fs-hadoop</artifactId>
+      <version>1.20.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka-clients</artifactId>
-      <version>3.8.0</version>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-connector-kafka</artifactId>
+      <version>3.3.0-1.20</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-jooq</artifactId>
-      <version>3.4.0-M3</version>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>s3</artifactId>
+      <version>2.29.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jooq</groupId>
+      <artifactId>jooq</artifactId>
+      <version>3.15.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.33</version>
+      <version>8.0.32</version>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>io.github.resilience4j</groupId>
-      <artifactId>resilience4j-spring-boot3</artifactId>
-      <version>2.2.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.logstash.logback</groupId>
-      <artifactId>logstash-logback-encoder</artifactId>
-      <version>8.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <version>3.4.0-M3</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>spring-boot-test</artifactId>
-          <groupId>org.springframework.boot</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>spring-boot-test-autoconfigure</artifactId>
-          <groupId>org.springframework.boot</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>json-path</artifactId>
-          <groupId>com.jayway.jsonpath</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jakarta.xml.bind-api</artifactId>
-          <groupId>jakarta.xml.bind</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>json-smart</artifactId>
-          <groupId>net.minidev</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>assertj-core</artifactId>
-          <groupId>org.assertj</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>awaitility</artifactId>
-          <groupId>org.awaitility</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>hamcrest</artifactId>
-          <groupId>org.hamcrest</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>junit-jupiter</artifactId>
-          <groupId>org.junit.jupiter</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mockito-core</artifactId>
-          <groupId>org.mockito</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mockito-junit-jupiter</artifactId>
-          <groupId>org.mockito</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jsonassert</artifactId>
-          <groupId>org.skyscreamer</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>spring-test</artifactId>
-          <groupId>org.springframework</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>xmlunit-core</artifactId>
-          <groupId>org.xmlunit</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
   </dependencies>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.github.resilience4j</groupId>
-        <artifactId>resilience4j-bom</artifactId>
-        <version>2.2.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>net.logstash.logback</groupId>
-        <artifactId>logstash-logback-encoder</artifactId>
-        <version>8.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.github.resilience4j</groupId>
-        <artifactId>resilience4j-bom</artifactId>
-        <version>2.2.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.micrometer</groupId>
-        <artifactId>micrometer-bom</artifactId>
-        <version>1.13.6</version>
-        <type>pom</type>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <properties>
-    <java.version>17</java.version>
-    <spring-boot.version>3.4.0-M3</spring-boot.version>
+    <log4j2.version>2.19.0</log4j2.version>
+    <java.version>11</java.version>
+    <flink.version>1.20.0</flink.version>
   </properties>
 </project>
