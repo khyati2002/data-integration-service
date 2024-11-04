@@ -99,238 +99,238 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.id</code>.
+     * Getter for <code>ck_metadata.id</code>.
      */
     public String getId() {
         return this.id;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.id</code>.
+     * Setter for <code>ck_metadata.id</code>.
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.active_status</code>.
+     * Getter for <code>ck_metadata.active_status</code>.
      */
     public ActiveStatus getActiveStatus() {
         return this.activeStatus;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.active_status</code>.
+     * Setter for <code>ck_metadata.active_status</code>.
      */
     public void setActiveStatus(ActiveStatus activeStatus) {
         this.activeStatus = activeStatus;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.active_status_reason</code>.
+     * Getter for <code>ck_metadata.active_status_reason</code>.
      */
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.active_status_reason</code>.
+     * Setter for <code>ck_metadata.active_status_reason</code>.
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.created_by</code>.
+     * Getter for <code>ck_metadata.created_by</code>.
      */
     public String getCreatedBy() {
         return this.createdBy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.created_by</code>.
+     * Setter for <code>ck_metadata.created_by</code>.
      */
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.creation_time</code>.
+     * Getter for <code>ck_metadata.creation_time</code>.
      */
     public Date getCreationTime() {
         return this.creationTime;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.creation_time</code>.
+     * Setter for <code>ck_metadata.creation_time</code>.
      */
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.extended_attributes</code>.
+     * Getter for <code>ck_metadata.extended_attributes</code>.
      */
     public JsonNode getExtendedAttributes() {
         return this.extendedAttributes;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.extended_attributes</code>.
+     * Setter for <code>ck_metadata.extended_attributes</code>.
      */
     public void setExtendedAttributes(JsonNode extendedAttributes) {
         this.extendedAttributes = extendedAttributes;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.last_modified_time</code>.
+     * Getter for <code>ck_metadata.last_modified_time</code>.
      */
     public Date getLastModifiedTime() {
         return this.lastModifiedTime;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.last_modified_time</code>.
+     * Setter for <code>ck_metadata.last_modified_time</code>.
      */
     public void setLastModifiedTime(Date lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.lob</code>.
+     * Getter for <code>ck_metadata.lob</code>.
      */
     public String getLob() {
         return this.lob;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.lob</code>.
+     * Setter for <code>ck_metadata.lob</code>.
      */
     public void setLob(String lob) {
         this.lob = lob;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.modified_by</code>.
+     * Getter for <code>ck_metadata.modified_by</code>.
      */
     public String getModifiedBy() {
         return this.modifiedBy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.modified_by</code>.
+     * Setter for <code>ck_metadata.modified_by</code>.
      */
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.version</code>.
+     * Getter for <code>ck_metadata.version</code>.
      */
     public Integer getVersion() {
         return this.version;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.version</code>.
+     * Setter for <code>ck_metadata.version</code>.
      */
     public void setVersion(Integer version) {
         this.version = version;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.domain_name</code>.
+     * Getter for <code>ck_metadata.domain_name</code>.
      */
     public String getDomainName() {
         return this.domainName;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.domain_name</code>.
+     * Setter for <code>ck_metadata.domain_name</code>.
      */
     public void setDomainName(String domainName) {
         this.domainName = domainName;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.domain_type</code>.
+     * Getter for <code>ck_metadata.domain_type</code>.
      */
     public String getDomainType() {
         return this.domainType;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.domain_type</code>.
+     * Setter for <code>ck_metadata.domain_type</code>.
      */
     public void setDomainType(String domainType) {
         this.domainType = domainType;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.domain_values</code>.
+     * Getter for <code>ck_metadata.domain_values</code>.
      */
     public JsonNode getDomainValues() {
         return this.domainValues;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.domain_values</code>.
+     * Setter for <code>ck_metadata.domain_values</code>.
      */
     public void setDomainValues(JsonNode domainValues) {
         this.domainValues = domainValues;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.source</code>.
+     * Getter for <code>ck_metadata.source</code>.
      */
     public String getSource() {
         return this.source;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.source</code>.
+     * Setter for <code>ck_metadata.source</code>.
      */
     public void setSource(String source) {
         this.source = source;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.description</code>.
+     * Getter for <code>ck_metadata.description</code>.
      */
     public String getDescription() {
         return this.description;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.description</code>.
+     * Setter for <code>ck_metadata.description</code>.
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.hash</code>.
+     * Getter for <code>ck_metadata.hash</code>.
      */
     public String getHash() {
         return this.hash;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.hash</code>.
+     * Setter for <code>ck_metadata.hash</code>.
      */
     public void setHash(String hash) {
         this.hash = hash;
     }
 
     /**
-     * Getter for <code>ckroot.ck_metadata.changed</code>.
+     * Getter for <code>ck_metadata.changed</code>.
      */
     public Byte getChanged() {
         return this.changed;
     }
 
     /**
-     * Setter for <code>ckroot.ck_metadata.changed</code>.
+     * Setter for <code>ck_metadata.changed</code>.
      */
     public void setChanged(Byte changed) {
         this.changed = changed;

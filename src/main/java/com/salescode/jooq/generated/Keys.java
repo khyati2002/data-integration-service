@@ -4,7 +4,13 @@
 package com.salescode.jooq.generated;
 
 
-import com.salescode.jooq.generated.tables.*;
+import com.salescode.jooq.generated.tables.CkEnrichmentInfo;
+import com.salescode.jooq.generated.tables.CkMetadata;
+import com.salescode.jooq.generated.tables.CkOutletDetails;
+import com.salescode.jooq.generated.tables.CkTransformerInfo;
+import com.salescode.jooq.generated.tables.CkUser;
+import com.salescode.jooq.generated.tables.Profile;
+
 import org.jooq.ForeignKey;
 import org.jooq.Record;
 import org.jooq.TableField;
@@ -14,8 +20,8 @@ import org.jooq.impl.Internal;
 
 
 /**
- * A class modelling foreign key relationships and constraints of tables in
- * ckroot.
+ * A class modelling foreign key relationships and constraints of tables in the
+ * default schema.
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Keys {
@@ -24,6 +30,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<Record> KEY_CK_ENRICHMENT_INFO_PRIMARY = Internal.createUniqueKey(CkEnrichmentInfo.CK_ENRICHMENT_INFO, DSL.name("KEY_ck_enrichment_info_PRIMARY"), new TableField[] { CkEnrichmentInfo.CK_ENRICHMENT_INFO.ID }, true);
     public static final UniqueKey<Record> KEY_CK_METADATA_PRIMARY = Internal.createUniqueKey(CkMetadata.CK_METADATA, DSL.name("KEY_ck_metadata_PRIMARY"), new TableField[] { CkMetadata.CK_METADATA.ID }, true);
     public static final UniqueKey<Record> KEY_CK_METADATA_UK_METADATA = Internal.createUniqueKey(CkMetadata.CK_METADATA, DSL.name("KEY_ck_metadata_uk_metadata"), new TableField[] { CkMetadata.CK_METADATA.DOMAIN_NAME, CkMetadata.CK_METADATA.DOMAIN_TYPE }, true);
     public static final UniqueKey<Record> KEY_CK_OUTLET_DETAILS_PRIMARY = Internal.createUniqueKey(CkOutletDetails.CK_OUTLET_DETAILS, DSL.name("KEY_ck_outlet_details_PRIMARY"), new TableField[] { CkOutletDetails.CK_OUTLET_DETAILS.ID }, true);

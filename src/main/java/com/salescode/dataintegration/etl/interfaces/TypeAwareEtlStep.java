@@ -6,9 +6,7 @@ public interface TypeAwareEtlStep {
 
     enum EtlType {
         TRANSFORMER,
-        PRE_VALIDATION_ENRICHMENT,
         VALIDATION,
-        POST_VALIDATION_ENRICHMENT,
-        PRE_SAVE_ENRICHMENT
+        ENRICHMENT
     }
 }

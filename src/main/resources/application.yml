@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/db_mondelezckinduat
+    url: jdbc:mysql://localhost:3306/ckroot?currentSchema=ckroot
     username: root
     password: toor1234
     driver-class-name: com.mysql.cj.jdbc.Driver

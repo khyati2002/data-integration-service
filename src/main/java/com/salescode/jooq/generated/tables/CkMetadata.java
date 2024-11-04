@@ -9,17 +9,29 @@ import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
-import com.salescode.jooq.generated.Ckroot;
 import com.salescode.jooq.generated.Keys;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import org.jooq.Condition;
+import org.jooq.Field;
+import org.jooq.Name;
+import org.jooq.PlainSQL;
+import org.jooq.QueryPart;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.SQL;
+import org.jooq.Select;
+import org.jooq.Stringly;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -31,7 +43,7 @@ public class CkMetadata extends TableImpl<Record> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>ckroot.ck_metadata</code>
+     * The reference instance of <code>ck_metadata</code>
      */
     public static final CkMetadata CK_METADATA = new CkMetadata();
 
@@ -44,126 +56,117 @@ public class CkMetadata extends TableImpl<Record> {
     }
 
     /**
-     * The column <code>ckroot.ck_metadata.id</code>.
+     * The column <code>ck_metadata.id</code>.
      */
     public final TableField<Record, String> ID = createField(DSL.name("id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.active_status</code>.
+     * The column <code>ck_metadata.active_status</code>.
      */
     public final TableField<Record, ActiveStatus> ACTIVE_STATUS = createField(DSL.name("active_status"), SQLDataType.VARCHAR(255), this, "", new ActiveStatusConverter());
 
     /**
-     * The column <code>ckroot.ck_metadata.active_status_reason</code>.
+     * The column <code>ck_metadata.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.created_by</code>.
+     * The column <code>ck_metadata.created_by</code>.
      */
     public final TableField<Record, String> CREATED_BY = createField(DSL.name("created_by"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.creation_time</code>.
+     * The column <code>ck_metadata.creation_time</code>.
      */
     public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
 
     /**
-     * The column <code>ckroot.ck_metadata.extended_attributes</code>.
+     * The column <code>ck_metadata.extended_attributes</code>.
      */
     public final TableField<Record, JsonNode> EXTENDED_ATTRIBUTES = createField(DSL.name("extended_attributes"), SQLDataType.JSON, this, "", new JsonNodeConverter());
 
     /**
-     * The column <code>ckroot.ck_metadata.last_modified_time</code>.
+     * The column <code>ck_metadata.last_modified_time</code>.
      */
     public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
 
     /**
-     * The column <code>ckroot.ck_metadata.lob</code>.
+     * The column <code>ck_metadata.lob</code>.
      */
     public final TableField<Record, String> LOB = createField(DSL.name("lob"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.modified_by</code>.
+     * The column <code>ck_metadata.modified_by</code>.
      */
     public final TableField<Record, String> MODIFIED_BY = createField(DSL.name("modified_by"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.version</code>.
+     * The column <code>ck_metadata.version</code>.
      */
     public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.domain_name</code>.
+     * The column <code>ck_metadata.domain_name</code>.
      */
     public final TableField<Record, String> DOMAIN_NAME = createField(DSL.name("domain_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.domain_type</code>.
+     * The column <code>ck_metadata.domain_type</code>.
      */
     public final TableField<Record, String> DOMAIN_TYPE = createField(DSL.name("domain_type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.domain_values</code>.
+     * The column <code>ck_metadata.domain_values</code>.
      */
     public final TableField<Record, JsonNode> DOMAIN_VALUES = createField(DSL.name("domain_values"), SQLDataType.JSON, this, "", new JsonNodeConverter());
 
     /**
-     * The column <code>ckroot.ck_metadata.source</code>.
+     * The column <code>ck_metadata.source</code>.
      */
     public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.description</code>.
+     * The column <code>ck_metadata.description</code>.
      */
     public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.hash</code>.
+     * The column <code>ck_metadata.hash</code>.
      */
     public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>ckroot.ck_metadata.changed</code>.
+     * The column <code>ck_metadata.changed</code>.
      */
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkMetadata(Name alias, Table<Record> aliased) {
-        this(alias, aliased, null);
+        this(alias, aliased, (Field<?>[]) null, null);
     }
 
-    private CkMetadata(Name alias, Table<Record> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
+    private CkMetadata(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
     }
 
     /**
-     * Create an aliased <code>ckroot.ck_metadata</code> table reference
+     * Create an aliased <code>ck_metadata</code> table reference
      */
     public CkMetadata(String alias) {
         this(DSL.name(alias), CK_METADATA);
     }
 
     /**
-     * Create an aliased <code>ckroot.ck_metadata</code> table reference
+     * Create an aliased <code>ck_metadata</code> table reference
      */
     public CkMetadata(Name alias) {
         this(alias, CK_METADATA);
     }
 
     /**
-     * Create a <code>ckroot.ck_metadata</code> table reference
+     * Create a <code>ck_metadata</code> table reference
      */
     public CkMetadata() {
         this(DSL.name("ck_metadata"), null);
-    }
-
-    public <O extends Record> CkMetadata(Table<O> child, ForeignKey<O, Record> key) {
-        super(child, key, CK_METADATA);
-    }
-
-    @Override
-    public Schema getSchema() {
-        return aliased() ? null : Ckroot.CKROOT;
     }
 
     @Override
@@ -213,5 +216,89 @@ public class CkMetadata extends TableImpl<Record> {
     @Override
     public CkMetadata rename(Table<?> name) {
         return new CkMetadata(name.getQualifiedName(), null);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkMetadata where(Condition condition) {
+        return new CkMetadata(getQualifiedName(), aliased() ? this : null, null, condition);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkMetadata where(Collection<? extends Condition> conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkMetadata where(Condition... conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkMetadata where(Field<Boolean> condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public CkMetadata where(SQL condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public CkMetadata where(@Stringly.SQL String condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public CkMetadata where(@Stringly.SQL String condition, Object... binds) {
+        return where(DSL.condition(condition, binds));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public CkMetadata where(@Stringly.SQL String condition, QueryPart... parts) {
+        return where(DSL.condition(condition, parts));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkMetadata whereExists(Select<?> select) {
+        return where(DSL.exists(select));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkMetadata whereNotExists(Select<?> select) {
+        return where(DSL.notExists(select));
     }
 }

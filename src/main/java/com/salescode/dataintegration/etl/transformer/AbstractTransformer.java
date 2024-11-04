@@ -1,8 +1,12 @@
 package com.salescode.dataintegration.etl.transformer;
 
-import java.util.Map;
+import com.salescode.jooq.generated.tables.pojos.CkTransformerInfo;
+import lombok.Getter;
+import lombok.Setter;
 
-public abstract class AbstractTransformer implements Transformer<Map<String, Object>, Object> {
+@Getter
+@Setter
+public abstract class AbstractTransformer<S, T> implements Transformer<S, T> {
 
-
+    CkTransformerInfo transformerInfo;
 }

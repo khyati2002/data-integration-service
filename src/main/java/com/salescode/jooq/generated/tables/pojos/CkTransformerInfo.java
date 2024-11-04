@@ -111,280 +111,280 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.id</code>.
+     * Getter for <code>ck_transformer_info.id</code>.
      */
     public String getId() {
         return this.id;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.id</code>.
+     * Setter for <code>ck_transformer_info.id</code>.
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.active_status</code>.
+     * Getter for <code>ck_transformer_info.active_status</code>.
      */
     public ActiveStatus getActiveStatus() {
         return this.activeStatus;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.active_status</code>.
+     * Setter for <code>ck_transformer_info.active_status</code>.
      */
     public void setActiveStatus(ActiveStatus activeStatus) {
         this.activeStatus = activeStatus;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.active_status_reason</code>.
+     * Getter for <code>ck_transformer_info.active_status_reason</code>.
      */
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.active_status_reason</code>.
+     * Setter for <code>ck_transformer_info.active_status_reason</code>.
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.created_by</code>.
+     * Getter for <code>ck_transformer_info.created_by</code>.
      */
     public String getCreatedBy() {
         return this.createdBy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.created_by</code>.
+     * Setter for <code>ck_transformer_info.created_by</code>.
      */
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.creation_time</code>.
+     * Getter for <code>ck_transformer_info.creation_time</code>.
      */
     public Date getCreationTime() {
         return this.creationTime;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.creation_time</code>.
+     * Setter for <code>ck_transformer_info.creation_time</code>.
      */
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.extended_attributes</code>.
+     * Getter for <code>ck_transformer_info.extended_attributes</code>.
      */
     public JsonNode getExtendedAttributes() {
         return this.extendedAttributes;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.extended_attributes</code>.
+     * Setter for <code>ck_transformer_info.extended_attributes</code>.
      */
     public void setExtendedAttributes(JsonNode extendedAttributes) {
         this.extendedAttributes = extendedAttributes;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.last_modified_time</code>.
+     * Getter for <code>ck_transformer_info.last_modified_time</code>.
      */
     public Date getLastModifiedTime() {
         return this.lastModifiedTime;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.last_modified_time</code>.
+     * Setter for <code>ck_transformer_info.last_modified_time</code>.
      */
     public void setLastModifiedTime(Date lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.lob</code>.
+     * Getter for <code>ck_transformer_info.lob</code>.
      */
     public String getLob() {
         return this.lob;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.lob</code>.
+     * Setter for <code>ck_transformer_info.lob</code>.
      */
     public void setLob(String lob) {
         this.lob = lob;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.modified_by</code>.
+     * Getter for <code>ck_transformer_info.modified_by</code>.
      */
     public String getModifiedBy() {
         return this.modifiedBy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.modified_by</code>.
+     * Setter for <code>ck_transformer_info.modified_by</code>.
      */
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.version</code>.
+     * Getter for <code>ck_transformer_info.version</code>.
      */
     public Integer getVersion() {
         return this.version;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.version</code>.
+     * Setter for <code>ck_transformer_info.version</code>.
      */
     public void setVersion(Integer version) {
         this.version = version;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.code</code>.
+     * Getter for <code>ck_transformer_info.code</code>.
      */
     public JsonNode getCode() {
         return this.code;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.code</code>.
+     * Setter for <code>ck_transformer_info.code</code>.
      */
     public void setCode(JsonNode code) {
         this.code = code;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.description</code>.
+     * Getter for <code>ck_transformer_info.description</code>.
      */
     public String getDescription() {
         return this.description;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.description</code>.
+     * Setter for <code>ck_transformer_info.description</code>.
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.implementation</code>.
+     * Getter for <code>ck_transformer_info.implementation</code>.
      */
     public String getImplementation() {
         return this.implementation;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.implementation</code>.
+     * Setter for <code>ck_transformer_info.implementation</code>.
      */
     public void setImplementation(String implementation) {
         this.implementation = implementation;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.language</code>.
+     * Getter for <code>ck_transformer_info.language</code>.
      */
     public String getLanguage() {
         return this.language;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.language</code>.
+     * Setter for <code>ck_transformer_info.language</code>.
      */
     public void setLanguage(String language) {
         this.language = language;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.priority</code>.
+     * Getter for <code>ck_transformer_info.priority</code>.
      */
     public Integer getPriority() {
         return this.priority;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.priority</code>.
+     * Setter for <code>ck_transformer_info.priority</code>.
      */
     public void setPriority(Integer priority) {
         this.priority = priority;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.type</code>.
+     * Getter for <code>ck_transformer_info.type</code>.
      */
     public String getType() {
         return this.type;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.type</code>.
+     * Setter for <code>ck_transformer_info.type</code>.
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.source</code>.
+     * Getter for <code>ck_transformer_info.source</code>.
      */
     public String getSource() {
         return this.source;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.source</code>.
+     * Setter for <code>ck_transformer_info.source</code>.
      */
     public void setSource(String source) {
         this.source = source;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.hash</code>.
+     * Getter for <code>ck_transformer_info.hash</code>.
      */
     public String getHash() {
         return this.hash;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.hash</code>.
+     * Setter for <code>ck_transformer_info.hash</code>.
      */
     public void setHash(String hash) {
         this.hash = hash;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.changed</code>.
+     * Getter for <code>ck_transformer_info.changed</code>.
      */
     public Byte getChanged() {
         return this.changed;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.changed</code>.
+     * Setter for <code>ck_transformer_info.changed</code>.
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
     }
 
     /**
-     * Getter for <code>ckroot.ck_transformer_info.name</code>.
+     * Getter for <code>ck_transformer_info.name</code>.
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Setter for <code>ckroot.ck_transformer_info.name</code>.
+     * Setter for <code>ck_transformer_info.name</code>.
      */
     public void setName(String name) {
         this.name = name;

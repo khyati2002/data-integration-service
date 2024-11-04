@@ -2,11 +2,12 @@ package com.salescode.jooq;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salescode.channelkart.utils.JSONUtils;
 import org.jooq.Converter;
 import org.jooq.JSON;
 
 public class JsonNodeConverter implements Converter<JSON, JsonNode> {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
     @Override
     public JsonNode from(JSON databaseObject) {

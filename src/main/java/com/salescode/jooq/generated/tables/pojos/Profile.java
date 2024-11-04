@@ -107,266 +107,266 @@ public class Profile extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ckroot.profile.id</code>.
+     * Getter for <code>profile.id</code>.
      */
     public String getId() {
         return this.id;
     }
 
     /**
-     * Setter for <code>ckroot.profile.id</code>.
+     * Setter for <code>profile.id</code>.
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * Getter for <code>ckroot.profile.active_status</code>.
+     * Getter for <code>profile.active_status</code>.
      */
     public ActiveStatus getActiveStatus() {
         return this.activeStatus;
     }
 
     /**
-     * Setter for <code>ckroot.profile.active_status</code>.
+     * Setter for <code>profile.active_status</code>.
      */
     public void setActiveStatus(ActiveStatus activeStatus) {
         this.activeStatus = activeStatus;
     }
 
     /**
-     * Getter for <code>ckroot.profile.active_status_reason</code>.
+     * Getter for <code>profile.active_status_reason</code>.
      */
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
 
     /**
-     * Setter for <code>ckroot.profile.active_status_reason</code>.
+     * Setter for <code>profile.active_status_reason</code>.
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
     }
 
     /**
-     * Getter for <code>ckroot.profile.created_by</code>.
+     * Getter for <code>profile.created_by</code>.
      */
     public String getCreatedBy() {
         return this.createdBy;
     }
 
     /**
-     * Setter for <code>ckroot.profile.created_by</code>.
+     * Setter for <code>profile.created_by</code>.
      */
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
     /**
-     * Getter for <code>ckroot.profile.creation_time</code>.
+     * Getter for <code>profile.creation_time</code>.
      */
     public Date getCreationTime() {
         return this.creationTime;
     }
 
     /**
-     * Setter for <code>ckroot.profile.creation_time</code>.
+     * Setter for <code>profile.creation_time</code>.
      */
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 
     /**
-     * Getter for <code>ckroot.profile.extended_attributes</code>.
+     * Getter for <code>profile.extended_attributes</code>.
      */
     public JsonNode getExtendedAttributes() {
         return this.extendedAttributes;
     }
 
     /**
-     * Setter for <code>ckroot.profile.extended_attributes</code>.
+     * Setter for <code>profile.extended_attributes</code>.
      */
     public void setExtendedAttributes(JsonNode extendedAttributes) {
         this.extendedAttributes = extendedAttributes;
     }
 
     /**
-     * Getter for <code>ckroot.profile.hash</code>.
+     * Getter for <code>profile.hash</code>.
      */
     public String getHash() {
         return this.hash;
     }
 
     /**
-     * Setter for <code>ckroot.profile.hash</code>.
+     * Setter for <code>profile.hash</code>.
      */
     public void setHash(String hash) {
         this.hash = hash;
     }
 
     /**
-     * Getter for <code>ckroot.profile.last_modified_time</code>.
+     * Getter for <code>profile.last_modified_time</code>.
      */
     public Date getLastModifiedTime() {
         return this.lastModifiedTime;
     }
 
     /**
-     * Setter for <code>ckroot.profile.last_modified_time</code>.
+     * Setter for <code>profile.last_modified_time</code>.
      */
     public void setLastModifiedTime(Date lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
     }
 
     /**
-     * Getter for <code>ckroot.profile.lob</code>.
+     * Getter for <code>profile.lob</code>.
      */
     public String getLob() {
         return this.lob;
     }
 
     /**
-     * Setter for <code>ckroot.profile.lob</code>.
+     * Setter for <code>profile.lob</code>.
      */
     public void setLob(String lob) {
         this.lob = lob;
     }
 
     /**
-     * Getter for <code>ckroot.profile.modified_by</code>.
+     * Getter for <code>profile.modified_by</code>.
      */
     public String getModifiedBy() {
         return this.modifiedBy;
     }
 
     /**
-     * Setter for <code>ckroot.profile.modified_by</code>.
+     * Setter for <code>profile.modified_by</code>.
      */
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
     /**
-     * Getter for <code>ckroot.profile.source</code>.
+     * Getter for <code>profile.source</code>.
      */
     public String getSource() {
         return this.source;
     }
 
     /**
-     * Setter for <code>ckroot.profile.source</code>.
+     * Setter for <code>profile.source</code>.
      */
     public void setSource(String source) {
         this.source = source;
     }
 
     /**
-     * Getter for <code>ckroot.profile.version</code>.
+     * Getter for <code>profile.version</code>.
      */
     public Integer getVersion() {
         return this.version;
     }
 
     /**
-     * Setter for <code>ckroot.profile.version</code>.
+     * Setter for <code>profile.version</code>.
      */
     public void setVersion(Integer version) {
         this.version = version;
     }
 
     /**
-     * Getter for <code>ckroot.profile.attributes</code>.
+     * Getter for <code>profile.attributes</code>.
      */
     public JsonNode getAttributes() {
         return this.attributes;
     }
 
     /**
-     * Setter for <code>ckroot.profile.attributes</code>.
+     * Setter for <code>profile.attributes</code>.
      */
     public void setAttributes(JsonNode attributes) {
         this.attributes = attributes;
     }
 
     /**
-     * Getter for <code>ckroot.profile.implementation</code>.
+     * Getter for <code>profile.implementation</code>.
      */
     public String getImplementation() {
         return this.implementation;
     }
 
     /**
-     * Setter for <code>ckroot.profile.implementation</code>.
+     * Setter for <code>profile.implementation</code>.
      */
     public void setImplementation(String implementation) {
         this.implementation = implementation;
     }
 
     /**
-     * Getter for <code>ckroot.profile.name</code>.
+     * Getter for <code>profile.name</code>.
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Setter for <code>ckroot.profile.name</code>.
+     * Setter for <code>profile.name</code>.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Getter for <code>ckroot.profile.payload</code>.
+     * Getter for <code>profile.payload</code>.
      */
     public String getPayload() {
         return this.payload;
     }
 
     /**
-     * Setter for <code>ckroot.profile.payload</code>.
+     * Setter for <code>profile.payload</code>.
      */
     public void setPayload(String payload) {
         this.payload = payload;
     }
 
     /**
-     * Getter for <code>ckroot.profile.type</code>.
+     * Getter for <code>profile.type</code>.
      */
     public String getType() {
         return this.type;
     }
 
     /**
-     * Setter for <code>ckroot.profile.type</code>.
+     * Setter for <code>profile.type</code>.
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     * Getter for <code>ckroot.profile.location_hierarchy</code>.
+     * Getter for <code>profile.location_hierarchy</code>.
      */
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
 
     /**
-     * Setter for <code>ckroot.profile.location_hierarchy</code>.
+     * Setter for <code>profile.location_hierarchy</code>.
      */
     public void setLocationHierarchy(String locationHierarchy) {
         this.locationHierarchy = locationHierarchy;
     }
 
     /**
-     * Getter for <code>ckroot.profile.changed</code>.
+     * Getter for <code>profile.changed</code>.
      */
     public Byte getChanged() {
         return this.changed;
     }
 
     /**
-     * Setter for <code>ckroot.profile.changed</code>.
+     * Setter for <code>profile.changed</code>.
      */
     public void setChanged(Byte changed) {
         this.changed = changed;

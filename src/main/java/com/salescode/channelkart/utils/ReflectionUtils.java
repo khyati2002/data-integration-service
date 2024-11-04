@@ -33,7 +33,7 @@ public class ReflectionUtils {
 
    static {
       try {
-         reflections = new Reflections("com.applicate");
+         reflections = new Reflections("com.salescode");
       } catch (Exception e) {
          log.error("Could not load reflections:{}", e.getMessage());
       }

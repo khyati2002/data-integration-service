@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -245,532 +246,532 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.id</code>.
+     * Getter for <code>ck_outlet_details.id</code>.
      */
     public String getId() {
         return this.id;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.id</code>.
+     * Setter for <code>ck_outlet_details.id</code>.
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.active_status</code>.
+     * Getter for <code>ck_outlet_details.active_status</code>.
      */
     public ActiveStatus getActiveStatus() {
         return this.activeStatus;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.active_status</code>.
+     * Setter for <code>ck_outlet_details.active_status</code>.
      */
     public void setActiveStatus(ActiveStatus activeStatus) {
         this.activeStatus = activeStatus;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.active_status_reason</code>.
+     * Getter for <code>ck_outlet_details.active_status_reason</code>.
      */
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.active_status_reason</code>.
+     * Setter for <code>ck_outlet_details.active_status_reason</code>.
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.created_by</code>.
+     * Getter for <code>ck_outlet_details.created_by</code>.
      */
     public String getCreatedBy() {
         return this.createdBy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.created_by</code>.
+     * Setter for <code>ck_outlet_details.created_by</code>.
      */
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.creation_time</code>.
+     * Getter for <code>ck_outlet_details.creation_time</code>.
      */
     public Date getCreationTime() {
         return this.creationTime;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.creation_time</code>.
+     * Setter for <code>ck_outlet_details.creation_time</code>.
      */
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.extended_attributes</code>.
+     * Getter for <code>ck_outlet_details.extended_attributes</code>.
      */
     public JsonNode getExtendedAttributes() {
         return this.extendedAttributes;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.extended_attributes</code>.
+     * Setter for <code>ck_outlet_details.extended_attributes</code>.
      */
     public void setExtendedAttributes(JsonNode extendedAttributes) {
         this.extendedAttributes = extendedAttributes;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.last_modified_time</code>.
+     * Getter for <code>ck_outlet_details.last_modified_time</code>.
      */
     public Date getLastModifiedTime() {
         return this.lastModifiedTime;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.last_modified_time</code>.
+     * Setter for <code>ck_outlet_details.last_modified_time</code>.
      */
     public void setLastModifiedTime(Date lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.lob</code>.
+     * Getter for <code>ck_outlet_details.lob</code>.
      */
     public String getLob() {
         return this.lob;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.lob</code>.
+     * Setter for <code>ck_outlet_details.lob</code>.
      */
     public void setLob(String lob) {
         this.lob = lob;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.modified_by</code>.
+     * Getter for <code>ck_outlet_details.modified_by</code>.
      */
     public String getModifiedBy() {
         return this.modifiedBy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.modified_by</code>.
+     * Setter for <code>ck_outlet_details.modified_by</code>.
      */
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.source</code>.
+     * Getter for <code>ck_outlet_details.source</code>.
      */
     public String getSource() {
         return this.source;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.source</code>.
+     * Setter for <code>ck_outlet_details.source</code>.
      */
     public void setSource(String source) {
         this.source = source;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.version</code>.
+     * Getter for <code>ck_outlet_details.version</code>.
      */
     public Integer getVersion() {
         return this.version;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.version</code>.
+     * Setter for <code>ck_outlet_details.version</code>.
      */
     public void setVersion(Integer version) {
         this.version = version;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.account</code>.
+     * Getter for <code>ck_outlet_details.account</code>.
      */
     public String getAccount() {
         return this.account;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.account</code>.
+     * Setter for <code>ck_outlet_details.account</code>.
      */
     public void setAccount(String account) {
         this.account = account;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.address</code>.
+     * Getter for <code>ck_outlet_details.address</code>.
      */
     public String getAddress() {
         return this.address;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.address</code>.
+     * Setter for <code>ck_outlet_details.address</code>.
      */
     public void setAddress(String address) {
         this.address = address;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.beat</code>.
+     * Getter for <code>ck_outlet_details.beat</code>.
      */
     public String getBeat() {
         return this.beat;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.beat</code>.
+     * Setter for <code>ck_outlet_details.beat</code>.
      */
     public void setBeat(String beat) {
         this.beat = beat;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.beat_name</code>.
+     * Getter for <code>ck_outlet_details.beat_name</code>.
      */
     public String getBeatName() {
         return this.beatName;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.beat_name</code>.
+     * Setter for <code>ck_outlet_details.beat_name</code>.
      */
     public void setBeatName(String beatName) {
         this.beatName = beatName;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.channel</code>.
+     * Getter for <code>ck_outlet_details.channel</code>.
      */
     public String getChannel() {
         return this.channel;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.channel</code>.
+     * Setter for <code>ck_outlet_details.channel</code>.
      */
     public void setChannel(String channel) {
         this.channel = channel;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.contact_name</code>.
+     * Getter for <code>ck_outlet_details.contact_name</code>.
      */
     public String getContactName() {
         return this.contactName;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.contact_name</code>.
+     * Setter for <code>ck_outlet_details.contact_name</code>.
      */
     public void setContactName(String contactName) {
         this.contactName = contactName;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.contactno</code>.
+     * Getter for <code>ck_outlet_details.contactno</code>.
      */
     public String getContactno() {
         return this.contactno;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.contactno</code>.
+     * Setter for <code>ck_outlet_details.contactno</code>.
      */
     public void setContactno(String contactno) {
         this.contactno = contactno;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.display_address</code>.
+     * Getter for <code>ck_outlet_details.display_address</code>.
      */
     public String getDisplayAddress() {
         return this.displayAddress;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.display_address</code>.
+     * Setter for <code>ck_outlet_details.display_address</code>.
      */
     public void setDisplayAddress(String displayAddress) {
         this.displayAddress = displayAddress;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.frequency</code>.
+     * Getter for <code>ck_outlet_details.frequency</code>.
      */
     public String getFrequency() {
         return this.frequency;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.frequency</code>.
+     * Setter for <code>ck_outlet_details.frequency</code>.
      */
     public void setFrequency(String frequency) {
         this.frequency = frequency;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.gst_no</code>.
+     * Getter for <code>ck_outlet_details.gst_no</code>.
      */
     public String getGstNo() {
         return this.gstNo;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.gst_no</code>.
+     * Setter for <code>ck_outlet_details.gst_no</code>.
      */
     public void setGstNo(String gstNo) {
         this.gstNo = gstNo;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.last_order_date</code>.
+     * Getter for <code>ck_outlet_details.last_order_date</code>.
      */
     public Date getLastOrderDate() {
         return this.lastOrderDate;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.last_order_date</code>.
+     * Setter for <code>ck_outlet_details.last_order_date</code>.
      */
     public void setLastOrderDate(Date lastOrderDate) {
         this.lastOrderDate = lastOrderDate;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.latitude</code>.
+     * Getter for <code>ck_outlet_details.latitude</code>.
      */
     public BigDecimal getLatitude() {
         return this.latitude;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.latitude</code>.
+     * Setter for <code>ck_outlet_details.latitude</code>.
      */
     public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.longitude</code>.
+     * Getter for <code>ck_outlet_details.longitude</code>.
      */
     public BigDecimal getLongitude() {
         return this.longitude;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.longitude</code>.
+     * Setter for <code>ck_outlet_details.longitude</code>.
      */
     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.mapped</code>.
+     * Getter for <code>ck_outlet_details.mapped</code>.
      */
     public Boolean getMapped() {
         return this.mapped;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.mapped</code>.
+     * Setter for <code>ck_outlet_details.mapped</code>.
      */
     public void setMapped(Boolean mapped) {
         this.mapped = mapped;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.market_id</code>.
+     * Getter for <code>ck_outlet_details.market_id</code>.
      */
     public String getMarketId() {
         return this.marketId;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.market_id</code>.
+     * Setter for <code>ck_outlet_details.market_id</code>.
      */
     public void setMarketId(String marketId) {
         this.marketId = marketId;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.market_name</code>.
+     * Getter for <code>ck_outlet_details.market_name</code>.
      */
     public String getMarketName() {
         return this.marketName;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.market_name</code>.
+     * Setter for <code>ck_outlet_details.market_name</code>.
      */
     public void setMarketName(String marketName) {
         this.marketName = marketName;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.outlet_category</code>.
+     * Getter for <code>ck_outlet_details.outlet_category</code>.
      */
     public String getOutletCategory() {
         return this.outletCategory;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.outlet_category</code>.
+     * Setter for <code>ck_outlet_details.outlet_category</code>.
      */
     public void setOutletCategory(String outletCategory) {
         this.outletCategory = outletCategory;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.outlet_class</code>.
+     * Getter for <code>ck_outlet_details.outlet_class</code>.
      */
     public String getOutletClass() {
         return this.outletClass;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.outlet_class</code>.
+     * Setter for <code>ck_outlet_details.outlet_class</code>.
      */
     public void setOutletClass(String outletClass) {
         this.outletClass = outletClass;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.outletcode</code>.
+     * Getter for <code>ck_outlet_details.outletcode</code>.
      */
     public String getOutletcode() {
         return this.outletcode;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.outletcode</code>.
+     * Setter for <code>ck_outlet_details.outletcode</code>.
      */
     public void setOutletcode(String outletcode) {
         this.outletcode = outletcode;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.outlet_name</code>.
+     * Getter for <code>ck_outlet_details.outlet_name</code>.
      */
     public String getOutletName() {
         return this.outletName;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.outlet_name</code>.
+     * Setter for <code>ck_outlet_details.outlet_name</code>.
      */
     public void setOutletName(String outletName) {
         this.outletName = outletName;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.outlet_type</code>.
+     * Getter for <code>ck_outlet_details.outlet_type</code>.
      */
     public String getOutletType() {
         return this.outletType;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.outlet_type</code>.
+     * Setter for <code>ck_outlet_details.outlet_type</code>.
      */
     public void setOutletType(String outletType) {
         this.outletType = outletType;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.tin_no</code>.
+     * Getter for <code>ck_outlet_details.tin_no</code>.
      */
     public String getTinNo() {
         return this.tinNo;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.tin_no</code>.
+     * Setter for <code>ck_outlet_details.tin_no</code>.
      */
     public void setTinNo(String tinNo) {
         this.tinNo = tinNo;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.location_hierarchy</code>.
+     * Getter for <code>ck_outlet_details.location_hierarchy</code>.
      */
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.location_hierarchy</code>.
+     * Setter for <code>ck_outlet_details.location_hierarchy</code>.
      */
     public void setLocationHierarchy(String locationHierarchy) {
         this.locationHierarchy = locationHierarchy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.loginid</code>.
+     * Getter for <code>ck_outlet_details.loginid</code>.
      */
     public String getLoginid() {
         return this.loginid;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.loginid</code>.
+     * Setter for <code>ck_outlet_details.loginid</code>.
      */
     public void setLoginid(String loginid) {
         this.loginid = loginid;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.accessibleBy</code>.
+     * Getter for <code>ck_outlet_details.accessibleBy</code>.
      */
     public JSON getAccessibleby() {
         return this.accessibleby;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.accessibleBy</code>.
+     * Setter for <code>ck_outlet_details.accessibleBy</code>.
      */
     public void setAccessibleby(JSON accessibleby) {
         this.accessibleby = accessibleby;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.accessible_by</code>.
+     * Getter for <code>ck_outlet_details.accessible_by</code>.
      */
     public JSON getAccessibleBy() {
         return this.accessibleBy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.accessible_by</code>.
+     * Setter for <code>ck_outlet_details.accessible_by</code>.
      */
     public void setAccessibleBy(JSON accessibleBy) {
         this.accessibleBy = accessibleBy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.hash</code>.
+     * Getter for <code>ck_outlet_details.hash</code>.
      */
     public String getHash() {
         return this.hash;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.hash</code>.
+     * Setter for <code>ck_outlet_details.hash</code>.
      */
     public void setHash(String hash) {
         this.hash = hash;
@@ -803,196 +804,196 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.doo</code>.
+     * Getter for <code>ck_outlet_details.doo</code>.
      */
     public Date getDoo() {
         return this.doo;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.doo</code>.
+     * Setter for <code>ck_outlet_details.doo</code>.
      */
     public void setDoo(Date doo) {
         this.doo = doo;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.dtype</code>.
+     * Getter for <code>ck_outlet_details.dtype</code>.
      */
     public String getDtype() {
         return this.dtype;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.dtype</code>.
+     * Setter for <code>ck_outlet_details.dtype</code>.
      */
     public void setDtype(String dtype) {
         this.dtype = dtype;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.hierarchy</code>.
+     * Getter for <code>ck_outlet_details.hierarchy</code>.
      */
     public String getHierarchy() {
         return this.hierarchy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.hierarchy</code>.
+     * Setter for <code>ck_outlet_details.hierarchy</code>.
      */
     public void setHierarchy(String hierarchy) {
         this.hierarchy = hierarchy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.changed</code>.
+     * Getter for <code>ck_outlet_details.changed</code>.
      */
     public Byte getChanged() {
         return this.changed;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.changed</code>.
+     * Setter for <code>ck_outlet_details.changed</code>.
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.distribution_channel</code>.
+     * Getter for <code>ck_outlet_details.distribution_channel</code>.
      */
     public String getDistributionChannel() {
         return this.distributionChannel;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.distribution_channel</code>.
+     * Setter for <code>ck_outlet_details.distribution_channel</code>.
      */
     public void setDistributionChannel(String distributionChannel) {
         this.distributionChannel = distributionChannel;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.outlet_division</code>.
+     * Getter for <code>ck_outlet_details.outlet_division</code>.
      */
     public String getOutletDivision() {
         return this.outletDivision;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.outlet_division</code>.
+     * Setter for <code>ck_outlet_details.outlet_division</code>.
      */
     public void setOutletDivision(String outletDivision) {
         this.outletDivision = outletDivision;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.sold_to</code>.
+     * Getter for <code>ck_outlet_details.sold_to</code>.
      */
     public String getSoldTo() {
         return this.soldTo;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.sold_to</code>.
+     * Setter for <code>ck_outlet_details.sold_to</code>.
      */
     public void setSoldTo(String soldTo) {
         this.soldTo = soldTo;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.sub_channel</code>.
+     * Getter for <code>ck_outlet_details.sub_channel</code>.
      */
     public String getSubChannel() {
         return this.subChannel;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.sub_channel</code>.
+     * Setter for <code>ck_outlet_details.sub_channel</code>.
      */
     public void setSubChannel(String subChannel) {
         this.subChannel = subChannel;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.sub_territory</code>.
+     * Getter for <code>ck_outlet_details.sub_territory</code>.
      */
     public String getSubTerritory() {
         return this.subTerritory;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.sub_territory</code>.
+     * Setter for <code>ck_outlet_details.sub_territory</code>.
      */
     public void setSubTerritory(String subTerritory) {
         this.subTerritory = subTerritory;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.blob_key</code>.
+     * Getter for <code>ck_outlet_details.blob_key</code>.
      */
     public String getBlobKey() {
         return this.blobKey;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.blob_key</code>.
+     * Setter for <code>ck_outlet_details.blob_key</code>.
      */
     public void setBlobKey(String blobKey) {
         this.blobKey = blobKey;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.email</code>.
+     * Getter for <code>ck_outlet_details.email</code>.
      */
     public String getEmail() {
         return this.email;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.email</code>.
+     * Setter for <code>ck_outlet_details.email</code>.
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.control_group</code>.
+     * Getter for <code>ck_outlet_details.control_group</code>.
      */
     public String getControlGroup() {
         return this.controlGroup;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.control_group</code>.
+     * Setter for <code>ck_outlet_details.control_group</code>.
      */
     public void setControlGroup(String controlGroup) {
         this.controlGroup = controlGroup;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.normalized_hierarchy</code>.
+     * Getter for <code>ck_outlet_details.normalized_hierarchy</code>.
      */
     public String getNormalizedHierarchy() {
         return this.normalizedHierarchy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.normalized_hierarchy</code>.
+     * Setter for <code>ck_outlet_details.normalized_hierarchy</code>.
      */
     public void setNormalizedHierarchy(String normalizedHierarchy) {
         this.normalizedHierarchy = normalizedHierarchy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_outlet_details.price_list_id</code>.
+     * Getter for <code>ck_outlet_details.price_list_id</code>.
      */
     public String getPriceListId() {
         return this.priceListId;
     }
 
     /**
-     * Setter for <code>ckroot.ck_outlet_details.price_list_id</code>.
+     * Setter for <code>ck_outlet_details.price_list_id</code>.
      */
     public void setPriceListId(String priceListId) {
         this.priceListId = priceListId;

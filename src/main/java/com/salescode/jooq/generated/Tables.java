@@ -4,37 +4,47 @@
 package com.salescode.jooq.generated;
 
 
-import com.salescode.jooq.generated.tables.*;
+import com.salescode.jooq.generated.tables.CkEnrichmentInfo;
+import com.salescode.jooq.generated.tables.CkMetadata;
+import com.salescode.jooq.generated.tables.CkOutletDetails;
+import com.salescode.jooq.generated.tables.CkTransformerInfo;
+import com.salescode.jooq.generated.tables.CkUser;
+import com.salescode.jooq.generated.tables.Profile;
 
 
 /**
- * Convenience access to all tables in ckroot.
+ * Convenience access to all tables in the default schema.
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
 
     /**
-     * The table <code>ckroot.ck_metadata</code>.
+     * The table <code>ck_enrichment_info</code>.
+     */
+    public static final CkEnrichmentInfo CK_ENRICHMENT_INFO = CkEnrichmentInfo.CK_ENRICHMENT_INFO;
+
+    /**
+     * The table <code>ck_metadata</code>.
      */
     public static final CkMetadata CK_METADATA = CkMetadata.CK_METADATA;
 
     /**
-     * The table <code>ckroot.ck_outlet_details</code>.
+     * The table <code>ck_outlet_details</code>.
      */
     public static final CkOutletDetails CK_OUTLET_DETAILS = CkOutletDetails.CK_OUTLET_DETAILS;
 
     /**
-     * The table <code>ckroot.ck_transformer_info</code>.
+     * The table <code>ck_transformer_info</code>.
      */
     public static final CkTransformerInfo CK_TRANSFORMER_INFO = CkTransformerInfo.CK_TRANSFORMER_INFO;
 
     /**
-     * The table <code>ckroot.ck_user</code>.
+     * The table <code>ck_user</code>.
      */
     public static final CkUser CK_USER = CkUser.CK_USER;
 
     /**
-     * The table <code>ckroot.profile</code>.
+     * The table <code>profile</code>.
      */
     public static final Profile PROFILE = Profile.PROFILE;
 }

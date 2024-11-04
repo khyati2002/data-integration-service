@@ -36,11 +36,11 @@
                 <version>2.2.0</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>            
-			<dependency>
-				<groupId>net.logstash.logback</groupId>
-				<artifactId>logstash-logback-encoder</artifactId>
-            	<version>8.0</version>
+            </dependency>
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>8.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -51,12 +51,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-			<dependency>
-				<groupId>io.micrometer</groupId>
-				<artifactId>micrometer-bom</artifactId>
-				<version>1.13.6</version>
-				<type>pom</type>
-			</dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-bom</artifactId>
+                <version>1.13.6</version>
+                <type>pom</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -72,23 +72,23 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-		<!-- Spring Boot Actuator for exposing metrics -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
+        <!-- Spring Boot Actuator for exposing metrics -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
 
-		<!-- Micrometer registry of your choice, for example Prometheus -->
-		<dependency>
-			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-registry-prometheus</artifactId>
-		</dependency>
+        <!-- Micrometer registry of your choice, for example Prometheus -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
 
-		<!-- Optional: OpenTelemetry integration -->
-		<dependency>
-			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-registry-otlp</artifactId>
-		</dependency>
+        <!-- Optional: OpenTelemetry integration -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-otlp</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.kafka</groupId>
@@ -147,11 +147,11 @@
 
         <!-- Code gen  -->
 
-<!--        <dependency>-->
-<!--            <groupId>org.jooq</groupId>-->
-<!--            <artifactId>jooq</artifactId>-->
-<!--            <version>3.18.0</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.jooq</groupId>-->
+        <!--            <artifactId>jooq</artifactId>-->
+        <!--            <version>3.18.0</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-meta</artifactId>
@@ -161,6 +161,13 @@
             <groupId>org.jooq</groupId>
             <artifactId>jooq-codegen</artifactId>
             <version>3.19.7</version>
+        </dependency>
+
+        <!-- Template engine (Dynamic query)  -->
+        <dependency>
+            <groupId>com.github.jknack</groupId>
+            <artifactId>handlebars</artifactId>
+            <version>4.2.0</version>
         </dependency>
 
         <!--        -->
@@ -219,22 +226,22 @@
 
     <build>
         <plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<compilerArgs>
-						<arg>-parameters</arg>
-					</compilerArgs>
-				</configuration>
-			</plugin>
-			<plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
                 <executions>
                     <execution>
-    					<id>shade-jar-with-dependencies</id>
+                        <id>shade-jar-with-dependencies</id>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
@@ -242,10 +249,12 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-								    <manifestEntries>
-										<Main-Class>com.salescode.dataintegration.DataIntegrationApplication</Main-Class>
-									</manifestEntries>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>com.salescode.dataintegration.DataIntegrationApplication
+                                        </Main-Class>
+                                    </manifestEntries>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -268,7 +277,7 @@
             <plugin>
                 <groupId>org.jooq</groupId>
                 <artifactId>jooq-codegen-maven</artifactId>
-                <version>3.18.0</version>
+                <version>3.19.7</version>
                 <executions>
                     <execution>
                         <goals>
@@ -285,10 +294,12 @@
                         <password>toor1234</password>
                     </jdbc>
                     <generator>
-                        <name>org.jooq.codegen.DefaultGenerator</name>
+<!--                        <name>org.jooq.codegen.DefaultGenerator</name>-->
                         <database>
                             <name>org.jooq.meta.mysql.MySQLDatabase</name>
                             <inputSchema>ckroot</inputSchema>
+<!--                            <includes>ckroot</includes>-->
+                            <outputSchemaToDefault>true</outputSchemaToDefault>
                             <forcedTypes>
                                 <forcedType>
                                     <userType>com.salescode.channelkart.converters.ActiveStatus</userType>
@@ -305,9 +316,16 @@
                                     <converter>com.salescode.jooq.JsonNodeConverter</converter>
                                     <includeExpression>(.*ATTRIBUTES)|code|domain_values</includeExpression>
                                 </forcedType>
+                                <forcedType>
+                                    <userType>com.salescode.channelkart.converters.EnrichmentPhase</userType>
+                                    <converter>com.salescode.jooq.EnrichmentPhaseConverter</converter>
+                                    <includeExpression>phase</includeExpression>
+                                </forcedType>
                             </forcedTypes>
                         </database>
                         <generate>
+                            <defaultCatalog>false</defaultCatalog>
+                            <defaultSchema>false</defaultSchema>
                             <pojos>true</pojos>
                             <records>false</records>
 <!--                            <fluentSetters>true</fluentSetters>-->

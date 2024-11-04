@@ -1,10 +1,10 @@
-import com.fasterxml.jackson.databind.JsonNode;
-import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.dataintegration.DataIntegrationApplication;
 import com.salescode.dataintegration.scanner.ExternalRegistryScanner;
 import com.salescode.dataintegration.scanner.JarScanner;
+import com.salescode.jooq.generated.tables.CkMetadata;
 import org.jooq.DSLContext;
 import org.jooq.Record;
+import org.jooq.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -13,9 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = DataIntegrationApplication.class)
 public class ExternalRegistryScannerTest1 {
@@ -39,6 +38,17 @@ public class ExternalRegistryScannerTest1 {
     @Test
     public void testLoadClassesFromLob_success() {
         // Mock a profile record from Jooq
+        Class<? extends CkMetadata> entityClass = CkMetadata.class;
+        List<Table<?>> tables = dslContext.meta()
+//                .filterSchemas(s -> s.getName().equals("ckroot"))
+                .getTables();
+        System.out.println(tables);
+        org.jooq.Table<?> table = tables.stream()
+                .filter(t -> t.getName().equalsIgnoreCase(entityClass.getSimpleName().toUpperCase()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Table not found for POJO class: " + entityClass));
+        String tableName = dslContext.render(table);
+
 
         Record profile = dslContext.select()
                 .from("profile")

@@ -9,17 +9,29 @@ import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
-import com.salescode.jooq.generated.Ckroot;
 import com.salescode.jooq.generated.Keys;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import org.jooq.Condition;
+import org.jooq.Field;
+import org.jooq.Name;
+import org.jooq.PlainSQL;
+import org.jooq.QueryPart;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.SQL;
+import org.jooq.Select;
+import org.jooq.Stringly;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -31,7 +43,7 @@ public class Profile extends TableImpl<Record> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>ckroot.profile</code>
+     * The reference instance of <code>profile</code>
      */
     public static final Profile PROFILE = new Profile();
 
@@ -44,136 +56,127 @@ public class Profile extends TableImpl<Record> {
     }
 
     /**
-     * The column <code>ckroot.profile.id</code>.
+     * The column <code>profile.id</code>.
      */
     public final TableField<Record, String> ID = createField(DSL.name("id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>ckroot.profile.active_status</code>.
+     * The column <code>profile.active_status</code>.
      */
     public final TableField<Record, ActiveStatus> ACTIVE_STATUS = createField(DSL.name("active_status"), SQLDataType.VARCHAR(255), this, "", new ActiveStatusConverter());
 
     /**
-     * The column <code>ckroot.profile.active_status_reason</code>.
+     * The column <code>profile.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.profile.created_by</code>.
+     * The column <code>profile.created_by</code>.
      */
     public final TableField<Record, String> CREATED_BY = createField(DSL.name("created_by"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.profile.creation_time</code>.
+     * The column <code>profile.creation_time</code>.
      */
     public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
 
     /**
-     * The column <code>ckroot.profile.extended_attributes</code>.
+     * The column <code>profile.extended_attributes</code>.
      */
     public final TableField<Record, JsonNode> EXTENDED_ATTRIBUTES = createField(DSL.name("extended_attributes"), SQLDataType.JSON, this, "", new JsonNodeConverter());
 
     /**
-     * The column <code>ckroot.profile.hash</code>.
+     * The column <code>profile.hash</code>.
      */
     public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>ckroot.profile.last_modified_time</code>.
+     * The column <code>profile.last_modified_time</code>.
      */
     public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
 
     /**
-     * The column <code>ckroot.profile.lob</code>.
+     * The column <code>profile.lob</code>.
      */
     public final TableField<Record, String> LOB = createField(DSL.name("lob"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.profile.modified_by</code>.
+     * The column <code>profile.modified_by</code>.
      */
     public final TableField<Record, String> MODIFIED_BY = createField(DSL.name("modified_by"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.profile.source</code>.
+     * The column <code>profile.source</code>.
      */
     public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.profile.version</code>.
+     * The column <code>profile.version</code>.
      */
     public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>ckroot.profile.attributes</code>.
+     * The column <code>profile.attributes</code>.
      */
     public final TableField<Record, JsonNode> ATTRIBUTES = createField(DSL.name("attributes"), SQLDataType.JSON, this, "", new JsonNodeConverter());
 
     /**
-     * The column <code>ckroot.profile.implementation</code>.
+     * The column <code>profile.implementation</code>.
      */
     public final TableField<Record, String> IMPLEMENTATION = createField(DSL.name("implementation"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.profile.name</code>.
+     * The column <code>profile.name</code>.
      */
     public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.profile.payload</code>.
+     * The column <code>profile.payload</code>.
      */
     public final TableField<Record, String> PAYLOAD = createField(DSL.name("payload"), SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>ckroot.profile.type</code>.
+     * The column <code>profile.type</code>.
      */
     public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ckroot.profile.location_hierarchy</code>.
+     * The column <code>profile.location_hierarchy</code>.
      */
     public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
 
     /**
-     * The column <code>ckroot.profile.changed</code>.
+     * The column <code>profile.changed</code>.
      */
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private Profile(Name alias, Table<Record> aliased) {
-        this(alias, aliased, null);
+        this(alias, aliased, (Field<?>[]) null, null);
     }
 
-    private Profile(Name alias, Table<Record> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
+    private Profile(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
     }
 
     /**
-     * Create an aliased <code>ckroot.profile</code> table reference
+     * Create an aliased <code>profile</code> table reference
      */
     public Profile(String alias) {
         this(DSL.name(alias), PROFILE);
     }
 
     /**
-     * Create an aliased <code>ckroot.profile</code> table reference
+     * Create an aliased <code>profile</code> table reference
      */
     public Profile(Name alias) {
         this(alias, PROFILE);
     }
 
     /**
-     * Create a <code>ckroot.profile</code> table reference
+     * Create a <code>profile</code> table reference
      */
     public Profile() {
         this(DSL.name("profile"), null);
-    }
-
-    public <O extends Record> Profile(Table<O> child, ForeignKey<O, Record> key) {
-        super(child, key, PROFILE);
-    }
-
-    @Override
-    public Schema getSchema() {
-        return aliased() ? null : Ckroot.CKROOT;
     }
 
     @Override
@@ -223,5 +226,89 @@ public class Profile extends TableImpl<Record> {
     @Override
     public Profile rename(Table<?> name) {
         return new Profile(name.getQualifiedName(), null);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Profile where(Condition condition) {
+        return new Profile(getQualifiedName(), aliased() ? this : null, null, condition);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Profile where(Collection<? extends Condition> conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Profile where(Condition... conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Profile where(Field<Boolean> condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Profile where(SQL condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Profile where(@Stringly.SQL String condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Profile where(@Stringly.SQL String condition, Object... binds) {
+        return where(DSL.condition(condition, binds));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Profile where(@Stringly.SQL String condition, QueryPart... parts) {
+        return where(DSL.condition(condition, parts));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Profile whereExists(Select<?> select) {
+        return where(DSL.exists(select));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Profile whereNotExists(Select<?> select) {
+        return where(DSL.notExists(select));
     }
 }

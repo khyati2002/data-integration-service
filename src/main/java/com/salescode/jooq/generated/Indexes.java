@@ -6,6 +6,7 @@ package com.salescode.jooq.generated;
 
 import com.salescode.jooq.generated.tables.CkOutletDetails;
 import com.salescode.jooq.generated.tables.CkUser;
+
 import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;
@@ -13,7 +14,7 @@ import org.jooq.impl.Internal;
 
 
 /**
- * A class modelling indexes of tables in ckroot.
+ * A class modelling indexes of tables in the default schema.
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Indexes {

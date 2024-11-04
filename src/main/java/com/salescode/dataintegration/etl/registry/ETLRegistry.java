@@ -1,6 +1,10 @@
 package com.salescode.dataintegration.etl.registry;
 
+import com.salescode.channelkart.converters.EnrichmentPhase;
+import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
+import com.salescode.dataintegration.etl.enrichment.Enrichment;
 import com.salescode.dataintegration.etl.interfaces.TypeAwareEtlStep;
+import com.salescode.dataintegration.etl.transformer.AbstractTransformer;
 import com.salescode.dataintegration.etl.transformer.Transformer;
 import com.salescode.dataintegration.scanner.ExternalRegistryScanner;
 import org.springframework.stereotype.Component;
@@ -22,10 +26,21 @@ public class ETLRegistry {
 
     public <T> T getTransformer(String fullyQualifiedClassName) {
         return (T) registry.getOrDefault(TypeAwareEtlStep.EtlType.TRANSFORMER, List.of()).stream()
-                .filter(Transformer.class::isInstance)
-                .map(Transformer.class::cast)
+                .filter(AbstractTransformer.class::isInstance)
+                .map(AbstractTransformer.class::cast)
                 .filter(s -> s.getClass().getName().equals(fullyQualifiedClassName))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("No transformer found for implementation: " + fullyQualifiedClassName));
     }
+
+
+    public <T> T getEnrichment(String fullyQualifiedClassName) {
+        return (T) registry.getOrDefault(TypeAwareEtlStep.EtlType.ENRICHMENT, List.of()).stream()
+                .filter(AbstractEnrichment.class::isInstance)
+                .map(AbstractEnrichment.class::cast)
+                .filter(s -> s.getClass().getName().equals(fullyQualifiedClassName))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("No Enrichment found for implementation: " + fullyQualifiedClassName));
+    }
+
 }

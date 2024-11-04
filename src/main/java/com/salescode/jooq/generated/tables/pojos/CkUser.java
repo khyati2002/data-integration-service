@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -200,588 +201,588 @@ public class CkUser extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.id</code>.
+     * Getter for <code>ck_user.id</code>.
      */
     public String getId() {
         return this.id;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.id</code>.
+     * Setter for <code>ck_user.id</code>.
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.active_status</code>.
+     * Getter for <code>ck_user.active_status</code>.
      */
     public ActiveStatus getActiveStatus() {
         return this.activeStatus;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.active_status</code>.
+     * Setter for <code>ck_user.active_status</code>.
      */
     public void setActiveStatus(ActiveStatus activeStatus) {
         this.activeStatus = activeStatus;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.active_status_reason</code>.
+     * Getter for <code>ck_user.active_status_reason</code>.
      */
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.active_status_reason</code>.
+     * Setter for <code>ck_user.active_status_reason</code>.
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.created_by</code>.
+     * Getter for <code>ck_user.created_by</code>.
      */
     public String getCreatedBy() {
         return this.createdBy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.created_by</code>.
+     * Setter for <code>ck_user.created_by</code>.
      */
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.creation_time</code>.
+     * Getter for <code>ck_user.creation_time</code>.
      */
     public Date getCreationTime() {
         return this.creationTime;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.creation_time</code>.
+     * Setter for <code>ck_user.creation_time</code>.
      */
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.extended_attributes</code>.
+     * Getter for <code>ck_user.extended_attributes</code>.
      */
     public JsonNode getExtendedAttributes() {
         return this.extendedAttributes;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.extended_attributes</code>.
+     * Setter for <code>ck_user.extended_attributes</code>.
      */
     public void setExtendedAttributes(JsonNode extendedAttributes) {
         this.extendedAttributes = extendedAttributes;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.last_modified_time</code>.
+     * Getter for <code>ck_user.last_modified_time</code>.
      */
     public Date getLastModifiedTime() {
         return this.lastModifiedTime;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.last_modified_time</code>.
+     * Setter for <code>ck_user.last_modified_time</code>.
      */
     public void setLastModifiedTime(Date lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.lob</code>.
+     * Getter for <code>ck_user.lob</code>.
      */
     public String getLob() {
         return this.lob;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.lob</code>.
+     * Setter for <code>ck_user.lob</code>.
      */
     public void setLob(String lob) {
         this.lob = lob;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.modified_by</code>.
+     * Getter for <code>ck_user.modified_by</code>.
      */
     public String getModifiedBy() {
         return this.modifiedBy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.modified_by</code>.
+     * Setter for <code>ck_user.modified_by</code>.
      */
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.version</code>.
+     * Getter for <code>ck_user.version</code>.
      */
     public Integer getVersion() {
         return this.version;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.version</code>.
+     * Setter for <code>ck_user.version</code>.
      */
     public void setVersion(Integer version) {
         this.version = version;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.address</code>.
+     * Getter for <code>ck_user.address</code>.
      */
     public String getAddress() {
         return this.address;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.address</code>.
+     * Setter for <code>ck_user.address</code>.
      */
     public void setAddress(String address) {
         this.address = address;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.contact_type</code>.
+     * Getter for <code>ck_user.contact_type</code>.
      */
     public String getContactType() {
         return this.contactType;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.contact_type</code>.
+     * Setter for <code>ck_user.contact_type</code>.
      */
     public void setContactType(String contactType) {
         this.contactType = contactType;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.country_code</code>.
+     * Getter for <code>ck_user.country_code</code>.
      */
     public String getCountryCode() {
         return this.countryCode;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.country_code</code>.
+     * Setter for <code>ck_user.country_code</code>.
      */
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.email</code>.
+     * Getter for <code>ck_user.email</code>.
      */
     public String getEmail() {
         return this.email;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.email</code>.
+     * Setter for <code>ck_user.email</code>.
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.hierarchy</code>.
+     * Getter for <code>ck_user.hierarchy</code>.
      */
     public String getHierarchy() {
         return this.hierarchy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.hierarchy</code>.
+     * Setter for <code>ck_user.hierarchy</code>.
      */
     public void setHierarchy(String hierarchy) {
         this.hierarchy = hierarchy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.last_password_reset_date</code>.
+     * Getter for <code>ck_user.last_password_reset_date</code>.
      */
     public Date getLastPasswordResetDate() {
         return this.lastPasswordResetDate;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.last_password_reset_date</code>.
+     * Setter for <code>ck_user.last_password_reset_date</code>.
      */
     public void setLastPasswordResetDate(Date lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.loginid</code>.
+     * Getter for <code>ck_user.loginid</code>.
      */
     public String getLoginid() {
         return this.loginid;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.loginid</code>.
+     * Setter for <code>ck_user.loginid</code>.
      */
     public void setLoginid(String loginid) {
         this.loginid = loginid;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.mobile</code>.
+     * Getter for <code>ck_user.mobile</code>.
      */
     public String getMobile() {
         return this.mobile;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.mobile</code>.
+     * Setter for <code>ck_user.mobile</code>.
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.name</code>.
+     * Getter for <code>ck_user.name</code>.
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.name</code>.
+     * Setter for <code>ck_user.name</code>.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.password</code>.
+     * Getter for <code>ck_user.password</code>.
      */
     public String getPassword() {
         return this.password;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.password</code>.
+     * Setter for <code>ck_user.password</code>.
      */
     public void setPassword(String password) {
         this.password = password;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.useraccountid</code>.
+     * Getter for <code>ck_user.useraccountid</code>.
      */
     public String getUseraccountid() {
         return this.useraccountid;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.useraccountid</code>.
+     * Setter for <code>ck_user.useraccountid</code>.
      */
     public void setUseraccountid(String useraccountid) {
         this.useraccountid = useraccountid;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.usercontext</code>.
+     * Getter for <code>ck_user.usercontext</code>.
      */
     public String getUsercontext() {
         return this.usercontext;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.usercontext</code>.
+     * Setter for <code>ck_user.usercontext</code>.
      */
     public void setUsercontext(String usercontext) {
         this.usercontext = usercontext;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.webcontext</code>.
+     * Getter for <code>ck_user.webcontext</code>.
      */
     public String getWebcontext() {
         return this.webcontext;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.webcontext</code>.
+     * Setter for <code>ck_user.webcontext</code>.
      */
     public void setWebcontext(String webcontext) {
         this.webcontext = webcontext;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.location_hierarchy</code>.
+     * Getter for <code>ck_user.location_hierarchy</code>.
      */
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.location_hierarchy</code>.
+     * Setter for <code>ck_user.location_hierarchy</code>.
      */
     public void setLocationHierarchy(String locationHierarchy) {
         this.locationHierarchy = locationHierarchy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.source</code>.
+     * Getter for <code>ck_user.source</code>.
      */
     public String getSource() {
         return this.source;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.source</code>.
+     * Setter for <code>ck_user.source</code>.
      */
     public void setSource(String source) {
         this.source = source;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.registered_number</code>.
+     * Getter for <code>ck_user.registered_number</code>.
      */
     public String getRegisteredNumber() {
         return this.registeredNumber;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.registered_number</code>.
+     * Setter for <code>ck_user.registered_number</code>.
      */
     public void setRegisteredNumber(String registeredNumber) {
         this.registeredNumber = registeredNumber;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.facebookpsid</code>.
+     * Getter for <code>ck_user.facebookpsid</code>.
      */
     public String getFacebookpsid() {
         return this.facebookpsid;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.facebookpsid</code>.
+     * Setter for <code>ck_user.facebookpsid</code>.
      */
     public void setFacebookpsid(String facebookpsid) {
         this.facebookpsid = facebookpsid;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.accessible_by</code>.
+     * Getter for <code>ck_user.accessible_by</code>.
      */
     public JSON getAccessibleBy() {
         return this.accessibleBy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.accessible_by</code>.
+     * Setter for <code>ck_user.accessible_by</code>.
      */
     public void setAccessibleBy(JSON accessibleBy) {
         this.accessibleBy = accessibleBy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.hash</code>.
+     * Getter for <code>ck_user.hash</code>.
      */
     public String getHash() {
         return this.hash;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.hash</code>.
+     * Setter for <code>ck_user.hash</code>.
      */
     public void setHash(String hash) {
         this.hash = hash;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.dial_code</code>.
+     * Getter for <code>ck_user.dial_code</code>.
      */
     public String getDialCode() {
         return this.dialCode;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.dial_code</code>.
+     * Setter for <code>ck_user.dial_code</code>.
      */
     public void setDialCode(String dialCode) {
         this.dialCode = dialCode;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.sso_id</code>.
+     * Getter for <code>ck_user.sso_id</code>.
      */
     public String getSsoId() {
         return this.ssoId;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.sso_id</code>.
+     * Setter for <code>ck_user.sso_id</code>.
      */
     public void setSsoId(String ssoId) {
         this.ssoId = ssoId;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.device_id</code>.
+     * Getter for <code>ck_user.device_id</code>.
      */
     public String getDeviceId() {
         return this.deviceId;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.device_id</code>.
+     * Setter for <code>ck_user.device_id</code>.
      */
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.verified</code>.
+     * Getter for <code>ck_user.verified</code>.
      */
     public Byte getVerified() {
         return this.verified;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.verified</code>.
+     * Setter for <code>ck_user.verified</code>.
      */
     public void setVerified(Byte verified) {
         this.verified = verified;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.doa</code>.
+     * Getter for <code>ck_user.doa</code>.
      */
     public Date getDoa() {
         return this.doa;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.doa</code>.
+     * Setter for <code>ck_user.doa</code>.
      */
     public void setDoa(Date doa) {
         this.doa = doa;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.dob</code>.
+     * Getter for <code>ck_user.dob</code>.
      */
     public Date getDob() {
         return this.dob;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.dob</code>.
+     * Setter for <code>ck_user.dob</code>.
      */
     public void setDob(Date dob) {
         this.dob = dob;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.assigned_hierarchy</code>.
+     * Getter for <code>ck_user.assigned_hierarchy</code>.
      */
     public String getAssignedHierarchy() {
         return this.assignedHierarchy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.assigned_hierarchy</code>.
+     * Setter for <code>ck_user.assigned_hierarchy</code>.
      */
     public void setAssignedHierarchy(String assignedHierarchy) {
         this.assignedHierarchy = assignedHierarchy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.changed</code>.
+     * Getter for <code>ck_user.changed</code>.
      */
     public Byte getChanged() {
         return this.changed;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.changed</code>.
+     * Setter for <code>ck_user.changed</code>.
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.blocked</code>.
+     * Getter for <code>ck_user.blocked</code>.
      */
     public Boolean getBlocked() {
         return this.blocked;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.blocked</code>.
+     * Setter for <code>ck_user.blocked</code>.
      */
     public void setBlocked(Boolean blocked) {
         this.blocked = blocked;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.normalized_hierarchy</code>.
+     * Getter for <code>ck_user.normalized_hierarchy</code>.
      */
     public String getNormalizedHierarchy() {
         return this.normalizedHierarchy;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.normalized_hierarchy</code>.
+     * Setter for <code>ck_user.normalized_hierarchy</code>.
      */
     public void setNormalizedHierarchy(String normalizedHierarchy) {
         this.normalizedHierarchy = normalizedHierarchy;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.alternate_id</code>.
+     * Getter for <code>ck_user.alternate_id</code>.
      */
     public String getAlternateId() {
         return this.alternateId;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.alternate_id</code>.
+     * Setter for <code>ck_user.alternate_id</code>.
      */
     public void setAlternateId(String alternateId) {
         this.alternateId = alternateId;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.external_reference_id</code>.
+     * Getter for <code>ck_user.external_reference_id</code>.
      */
     public String getExternalReferenceId() {
         return this.externalReferenceId;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.external_reference_id</code>.
+     * Setter for <code>ck_user.external_reference_id</code>.
      */
     public void setExternalReferenceId(String externalReferenceId) {
         this.externalReferenceId = externalReferenceId;
     }
 
     /**
-     * Getter for <code>ckroot.ck_user.report_password</code>.
+     * Getter for <code>ck_user.report_password</code>.
      */
     public String getReportPassword() {
         return this.reportPassword;
     }
 
     /**
-     * Setter for <code>ckroot.ck_user.report_password</code>.
+     * Setter for <code>ck_user.report_password</code>.
      */
     public void setReportPassword(String reportPassword) {
         this.reportPassword = reportPassword;
