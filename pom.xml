@@ -279,12 +279,12 @@
                 <artifactId>jooq-codegen-maven</artifactId>
                 <version>3.19.7</version>
                 <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <phase>process-classes</phase> <!-- Change the phase to process-classes -->
-                    </execution>
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>generate</goal>-->
+<!--                        </goals>-->
+<!--                        <phase>process-classes</phase> &lt;!&ndash; Change the phase to process-classes &ndash;&gt;-->
+<!--                    </execution>-->
                 </executions>
                 <configuration>
                     <jdbc>
