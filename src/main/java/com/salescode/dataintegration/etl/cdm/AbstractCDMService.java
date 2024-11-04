@@ -4,7 +4,6 @@ import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.dataintegration.etl.cdm.util.ServiceLocator;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -43,5 +42,10 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         } else {
             return EntityUtils.getInstance().generateId(cdmObject, false);
         }
+    }
+
+    @Override
+    public T save(T cdmObject) {
+        return cdmObject;
     }
 }

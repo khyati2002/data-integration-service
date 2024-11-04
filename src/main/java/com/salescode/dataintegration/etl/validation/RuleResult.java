@@ -16,7 +16,7 @@ public class RuleResult {
     private Status status;
     private String message;
     private String errorCode;
-    private RuleInfo rule;
+//    private RuleInfo rule;
 
     @JsonIgnore
     private String exception;

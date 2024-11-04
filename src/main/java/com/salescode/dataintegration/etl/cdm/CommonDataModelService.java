@@ -8,4 +8,5 @@ public interface CommonDataModelService<T extends CommonDataModel> {
 
     public String getKey(T cdmObject);
 
+    public T save(T cdmObject);
 }

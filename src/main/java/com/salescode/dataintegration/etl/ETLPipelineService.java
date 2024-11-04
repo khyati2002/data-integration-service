@@ -81,6 +81,7 @@ public class ETLPipelineService {
                 } else {
                     or.setStatus(OperationResponse.OperationStatus.Failure);
                 }
+
             }
         }
         return transformedObjects;
