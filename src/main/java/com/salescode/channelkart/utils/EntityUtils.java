@@ -104,8 +104,7 @@ public final class EntityUtils {
         CkMetadata metaConfig = metadataRegistry.getMetadataByDomainNameAndType(GET_KEY_QUERY_DOMAIN_NAME, cdmClassName).orElse(null);
         if (metaConfig != null && metaConfig.getDomainValues().get(0).has("query")) {
             String sql = metaConfig.getDomainValues().get(0).get("query").asText();
-            Map<String, Object> params = JSONUtils.getObjectMapper().convertValue(cdmObject, new TypeReference<>() {
-            });
+            Map<String, Object> params = JSONUtils.getObjectMapper().convertValue(cdmObject, new TypeReference<>() {});
             String finalQuery = replaceDynamicKeys(sql, params);
             return dslContext.selectFrom(finalQuery).fetchInto(clazz);
         } else {
@@ -189,7 +188,6 @@ public final class EntityUtils {
     @SneakyThrows
     public CommonDataModel findRecords(Class<? extends CommonDataModel> clazz, CommonDataModel element) {
         ArrayNode dynamicPrimaryKeys = fetchDynamicPrimaryKeys(clazz.getSimpleName());
-        dynamicPrimaryKeys = JSONUtils.getObjectMapper().readValue("[\"id\"]", ArrayNode.class);
         if (!dynamicPrimaryKeys.isEmpty()) {
             return findUniqueRecord(clazz, element, dynamicPrimaryKeys);
         } else {
@@ -223,7 +221,7 @@ public final class EntityUtils {
             return nativeTableNames.get(fullqname);
         }
         TableImpl table = getDSLContextTable(entityClass);
-        String tableName = table.getUnqualifiedName().toString();
+        String tableName = table.getName();
         if (org.apache.commons.lang3.StringUtils.isNotBlank(tableName)) {
             nativeTableNames.put(fullqname, tableName);
         }
@@ -255,7 +253,7 @@ public final class EntityUtils {
         buffer1.append(buffer2);
 //        Query sqlquery = entitymanager.createNativeQuery(buffer1.toString(), clazz);
         try {
-            return (CommonDataModel) dslContext.selectFrom(buffer1.toString()).fetchOneInto(clazz);
+            return (CommonDataModel)  Objects.requireNonNull(dslContext.parser().parseSelect(buffer1.toString())).fetchAnyInto(clazz);
         } catch (NoResultException nr) {
         }
         return null;

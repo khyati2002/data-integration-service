@@ -38,7 +38,6 @@ import org.jooq.TableField;
 import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
-import org.jooq.impl.DefaultDataType;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
@@ -253,17 +252,6 @@ public class CkOutletDetails extends TableImpl<Record> {
      * The column <code>ck_outlet_details.hash</code>.
      */
     public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
-
-    /**
-     * @deprecated Unknown data type. If this is a qualified, user-defined type,
-     * it may have been excluded from code generation. If this is a built-in
-     * type, you can define an explicit {@link org.jooq.Binding} to specify how
-     * this type should be handled. Deprecation can be turned off using
-     * {@literal <deprecationOnUnknownTypes/>} in your code generator
-     * configuration.
-     */
-    @Deprecated
-    public final TableField<Record, Object> COORDINATE = createField(DSL.name("coordinate"), DefaultDataType.getDefaultDataType("\"ckroot\".\"ck_outlet_details_coordinate\""), this, "");
 
     /**
      * The column <code>ck_outlet_details.doo</code>.

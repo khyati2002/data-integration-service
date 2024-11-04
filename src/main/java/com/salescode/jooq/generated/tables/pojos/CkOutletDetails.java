@@ -61,7 +61,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     private JSON accessibleby;
     private JSON accessibleBy;
     private String hash;
-    private Object coordinate;
     private Date doo;
     private String dtype;
     private String hierarchy;
@@ -118,7 +117,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         this.accessibleby = value.accessibleby;
         this.accessibleBy = value.accessibleBy;
         this.hash = value.hash;
-        this.coordinate = value.coordinate;
         this.doo = value.doo;
         this.dtype = value.dtype;
         this.hierarchy = value.hierarchy;
@@ -174,7 +172,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         JSON accessibleby,
         JSON accessibleBy,
         String hash,
-        Object coordinate,
         Date doo,
         String dtype,
         String hierarchy,
@@ -228,7 +225,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         this.accessibleby = accessibleby;
         this.accessibleBy = accessibleBy;
         this.hash = hash;
-        this.coordinate = coordinate;
         this.doo = doo;
         this.dtype = dtype;
         this.hierarchy = hierarchy;
@@ -778,32 +774,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     }
 
     /**
-     * @deprecated Unknown data type. If this is a qualified, user-defined type,
-     * it may have been excluded from code generation. If this is a built-in
-     * type, you can define an explicit {@link org.jooq.Binding} to specify how
-     * this type should be handled. Deprecation can be turned off using
-     * {@literal <deprecationOnUnknownTypes/>} in your code generator
-     * configuration.
-     */
-    @Deprecated
-    public Object getCoordinate() {
-        return this.coordinate;
-    }
-
-    /**
-     * @deprecated Unknown data type. If this is a qualified, user-defined type,
-     * it may have been excluded from code generation. If this is a built-in
-     * type, you can define an explicit {@link org.jooq.Binding} to specify how
-     * this type should be handled. Deprecation can be turned off using
-     * {@literal <deprecationOnUnknownTypes/>} in your code generator
-     * configuration.
-     */
-    @Deprecated
-    public void setCoordinate(Object coordinate) {
-        this.coordinate = coordinate;
-    }
-
-    /**
      * Getter for <code>ck_outlet_details.doo</code>.
      */
     public Date getDoo() {
@@ -1236,12 +1206,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         }
         else if (!this.hash.equals(other.hash))
             return false;
-        if (this.coordinate == null) {
-            if (other.coordinate != null)
-                return false;
-        }
-        else if (!this.coordinate.equals(other.coordinate))
-            return false;
         if (this.doo == null) {
             if (other.doo != null)
                 return false;
@@ -1371,7 +1335,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         result = prime * result + ((this.accessibleby == null) ? 0 : this.accessibleby.hashCode());
         result = prime * result + ((this.accessibleBy == null) ? 0 : this.accessibleBy.hashCode());
         result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.coordinate == null) ? 0 : this.coordinate.hashCode());
         result = prime * result + ((this.doo == null) ? 0 : this.doo.hashCode());
         result = prime * result + ((this.dtype == null) ? 0 : this.dtype.hashCode());
         result = prime * result + ((this.hierarchy == null) ? 0 : this.hierarchy.hashCode());
@@ -1431,7 +1394,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         sb.append(", ").append(accessibleby);
         sb.append(", ").append(accessibleBy);
         sb.append(", ").append(hash);
-        sb.append(", ").append(coordinate);
         sb.append(", ").append(doo);
         sb.append(", ").append(dtype);
         sb.append(", ").append(hierarchy);

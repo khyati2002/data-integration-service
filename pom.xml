@@ -279,12 +279,12 @@
                 <artifactId>jooq-codegen-maven</artifactId>
                 <version>3.19.7</version>
                 <executions>
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>generate</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>process-classes</phase> &lt;!&ndash; Change the phase to process-classes &ndash;&gt;-->
-<!--                    </execution>-->
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-classes</phase> <!-- Change the phase to process-classes -->
+                    </execution>
                 </executions>
                 <configuration>
                     <jdbc>
@@ -320,6 +320,11 @@
                                     <userType>com.salescode.channelkart.converters.EnrichmentPhase</userType>
                                     <converter>com.salescode.jooq.EnrichmentPhaseConverter</converter>
                                     <includeExpression>phase</includeExpression>
+                                </forcedType>
+                                <forcedType>
+                                    <name></name>
+                                    <expression>.*\.COORDINATE</expression>
+                                    <types>POINT</types>
                                 </forcedType>
                             </forcedTypes>
                         </database>

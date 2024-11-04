@@ -19,7 +19,7 @@ public class EnrichmentResult {
     private CkEnrichmentInfo enrichmentInfo;
     private List<? extends CommonDataModel> enrichedData;
 
-    private EnrichmentResult(Status status) {
+    public EnrichmentResult(Status status) {
         this(status, null);
     }
 

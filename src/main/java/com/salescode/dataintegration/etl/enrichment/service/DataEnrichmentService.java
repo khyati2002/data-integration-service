@@ -8,7 +8,6 @@ import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import com.salescode.dataintegration.etl.enrichment.registry.EnrichmentInfoRegistry;
 import com.salescode.dataintegration.etl.registry.ETLRegistry;
 import com.salescode.jooq.generated.tables.pojos.CkEnrichmentInfo;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
