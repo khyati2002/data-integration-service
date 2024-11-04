@@ -63,6 +63,10 @@ public class ETLPipelineService {
                     id = UUID.randomUUID().toString();
                 }
                 CommonDataModel refresh = cdmService.refresh(tempCdm);
+
+                cdmService.save(refresh); // remove
+
+
                 EnrichmentOperationResult enrich = dataEnrichmentService.enrich(refresh, EnrichmentPhase.PRE_VALIDATION);
                 OperationResponse or = new OperationResponse();
                 or.setEnrichment(enrich);
@@ -81,6 +85,7 @@ public class ETLPipelineService {
                 } else {
                     or.setStatus(OperationResponse.OperationStatus.Failure);
                 }
+
 
             }
         }
