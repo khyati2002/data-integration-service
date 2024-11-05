@@ -6,6 +6,7 @@ import com.salescode.dataintegration.etl.enrichment.Enrichment;
 import com.salescode.dataintegration.etl.interfaces.TypeAwareEtlStep;
 import com.salescode.dataintegration.etl.transformer.AbstractTransformer;
 import com.salescode.dataintegration.etl.transformer.Transformer;
+import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
 import com.salescode.dataintegration.scanner.ExternalRegistryScanner;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +42,15 @@ public class ETLRegistry {
                 .filter(s -> s.getClass().getName().equals(fullyQualifiedClassName))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("No Enrichment found for implementation: " + fullyQualifiedClassName));
+    }
+
+    public <T> T getValidationRule(String fullyQualifiedClassName) {
+        return (T) registry.getOrDefault(TypeAwareEtlStep.EtlType.VALIDATION, List.of()).stream()
+                .filter(AbstractValidationRule.class::isInstance)
+                .map(AbstractValidationRule.class::cast)
+                .filter(s -> s.getClass().getName().equals(fullyQualifiedClassName))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("No Validation Rule found for implementation: " + fullyQualifiedClassName));
     }
 
 }

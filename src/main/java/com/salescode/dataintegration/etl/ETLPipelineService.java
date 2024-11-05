@@ -14,6 +14,9 @@ import com.salescode.dataintegration.etl.enrichment.EnrichmentOperationResult;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import com.salescode.dataintegration.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dataintegration.etl.transformer.service.DataTransformationService;
+import com.salescode.dataintegration.etl.validation.ValidationResult;
+import com.salescode.dataintegration.etl.validation.service.DataEntityValidationService;
+import com.salescode.dataintegration.etl.validation.service.DataValidationService;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +29,15 @@ public class ETLPipelineService {
 
     private final DataTransformationService dataTransformationService;
     private final DataEnrichmentService dataEnrichmentService;
+    private final DataValidationService dataValidationService;
+    private final DataEntityValidationService dataEntityValidationService;
     ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
-    public ETLPipelineService(DataTransformationService dataTransformationService, DataEnrichmentService dataEnrichmentService) {
+    public ETLPipelineService(DataTransformationService dataTransformationService, DataEnrichmentService dataEnrichmentService, DataValidationService dataValidationService, DataEntityValidationService dataEntityValidationService) {
         this.dataTransformationService = dataTransformationService;
         this.dataEnrichmentService = dataEnrichmentService;
+        this.dataValidationService = dataValidationService;
+        this.dataEntityValidationService = dataEntityValidationService;
     }
 
     @SneakyThrows
@@ -53,7 +60,7 @@ public class ETLPipelineService {
         for (StreamingRawData.TransformerInfoRequest transformerInfo : transformerInfos) {
             String transformerId = transformerInfo.getTransformerId();
             String entityName = transformerInfo.getEntityName();
-            JsonNode jsonNode = streamingRawData.getFeatures().get(0); // Only one feature per execution
+            JsonNode jsonNode = streamingRawData.getFeatures().get(0);
             Class<? extends CommonDataModel> entityClass = EntityUtils.getInstance().getEntityClass(transformerInfo.getEntityName());
             CommonDataModelService cdmService = ServiceLocator.lookup(entityClass);
             List<? extends CommonDataModel> cdms = dataTransformationService.transformData(transformerId, entityName, jsonNode);
@@ -63,25 +70,31 @@ public class ETLPipelineService {
                     id = UUID.randomUUID().toString();
                 }
                 CommonDataModel refresh = cdmService.refresh(tempCdm);
-                EnrichmentOperationResult enrich = dataEnrichmentService.enrich(refresh, EnrichmentPhase.PRE_VALIDATION);
                 OperationResponse or = new OperationResponse();
+                EnrichmentOperationResult enrich = dataEnrichmentService.enrich(refresh, EnrichmentPhase.PRE_VALIDATION);
                 or.setEnrichment(enrich);
                 List<CommonDataModel> enrichedData = enrich.getEnrichedData();
                 boolean cStatus = enrich.getStatus().equals(EnrichmentResult.Status.OK);
-                for (CommonDataModel cdm : enrichedData) {
-                    if (cStatus) {
-                        EnrichmentOperationResult erPost = dataEnrichmentService.enrich(cdm, EnrichmentPhase.POST_VALIDATION);
-                        cStatus = erPost.getStatus().equals(EnrichmentResult.Status.OK);
-                        or.getEnrichment().setStatus(erPost.getStatus());
-                        or.getEnrichment().getEnrichmentResults().addAll(erPost.getEnrichmentResults());
-                    }
+                if (cStatus) {
+                    ValidationResult vr = dataValidationService.validate(enrichedData);
+                    or.setValidation(vr);
+                    cStatus = vr.getStatus().equals(ValidationResult.Status.OK);
+                }
+                if (cStatus) {
+                    ValidationResult vr = dataEntityValidationService.validate(enrichedData);
+                    or.setEntityValidation(vr);
+                    cStatus = vr.getStatus().equals(ValidationResult.Status.OK);
+                }
+                if (cStatus) {
+                    EnrichmentOperationResult erPost = dataEnrichmentService.enrich(enrichedData, EnrichmentPhase.POST_VALIDATION);
+                    or.getEnrichment().merge(erPost);
+                    cStatus = erPost.getStatus().equals(EnrichmentResult.Status.OK);
                 }
                 if (cStatus) {
                     or.setStatus(OperationResponse.OperationStatus.Success);
                 } else {
                     or.setStatus(OperationResponse.OperationStatus.Failure);
                 }
-                // enrichment data for post validation not set
             }
         }
         return transformedObjects;

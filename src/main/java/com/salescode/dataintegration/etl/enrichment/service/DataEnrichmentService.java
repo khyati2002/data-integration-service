@@ -41,11 +41,23 @@ public class DataEnrichmentService {
      * @return the result of the enrichment operation
      */
     public EnrichmentOperationResult enrich(CommonDataModel cdm, EnrichmentPhase phase) {
-        List<CkEnrichmentInfo> enrichmentRules = fetchEnrichmentRules(cdm.getClass().getSimpleName(), phase);
-
         List<CommonDataModel> currentDataModels = new ArrayList<>(List.of(cdm));
-        List<EnrichmentResult> allEnrichmentResults = new ArrayList<>();
+        return enrich(currentDataModels, phase);
+    }
 
+    /**
+     * Enriches the given list of CommonDataModels based on the specified EnrichmentPhase.
+     *
+     * @param currentDataModels the list of data models to enrich
+     * @param phase             the enrichment phase
+     * @return a list of enrichment operation results
+     */
+    public EnrichmentOperationResult enrich(List<CommonDataModel> currentDataModels, EnrichmentPhase phase) {
+        if (currentDataModels == null || currentDataModels.isEmpty()) {
+            return new EnrichmentOperationResult(Status.OK, currentDataModels);
+        }
+        List<EnrichmentResult> allEnrichmentResults = new ArrayList<>();
+        List<CkEnrichmentInfo> enrichmentRules = fetchEnrichmentRules(currentDataModels.get(0).getClass().getSimpleName(), phase);
         for (CkEnrichmentInfo rule : enrichmentRules) {
             List<EnrichmentResult> enrichmentResults = applyRuleToDataModels(rule, currentDataModels);
             List<CommonDataModel> currentCDMS = extractEnrichedDataModels(enrichmentResults);
@@ -58,6 +70,7 @@ public class DataEnrichmentService {
         operationResult.setEnrichedData(currentDataModels);
         return operationResult;
     }
+
 
     /**
      * Fetches and sorts enrichment rules applicable to the data model and phase.
@@ -148,15 +161,10 @@ public class DataEnrichmentService {
         try {
             AbstractEnrichment<CommonDataModel> enrichment = etlRegistry.getEnrichment(enrichmentInfo.getImplementation());
             enrichment.setEnrichmentInfo(enrichmentInfo);
-            EnrichmentResult result = enrichment.apply(cdm);
-            result.setEnrichmentInfo(enrichmentInfo);
-            return result;
+            return enrichment.apply(cdm);
         } catch (Exception e) {
-            logger.error("Error applying enrichment '{}': {}", enrichmentInfo.getImplementation(), e.getMessage(), e);
 //            cdm.addPreProcessPipelineException(ExceptionUtils.getStackTrace(e));
-            EnrichmentResult errorResult = new EnrichmentResult(Status.ERROR, ERROR_MESSAGE, e.getMessage());
-            errorResult.setEnrichmentInfo(enrichmentInfo);
-            return errorResult;
+            return new EnrichmentResult(Status.ERROR, ERROR_MESSAGE + e.getMessage());
         }
     }
 

@@ -72,7 +72,7 @@ public final class EntityUtils {
     }
 
     @SneakyThrows
-    private static <T extends CommonDataModel> TableImpl getDSLContextTable(Class<T> entityClass) {
+    public <T extends CommonDataModel> TableImpl getDSLContextTable(Class<T> entityClass) {
         Field ckOutletDetails = Arrays.stream(Tables.class.getFields()).filter(s -> s.getType().getSimpleName().equals(entityClass.getSimpleName())).findAny().orElseThrow();
         ckOutletDetails.setAccessible(true);
         TableImpl table = (TableImpl) ckOutletDetails.get(null);

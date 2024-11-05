@@ -1,6 +1,5 @@
 package com.salescode.dataintegration.etl;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.channelkart.utils.EntityUtils;
@@ -19,7 +18,6 @@ import lombok.SneakyThrows;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;

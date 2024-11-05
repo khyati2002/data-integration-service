@@ -155,12 +155,10 @@
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-meta</artifactId>
-            <version>3.19.11</version>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-codegen</artifactId>
-            <version>3.19.7</version>
         </dependency>
 
         <!-- Template engine (Dynamic query)  -->
@@ -171,6 +169,11 @@
         </dependency>
 
         <!--        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -187,14 +190,8 @@
             <version>3.27.0-GA</version>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -206,6 +203,21 @@
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
             <version>2.2</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>javax.validation</groupId>-->
+<!--            <artifactId>validation-api</artifactId>-->
+<!--            <version>2.0.1.Final</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate.validator</groupId>-->
+<!--            <artifactId>hibernate-validator</artifactId>-->
+<!--            <version>8.0.1.Final</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator-annotation-processor</artifactId>
+            <version>6.0.11.Final</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -279,12 +291,12 @@
                 <artifactId>jooq-codegen-maven</artifactId>
                 <version>3.19.7</version>
                 <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <phase>process-classes</phase> <!-- Change the phase to process-classes -->
-                    </execution>
+                    <!--                    <execution>-->
+                    <!--                        <goals>-->
+                    <!--                            <goal>generate</goal>-->
+                    <!--                        </goals>-->
+                    <!--                        <phase>process-classes</phase> &lt;!&ndash; Change the phase to process-classes &ndash;&gt;-->
+                    <!--                    </execution>-->
                 </executions>
                 <configuration>
                     <jdbc>
@@ -294,11 +306,11 @@
                         <password>toor1234</password>
                     </jdbc>
                     <generator>
-<!--                        <name>org.jooq.codegen.DefaultGenerator</name>-->
+                        <!--                        <name>org.jooq.codegen.DefaultGenerator</name>-->
                         <database>
                             <name>org.jooq.meta.mysql.MySQLDatabase</name>
                             <inputSchema>ckroot</inputSchema>
-<!--                            <includes>ckroot</includes>-->
+                            <!--                            <includes>ckroot</includes>-->
                             <outputSchemaToDefault>true</outputSchemaToDefault>
                             <forcedTypes>
                                 <forcedType>
@@ -330,10 +342,29 @@
                         </database>
                         <generate>
                             <defaultCatalog>false</defaultCatalog>
-                            <defaultSchema>false</defaultSchema>
+                            <defaultSchema>true</defaultSchema>
                             <pojos>true</pojos>
                             <records>false</records>
-<!--                            <fluentSetters>true</fluentSetters>-->
+                            <generatedAnnotation>true</generatedAnnotation>
+                            <generatedAnnotationType>JAVAX_ANNOTATION_PROCESSING_GENERATED</generatedAnnotationType>
+                            <generatedAnnotationDate>true</generatedAnnotationDate>
+                            <generatedAnnotationJooqVersion>true</generatedAnnotationJooqVersion>
+                            <nullableAnnotation>true</nullableAnnotation>
+                            <nullableAnnotationType>javax.annotation.Nullable</nullableAnnotationType>
+                            <nonnullAnnotation>true</nonnullAnnotation>
+                            <nonnullAnnotationType>javax.annotation.Nonnull</nonnullAnnotationType>
+
+                            <!--                            <jpaAnnotations>true</jpaAnnotations>-->
+                            <!--                            <jpaVersion>${project.parent.version}}</jpaVersion>-->
+                            <validationAnnotations>true</validationAnnotations>
+                            <springAnnotations>true</springAnnotations>
+                            <springDao>true</springDao>
+
+                            <constructorPropertiesAnnotation>true</constructorPropertiesAnnotation>
+                            <constructorPropertiesAnnotationOnPojos>true</constructorPropertiesAnnotationOnPojos>
+                            <constructorPropertiesAnnotationOnRecords>true</constructorPropertiesAnnotationOnRecords>
+
+                            <!--                            <fluentSetters>true</fluentSetters>-->
                         </generate>
                         <target>
                             <packageName>com.salescode.jooq.generated</packageName>

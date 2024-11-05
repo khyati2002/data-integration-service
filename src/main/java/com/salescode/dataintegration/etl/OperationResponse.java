@@ -13,7 +13,7 @@ public class OperationResponse {
 
     private EnrichmentOperationResult enrichment;
 
-//    private EntityValidationResult entityValidation;
+    private ValidationResult entityValidation;
 
     private OperationStatus status;
 
