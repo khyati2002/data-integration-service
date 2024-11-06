@@ -291,12 +291,12 @@
                 <artifactId>jooq-codegen-maven</artifactId>
                 <version>3.19.7</version>
                 <executions>
-                    <!--                    <execution>-->
-                    <!--                        <goals>-->
-                    <!--                            <goal>generate</goal>-->
-                    <!--                        </goals>-->
-                    <!--                        <phase>process-classes</phase> &lt;!&ndash; Change the phase to process-classes &ndash;&gt;-->
-                    <!--                    </execution>-->
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-classes</phase> <!-- Change the phase to process-classes -->
+                    </execution>
                 </executions>
                 <configuration>
                     <jdbc>
@@ -345,24 +345,24 @@
                             <defaultSchema>true</defaultSchema>
                             <pojos>true</pojos>
                             <records>false</records>
-                            <generatedAnnotation>true</generatedAnnotation>
-                            <generatedAnnotationType>JAVAX_ANNOTATION_PROCESSING_GENERATED</generatedAnnotationType>
-                            <generatedAnnotationDate>true</generatedAnnotationDate>
-                            <generatedAnnotationJooqVersion>true</generatedAnnotationJooqVersion>
-                            <nullableAnnotation>true</nullableAnnotation>
-                            <nullableAnnotationType>javax.annotation.Nullable</nullableAnnotationType>
-                            <nonnullAnnotation>true</nonnullAnnotation>
-                            <nonnullAnnotationType>javax.annotation.Nonnull</nonnullAnnotationType>
+<!--                            <generatedAnnotation>true</generatedAnnotation>-->
+<!--                            <generatedAnnotationType>JAVAX_ANNOTATION_PROCESSING_GENERATED</generatedAnnotationType>-->
+<!--                            <generatedAnnotationDate>true</generatedAnnotationDate>-->
+<!--                            <generatedAnnotationJooqVersion>true</generatedAnnotationJooqVersion>-->
+<!--                            <nullableAnnotation>true</nullableAnnotation>-->
+<!--                            <nullableAnnotationType>javax.annotation.Nullable</nullableAnnotationType>-->
+<!--                            <nonnullAnnotation>true</nonnullAnnotation>-->
+<!--                            <nonnullAnnotationType>javax.annotation.Nonnull</nonnullAnnotationType>-->
 
                             <!--                            <jpaAnnotations>true</jpaAnnotations>-->
                             <!--                            <jpaVersion>${project.parent.version}}</jpaVersion>-->
                             <validationAnnotations>true</validationAnnotations>
                             <springAnnotations>true</springAnnotations>
-                            <springDao>true</springDao>
+<!--                            <springDao>true</springDao>-->
 
-                            <constructorPropertiesAnnotation>true</constructorPropertiesAnnotation>
-                            <constructorPropertiesAnnotationOnPojos>true</constructorPropertiesAnnotationOnPojos>
-                            <constructorPropertiesAnnotationOnRecords>true</constructorPropertiesAnnotationOnRecords>
+<!--                            <constructorPropertiesAnnotation>true</constructorPropertiesAnnotation>-->
+<!--                            <constructorPropertiesAnnotationOnPojos>true</constructorPropertiesAnnotationOnPojos>-->
+<!--                            <constructorPropertiesAnnotationOnRecords>true</constructorPropertiesAnnotationOnRecords>-->
 
                             <!--                            <fluentSetters>true</fluentSetters>-->
                         </generate>
