@@ -61,41 +61,44 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Spring Boot dependencies -->
+        <!-- Spring Boot Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <!-- Spring Boot Actuator for exposing metrics -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jooq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
 
-        <!-- Micrometer registry of your choice, for example Prometheus -->
+        <!-- Monitoring -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
-
-        <!-- Optional: OpenTelemetry integration -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-otlp</artifactId>
         </dependency>
 
+        <!-- Kafka -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
-
-        <!-- Kafka Client -->
+        
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
@@ -104,15 +107,13 @@
 
         <!-- JOOQ -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jooq</artifactId>
-        </dependency>
-
-        <!-- <dependency>
             <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-            <version>3.18.0</version>
-        </dependency> -->
+            <artifactId>jooq-meta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+        </dependency>
 
         <!-- MySQL Driver -->
         <dependency>
@@ -126,13 +127,15 @@
             <groupId>io.github.resilience4j</groupId>
             <artifactId>resilience4j-spring-boot3</artifactId>
         </dependency>
+
+        <!-- Logging -->
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <version>8.0</version>
         </dependency>
 
-        <!-- Test dependencies -->
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -145,35 +148,13 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Code gen  -->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.jooq</groupId>-->
-        <!--            <artifactId>jooq</artifactId>-->
-        <!--            <version>3.18.0</version>-->
-        <!--        </dependency>-->
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-meta</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-codegen</artifactId>
-        </dependency>
-
-        <!-- Template engine (Dynamic query)  -->
+        <!-- Additional Libraries -->
+        
         <dependency>
             <groupId>com.github.jknack</groupId>
             <artifactId>handlebars</artifactId>
             <version>4.2.0</version>
         </dependency>
-
-        <!--        -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -182,7 +163,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
-            <version>1.8</version>
+            <version>1.11.0</version>
         </dependency>
         <dependency>
             <groupId>org.javassist</groupId>
@@ -204,30 +185,15 @@
             <artifactId>javax.persistence-api</artifactId>
             <version>2.2</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>javax.validation</groupId>-->
-<!--            <artifactId>validation-api</artifactId>-->
-<!--            <version>2.0.1.Final</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate.validator</groupId>-->
-<!--            <artifactId>hibernate-validator</artifactId>-->
-<!--            <version>8.0.1.Final</version>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator-annotation-processor</artifactId>
-            <version>6.0.11.Final</version>
-        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.7</version>
+            <version>2.14.0</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20200518</version>
+            <version>20231013</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -345,24 +311,24 @@
                             <defaultSchema>true</defaultSchema>
                             <pojos>true</pojos>
                             <records>false</records>
-<!--                            <generatedAnnotation>true</generatedAnnotation>-->
-<!--                            <generatedAnnotationType>JAVAX_ANNOTATION_PROCESSING_GENERATED</generatedAnnotationType>-->
-<!--                            <generatedAnnotationDate>true</generatedAnnotationDate>-->
-<!--                            <generatedAnnotationJooqVersion>true</generatedAnnotationJooqVersion>-->
-<!--                            <nullableAnnotation>true</nullableAnnotation>-->
-<!--                            <nullableAnnotationType>javax.annotation.Nullable</nullableAnnotationType>-->
-<!--                            <nonnullAnnotation>true</nonnullAnnotation>-->
-<!--                            <nonnullAnnotationType>javax.annotation.Nonnull</nonnullAnnotationType>-->
+                            <!--                            <generatedAnnotation>true</generatedAnnotation>-->
+                            <!--                            <generatedAnnotationType>JAVAX_ANNOTATION_PROCESSING_GENERATED</generatedAnnotationType>-->
+                            <!--                            <generatedAnnotationDate>true</generatedAnnotationDate>-->
+                            <!--                            <generatedAnnotationJooqVersion>true</generatedAnnotationJooqVersion>-->
+                            <!--                            <nullableAnnotation>true</nullableAnnotation>-->
+                            <!--                            <nullableAnnotationType>javax.annotation.Nullable</nullableAnnotationType>-->
+                            <!--                            <nonnullAnnotation>true</nonnullAnnotation>-->
+                            <!--                            <nonnullAnnotationType>javax.annotation.Nonnull</nonnullAnnotationType>-->
 
                             <!--                            <jpaAnnotations>true</jpaAnnotations>-->
                             <!--                            <jpaVersion>${project.parent.version}}</jpaVersion>-->
                             <validationAnnotations>true</validationAnnotations>
                             <springAnnotations>true</springAnnotations>
-<!--                            <springDao>true</springDao>-->
+                            <!--                            <springDao>true</springDao>-->
 
-<!--                            <constructorPropertiesAnnotation>true</constructorPropertiesAnnotation>-->
-<!--                            <constructorPropertiesAnnotationOnPojos>true</constructorPropertiesAnnotationOnPojos>-->
-<!--                            <constructorPropertiesAnnotationOnRecords>true</constructorPropertiesAnnotationOnRecords>-->
+                            <!--                            <constructorPropertiesAnnotation>true</constructorPropertiesAnnotation>-->
+                            <!--                            <constructorPropertiesAnnotationOnPojos>true</constructorPropertiesAnnotationOnPojos>-->
+                            <!--                            <constructorPropertiesAnnotationOnRecords>true</constructorPropertiesAnnotationOnRecords>-->
 
                             <!--                            <fluentSetters>true</fluentSetters>-->
                         </generate>
