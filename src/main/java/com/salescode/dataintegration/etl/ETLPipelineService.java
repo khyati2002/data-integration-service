@@ -50,6 +50,7 @@ public class ETLPipelineService {
         for (JsonNode jsonNode : streamingRawData.getFeatures()) {
             streamingRawData.setFeatures(objectMapper.createArrayNode().add(jsonNode));
             List<CommonDataModel> process = process(streamingRawData);
+
         }
         streamingRawData.setFeatures(features);
     }
@@ -69,6 +70,7 @@ public class ETLPipelineService {
                 if (id == null) {
                     id = UUID.randomUUID().toString();
                 }
+                cdmService.save(tempCdm);
                 CommonDataModel refresh = cdmService.refresh(tempCdm);
                 OperationResponse or = new OperationResponse();
                 EnrichmentOperationResult enrich = dataEnrichmentService.enrich(refresh, EnrichmentPhase.PRE_VALIDATION);
