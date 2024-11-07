@@ -3,6 +3,7 @@ package com.salescode.dataintegration.etl.cdm.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.salescode.channelkart.utils.TimerUtils;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
+import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
 import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
 import com.salescode.jooq.generated.tables.pojos.CkUser;
 import org.apache.commons.lang.StringUtils;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.salescode.jooq.generated.tables.CkOutletDetails.CK_OUTLET_DETAILS;
+import static com.salescode.jooq.generated.tables.CkHierarchyMetadata.CK_HIERARCHY_METADATA;
 
 @Service
 public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
@@ -36,10 +38,11 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         printLogsForNullHierarchy(cdmObject,"Location null before prepare outlet details");
         CkOutletDetails tempoutlet = TimerUtils.withTime("Time taken to prepareOutletDetails record ",
                 k -> prepareOutletDetails(cdmObject));
-        List<CkHierarchyMetaData> immediateParents = tempoutlet.getImmediateParent();
+
+        List<CkHierarchyMetadata> immediateParents = tempoutlet.getImmediateParent();
         if (immediateParents != null && !immediateParents.isEmpty()) {
-            List<CkHierarchyMetaData> existingMetadata = new ArrayList<>();
-            List<CkHierarchyMetaData> newMetadata = new ArrayList<>();
+            List<CkHierarchyMetadata> existingMetadata = new ArrayList<>();
+            List<CkHierarchyMetadata> newMetadata = new ArrayList<>();
             for (CkHierarchyMetaData hierarchyMetadata : immediateParents) {
                 populateHierarchy(hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
             }
