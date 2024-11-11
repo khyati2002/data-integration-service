@@ -233,8 +233,6 @@ public final class EntityUtils {
     }
 
     public CommonDataModel findUniqueRecord(Class<? extends CommonDataModel> clazz, CommonDataModel element, ArrayNode columnArr) {
-        String tablename = getTableName(clazz);
-        StringBuilder buffer1 = new StringBuilder(getBaseSQL(tablename));
         StringBuilder buffer2 = new StringBuilder();
 
         String value = "";
@@ -250,10 +248,9 @@ public final class EntityUtils {
             }
         }
         buffer2.append("id").append("=").append("'").append(StringUtils.escapeSql(checkGenerateMD5Hash(clazz.getSimpleName()) ? EncodingUtils.getMd5(value) : value)).append("'");
-        buffer1.append(buffer2);
 //        Query sqlquery = entitymanager.createNativeQuery(buffer1.toString(), clazz);
         try {
-            return (CommonDataModel)  Objects.requireNonNull(dslContext.parser().parseSelect(buffer1.toString())).fetchAnyInto(clazz);
+            return (CommonDataModel)  Objects.requireNonNull(dslContext.selectFrom(getDSLContextTable(clazz)).where(buffer2.toString())).fetchAnyInto(clazz);
         } catch (NoResultException nr) {
         }
         return null;
