@@ -4,13 +4,13 @@ import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.JSONUtils;
-import com.salescode.dataintegration.DataIntegrationApplication;
 import com.salescode.dataintegration.etl.enrichment.registry.EnrichmentInfoRegistry;
 import com.salescode.dataintegration.etl.impl.TestEnrichment;
 import com.salescode.dataintegration.etl.impl.TestTransformer;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.dataintegration.etl.registry.ETLRegistry;
 import com.salescode.dataintegration.etl.transformer.registry.TransformerInfoRegistry;
+import com.salescode.dis.FlinkApplication;
 import com.salescode.jooq.generated.tables.pojos.CkEnrichmentInfo;
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
 import com.salescode.jooq.generated.tables.pojos.CkTransformerInfo;
@@ -20,23 +20,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
 
-@SpringBootTest(classes = DataIntegrationApplication.class)
+@SpringBootTest(classes = FlinkApplication.class)
 class ETLPipelineServiceTest {
 
     @Autowired DSLContext dslContext;
     @Autowired ETLPipelineService etlPipelineService;
-    @Autowired @MockitoSpyBean MetadataRegistry metadataRegistry;
-    @Autowired @MockitoSpyBean TransformerInfoRegistry transformerInfoRegistry;
-    @Autowired @MockitoSpyBean EnrichmentInfoRegistry enrichmentInfoRegistry;
-    @Autowired @MockitoSpyBean ETLRegistry etlRegistry;
+    @Autowired @SpyBean MetadataRegistry metadataRegistry;
+    @Autowired @SpyBean TransformerInfoRegistry transformerInfoRegistry;
+    @Autowired @SpyBean EnrichmentInfoRegistry enrichmentInfoRegistry;
+    @Autowired @SpyBean ETLRegistry etlRegistry;
     @Autowired EntityUtils entityUtils;
 
     @BeforeEach
@@ -62,24 +61,23 @@ class ETLPipelineServiceTest {
 
     @Test
     void execute() {
-        etlPipelineService.execute("""
-                {
-                    "groupId": "USR000008",
-                    "lob": "mondelezckinduat",
-                    "transformerInfo": [
-                        {
-                            "entityName": "CkOutletDetails",
-                            "operationType": "insert",
-                            "transformerId": "testId"
-                        }
-                    ],
-                    "preserveOnFailure": true,
-                    "features": [
-                        {
-                            "outletcode": 1076573
-                        }
-                    ]
-                }""");
+        etlPipelineService.execute(" {\n" +
+                "                    \"groupId\": \"USR000008\",\n" +
+                "                    \"lob\": \"mondelezckinduat\",\n" +
+                "                    \"transformerInfo\": [\n" +
+                "                        {\n" +
+                "                            \"entityName\": \"CkOutletDetails\",\n" +
+                "                            \"operationType\": \"insert\",\n" +
+                "                            \"transformerId\": \"testId\"\n" +
+                "                        }\n" +
+                "                    ],\n" +
+                "                    \"preserveOnFailure\": true,\n" +
+                "                    \"features\": [\n" +
+                "                        {\n" +
+                "                            \"outletcode\": 1076573\n" +
+                "                        }\n" +
+                "                    ]\n" +
+                "                }");
     }
 
 

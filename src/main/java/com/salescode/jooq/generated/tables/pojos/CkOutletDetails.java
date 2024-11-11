@@ -7,15 +7,13 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -26,58 +24,58 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String account;
-    private String address;
-    private String beat;
-    private String beatName;
-    private String channel;
-    private String contactName;
-    private String contactno;
-    private String displayAddress;
-    private String frequency;
-    private String gstNo;
-    private Date lastOrderDate;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
-    private Boolean mapped;
-    private String marketId;
-    private String marketName;
-    private String outletCategory;
-    private String outletClass;
-    private String outletcode;
-    private String outletName;
-    private String outletType;
-    private String tinNo;
-    private String locationHierarchy;
-    private String loginid;
-    private JSON accessibleby;
-    private JSON accessibleBy;
-    private String hash;
-    private Date doo;
-    private String dtype;
-    private String hierarchy;
-    private Byte changed;
-    private String distributionChannel;
-    private String outletDivision;
-    private String soldTo;
-    private String subChannel;
-    private String subTerritory;
-    private String blobKey;
-    private String email;
-    private String controlGroup;
-    private String normalizedHierarchy;
-    private String priceListId;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       account;
+    private String       address;
+    private String       beat;
+    private String       beatName;
+    private String       channel;
+    private String       contactName;
+    private String       contactno;
+    private String       displayAddress;
+    private String       frequency;
+    private String       gstNo;
+    private Date         lastOrderDate;
+    private BigDecimal   latitude;
+    private BigDecimal   longitude;
+    private Boolean      mapped;
+    private String       marketId;
+    private String       marketName;
+    private String       outletCategory;
+    private String       outletClass;
+    private String       outletcode;
+    private String       outletName;
+    private String       outletType;
+    private String       tinNo;
+    private String       locationHierarchy;
+    private String       loginid;
+    private JSON         accessibleby;
+    private JSON         accessibleBy;
+    private String       hash;
+    private Date         doo;
+    private String       dtype;
+    private String       hierarchy;
+    private Byte         changed;
+    private String       distributionChannel;
+    private String       outletDivision;
+    private String       soldTo;
+    private String       subChannel;
+    private String       subTerritory;
+    private String       blobKey;
+    private String       email;
+    private String       controlGroup;
+    private String       normalizedHierarchy;
+    private String       priceListId;
 
     public CkOutletDetails() {}
 
@@ -137,58 +135,58 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     }
 
     public CkOutletDetails(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String account,
-        String address,
-        String beat,
-        String beatName,
-        String channel,
-        String contactName,
-        String contactno,
-        String displayAddress,
-        String frequency,
-        String gstNo,
-        Date lastOrderDate,
-        BigDecimal latitude,
-        BigDecimal longitude,
-        Boolean mapped,
-        String marketId,
-        String marketName,
-        String outletCategory,
-        String outletClass,
-        String outletcode,
-        String outletName,
-        String outletType,
-        String tinNo,
-        String locationHierarchy,
-        String loginid,
-        JSON accessibleby,
-        JSON accessibleBy,
-        String hash,
-        Date doo,
-        String dtype,
-        String hierarchy,
-        Byte changed,
-        String distributionChannel,
-        String outletDivision,
-        String soldTo,
-        String subChannel,
-        String subTerritory,
-        String blobKey,
-        String email,
-        String controlGroup,
-        String normalizedHierarchy,
-        String priceListId
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       account,
+        String       address,
+        String       beat,
+        String       beatName,
+        String       channel,
+        String       contactName,
+        String       contactno,
+        String       displayAddress,
+        String       frequency,
+        String       gstNo,
+        Date         lastOrderDate,
+        BigDecimal   latitude,
+        BigDecimal   longitude,
+        Boolean      mapped,
+        String       marketId,
+        String       marketName,
+        String       outletCategory,
+        String       outletClass,
+        String       outletcode,
+        String       outletName,
+        String       outletType,
+        String       tinNo,
+        String       locationHierarchy,
+        String       loginid,
+        JSON         accessibleby,
+        JSON         accessibleBy,
+        String       hash,
+        Date         doo,
+        String       dtype,
+        String       hierarchy,
+        Byte         changed,
+        String       distributionChannel,
+        String       outletDivision,
+        String       soldTo,
+        String       subChannel,
+        String       subTerritory,
+        String       blobKey,
+        String       email,
+        String       controlGroup,
+        String       normalizedHierarchy,
+        String       priceListId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -1011,389 +1009,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
      */
     public void setPriceListId(String priceListId) {
         this.priceListId = priceListId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkOutletDetails other = (CkOutletDetails) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.account == null) {
-            if (other.account != null)
-                return false;
-        }
-        else if (!this.account.equals(other.account))
-            return false;
-        if (this.address == null) {
-            if (other.address != null)
-                return false;
-        }
-        else if (!this.address.equals(other.address))
-            return false;
-        if (this.beat == null) {
-            if (other.beat != null)
-                return false;
-        }
-        else if (!this.beat.equals(other.beat))
-            return false;
-        if (this.beatName == null) {
-            if (other.beatName != null)
-                return false;
-        }
-        else if (!this.beatName.equals(other.beatName))
-            return false;
-        if (this.channel == null) {
-            if (other.channel != null)
-                return false;
-        }
-        else if (!this.channel.equals(other.channel))
-            return false;
-        if (this.contactName == null) {
-            if (other.contactName != null)
-                return false;
-        }
-        else if (!this.contactName.equals(other.contactName))
-            return false;
-        if (this.contactno == null) {
-            if (other.contactno != null)
-                return false;
-        }
-        else if (!this.contactno.equals(other.contactno))
-            return false;
-        if (this.displayAddress == null) {
-            if (other.displayAddress != null)
-                return false;
-        }
-        else if (!this.displayAddress.equals(other.displayAddress))
-            return false;
-        if (this.frequency == null) {
-            if (other.frequency != null)
-                return false;
-        }
-        else if (!this.frequency.equals(other.frequency))
-            return false;
-        if (this.gstNo == null) {
-            if (other.gstNo != null)
-                return false;
-        }
-        else if (!this.gstNo.equals(other.gstNo))
-            return false;
-        if (this.lastOrderDate == null) {
-            if (other.lastOrderDate != null)
-                return false;
-        }
-        else if (!this.lastOrderDate.equals(other.lastOrderDate))
-            return false;
-        if (this.latitude == null) {
-            if (other.latitude != null)
-                return false;
-        }
-        else if (!this.latitude.equals(other.latitude))
-            return false;
-        if (this.longitude == null) {
-            if (other.longitude != null)
-                return false;
-        }
-        else if (!this.longitude.equals(other.longitude))
-            return false;
-        if (this.mapped == null) {
-            if (other.mapped != null)
-                return false;
-        }
-        else if (!this.mapped.equals(other.mapped))
-            return false;
-        if (this.marketId == null) {
-            if (other.marketId != null)
-                return false;
-        }
-        else if (!this.marketId.equals(other.marketId))
-            return false;
-        if (this.marketName == null) {
-            if (other.marketName != null)
-                return false;
-        }
-        else if (!this.marketName.equals(other.marketName))
-            return false;
-        if (this.outletCategory == null) {
-            if (other.outletCategory != null)
-                return false;
-        }
-        else if (!this.outletCategory.equals(other.outletCategory))
-            return false;
-        if (this.outletClass == null) {
-            if (other.outletClass != null)
-                return false;
-        }
-        else if (!this.outletClass.equals(other.outletClass))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.outletName == null) {
-            if (other.outletName != null)
-                return false;
-        }
-        else if (!this.outletName.equals(other.outletName))
-            return false;
-        if (this.outletType == null) {
-            if (other.outletType != null)
-                return false;
-        }
-        else if (!this.outletType.equals(other.outletType))
-            return false;
-        if (this.tinNo == null) {
-            if (other.tinNo != null)
-                return false;
-        }
-        else if (!this.tinNo.equals(other.tinNo))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.accessibleby == null) {
-            if (other.accessibleby != null)
-                return false;
-        }
-        else if (!this.accessibleby.equals(other.accessibleby))
-            return false;
-        if (this.accessibleBy == null) {
-            if (other.accessibleBy != null)
-                return false;
-        }
-        else if (!this.accessibleBy.equals(other.accessibleBy))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.doo == null) {
-            if (other.doo != null)
-                return false;
-        }
-        else if (!this.doo.equals(other.doo))
-            return false;
-        if (this.dtype == null) {
-            if (other.dtype != null)
-                return false;
-        }
-        else if (!this.dtype.equals(other.dtype))
-            return false;
-        if (this.hierarchy == null) {
-            if (other.hierarchy != null)
-                return false;
-        }
-        else if (!this.hierarchy.equals(other.hierarchy))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.distributionChannel == null) {
-            if (other.distributionChannel != null)
-                return false;
-        }
-        else if (!this.distributionChannel.equals(other.distributionChannel))
-            return false;
-        if (this.outletDivision == null) {
-            if (other.outletDivision != null)
-                return false;
-        }
-        else if (!this.outletDivision.equals(other.outletDivision))
-            return false;
-        if (this.soldTo == null) {
-            if (other.soldTo != null)
-                return false;
-        }
-        else if (!this.soldTo.equals(other.soldTo))
-            return false;
-        if (this.subChannel == null) {
-            if (other.subChannel != null)
-                return false;
-        }
-        else if (!this.subChannel.equals(other.subChannel))
-            return false;
-        if (this.subTerritory == null) {
-            if (other.subTerritory != null)
-                return false;
-        }
-        else if (!this.subTerritory.equals(other.subTerritory))
-            return false;
-        if (this.blobKey == null) {
-            if (other.blobKey != null)
-                return false;
-        }
-        else if (!this.blobKey.equals(other.blobKey))
-            return false;
-        if (this.email == null) {
-            if (other.email != null)
-                return false;
-        }
-        else if (!this.email.equals(other.email))
-            return false;
-        if (this.controlGroup == null) {
-            if (other.controlGroup != null)
-                return false;
-        }
-        else if (!this.controlGroup.equals(other.controlGroup))
-            return false;
-        if (this.normalizedHierarchy == null) {
-            if (other.normalizedHierarchy != null)
-                return false;
-        }
-        else if (!this.normalizedHierarchy.equals(other.normalizedHierarchy))
-            return false;
-        if (this.priceListId == null) {
-            if (other.priceListId != null)
-                return false;
-        }
-        else if (!this.priceListId.equals(other.priceListId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
-        result = prime * result + ((this.address == null) ? 0 : this.address.hashCode());
-        result = prime * result + ((this.beat == null) ? 0 : this.beat.hashCode());
-        result = prime * result + ((this.beatName == null) ? 0 : this.beatName.hashCode());
-        result = prime * result + ((this.channel == null) ? 0 : this.channel.hashCode());
-        result = prime * result + ((this.contactName == null) ? 0 : this.contactName.hashCode());
-        result = prime * result + ((this.contactno == null) ? 0 : this.contactno.hashCode());
-        result = prime * result + ((this.displayAddress == null) ? 0 : this.displayAddress.hashCode());
-        result = prime * result + ((this.frequency == null) ? 0 : this.frequency.hashCode());
-        result = prime * result + ((this.gstNo == null) ? 0 : this.gstNo.hashCode());
-        result = prime * result + ((this.lastOrderDate == null) ? 0 : this.lastOrderDate.hashCode());
-        result = prime * result + ((this.latitude == null) ? 0 : this.latitude.hashCode());
-        result = prime * result + ((this.longitude == null) ? 0 : this.longitude.hashCode());
-        result = prime * result + ((this.mapped == null) ? 0 : this.mapped.hashCode());
-        result = prime * result + ((this.marketId == null) ? 0 : this.marketId.hashCode());
-        result = prime * result + ((this.marketName == null) ? 0 : this.marketName.hashCode());
-        result = prime * result + ((this.outletCategory == null) ? 0 : this.outletCategory.hashCode());
-        result = prime * result + ((this.outletClass == null) ? 0 : this.outletClass.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.outletName == null) ? 0 : this.outletName.hashCode());
-        result = prime * result + ((this.outletType == null) ? 0 : this.outletType.hashCode());
-        result = prime * result + ((this.tinNo == null) ? 0 : this.tinNo.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.accessibleby == null) ? 0 : this.accessibleby.hashCode());
-        result = prime * result + ((this.accessibleBy == null) ? 0 : this.accessibleBy.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.doo == null) ? 0 : this.doo.hashCode());
-        result = prime * result + ((this.dtype == null) ? 0 : this.dtype.hashCode());
-        result = prime * result + ((this.hierarchy == null) ? 0 : this.hierarchy.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.distributionChannel == null) ? 0 : this.distributionChannel.hashCode());
-        result = prime * result + ((this.outletDivision == null) ? 0 : this.outletDivision.hashCode());
-        result = prime * result + ((this.soldTo == null) ? 0 : this.soldTo.hashCode());
-        result = prime * result + ((this.subChannel == null) ? 0 : this.subChannel.hashCode());
-        result = prime * result + ((this.subTerritory == null) ? 0 : this.subTerritory.hashCode());
-        result = prime * result + ((this.blobKey == null) ? 0 : this.blobKey.hashCode());
-        result = prime * result + ((this.email == null) ? 0 : this.email.hashCode());
-        result = prime * result + ((this.controlGroup == null) ? 0 : this.controlGroup.hashCode());
-        result = prime * result + ((this.normalizedHierarchy == null) ? 0 : this.normalizedHierarchy.hashCode());
-        result = prime * result + ((this.priceListId == null) ? 0 : this.priceListId.hashCode());
-        return result;
     }
 
     @Override

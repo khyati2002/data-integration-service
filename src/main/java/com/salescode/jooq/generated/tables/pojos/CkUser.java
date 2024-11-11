@@ -7,14 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,48 +23,48 @@ public class CkUser extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private Integer version;
-    private String address;
-    private String contactType;
-    private String countryCode;
-    private String email;
-    private String hierarchy;
-    private Date lastPasswordResetDate;
-    private String loginid;
-    private String mobile;
-    private String name;
-    private String password;
-    private String useraccountid;
-    private String usercontext;
-    private String webcontext;
-    private String locationHierarchy;
-    private String source;
-    private String registeredNumber;
-    private String facebookpsid;
-    private JSON accessibleBy;
-    private String hash;
-    private String dialCode;
-    private String ssoId;
-    private String deviceId;
-    private Byte verified;
-    private Date doa;
-    private Date dob;
-    private String assignedHierarchy;
-    private Byte changed;
-    private Boolean blocked;
-    private String normalizedHierarchy;
-    private String alternateId;
-    private String externalReferenceId;
-    private String reportPassword;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private Integer      version;
+    private String       address;
+    private String       contactType;
+    private String       countryCode;
+    private String       email;
+    private String       hierarchy;
+    private Date         lastPasswordResetDate;
+    private String       loginid;
+    private String       mobile;
+    private String       name;
+    private String       password;
+    private String       useraccountid;
+    private String       usercontext;
+    private String       webcontext;
+    private String       locationHierarchy;
+    private String       source;
+    private String       registeredNumber;
+    private String       facebookpsid;
+    private JSON         accessibleBy;
+    private String       hash;
+    private String       dialCode;
+    private String       ssoId;
+    private String       deviceId;
+    private Byte         verified;
+    private Date         doa;
+    private Date         dob;
+    private String       assignedHierarchy;
+    private Byte         changed;
+    private Boolean      blocked;
+    private String       normalizedHierarchy;
+    private String       alternateId;
+    private String       externalReferenceId;
+    private String       reportPassword;
 
     public CkUser() {}
 
@@ -116,48 +114,48 @@ public class CkUser extends CommonDataModel implements Serializable {
     }
 
     public CkUser(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        Integer version,
-        String address,
-        String contactType,
-        String countryCode,
-        String email,
-        String hierarchy,
-        Date lastPasswordResetDate,
-        String loginid,
-        String mobile,
-        String name,
-        String password,
-        String useraccountid,
-        String usercontext,
-        String webcontext,
-        String locationHierarchy,
-        String source,
-        String registeredNumber,
-        String facebookpsid,
-        JSON accessibleBy,
-        String hash,
-        String dialCode,
-        String ssoId,
-        String deviceId,
-        Byte verified,
-        Date doa,
-        Date dob,
-        String assignedHierarchy,
-        Byte changed,
-        Boolean blocked,
-        String normalizedHierarchy,
-        String alternateId,
-        String externalReferenceId,
-        String reportPassword
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        Integer      version,
+        String       address,
+        String       contactType,
+        String       countryCode,
+        String       email,
+        String       hierarchy,
+        Date         lastPasswordResetDate,
+        String       loginid,
+        String       mobile,
+        String       name,
+        String       password,
+        String       useraccountid,
+        String       usercontext,
+        String       webcontext,
+        String       locationHierarchy,
+        String       source,
+        String       registeredNumber,
+        String       facebookpsid,
+        JSON         accessibleBy,
+        String       hash,
+        String       dialCode,
+        String       ssoId,
+        String       deviceId,
+        Byte         verified,
+        Date         doa,
+        Date         dob,
+        String       assignedHierarchy,
+        Byte         changed,
+        Boolean      blocked,
+        String       normalizedHierarchy,
+        String       alternateId,
+        String       externalReferenceId,
+        String       reportPassword
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -821,319 +819,6 @@ public class CkUser extends CommonDataModel implements Serializable {
      */
     public void setReportPassword(String reportPassword) {
         this.reportPassword = reportPassword;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkUser other = (CkUser) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.address == null) {
-            if (other.address != null)
-                return false;
-        }
-        else if (!this.address.equals(other.address))
-            return false;
-        if (this.contactType == null) {
-            if (other.contactType != null)
-                return false;
-        }
-        else if (!this.contactType.equals(other.contactType))
-            return false;
-        if (this.countryCode == null) {
-            if (other.countryCode != null)
-                return false;
-        }
-        else if (!this.countryCode.equals(other.countryCode))
-            return false;
-        if (this.email == null) {
-            if (other.email != null)
-                return false;
-        }
-        else if (!this.email.equals(other.email))
-            return false;
-        if (this.hierarchy == null) {
-            if (other.hierarchy != null)
-                return false;
-        }
-        else if (!this.hierarchy.equals(other.hierarchy))
-            return false;
-        if (this.lastPasswordResetDate == null) {
-            if (other.lastPasswordResetDate != null)
-                return false;
-        }
-        else if (!this.lastPasswordResetDate.equals(other.lastPasswordResetDate))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.mobile == null) {
-            if (other.mobile != null)
-                return false;
-        }
-        else if (!this.mobile.equals(other.mobile))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.password == null) {
-            if (other.password != null)
-                return false;
-        }
-        else if (!this.password.equals(other.password))
-            return false;
-        if (this.useraccountid == null) {
-            if (other.useraccountid != null)
-                return false;
-        }
-        else if (!this.useraccountid.equals(other.useraccountid))
-            return false;
-        if (this.usercontext == null) {
-            if (other.usercontext != null)
-                return false;
-        }
-        else if (!this.usercontext.equals(other.usercontext))
-            return false;
-        if (this.webcontext == null) {
-            if (other.webcontext != null)
-                return false;
-        }
-        else if (!this.webcontext.equals(other.webcontext))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.registeredNumber == null) {
-            if (other.registeredNumber != null)
-                return false;
-        }
-        else if (!this.registeredNumber.equals(other.registeredNumber))
-            return false;
-        if (this.facebookpsid == null) {
-            if (other.facebookpsid != null)
-                return false;
-        }
-        else if (!this.facebookpsid.equals(other.facebookpsid))
-            return false;
-        if (this.accessibleBy == null) {
-            if (other.accessibleBy != null)
-                return false;
-        }
-        else if (!this.accessibleBy.equals(other.accessibleBy))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.dialCode == null) {
-            if (other.dialCode != null)
-                return false;
-        }
-        else if (!this.dialCode.equals(other.dialCode))
-            return false;
-        if (this.ssoId == null) {
-            if (other.ssoId != null)
-                return false;
-        }
-        else if (!this.ssoId.equals(other.ssoId))
-            return false;
-        if (this.deviceId == null) {
-            if (other.deviceId != null)
-                return false;
-        }
-        else if (!this.deviceId.equals(other.deviceId))
-            return false;
-        if (this.verified == null) {
-            if (other.verified != null)
-                return false;
-        }
-        else if (!this.verified.equals(other.verified))
-            return false;
-        if (this.doa == null) {
-            if (other.doa != null)
-                return false;
-        }
-        else if (!this.doa.equals(other.doa))
-            return false;
-        if (this.dob == null) {
-            if (other.dob != null)
-                return false;
-        }
-        else if (!this.dob.equals(other.dob))
-            return false;
-        if (this.assignedHierarchy == null) {
-            if (other.assignedHierarchy != null)
-                return false;
-        }
-        else if (!this.assignedHierarchy.equals(other.assignedHierarchy))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.blocked == null) {
-            if (other.blocked != null)
-                return false;
-        }
-        else if (!this.blocked.equals(other.blocked))
-            return false;
-        if (this.normalizedHierarchy == null) {
-            if (other.normalizedHierarchy != null)
-                return false;
-        }
-        else if (!this.normalizedHierarchy.equals(other.normalizedHierarchy))
-            return false;
-        if (this.alternateId == null) {
-            if (other.alternateId != null)
-                return false;
-        }
-        else if (!this.alternateId.equals(other.alternateId))
-            return false;
-        if (this.externalReferenceId == null) {
-            if (other.externalReferenceId != null)
-                return false;
-        }
-        else if (!this.externalReferenceId.equals(other.externalReferenceId))
-            return false;
-        if (this.reportPassword == null) {
-            if (other.reportPassword != null)
-                return false;
-        }
-        else if (!this.reportPassword.equals(other.reportPassword))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.address == null) ? 0 : this.address.hashCode());
-        result = prime * result + ((this.contactType == null) ? 0 : this.contactType.hashCode());
-        result = prime * result + ((this.countryCode == null) ? 0 : this.countryCode.hashCode());
-        result = prime * result + ((this.email == null) ? 0 : this.email.hashCode());
-        result = prime * result + ((this.hierarchy == null) ? 0 : this.hierarchy.hashCode());
-        result = prime * result + ((this.lastPasswordResetDate == null) ? 0 : this.lastPasswordResetDate.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.mobile == null) ? 0 : this.mobile.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.password == null) ? 0 : this.password.hashCode());
-        result = prime * result + ((this.useraccountid == null) ? 0 : this.useraccountid.hashCode());
-        result = prime * result + ((this.usercontext == null) ? 0 : this.usercontext.hashCode());
-        result = prime * result + ((this.webcontext == null) ? 0 : this.webcontext.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.registeredNumber == null) ? 0 : this.registeredNumber.hashCode());
-        result = prime * result + ((this.facebookpsid == null) ? 0 : this.facebookpsid.hashCode());
-        result = prime * result + ((this.accessibleBy == null) ? 0 : this.accessibleBy.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.dialCode == null) ? 0 : this.dialCode.hashCode());
-        result = prime * result + ((this.ssoId == null) ? 0 : this.ssoId.hashCode());
-        result = prime * result + ((this.deviceId == null) ? 0 : this.deviceId.hashCode());
-        result = prime * result + ((this.verified == null) ? 0 : this.verified.hashCode());
-        result = prime * result + ((this.doa == null) ? 0 : this.doa.hashCode());
-        result = prime * result + ((this.dob == null) ? 0 : this.dob.hashCode());
-        result = prime * result + ((this.assignedHierarchy == null) ? 0 : this.assignedHierarchy.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.blocked == null) ? 0 : this.blocked.hashCode());
-        result = prime * result + ((this.normalizedHierarchy == null) ? 0 : this.normalizedHierarchy.hashCode());
-        result = prime * result + ((this.alternateId == null) ? 0 : this.alternateId.hashCode());
-        result = prime * result + ((this.externalReferenceId == null) ? 0 : this.externalReferenceId.hashCode());
-        result = prime * result + ((this.reportPassword == null) ? 0 : this.reportPassword.hashCode());
-        return result;
     }
 
     @Override

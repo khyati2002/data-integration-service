@@ -1,0 +1,55 @@
+version: "3.8"
+volumes:
+  mysql_data:
+    driver: local
+services:
+  mysql:
+    image: mysql:latest # MySQL version 8.0
+    container_name: mysql_local
+    hostname: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password # Set the root password
+      MYSQL_DATABASE: yourdatabase # Create a test database
+      MYSQL_USER: youruser # Create a user
+      MYSQL_PASSWORD: youruserpassword # Set the user password
+    ports:
+      - "3306:3306" # Map port 3306 (MySQL) to the host
+    volumes:
+      - mysql_data:/var/lib/mysql # Persist MySQL data
+    networks:
+      - flink-network
+  jobmanager:
+    image: apache/flink:1.20-java17
+    container_name: flink-jobmanager
+    ports:
+      - "8082:8081" # Expose the Flink Web UI
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - AWS_ACCESS_KEY_ID=AKIAQDZHVLDKKKAF36G7
+      - AWS_SECRET_ACCESS_KEY=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
+    command: jobmanager
+    volumes:
+      - ./plugins/flink-s3-fs-hadoop:/opt/flink/plugins/flink-s3-fs-hadoop # Mount S3 plugin
+    networks:
+      - flink-network
+
+  taskmanager:
+    image: apache/flink:1.20-java17
+    container_name: flink-taskmanager
+    depends_on:
+      - jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+      - AWS_ACCESS_KEY_ID=AKIAQDZHVLDKKKAF36G7
+      - AWS_SECRET_ACCESS_KEY=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
+      - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=15
+      - FLINK_TM_HEAP_MEMORY=1024m
+    command: taskmanager
+    volumes:
+      - ./plugins/flink-s3-fs-hadoop:/opt/flink/plugins/flink-s3-fs-hadoop # Mount S3 plugin
+    networks:
+      - flink-network
+
+networks:
+  flink-network:
+    driver: bridge

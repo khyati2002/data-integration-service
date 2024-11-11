@@ -1,11 +1,20 @@
 package com.salescode.dis;
 
+import com.salescode.channelkart.services.SpringContext;
+import com.salescode.jooq.JooqConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
+
+import java.util.Optional;
 
 @SpringBootApplication
+@Import(JooqConfig.class)
+@ComponentScan(basePackages = "com.salescode")
 public class FlinkApplication implements CommandLineRunner {
 
     @Autowired
@@ -20,6 +29,18 @@ public class FlinkApplication implements CommandLineRunner {
         // }
         System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
         SpringApplication.run(FlinkApplication.class, args);
+    }
+
+    public static String getEnv() {
+        return SpringContext.getBeanSafely(Environment.class)
+                .map(environment -> environment.getProperty("channelkart.environment", "dev"))
+                .orElseGet(() -> Optional.ofNullable(System.getenv("channelkart.environment")).orElse("dev"));
+    }
+
+    public static String getLob() {
+        return SpringContext.getBeanSafely(Environment.class)
+                .map(environment -> environment.getProperty("channelkart.lobs", "none"))
+                .orElseGet(() -> Optional.ofNullable(System.getenv("channelkart.lobs")).orElse("none"));
     }
 
     @Override

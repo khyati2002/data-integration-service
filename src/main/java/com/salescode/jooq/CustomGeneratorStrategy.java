@@ -2,7 +2,6 @@ package com.salescode.jooq;
 
 import org.jooq.codegen.DefaultGeneratorStrategy;
 import org.jooq.meta.Definition;
-import org.jooq.meta.TableDefinition;
 
 public class CustomGeneratorStrategy extends DefaultGeneratorStrategy {
     @Override

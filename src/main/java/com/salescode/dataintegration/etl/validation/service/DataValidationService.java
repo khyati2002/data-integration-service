@@ -91,7 +91,7 @@ public class DataValidationService {
     protected List<RuleResult> applyRuleToDataModels(CkValidationRule rule, List<CommonDataModel> dataModels) {
         return dataModels.stream()
                 .map(model -> applyValidation(model, rule))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     /**

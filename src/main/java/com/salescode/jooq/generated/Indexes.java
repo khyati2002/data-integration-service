@@ -6,7 +6,6 @@ package com.salescode.jooq.generated;
 
 import com.salescode.jooq.generated.tables.CkOutletDetails;
 import com.salescode.jooq.generated.tables.CkUser;
-
 import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;

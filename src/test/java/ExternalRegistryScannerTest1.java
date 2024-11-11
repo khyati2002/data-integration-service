@@ -1,6 +1,6 @@
-import com.salescode.dataintegration.DataIntegrationApplication;
 import com.salescode.dataintegration.scanner.ExternalRegistryScanner;
 import com.salescode.dataintegration.scanner.JarScanner;
+import com.salescode.dis.FlinkApplication;
 import com.salescode.jooq.generated.tables.CkMetadata;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootTest(classes = DataIntegrationApplication.class)
+@SpringBootTest(classes = FlinkApplication.class)
 public class ExternalRegistryScannerTest1 {
 
     private final String LOB = "mondelezckinduat";
@@ -43,17 +43,11 @@ public class ExternalRegistryScannerTest1 {
 //                .filterSchemas(s -> s.getName().equals("ckroot"))
                 .getTables();
         System.out.println(tables);
-        org.jooq.Table<?> table = tables.stream()
-                .filter(t -> t.getName().equalsIgnoreCase(entityClass.getSimpleName().toUpperCase()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Table not found for POJO class: " + entityClass));
+        org.jooq.Table<?> table = tables.stream().filter(t -> t.getName().equalsIgnoreCase(entityClass.getSimpleName().toUpperCase())).findFirst().orElseThrow(() -> new IllegalArgumentException("Table not found for POJO class: " + entityClass));
         String tableName = dslContext.render(table);
 
 
-        Record profile = dslContext.select()
-                .from("profile")
-                .where("lob = ? AND type = 'bundle'", LOB)
-                .fetchOne();
+        Record profile = dslContext.select().from("profile").where("lob = ? AND type = 'bundle'", LOB).fetchOne();
 
 //        assert profile != null;
 //        String decrypt = profile.getValue("profile", String.class);
@@ -64,7 +58,7 @@ public class ExternalRegistryScannerTest1 {
         Map<String, Object> instanceCache = new HashMap<>();
         String artifactURL1 = "https://sellinabundle.s3.ap-south-1.amazonaws.com/channelkart/server/mondelezckinduat/latest/channelkart-bundle.jar?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241023T125722Z&X-Amz-SignedHeaders=host&X-Amz-Expires=604799&X-Amz-Credential=AKIAQDZHVLDKJNQTXEYP%2F20241023%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=73c6aad7eaf97e45752b4ead4564bab13639f7738a1c51c2f6b7763cbdef3c2b";
         String artifactURL2 = "file:///Users/gauravgupta/Documents/workspace/integration-bundle/target/integration-bundle-0.0.1-SNAPSHOT.jar";
-        jarScanner1.loadAndCacheClasses(artifactURL2,instanceCache);
+        jarScanner1.loadAndCacheClasses(artifactURL2, instanceCache);
 
 //        instanceCache.get()
 //        externalRegistryScanner.loadClassesFromLob(LOB);

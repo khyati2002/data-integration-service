@@ -4,14 +4,7 @@
 package com.salescode.jooq.generated;
 
 
-import com.salescode.jooq.generated.tables.CkEnrichmentInfo;
-import com.salescode.jooq.generated.tables.CkMetadata;
-import com.salescode.jooq.generated.tables.CkOutletDetails;
-import com.salescode.jooq.generated.tables.CkTransformerInfo;
-import com.salescode.jooq.generated.tables.CkUser;
-import com.salescode.jooq.generated.tables.CkValidationRule;
-import com.salescode.jooq.generated.tables.Profile;
-
+import com.salescode.jooq.generated.tables.*;
 import org.jooq.ForeignKey;
 import org.jooq.Record;
 import org.jooq.TableField;

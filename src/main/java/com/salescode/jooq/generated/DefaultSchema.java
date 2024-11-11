@@ -4,19 +4,13 @@
 package com.salescode.jooq.generated;
 
 
-import com.salescode.jooq.generated.tables.CkEnrichmentInfo;
-import com.salescode.jooq.generated.tables.CkMetadata;
-import com.salescode.jooq.generated.tables.CkOutletDetails;
-import com.salescode.jooq.generated.tables.CkTransformerInfo;
-import com.salescode.jooq.generated.tables.CkUser;
-import com.salescode.jooq.generated.tables.CkValidationRule;
-import com.salescode.jooq.generated.tables.Profile;
+import com.salescode.jooq.generated.tables.*;
+import org.jooq.Catalog;
+import org.jooq.Table;
+import org.jooq.impl.SchemaImpl;
 
 import java.util.Arrays;
 import java.util.List;
-
-import org.jooq.Table;
-import org.jooq.impl.SchemaImpl;
 
 
 /**
@@ -72,6 +66,12 @@ public class DefaultSchema extends SchemaImpl {
      */
     private DefaultSchema() {
         super("", null);
+    }
+
+
+    @Override
+    public Catalog getCatalog() {
+        return DefaultCatalog.DEFAULT_CATALOG;
     }
 
     @Override

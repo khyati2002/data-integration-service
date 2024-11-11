@@ -7,7 +7,6 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -23,26 +22,26 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private Integer version;
-    private JsonNode code;
-    private String description;
-    private String implementation;
-    private String language;
-    private Integer priority;
-    private String type;
-    private String source;
-    private String hash;
-    private Byte changed;
-    private String name;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private Integer      version;
+    private JsonNode     code;
+    private String       description;
+    private String       implementation;
+    private String       language;
+    private Integer      priority;
+    private String       type;
+    private String       source;
+    private String       hash;
+    private Byte         changed;
+    private String       name;
 
     public CkTransformerInfo() {}
 
@@ -70,26 +69,26 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     }
 
     public CkTransformerInfo(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        Integer version,
-        JsonNode code,
-        String description,
-        String implementation,
-        String language,
-        Integer priority,
-        String type,
-        String source,
-        String hash,
-        Byte changed,
-        String name
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        Integer      version,
+        JsonNode     code,
+        String       description,
+        String       implementation,
+        String       language,
+        Integer      priority,
+        String       type,
+        String       source,
+        String       hash,
+        Byte         changed,
+        String       name
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -406,165 +405,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkTransformerInfo other = (CkTransformerInfo) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.code == null) {
-            if (other.code != null)
-                return false;
-        }
-        else if (!this.code.equals(other.code))
-            return false;
-        if (this.description == null) {
-            if (other.description != null)
-                return false;
-        }
-        else if (!this.description.equals(other.description))
-            return false;
-        if (this.implementation == null) {
-            if (other.implementation != null)
-                return false;
-        }
-        else if (!this.implementation.equals(other.implementation))
-            return false;
-        if (this.language == null) {
-            if (other.language != null)
-                return false;
-        }
-        else if (!this.language.equals(other.language))
-            return false;
-        if (this.priority == null) {
-            if (other.priority != null)
-                return false;
-        }
-        else if (!this.priority.equals(other.priority))
-            return false;
-        if (this.type == null) {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.code == null) ? 0 : this.code.hashCode());
-        result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-        result = prime * result + ((this.implementation == null) ? 0 : this.implementation.hashCode());
-        result = prime * result + ((this.language == null) ? 0 : this.language.hashCode());
-        result = prime * result + ((this.priority == null) ? 0 : this.priority.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        return result;
     }
 
     @Override
