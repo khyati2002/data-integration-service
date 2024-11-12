@@ -35,13 +35,13 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 
     @Override
     public CkOutletDetails save(CkOutletDetails cdmObject) {
-//        TimerUtils.withTime("Time taken to createAssociatedData record ",
-//                () -> createAssociatedData(cdmObject));
-//        printLogsForNullHierarchy(cdmObject,"Location null before prepare outlet details");
-//        CkOutletDetails tempoutlet = TimerUtils.withTime("Time taken to prepareOutletDetails record ",
-//                k -> prepareOutletDetails(cdmObject));
+        TimerUtils.withTime("Time taken to createAssociatedData record ",
+                () -> createAssociatedData(cdmObject));
+        printLogsForNullHierarchy(cdmObject,"Location null before prepare outlet details");
+        CkOutletDetails tempoutlet = TimerUtils.withTime("Time taken to prepareOutletDetails record ",
+                k -> prepareOutletDetails(cdmObject));
 //
-//        List<CkHierarchyMetadata> immediateParents = tempoutlet.getImmediateParent();
+      List<CkHierarchyMetadata> immediateParents = tempoutlet.getImmediateParent();
 //        if (immediateParents != null && !immediateParents.isEmpty()) {
 //            List<CkHierarchyMetadata> existingMetadata = new ArrayList<>();
 //            List<CkHierarchyMetadata> newMetadata = new ArrayList<>();

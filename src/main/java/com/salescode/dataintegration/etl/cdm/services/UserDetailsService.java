@@ -33,8 +33,8 @@ public class UserDetailsService {
         user.setLocationHierarchy(outlet.getLocationHierarchy());
         user.setMobile(outlet.getContactno());
         user.setName(StringUtils.isEmpty(outlet.getOutletName()) ? outlet.getOutletcode() : outlet.getOutletName());
-//        user.setPassword(outlet.getOutletcode());
-//
+        user.setPassword(outlet.getOutletcode());
+
         var record = dsl.newRecord(CK_USER, user);
 
         dsl.insertInto(CK_USER)
