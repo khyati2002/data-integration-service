@@ -25,6 +25,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.channelkart.repository.LocationRepository;
 import com.salescode.channelkart.services.SpringContext;
+import com.salescode.channelkart.utils.NullUtils;
+import com.salescode.channelkart.utils.TimerUtils;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.jooq.generated.tables.pojos.CkLocation;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -169,13 +171,13 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 		return savedObj;
 	}
 
-	public Location findByLocationHierarchy(String locationHierarchy) {
+	public CkLocation findByLocationHierarchy(String locationHierarchy) {
 		return findByLocationHierarchy(locationHierarchy,true);
 	}
 
-	public Location findByLocationHierarchy(String locationHierarchy,boolean cached) {
+	public CkLocation findByLocationHierarchy(String locationHierarchy,boolean cached) {
 		String lob = SecurityContextUtils.getLob();
-		Function<String,Location> function = (String locationHie)->{
+		Function<String,CkLocation> function = (String locationHie)->{
 			LocationRepository repo= SpringContext.getBean(LocationRepository.class);
 			return repo.findByLocationHierarchy(locationHie);
 		};
@@ -236,7 +238,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 		}
 	}
 
-	public String formHierarchyUsingColumns(Location location, String[] columnList,
+	public String formHierarchyUsingColumns(CkLocation location, String[] columnList,
 											String delimiter) {
 		StringBuilder hierarchyStr = new StringBuilder("");
 		if (location == null) {
@@ -284,21 +286,21 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 		return hierarchyStr.toString();
 	}
 
-	public Location findLocationOrPersistLocation(Location dataObj)  {
+	public CkLocation findLocationOrPersistLocation(CkLocation dataObj)  {
 		if(NullUtils.isNotNull(dataObj)) {
 			return TimerUtils.withTime("Time Taken to FindOrPersist Location Object", s->{
 				String[] columnList = getLocationColumns();
-				Location tLocation=dataObj;
+				CkLocation tLocation=dataObj;
 				String hierarchyStr =formHierarchyUsingColumns(tLocation, columnList, delimiter);
 				if (StringUtils.isNotEmpty(hierarchyStr)) {
-					Location locationRes = findByLocationHierarchy(hierarchyStr);
+					CkLocation locationRes = findByLocationHierarchy(hierarchyStr);
 					if (locationRes != null) {
 						return locationRes;
 					} else {
 						GlobalLock.withLock(hierarchyStr,k->
 								saveRecursiveLocationHierarchies(tLocation, columnList)
 						);
-						Location locdata  = findByLocationHierarchy(hierarchyStr,false);
+						CkLocation locdata  = findByLocationHierarchy(hierarchyStr,false);
 						distributedCache.put(SecurityContextUtils.getLob(), CACHE_DOMAIN,
 								locdata.getLocationHierarchy(),locdata,true);
 						return locdata;

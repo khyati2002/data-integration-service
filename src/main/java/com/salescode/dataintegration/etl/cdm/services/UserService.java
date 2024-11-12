@@ -36,7 +36,7 @@ import com.applicate.services.channelkart.repository.UserMetadataRepository;
 import com.applicate.services.channelkart.security.Constants;
 import com.applicate.services.channelkart.security.JwtUser;
 import com.applicate.services.channelkart.security.PermissionEvaluator;
-import com.applicate.services.channelkart.security.SecurityContextUtils;
+
 import com.applicate.services.channelkart.services.enums.OperationType;
 import com.applicate.services.channelkart.sync.schduler.UserNameAndContext;
 import com.applicate.services.channelkart.unification.UnificationErrorCodes;
@@ -48,6 +48,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.channelkart.repository.UserRepository;
 import com.salescode.channelkart.services.SpringContext;
+import com.salescode.channelkart.utils.SecurityContextUtils;
+import com.salescode.channelkart.utils.TimerUtils;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.jooq.generated.tables.pojos.CkUser;
 import org.apache.commons.collections.CollectionUtils;
@@ -177,7 +179,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 
 	}
 
-	public User findByLoginId(String loginId) {
+	public CkUser findByLoginId(String loginId) {
 		return findByLoginId(loginId,true,true);
 	}
 
@@ -190,20 +192,20 @@ public class UserService extends AbstractCDMService<CkUser> {
 	public User findByLoginId(String loginId,boolean cached) {
 		return findByLoginId(loginId,true,true);
 	}
-	public User findByLoginId(String loginId,boolean cached,boolean hierarchy) {
+	public CkUser findByLoginId(String loginId,boolean cached,boolean hierarchy) {
 		String lob = SecurityContextUtils.getLob();
-		Function<String,User> function = (String lid)->{
+		Function<String,CkUser> function = (String lid)->{
 			UserService service= SpringContext.getBean(UserService.class);
 			return service.getLoadedUserObject(lid,hierarchy);
 		};
 
-		if(cached) {
-			User user = distributedCache.withCache(lob,CACHE_DOMAIN, loginId,function);
-			if(user != null && StringUtils.isBlank(user.getHierarchy())) {
-				return reloadCache(loginId);
-			}
-			return user;
-		}
+//		if(cached) {
+//			User user = distributedCache.withCache(lob,CACHE_DOMAIN, loginId,function);
+//			if(user != null && StringUtils.isBlank(user.getHierarchy())) {
+//				return reloadCache(loginId);
+//			}
+//			return user;
+//		}
 
 		return function.apply(loginId);
 	}
@@ -218,8 +220,8 @@ public class UserService extends AbstractCDMService<CkUser> {
 		return  distributedCache.withCache(lob,CACHE_DOMAIN, loginId,function);
 	}
 
-	public User getLoadedUserObject(String lid,boolean hierarchy) {
-		User u = TimerUtils
+	public CkUser getLoadedUserObject(String lid,boolean hierarchy) {
+		CkUser u = TimerUtils
 				.withTime("Time taken UserService record ", () -> userRepository.findByLoginId(lid));
 		if (u != null) {
 			loadUserAssociationObjects(u);
@@ -1169,7 +1171,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 				.collect(Collectors.toMap(data -> data.get(LOGIN_ID).toString(), data ->  Boolean.valueOf(data.get("verified").toString()) ) );
 	}
 
-	private void loadUserAssociationObjects(User u) {
+	private void loadUserAssociationObjects(CkUser u) {
 		TimerUtils
 				.withTime("Time taken UserService Association load ", () -> {
 					if (u.getRoles() != null) u.getRoles().size();

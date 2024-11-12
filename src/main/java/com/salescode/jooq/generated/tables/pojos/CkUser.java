@@ -1186,4 +1186,7 @@ public class CkUser extends CommonDataModel implements Serializable {
         sb.append(")");
         return sb.toString();
     }
+    public String getLoginId() {
+        return loginid;
+    }
 }

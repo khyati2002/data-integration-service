@@ -1,6 +1,9 @@
 package com.salescode.channelkart.utils;
 
 import com.salescode.channelkart.models.diff.UserContext;
+import com.salescode.dataintegration.etl.cdm.abstractdatasource.AbstractDataSourceConstants;
+
+import java.util.Optional;
 
 public class SecurityContextUtils {
 
@@ -29,6 +32,16 @@ public class SecurityContextUtils {
             lob = AbstractDataSourceConstants.DEFAULT;
         }
         return lob;
+    }
+
+    public static String getTempLOB() {
+        return getUserContext()
+                .map(UserContext::getLob)
+                .orElse(null);
+    }
+
+    public static Optional<UserContext> getUserContext() {
+        return Optional.ofNullable(userContextHolder.get());
     }
 
 
