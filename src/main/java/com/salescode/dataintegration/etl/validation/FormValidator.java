@@ -1,13 +1,14 @@
 package com.salescode.dataintegration.etl.validation;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import jakarta.validation.metadata.PropertyDescriptor;
+
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.validation.metadata.PropertyDescriptor;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

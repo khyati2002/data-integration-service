@@ -8,12 +8,12 @@ import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;
 import com.salescode.dataintegration.etl.validation.registry.ValidationInfoRegistry;
 import com.salescode.jooq.generated.tables.pojos.CkValidationRule;
-import jakarta.validation.ConstraintViolation;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.validation.ConstraintViolation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,14 +24,12 @@ import java.util.stream.Collectors;
 public class DataEntityValidationService extends DataValidationService {
 
     private static final String PREFIX = "ev-{}";
-    private final DSLContext dslContext;
     private final FormValidator formValidator;
 
     @Autowired
-    public DataEntityValidationService(ValidationInfoRegistry validationInfoRegistry, ETLRegistry etlRegistry, DSLContext dslContext, FormValidator formValidator) {
+    public DataEntityValidationService(ValidationInfoRegistry validationInfoRegistry, ETLRegistry etlRegistry, FormValidator formValidator) {
         super(validationInfoRegistry, etlRegistry);
         this.formValidator = formValidator;
-        this.dslContext = dslContext;
     }
 
     /**
