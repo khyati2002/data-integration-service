@@ -7,9 +7,8 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -67,7 +66,7 @@ public class Profile extends CommonDataModel implements Serializable {
     }
 
     public Profile(
-        String       id,
+        @Nonnull String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
         String       createdBy,
@@ -111,8 +110,7 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>profile.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
+    @Nonnull
     public String getId() {
         return this.id;
     }
@@ -120,7 +118,7 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>profile.id</code>.
      */
-    public void setId(String id) {
+    public void setId(@Nonnull String id) {
         this.id = id;
     }
 
@@ -141,7 +139,6 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>profile.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -156,7 +153,6 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>profile.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -227,7 +223,6 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>profile.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -242,7 +237,6 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>profile.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -257,7 +251,6 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>profile.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -300,7 +293,6 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>profile.implementation</code>.
      */
-    @Size(max = 255)
     public String getImplementation() {
         return this.implementation;
     }
@@ -315,7 +307,6 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>profile.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -344,7 +335,6 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>profile.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -359,7 +349,6 @@ public class Profile extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>profile.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }

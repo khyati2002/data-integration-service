@@ -1,6 +1,7 @@
 package com.salescode.dis;
 
 import com.salescode.channelkart.services.SpringContext;
+import com.salescode.dis.config.DatabaseConfig;
 import com.salescode.jooq.JooqConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,8 +14,8 @@ import org.springframework.core.env.Environment;
 import java.util.Optional;
 
 @SpringBootApplication
-@Import(JooqConfig.class)
-@ComponentScan(basePackages = "com.salescode")
+@Import({JooqConfig.class, DatabaseConfig.class})
+@ComponentScan(basePackages = {"com.salescode"})
 public class FlinkApplication implements CommandLineRunner {
 
     @Autowired

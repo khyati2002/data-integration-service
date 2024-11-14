@@ -18,6 +18,7 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
+import javax.annotation.Nonnull;
 import java.util.Date;
 
 
@@ -38,6 +39,7 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
      * The class holding records for this type
      */
     @Override
+    @Nonnull
     public Class<Record> getRecordType() {
         return Record.class;
     }
@@ -181,16 +183,19 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
     }
 
     @Override
+    @Nonnull
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_ENRICHMENT_INFO_PRIMARY;
     }
 
     @Override
+    @Nonnull
     public CkEnrichmentInfo as(String alias) {
         return new CkEnrichmentInfo(DSL.name(alias), this);
     }
 
     @Override
+    @Nonnull
     public CkEnrichmentInfo as(Name alias) {
         return new CkEnrichmentInfo(alias, this);
     }
@@ -199,6 +204,7 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkEnrichmentInfo rename(String name) {
         return new CkEnrichmentInfo(DSL.name(name), null);
     }
@@ -207,6 +213,7 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkEnrichmentInfo rename(Name name) {
         return new CkEnrichmentInfo(name, null);
     }

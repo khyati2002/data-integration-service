@@ -17,6 +17,7 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +40,7 @@ public class CkUser extends TableImpl<Record> {
      * The class holding records for this type
      */
     @Override
+    @Nonnull
     public Class<Record> getRecordType() {
         return Record.class;
     }
@@ -292,26 +294,31 @@ public class CkUser extends TableImpl<Record> {
     }
 
     @Override
+    @Nonnull
     public List<Index> getIndexes() {
         return Arrays.asList(Indexes.CK_USER_CK_USER_IDX_1, Indexes.CK_USER_CK_USER_IDX_2, Indexes.CK_USER_IDX_HIERARCHY_FULLINDEX, Indexes.CK_USER_USERCONTEXT_IDX);
     }
 
     @Override
+    @Nonnull
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_USER_PRIMARY;
     }
 
     @Override
+    @Nonnull
     public List<UniqueKey<Record>> getUniqueKeys() {
         return Arrays.asList(Keys.KEY_CK_USER_UK_2F6QWRY9T0AXMNHVAN6XHUG8G, Keys.KEY_CK_USER_UK_EITQD1YHCGA0L4XRAA6MAGNV2, Keys.KEY_CK_USER_UK_NQB2805SL8W8990HA7495C9TG);
     }
 
     @Override
+    @Nonnull
     public CkUser as(String alias) {
         return new CkUser(DSL.name(alias), this);
     }
 
     @Override
+    @Nonnull
     public CkUser as(Name alias) {
         return new CkUser(alias, this);
     }
@@ -320,6 +327,7 @@ public class CkUser extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkUser rename(String name) {
         return new CkUser(DSL.name(name), null);
     }
@@ -328,6 +336,7 @@ public class CkUser extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkUser rename(Name name) {
         return new CkUser(name, null);
     }

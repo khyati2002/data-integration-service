@@ -16,6 +16,7 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,7 @@ public class CkMetadata extends TableImpl<Record> {
      * The class holding records for this type
      */
     @Override
+    @Nonnull
     public Class<Record> getRecordType() {
         return Record.class;
     }
@@ -166,21 +168,25 @@ public class CkMetadata extends TableImpl<Record> {
     }
 
     @Override
+    @Nonnull
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_METADATA_PRIMARY;
     }
 
     @Override
+    @Nonnull
     public List<UniqueKey<Record>> getUniqueKeys() {
         return Arrays.asList(Keys.KEY_CK_METADATA_UK_METADATA);
     }
 
     @Override
+    @Nonnull
     public CkMetadata as(String alias) {
         return new CkMetadata(DSL.name(alias), this);
     }
 
     @Override
+    @Nonnull
     public CkMetadata as(Name alias) {
         return new CkMetadata(alias, this);
     }
@@ -189,6 +195,7 @@ public class CkMetadata extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkMetadata rename(String name) {
         return new CkMetadata(DSL.name(name), null);
     }
@@ -197,6 +204,7 @@ public class CkMetadata extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkMetadata rename(Name name) {
         return new CkMetadata(name, null);
     }

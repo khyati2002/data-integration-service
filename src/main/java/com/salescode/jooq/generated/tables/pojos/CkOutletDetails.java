@@ -7,10 +7,9 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import org.jooq.JSON;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -135,7 +134,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     }
 
     public CkOutletDetails(
-        String       id,
+        @Nonnull String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
         String       createdBy,
@@ -145,7 +144,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         String       lob,
         String       modifiedBy,
         String       source,
-        Integer      version,
+        @Nonnull Integer      version,
         String       account,
         String       address,
         String       beat,
@@ -159,12 +158,12 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         Date         lastOrderDate,
         BigDecimal   latitude,
         BigDecimal   longitude,
-        Boolean      mapped,
+        @Nonnull Boolean      mapped,
         String       marketId,
         String       marketName,
         String       outletCategory,
         String       outletClass,
-        String       outletcode,
+        @Nonnull String       outletcode,
         String       outletName,
         String       outletType,
         String       tinNo,
@@ -174,7 +173,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         JSON         accessibleBy,
         String       hash,
         Date         doo,
-        String       dtype,
+        @Nonnull String       dtype,
         String       hierarchy,
         Byte         changed,
         String       distributionChannel,
@@ -245,8 +244,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
+    @Nonnull
     public String getId() {
         return this.id;
     }
@@ -254,7 +252,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_outlet_details.id</code>.
      */
-    public void setId(String id) {
+    public void setId(@Nonnull String id) {
         this.id = id;
     }
 
@@ -275,7 +273,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -290,7 +287,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -347,7 +343,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -362,7 +357,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -377,7 +371,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -392,7 +385,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.version</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getVersion() {
         return this.version;
     }
@@ -400,14 +393,13 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_outlet_details.version</code>.
      */
-    public void setVersion(Integer version) {
+    public void setVersion(@Nonnull Integer version) {
         this.version = version;
     }
 
     /**
      * Getter for <code>ck_outlet_details.account</code>.
      */
-    @Size(max = 255)
     public String getAccount() {
         return this.account;
     }
@@ -422,7 +414,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.address</code>.
      */
-    @Size(max = 255)
     public String getAddress() {
         return this.address;
     }
@@ -437,7 +428,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.beat</code>.
      */
-    @Size(max = 255)
     public String getBeat() {
         return this.beat;
     }
@@ -452,7 +442,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.beat_name</code>.
      */
-    @Size(max = 255)
     public String getBeatName() {
         return this.beatName;
     }
@@ -467,7 +456,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.channel</code>.
      */
-    @Size(max = 255)
     public String getChannel() {
         return this.channel;
     }
@@ -482,7 +470,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.contact_name</code>.
      */
-    @Size(max = 255)
     public String getContactName() {
         return this.contactName;
     }
@@ -497,7 +484,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.contactno</code>.
      */
-    @Size(max = 255)
     public String getContactno() {
         return this.contactno;
     }
@@ -512,7 +498,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.display_address</code>.
      */
-    @Size(max = 255)
     public String getDisplayAddress() {
         return this.displayAddress;
     }
@@ -527,7 +512,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.frequency</code>.
      */
-    @Size(max = 255)
     public String getFrequency() {
         return this.frequency;
     }
@@ -542,7 +526,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.gst_no</code>.
      */
-    @Size(max = 255)
     public String getGstNo() {
         return this.gstNo;
     }
@@ -599,7 +582,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.mapped</code>.
      */
-    @NotNull
+    @Nonnull
     public Boolean getMapped() {
         return this.mapped;
     }
@@ -607,14 +590,13 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_outlet_details.mapped</code>.
      */
-    public void setMapped(Boolean mapped) {
+    public void setMapped(@Nonnull Boolean mapped) {
         this.mapped = mapped;
     }
 
     /**
      * Getter for <code>ck_outlet_details.market_id</code>.
      */
-    @Size(max = 255)
     public String getMarketId() {
         return this.marketId;
     }
@@ -629,7 +611,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.market_name</code>.
      */
-    @Size(max = 255)
     public String getMarketName() {
         return this.marketName;
     }
@@ -644,7 +625,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.outlet_category</code>.
      */
-    @Size(max = 255)
     public String getOutletCategory() {
         return this.outletCategory;
     }
@@ -659,7 +639,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.outlet_class</code>.
      */
-    @Size(max = 255)
     public String getOutletClass() {
         return this.outletClass;
     }
@@ -674,8 +653,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.outletcode</code>.
      */
-    @NotNull
-    @Size(max = 200)
+    @Nonnull
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -683,14 +661,13 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_outlet_details.outletcode</code>.
      */
-    public void setOutletcode(String outletcode) {
+    public void setOutletcode(@Nonnull String outletcode) {
         this.outletcode = outletcode;
     }
 
     /**
      * Getter for <code>ck_outlet_details.outlet_name</code>.
      */
-    @Size(max = 255)
     public String getOutletName() {
         return this.outletName;
     }
@@ -705,7 +682,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.outlet_type</code>.
      */
-    @Size(max = 255)
     public String getOutletType() {
         return this.outletType;
     }
@@ -720,7 +696,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.tin_no</code>.
      */
-    @Size(max = 255)
     public String getTinNo() {
         return this.tinNo;
     }
@@ -735,7 +710,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.location_hierarchy</code>.
      */
-    @Size(max = 200)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -750,7 +724,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.loginid</code>.
      */
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -821,8 +794,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.dtype</code>.
      */
-    @NotNull
-    @Size(max = 31)
+    @Nonnull
     public String getDtype() {
         return this.dtype;
     }
@@ -830,7 +802,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_outlet_details.dtype</code>.
      */
-    public void setDtype(String dtype) {
+    public void setDtype(@Nonnull String dtype) {
         this.dtype = dtype;
     }
 
@@ -865,7 +837,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.distribution_channel</code>.
      */
-    @Size(max = 255)
     public String getDistributionChannel() {
         return this.distributionChannel;
     }
@@ -880,7 +851,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.outlet_division</code>.
      */
-    @Size(max = 255)
     public String getOutletDivision() {
         return this.outletDivision;
     }
@@ -895,7 +865,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.sold_to</code>.
      */
-    @Size(max = 255)
     public String getSoldTo() {
         return this.soldTo;
     }
@@ -910,7 +879,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.sub_channel</code>.
      */
-    @Size(max = 255)
     public String getSubChannel() {
         return this.subChannel;
     }
@@ -925,7 +893,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.sub_territory</code>.
      */
-    @Size(max = 255)
     public String getSubTerritory() {
         return this.subTerritory;
     }
@@ -940,7 +907,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.blob_key</code>.
      */
-    @Size(max = 255)
     public String getBlobKey() {
         return this.blobKey;
     }
@@ -955,7 +921,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.email</code>.
      */
-    @Size(max = 255)
     public String getEmail() {
         return this.email;
     }
@@ -970,7 +935,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.control_group</code>.
      */
-    @Size(max = 255)
     public String getControlGroup() {
         return this.controlGroup;
     }
@@ -999,7 +963,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_details.price_list_id</code>.
      */
-    @Size(max = 255)
     public String getPriceListId() {
         return this.priceListId;
     }

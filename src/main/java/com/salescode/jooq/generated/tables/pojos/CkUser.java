@@ -7,10 +7,9 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import org.jooq.JSON;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -114,7 +113,7 @@ public class CkUser extends CommonDataModel implements Serializable {
     }
 
     public CkUser(
-        String       id,
+        @Nonnull String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
         String       createdBy,
@@ -123,18 +122,18 @@ public class CkUser extends CommonDataModel implements Serializable {
         Date         lastModifiedTime,
         String       lob,
         String       modifiedBy,
-        Integer      version,
+        @Nonnull Integer      version,
         String       address,
         String       contactType,
         String       countryCode,
         String       email,
         String       hierarchy,
         Date         lastPasswordResetDate,
-        String       loginid,
+        @Nonnull String       loginid,
         String       mobile,
-        String       name,
-        String       password,
-        String       useraccountid,
+        @Nonnull String       name,
+        @Nonnull String       password,
+        @Nonnull String       useraccountid,
         String       usercontext,
         String       webcontext,
         String       locationHierarchy,
@@ -204,8 +203,7 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
+    @Nonnull
     public String getId() {
         return this.id;
     }
@@ -213,7 +211,7 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_user.id</code>.
      */
-    public void setId(String id) {
+    public void setId(@Nonnull String id) {
         this.id = id;
     }
 
@@ -234,7 +232,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -249,7 +246,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -306,7 +302,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -321,7 +316,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -336,7 +330,7 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.version</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getVersion() {
         return this.version;
     }
@@ -344,14 +338,13 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_user.version</code>.
      */
-    public void setVersion(Integer version) {
+    public void setVersion(@Nonnull Integer version) {
         this.version = version;
     }
 
     /**
      * Getter for <code>ck_user.address</code>.
      */
-    @Size(max = 255)
     public String getAddress() {
         return this.address;
     }
@@ -366,7 +359,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.contact_type</code>.
      */
-    @Size(max = 255)
     public String getContactType() {
         return this.contactType;
     }
@@ -381,7 +373,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.country_code</code>.
      */
-    @Size(max = 255)
     public String getCountryCode() {
         return this.countryCode;
     }
@@ -396,7 +387,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.email</code>.
      */
-    @Size(max = 50)
     public String getEmail() {
         return this.email;
     }
@@ -439,8 +429,7 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.loginid</code>.
      */
-    @NotNull
-    @Size(max = 50)
+    @Nonnull
     public String getLoginid() {
         return this.loginid;
     }
@@ -448,14 +437,13 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_user.loginid</code>.
      */
-    public void setLoginid(String loginid) {
+    public void setLoginid(@Nonnull String loginid) {
         this.loginid = loginid;
     }
 
     /**
      * Getter for <code>ck_user.mobile</code>.
      */
-    @Size(max = 15)
     public String getMobile() {
         return this.mobile;
     }
@@ -470,8 +458,7 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.name</code>.
      */
-    @NotNull
-    @Size(max = 255)
+    @Nonnull
     public String getName() {
         return this.name;
     }
@@ -479,15 +466,14 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_user.name</code>.
      */
-    public void setName(String name) {
+    public void setName(@Nonnull String name) {
         this.name = name;
     }
 
     /**
      * Getter for <code>ck_user.password</code>.
      */
-    @NotNull
-    @Size(max = 100)
+    @Nonnull
     public String getPassword() {
         return this.password;
     }
@@ -495,15 +481,14 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_user.password</code>.
      */
-    public void setPassword(String password) {
+    public void setPassword(@Nonnull String password) {
         this.password = password;
     }
 
     /**
      * Getter for <code>ck_user.useraccountid</code>.
      */
-    @NotNull
-    @Size(max = 50)
+    @Nonnull
     public String getUseraccountid() {
         return this.useraccountid;
     }
@@ -511,14 +496,13 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_user.useraccountid</code>.
      */
-    public void setUseraccountid(String useraccountid) {
+    public void setUseraccountid(@Nonnull String useraccountid) {
         this.useraccountid = useraccountid;
     }
 
     /**
      * Getter for <code>ck_user.usercontext</code>.
      */
-    @Size(max = 500)
     public String getUsercontext() {
         return this.usercontext;
     }
@@ -533,7 +517,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.webcontext</code>.
      */
-    @Size(max = 500)
     public String getWebcontext() {
         return this.webcontext;
     }
@@ -548,7 +531,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.location_hierarchy</code>.
      */
-    @Size(max = 200)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -563,7 +545,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -578,7 +559,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.registered_number</code>.
      */
-    @Size(max = 15)
     public String getRegisteredNumber() {
         return this.registeredNumber;
     }
@@ -593,7 +573,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.facebookpsid</code>.
      */
-    @Size(max = 255)
     public String getFacebookpsid() {
         return this.facebookpsid;
     }
@@ -636,7 +615,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.dial_code</code>.
      */
-    @Size(max = 255)
     public String getDialCode() {
         return this.dialCode;
     }
@@ -651,7 +629,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.sso_id</code>.
      */
-    @Size(max = 100)
     public String getSsoId() {
         return this.ssoId;
     }
@@ -666,7 +643,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.device_id</code>.
      */
-    @Size(max = 255)
     public String getDeviceId() {
         return this.deviceId;
     }
@@ -779,7 +755,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.alternate_id</code>.
      */
-    @Size(max = 50)
     public String getAlternateId() {
         return this.alternateId;
     }
@@ -794,7 +769,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.external_reference_id</code>.
      */
-    @Size(max = 255)
     public String getExternalReferenceId() {
         return this.externalReferenceId;
     }
@@ -809,7 +783,6 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.report_password</code>.
      */
-    @Size(max = 255)
     public String getReportPassword() {
         return this.reportPassword;
     }

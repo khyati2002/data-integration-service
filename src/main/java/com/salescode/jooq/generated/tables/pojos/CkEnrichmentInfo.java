@@ -8,9 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.channelkart.models.CommonDataModel;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -70,7 +69,7 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     }
 
     public CkEnrichmentInfo(
-        String          id,
+        @Nonnull String          id,
         ActiveStatus    activeStatus,
         String          activeStatusReason,
         String          createdBy,
@@ -79,13 +78,13 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
         Date            lastModifiedTime,
         String          lob,
         String          modifiedBy,
-        Integer         version,
+        @Nonnull Integer         version,
         String          description,
         String          implementation,
         String          language,
-        EnrichmentPhase phase,
-        Integer         priority,
-        Integer         severity,
+        @Nonnull EnrichmentPhase phase,
+        @Nonnull Integer         priority,
+        @Nonnull Integer         severity,
         String          type,
         String          source,
         String          hash,
@@ -116,8 +115,7 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_enrichment_info.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
+    @Nonnull
     public String getId() {
         return this.id;
     }
@@ -125,7 +123,7 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_enrichment_info.id</code>.
      */
-    public void setId(String id) {
+    public void setId(@Nonnull String id) {
         this.id = id;
     }
 
@@ -146,7 +144,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_enrichment_info.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -161,7 +158,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_enrichment_info.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -218,7 +214,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_enrichment_info.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -233,7 +228,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_enrichment_info.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -248,7 +242,7 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_enrichment_info.version</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getVersion() {
         return this.version;
     }
@@ -256,14 +250,13 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_enrichment_info.version</code>.
      */
-    public void setVersion(Integer version) {
+    public void setVersion(@Nonnull Integer version) {
         this.version = version;
     }
 
     /**
      * Getter for <code>ck_enrichment_info.description</code>.
      */
-    @Size(max = 255)
     public String getDescription() {
         return this.description;
     }
@@ -278,7 +271,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_enrichment_info.implementation</code>.
      */
-    @Size(max = 255)
     public String getImplementation() {
         return this.implementation;
     }
@@ -293,7 +285,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_enrichment_info.language</code>.
      */
-    @Size(max = 255)
     public String getLanguage() {
         return this.language;
     }
@@ -308,7 +299,7 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_enrichment_info.phase</code>.
      */
-    @NotNull
+    @Nonnull
     public EnrichmentPhase getPhase() {
         return this.phase;
     }
@@ -316,14 +307,14 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_enrichment_info.phase</code>.
      */
-    public void setPhase(EnrichmentPhase phase) {
+    public void setPhase(@Nonnull EnrichmentPhase phase) {
         this.phase = phase;
     }
 
     /**
      * Getter for <code>ck_enrichment_info.priority</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getPriority() {
         return this.priority;
     }
@@ -331,14 +322,14 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_enrichment_info.priority</code>.
      */
-    public void setPriority(Integer priority) {
+    public void setPriority(@Nonnull Integer priority) {
         this.priority = priority;
     }
 
     /**
      * Getter for <code>ck_enrichment_info.severity</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getSeverity() {
         return this.severity;
     }
@@ -346,14 +337,13 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_enrichment_info.severity</code>.
      */
-    public void setSeverity(Integer severity) {
+    public void setSeverity(@Nonnull Integer severity) {
         this.severity = severity;
     }
 
     /**
      * Getter for <code>ck_enrichment_info.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -368,7 +358,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_enrichment_info.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }

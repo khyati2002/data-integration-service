@@ -3,6 +3,9 @@ package com.salescode.dis.flink.sinks;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.dataintegration.etl.cdm.CommonDataModelService;
+import com.salescode.dataintegration.etl.cdm.util.ServiceLocator;
 import org.apache.commons.io.IOExceptionWithCause;
 import org.apache.flink.api.connector.sink2.SinkWriter;
 import org.jooq.DSLContext;
@@ -10,13 +13,11 @@ import org.jooq.SQLDialect;
 import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 
-import com.salescode.dis.jooq.generated.tables.pojos.CkOrder;
-import com.salescode.dis.jooq.generated.tables.records.CkOrderRecord;
 
 
 //TODO: Change CkOrder to common base class that all POJOs implement
-public class JOOQSinkWriter implements SinkWriter<CkOrder> {
-    
+public class JOOQSinkWriter implements SinkWriter<CommonDataModel> {
+
     private DSLContext dslContext;
     private Connection connection;
 
@@ -45,21 +46,17 @@ public class JOOQSinkWriter implements SinkWriter<CkOrder> {
     }
 
     @Override
-    public void write(CkOrder order, Context context) throws java.io.IOException, InterruptedException {
+    public void write(CommonDataModel cdm, Context context) throws java.io.IOException, InterruptedException {
         try {
-            System.out.println("About to write the record in DB, pojo:"+order);
-
-            org.jooq.Record record = new CkOrderRecord(order);
-
-            System.out.println("Record:"+record);
+            System.out.println("About to write the record in DB, pojo:"+cdm);
+            CommonDataModelService lookup = ServiceLocator.lookup(cdm.getClass());
+            lookup.save(cdm);
+            System.out.println("Record:"+cdm);
             System.out.println("*****************");
             System.out.println("Printing DSLContext"+dslContext.configuration().connectionProvider().acquire().getMetaData().getURL());
             System.out.println(dslContext);
 
-            record.attach(dslContext.configuration());
-            dslContext.insertInto(DSL.table("ck_order"))
-            .set(record)
-            .execute();
+
         } catch (Exception e) {
             // throw new IOException("Failed to write record", e);
             e.printStackTrace();

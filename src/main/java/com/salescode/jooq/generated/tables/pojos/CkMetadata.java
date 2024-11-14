@@ -7,9 +7,8 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -63,7 +62,7 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     }
 
     public CkMetadata(
-        String       id,
+        @Nonnull String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
         String       createdBy,
@@ -72,7 +71,7 @@ public class CkMetadata extends CommonDataModel implements Serializable {
         Date         lastModifiedTime,
         String       lob,
         String       modifiedBy,
-        Integer      version,
+        @Nonnull Integer      version,
         String       domainName,
         String       domainType,
         JsonNode     domainValues,
@@ -103,8 +102,7 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_metadata.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
+    @Nonnull
     public String getId() {
         return this.id;
     }
@@ -112,7 +110,7 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_metadata.id</code>.
      */
-    public void setId(String id) {
+    public void setId(@Nonnull String id) {
         this.id = id;
     }
 
@@ -133,7 +131,6 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_metadata.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -148,7 +145,6 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_metadata.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -205,7 +201,6 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_metadata.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -220,7 +215,6 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_metadata.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -235,7 +229,7 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_metadata.version</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getVersion() {
         return this.version;
     }
@@ -243,14 +237,13 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_metadata.version</code>.
      */
-    public void setVersion(Integer version) {
+    public void setVersion(@Nonnull Integer version) {
         this.version = version;
     }
 
     /**
      * Getter for <code>ck_metadata.domain_name</code>.
      */
-    @Size(max = 255)
     public String getDomainName() {
         return this.domainName;
     }
@@ -265,7 +258,6 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_metadata.domain_type</code>.
      */
-    @Size(max = 255)
     public String getDomainType() {
         return this.domainType;
     }
@@ -294,7 +286,6 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_metadata.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -309,7 +300,6 @@ public class CkMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_metadata.description</code>.
      */
-    @Size(max = 255)
     public String getDescription() {
         return this.description;
     }

@@ -1,5 +1,7 @@
 package com.salescode.dis.flink.jobs.fromKafkaToDB;
 
+import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.dataintegration.etl.ETLPipelineService;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.typeinfo.TypeHint;
@@ -17,11 +19,13 @@ import org.springframework.stereotype.Component;
 import com.salescode.dis.flink.sinks.DISKafkaSinkBuilder;
 import com.salescode.dis.flink.sinks.JOOQSink;
 import com.salescode.dis.flink.sources.DISKafkaSourceBuilder;
-import com.salescode.dis.jooq.generated.tables.pojos.CkOrder;
 
 @Component
 public class KafkaConsumerJob {
-        
+
+    @Autowired
+    ETLPipelineService etlPipelineService;
+
     @Autowired
     private DISKafkaSourceBuilder kafkaSourceBuilder;
 
@@ -48,15 +52,14 @@ public class KafkaConsumerJob {
         OutputTag<String> deadLetterTag = new OutputTag<String>(deadLetterTopicName) {};
 
         // Define Input Stream
-        //TODO: SingleOutputStreamOperator<CkOrder> should be SingleOutputStreamOperator<POJOBase>
-        SingleOutputStreamOperator<CkOrder> sourceStream =
+        SingleOutputStreamOperator<CommonDataModel> sourceStream =
             env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Integration Kafka Source")
                 .map((MapFunction<ObjectNode, Tuple2<String, ObjectNode>>) value -> {
                     String entityName = value.at("/transformerInfo/0/entityName").asText();
                     return new Tuple2<>(entityName, value);
                 }, TypeInformation.of(new TypeHint<Tuple2<String, ObjectNode>>(){}))
                 .keyBy(tuple -> tuple.f0)
-                .process(new MessageProcessFunction(deadLetterTag));
+                .process(new MessageProcessFunction(deadLetterTag,etlPipelineService));
             
 
         System.out.println(url+","+user+","+password);

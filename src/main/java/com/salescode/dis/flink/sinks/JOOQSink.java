@@ -2,15 +2,14 @@ package com.salescode.dis.flink.sinks;
 
 import java.io.IOException;
 
+import com.salescode.channelkart.models.CommonDataModel;
 import org.apache.commons.io.IOExceptionWithCause;
 import org.apache.flink.api.connector.sink2.Sink;
 import org.apache.flink.api.connector.sink2.SinkWriter;
 
-import com.salescode.dis.jooq.generated.tables.pojos.CkOrder;
-
 //TODO: Change CkOrder to common base class that all POJOs implement. We cannot use jooq record class becasue it's not serializable.
 //TODO: Sink and SinkWriter cannot be Autowired, flinks failes to distribute them if they're autowired
-public class JOOQSink implements Sink<CkOrder> {
+public class JOOQSink implements Sink<CommonDataModel> {
 
     private String url;
 
@@ -25,7 +24,7 @@ public class JOOQSink implements Sink<CkOrder> {
     }
 
     @Override
-    public SinkWriter<CkOrder> createWriter(InitContext context) throws IOException{
+    public SinkWriter<CommonDataModel> createWriter(InitContext context) throws IOException{
         try {
             System.out.println("*****************");
             System.out.println(url);            

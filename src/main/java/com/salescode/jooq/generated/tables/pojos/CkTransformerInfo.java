@@ -7,9 +7,8 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -69,7 +68,7 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     }
 
     public CkTransformerInfo(
-        String       id,
+        @Nonnull String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
         String       createdBy,
@@ -78,12 +77,12 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         Date         lastModifiedTime,
         String       lob,
         String       modifiedBy,
-        Integer      version,
+        @Nonnull Integer      version,
         JsonNode     code,
         String       description,
         String       implementation,
-        String       language,
-        Integer      priority,
+        @Nonnull String       language,
+        @Nonnull Integer      priority,
         String       type,
         String       source,
         String       hash,
@@ -115,8 +114,7 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
+    @Nonnull
     public String getId() {
         return this.id;
     }
@@ -124,7 +122,7 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_transformer_info.id</code>.
      */
-    public void setId(String id) {
+    public void setId(@Nonnull String id) {
         this.id = id;
     }
 
@@ -145,7 +143,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -160,7 +157,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -217,7 +213,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -232,7 +227,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -247,7 +241,7 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.version</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getVersion() {
         return this.version;
     }
@@ -255,7 +249,7 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_transformer_info.version</code>.
      */
-    public void setVersion(Integer version) {
+    public void setVersion(@Nonnull Integer version) {
         this.version = version;
     }
 
@@ -276,7 +270,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.description</code>.
      */
-    @Size(max = 255)
     public String getDescription() {
         return this.description;
     }
@@ -291,7 +284,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.implementation</code>.
      */
-    @Size(max = 255)
     public String getImplementation() {
         return this.implementation;
     }
@@ -306,8 +298,7 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.language</code>.
      */
-    @NotNull
-    @Size(max = 255)
+    @Nonnull
     public String getLanguage() {
         return this.language;
     }
@@ -315,14 +306,14 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_transformer_info.language</code>.
      */
-    public void setLanguage(String language) {
+    public void setLanguage(@Nonnull String language) {
         this.language = language;
     }
 
     /**
      * Getter for <code>ck_transformer_info.priority</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getPriority() {
         return this.priority;
     }
@@ -330,14 +321,13 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_transformer_info.priority</code>.
      */
-    public void setPriority(Integer priority) {
+    public void setPriority(@Nonnull Integer priority) {
         this.priority = priority;
     }
 
     /**
      * Getter for <code>ck_transformer_info.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -352,7 +342,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -395,7 +384,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_transformer_info.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }

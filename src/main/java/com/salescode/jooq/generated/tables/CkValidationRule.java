@@ -16,6 +16,7 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
+import javax.annotation.Nonnull;
 import java.util.Date;
 
 
@@ -36,6 +37,7 @@ public class CkValidationRule extends TableImpl<Record> {
      * The class holding records for this type
      */
     @Override
+    @Nonnull
     public Class<Record> getRecordType() {
         return Record.class;
     }
@@ -174,16 +176,19 @@ public class CkValidationRule extends TableImpl<Record> {
     }
 
     @Override
+    @Nonnull
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_VALIDATION_RULE_PRIMARY;
     }
 
     @Override
+    @Nonnull
     public CkValidationRule as(String alias) {
         return new CkValidationRule(DSL.name(alias), this);
     }
 
     @Override
+    @Nonnull
     public CkValidationRule as(Name alias) {
         return new CkValidationRule(alias, this);
     }
@@ -192,6 +197,7 @@ public class CkValidationRule extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkValidationRule rename(String name) {
         return new CkValidationRule(DSL.name(name), null);
     }
@@ -200,6 +206,7 @@ public class CkValidationRule extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkValidationRule rename(Name name) {
         return new CkValidationRule(name, null);
     }

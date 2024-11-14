@@ -8,6 +8,7 @@ import org.jooq.Constants;
 import org.jooq.Schema;
 import org.jooq.impl.CatalogImpl;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class DefaultCatalog extends CatalogImpl {
     }
 
     @Override
+    @Nonnull
     public final List<Schema> getSchemas() {
         return Arrays.asList(
             DefaultSchema.DEFAULT_SCHEMA

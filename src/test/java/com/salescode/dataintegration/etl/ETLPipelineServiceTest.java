@@ -11,6 +11,7 @@ import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.dataintegration.etl.registry.ETLRegistry;
 import com.salescode.dataintegration.etl.transformer.registry.TransformerInfoRegistry;
 import com.salescode.dis.FlinkApplication;
+import com.salescode.dis.config.DatabaseConfig;
 import com.salescode.jooq.generated.tables.pojos.CkEnrichmentInfo;
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
 import com.salescode.jooq.generated.tables.pojos.CkTransformerInfo;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Import;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +30,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest(classes = FlinkApplication.class)
+@Import(DatabaseConfig.class)
 class ETLPipelineServiceTest {
 
     @Autowired DSLContext dslContext;

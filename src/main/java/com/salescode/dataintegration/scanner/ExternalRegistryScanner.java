@@ -15,8 +15,12 @@ public class ExternalRegistryScanner {
 
     // Cache for storing class instances
     private final Map<String, ? extends TypeAwareEtlStep> instanceCache = new HashMap<>();
-    @Autowired
-    private DSLContext dslContext;
+
+    private final transient DSLContext dslContext;
+
+    public ExternalRegistryScanner(DSLContext dslContext) {
+        this.dslContext = dslContext;
+    }
 
     /**
      * Loads and caches classes from a bundle jar file based on the LOB.

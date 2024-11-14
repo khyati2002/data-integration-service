@@ -9,6 +9,7 @@ import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,11 +71,13 @@ public class DefaultSchema extends SchemaImpl {
 
 
     @Override
+    @Nonnull
     public Catalog getCatalog() {
         return DefaultCatalog.DEFAULT_CATALOG;
     }
 
     @Override
+    @Nonnull
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             CkEnrichmentInfo.CK_ENRICHMENT_INFO,

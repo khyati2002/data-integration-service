@@ -7,9 +7,8 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -67,7 +66,7 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     }
 
     public CkValidationRule(
-        String       id,
+        @Nonnull String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
         String       createdBy,
@@ -76,12 +75,12 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
         Date         lastModifiedTime,
         String       lob,
         String       modifiedBy,
-        Integer      version,
+        @Nonnull Integer      version,
         String       description,
         String       implementation,
         String       language,
-        Integer      priority,
-        Integer      severity,
+        @Nonnull Integer      priority,
+        @Nonnull Integer      severity,
         String       type,
         String       source,
         String       hash,
@@ -111,8 +110,7 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_validation_rule.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
+    @Nonnull
     public String getId() {
         return this.id;
     }
@@ -120,7 +118,7 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_validation_rule.id</code>.
      */
-    public void setId(String id) {
+    public void setId(@Nonnull String id) {
         this.id = id;
     }
 
@@ -141,7 +139,6 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_validation_rule.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -156,7 +153,6 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_validation_rule.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -213,7 +209,6 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_validation_rule.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -228,7 +223,6 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_validation_rule.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -243,7 +237,7 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_validation_rule.version</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getVersion() {
         return this.version;
     }
@@ -251,14 +245,13 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_validation_rule.version</code>.
      */
-    public void setVersion(Integer version) {
+    public void setVersion(@Nonnull Integer version) {
         this.version = version;
     }
 
     /**
      * Getter for <code>ck_validation_rule.description</code>.
      */
-    @Size(max = 255)
     public String getDescription() {
         return this.description;
     }
@@ -273,7 +266,6 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_validation_rule.implementation</code>.
      */
-    @Size(max = 255)
     public String getImplementation() {
         return this.implementation;
     }
@@ -288,7 +280,6 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_validation_rule.language</code>.
      */
-    @Size(max = 255)
     public String getLanguage() {
         return this.language;
     }
@@ -303,7 +294,7 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_validation_rule.priority</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getPriority() {
         return this.priority;
     }
@@ -311,14 +302,14 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_validation_rule.priority</code>.
      */
-    public void setPriority(Integer priority) {
+    public void setPriority(@Nonnull Integer priority) {
         this.priority = priority;
     }
 
     /**
      * Getter for <code>ck_validation_rule.severity</code>.
      */
-    @NotNull
+    @Nonnull
     public Integer getSeverity() {
         return this.severity;
     }
@@ -326,14 +317,13 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Setter for <code>ck_validation_rule.severity</code>.
      */
-    public void setSeverity(Integer severity) {
+    public void setSeverity(@Nonnull Integer severity) {
         this.severity = severity;
     }
 
     /**
      * Getter for <code>ck_validation_rule.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -348,7 +338,6 @@ public class CkValidationRule extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_validation_rule.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }

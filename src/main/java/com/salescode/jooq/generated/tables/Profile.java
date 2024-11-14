@@ -16,6 +16,7 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,7 @@ public class Profile extends TableImpl<Record> {
      * The class holding records for this type
      */
     @Override
+    @Nonnull
     public Class<Record> getRecordType() {
         return Record.class;
     }
@@ -176,21 +178,25 @@ public class Profile extends TableImpl<Record> {
     }
 
     @Override
+    @Nonnull
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_PROFILE_PRIMARY;
     }
 
     @Override
+    @Nonnull
     public List<UniqueKey<Record>> getUniqueKeys() {
         return Arrays.asList(Keys.KEY_PROFILE_UK_H0MISXFXI90TXD9E2CF1OWM8J);
     }
 
     @Override
+    @Nonnull
     public Profile as(String alias) {
         return new Profile(DSL.name(alias), this);
     }
 
     @Override
+    @Nonnull
     public Profile as(Name alias) {
         return new Profile(alias, this);
     }
@@ -199,6 +205,7 @@ public class Profile extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public Profile rename(String name) {
         return new Profile(DSL.name(name), null);
     }
@@ -207,6 +214,7 @@ public class Profile extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public Profile rename(Name name) {
         return new Profile(name, null);
     }

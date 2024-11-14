@@ -17,6 +17,7 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
+import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
@@ -40,6 +41,7 @@ public class CkOutletDetails extends TableImpl<Record> {
      * The class holding records for this type
      */
     @Override
+    @Nonnull
     public Class<Record> getRecordType() {
         return Record.class;
     }
@@ -343,21 +345,25 @@ public class CkOutletDetails extends TableImpl<Record> {
     }
 
     @Override
+    @Nonnull
     public List<Index> getIndexes() {
         return Arrays.asList(Indexes.CK_OUTLET_DETAILS_CK_OUTLET_DETAILS_IDX_1, Indexes.CK_OUTLET_DETAILS_CK_OUTLET_DETAILS_IDX_2, Indexes.CK_OUTLET_DETAILS_CK_OUTLET_DETAILS_IDX_3, Indexes.CK_OUTLET_DETAILS_IDX_CREATION_TIME);
     }
 
     @Override
+    @Nonnull
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_OUTLET_DETAILS_PRIMARY;
     }
 
     @Override
+    @Nonnull
     public List<UniqueKey<Record>> getUniqueKeys() {
         return Arrays.asList(Keys.KEY_CK_OUTLET_DETAILS_UK_MLY519H4E7VB1OSP9V927V3XQ);
     }
 
     @Override
+    @Nonnull
     public List<ForeignKey<Record, ?>> getReferences() {
         return Arrays.asList(Keys.FK34TJNHKXR2ESQXCCD5LJL3UAK);
     }
@@ -375,11 +381,13 @@ public class CkOutletDetails extends TableImpl<Record> {
     }
 
     @Override
+    @Nonnull
     public CkOutletDetails as(String alias) {
         return new CkOutletDetails(DSL.name(alias), this);
     }
 
     @Override
+    @Nonnull
     public CkOutletDetails as(Name alias) {
         return new CkOutletDetails(alias, this);
     }
@@ -388,6 +396,7 @@ public class CkOutletDetails extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkOutletDetails rename(String name) {
         return new CkOutletDetails(DSL.name(name), null);
     }
@@ -396,6 +405,7 @@ public class CkOutletDetails extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkOutletDetails rename(Name name) {
         return new CkOutletDetails(name, null);
     }

@@ -18,12 +18,14 @@ import com.salescode.dataintegration.etl.validation.ValidationResult;
 import com.salescode.dataintegration.etl.validation.service.DataEntityValidationService;
 import com.salescode.dataintegration.etl.validation.service.DataValidationService;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ETLPipelineService {
 
@@ -41,17 +43,19 @@ public class ETLPipelineService {
     }
 
     @SneakyThrows
-    void execute(String message) {
+    public List<CommonDataModel> execute(String message) {
+        log.info("Executing etl pipeline");
+        List<CommonDataModel> transformedObjects = new ArrayList<>();
         StreamingRawData streamingRawData = objectMapper.readValue(message, StreamingRawData.class);
         ArrayNode features = streamingRawData.getFeatures();
         if (features.isEmpty()) {
             throw new IllegalArgumentException("Features cannot be empty");
         }
-        for (JsonNode jsonNode : streamingRawData.getFeatures()) {
+        for (JsonNode jsonNode : features) {
             streamingRawData.setFeatures(objectMapper.createArrayNode().add(jsonNode));
-            List<CommonDataModel> process = process(streamingRawData);
+            transformedObjects.addAll(process(streamingRawData));
         }
-        streamingRawData.setFeatures(features);
+        return transformedObjects;
     }
 
     List<CommonDataModel> process(StreamingRawData streamingRawData) {
@@ -64,6 +68,7 @@ public class ETLPipelineService {
             Class<? extends CommonDataModel> entityClass = EntityUtils.getInstance().getEntityClass(transformerInfo.getEntityName());
             CommonDataModelService cdmService = ServiceLocator.lookup(entityClass);
             List<? extends CommonDataModel> cdms = dataTransformationService.transformData(transformerId, entityName, jsonNode);
+            log.info("CDM : {}", JSONUtils.getObjectMapper().convertValue(cdms, JsonNode.class).toPrettyString());
             for (CommonDataModel tempCdm : cdms) {
                 String id = cdmService.getKey(tempCdm);
                 if (id == null) {
@@ -95,6 +100,7 @@ public class ETLPipelineService {
                 } else {
                     or.setStatus(OperationResponse.OperationStatus.Failure);
                 }
+                transformedObjects.addAll(or.getEnrichment().getEnrichedData().parallelStream().map(s -> cdmService.save(s)).collect(Collectors.toList()));
             }
         }
         return transformedObjects;

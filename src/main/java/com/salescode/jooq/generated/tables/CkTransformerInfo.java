@@ -16,6 +16,7 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,7 @@ public class CkTransformerInfo extends TableImpl<Record> {
      * The class holding records for this type
      */
     @Override
+    @Nonnull
     public Class<Record> getRecordType() {
         return Record.class;
     }
@@ -181,21 +183,25 @@ public class CkTransformerInfo extends TableImpl<Record> {
     }
 
     @Override
+    @Nonnull
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_TRANSFORMER_INFO_PRIMARY;
     }
 
     @Override
+    @Nonnull
     public List<UniqueKey<Record>> getUniqueKeys() {
         return Arrays.asList(Keys.KEY_CK_TRANSFORMER_INFO_UK_TRANSFORMER_INFO);
     }
 
     @Override
+    @Nonnull
     public CkTransformerInfo as(String alias) {
         return new CkTransformerInfo(DSL.name(alias), this);
     }
 
     @Override
+    @Nonnull
     public CkTransformerInfo as(Name alias) {
         return new CkTransformerInfo(alias, this);
     }
@@ -204,6 +210,7 @@ public class CkTransformerInfo extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkTransformerInfo rename(String name) {
         return new CkTransformerInfo(DSL.name(name), null);
     }
@@ -212,6 +219,7 @@ public class CkTransformerInfo extends TableImpl<Record> {
      * Rename this table
      */
     @Override
+    @Nonnull
     public CkTransformerInfo rename(Name name) {
         return new CkTransformerInfo(name, null);
     }
