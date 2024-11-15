@@ -32,7 +32,7 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
     private String lob;
     private String modifiedBy;
     private Integer version;
-    private String hierarchy;
+    public String hierarchy;
     private String parent;
     private String locationHierarchy;
     private String source;

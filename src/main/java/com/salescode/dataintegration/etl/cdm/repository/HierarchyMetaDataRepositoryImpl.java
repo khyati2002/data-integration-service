@@ -7,8 +7,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static com.salescode.jooq.generated.Tables.CK_USER;
 import static com.salescode.jooq.generated.tables.CkHierarchyMetadata.CK_HIERARCHY_METADATA;
 import static com.salescode.jooq.generated.tables.CkUserParent.CK_USER_PARENT;
+import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.select;
 
 public class HierarchyMetaDataRepositoryImpl implements HierarchyMetaDataRepository {
@@ -54,36 +56,59 @@ public class HierarchyMetaDataRepositoryImpl implements HierarchyMetaDataReposit
 
     @Override
     public void updateHierarchy() {
-
+        dsl.update(CK_HIERARCHY_METADATA)
+                .set(CK_HIERARCHY_METADATA.HIERARCHY, CK_USER.HIERARCHY)
+                .from(CK_USER)
+                .where(CK_HIERARCHY_METADATA.PARENT.eq(CK_USER.LOGINID))
+                .execute();
     }
 
     @Override
     public void deleteHierarchyMetaData(String loginid) {
-
+        dsl.deleteFrom(CK_HIERARCHY_METADATA)
+                .where(CK_HIERARCHY_METADATA.PARENT.eq(loginid))
+                .execute();
     }
 
     @Override
     public void deleteByHierarchyIn(Collection<String> hierarchy) {
-
+        dsl.deleteFrom(CK_HIERARCHY_METADATA)
+                .where(CK_HIERARCHY_METADATA.HIERARCHY.in(hierarchy))
+                .execute();
     }
 
     @Override
     public void deleteByHierarchy(String hierarchy) {
-
+        dsl.deleteFrom(CK_HIERARCHY_METADATA)
+                .where(CK_HIERARCHY_METADATA.HIERARCHY.eq(hierarchy))
+                .execute();
     }
 
     @Override
     public void updateLocationHierarchy() {
-
+        dsl.update(CK_HIERARCHY_METADATA)
+                .set(CK_HIERARCHY_METADATA.LOCATION_HIERARCHY, CK_USER.LOCATION_HIERARCHY)
+                .from(CK_USER)
+                .where(CK_HIERARCHY_METADATA.PARENT.eq(CK_USER.LOGINID))
+                .execute();
     }
 
     @Override
     public List<CkHierarchyMetadata> findByParentMatchByHierarchy(String loginId, String hierarchyUser) {
-        return List.of();
+        return dsl.selectFrom(CK_HIERARCHY_METADATA)
+                .where(CK_HIERARCHY_METADATA.PARENT.eq(loginId))
+                .and(field("MATCH (hierarchy) AGAINST ({0})", Boolean.class, hierarchyUser))
+                .fetchInto(CkHierarchyMetadata.class);
     }
 
     @Override
     public List<Map<String, Object>> getHierarchyDetailsByLoginId(List<String> parents) {
-        return List.of();
+        return dsl.select(CK_HIERARCHY_METADATA.PARENT,
+                        CK_HIERARCHY_METADATA.HIERARCHY.as("hmdHierarchy"),
+                        CK_HIERARCHY_METADATA.ID)
+                .from(CK_HIERARCHY_METADATA)
+                .where(CK_HIERARCHY_METADATA.PARENT.in(parents))
+                .fetch()
+                .intoMaps();
     }
 }

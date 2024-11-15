@@ -8,8 +8,11 @@ package com.salescode.dataintegration.etl.cdm.services;
 import com.applicate.services.channelkart.cache.AppCacheManager;
 import com.applicate.services.channelkart.cache.DistributedCache;
 import com.applicate.services.channelkart.models.HierarchyMetaData;
-import com.applicate.services.channelkart.repository.HierarchyMetaDataRepository;
+
 import com.applicate.services.channelkart.security.SecurityContextUtils;
+import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
+import com.salescode.dataintegration.etl.cdm.repository.HierarchyMetaDataRepository;
+import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +32,7 @@ import java.util.function.Function;
  * @since  2020
  */
 @Service
-public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaData>  {
+public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMetadata> {
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -48,7 +51,6 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
 	 * @param repository the repository
 	 */
 	public HierarchyMetaDataService(HierarchyMetaDataRepository repository) {
-		super(repository);
 		this.hierarchyMetaDataRepository=repository;
 	}
 
@@ -58,7 +60,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
      * @param loginId the login id
      * @return the hierarchy meta data
      */
-    public Collection<HierarchyMetaData> findByImmediateParent(String loginId) {
+    public Collection<CkHierarchyMetadata> findByImmediateParent(String loginId) {
         return findByImmediateParent(loginId,true);
     }
     
@@ -69,20 +71,20 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
      * @param cached the cached
      * @return the hierarchy meta data
      */
-    public Collection<HierarchyMetaData> findByImmediateParent(String loginId, boolean cached) {
-    	Function<String,Collection<HierarchyMetaData>> function = (String lid)->{
+    public Collection<CkHierarchyMetadata> findByImmediateParent(String loginId, boolean cached) {
+    	Function<String,Collection<CkHierarchyMetadata>> function = (String lid)->{
 			return hierarchyMetaDataRepository.findByImmediateParent(lid);
 		};
     	logger.debug("Find immediate Parent for->>>>>>>>>>>>:{}", loginId);
 		return (cached) ? AppCacheManager.getInstance().withCache(CACHE_DOMAIN, loginId,function):function.apply(loginId);
     }
     
-    public Collection<HierarchyMetaData> findByImmediateParent(List<String> loginId) {
+    public Collection<CkHierarchyMetadata> findByImmediateParent(List<String> loginId) {
 		return hierarchyMetaDataRepository.findByImmediateParentIn(loginId);
     }
     
     @Override
-    public HierarchyMetaData save(HierarchyMetaData cdmObject) {
+    public CkHierarchyMetadata save(CkHierarchyMetadata cdmObject) {
     	//List<HierarchyMetaData> dbData=(List<HierarchyMetaData>) findByImmediateParent(cdmObject.getImmediateParent(),true);
     	//if(dbData != null && !dbData.isEmpty()) {
     		String lob= SecurityContextUtils.getLob();
@@ -91,7 +93,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
     		//AppCacheManager.getInstance().removeByDomain(CACHE_DOMAIN,cdmObject.getHierarchy());
     		clearCache(lob,cdmObject.getImmediateParent());
     	//}
-    	HierarchyMetaData saved= super.save(cdmObject);
+    	CkHierarchyMetadata saved= super.save(cdmObject);
     	if(saved != null) {
     		clearCache(lob,saved.getImmediateParent());
     	}
@@ -99,10 +101,10 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
     }
 
 	@Override
-	public List<HierarchyMetaData> batchSave(Iterable<HierarchyMetaData> iterObj) {
+	public List<CkHierarchyMetadata> batchSave(Iterable<CkHierarchyMetadata> iterObj) {
     	return batchSave(iterObj,true);
 	}
-	public List<HierarchyMetaData> batchSave(Iterable<HierarchyMetaData> iterObj,boolean clearCache) {
+	public List<CkHierarchyMetadata> batchSave(Iterable<CkHierarchyMetadata> iterObj,boolean clearCache) {
     	String lob= SecurityContextUtils.getLob();
 
     	if(clearCache) {
@@ -115,7 +117,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
 					}
 				});
 			}
-    	List<HierarchyMetaData> saved= super.batchSave(iterObj);
+    	List<CkHierarchyMetadata> saved= super.batchSave(iterObj);
     	if(saved != null && clearCache) {
 			saved.forEach(element->clearCache(lob,element.getImmediateParent()));
     	}
@@ -149,7 +151,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
      * @param loginid the loginid
      * @return the list
      */
-    public List<HierarchyMetaData> findParentThroughUserLoginId(String loginid){
+    public List<CkHierarchyMetadata> findParentThroughUserLoginId(String loginid){
     	return hierarchyMetaDataRepository.findMyHierarchy(loginid);
     }
     
@@ -165,7 +167,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
      */
     
     @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
-    public HierarchyMetaData findByHierarchy(String hierarchy) {
+    public CkHierarchyMetadata findByHierarchy(String hierarchy) {
     	return hierarchyMetaDataRepository.findByHierarchy(hierarchy);
     }
     
@@ -187,7 +189,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
     	hierarchyMetaDataRepository.updateLocationHierarchy();
     }
     
-    public List<HierarchyMetaData> findByParentMatchByHierarchy(String loginId, String hierarchyUser){
+    public List<CkHierarchyMetadata> findByParentMatchByHierarchy(String loginId, String hierarchyUser){
     	return hierarchyMetaDataRepository.findByParentMatchByHierarchy(loginId, hierarchyUser);
     	}
 	
