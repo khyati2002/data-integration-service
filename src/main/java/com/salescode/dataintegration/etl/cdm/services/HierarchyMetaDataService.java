@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2020. All rights reserved.
  * APPLICATE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
+ * 
  */
 package com.salescode.dataintegration.etl.cdm.services;
 

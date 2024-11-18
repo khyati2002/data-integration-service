@@ -4,6 +4,8 @@ import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.dataintegration.etl.cdm.util.ServiceLocator;
+import org.apache.commons.collections.ListUtils;
+import org.springframework.util.IdGenerator;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -47,5 +49,18 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     @Override
     public T save(T cdmObject) {
         return cdmObject;
+    }
+
+    @Override
+    public List<T> batchSave(Iterable<T> iterObj, IdGenerator idGenerator) {
+        iterObj.forEach(this::preSaveEnrichment);
+        if(isNativeBatchSave(iterObj)) {
+            return nativeBatchSave(iterObj, idGenerator);
+        }else {
+            BatchContainer<T> container = splitElements(iterObj, idGenerator);
+            List<T> elementsToSaveAsList = container.getAllElementstoSave();
+            List<T> savedData = saveAll(elementsToSaveAsList);
+            return ListUtils.union(container.getDuplicateElementsAsList(), savedData);
+        }
     }
 }

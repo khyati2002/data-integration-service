@@ -51,4 +51,8 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final ForeignKey<Record, Record> FK34TJNHKXR2ESQXCCD5LJL3UAK = Internal.createForeignKey(CkOutletDetails.CK_OUTLET_DETAILS, DSL.name("FK34tjnhkxr2esqxccd5ljl3uak"), new TableField[] { CkOutletDetails.CK_OUTLET_DETAILS.LOGINID }, Keys.KEY_CK_USER_UK_2F6QWRY9T0AXMNHVAN6XHUG8G, new TableField[] { CkUser.CK_USER.LOGINID }, true);
+    public static final UniqueKey<Record> KEY_CK_HIERARCHY_METADATA_PRIMARY = ;
+    public static final UniqueKey<Record> KEY_CK_HIERARCHY_METADATA_UK_5LPW74NKMPKYSJ31VICHMJI7K = ;
+    public static final UniqueKey<Record> KEY_CK_HIERARCHY_METADATA_UK_HIERARCHY_METADATA = ;
+    public static final UniqueKey<Record> KEY_CK_HIERARCHY_METADATA_ROWID = ;
 }

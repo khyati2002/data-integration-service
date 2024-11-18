@@ -101,6 +101,15 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 //                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet)));
 //    }
 
+    public void createAssociatedData(CkOutletDetails outlet) {
+        if (outlet.getUserName() != null) {
+            addAssociatedData(outlet);
+        } else if (getClientProperty("application.category")
+                .equals(ApplicationCategory.RETAIL.name())) {
+            createRetailUser(outlet);
+        }
+    }
+
 public CkLocation getLocation(CkOutletDetails outlet) {
 
        return dsl.select(CK_OUTLET_DETAILS.fields())
@@ -109,6 +118,9 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                .on(CK_OUTLET_DETAILS.LOCATION_HIERARCHY.eq(CK_LOCATION.LOCATION_HIERARCHY))
                .where(CK_OUTLET_DETAILS.ID.eq(outlet.getId()))
                .fetchOneInto(CkLocation.class);
+    private void addAssociatedData(CkOutletDetails outlet) {
+        if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY).equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))){
+            outlet.getChanges().forEach(changed ->
 
     }
 
@@ -465,6 +477,15 @@ private void setHierarchy(CkOutletDetails tempoutlet) {
         }else{
            // logger.warn("Hierarchy logs: Null hierarchy found for outlet {}. Skipping setHierarchy() operation",tempoutlet.getOutletCode());
         }
+    }
+
+    private List<CkHierarchyMetadata> replicateRetailerOutletParent(List<CkHierarchyMetadata> hms) {
+        if (NullUtils.isNull(hms)) {
+            return new ArrayList<>(1);
+        }
+        List<CkHierarchyMetadata> parentList = new ArrayList<>(hms.size());
+        hms.forEach(hm -> parentList.add(EntityUtils.deepClone(hm)));
+        return parentList;
     }
 }
 //

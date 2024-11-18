@@ -31,4 +31,7 @@ public class Indexes {
     public static final Index CK_OUTLET_DETAILS_IDX_CREATION_TIME = Internal.createIndex(DSL.name("idx_creation_time"), CkOutletDetails.CK_OUTLET_DETAILS, new OrderField[] { CkOutletDetails.CK_OUTLET_DETAILS.CREATION_TIME }, false);
     public static final Index CK_USER_IDX_HIERARCHY_FULLINDEX = Internal.createIndex(DSL.name("idx_hierarchy_fullindex"), CkUser.CK_USER, new OrderField[] { CkUser.CK_USER.HIERARCHY }, false);
     public static final Index CK_USER_USERCONTEXT_IDX = Internal.createIndex(DSL.name("usercontext_idx"), CkUser.CK_USER, new OrderField[] { CkUser.CK_USER.USERCONTEXT }, false);
+    public static final Index CK_HIERARCHY_METADATA_CK_HIERARCHY_METADATA_IDX_1 = ;
+    public static final Index CK_HIERARCHY_METADATA_CK_HIERARCHY_METADATA_IDX_2 = ;
+    public static final Index CK_HIERARCHY_METADATA_IDX_FULL_INDEX_HIERARCHY = ;
 }
