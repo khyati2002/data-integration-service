@@ -8,9 +8,9 @@ import java.util.Set;
 
 @Repository
 public interface LocationRepository  {
-	
+
 	CkLocation findByLocationHierarchy(String locationHierarchy);
-	
+
 	List<CkLocation> findByLocationHierarchyIn(Set<String> locationHierarchy);
 
 	CkLocation findBySalescodeId (String salescodeId);

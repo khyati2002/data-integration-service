@@ -1,6 +1,7 @@
 package com.salescode.dataintegration.etl.cdm.repository;
 
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -8,6 +9,7 @@ import java.util.List;
  * @author : Jinu
  * Date    : 2/8/2021
  **/
+@Repository
 public interface MetaDataCustomRepository {
 
    List<CkMetadata> findAll(String domainName);

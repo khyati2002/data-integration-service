@@ -1,6 +1,7 @@
 package com.salescode.dataintegration.etl.cdm.repository;
 
-import com.salescode.channelkart.sync.schduler.UserNameAndContext;
+import com.salescode.channelkart.models.enums.ActiveStatus;
+
 import com.salescode.jooq.generated.tables.pojos.CkUser;
 import com.salescode.jooq.generated.tables.pojos.CkUserMessengerInfo;
 import org.jooq.DSLContext;
@@ -15,6 +16,7 @@ import static com.salescode.jooq.generated.tables.CkToken.CK_TOKEN;
 import static com.salescode.jooq.generated.tables.CkUser.CK_USER;
 import static com.salescode.jooq.generated.tables.CkUserMessengerInfo.CK_USER_MESSENGER_INFO;
 import static com.salescode.jooq.generated.tables.CkUserdesignation.CK_USERDESIGNATION;
+
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
@@ -80,22 +82,22 @@ public class UserRepositoryImpl implements UserRepository {
                 .fetchOptionalInto(String.class);
     }
 
-    @Override
-    public List<UserNameAndContext> getUserContexts(){
-        return dsl.select(CK_USER.LOGINID, CK_USER.USERCONTEXT)        // Select loginId and userContext
-                .from(CK_USER)                                       // From the USER table
-                .where(CK_USER.USERCONTEXT.isNotNull())             // Only where userContext is not null
-                .fetchInto(UserNameAndContext.class);
-    }
+//    @Override
+//    public List<UserNameAndContext> getUserContexts(){
+//        return dsl.select(CK_USER.LOGINID, CK_USER.USERCONTEXT)        // Select loginId and userContext
+//                .from(CK_USER)                                       // From the USER table
+//                .where(CK_USER.USERCONTEXT.isNotNull())             // Only where userContext is not null
+//                .fetchInto(UserNameAndContext.class);
+//    }
 
-    @Override
-    public List<UserNameAndContext> getUserContexts(List<String> loginIds){
-        return dsl.select(CK_USER.LOGINID, CK_USER.USERCONTEXT)             // Select loginId and userContext
-                .from(CK_USER)                                            // From the USER table
-                .where(CK_USER.USERCONTEXT.isNotNull())                  // Only where userContext is not null
-                .and(CK_USER.LOGINID.in(loginIds))                       // Only where loginId is in the provided list
-                .fetchInto(UserNameAndContext.class);                   // Map results directly into UserNameAndContext objects
-    }
+//    @Override
+//    public List<UserNameAndContext> getUserContexts(List<String> loginIds){
+//        return dsl.select(CK_USER.LOGINID, CK_USER.USERCONTEXT)             // Select loginId and userContext
+//                .from(CK_USER)                                            // From the USER table
+//                .where(CK_USER.USERCONTEXT.isNotNull())                  // Only where userContext is not null
+//                .and(CK_USER.LOGINID.in(loginIds))                       // Only where loginId is in the provided list
+//                .fetchInto(UserNameAndContext.class);                   // Map results directly into UserNameAndContext objects
+//    }
 
     @Override
     public List<Map<String, Object>> getUserAndVerification(List<String> loginIds) {
@@ -210,6 +212,11 @@ public class UserRepositoryImpl implements UserRepository {
                 .set(CK_USER.HASH, hash)
                 .where(CK_USER.LOGINID.eq(loginId))
                 .execute();  // Executes the update without storing the result
+    }
+
+    @Override
+    public int updateActiveStatusAndReason(String loginId, ActiveStatus activeStatus, String activeStatusReason) {
+        return 0;
     }
 
 //    public int updateActiveStatusAndReason(String loginId, ActiveStatus activeStatus, String activeStatusReason){

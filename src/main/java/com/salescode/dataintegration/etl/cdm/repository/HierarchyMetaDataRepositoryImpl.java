@@ -2,6 +2,7 @@ package com.salescode.dataintegration.etl.cdm.repository;
 
 import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
 import org.jooq.DSLContext;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,6 +14,7 @@ import static com.salescode.jooq.generated.tables.CkUserParent.CK_USER_PARENT;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.select;
 
+@Repository
 public class HierarchyMetaDataRepositoryImpl implements HierarchyMetaDataRepository {
     private final DSLContext dsl;
 
@@ -28,12 +30,12 @@ public class HierarchyMetaDataRepositoryImpl implements HierarchyMetaDataReposit
 
     @Override
     public Collection<CkHierarchyMetadata> findByImmediateParent(String loginId) {
-
+     return List.of();
     }
 
     @Override
     public Collection<CkHierarchyMetadata> findByImmediateParentIn(List<String> loginId) {
-
+        return List.of();
     }
 
     @Override

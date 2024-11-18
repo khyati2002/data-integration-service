@@ -2,11 +2,13 @@ package com.salescode.dataintegration.etl.cdm.repository;
 
 import com.salescode.jooq.generated.tables.pojos.CkLocation;
 import org.jooq.DSLContext;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Set;
 
 import static com.salescode.jooq.generated.tables.CkLocation.CK_LOCATION;
+@Repository
 public class LocationRepositoryImpl implements LocationRepository {
     private final DSLContext dsl;
 

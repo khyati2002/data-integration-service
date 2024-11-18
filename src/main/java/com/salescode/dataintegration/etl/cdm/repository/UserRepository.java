@@ -9,7 +9,7 @@ package com.salescode.dataintegration.etl.cdm.repository;
 //import com.applicate.services.channelkart.models.enums.ActiveStatus;
 
 import com.salescode.channelkart.models.enums.ActiveStatus;
-import com.salescode.channelkart.sync.schduler.UserNameAndContext;
+
 import com.salescode.jooq.generated.tables.pojos.CkUser;
 import com.salescode.jooq.generated.tables.pojos.CkUserMessengerInfo;
 import org.springframework.stereotype.Repository;
@@ -50,10 +50,10 @@ public interface UserRepository {
 //
 
   //  @Query("select new com.applicate.services.channelkart.sync.schduler.UserNameAndContext(u.loginId, u.userContext)  from User u where u.userContext is not null")
-    List<UserNameAndContext> getUserContexts();
+   // List<UserNameAndContext> getUserContexts();
 //
 //    @Query("select new com.applicate.services.channelkart.sync.schduler.UserNameAndContext(u.loginId, u.userContext)  from User u where u.userContext is not null and u.loginId in (?1)")
-      List<UserNameAndContext> getUserContexts(List<String> loginIds);
+     // List<UserNameAndContext> getUserContexts(List<String> loginIds);
 //
 //    @Query("select u.loginId as loginId, u.verified as verified from User u where u.loginId in (?1)")
        List<Map<String, Object>> getUserAndVerification(List<String> loginIds);

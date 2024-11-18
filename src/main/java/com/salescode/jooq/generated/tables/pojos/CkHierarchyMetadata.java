@@ -4,12 +4,15 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.jooq.JSON;
 
@@ -23,12 +26,12 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
     private static final long serialVersionUID = 1L;
 
     private String id;
-    private String activeStatus;
+    private ActiveStatus activeStatus;
     private String activeStatusReason;
     private String createdBy;
-    private LocalDateTime creationTime;
-    private JSON extendedAttributes;
-    private LocalDateTime lastModifiedTime;
+    private Date creationTime;
+    private JsonNode extendedAttributes;
+    private Date lastModifiedTime;
     private String lob;
     private String modifiedBy;
     private Integer version;
@@ -64,12 +67,12 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
 
     public CkHierarchyMetadata(
         String id,
-        String activeStatus,
+        ActiveStatus activeStatus,
         String activeStatusReason,
         String createdBy,
-        LocalDateTime creationTime,
-        JSON extendedAttributes,
-        LocalDateTime lastModifiedTime,
+        Date creationTime,
+        JsonNode extendedAttributes,
+        Date lastModifiedTime,
         String lob,
         String modifiedBy,
         Integer version,
@@ -119,17 +122,13 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_hierarchy_metadata.active_status</code>.
      */
-    @Size(max = 255)
-    public String getActiveStatus() {
-        return this.activeStatus;
-    }
+
+
 
     /**
      * Setter for <code>ck_hierarchy_metadata.active_status</code>.
      */
-    public void setActiveStatus(String activeStatus) {
-        this.activeStatus = activeStatus;
-    }
+
 
     /**
      * Getter for <code>ck_hierarchy_metadata.active_status_reason</code>.
@@ -164,42 +163,49 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_hierarchy_metadata.creation_time</code>.
      */
-    public LocalDateTime getCreationTime() {
+    public Date getCreationTime() {
         return this.creationTime;
     }
+
+
 
     /**
      * Setter for <code>ck_hierarchy_metadata.creation_time</code>.
      */
-    public void setCreationTime(LocalDateTime creationTime) {
+    public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 
     /**
      * Getter for <code>ck_hierarchy_metadata.extended_attributes</code>.
      */
-    public JSON getExtendedAttributes() {
+
+    public JsonNode getExtendedAttributes() {
         return this.extendedAttributes;
+    }
+
+
+    public void setExtendedAttributes(JsonNode extendedAttributes) {
+        this.extendedAttributes = extendedAttributes;
     }
 
     /**
      * Setter for <code>ck_hierarchy_metadata.extended_attributes</code>.
      */
-    public void setExtendedAttributes(JSON extendedAttributes) {
-        this.extendedAttributes = extendedAttributes;
-    }
+
 
     /**
      * Getter for <code>ck_hierarchy_metadata.last_modified_time</code>.
      */
-    public LocalDateTime getLastModifiedTime() {
+    public Date getLastModifiedTime() {
         return this.lastModifiedTime;
     }
+
 
     /**
      * Setter for <code>ck_hierarchy_metadata.last_modified_time</code>.
      */
-    public void setLastModifiedTime(LocalDateTime lastModifiedTime) {
+    public void setLastModifiedTime(Date lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
     }
 
@@ -246,6 +252,16 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
      */
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    @Override
+    public ActiveStatus getActiveStatus() {
+        return null;
+    }
+
+   @Override
+    public void setActiveStatus(ActiveStatus activeStatus) {
+        this.activeStatus = activeStatus;
     }
 
     /**

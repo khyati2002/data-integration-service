@@ -3,10 +3,12 @@ package com.salescode.channelkart.converters;
 
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
+import org.springframework.stereotype.Component;
 
 
 import java.util.List;
 
+@Component
 public class HierarchyMetaDataToStringConverter extends StdConverter<List<CkHierarchyMetadata>,String> {
 
 

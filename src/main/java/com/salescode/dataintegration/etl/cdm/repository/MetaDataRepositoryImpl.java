@@ -2,6 +2,7 @@ package com.salescode.dataintegration.etl.cdm.repository;
 
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
 import org.jooq.DSLContext;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.salescode.jooq.generated.tables.CkMetadata.CK_METADATA;
+@Repository
 public class MetaDataRepositoryImpl implements MetaDataRepository {
 
     @PersistenceContext
