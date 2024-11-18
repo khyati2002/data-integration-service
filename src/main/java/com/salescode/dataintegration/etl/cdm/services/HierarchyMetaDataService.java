@@ -76,7 +76,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
 			return hierarchyMetaDataRepository.findByImmediateParent(lid);
 		};
     	logger.debug("Find immediate Parent for->>>>>>>>>>>>:{}", loginId);
-		return (cached) ? AppCacheManager.getInstance().withCache(CACHE_DOMAIN, loginId,function):function.apply(loginId);
+		return function.apply(loginId);
     }
     
     public Collection<CkHierarchyMetadata> findByImmediateParent(List<String> loginId) {
@@ -102,9 +102,6 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
 
 	@Override
 	public List<CkHierarchyMetadata> batchSave(Iterable<CkHierarchyMetadata> iterObj) {
-    	return batchSave(iterObj,true);
-	}
-	public List<CkHierarchyMetadata> batchSave(Iterable<CkHierarchyMetadata> iterObj,boolean clearCache) {
     	String lob= SecurityContextUtils.getLob();
 
     	if(clearCache) {

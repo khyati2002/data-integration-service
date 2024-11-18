@@ -2,6 +2,7 @@ package com.salescode.dataintegration.etl.cdm.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.salescode.channelkart.utils.TimerUtils;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.util.RawValue;
 import com.salescode.channelkart.services.SpringContext;
@@ -10,6 +11,8 @@ import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.channelkart.utils.TimerUtils;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
+import com.salescode.dataintegration.etl.cdm.enums.ApplicationCategory;
+import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.jooq.generated.tables.pojos.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -34,21 +37,79 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 
     private final DSLContext dsl;
     private final UserDetailsService userDetailsService;
-    @Autowired
-    private HierarchyMetaDataService hierarchyMetaDataService;
-
-    private LocationService locationService;
-    private UserService userService;
+    private final MetadataRegistry metadataRegistry;
 
 
     @Autowired
-    public OutletDetailsService(DSLContext dsl, UserDetailsService userDetailsService) {
+    public OutletDetailsService(DSLContext dsl, UserDetailsService userDetailsService,MetadataRegistry metadataRegistry) {
         this.dsl = dsl;
         this.userDetailsService = userDetailsService;
+        this.metadataRegistry = metadataRegistry;
     }
 
     private CustomerAccountsService getCustomerAccountsService() {
         return SpringContext.getBean(CustomerAccountsService.class);
+    }
+
+    @Override
+    public CkOutletDetails save(CkOutletDetails cdmObject) {
+        TimerUtils.withTime("Time taken to createAssociatedData record ",
+                () -> createAssociatedData(cdmObject));
+        CkOutletDetails tempoutlet = TimerUtils.withTime("Time taken to prepareOutletDetails record ",
+                k -> prepareOutletDetails(cdmObject));
+        List<CkHierarchyMetadata> immediateParents = tempoutlet.getImmediateParent(cdmObject.getId());
+        if (immediateParents != null && !immediateParents.isEmpty()) {
+            List<CkHierarchyMetadata> existingMetadata = new ArrayList<>();
+            List<CkHierarchyMetadata> newMetadata = new ArrayList<>();
+            for (CkHierarchyMetadata hierarchyMetadata : immediateParents) {
+                populateHierarchy(hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
+            }
+            if (!newMetadata.isEmpty()) {
+                List<CkHierarchyMetadata> savedData = HierarchyMetaDataService.batchSave(newMetadata);
+                existingMetadata.addAll(savedData);
+            }
+            if (!existingMetadata.isEmpty())
+                tempoutlet.setImmediateParent(existingMetadata, cdmObject);
+        }
+        setHierarchy(tempoutlet);
+
+        tempoutlet.setNormalizedHierarchy(UserService.getNormalizedHierarchy(tempoutlet.getHierarchy()));
+
+        TimerUtils.withTime("Time taken to set supplier ",
+                () -> {
+                    try {
+                        setOutletSupplier(tempoutlet);
+                    } catch (JsonProcessingException e) {
+                    }
+                });
+//        var record = dsl.newRecord(CK_OUTLET_DETAILS, tempoutlet);
+//        dsl.insertInto(CK_OUTLET_DETAILS)
+//                .set(record)
+//                .onDuplicateKeyUpdate()
+//                .set(record)
+//                .execute();
+        CkOutletDetails saved = super.save(tempoutlet);
+        return saved;
+    }
+
+    public void createAssociatedData(CkOutletDetails outlet) {
+        if (outlet.getUserName() != null) {
+            addAssociatedData(outlet);
+        } else if (getClientProperty("application.category")
+                .equals(ApplicationCategory.RETAIL.name())) {
+            createRetailUser(outlet);
+        }
+    }
+
+    public String getClientProperty(String property){
+        final String[] result = {null};
+        CkMetadata metaConfig = metadataRegistry.getMetadataByDomainNameAndType("client", "properties").orElse(null);
+        if (metaConfig != null) {
+            metaConfig.getDomainValues().forEach(pair -> {
+                if(property.equalsIgnoreCase(pair.get("name").toString())) result[0] = pair.get("value").asText();
+            });
+        }
+        return result[0];
     }
 
     private void createRetailUser(CkOutletDetails outlet) {
@@ -59,24 +120,13 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 //        user.setLocationHierarchy(outlet.getLocationHierarchy(outlet));
         user.setMobile(outlet.getContactno());
         user.setName(StringUtils.isEmpty(outlet.getOutletName()) ? outlet.getOutletcode() : outlet.getOutletName());
-        user.setImmediateParent(replicateRetailerOutletParent(outlet.getImmediateParent()));
-        user.setDesignation(Set.of(RETAILER));
+        user.setImmediateParent(replicateRetailerOutletParent(outlet.getImmediateParent(outlet.getOutletcode())));
+        user.setDesignation(Set.of("retailer"));
         List<CkAuthRole> roles = roleService.getRoleAsList(RoleName.ROLE_USER.name());
         user.setRoles(roles);
         outlet.setUserName(user);
         outlet.setImmediateParent(new ArrayList<>(1));
         createAssociateDataWithLock(outlet);
-    }
-
-    public void createAssociatedData(CkOutletDetails outlet) {
-        if (outlet.getUserName() != null) {
-            addAssociatedData(outlet);
-        } else if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY)
-                .equals(ApplicationCategory.RETAIL.name())) {
-            //domain-name -> client
-            //domain-type -> properties
-            createRetailUser(outlet);
-        }
     }
 
     private void addAssociatedData(CkOutletDetails outlet) {
@@ -147,178 +197,6 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         }
     }
 
-    @Override
-    public CkOutletDetails save(CkOutletDetails cdmObject) {
-        TimerUtils.withTime("Time taken to createAssociatedData record ",
-                () -> createAssociatedData(cdmObject));
-//      printLogsForNullHierarchy(cdmObject,"Location null before prepare outlet details");
-        CkOutletDetails tempoutlet = TimerUtils.withTime("Time taken to prepareOutletDetails record ",
-                k -> prepareOutletDetails(cdmObject));
-//
-        List<CkHierarchyMetadata> immediateParents = tempoutlet.getImmediateParent(cdmObject.getId());
-        if (immediateParents != null && !immediateParents.isEmpty()) {
-            List<CkHierarchyMetadata> existingMetadata = new ArrayList<>();
-            List<CkHierarchyMetadata> newMetadata = new ArrayList<>();
-            for (CkHierarchyMetadata hierarchyMetadata : immediateParents) {
-                populateHierarchy(hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
-            }
-            if (!newMetadata.isEmpty()) {
-                List<CkHierarchyMetadata> savedData = hierarchyMetaDataService.batchSave(newMetadata);
-                existingMetadata.addAll(savedData);
-            }
-            if (!existingMetadata.isEmpty())
-                tempoutlet.setImmediateParent(existingMetadata, cdmObject);
-        }
-//        printLogsForNullHierarchy(tempoutlet,"Location null before setting hierarchy");
-        setHierarchy(tempoutlet);
-//
-        tempoutlet.setNormalizedHierarchy(UserService.getNormalizedHierarchy(tempoutlet.getHierarchy()));
-//
-        TimerUtils.withTime("Time taken to set supplier ",
-                () -> {
-                    try {
-                        setOutletSupplier(tempoutlet);
-                    } catch (JsonProcessingException e) {
-//                        logger.error("Error while setting supplier in outlet extended attribute");
-                    }
-                });
-//      printLogsForNullHierarchy(tempoutlet,"Location null before saving outlet");
-        var record = dsl.newRecord(CK_OUTLET_DETAILS, tempoutlet);
-        //        record.set(CK_OUTLET_DETAILS.ID, "1");
-        //        record.set(CK_OUTLET_DETAILS.VERSION,1);
-        //        record.set(CK_OUTLET_DETAILS.MAPPED,true);
-        //        record.set(CK_OUTLET_DETAILS.DTYPE,"1");
-        dsl.insertInto(CK_OUTLET_DETAILS)
-                .set(record)
-                .onDuplicateKeyUpdate()
-                .set(record)
-                .execute();
-        CkOutletDetails saved = super.save(tempoutlet);
-        String logMessage = String.format(
-                "OutletDetails is updated for id '%s', outletcode '%s', last updated on '%s', modified by '%s'",
-                saved.getId(),
-                saved.getOutletcode(),
-                saved.getLastModifiedTime(),
-                saved.getModifiedBy()
-        );
-//        AuditLogger.log("OutletDetails Updated",logMessage, AuditLogger.Status.SUCCESS, "OutletDetails", AuditLogger.Operations.UPDATE.toString(),null);
-//        if (ObjectUtils.isEmpty(outletDetails.getChanges())) {
-//            AuditLogger.log(LOG_TYPE, "Created new Outlet with outletCode '{}'", outletDetails.getOutletCode());
-//        } else {
-//            AuditLogger.log(LOG_TYPE, "Outlet with outletCode '{}' updated with data '{}'",
-//                    outletDetails.getOutletCode(), EntityUtils.getDataChanges(outletDetails.getChanges()));
-//        }
-//        clearCache(SecurityContextUtils.getLob(), outletDetails);
-//        dsl.insertInto(EntityUtils.getInstance().getDSLContextTable(cdmObject.getClass()));
-//        cdmObject.setHierarchy("outletcode > admin@applicate.in");
-//        var record = dsl.newRecord(CK_OUTLET_DETAILS, cdmObject);
-////      record.set(CK_OUTLET_DETAILS.ID, "1");
-////      record.set(CK_OUTLET_DETAILS.VERSION,1);
-////      record.set(CK_OUTLET_DETAILS.MAPPED,true);
-////      record.set(CK_OUTLET_DETAILS.DTYPE,"1");
-//        dsl.insertInto(CK_OUTLET_DETAILS)
-//                .set(record)
-//                .onDuplicateKeyUpdate()
-//                .set(record)
-//                .execute();
-          userDetailsService.save(cdmObject);
-          return cdmObject;
-    }
-
-    //SAVE IN USER entity
-
-
-    //hierarchy 'outletcode > admin@applicate.in'
-
-
-//
-////    public void createAssociatedData(CkOutletDetails outlet) {
-////        if (outlet.getUserName() != null) {
-////            addAssociatedData(outlet);
-////        } else if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY)
-////                .equals(ApplicationCategory.RETAIL.name())) {
-////            createRetailUser(outlet);
-////        }
-////    }
-////
-////    void printLogsForNullHierarchy(CkOutletDetails outletDetails, String message){
-////        message += " for outletCode {}";
-////        if(propertyRegistry.getAsBoolean(PropertyDefinition.LOGS_FOR_NULL_LOCATION) &&
-////                (outletDetails.getLocationHierarchy()==null || outletDetails.getLocationHierarchy().getLocationHierarchy()==null)){
-////            logger.error(message, outletDetails.getOutletcode());
-////        }
-////    }
-////
-////    public CkOutletDetails prepareOutletDetails(CkOutletDetails outletDetails) {
-////        /* location */
-////        refreshLocation(outletDetails);
-////
-////        /* Retailer Info/Username */
-////        TimerUtils.withTime("prepareOutletDetails Time taken to fillRetailer ",
-////                () -> fillRetailer(outletDetails, false));
-////
-////        return outletDetails;
-////    }
-////
-////    private void createRetailUser(CkOutletDetails outlet) {
-////        CkUser user = new CkUser();
-////        user.setActiveStatus(outlet.getActiveStatus());
-////        user.setLoginId(outlet.getOutletCode());
-////        user.setUserAccountId(outlet.getOutletCode());
-////        user.setLocationHierarchy(outlet.getLocationHierarchy());
-////        user.setMobile(outlet.getContactno());
-////        user.setName(StringUtils.isEmpty(outlet.getOutletName()) ? outlet.getOutletCode() : outlet.getOutletName());
-////        user.setImmediateParent(replicateRetailerOutletParent(outlet.getImmediateParent()));
-////        user.setDesignation(Set.of(RETAILER));
-////        List<Role> roles = roleService.getRoleAsList(RoleName.ROLE_USER.name());
-////        user.setRoles(roles);
-////        outlet.setUserName(user);
-////        outlet.setImmediateParent(new ArrayList<>(1));
-////        createAssociateDataWithLock(outlet);
-////    }
-////
-////    private void createAssociateDataWithLock(CkOutletDetails outlet) {
-////        User user = TimerUtils.withTime("Time taken to execute getUser([[" + outlet.getUserName().getLoginId()
-////                + "]]) for outlet[[" + outlet.getOutletcode() + "]]", k -> getUser(outlet.getUserName()));
-////        outlet.setUserName(user);
-////        if(user.getDesignation().contains(RETAILER) || user.getDesignation().contains(WHOLESALER)) {
-////            outlet.setActiveStatus(outlet.getUserName().getActiveStatus());
-////        }
-////        if (ObjectUtils.isNotEmpty(user.getImmediateParent())) {
-////            List<HierarchyMetaData> hms = user.getImmediateParent().stream().map(parent -> {
-////                HierarchyMetaData hm = new HierarchyMetaData();
-////                hm.setHierarchy(user.getLoginId() + " > "
-////                        + (StringUtils.isEmpty(parent.getHierarchy())
-////                        ? parent.getImmediateParent() + " > " + getCustomerAccountsService().getAdminLoginId()
-////                        : parent.getHierarchy()));
-////                Location location = user.getLocationHierarchy();
-////                hm.setLocationHierarchy((location == null) ? null : location.getLocationHierarchy());
-////                hm.setImmediateParent(user.getLoginId());
-////                return hm;
-////            }).collect(Collectors.toList());
-////            // If outlet defines its own immediate parent then it should not override by
-////            // user.
-////            // The whole hierarchy should be take care by populate hierarchy in next steps.
-////            if (ObjectUtils.isEmpty(outlet.getImmediateParent())) {
-////                outlet.setImmediateParent(hms);
-////            }
-////        }
-////    }
-////
-////    private void addAssociatedData(CkOutletDetails outlet) {
-////
-////        if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY).equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))) {
-////            outlet.getChanges().forEach(changed ->
-////
-////                    setUserAssociateData(outlet,changed)
-////            );
-////        }
-////        GlobalLock.withLock(outlet.getUserName().getLoginId(), s ->
-////                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet)));
-////
-////    }
-
-
     private void populateHierarchy(CkHierarchyMetadata hierarchyMetadata, List<CkHierarchyMetadata> existingMetadata,
                                    List<CkHierarchyMetadata> newMetadata, CkOutletDetails tempoutlet) {
         if (hierarchyMetadata.getId() == null) {
@@ -379,5 +257,14 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
                 newMetadata.add(tempHierarchyMetaData);
             }
         }
+    }
+
+    private List<CkHierarchyMetadata> replicateRetailerOutletParent(List<CkHierarchyMetadata> hms) {
+        if (NullUtils.isNull(hms)) {
+            return new ArrayList<>(1);
+        }
+        List<CkHierarchyMetadata> parentList = new ArrayList<>(hms.size());
+        hms.forEach(hm -> parentList.add(EntityUtils.deepClone(hm)));
+        return parentList;
     }
 }
