@@ -6,32 +6,16 @@
 package com.salescode.dataintegration.etl.cdm.services;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.repository.UserRepository;
 import com.salescode.jooq.generated.tables.pojos.CkUser;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import java.io.Serializable;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 ;
@@ -66,6 +50,10 @@ public class UserService extends AbstractCDMService<CkUser> {
 	private static final String LOGIN_ID = "loginId";
 
 	private UserRepository userRepository;
+
+	public UserService() {
+		super();
+	}
 
 //	private RoleService roleService;
 //

@@ -8,19 +8,11 @@ package com.salescode.dataintegration.etl.cdm.services;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.repository.DivisionRepository;
 import com.salescode.jooq.generated.tables.pojos.CkDivision;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * The class DivisionService.
@@ -58,6 +50,7 @@ public class DivisionService extends AbstractCDMService<CkDivision> {
 			//, DistributedCache distributedCache
 						   ) {
 
+		super();
 		this.divisionRepository = divisionRepository;
 	//	this.distributedCache = distributedCache;
 	}

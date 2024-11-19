@@ -41,7 +41,7 @@ public class ChannelHierarchyMetaDataService {
 	
 	private DivisionService divisionService;
 	
-	private HierarchyMetaDataService hierarchyMetaDataService;
+	//private HierarchyMetaDataService hierarchyMetaDataService;
 
 
 	private final DSLContext dsl;

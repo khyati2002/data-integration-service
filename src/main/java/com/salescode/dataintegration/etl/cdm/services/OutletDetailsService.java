@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.salescode.channelkart.utils.TimerUtils;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 //import com.fasterxml.jackson.databind.util.RawValue;
-//import com.salescode.channelkart.services.SpringContext;
 //import com.salescode.channelkart.utils.EntityUtils;
 //import com.salescode.channelkart.utils.JSONUtils;
 //import com.salescode.channelkart.utils.NullUtils;
@@ -12,22 +11,21 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 //import com.salescode.channelkart.utils.TimerUtils;
 import com.fasterxml.jackson.databind.util.RawValue;
 import com.salescode.channelkart.converters.HierarchyMetaDataToStringConverter;
+import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.jooq.generated.tables.pojos.*;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.ObjectUtils;
+
 import org.jooq.DSLContext;
-import org.jooq.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.salescode.jooq.generated.Tables.CK_LOCATION;
@@ -44,7 +42,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     @Autowired
     private SupplierInfoService supplierInfoService;
     //    private final UserDetailsService userDetailsService;
-//    @Autowired
+    @Autowired
     private HierarchyMetaDataService hierarchyMetaDataService;
     //
     private LocationService locationService;
@@ -54,6 +52,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
    private final HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter;
     @Autowired
     public OutletDetailsService(DSLContext dsl,HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter) {
+
         this.dsl = dsl;
         this.hierarchyMetaDataToStringConverter = hierarchyMetaDataToStringConverter;
     }
@@ -101,28 +100,30 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 //                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet)));
 //    }
 
-    public void createAssociatedData(CkOutletDetails outlet) {
-        if (outlet.getUserName() != null) {
-            addAssociatedData(outlet);
-        } else if (getClientProperty("application.category")
-                .equals(ApplicationCategory.RETAIL.name())) {
-            createRetailUser(outlet);
-        }
-    }
+//    public void createAssociatedData(CkOutletDetails outlet) {
+//        if (getUserName(outlet) != null) {
+//            addAssociatedData(outlet);
+//        } else if (getClientProperty("application.category")
+//                .equals(ApplicationCategory.RETAIL.name())) {
+//            createRetailUser(outlet);
+//        }
+//    }
 
 public CkLocation getLocation(CkOutletDetails outlet) {
 
-       return dsl.select(CK_OUTLET_DETAILS.fields())
-               .from(CK_OUTLET_DETAILS)
-               .join(CK_LOCATION)
-               .on(CK_OUTLET_DETAILS.LOCATION_HIERARCHY.eq(CK_LOCATION.LOCATION_HIERARCHY))
-               .where(CK_OUTLET_DETAILS.ID.eq(outlet.getId()))
-               .fetchOneInto(CkLocation.class);
+    return dsl.select(CK_OUTLET_DETAILS.fields())
+            .from(CK_OUTLET_DETAILS)
+            .join(CK_LOCATION)
+            .on(CK_OUTLET_DETAILS.LOCATION_HIERARCHY.eq(CK_LOCATION.LOCATION_HIERARCHY))
+            .where(CK_OUTLET_DETAILS.ID.eq(outlet.getId()))
+            .fetchOneInto(CkLocation.class);
+}
     private void addAssociatedData(CkOutletDetails outlet) {
-        if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY).equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))){
-            outlet.getChanges().forEach(changed ->
+//        if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY).equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))){
+//            outlet.getChanges().forEach(changed ->
 
     }
+
 
     public CkLocation getLocationHierarchy(CkOutletDetails outlet){
         return getLocation(outlet);
@@ -194,29 +195,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
         return outletDetails;
     }
 
-//    private void setHierarchy(CkOutletDetails tempoutlet) {
-//        if (tempoutlet.getImmediateParent(tempoutlet.getId()) != null && !tempoutlet.getImmediateParent(tempoutlet.getId()).isEmpty()) {
-//            String hierarchy = String.join(",",
-//                    tempoutlet.getImmediateParent(tempoutlet.getId()).stream().map(s -> s.hierarchy).collect(Collectors.toList()));
-//            if (StringUtils.isNotEmpty(hierarchy)) {
-//                tempoutlet.setHierarchy(hierarchy);
-//            } else {
-//                //logger.warn("Hierarchy logs: Null hierarchy found for outlet {}. Skipping setHierarchy() operation",tempoutlet.getOutletCode());
-//            }
-//        }
-//    }
 
-//    public void setOutletSupplier(CkOutletDetails outletDetails) throws JsonProcessingException {
-//        if (NullUtils.isNotNull(outletDetails.getImmediateParent(outletDetails.getId())) && !outletDetails.getImmediateParent(outletDetails.getId()).isEmpty() && outletDetails.getImmediateParent(outletDetails.getId()).stream().noneMatch(hierarchyMetaData -> NullUtils.isNull(hierarchyMetaData.getHierarchy()))) {
-//            List<String> supplierList = supplierInfoService.findSuppliers(outletDetails);
-//            ObjectNode extendedAttributes = (ObjectNode) outletDetails.getExtendedAttributes();
-//            if (extendedAttributes == null) {
-//                extendedAttributes = JSONUtils.getObjectMapper().createObjectNode();
-//            }
-//            extendedAttributes.putRawValue("supplier", new RawValue(JSONUtils.getObjectMapper().writeValueAsString(supplierList)));
-//            outletDetails.setExtendedAttributes(extendedAttributes);
-//        }
-//    }
 
    public void setImmediateParent(CkOutletDetails tempoutlet,List<CkHierarchyMetadata> existingMetadata ) {
 //        dsl.update(CK_OUTLET_DETAILS_HIERARCHYMETADATA)
@@ -246,8 +225,8 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                 populateHierarchy(hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
             }
             if (!newMetadata.isEmpty()) {
-                List<CkHierarchyMetadata> savedData = hierarchyMetaDataService.batchSave(newMetadata);
-                existingMetadata.addAll(savedData);
+//                List<CkHierarchyMetadata> savedData = hierarchyMetaDataService.batchSave(newMetadata);
+//                existingMetadata.addAll(savedData);
             }
             if (!existingMetadata.isEmpty())
                 setImmediateParent(tempoutlet, existingMetadata);
@@ -404,28 +383,28 @@ public CkLocation getLocation(CkOutletDetails outlet) {
             String parentHierarchy = hierarchyMetadata.getHierarchy();
             // Dangerous code, this has to be fixed. Very bad workaround
             if (parentHierarchy != null) {
-                Arrays.asList(parentHierarchy.split(",")).stream().forEach(tempHierarchy -> {
-                   List<String> hierarchyusers = Arrays.asList(tempHierarchy.split(" > ")).stream().filter(parent -> !parent.equals(getCustomerAccountsService().getAdminLoginId())).collect(Collectors.toList());
-                    String loginId = hierarchyusers.get(hierarchyusers.size() - 1);
-                    List<CkHierarchyMetadata> lastParent = (List<CkHierarchyMetadata>) hierarchyMetaDataService.findByImmediateParent(loginId);
-                    if (lastParent.isEmpty()) {
-                        CkHierarchyMetadata hmd = new CkHierarchyMetadata();
-                        hmd.setImmediateParent(loginId);
-                        hmd.setHierarchy(loginId + " > " + getCustomerAccountsService().getAdminLoginId());
-                        setHierarchyElement(hmd, hierarchyusers, hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
-                    } else {
-                        lastParent.stream().forEach(element -> setHierarchyElement(element, hierarchyusers,
-                                hierarchyMetadata, existingMetadata, newMetadata, tempoutlet));
-                    }
-                });
+//                Arrays.asList(parentHierarchy.split(",")).stream().forEach(tempHierarchy -> {
+//                   List<String> hierarchyusers = Arrays.asList(tempHierarchy.split(" > ")).stream().filter(parent -> !parent.equals(getCustomerAccountsService().getAdminLoginId())).collect(Collectors.toList());
+//                    String loginId = hierarchyusers.get(hierarchyusers.size() - 1);
+//                    List<CkHierarchyMetadata> lastParent = (List<CkHierarchyMetadata>) hierarchyMetaDataService.findByImmediateParent(loginId);
+//                    if (lastParent.isEmpty()) {
+//                        CkHierarchyMetadata hmd = new CkHierarchyMetadata();
+//                        hmd.setImmediateParent(loginId);
+//                       // hmd.setHierarchy(loginId + " > " + getCustomerAccountsService().getAdminLoginId());
+//                        setHierarchyElement(hmd, hierarchyusers, hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
+//                    } else {
+//                        lastParent.stream().forEach(element -> setHierarchyElement(element, hierarchyusers,
+//                                hierarchyMetadata, existingMetadata, newMetadata, tempoutlet));
+//                    }
+ //               });
             } else {
                 // Handle the case at which Hierarchy is null
  //               TimerUtils.withTime("Time taken to read and populate hierarchyMetadata record ", () -> {
-                   List<CkHierarchyMetadata> lastParent = (List<CkHierarchyMetadata>) hierarchyMetaDataService
-                           .findByImmediateParent(hierarchyMetadata.getParent());
-                    if (lastParent != null) {
-                        existingMetadata.addAll(lastParent);
-                    }
+//                   List<CkHierarchyMetadata> lastParent = (List<CkHierarchyMetadata>) hierarchyMetaDataService
+//                           .findByImmediateParent(hierarchyMetadata.getParent());
+//                    if (lastParent != null) {
+//                        existingMetadata.addAll(lastParent);
+//                    }
 //                });
                 // Handle the case where it is a new Hierarchy
             }
@@ -471,13 +450,14 @@ private void setHierarchy(CkOutletDetails tempoutlet) {
     if (immediateParent != null && !immediateParent.isEmpty()) {
         String hierarchy = String.join(",",
                 list.stream().map(s -> s.hierarchy).collect(Collectors.toList()));
-        if(StringUtils.isNotEmpty(hierarchy)) {
+        if (StringUtils.isNotEmpty(hierarchy)) {
             tempoutlet.setHierarchy(hierarchy);
-            saveHierarchy(tempoutlet,hierarchy);
-        }else{
-           // logger.warn("Hierarchy logs: Null hierarchy found for outlet {}. Skipping setHierarchy() operation",tempoutlet.getOutletCode());
+            saveHierarchy(tempoutlet, hierarchy);
+        } else {
+            // logger.warn("Hierarchy logs: Null hierarchy found for outlet {}. Skipping setHierarchy() operation",tempoutlet.getOutletCode());
         }
     }
+}
 
     private List<CkHierarchyMetadata> replicateRetailerOutletParent(List<CkHierarchyMetadata> hms) {
         if (NullUtils.isNull(hms)) {
@@ -487,7 +467,7 @@ private void setHierarchy(CkOutletDetails tempoutlet) {
         hms.forEach(hm -> parentList.add(EntityUtils.deepClone(hm)));
         return parentList;
     }
-}
+
 //
     public void setOutletSupplier(CkOutletDetails outletDetails) throws JsonProcessingException {
         if (NullUtils.isNotNull(getImmediateParent(outletDetails)) && !getImmediateParent(outletDetails).isEmpty() && getImmediateParent(outletDetails).stream().noneMatch(hierarchyMetaData -> NullUtils.isNull(hierarchyMetaData.getHierarchy()))) {

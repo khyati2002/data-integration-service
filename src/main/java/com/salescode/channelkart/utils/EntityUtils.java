@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.channelkart.exceptions.CustomRuntimeException;
 import com.salescode.channelkart.models.CommonDataModel;
+
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.templates.TemplateEngine;
+
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.jooq.generated.Tables;
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
@@ -22,7 +24,10 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -301,5 +306,6 @@ public final class EntityUtils {
             org.springframework.beans.BeanUtils.copyProperties(src, tgt, fields.toArray(new String[0]));
         }
     }
+
 
 }

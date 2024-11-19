@@ -21,10 +21,8 @@ import com.salescode.dataintegration.etl.cdm.repository.MetaDataRepository;
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class MetaDataService extends AbstractCDMService<CkMetadata>
@@ -49,7 +47,8 @@ public class MetaDataService extends AbstractCDMService<CkMetadata>
     )
     {
 //		super(repository);
-		this.metaDataRepository = repository;
+        super();
+        this.metaDataRepository = repository;
 //		this.distributedCache = distributedCache;
 //		this.requestCache= requestCache;
 	}
@@ -84,10 +83,10 @@ public class MetaDataService extends AbstractCDMService<CkMetadata>
 		return this.metaDataRepository.findByDomainNameAndDomainType(domainName, domainType).orElse(null);
 	}
 
-//	public CkMetadata fetchByValue(String domainName,String domainType) {
-//		return fetchByValue(domainName, domainType, false);
-//	}
-//
+	public CkMetadata fetchByValue(String domainName,String domainType) {
+		return fetchByValue(domainName, domainType, false);
+	}
+
 	public CkMetadata fetchByValue(String domainName,String domainType,boolean cached) {
 		//return AppCacheManager.getInstance().withCache(SecurityContextUtils.getLob()+":"+domainName,domainType,(s)->fetchByValueFromDB(domainName,domainType));
         return fetchByValueFromDB(domainName,domainType);

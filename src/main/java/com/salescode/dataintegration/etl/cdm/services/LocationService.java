@@ -23,9 +23,9 @@ package com.salescode.dataintegration.etl.cdm.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 //import com.salescode.channelkart.services.SpringContext;
+import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.utils.GlobalLock;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
@@ -43,27 +43,12 @@ import org.apache.commons.beanutils.PropertyUtils;
 //import org.apache.http.ssl.SSLContextBuilder;
 //import org.hibernate.transform.Transformers;
 import org.jooq.DSLContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.Assert;
-import org.springframework.web.client.RestTemplate;
 
 //import javax.annotation.Resource;
-import javax.net.ssl.SSLContext;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.lang.reflect.InvocationTargetException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -169,6 +154,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 	) {
 //		super(locationRepository);
 //		this.locationRepository = locationRepository;
+		super();
 		this.metadataservice = metadataservice;
 		this.dsl = dsl;
 //		this.distributedCache = distributedCache;

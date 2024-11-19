@@ -76,7 +76,7 @@ class ETLPipelineServiceTest {
                     "preserveOnFailure": true,
                     "features": [
                         {
-                            "outletcode": 1076573
+                            "outletcode": "O7"
                         }
                     ]
                 }""");
