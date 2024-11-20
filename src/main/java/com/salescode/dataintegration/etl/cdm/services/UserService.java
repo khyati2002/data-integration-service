@@ -6,6 +6,7 @@
 package com.salescode.dataintegration.etl.cdm.services;
 
 
+import com.salescode.channelkart.services.SpringContext;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.repository.UserRepository;
 import com.salescode.jooq.generated.tables.pojos.CkUser;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 ;
@@ -59,7 +61,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 //
 //	private LocationService locationService;
 //
-//	private HierarchyMetaDataService hierarchyMetaDataService;
+	private HierarchyMetaDataService hierarchyMetaDataService;
 //
 //	private UserParentService userparentservice;
 //
@@ -111,7 +113,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 //	private AttributeUpdateOverrideManager attributeUpdateOverrideManager;
 //
 //
-//	public UserService(UserRepository repository, RoleService roleService, LocationService locationService, HierarchyMetaDataService hierarchyMetaDataService, UserParentService userparentservice,
+//public UserService(UserRepository repository, RoleService roleService, LocationService locationService, HierarchyMetaDataService hierarchyMetaDataService, UserParentService userparentservice,
 //                       MetaDataService metadataservice, DistributedCache distributedCache, NativeEntityManager nem, AttributeUpdateOverrideManager attributeUpdateOverrideManager) {
 //		super(repository);
 //		this.userRepository=repository;
@@ -126,6 +128,10 @@ public class UserService extends AbstractCDMService<CkUser> {
 //
 //	}
 
+	public UserService(HierarchyMetaDataService hierarchyMetaDataService){
+		this.hierarchyMetaDataService = hierarchyMetaDataService;
+	}
+
 //	public CkUser findByLoginId(String loginId) {
 //		return findByLoginId(loginId,true,true);
 //	}
@@ -136,26 +142,26 @@ public class UserService extends AbstractCDMService<CkUser> {
 //	 * @param cached indicate the use of caching
 //	 * @return
 //	 */
-//	public User findByLoginId(String loginId,boolean cached) {
-//		return findByLoginId(loginId,true,true);
-//	}
-//	public CkUser findByLoginId(String loginId,boolean cached,boolean hierarchy) {
-//		//String lob = SecurityContextUtils.getLob();
-//		Function<String,CkUser> function = (String lid)->{
-//			UserService service= SpringContext.getBean(UserService.class);
-//			return service.getLoadedUserObject(lid,hierarchy);
-//		};
-//
-////		if(cached) {
-////			User user = distributedCache.withCache(lob,CACHE_DOMAIN, loginId,function);
-////			if(user != null && StringUtils.isBlank(user.getHierarchy())) {
-////				return reloadCache(loginId);
-////			}
-////			return user;
-////		}
-//
-//		return function.apply(loginId);
-//	}
+	public CkUser findByLoginId(String loginId,boolean cached) {
+		return findByLoginId(loginId,true,true);
+	}
+	public CkUser findByLoginId(String loginId,boolean cached,boolean hierarchy) {
+		//String lob = SecurityContextUtils.getLob();
+		Function<String,CkUser> function = (String lid)->{
+			UserService service = SpringContext.getBean(UserService.class);
+			return service.getLoadedUserObject(lid,hierarchy);
+		};
+
+//		if(cached) {
+//			User user = distributedCache.withCache(lob,CACHE_DOMAIN, loginId,function);
+//			if(user != null && StringUtils.isBlank(user.getHierarchy())) {
+//				return reloadCache(loginId);
+//			}
+//			return user;
+//		}
+
+		return function.apply(loginId);
+	}
 //
 //	public User reloadCache(String loginId) {
 //		String lob = SecurityContextUtils.getLob();
@@ -167,20 +173,23 @@ public class UserService extends AbstractCDMService<CkUser> {
 //		return  distributedCache.withCache(lob,CACHE_DOMAIN, loginId,function);
 //	}
 //
-//	public CkUser getLoadedUserObject(String lid,boolean hierarchy) {
+	public CkUser getLoadedUserObject(String lid,boolean hierarchy) {
 //		CkUser u = TimerUtils
 //				.withTime("Time taken UserService record ", () -> userRepository.findByLoginId(lid));
-//		if (u != null) {
-//			loadUserAssociationObjects(u);
-//			if (hierarchy && u.getImmediateParent() == null) {
+		CkUser u = userRepository.findByLoginId(lid);
+		if (u != null) {
+			loadUserAssociationObjects(u);
+//			if (hierarchy && outletDetailsService.getImmediateParent(u) == null) {
 //				TimerUtils
 //						.withTime("Time taken UserService hierarchyMetaDataService load ", () ->
-//								u.setImmediateParent(hierarchyMetaDataService.findParentThroughUserLoginId(lid))
+//				u.setImmediateParent(hierarchyMetaDataService.findParentThroughUserLoginId(lid));
 //						);
-//			}
-//		}
-//		return u;
-//	}
+//				u.setImmediateParent(hierarchyMetaDataService.findParentThroughUserLoginId(lid));
+			}
+		return u;
+		}
+
+
 //
 //	public User findByHierarchy(String hierarchy) {
 //		return userRepository.findByHierarchy(hierarchy);
@@ -1119,16 +1128,17 @@ public class UserService extends AbstractCDMService<CkUser> {
 //				.collect(Collectors.toMap(data -> data.get(LOGIN_ID).toString(), data ->  Boolean.valueOf(data.get("verified").toString()) ) );
 //	}
 //
-//	private void loadUserAssociationObjects(CkUser u) {
+	private void loadUserAssociationObjects(CkUser u) {
 //		TimerUtils
 //				.withTime("Time taken UserService Association load ", () -> {
 //					if (u.getRoles() != null) u.getRoles().size();
 //					if (u.getSupplierMetaData() != null) u.getSupplierMetaData().size();
 //					if (u.getDesignation() != null) u.getDesignation().size();
 //					if (u.getMessengerInfo() != null) u.getMessengerInfo().size();
-//				});
-//
-//	}
+////				});
+
+	}
+	}
 //
 //	public static boolean isCurrentUserIsTestUser(){
 //		return isTestUser(SecurityContextUtils.getPrincipal());
@@ -1339,4 +1349,3 @@ public class UserService extends AbstractCDMService<CkUser> {
 //		userRepository.updateReportPassword(loginId,reportPassword);
 //		distributedCache.clearCache(SecurityContextUtils.getLob(),CACHE_DOMAIN,loginId);
 //	}
-}

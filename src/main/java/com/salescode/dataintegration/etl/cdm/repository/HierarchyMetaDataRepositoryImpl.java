@@ -30,12 +30,17 @@ public class HierarchyMetaDataRepositoryImpl implements HierarchyMetaDataReposit
 
     @Override
     public Collection<CkHierarchyMetadata> findByImmediateParent(String loginId) {
-     return List.of();
+     return dsl.selectFrom(CK_HIERARCHY_METADATA)
+             .where(CK_HIERARCHY_METADATA.PARENT.eq(loginId))
+             .fetchInto(CkHierarchyMetadata.class);
+
     }
 
     @Override
     public Collection<CkHierarchyMetadata> findByImmediateParentIn(List<String> loginId) {
-        return List.of();
+        return dsl.selectFrom(CK_HIERARCHY_METADATA)
+                .where(CK_HIERARCHY_METADATA.PARENT.in(loginId))
+                .fetchInto(CkHierarchyMetadata.class);
     }
 
     @Override

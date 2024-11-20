@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.salescode.jooq.generated.Tables.CK_USER;
-import static com.salescode.jooq.generated.Tables.CK_USERDESIGNATION;
+import static com.salescode.jooq.generated.tables.CkUser.CK_USER;
+import static com.salescode.jooq.generated.tables.CkUserdesignation.CK_USERDESIGNATION;
 import static com.salescode.jooq.generated.tables.CkHierarchyMetadata.CK_HIERARCHY_METADATA;
 import static com.salescode.jooq.generated.tables.CkOutletDetails.CK_OUTLET_DETAILS;
 import static com.salescode.jooq.generated.tables.CkOutletDetailsHierarchymetadata.CK_OUTLET_DETAILS_HIERARCHYMETADATA;

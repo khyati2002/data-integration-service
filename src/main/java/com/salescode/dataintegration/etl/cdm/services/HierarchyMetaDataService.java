@@ -58,9 +58,9 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
      * @param loginId the login id
      * @return the hierarchy meta data
      */
-//    public Collection<CkHierarchyMetadata> findByImmediateParent(String loginId) {
-//        return findByImmediateParent(loginId,true);
-//    }
+    public Collection<CkHierarchyMetadata> findByImmediateParent(String loginId) {
+        return findByImmediateParent(loginId,true);
+    }
 
 //    /**
 //     * Find by immdiate parent cached.
@@ -69,18 +69,19 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
 //     * @param cached the cached
 //     * @return the hierarchy meta data
 //     */
-//    public Collection<CkHierarchyMetadata> findByImmediateParent(String loginId, boolean cached) {
-//        Function<String,Collection<CkHierarchyMetadata>> function = (String lid)->{
-//            return hierarchyMetaDataRepository.findByImmediateParent(lid);
-//        };
-//        logger.debug("Find immediate Parent for->>>>>>>>>>>>:{}", loginId);
-//        return (cached) ? AppCacheManager.getInstance().withCache(CACHE_DOMAIN, loginId,function):function.apply(loginId);
-//    }
-//
-//    public Collection<CkHierarchyMetadata> findByImmediateParent(List<String> loginId) {
-//        return hierarchyMetaDataRepository.findByImmediateParentIn(loginId);
-//    }
-//
+    public Collection<CkHierarchyMetadata> findByImmediateParent(String loginId, boolean cached) {
+        Function<String,Collection<CkHierarchyMetadata>> function = (String lid)->{
+            return hierarchyMetaDataRepository.findByImmediateParent(lid);
+        };
+        logger.debug("Find immediate Parent for->>>>>>>>>>>>:{}", loginId);
+       // return (cached) ? AppCacheManager.getInstance().withCache(CACHE_DOMAIN, loginId,function):function.apply(loginId);
+       return function.apply(loginId);
+    }
+
+    public Collection<CkHierarchyMetadata> findByImmediateParent(List<String> loginId) {
+        return hierarchyMetaDataRepository.findByImmediateParentIn(loginId);
+    }
+
 //    @Override
 //    public CkHierarchyMetadata save(CkHierarchyMetadata cdmObject) {
 //        //List<HierarchyMetaData> dbData=(List<HierarchyMetaData>) findByImmediateParent(cdmObject.getImmediateParent(),true);
