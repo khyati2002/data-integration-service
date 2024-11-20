@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2020. All rights reserved.
  * APPLICATE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- * 
+ *
  */
 package com.salescode.channelkart.utils;
 
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 public class NullUtils {
 
 	private NullUtils() {}
-	
+
 	/**
 	 * Checks for null values.
 	 *
@@ -89,5 +89,5 @@ public class NullUtils {
 		T t = supplier.get();
 		return t == null ? defaultValue : t;
 	}
-	
+
 }

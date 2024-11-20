@@ -37,4 +37,15 @@ public class StringUtils {
         input = input.replace("\\", "\\\\");
         return input.replace("'", "''");
     }
+
+    public static boolean isNotEmpty(String value) {
+        return !isEmpty(value);
+    }
+
+    public static boolean isEmpty(String value) {
+        return value == null || value.isEmpty();
+    }
+    public static boolean isNotBlank(String input) {
+        return input != null && !input.isBlank()	;
+    }
 }

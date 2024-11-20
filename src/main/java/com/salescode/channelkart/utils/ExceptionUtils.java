@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2020. All rights reserved.
  * APPLICATE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- * 
+ *
  */
 package com.salescode.channelkart.utils;
 
@@ -16,7 +16,7 @@ import org.springframework.core.NestedRuntimeException;
 public class ExceptionUtils {
 
 	private static final String empty= "";
-	
+
 	public static String getRootCauseMessage(Throwable input) {
 		Throwable result = getRootCause(input);
 		if(result == null) {
@@ -24,12 +24,12 @@ public class ExceptionUtils {
 		}
 		return result.getMessage();
 	}
-	
+
 	public static Throwable getRootCause(Throwable input) {
 		if(input != null) {
 			synchronized(input) {
-				Throwable cause = null; 
-				Throwable result = input; 
+				Throwable cause = null;
+				Throwable result = input;
 				while(null != (cause = result.getCause())  && (result != cause) ) {
 					result = cause;
 				}
@@ -38,11 +38,11 @@ public class ExceptionUtils {
 		}
 		return null;
 	}
-	
+
 	/*
-	 * This method checks if exception contains given class type or has 
+	 * This method checks if exception contains given class type or has
 	 * its child type.
-	 * 
+	 *
 	 *  @see MDMService
 	 *  @author Manish Srivastava
 	 * */
