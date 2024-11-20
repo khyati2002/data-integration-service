@@ -428,7 +428,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                 CkHierarchyMetadata hm = new CkHierarchyMetadata();
                 hm.setHierarchy(user.getLoginid() + " > "
                         + (StringUtils.isEmpty(parent.getHierarchy())
-                        ? parent.getParent() + " > " //+ getCustomerAccountsService().getAdminLoginId()
+                        ? parent.getParent() + " > "  getCustomerAccountsService().getAdminLoginId()
                         : parent.getHierarchy()));
                 CkLocation location = getLocationHierarchy(user);
                 hm.setLocationHierarchy((location == null) ? null : location.getLocationHierarchy());
