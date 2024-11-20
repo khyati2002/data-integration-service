@@ -257,6 +257,7 @@ public final class EntityUtils {
         try {
             return (CommonDataModel)  Objects.requireNonNull(dslContext.selectFrom(getDSLContextTable(clazz)).where(buffer2.toString())).fetchAnyInto(clazz);
         } catch (NoResultException nr) {
+            //throw new RuntimeException("Invalid ");
         }
         return null;
     }

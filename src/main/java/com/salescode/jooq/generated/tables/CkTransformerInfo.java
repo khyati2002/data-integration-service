@@ -11,15 +11,29 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import org.jooq.Condition;
+import org.jooq.Field;
+import org.jooq.Name;
+import org.jooq.PlainSQL;
+import org.jooq.QueryPart;
+import org.jooq.Record;
+import org.jooq.SQL;
+import org.jooq.Schema;
+import org.jooq.Select;
+import org.jooq.Stringly;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -39,7 +53,6 @@ public class CkTransformerInfo extends TableImpl<Record> {
      * The class holding records for this type
      */
     @Override
-    @Nonnull
     public Class<Record> getRecordType() {
         return Record.class;
     }
@@ -145,11 +158,11 @@ public class CkTransformerInfo extends TableImpl<Record> {
     public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
 
     private CkTransformerInfo(Name alias, Table<Record> aliased) {
-        this(alias, aliased, null);
+        this(alias, aliased, (Field<?>[]) null, null);
     }
 
-    private CkTransformerInfo(Name alias, Table<Record> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
+    private CkTransformerInfo(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
     }
 
     /**
@@ -173,44 +186,41 @@ public class CkTransformerInfo extends TableImpl<Record> {
         this(DSL.name("ck_transformer_info"), null);
     }
 
-    public <O extends Record> CkTransformerInfo(Table<O> child, ForeignKey<O, Record> key) {
-        super(child, key, CK_TRANSFORMER_INFO);
-    }
-
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
     }
 
     @Override
-    @Nonnull
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_TRANSFORMER_INFO_PRIMARY;
     }
 
     @Override
-    @Nonnull
     public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_TRANSFORMER_INFO_UK_TRANSFORMER_INFO);
+        return Arrays.asList();
+       // return Arrays.asList(Keys.KEY_CK_TRANSFORMER_INFO_UK_TRANSFORMER_INFO);
     }
 
     @Override
-    @Nonnull
     public CkTransformerInfo as(String alias) {
         return new CkTransformerInfo(DSL.name(alias), this);
     }
 
     @Override
-    @Nonnull
     public CkTransformerInfo as(Name alias) {
         return new CkTransformerInfo(alias, this);
+    }
+
+    @Override
+    public CkTransformerInfo as(Table<?> alias) {
+        return new CkTransformerInfo(alias.getQualifiedName(), this);
     }
 
     /**
      * Rename this table
      */
     @Override
-    @Nonnull
     public CkTransformerInfo rename(String name) {
         return new CkTransformerInfo(DSL.name(name), null);
     }
@@ -219,8 +229,99 @@ public class CkTransformerInfo extends TableImpl<Record> {
      * Rename this table
      */
     @Override
-    @Nonnull
     public CkTransformerInfo rename(Name name) {
         return new CkTransformerInfo(name, null);
+    }
+
+    /**
+     * Rename this table
+     */
+    @Override
+    public CkTransformerInfo rename(Table<?> name) {
+        return new CkTransformerInfo(name.getQualifiedName(), null);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkTransformerInfo where(Condition condition) {
+        return new CkTransformerInfo(getQualifiedName(), aliased() ? this : null, null, condition);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkTransformerInfo where(Collection<? extends Condition> conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkTransformerInfo where(Condition... conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkTransformerInfo where(Field<Boolean> condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public CkTransformerInfo where(SQL condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public CkTransformerInfo where(@Stringly.SQL String condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public CkTransformerInfo where(@Stringly.SQL String condition, Object... binds) {
+        return where(DSL.condition(condition, binds));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public CkTransformerInfo where(@Stringly.SQL String condition, QueryPart... parts) {
+        return where(DSL.condition(condition, parts));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkTransformerInfo whereExists(Select<?> select) {
+        return where(DSL.exists(select));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public CkTransformerInfo whereNotExists(Select<?> select) {
+        return where(DSL.notExists(select));
     }
 }
