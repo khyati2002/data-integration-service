@@ -25,12 +25,11 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
-public class MetaDataService extends AbstractCDMService<CkMetadata>
-{
+public class MetaDataService extends AbstractCDMService<CkMetadata> {
 	private static final String CACHE_DOMAIN = "metadata";
 	private static final Set<String> appConfigDomainNameSet = Set.of("clientconfig","filter", "supportedValues");
 
-    //	private RequestCacheManager requestCache;
+//	private RequestCacheManager requestCache;
 //
 //	public static final String OTP_VERIFY = "otpverify";
 //

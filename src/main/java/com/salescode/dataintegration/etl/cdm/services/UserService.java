@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -51,7 +52,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 	public static final String DEFAULT_ERROR_MESSAGE = "invalid username or password";
 	private static final String LOGIN_ID = "loginId";
 
-	private UserRepository userRepository;
+	@Autowired private UserRepository userRepository;
 
 	public UserService() {
 		super();
@@ -61,7 +62,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 //
 //	private LocationService locationService;
 //
-	private HierarchyMetaDataService hierarchyMetaDataService;
+	@Autowired private HierarchyMetaDataService hierarchyMetaDataService;
 //
 //	private UserParentService userparentservice;
 //
