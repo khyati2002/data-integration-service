@@ -70,10 +70,10 @@ public class ETLPipelineService {
             List<? extends CommonDataModel> cdms = dataTransformationService.transformData(transformerId, entityName, jsonNode);
             log.info("CDM : {}", JSONUtils.getObjectMapper().convertValue(cdms, JsonNode.class).toPrettyString());
             for (CommonDataModel tempCdm : cdms) {
-                String id = cdmService.getKey(tempCdm);
-                if (id == null) {
-                    id = UUID.randomUUID().toString();
-                }
+//                String id = cdmService.getKey(tempCdm);
+//                if (id == null) {
+//                    id = UUID.randomUUID().toString();
+//                }
                 CommonDataModel refresh = cdmService.refresh(tempCdm);
                 OperationResponse or = new OperationResponse();
                 EnrichmentOperationResult enrich = dataEnrichmentService.enrich(refresh, EnrichmentPhase.PRE_VALIDATION);

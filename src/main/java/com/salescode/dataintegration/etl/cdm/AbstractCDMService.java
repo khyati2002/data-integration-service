@@ -4,10 +4,12 @@ import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.dataintegration.etl.cdm.util.ServiceLocator;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+@Slf4j
 public abstract class AbstractCDMService<T extends CommonDataModel> implements CommonDataModelService<T> {
 
     private Class<T> persistentClass;
@@ -46,6 +48,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     @Override
     public T save(T cdmObject) {
+        log.info("Saving {}, cdm: {}", cdmObject.getClass().getSimpleName(), cdmObject);
         return cdmObject;
     }
 }

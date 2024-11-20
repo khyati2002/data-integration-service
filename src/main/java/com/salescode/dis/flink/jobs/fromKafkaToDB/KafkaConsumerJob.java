@@ -24,9 +24,6 @@ import com.salescode.dis.flink.sources.DISKafkaSourceBuilder;
 public class KafkaConsumerJob {
 
     @Autowired
-    ETLPipelineService etlPipelineService;
-
-    @Autowired
     private DISKafkaSourceBuilder kafkaSourceBuilder;
 
     @Autowired
@@ -59,7 +56,7 @@ public class KafkaConsumerJob {
                     return new Tuple2<>(entityName, value);
                 }, TypeInformation.of(new TypeHint<Tuple2<String, ObjectNode>>(){}))
                 .keyBy(tuple -> tuple.f0)
-                .process(new MessageProcessFunction(deadLetterTag,etlPipelineService));
+                .process(new MessageProcessFunction(deadLetterTag));
             
 
         System.out.println(url+","+user+","+password);

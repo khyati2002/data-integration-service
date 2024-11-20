@@ -22,17 +22,4 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         this.dsl = dsl;
     }
 
-    @Override
-    public CkOutletDetails save(CkOutletDetails cdmObject) {
-        TableImpl dslContextTable = EntityUtils.getInstance().getDSLContextTable(cdmObject.getClass());
-        dslContextTable.newRecord().from(cdmObject);
-        var record = dsl.newRecord(dslContextTable, cdmObject);
-
-        dsl.insertInto(dslContextTable)
-                .set(record)
-                .onDuplicateKeyUpdate()
-                .set(record)
-                .execute();
-        return cdmObject;
-    }
 }
