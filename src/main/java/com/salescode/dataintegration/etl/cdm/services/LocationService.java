@@ -79,7 +79,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 //	@Autowired
 //	private EntityManager em;
 //
-	@Value("${location.column}")
+	@Value("${location.column : area,pincode,territory,city,state,region,zone,cluster,branch,country}")
 	private String locationColumns;
 
 
