@@ -1,8 +1,8 @@
-package com.salescode.channelkart.utils;
-
-@FunctionalInterface
-public interface Action {
-
-    void action();
-
-}
+//package com.salescode.channelkart.utils;
+//
+//@FunctionalInterface
+//public interface Action {
+//
+//    void action();
+//
+//}

@@ -3,14 +3,9 @@ package com.salescode.dataintegration.etl.cdm.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.salescode.channelkart.utils.TimerUtils;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-//import com.fasterxml.jackson.databind.util.RawValue;
-//import com.salescode.channelkart.utils.EntityUtils;
-//import com.salescode.channelkart.utils.JSONUtils;
-//import com.salescode.channelkart.utils.NullUtils;
-//import com.salescode.channelkart.utils.TimerUtils;
-//import com.salescode.channelkart.utils.TimerUtils;
 import com.fasterxml.jackson.databind.util.RawValue;
 import com.salescode.channelkart.converters.HierarchyMetaDataToStringConverter;
+import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.RoleName;
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.utils.EntityUtils;
@@ -18,6 +13,8 @@ import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.dataintegration.etl.OperationResponse;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
+import com.salescode.dataintegration.etl.cdm.enums.ApplicationCategory;
+import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.jooq.generated.tables.pojos.CkLocation;
 import com.salescode.jooq.generated.tables.pojos.*;
 import org.apache.commons.lang.StringUtils;
@@ -29,6 +26,7 @@ import org.jooq.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,6 +55,9 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private MetadataRegistry metadataRegistry;
+
     private final UserService userService;
     @Autowired
     private HierarchyMetaDataService hierarchyMetaDataService;
@@ -78,54 +79,33 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     private CustomerAccountsService getCustomerAccountsService() {
         return SpringContext.getBean(CustomerAccountsService.class);
     }
-//
-//    private void createRetailUser(CkOutletDetails outlet) {
-//        CkUser user = new CkUser();
-//        user.setActiveStatus(outlet.getActiveStatus());
-//        user.setLoginid(outlet.getOutletcode());
-//        user.setUseraccountid(outlet.getOutletcode());
-////        user.setLocationHierarchy(outlet.getLocationHierarchy(outlet));
-//        user.setMobile(outlet.getContactno());
-//        user.setName(StringUtils.isEmpty(outlet.getOutletName()) ? outlet.getOutletcode() : outlet.getOutletName());
-//        user.setImmediateParent(replicateRetailerOutletParent(outlet.getImmediateParent()));
-//        user.setDesignation(Set.of(RETAILER));
-//        List<CkAuthRole> roles = roleService.getRoleAsList(RoleName.ROLE_USER.name());
-//        user.setRoles(roles);
-//        outlet.setUserName(user);
-//        outlet.setImmediateParent(new ArrayList<>(1));
-//        createAssociateDataWithLock(outlet);
-//    }
 
-//    public void createAssociatedData(CkOutletDetails outlet) {
-//        if (outlet.getUserName() != null) {
-//            addAssociatedData(outlet);
-//        } else if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY)
-//                .equals(ApplicationCategory.RETAIL.name())) {
-//            //domain-name -> client
-//            //domain-type -> properties
-//            createRetailUser(outlet);
-//        }
-//    }
 
-    //    private void addAssociatedData(CkOutletDetails outlet) {
-//        if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY).equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))){
-//            outlet.getChanges().forEach(changed ->
-//
-//                    setUserAssociateData(outlet,changed)
-//            );
-//        }
-//        GlobalLock.withLock(outlet.getUserName().getLoginId(), s ->
-//                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet)));
-//    }
 
-//    public void createAssociatedData(CkOutletDetails outlet) {
-//        if (getUserName(outlet) != null) {
-//            addAssociatedData(outlet);
-//        } else if (getClientProperty("application.category")
-//                .equals(ApplicationCategory.RETAIL.name())) {
-//            createRetailUser(outlet);
-//        }
-//    }
+    public void createAssociatedData(CkOutletDetails outlet,CkOutletDetailsWrapper cdmObjectDetails) {
+        if (cdmObjectDetails.getUserName() != null) {
+            addAssociatedData(outlet,cdmObjectDetails);
+        } else if (getClientProperty("application.category")
+                .equals(ApplicationCategory.RETAIL.name())) {
+            createRetailUser(outlet,cdmObjectDetails);
+        }
+    }
+
+    public String getClientProperty(String property){
+        final String[] result = {null};
+        CkMetadata metaConfig = metadataRegistry.getMetadataByDomainNameAndType("client", "properties").orElse(null);
+        if (metaConfig != null) {
+            metaConfig.getDomainValues().forEach(pair -> {
+                String str = pair.get("name").toString();
+                String name = str.substring(1,str.length()-1);
+                String val = pair.get("value").asText();
+                if(property.equalsIgnoreCase(name)){
+                    result[0] = pair.get("value").asText();
+                }
+            });
+        }
+        return result[0];
+    }
 
 public CkLocation getLocation(CkOutletDetails outlet) {
 
@@ -183,19 +163,6 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                 .fetchInto(CkHierarchyMetadata.class);
     }
 
-//    public void fillRetailer(CkOutletDetails outlet, boolean hierarchy) {
-//        if (outlet.getUserName(dsl) != null) {
-//            if (StringUtils.isBlank(getUserName(outlet).getId())) {
-//                CkUser tempuser = TimerUtils.withTime("Time taken UserService findByLoginId from outlet ",
-//                        () -> userService.findByLoginId(getLoginId(getUserName(outlet)), true, hierarchy));
-//                outlet.setRetailerInfo(tempuser);
-//                retailerInfo = tempuser;
-//            } else {
-//                retailerInfo = getUserName(outlet);
-////                outlet.setRetailerInfo(getUserName(outlet));
-//            }
-//        }
-//    }
 
     public CkOutletDetails prepareOutletDetails(CkOutletDetails outletDetails) {
 //        /* location */
@@ -272,7 +239,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
 //                });
 ////      printLogsForNullHierarchy(tempoutlet,"Location null before saving outlet");
 
-        setImmediateParent(cdmObjectDetails);
+//        setImmediateParent(cdmObjectDetails);
         var record = dsl.newRecord(CK_OUTLET_DETAILS, tempoutlet);
         if(record.get(CK_OUTLET_DETAILS.ID) == null) record.set(CK_OUTLET_DETAILS.ID, tempoutlet.getOutletcode());
         if(record.get(CK_OUTLET_DETAILS.VERSION) == null) record.set(CK_OUTLET_DETAILS.VERSION, 1);
@@ -310,23 +277,6 @@ public CkLocation getLocation(CkOutletDetails outlet) {
 
 
     //hierarchy 'outletcode > admin@applicate.in'
-
-
-//
-    public void createAssociatedData(CkOutletDetails outlet,CkOutletDetailsWrapper cdmObjectDetails) {
-        CkUser str = cdmObjectDetails.getUserName();
-        if (cdmObjectDetails.getUserName() != null) {
-            //addAssociatedData(outlet);
-        }
-//        } else if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY)
-//                .equals(ApplicationCategory.RETAIL.name())) {
-        else {
-            createRetailUser(outlet, cdmObjectDetails);
-        }
-
-        }
-
-
 ////
 ////    void printLogsForNullHierarchy(CkOutletDetails outletDetails, String message){
 ////        message += " for outletCode {}";
@@ -584,18 +534,45 @@ public CkLocation getLocation(CkOutletDetails outlet) {
     }
 
 
-////
-//    private void addAssociatedData(CkOutletDetails outlet) {
 //
-//        if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY).equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))) {
-//            outlet.getChanges().forEach(changed ->
-//
-//                    setUserAssociateData(outlet,changed)
-//            );
-//        }
+    private void addAssociatedData(CkOutletDetails outlet,CkOutletDetailsWrapper cdmObjectDetails) {
+
+        if (getClientProperty("application.category").equals(ApplicationCategory.RETAIL.name()) && (getDesignation(cdmObjectDetails.getUserName()).contains(RETAILER) || getDesignation(cdmObjectDetails.getUserName()).contains(WHOLESALER))) {
+            outlet.getChanges().forEach(changed ->
+
+                    setUserAssociateData(outlet,changed,cdmObjectDetails)
+            );
+        }
 //        GlobalLock.withLock(outlet.getUserName().getLoginId(), s ->
-//                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet)));
-//}
+//                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet,cdmObjectDetails)));
+        createAssociateDataWithLock(outlet,cdmObjectDetails);
+    }
+
+    private void setUserAssociateData(CkOutletDetails outlet, Change<Serializable> changed,CkOutletDetailsWrapper cdmObjectDetails) {
+        if (changed.getName().equalsIgnoreCase("activestatus")) {
+            cdmObjectDetails.getUserName().setActiveStatus(outlet.getActiveStatus());
+        }
+        if (changed.getName().equalsIgnoreCase("outletname")) {
+            cdmObjectDetails.getUserName().setName(outlet.getOutletName());
+        }
+        if (changed.getName().equalsIgnoreCase("contactno")) {
+            cdmObjectDetails.getUserName().setMobile(outlet.getContactno());
+        }
+        if (changed.getName().equalsIgnoreCase("locationhierarchy")) {
+            cdmObjectDetails.getUserName().setLocationHierarchy(outlet.getLocationHierarchy());
+        }
+        if (changed.getName().equalsIgnoreCase("immediateparent")) {
+            List<CkHierarchyMetadata> parentList = cdmObjectDetails.getImmediateParent().stream()
+                    .filter(h -> !h.getParent().equalsIgnoreCase(cdmObjectDetails.getUserName().getLoginid()))
+                    .collect(Collectors.toList());
+            if (!parentList.isEmpty()) {
+                setImmediateParent(replicateRetailerOutletParent(parentList),cdmObjectDetails.getUserName());
+                cdmObjectDetails.setImmediateParent(new ArrayList<>(1));
+            }
+        }
+    }
+
+
 
 
 
@@ -627,11 +604,11 @@ public CkLocation getLocation(CkOutletDetails outlet) {
             } else {
                 // Handle the case at which Hierarchy is null
  //               TimerUtils.withTime("Time taken to read and populate hierarchyMetadata record ", () -> {
-//                   List<CkHierarchyMetadata> lastParent = (List<CkHierarchyMetadata>) hierarchyMetaDataService
-//                           .findByImmediateParent(hierarchyMetadata.getParent());
-//                    if (lastParent != null) {
-//                        existingMetadata.addAll(lastParent);
-//                    }
+                   List<CkHierarchyMetadata> lastParent = (List<CkHierarchyMetadata>) hierarchyMetaDataService
+                           .findByImmediateParent(hierarchyMetadata.getParent());
+                    if (lastParent != null) {
+                        existingMetadata.addAll(lastParent);
+                    }
 //                });
                 // Handle the case where it is a new Hierarchy
             }
