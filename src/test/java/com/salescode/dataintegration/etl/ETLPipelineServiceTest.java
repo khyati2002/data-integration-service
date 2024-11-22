@@ -1,5 +1,6 @@
 package com.salescode.dataintegration.etl;
 
+import com.salescode.DataIntegrationApplication;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.channelkart.utils.EntityUtils;
@@ -29,7 +30,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.doReturn;
 
-@SpringBootTest(classes = FlinkApplication.class)
+@SpringBootTest(classes = DataIntegrationApplication.class)
 @Import(DatabaseConfig.class)
 class ETLPipelineServiceTest {
 
