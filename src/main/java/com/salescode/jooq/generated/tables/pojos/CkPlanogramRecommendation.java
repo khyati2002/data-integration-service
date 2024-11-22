@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,26 +21,26 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Double centreQty;
-    private Integer clusterId;
-    private Date enddate;
-    private String itemId;
-    private String outletcode;
-    private Integer priority;
-    private Date startdate;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private Double        centreQty;
+    private Integer       clusterId;
+    private LocalDateTime enddate;
+    private String        itemId;
+    private String        outletcode;
+    private Integer       priority;
+    private LocalDateTime startdate;
 
     public CkPlanogramRecommendation() {}
 
@@ -70,26 +68,26 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     }
 
     public CkPlanogramRecommendation(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Double centreQty,
-        Integer clusterId,
-        Date enddate,
-        String itemId,
-        String outletcode,
-        Integer priority,
-        Date startdate
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        Double        centreQty,
+        Integer       clusterId,
+        LocalDateTime enddate,
+        String        itemId,
+        String        outletcode,
+        Integer       priority,
+        LocalDateTime startdate
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -116,8 +114,6 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -146,7 +142,6 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -175,7 +170,6 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -246,7 +240,6 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -261,7 +254,6 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -276,7 +268,6 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -305,7 +296,6 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.centre_qty</code>.
      */
-    @NotNull
     public Double getCentreQty() {
         return this.centreQty;
     }
@@ -320,7 +310,6 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.cluster_id</code>.
      */
-    @NotNull
     public Integer getClusterId() {
         return this.clusterId;
     }
@@ -335,21 +324,20 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.enddate</code>.
      */
-    public Date getEnddate() {
+    public LocalDateTime getEnddate() {
         return this.enddate;
     }
 
     /**
      * Setter for <code>ck_planogram_recommendation.enddate</code>.
      */
-    public void setEnddate(Date enddate) {
+    public void setEnddate(LocalDateTime enddate) {
         this.enddate = enddate;
     }
 
     /**
      * Getter for <code>ck_planogram_recommendation.item_id</code>.
      */
-    @Size(max = 255)
     public String getItemId() {
         return this.itemId;
     }
@@ -364,7 +352,6 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.outletcode</code>.
      */
-    @Size(max = 255)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -379,7 +366,6 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.priority</code>.
      */
-    @NotNull
     public Integer getPriority() {
         return this.priority;
     }
@@ -394,174 +380,15 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.startdate</code>.
      */
-    public Date getStartdate() {
+    public LocalDateTime getStartdate() {
         return this.startdate;
     }
 
     /**
      * Setter for <code>ck_planogram_recommendation.startdate</code>.
      */
-    public void setStartdate(Date startdate) {
+    public void setStartdate(LocalDateTime startdate) {
         this.startdate = startdate;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkPlanogramRecommendation other = (CkPlanogramRecommendation) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.centreQty == null) {
-            if (other.centreQty != null)
-                return false;
-        }
-        else if (!this.centreQty.equals(other.centreQty))
-            return false;
-        if (this.clusterId == null) {
-            if (other.clusterId != null)
-                return false;
-        }
-        else if (!this.clusterId.equals(other.clusterId))
-            return false;
-        if (this.enddate == null) {
-            if (other.enddate != null)
-                return false;
-        }
-        else if (!this.enddate.equals(other.enddate))
-            return false;
-        if (this.itemId == null) {
-            if (other.itemId != null)
-                return false;
-        }
-        else if (!this.itemId.equals(other.itemId))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.priority == null) {
-            if (other.priority != null)
-                return false;
-        }
-        else if (!this.priority.equals(other.priority))
-            return false;
-        if (this.startdate == null) {
-            if (other.startdate != null)
-                return false;
-        }
-        else if (!this.startdate.equals(other.startdate))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.centreQty == null) ? 0 : this.centreQty.hashCode());
-        result = prime * result + ((this.clusterId == null) ? 0 : this.clusterId.hashCode());
-        result = prime * result + ((this.enddate == null) ? 0 : this.enddate.hashCode());
-        result = prime * result + ((this.itemId == null) ? 0 : this.itemId.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.priority == null) ? 0 : this.priority.hashCode());
-        result = prime * result + ((this.startdate == null) ? 0 : this.startdate.hashCode());
-        return result;
     }
 
     @Override

@@ -11,35 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -136,13 +116,13 @@ public class CkPostaggregateGlobalConstantActivity extends TableImpl<Record> {
      * The column
      * <code>ck_postaggregate_global_constant_activity.system_time</code>.
      */
-    public final TableField<Record, Date> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
      * <code>ck_postaggregate_global_constant_activity.end_time</code>.
      */
-    public final TableField<Record, Date> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
@@ -182,13 +162,13 @@ public class CkPostaggregateGlobalConstantActivity extends TableImpl<Record> {
      * The column
      * <code>ck_postaggregate_global_constant_activity.start_time</code>.
      */
-    public final TableField<Record, Date> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
      * <code>ck_postaggregate_global_constant_activity.submission_time</code>.
      */
-    public final TableField<Record, Date> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
@@ -271,7 +251,7 @@ public class CkPostaggregateGlobalConstantActivity extends TableImpl<Record> {
     /**
      * The column <code>ck_postaggregate_global_constant_activity.date</code>.
      */
-    public final TableField<Record, Date> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
@@ -292,11 +272,11 @@ public class CkPostaggregateGlobalConstantActivity extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPostaggregateGlobalConstantActivity(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkPostaggregateGlobalConstantActivity(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkPostaggregateGlobalConstantActivity(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -323,37 +303,8 @@ public class CkPostaggregateGlobalConstantActivity extends TableImpl<Record> {
         this(DSL.name("ck_postaggregate_global_constant_activity"), null);
     }
 
-    public <O extends Record> CkPostaggregateGlobalConstantActivity(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_POSTAGGREGATE_GLOBAL_CONSTANT_ACTIVITY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkPostaggregateGlobalConstantActivityPath extends CkPostaggregateGlobalConstantActivity implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkPostaggregateGlobalConstantActivityPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkPostaggregateGlobalConstantActivityPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkPostaggregateGlobalConstantActivityPath as(String alias) {
-            return new CkPostaggregateGlobalConstantActivityPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkPostaggregateGlobalConstantActivityPath as(Name alias) {
-            return new CkPostaggregateGlobalConstantActivityPath(alias, this);
-        }
-
-        @Override
-        public CkPostaggregateGlobalConstantActivityPath as(Table<?> alias) {
-            return new CkPostaggregateGlobalConstantActivityPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkPostaggregateGlobalConstantActivity(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_POSTAGGREGATE_GLOBAL_CONSTANT_ACTIVITY);
     }
 
     @Override
@@ -371,26 +322,25 @@ public class CkPostaggregateGlobalConstantActivity extends TableImpl<Record> {
         return Arrays.asList(Keys.FKTEWFXRWXFFXTI8P5P22U40KGV, Keys.FKBTBF5AY8G1VYRWCRA147FWFY);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKTEWFXRWXFFXTI8P5P22U40KGV, null);
+            _ckLocation = new CkLocation(this, Keys.FKTEWFXRWXFFXTI8P5P22U40KGV);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKBTBF5AY8G1VYRWCRA147FWFY, null);
+            _ckUser = new CkUser(this, Keys.FKBTBF5AY8G1VYRWCRA147FWFY);
 
         return _ckUser;
     }
@@ -403,11 +353,6 @@ public class CkPostaggregateGlobalConstantActivity extends TableImpl<Record> {
     @Override
     public CkPostaggregateGlobalConstantActivity as(Name alias) {
         return new CkPostaggregateGlobalConstantActivity(alias, this);
-    }
-
-    @Override
-    public CkPostaggregateGlobalConstantActivity as(Table<?> alias) {
-        return new CkPostaggregateGlobalConstantActivity(alias.getQualifiedName(), this);
     }
 
     /**
@@ -424,97 +369,5 @@ public class CkPostaggregateGlobalConstantActivity extends TableImpl<Record> {
     @Override
     public CkPostaggregateGlobalConstantActivity rename(Name name) {
         return new CkPostaggregateGlobalConstantActivity(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkPostaggregateGlobalConstantActivity rename(Table<?> name) {
-        return new CkPostaggregateGlobalConstantActivity(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateGlobalConstantActivity where(Condition condition) {
-        return new CkPostaggregateGlobalConstantActivity(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateGlobalConstantActivity where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateGlobalConstantActivity where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateGlobalConstantActivity where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateGlobalConstantActivity where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateGlobalConstantActivity where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateGlobalConstantActivity where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateGlobalConstantActivity where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateGlobalConstantActivity whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateGlobalConstantActivity whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

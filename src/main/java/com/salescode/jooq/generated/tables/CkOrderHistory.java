@@ -11,33 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkOrders.CkOrdersPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -137,11 +118,11 @@ public class CkOrderHistory extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkOrderHistory(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkOrderHistory(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkOrderHistory(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -165,37 +146,8 @@ public class CkOrderHistory extends TableImpl<Record> {
         this(DSL.name("ck_order_history"), null);
     }
 
-    public <O extends Record> CkOrderHistory(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_ORDER_HISTORY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkOrderHistoryPath extends CkOrderHistory implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkOrderHistoryPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkOrderHistoryPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkOrderHistoryPath as(String alias) {
-            return new CkOrderHistoryPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkOrderHistoryPath as(Name alias) {
-            return new CkOrderHistoryPath(alias, this);
-        }
-
-        @Override
-        public CkOrderHistoryPath as(Table<?> alias) {
-            return new CkOrderHistoryPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkOrderHistory(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_ORDER_HISTORY);
     }
 
     @Override
@@ -213,14 +165,14 @@ public class CkOrderHistory extends TableImpl<Record> {
         return Arrays.asList(Keys.FK6548IW5YMOAT6K7HFXY8TJLGK);
     }
 
-    private transient CkOrdersPath _ckOrders;
+    private transient CkOrders _ckOrders;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_orders</code> table.
      */
-    public CkOrdersPath ckOrders() {
+    public CkOrders ckOrders() {
         if (_ckOrders == null)
-            _ckOrders = new CkOrdersPath(this, Keys.FK6548IW5YMOAT6K7HFXY8TJLGK, null);
+            _ckOrders = new CkOrders(this, Keys.FK6548IW5YMOAT6K7HFXY8TJLGK);
 
         return _ckOrders;
     }
@@ -233,11 +185,6 @@ public class CkOrderHistory extends TableImpl<Record> {
     @Override
     public CkOrderHistory as(Name alias) {
         return new CkOrderHistory(alias, this);
-    }
-
-    @Override
-    public CkOrderHistory as(Table<?> alias) {
-        return new CkOrderHistory(alias.getQualifiedName(), this);
     }
 
     /**
@@ -254,97 +201,5 @@ public class CkOrderHistory extends TableImpl<Record> {
     @Override
     public CkOrderHistory rename(Name name) {
         return new CkOrderHistory(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkOrderHistory rename(Table<?> name) {
-        return new CkOrderHistory(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOrderHistory where(Condition condition) {
-        return new CkOrderHistory(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOrderHistory where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOrderHistory where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOrderHistory where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOrderHistory where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOrderHistory where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOrderHistory where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOrderHistory where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOrderHistory whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOrderHistory whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

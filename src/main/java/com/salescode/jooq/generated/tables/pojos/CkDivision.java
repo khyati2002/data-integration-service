@@ -7,8 +7,6 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,25 +20,25 @@ public class CkDivision extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Boolean channelDivision;
-    private String displayName;
-    private String divisionName;
-    private Integer level;
-    private String roleAccessType;
-    private Byte changed;
-    private String parent;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private Boolean      channelDivision;
+    private String       displayName;
+    private String       divisionName;
+    private Integer      level;
+    private String       roleAccessType;
+    private Byte         changed;
+    private String       parent;
 
     public CkDivision() {}
 
@@ -67,25 +65,25 @@ public class CkDivision extends CommonDataModel implements Serializable {
     }
 
     public CkDivision(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Boolean channelDivision,
-        String displayName,
-        String divisionName,
-        Integer level,
-        String roleAccessType,
-        Byte changed,
-        String parent
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        Boolean      channelDivision,
+        String       displayName,
+        String       divisionName,
+        Integer      level,
+        String       roleAccessType,
+        Byte         changed,
+        String       parent
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -111,8 +109,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -141,7 +137,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -156,7 +151,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -227,7 +221,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -242,7 +235,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -257,7 +249,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -286,7 +277,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.channel_division</code>.
      */
-    @NotNull
     public Boolean getChannelDivision() {
         return this.channelDivision;
     }
@@ -301,7 +291,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.display_name</code>.
      */
-    @Size(max = 255)
     public String getDisplayName() {
         return this.displayName;
     }
@@ -316,7 +305,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.division_name</code>.
      */
-    @Size(max = 50)
     public String getDivisionName() {
         return this.divisionName;
     }
@@ -331,7 +319,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.level</code>.
      */
-    @NotNull
     public Integer getLevel() {
         return this.level;
     }
@@ -346,7 +333,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.role_access_type</code>.
      */
-    @Size(max = 255)
     public String getRoleAccessType() {
         return this.roleAccessType;
     }
@@ -375,7 +361,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_division.parent</code>.
      */
-    @Size(max = 50)
     public String getParent() {
         return this.parent;
     }
@@ -385,158 +370,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
      */
     public void setParent(String parent) {
         this.parent = parent;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkDivision other = (CkDivision) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.channelDivision == null) {
-            if (other.channelDivision != null)
-                return false;
-        }
-        else if (!this.channelDivision.equals(other.channelDivision))
-            return false;
-        if (this.displayName == null) {
-            if (other.displayName != null)
-                return false;
-        }
-        else if (!this.displayName.equals(other.displayName))
-            return false;
-        if (this.divisionName == null) {
-            if (other.divisionName != null)
-                return false;
-        }
-        else if (!this.divisionName.equals(other.divisionName))
-            return false;
-        if (this.level == null) {
-            if (other.level != null)
-                return false;
-        }
-        else if (!this.level.equals(other.level))
-            return false;
-        if (this.roleAccessType == null) {
-            if (other.roleAccessType != null)
-                return false;
-        }
-        else if (!this.roleAccessType.equals(other.roleAccessType))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.parent == null) {
-            if (other.parent != null)
-                return false;
-        }
-        else if (!this.parent.equals(other.parent))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.channelDivision == null) ? 0 : this.channelDivision.hashCode());
-        result = prime * result + ((this.displayName == null) ? 0 : this.displayName.hashCode());
-        result = prime * result + ((this.divisionName == null) ? 0 : this.divisionName.hashCode());
-        result = prime * result + ((this.level == null) ? 0 : this.level.hashCode());
-        result = prime * result + ((this.roleAccessType == null) ? 0 : this.roleAccessType.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.parent == null) ? 0 : this.parent.hashCode());
-        return result;
     }
 
     @Override

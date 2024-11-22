@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -42,8 +37,6 @@ public class CkSmartTriggerInfoDispatchers implements Serializable {
      * Getter for
      * <code>ck_smart_trigger_info_dispatchers.smart_trigger_info_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getSmartTriggerInfoId() {
         return this.smartTriggerInfoId;
     }
@@ -59,8 +52,6 @@ public class CkSmartTriggerInfoDispatchers implements Serializable {
     /**
      * Getter for <code>ck_smart_trigger_info_dispatchers.dispatchers_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getDispatchersId() {
         return this.dispatchersId;
     }
@@ -70,39 +61,6 @@ public class CkSmartTriggerInfoDispatchers implements Serializable {
      */
     public void setDispatchersId(String dispatchersId) {
         this.dispatchersId = dispatchersId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkSmartTriggerInfoDispatchers other = (CkSmartTriggerInfoDispatchers) obj;
-        if (this.smartTriggerInfoId == null) {
-            if (other.smartTriggerInfoId != null)
-                return false;
-        }
-        else if (!this.smartTriggerInfoId.equals(other.smartTriggerInfoId))
-            return false;
-        if (this.dispatchersId == null) {
-            if (other.dispatchersId != null)
-                return false;
-        }
-        else if (!this.dispatchersId.equals(other.dispatchersId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.smartTriggerInfoId == null) ? 0 : this.smartTriggerInfoId.hashCode());
-        result = prime * result + ((this.dispatchersId == null) ? 0 : this.dispatchersId.hashCode());
-        return result;
     }
 
     @Override

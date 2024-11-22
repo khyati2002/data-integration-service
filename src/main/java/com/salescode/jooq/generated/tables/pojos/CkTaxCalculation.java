@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,27 +20,27 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Double basePrice;
-    private String batchCode;
-    private Double finalTaxAmount;
-    private String invoiceNumber;
-    private String orderNumber;
-    private Double taxAmount;
-    private Double taxPercentage;
-    private String taxType;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private Double       basePrice;
+    private String       batchCode;
+    private Double       finalTaxAmount;
+    private String       invoiceNumber;
+    private String       orderNumber;
+    private Double       taxAmount;
+    private Double       taxPercentage;
+    private String       taxType;
 
     public CkTaxCalculation() {}
 
@@ -72,27 +69,27 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     }
 
     public CkTaxCalculation(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Double basePrice,
-        String batchCode,
-        Double finalTaxAmount,
-        String invoiceNumber,
-        String orderNumber,
-        Double taxAmount,
-        Double taxPercentage,
-        String taxType
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        Double       basePrice,
+        String       batchCode,
+        Double       finalTaxAmount,
+        String       invoiceNumber,
+        String       orderNumber,
+        Double       taxAmount,
+        Double       taxPercentage,
+        String       taxType
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -120,8 +117,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_tax_calculation.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -150,7 +145,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_tax_calculation.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -179,7 +173,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_tax_calculation.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -250,7 +243,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_tax_calculation.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -265,7 +257,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_tax_calculation.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -280,7 +271,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_tax_calculation.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -323,7 +313,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_tax_calculation.batch_code</code>.
      */
-    @Size(max = 255)
     public String getBatchCode() {
         return this.batchCode;
     }
@@ -352,7 +341,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_tax_calculation.invoice_number</code>.
      */
-    @Size(max = 255)
     public String getInvoiceNumber() {
         return this.invoiceNumber;
     }
@@ -367,7 +355,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_tax_calculation.order_number</code>.
      */
-    @Size(max = 255)
     public String getOrderNumber() {
         return this.orderNumber;
     }
@@ -410,7 +397,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_tax_calculation.tax_type</code>.
      */
-    @Size(max = 255)
     public String getTaxType() {
         return this.taxType;
     }
@@ -420,172 +406,6 @@ public class CkTaxCalculation extends CommonDataModel implements Serializable {
      */
     public void setTaxType(String taxType) {
         this.taxType = taxType;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkTaxCalculation other = (CkTaxCalculation) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.basePrice == null) {
-            if (other.basePrice != null)
-                return false;
-        }
-        else if (!this.basePrice.equals(other.basePrice))
-            return false;
-        if (this.batchCode == null) {
-            if (other.batchCode != null)
-                return false;
-        }
-        else if (!this.batchCode.equals(other.batchCode))
-            return false;
-        if (this.finalTaxAmount == null) {
-            if (other.finalTaxAmount != null)
-                return false;
-        }
-        else if (!this.finalTaxAmount.equals(other.finalTaxAmount))
-            return false;
-        if (this.invoiceNumber == null) {
-            if (other.invoiceNumber != null)
-                return false;
-        }
-        else if (!this.invoiceNumber.equals(other.invoiceNumber))
-            return false;
-        if (this.orderNumber == null) {
-            if (other.orderNumber != null)
-                return false;
-        }
-        else if (!this.orderNumber.equals(other.orderNumber))
-            return false;
-        if (this.taxAmount == null) {
-            if (other.taxAmount != null)
-                return false;
-        }
-        else if (!this.taxAmount.equals(other.taxAmount))
-            return false;
-        if (this.taxPercentage == null) {
-            if (other.taxPercentage != null)
-                return false;
-        }
-        else if (!this.taxPercentage.equals(other.taxPercentage))
-            return false;
-        if (this.taxType == null) {
-            if (other.taxType != null)
-                return false;
-        }
-        else if (!this.taxType.equals(other.taxType))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.basePrice == null) ? 0 : this.basePrice.hashCode());
-        result = prime * result + ((this.batchCode == null) ? 0 : this.batchCode.hashCode());
-        result = prime * result + ((this.finalTaxAmount == null) ? 0 : this.finalTaxAmount.hashCode());
-        result = prime * result + ((this.invoiceNumber == null) ? 0 : this.invoiceNumber.hashCode());
-        result = prime * result + ((this.orderNumber == null) ? 0 : this.orderNumber.hashCode());
-        result = prime * result + ((this.taxAmount == null) ? 0 : this.taxAmount.hashCode());
-        result = prime * result + ((this.taxPercentage == null) ? 0 : this.taxPercentage.hashCode());
-        result = prime * result + ((this.taxType == null) ? 0 : this.taxType.hashCode());
-        return result;
     }
 
     @Override

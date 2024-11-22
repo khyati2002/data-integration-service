@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,31 +21,31 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String bankName;
-    private String blobKey;
-    private Double collectedAmount;
-    private Double collectedAmountOther;
-    private Date date;
-    private String invoiceNumber;
-    private String loginid;
-    private String modeOfPayment;
-    private String modeOfPaymentOther;
-    private String outletcode;
-    private Date paymentDate;
-    private String uniqueId;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        blobKey;
+    private Double        collectedAmount;
+    private Double        collectedAmountOther;
+    private LocalDateTime date;
+    private String        invoiceNumber;
+    private String        loginid;
+    private String        modeOfPayment;
+    private String        modeOfPaymentOther;
+    private String        outletcode;
+    private LocalDateTime paymentDate;
+    private String        uniqueId;
+    private String        bankName;
 
     public CkPaymentCollection() {}
 
@@ -65,7 +63,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
         this.modifiedBy = value.modifiedBy;
         this.source = value.source;
         this.version = value.version;
-        this.bankName = value.bankName;
         this.blobKey = value.blobKey;
         this.collectedAmount = value.collectedAmount;
         this.collectedAmountOther = value.collectedAmountOther;
@@ -77,34 +74,35 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
         this.outletcode = value.outletcode;
         this.paymentDate = value.paymentDate;
         this.uniqueId = value.uniqueId;
+        this.bankName = value.bankName;
     }
 
     public CkPaymentCollection(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String bankName,
-        String blobKey,
-        Double collectedAmount,
-        Double collectedAmountOther,
-        Date date,
-        String invoiceNumber,
-        String loginid,
-        String modeOfPayment,
-        String modeOfPaymentOther,
-        String outletcode,
-        Date paymentDate,
-        String uniqueId
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        blobKey,
+        Double        collectedAmount,
+        Double        collectedAmountOther,
+        LocalDateTime date,
+        String        invoiceNumber,
+        String        loginid,
+        String        modeOfPayment,
+        String        modeOfPaymentOther,
+        String        outletcode,
+        LocalDateTime paymentDate,
+        String        uniqueId,
+        String        bankName
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -119,7 +117,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
         this.modifiedBy = modifiedBy;
         this.source = source;
         this.version = version;
-        this.bankName = bankName;
         this.blobKey = blobKey;
         this.collectedAmount = collectedAmount;
         this.collectedAmountOther = collectedAmountOther;
@@ -131,13 +128,12 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
         this.outletcode = outletcode;
         this.paymentDate = paymentDate;
         this.uniqueId = uniqueId;
+        this.bankName = bankName;
     }
 
     /**
      * Getter for <code>ck_payment_collection.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -166,7 +162,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -195,7 +190,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -266,7 +260,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -281,7 +274,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -296,7 +288,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -323,24 +314,8 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     }
 
     /**
-     * Getter for <code>ck_payment_collection.bank_name</code>.
-     */
-    @Size(max = 255)
-    public String getBankName() {
-        return this.bankName;
-    }
-
-    /**
-     * Setter for <code>ck_payment_collection.bank_name</code>.
-     */
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-
-    /**
      * Getter for <code>ck_payment_collection.blob_key</code>.
      */
-    @Size(max = 255)
     public String getBlobKey() {
         return this.blobKey;
     }
@@ -355,7 +330,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.collected_amount</code>.
      */
-    @NotNull
     public Double getCollectedAmount() {
         return this.collectedAmount;
     }
@@ -370,7 +344,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.collected_amount_other</code>.
      */
-    @NotNull
     public Double getCollectedAmountOther() {
         return this.collectedAmountOther;
     }
@@ -385,21 +358,20 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.date</code>.
      */
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return this.date;
     }
 
     /**
      * Setter for <code>ck_payment_collection.date</code>.
      */
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
     /**
      * Getter for <code>ck_payment_collection.invoice_number</code>.
      */
-    @Size(max = 255)
     public String getInvoiceNumber() {
         return this.invoiceNumber;
     }
@@ -414,7 +386,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.loginid</code>.
      */
-    @Size(max = 255)
     public String getLoginid() {
         return this.loginid;
     }
@@ -429,7 +400,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.mode_of_payment</code>.
      */
-    @Size(max = 255)
     public String getModeOfPayment() {
         return this.modeOfPayment;
     }
@@ -444,7 +414,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.mode_of_payment_other</code>.
      */
-    @Size(max = 255)
     public String getModeOfPaymentOther() {
         return this.modeOfPaymentOther;
     }
@@ -459,7 +428,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.outletcode</code>.
      */
-    @Size(max = 255)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -474,21 +442,20 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_payment_collection.payment_date</code>.
      */
-    public Date getPaymentDate() {
+    public LocalDateTime getPaymentDate() {
         return this.paymentDate;
     }
 
     /**
      * Setter for <code>ck_payment_collection.payment_date</code>.
      */
-    public void setPaymentDate(Date paymentDate) {
+    public void setPaymentDate(LocalDateTime paymentDate) {
         this.paymentDate = paymentDate;
     }
 
     /**
      * Getter for <code>ck_payment_collection.unique_id</code>.
      */
-    @Size(max = 255)
     public String getUniqueId() {
         return this.uniqueId;
     }
@@ -500,198 +467,18 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
         this.uniqueId = uniqueId;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkPaymentCollection other = (CkPaymentCollection) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.bankName == null) {
-            if (other.bankName != null)
-                return false;
-        }
-        else if (!this.bankName.equals(other.bankName))
-            return false;
-        if (this.blobKey == null) {
-            if (other.blobKey != null)
-                return false;
-        }
-        else if (!this.blobKey.equals(other.blobKey))
-            return false;
-        if (this.collectedAmount == null) {
-            if (other.collectedAmount != null)
-                return false;
-        }
-        else if (!this.collectedAmount.equals(other.collectedAmount))
-            return false;
-        if (this.collectedAmountOther == null) {
-            if (other.collectedAmountOther != null)
-                return false;
-        }
-        else if (!this.collectedAmountOther.equals(other.collectedAmountOther))
-            return false;
-        if (this.date == null) {
-            if (other.date != null)
-                return false;
-        }
-        else if (!this.date.equals(other.date))
-            return false;
-        if (this.invoiceNumber == null) {
-            if (other.invoiceNumber != null)
-                return false;
-        }
-        else if (!this.invoiceNumber.equals(other.invoiceNumber))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.modeOfPayment == null) {
-            if (other.modeOfPayment != null)
-                return false;
-        }
-        else if (!this.modeOfPayment.equals(other.modeOfPayment))
-            return false;
-        if (this.modeOfPaymentOther == null) {
-            if (other.modeOfPaymentOther != null)
-                return false;
-        }
-        else if (!this.modeOfPaymentOther.equals(other.modeOfPaymentOther))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.paymentDate == null) {
-            if (other.paymentDate != null)
-                return false;
-        }
-        else if (!this.paymentDate.equals(other.paymentDate))
-            return false;
-        if (this.uniqueId == null) {
-            if (other.uniqueId != null)
-                return false;
-        }
-        else if (!this.uniqueId.equals(other.uniqueId))
-            return false;
-        return true;
+    /**
+     * Getter for <code>ck_payment_collection.bank_name</code>.
+     */
+    public String getBankName() {
+        return this.bankName;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.bankName == null) ? 0 : this.bankName.hashCode());
-        result = prime * result + ((this.blobKey == null) ? 0 : this.blobKey.hashCode());
-        result = prime * result + ((this.collectedAmount == null) ? 0 : this.collectedAmount.hashCode());
-        result = prime * result + ((this.collectedAmountOther == null) ? 0 : this.collectedAmountOther.hashCode());
-        result = prime * result + ((this.date == null) ? 0 : this.date.hashCode());
-        result = prime * result + ((this.invoiceNumber == null) ? 0 : this.invoiceNumber.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.modeOfPayment == null) ? 0 : this.modeOfPayment.hashCode());
-        result = prime * result + ((this.modeOfPaymentOther == null) ? 0 : this.modeOfPaymentOther.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.paymentDate == null) ? 0 : this.paymentDate.hashCode());
-        result = prime * result + ((this.uniqueId == null) ? 0 : this.uniqueId.hashCode());
-        return result;
+    /**
+     * Setter for <code>ck_payment_collection.bank_name</code>.
+     */
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
     @Override
@@ -711,7 +498,6 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
         sb.append(", ").append(modifiedBy);
         sb.append(", ").append(source);
         sb.append(", ").append(version);
-        sb.append(", ").append(bankName);
         sb.append(", ").append(blobKey);
         sb.append(", ").append(collectedAmount);
         sb.append(", ").append(collectedAmountOther);
@@ -723,6 +509,7 @@ public class CkPaymentCollection extends CommonDataModel implements Serializable
         sb.append(", ").append(outletcode);
         sb.append(", ").append(paymentDate);
         sb.append(", ").append(uniqueId);
+        sb.append(", ").append(bankName);
 
         sb.append(")");
         return sb.toString();

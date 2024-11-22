@@ -11,34 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkSmartTriggerInfo.CkSmartTriggerInfoPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -70,7 +50,7 @@ public class CkQueryInfo extends TableImpl<Record> {
     /**
      * The column <code>ck_query_info.active_status</code>.
      */
-//    public final TableField<Record, ActiveStatus> ACTIVE_STATUS = createField(DSL.name("active_status"), SQLDataType.VARCHAR(255), this, "", new ActiveStatusConverter());
+    public final TableField<Record, ActiveStatus> ACTIVE_STATUS = createField(DSL.name("active_status"), SQLDataType.VARCHAR(255), this, "", new ActiveStatusConverter());
 
     /**
      * The column <code>ck_query_info.active_status_reason</code>.
@@ -228,11 +208,11 @@ public class CkQueryInfo extends TableImpl<Record> {
     public final TableField<Record, String> REVIEWER = createField(DSL.name("reviewer"), SQLDataType.VARCHAR(255), this, "");
 
     private CkQueryInfo(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkQueryInfo(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkQueryInfo(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -256,37 +236,8 @@ public class CkQueryInfo extends TableImpl<Record> {
         this(DSL.name("ck_query_info"), null);
     }
 
-    public <O extends Record> CkQueryInfo(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_QUERY_INFO);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkQueryInfoPath extends CkQueryInfo implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkQueryInfoPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkQueryInfoPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkQueryInfoPath as(String alias) {
-            return new CkQueryInfoPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkQueryInfoPath as(Name alias) {
-            return new CkQueryInfoPath(alias, this);
-        }
-
-        @Override
-        public CkQueryInfoPath as(Table<?> alias) {
-            return new CkQueryInfoPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkQueryInfo(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_QUERY_INFO);
     }
 
     @Override
@@ -304,19 +255,6 @@ public class CkQueryInfo extends TableImpl<Record> {
         return Arrays.asList(Keys.KEY_CK_QUERY_INFO_UK_FWYT2X54OAHWPB25X0THW0WAI);
     }
 
-    private transient CkSmartTriggerInfoPath _ckSmartTriggerInfo;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_smart_trigger_info</code> table
-     */
-    public CkSmartTriggerInfoPath ckSmartTriggerInfo() {
-        if (_ckSmartTriggerInfo == null)
-            _ckSmartTriggerInfo = new CkSmartTriggerInfoPath(this, null, Keys.FKBJFTOE17SL72C573UIKLVN9TI.getInverseKey());
-
-        return _ckSmartTriggerInfo;
-    }
-
     @Override
     public CkQueryInfo as(String alias) {
         return new CkQueryInfo(DSL.name(alias), this);
@@ -325,11 +263,6 @@ public class CkQueryInfo extends TableImpl<Record> {
     @Override
     public CkQueryInfo as(Name alias) {
         return new CkQueryInfo(alias, this);
-    }
-
-    @Override
-    public CkQueryInfo as(Table<?> alias) {
-        return new CkQueryInfo(alias.getQualifiedName(), this);
     }
 
     /**
@@ -346,97 +279,5 @@ public class CkQueryInfo extends TableImpl<Record> {
     @Override
     public CkQueryInfo rename(Name name) {
         return new CkQueryInfo(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkQueryInfo rename(Table<?> name) {
-        return new CkQueryInfo(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkQueryInfo where(Condition condition) {
-        return new CkQueryInfo(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkQueryInfo where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkQueryInfo where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkQueryInfo where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkQueryInfo where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkQueryInfo where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkQueryInfo where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkQueryInfo where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkQueryInfo whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkQueryInfo whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -7,14 +7,10 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,39 +21,39 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private Integer version;
-    private String description;
-    private String documentLink;
-    private Boolean enabled;
-    private String implementation;
-    private String language;
-    private String name;
-    private Integer priority;
-    private String query;
-    private Integer severity;
-    private String type;
-    private String source;
-    private String templateName;
-    private JSON accessibleBy;
-    private String hash;
-    private JSON queryConfig;
-    private String queryType;
-    private Integer ttl;
-    private String owner;
-    private String profileName;
-    private Byte changed;
-    private String label;
-    private String reviewStatus;
-    private String reviewer;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private Integer      version;
+    private String       description;
+    private String       documentLink;
+    private Boolean      enabled;
+    private String       implementation;
+    private String       language;
+    private String       name;
+    private Integer      priority;
+    private String       query;
+    private Integer      severity;
+    private String       type;
+    private String       source;
+    private String       templateName;
+    private JSON         accessibleBy;
+    private String       hash;
+    private JSON         queryConfig;
+    private String       queryType;
+    private Integer      ttl;
+    private String       owner;
+    private String       profileName;
+    private Byte         changed;
+    private String       label;
+    private String       reviewStatus;
+    private String       reviewer;
 
     public CkQueryInfo() {}
 
@@ -98,39 +94,39 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     }
 
     public CkQueryInfo(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        Integer version,
-        String description,
-        String documentLink,
-        Boolean enabled,
-        String implementation,
-        String language,
-        String name,
-        Integer priority,
-        String query,
-        Integer severity,
-        String type,
-        String source,
-        String templateName,
-        JSON accessibleBy,
-        String hash,
-        JSON queryConfig,
-        String queryType,
-        Integer ttl,
-        String owner,
-        String profileName,
-        Byte changed,
-        String label,
-        String reviewStatus,
-        String reviewer
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        Integer      version,
+        String       description,
+        String       documentLink,
+        Boolean      enabled,
+        String       implementation,
+        String       language,
+        String       name,
+        Integer      priority,
+        String       query,
+        Integer      severity,
+        String       type,
+        String       source,
+        String       templateName,
+        JSON         accessibleBy,
+        String       hash,
+        JSON         queryConfig,
+        String       queryType,
+        Integer      ttl,
+        String       owner,
+        String       profileName,
+        Byte         changed,
+        String       label,
+        String       reviewStatus,
+        String       reviewer
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -170,8 +166,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -200,7 +194,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -215,7 +208,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -272,7 +264,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -287,7 +278,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -302,7 +292,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.version</code>.
      */
-    @NotNull
     public Integer getVersion() {
         return this.version;
     }
@@ -317,7 +306,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.description</code>.
      */
-    @Size(max = 255)
     public String getDescription() {
         return this.description;
     }
@@ -332,7 +320,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.document_link</code>.
      */
-    @Size(max = 255)
     public String getDocumentLink() {
         return this.documentLink;
     }
@@ -347,7 +334,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.enabled</code>.
      */
-    @NotNull
     public Boolean getEnabled() {
         return this.enabled;
     }
@@ -362,7 +348,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.implementation</code>.
      */
-    @Size(max = 255)
     public String getImplementation() {
         return this.implementation;
     }
@@ -377,8 +362,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.language</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getLanguage() {
         return this.language;
     }
@@ -393,7 +376,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -408,7 +390,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.priority</code>.
      */
-    @NotNull
     public Integer getPriority() {
         return this.priority;
     }
@@ -423,8 +404,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.query</code>.
      */
-    @NotNull
-    @Size(max = 65535)
     public String getQuery() {
         return this.query;
     }
@@ -439,7 +418,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.severity</code>.
      */
-    @NotNull
     public Integer getSeverity() {
         return this.severity;
     }
@@ -454,7 +432,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -469,7 +446,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -484,7 +460,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.template_name</code>.
      */
-    @Size(max = 255)
     public String getTemplateName() {
         return this.templateName;
     }
@@ -541,7 +516,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.query_type</code>.
      */
-    @Size(max = 255)
     public String getQueryType() {
         return this.queryType;
     }
@@ -570,7 +544,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.owner</code>.
      */
-    @Size(max = 255)
     public String getOwner() {
         return this.owner;
     }
@@ -585,7 +558,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.profile_name</code>.
      */
-    @Size(max = 50)
     public String getProfileName() {
         return this.profileName;
     }
@@ -614,7 +586,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.label</code>.
      */
-    @Size(max = 255)
     public String getLabel() {
         return this.label;
     }
@@ -629,7 +600,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.review_status</code>.
      */
-    @Size(max = 255)
     public String getReviewStatus() {
         return this.reviewStatus;
     }
@@ -644,7 +614,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_query_info.reviewer</code>.
      */
-    @Size(max = 255)
     public String getReviewer() {
         return this.reviewer;
     }
@@ -654,256 +623,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
      */
     public void setReviewer(String reviewer) {
         this.reviewer = reviewer;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkQueryInfo other = (CkQueryInfo) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.description == null) {
-            if (other.description != null)
-                return false;
-        }
-        else if (!this.description.equals(other.description))
-            return false;
-        if (this.documentLink == null) {
-            if (other.documentLink != null)
-                return false;
-        }
-        else if (!this.documentLink.equals(other.documentLink))
-            return false;
-        if (this.enabled == null) {
-            if (other.enabled != null)
-                return false;
-        }
-        else if (!this.enabled.equals(other.enabled))
-            return false;
-        if (this.implementation == null) {
-            if (other.implementation != null)
-                return false;
-        }
-        else if (!this.implementation.equals(other.implementation))
-            return false;
-        if (this.language == null) {
-            if (other.language != null)
-                return false;
-        }
-        else if (!this.language.equals(other.language))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.priority == null) {
-            if (other.priority != null)
-                return false;
-        }
-        else if (!this.priority.equals(other.priority))
-            return false;
-        if (this.query == null) {
-            if (other.query != null)
-                return false;
-        }
-        else if (!this.query.equals(other.query))
-            return false;
-        if (this.severity == null) {
-            if (other.severity != null)
-                return false;
-        }
-        else if (!this.severity.equals(other.severity))
-            return false;
-        if (this.type == null) {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.templateName == null) {
-            if (other.templateName != null)
-                return false;
-        }
-        else if (!this.templateName.equals(other.templateName))
-            return false;
-        if (this.accessibleBy == null) {
-            if (other.accessibleBy != null)
-                return false;
-        }
-        else if (!this.accessibleBy.equals(other.accessibleBy))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.queryConfig == null) {
-            if (other.queryConfig != null)
-                return false;
-        }
-        else if (!this.queryConfig.equals(other.queryConfig))
-            return false;
-        if (this.queryType == null) {
-            if (other.queryType != null)
-                return false;
-        }
-        else if (!this.queryType.equals(other.queryType))
-            return false;
-        if (this.ttl == null) {
-            if (other.ttl != null)
-                return false;
-        }
-        else if (!this.ttl.equals(other.ttl))
-            return false;
-        if (this.owner == null) {
-            if (other.owner != null)
-                return false;
-        }
-        else if (!this.owner.equals(other.owner))
-            return false;
-        if (this.profileName == null) {
-            if (other.profileName != null)
-                return false;
-        }
-        else if (!this.profileName.equals(other.profileName))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.label == null) {
-            if (other.label != null)
-                return false;
-        }
-        else if (!this.label.equals(other.label))
-            return false;
-        if (this.reviewStatus == null) {
-            if (other.reviewStatus != null)
-                return false;
-        }
-        else if (!this.reviewStatus.equals(other.reviewStatus))
-            return false;
-        if (this.reviewer == null) {
-            if (other.reviewer != null)
-                return false;
-        }
-        else if (!this.reviewer.equals(other.reviewer))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-        result = prime * result + ((this.documentLink == null) ? 0 : this.documentLink.hashCode());
-        result = prime * result + ((this.enabled == null) ? 0 : this.enabled.hashCode());
-        result = prime * result + ((this.implementation == null) ? 0 : this.implementation.hashCode());
-        result = prime * result + ((this.language == null) ? 0 : this.language.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.priority == null) ? 0 : this.priority.hashCode());
-        result = prime * result + ((this.query == null) ? 0 : this.query.hashCode());
-        result = prime * result + ((this.severity == null) ? 0 : this.severity.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.templateName == null) ? 0 : this.templateName.hashCode());
-        result = prime * result + ((this.accessibleBy == null) ? 0 : this.accessibleBy.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.queryConfig == null) ? 0 : this.queryConfig.hashCode());
-        result = prime * result + ((this.queryType == null) ? 0 : this.queryType.hashCode());
-        result = prime * result + ((this.ttl == null) ? 0 : this.ttl.hashCode());
-        result = prime * result + ((this.owner == null) ? 0 : this.owner.hashCode());
-        result = prime * result + ((this.profileName == null) ? 0 : this.profileName.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.label == null) ? 0 : this.label.hashCode());
-        result = prime * result + ((this.reviewStatus == null) ? 0 : this.reviewStatus.hashCode());
-        result = prime * result + ((this.reviewer == null) ? 0 : this.reviewer.hashCode());
-        return result;
     }
 
     @Override

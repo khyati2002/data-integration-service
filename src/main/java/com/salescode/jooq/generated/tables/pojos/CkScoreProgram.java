@@ -7,15 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -26,70 +22,70 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String batchCode;
-    private String brand;
-    private String category;
-    private String channel;
-    private String constantKey;
-    private String discountId;
-    private String discountName;
-    private Date endDate;
-    private Double endQtyOrVal;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        batchCode;
+    private String        brand;
+    private String        category;
+    private String        channel;
+    private String        constantKey;
+    private String        discountId;
+    private String        discountName;
+    private LocalDateTime endDate;
+    private Double        endQtyOrVal;
     private LocalDateTime endRange;
-    private JSON groupBy;
-    private String groupType;
-    private String loyaltyType;
-    private String otherUnit;
-    private String outletCategory;
-    private String outletType;
-    private Integer priority;
-    private String product;
+    private JSON          groupBy;
+    private String        groupType;
+    private String        loyaltyType;
+    private String        otherUnit;
+    private String        outletCategory;
+    private String        outletType;
+    private Integer       priority;
+    private String        product;
     private LocalDateTime programCalculationEnd;
     private LocalDateTime programCalculationStart;
-    private String programLevel;
-    private String programNumber;
-    private String programType;
-    private String schemeDescription;
-    private JSON schemeJson;
-    private String skuCode;
-    private Date startDate;
-    private Double startQtyOrVal;
+    private String        programLevel;
+    private String        programNumber;
+    private String        programType;
+    private String        schemeDescription;
+    private JSON          schemeJson;
+    private String        skuCode;
+    private LocalDateTime startDate;
+    private Double        startQtyOrVal;
     private LocalDateTime startRange;
-    private String subCategory;
-    private String implementation;
-    private String language;
-    private String linkReference;
-    private Boolean override;
-    private JSON param;
-    private JSON rewardPoints;
-    private String locationHierarchy;
-    private String loginid;
-    private String outletcode;
-    private Byte changed;
-    private String account;
-    private String distributionChannel;
-    private String focPackageName;
-    private String itemClass;
-    private String itemId;
-    private String marketId;
-    private String marketName;
-    private String outletClass;
-    private String outletDivision;
-    private String pieceSize;
-    private String subChannel;
-    private String tradePackageName;
+    private String        subCategory;
+    private String        implementation;
+    private String        language;
+    private String        linkReference;
+    private Boolean       override;
+    private JSON          param;
+    private JSON          rewardPoints;
+    private String        locationHierarchy;
+    private String        loginid;
+    private String        outletcode;
+    private Byte          changed;
+    private String        account;
+    private String        distributionChannel;
+    private String        focPackageName;
+    private String        itemClass;
+    private String        itemId;
+    private String        marketId;
+    private String        marketName;
+    private String        outletClass;
+    private String        outletDivision;
+    private String        pieceSize;
+    private String        subChannel;
+    private String        tradePackageName;
 
     public CkScoreProgram() {}
 
@@ -161,70 +157,70 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     }
 
     public CkScoreProgram(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String batchCode,
-        String brand,
-        String category,
-        String channel,
-        String constantKey,
-        String discountId,
-        String discountName,
-        Date endDate,
-        Double endQtyOrVal,
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        batchCode,
+        String        brand,
+        String        category,
+        String        channel,
+        String        constantKey,
+        String        discountId,
+        String        discountName,
+        LocalDateTime endDate,
+        Double        endQtyOrVal,
         LocalDateTime endRange,
-        JSON groupBy,
-        String groupType,
-        String loyaltyType,
-        String otherUnit,
-        String outletCategory,
-        String outletType,
-        Integer priority,
-        String product,
+        JSON          groupBy,
+        String        groupType,
+        String        loyaltyType,
+        String        otherUnit,
+        String        outletCategory,
+        String        outletType,
+        Integer       priority,
+        String        product,
         LocalDateTime programCalculationEnd,
         LocalDateTime programCalculationStart,
-        String programLevel,
-        String programNumber,
-        String programType,
-        String schemeDescription,
-        JSON schemeJson,
-        String skuCode,
-        Date startDate,
-        Double startQtyOrVal,
+        String        programLevel,
+        String        programNumber,
+        String        programType,
+        String        schemeDescription,
+        JSON          schemeJson,
+        String        skuCode,
+        LocalDateTime startDate,
+        Double        startQtyOrVal,
         LocalDateTime startRange,
-        String subCategory,
-        String implementation,
-        String language,
-        String linkReference,
-        Boolean override,
-        JSON param,
-        JSON rewardPoints,
-        String locationHierarchy,
-        String loginid,
-        String outletcode,
-        Byte changed,
-        String account,
-        String distributionChannel,
-        String focPackageName,
-        String itemClass,
-        String itemId,
-        String marketId,
-        String marketName,
-        String outletClass,
-        String outletDivision,
-        String pieceSize,
-        String subChannel,
-        String tradePackageName
+        String        subCategory,
+        String        implementation,
+        String        language,
+        String        linkReference,
+        Boolean       override,
+        JSON          param,
+        JSON          rewardPoints,
+        String        locationHierarchy,
+        String        loginid,
+        String        outletcode,
+        Byte          changed,
+        String        account,
+        String        distributionChannel,
+        String        focPackageName,
+        String        itemClass,
+        String        itemId,
+        String        marketId,
+        String        marketName,
+        String        outletClass,
+        String        outletDivision,
+        String        pieceSize,
+        String        subChannel,
+        String        tradePackageName
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -295,8 +291,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -325,7 +319,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -340,7 +333,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -411,7 +403,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -426,7 +417,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -441,7 +431,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -470,7 +459,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.batch_code</code>.
      */
-    @Size(max = 255)
     public String getBatchCode() {
         return this.batchCode;
     }
@@ -485,7 +473,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.brand</code>.
      */
-    @Size(max = 255)
     public String getBrand() {
         return this.brand;
     }
@@ -500,7 +487,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.category</code>.
      */
-    @Size(max = 255)
     public String getCategory() {
         return this.category;
     }
@@ -515,7 +501,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.channel</code>.
      */
-    @Size(max = 255)
     public String getChannel() {
         return this.channel;
     }
@@ -530,7 +515,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.constant_key</code>.
      */
-    @Size(max = 255)
     public String getConstantKey() {
         return this.constantKey;
     }
@@ -545,7 +529,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.discount_id</code>.
      */
-    @Size(max = 255)
     public String getDiscountId() {
         return this.discountId;
     }
@@ -560,7 +543,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.discount_name</code>.
      */
-    @Size(max = 255)
     public String getDiscountName() {
         return this.discountName;
     }
@@ -575,21 +557,20 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_score_program.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
     /**
      * Getter for <code>ck_score_program.end_qty_or_val</code>.
      */
-    @NotNull
     public Double getEndQtyOrVal() {
         return this.endQtyOrVal;
     }
@@ -632,7 +613,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.group_type</code>.
      */
-    @Size(max = 255)
     public String getGroupType() {
         return this.groupType;
     }
@@ -647,7 +627,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.loyalty_type</code>.
      */
-    @Size(max = 255)
     public String getLoyaltyType() {
         return this.loyaltyType;
     }
@@ -662,7 +641,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.other_unit</code>.
      */
-    @Size(max = 255)
     public String getOtherUnit() {
         return this.otherUnit;
     }
@@ -677,7 +655,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.outlet_category</code>.
      */
-    @Size(max = 255)
     public String getOutletCategory() {
         return this.outletCategory;
     }
@@ -692,7 +669,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.outlet_type</code>.
      */
-    @Size(max = 255)
     public String getOutletType() {
         return this.outletType;
     }
@@ -707,7 +683,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.priority</code>.
      */
-    @NotNull
     public Integer getPriority() {
         return this.priority;
     }
@@ -722,7 +697,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.product</code>.
      */
-    @Size(max = 255)
     public String getProduct() {
         return this.product;
     }
@@ -765,7 +739,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.program_level</code>.
      */
-    @Size(max = 255)
     public String getProgramLevel() {
         return this.programLevel;
     }
@@ -780,7 +753,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.program_number</code>.
      */
-    @Size(max = 255)
     public String getProgramNumber() {
         return this.programNumber;
     }
@@ -795,7 +767,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.program_type</code>.
      */
-    @Size(max = 255)
     public String getProgramType() {
         return this.programType;
     }
@@ -810,7 +781,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.scheme_description</code>.
      */
-    @Size(max = 255)
     public String getSchemeDescription() {
         return this.schemeDescription;
     }
@@ -839,7 +809,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.sku_code</code>.
      */
-    @Size(max = 255)
     public String getSkuCode() {
         return this.skuCode;
     }
@@ -854,21 +823,20 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_score_program.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_score_program.start_qty_or_val</code>.
      */
-    @NotNull
     public Double getStartQtyOrVal() {
         return this.startQtyOrVal;
     }
@@ -897,7 +865,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.sub_category</code>.
      */
-    @Size(max = 255)
     public String getSubCategory() {
         return this.subCategory;
     }
@@ -912,8 +879,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.implementation</code>.
      */
-    @NotNull
-    @Size(max = 65535)
     public String getImplementation() {
         return this.implementation;
     }
@@ -928,7 +893,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.language</code>.
      */
-    @Size(max = 255)
     public String getLanguage() {
         return this.language;
     }
@@ -943,8 +907,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.link_reference</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getLinkReference() {
         return this.linkReference;
     }
@@ -959,7 +921,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.override</code>.
      */
-    @NotNull
     public Boolean getOverride() {
         return this.override;
     }
@@ -1002,7 +963,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -1017,7 +977,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.loginid</code>.
      */
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -1032,7 +991,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -1061,7 +1019,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.account</code>.
      */
-    @Size(max = 255)
     public String getAccount() {
         return this.account;
     }
@@ -1076,7 +1033,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.distribution_channel</code>.
      */
-    @Size(max = 255)
     public String getDistributionChannel() {
         return this.distributionChannel;
     }
@@ -1091,7 +1047,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.foc_package_name</code>.
      */
-    @Size(max = 255)
     public String getFocPackageName() {
         return this.focPackageName;
     }
@@ -1106,7 +1061,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.item_class</code>.
      */
-    @Size(max = 255)
     public String getItemClass() {
         return this.itemClass;
     }
@@ -1121,7 +1075,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.item_id</code>.
      */
-    @Size(max = 255)
     public String getItemId() {
         return this.itemId;
     }
@@ -1136,7 +1089,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.market_id</code>.
      */
-    @Size(max = 255)
     public String getMarketId() {
         return this.marketId;
     }
@@ -1151,7 +1103,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.market_name</code>.
      */
-    @Size(max = 255)
     public String getMarketName() {
         return this.marketName;
     }
@@ -1166,7 +1117,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.outlet_class</code>.
      */
-    @Size(max = 255)
     public String getOutletClass() {
         return this.outletClass;
     }
@@ -1181,7 +1131,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.outlet_division</code>.
      */
-    @Size(max = 255)
     public String getOutletDivision() {
         return this.outletDivision;
     }
@@ -1196,7 +1145,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.piece_size</code>.
      */
-    @Size(max = 255)
     public String getPieceSize() {
         return this.pieceSize;
     }
@@ -1211,7 +1159,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.sub_channel</code>.
      */
-    @Size(max = 255)
     public String getSubChannel() {
         return this.subChannel;
     }
@@ -1226,7 +1173,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_program.trade_package_name</code>.
      */
-    @Size(max = 255)
     public String getTradePackageName() {
         return this.tradePackageName;
     }
@@ -1236,473 +1182,6 @@ public class CkScoreProgram extends CommonDataModel implements Serializable {
      */
     public void setTradePackageName(String tradePackageName) {
         this.tradePackageName = tradePackageName;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkScoreProgram other = (CkScoreProgram) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.batchCode == null) {
-            if (other.batchCode != null)
-                return false;
-        }
-        else if (!this.batchCode.equals(other.batchCode))
-            return false;
-        if (this.brand == null) {
-            if (other.brand != null)
-                return false;
-        }
-        else if (!this.brand.equals(other.brand))
-            return false;
-        if (this.category == null) {
-            if (other.category != null)
-                return false;
-        }
-        else if (!this.category.equals(other.category))
-            return false;
-        if (this.channel == null) {
-            if (other.channel != null)
-                return false;
-        }
-        else if (!this.channel.equals(other.channel))
-            return false;
-        if (this.constantKey == null) {
-            if (other.constantKey != null)
-                return false;
-        }
-        else if (!this.constantKey.equals(other.constantKey))
-            return false;
-        if (this.discountId == null) {
-            if (other.discountId != null)
-                return false;
-        }
-        else if (!this.discountId.equals(other.discountId))
-            return false;
-        if (this.discountName == null) {
-            if (other.discountName != null)
-                return false;
-        }
-        else if (!this.discountName.equals(other.discountName))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.endQtyOrVal == null) {
-            if (other.endQtyOrVal != null)
-                return false;
-        }
-        else if (!this.endQtyOrVal.equals(other.endQtyOrVal))
-            return false;
-        if (this.endRange == null) {
-            if (other.endRange != null)
-                return false;
-        }
-        else if (!this.endRange.equals(other.endRange))
-            return false;
-        if (this.groupBy == null) {
-            if (other.groupBy != null)
-                return false;
-        }
-        else if (!this.groupBy.equals(other.groupBy))
-            return false;
-        if (this.groupType == null) {
-            if (other.groupType != null)
-                return false;
-        }
-        else if (!this.groupType.equals(other.groupType))
-            return false;
-        if (this.loyaltyType == null) {
-            if (other.loyaltyType != null)
-                return false;
-        }
-        else if (!this.loyaltyType.equals(other.loyaltyType))
-            return false;
-        if (this.otherUnit == null) {
-            if (other.otherUnit != null)
-                return false;
-        }
-        else if (!this.otherUnit.equals(other.otherUnit))
-            return false;
-        if (this.outletCategory == null) {
-            if (other.outletCategory != null)
-                return false;
-        }
-        else if (!this.outletCategory.equals(other.outletCategory))
-            return false;
-        if (this.outletType == null) {
-            if (other.outletType != null)
-                return false;
-        }
-        else if (!this.outletType.equals(other.outletType))
-            return false;
-        if (this.priority == null) {
-            if (other.priority != null)
-                return false;
-        }
-        else if (!this.priority.equals(other.priority))
-            return false;
-        if (this.product == null) {
-            if (other.product != null)
-                return false;
-        }
-        else if (!this.product.equals(other.product))
-            return false;
-        if (this.programCalculationEnd == null) {
-            if (other.programCalculationEnd != null)
-                return false;
-        }
-        else if (!this.programCalculationEnd.equals(other.programCalculationEnd))
-            return false;
-        if (this.programCalculationStart == null) {
-            if (other.programCalculationStart != null)
-                return false;
-        }
-        else if (!this.programCalculationStart.equals(other.programCalculationStart))
-            return false;
-        if (this.programLevel == null) {
-            if (other.programLevel != null)
-                return false;
-        }
-        else if (!this.programLevel.equals(other.programLevel))
-            return false;
-        if (this.programNumber == null) {
-            if (other.programNumber != null)
-                return false;
-        }
-        else if (!this.programNumber.equals(other.programNumber))
-            return false;
-        if (this.programType == null) {
-            if (other.programType != null)
-                return false;
-        }
-        else if (!this.programType.equals(other.programType))
-            return false;
-        if (this.schemeDescription == null) {
-            if (other.schemeDescription != null)
-                return false;
-        }
-        else if (!this.schemeDescription.equals(other.schemeDescription))
-            return false;
-        if (this.schemeJson == null) {
-            if (other.schemeJson != null)
-                return false;
-        }
-        else if (!this.schemeJson.equals(other.schemeJson))
-            return false;
-        if (this.skuCode == null) {
-            if (other.skuCode != null)
-                return false;
-        }
-        else if (!this.skuCode.equals(other.skuCode))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.startQtyOrVal == null) {
-            if (other.startQtyOrVal != null)
-                return false;
-        }
-        else if (!this.startQtyOrVal.equals(other.startQtyOrVal))
-            return false;
-        if (this.startRange == null) {
-            if (other.startRange != null)
-                return false;
-        }
-        else if (!this.startRange.equals(other.startRange))
-            return false;
-        if (this.subCategory == null) {
-            if (other.subCategory != null)
-                return false;
-        }
-        else if (!this.subCategory.equals(other.subCategory))
-            return false;
-        if (this.implementation == null) {
-            if (other.implementation != null)
-                return false;
-        }
-        else if (!this.implementation.equals(other.implementation))
-            return false;
-        if (this.language == null) {
-            if (other.language != null)
-                return false;
-        }
-        else if (!this.language.equals(other.language))
-            return false;
-        if (this.linkReference == null) {
-            if (other.linkReference != null)
-                return false;
-        }
-        else if (!this.linkReference.equals(other.linkReference))
-            return false;
-        if (this.override == null) {
-            if (other.override != null)
-                return false;
-        }
-        else if (!this.override.equals(other.override))
-            return false;
-        if (this.param == null) {
-            if (other.param != null)
-                return false;
-        }
-        else if (!this.param.equals(other.param))
-            return false;
-        if (this.rewardPoints == null) {
-            if (other.rewardPoints != null)
-                return false;
-        }
-        else if (!this.rewardPoints.equals(other.rewardPoints))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.account == null) {
-            if (other.account != null)
-                return false;
-        }
-        else if (!this.account.equals(other.account))
-            return false;
-        if (this.distributionChannel == null) {
-            if (other.distributionChannel != null)
-                return false;
-        }
-        else if (!this.distributionChannel.equals(other.distributionChannel))
-            return false;
-        if (this.focPackageName == null) {
-            if (other.focPackageName != null)
-                return false;
-        }
-        else if (!this.focPackageName.equals(other.focPackageName))
-            return false;
-        if (this.itemClass == null) {
-            if (other.itemClass != null)
-                return false;
-        }
-        else if (!this.itemClass.equals(other.itemClass))
-            return false;
-        if (this.itemId == null) {
-            if (other.itemId != null)
-                return false;
-        }
-        else if (!this.itemId.equals(other.itemId))
-            return false;
-        if (this.marketId == null) {
-            if (other.marketId != null)
-                return false;
-        }
-        else if (!this.marketId.equals(other.marketId))
-            return false;
-        if (this.marketName == null) {
-            if (other.marketName != null)
-                return false;
-        }
-        else if (!this.marketName.equals(other.marketName))
-            return false;
-        if (this.outletClass == null) {
-            if (other.outletClass != null)
-                return false;
-        }
-        else if (!this.outletClass.equals(other.outletClass))
-            return false;
-        if (this.outletDivision == null) {
-            if (other.outletDivision != null)
-                return false;
-        }
-        else if (!this.outletDivision.equals(other.outletDivision))
-            return false;
-        if (this.pieceSize == null) {
-            if (other.pieceSize != null)
-                return false;
-        }
-        else if (!this.pieceSize.equals(other.pieceSize))
-            return false;
-        if (this.subChannel == null) {
-            if (other.subChannel != null)
-                return false;
-        }
-        else if (!this.subChannel.equals(other.subChannel))
-            return false;
-        if (this.tradePackageName == null) {
-            if (other.tradePackageName != null)
-                return false;
-        }
-        else if (!this.tradePackageName.equals(other.tradePackageName))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.batchCode == null) ? 0 : this.batchCode.hashCode());
-        result = prime * result + ((this.brand == null) ? 0 : this.brand.hashCode());
-        result = prime * result + ((this.category == null) ? 0 : this.category.hashCode());
-        result = prime * result + ((this.channel == null) ? 0 : this.channel.hashCode());
-        result = prime * result + ((this.constantKey == null) ? 0 : this.constantKey.hashCode());
-        result = prime * result + ((this.discountId == null) ? 0 : this.discountId.hashCode());
-        result = prime * result + ((this.discountName == null) ? 0 : this.discountName.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.endQtyOrVal == null) ? 0 : this.endQtyOrVal.hashCode());
-        result = prime * result + ((this.endRange == null) ? 0 : this.endRange.hashCode());
-        result = prime * result + ((this.groupBy == null) ? 0 : this.groupBy.hashCode());
-        result = prime * result + ((this.groupType == null) ? 0 : this.groupType.hashCode());
-        result = prime * result + ((this.loyaltyType == null) ? 0 : this.loyaltyType.hashCode());
-        result = prime * result + ((this.otherUnit == null) ? 0 : this.otherUnit.hashCode());
-        result = prime * result + ((this.outletCategory == null) ? 0 : this.outletCategory.hashCode());
-        result = prime * result + ((this.outletType == null) ? 0 : this.outletType.hashCode());
-        result = prime * result + ((this.priority == null) ? 0 : this.priority.hashCode());
-        result = prime * result + ((this.product == null) ? 0 : this.product.hashCode());
-        result = prime * result + ((this.programCalculationEnd == null) ? 0 : this.programCalculationEnd.hashCode());
-        result = prime * result + ((this.programCalculationStart == null) ? 0 : this.programCalculationStart.hashCode());
-        result = prime * result + ((this.programLevel == null) ? 0 : this.programLevel.hashCode());
-        result = prime * result + ((this.programNumber == null) ? 0 : this.programNumber.hashCode());
-        result = prime * result + ((this.programType == null) ? 0 : this.programType.hashCode());
-        result = prime * result + ((this.schemeDescription == null) ? 0 : this.schemeDescription.hashCode());
-        result = prime * result + ((this.schemeJson == null) ? 0 : this.schemeJson.hashCode());
-        result = prime * result + ((this.skuCode == null) ? 0 : this.skuCode.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.startQtyOrVal == null) ? 0 : this.startQtyOrVal.hashCode());
-        result = prime * result + ((this.startRange == null) ? 0 : this.startRange.hashCode());
-        result = prime * result + ((this.subCategory == null) ? 0 : this.subCategory.hashCode());
-        result = prime * result + ((this.implementation == null) ? 0 : this.implementation.hashCode());
-        result = prime * result + ((this.language == null) ? 0 : this.language.hashCode());
-        result = prime * result + ((this.linkReference == null) ? 0 : this.linkReference.hashCode());
-        result = prime * result + ((this.override == null) ? 0 : this.override.hashCode());
-        result = prime * result + ((this.param == null) ? 0 : this.param.hashCode());
-        result = prime * result + ((this.rewardPoints == null) ? 0 : this.rewardPoints.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
-        result = prime * result + ((this.distributionChannel == null) ? 0 : this.distributionChannel.hashCode());
-        result = prime * result + ((this.focPackageName == null) ? 0 : this.focPackageName.hashCode());
-        result = prime * result + ((this.itemClass == null) ? 0 : this.itemClass.hashCode());
-        result = prime * result + ((this.itemId == null) ? 0 : this.itemId.hashCode());
-        result = prime * result + ((this.marketId == null) ? 0 : this.marketId.hashCode());
-        result = prime * result + ((this.marketName == null) ? 0 : this.marketName.hashCode());
-        result = prime * result + ((this.outletClass == null) ? 0 : this.outletClass.hashCode());
-        result = prime * result + ((this.outletDivision == null) ? 0 : this.outletDivision.hashCode());
-        result = prime * result + ((this.pieceSize == null) ? 0 : this.pieceSize.hashCode());
-        result = prime * result + ((this.subChannel == null) ? 0 : this.subChannel.hashCode());
-        result = prime * result + ((this.tradePackageName == null) ? 0 : this.tradePackageName.hashCode());
-        return result;
     }
 
     @Override

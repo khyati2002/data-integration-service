@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,29 +21,29 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String active;
-    private String approvedBy;
-    private String approvedRemarks;
-    private String designation;
-    private Date fromDate;
-    private String region;
-    private String status;
-    private Date toDate;
-    private String town;
-    private String townCode;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        active;
+    private String        approvedBy;
+    private String        approvedRemarks;
+    private String        designation;
+    private LocalDateTime fromDate;
+    private String        region;
+    private String        status;
+    private LocalDateTime toDate;
+    private String        town;
+    private String        townCode;
+    private Byte          changed;
 
     public CkMeetingmaster() {}
 
@@ -76,29 +74,29 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     }
 
     public CkMeetingmaster(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String active,
-        String approvedBy,
-        String approvedRemarks,
-        String designation,
-        Date fromDate,
-        String region,
-        String status,
-        Date toDate,
-        String town,
-        String townCode,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        active,
+        String        approvedBy,
+        String        approvedRemarks,
+        String        designation,
+        LocalDateTime fromDate,
+        String        region,
+        String        status,
+        LocalDateTime toDate,
+        String        town,
+        String        townCode,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -128,8 +126,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -158,7 +154,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -173,7 +168,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -244,7 +238,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -259,7 +252,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -274,7 +266,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -303,7 +294,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.active</code>.
      */
-    @Size(max = 255)
     public String getActive() {
         return this.active;
     }
@@ -318,7 +308,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.approved_by</code>.
      */
-    @Size(max = 255)
     public String getApprovedBy() {
         return this.approvedBy;
     }
@@ -333,7 +322,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.approved_remarks</code>.
      */
-    @Size(max = 255)
     public String getApprovedRemarks() {
         return this.approvedRemarks;
     }
@@ -348,7 +336,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.designation</code>.
      */
-    @Size(max = 30)
     public String getDesignation() {
         return this.designation;
     }
@@ -363,22 +350,20 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.from_date</code>.
      */
-    @NotNull
-    public Date getFromDate() {
+    public LocalDateTime getFromDate() {
         return this.fromDate;
     }
 
     /**
      * Setter for <code>ck_meetingmaster.from_date</code>.
      */
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
 
     /**
      * Getter for <code>ck_meetingmaster.region</code>.
      */
-    @Size(max = 50)
     public String getRegion() {
         return this.region;
     }
@@ -393,7 +378,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.status</code>.
      */
-    @Size(max = 20)
     public String getStatus() {
         return this.status;
     }
@@ -408,22 +392,20 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.to_date</code>.
      */
-    @NotNull
-    public Date getToDate() {
+    public LocalDateTime getToDate() {
         return this.toDate;
     }
 
     /**
      * Setter for <code>ck_meetingmaster.to_date</code>.
      */
-    public void setToDate(Date toDate) {
+    public void setToDate(LocalDateTime toDate) {
         this.toDate = toDate;
     }
 
     /**
      * Getter for <code>ck_meetingmaster.town</code>.
      */
-    @Size(max = 255)
     public String getTown() {
         return this.town;
     }
@@ -438,7 +420,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_meetingmaster.town_code</code>.
      */
-    @Size(max = 50)
     public String getTownCode() {
         return this.townCode;
     }
@@ -462,186 +443,6 @@ public class CkMeetingmaster extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkMeetingmaster other = (CkMeetingmaster) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.active == null) {
-            if (other.active != null)
-                return false;
-        }
-        else if (!this.active.equals(other.active))
-            return false;
-        if (this.approvedBy == null) {
-            if (other.approvedBy != null)
-                return false;
-        }
-        else if (!this.approvedBy.equals(other.approvedBy))
-            return false;
-        if (this.approvedRemarks == null) {
-            if (other.approvedRemarks != null)
-                return false;
-        }
-        else if (!this.approvedRemarks.equals(other.approvedRemarks))
-            return false;
-        if (this.designation == null) {
-            if (other.designation != null)
-                return false;
-        }
-        else if (!this.designation.equals(other.designation))
-            return false;
-        if (this.fromDate == null) {
-            if (other.fromDate != null)
-                return false;
-        }
-        else if (!this.fromDate.equals(other.fromDate))
-            return false;
-        if (this.region == null) {
-            if (other.region != null)
-                return false;
-        }
-        else if (!this.region.equals(other.region))
-            return false;
-        if (this.status == null) {
-            if (other.status != null)
-                return false;
-        }
-        else if (!this.status.equals(other.status))
-            return false;
-        if (this.toDate == null) {
-            if (other.toDate != null)
-                return false;
-        }
-        else if (!this.toDate.equals(other.toDate))
-            return false;
-        if (this.town == null) {
-            if (other.town != null)
-                return false;
-        }
-        else if (!this.town.equals(other.town))
-            return false;
-        if (this.townCode == null) {
-            if (other.townCode != null)
-                return false;
-        }
-        else if (!this.townCode.equals(other.townCode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.active == null) ? 0 : this.active.hashCode());
-        result = prime * result + ((this.approvedBy == null) ? 0 : this.approvedBy.hashCode());
-        result = prime * result + ((this.approvedRemarks == null) ? 0 : this.approvedRemarks.hashCode());
-        result = prime * result + ((this.designation == null) ? 0 : this.designation.hashCode());
-        result = prime * result + ((this.fromDate == null) ? 0 : this.fromDate.hashCode());
-        result = prime * result + ((this.region == null) ? 0 : this.region.hashCode());
-        result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
-        result = prime * result + ((this.toDate == null) ? 0 : this.toDate.hashCode());
-        result = prime * result + ((this.town == null) ? 0 : this.town.hashCode());
-        result = prime * result + ((this.townCode == null) ? 0 : this.townCode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

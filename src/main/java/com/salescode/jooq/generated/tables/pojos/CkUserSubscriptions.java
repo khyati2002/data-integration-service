@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,29 +22,29 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private JSON lobs;
-    private String loginid;
-    private String targetLob;
-    private String targetLoginId;
-    private Date activationDate;
-    private String mobileNumber;
-    private String principalLoginId;
-    private String principalOutletCode;
-    private Date registrationDate;
-    private String targetOutletCode;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private JSON          lobs;
+    private String        loginid;
+    private String        targetLob;
+    private String        targetLoginId;
+    private LocalDateTime activationDate;
+    private String        mobileNumber;
+    private String        principalLoginId;
+    private String        principalOutletCode;
+    private LocalDateTime registrationDate;
+    private String        targetOutletCode;
 
     public CkUserSubscriptions() {}
 
@@ -78,29 +75,29 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     }
 
     public CkUserSubscriptions(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        JSON lobs,
-        String loginid,
-        String targetLob,
-        String targetLoginId,
-        Date activationDate,
-        String mobileNumber,
-        String principalLoginId,
-        String principalOutletCode,
-        Date registrationDate,
-        String targetOutletCode
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        JSON          lobs,
+        String        loginid,
+        String        targetLob,
+        String        targetLoginId,
+        LocalDateTime activationDate,
+        String        mobileNumber,
+        String        principalLoginId,
+        String        principalOutletCode,
+        LocalDateTime registrationDate,
+        String        targetOutletCode
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -130,8 +127,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -160,7 +155,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -189,7 +183,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -260,7 +253,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -275,7 +267,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -290,7 +281,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -319,7 +309,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.lobs</code>.
      */
-    @NotNull
     public JSON getLobs() {
         return this.lobs;
     }
@@ -334,8 +323,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.loginid</code>.
      */
-    @NotNull
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -350,7 +337,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.target_lob</code>.
      */
-    @Size(max = 255)
     public String getTargetLob() {
         return this.targetLob;
     }
@@ -365,7 +351,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.target_login_id</code>.
      */
-    @Size(max = 255)
     public String getTargetLoginId() {
         return this.targetLoginId;
     }
@@ -380,21 +365,20 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.activation_date</code>.
      */
-    public Date getActivationDate() {
+    public LocalDateTime getActivationDate() {
         return this.activationDate;
     }
 
     /**
      * Setter for <code>ck_user_subscriptions.activation_date</code>.
      */
-    public void setActivationDate(Date activationDate) {
+    public void setActivationDate(LocalDateTime activationDate) {
         this.activationDate = activationDate;
     }
 
     /**
      * Getter for <code>ck_user_subscriptions.mobile_number</code>.
      */
-    @Size(max = 255)
     public String getMobileNumber() {
         return this.mobileNumber;
     }
@@ -409,8 +393,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.principal_login_id</code>.
      */
-    @NotNull
-    @Size(max = 50)
     public String getPrincipalLoginId() {
         return this.principalLoginId;
     }
@@ -425,7 +407,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.principal_outlet_code</code>.
      */
-    @Size(max = 255)
     public String getPrincipalOutletCode() {
         return this.principalOutletCode;
     }
@@ -440,21 +421,20 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     /**
      * Getter for <code>ck_user_subscriptions.registration_date</code>.
      */
-    public Date getRegistrationDate() {
+    public LocalDateTime getRegistrationDate() {
         return this.registrationDate;
     }
 
     /**
      * Setter for <code>ck_user_subscriptions.registration_date</code>.
      */
-    public void setRegistrationDate(Date registrationDate) {
+    public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
     }
 
     /**
      * Getter for <code>ck_user_subscriptions.target_outlet_code</code>.
      */
-    @Size(max = 255)
     public String getTargetOutletCode() {
         return this.targetOutletCode;
     }
@@ -464,186 +444,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
      */
     public void setTargetOutletCode(String targetOutletCode) {
         this.targetOutletCode = targetOutletCode;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkUserSubscriptions other = (CkUserSubscriptions) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.lobs == null) {
-            if (other.lobs != null)
-                return false;
-        }
-        else if (!this.lobs.equals(other.lobs))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.targetLob == null) {
-            if (other.targetLob != null)
-                return false;
-        }
-        else if (!this.targetLob.equals(other.targetLob))
-            return false;
-        if (this.targetLoginId == null) {
-            if (other.targetLoginId != null)
-                return false;
-        }
-        else if (!this.targetLoginId.equals(other.targetLoginId))
-            return false;
-        if (this.activationDate == null) {
-            if (other.activationDate != null)
-                return false;
-        }
-        else if (!this.activationDate.equals(other.activationDate))
-            return false;
-        if (this.mobileNumber == null) {
-            if (other.mobileNumber != null)
-                return false;
-        }
-        else if (!this.mobileNumber.equals(other.mobileNumber))
-            return false;
-        if (this.principalLoginId == null) {
-            if (other.principalLoginId != null)
-                return false;
-        }
-        else if (!this.principalLoginId.equals(other.principalLoginId))
-            return false;
-        if (this.principalOutletCode == null) {
-            if (other.principalOutletCode != null)
-                return false;
-        }
-        else if (!this.principalOutletCode.equals(other.principalOutletCode))
-            return false;
-        if (this.registrationDate == null) {
-            if (other.registrationDate != null)
-                return false;
-        }
-        else if (!this.registrationDate.equals(other.registrationDate))
-            return false;
-        if (this.targetOutletCode == null) {
-            if (other.targetOutletCode != null)
-                return false;
-        }
-        else if (!this.targetOutletCode.equals(other.targetOutletCode))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.lobs == null) ? 0 : this.lobs.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.targetLob == null) ? 0 : this.targetLob.hashCode());
-        result = prime * result + ((this.targetLoginId == null) ? 0 : this.targetLoginId.hashCode());
-        result = prime * result + ((this.activationDate == null) ? 0 : this.activationDate.hashCode());
-        result = prime * result + ((this.mobileNumber == null) ? 0 : this.mobileNumber.hashCode());
-        result = prime * result + ((this.principalLoginId == null) ? 0 : this.principalLoginId.hashCode());
-        result = prime * result + ((this.principalOutletCode == null) ? 0 : this.principalOutletCode.hashCode());
-        result = prime * result + ((this.registrationDate == null) ? 0 : this.registrationDate.hashCode());
-        result = prime * result + ((this.targetOutletCode == null) ? 0 : this.targetOutletCode.hashCode());
-        return result;
     }
 
     @Override

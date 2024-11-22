@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -41,8 +36,6 @@ public class CkOutletMappingBeatFrequency implements Serializable {
     /**
      * Getter for <code>ck_outlet_mapping_beat_frequency.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -57,7 +50,6 @@ public class CkOutletMappingBeatFrequency implements Serializable {
     /**
      * Getter for <code>ck_outlet_mapping_beat_frequency.beat_frequency</code>.
      */
-    @Size(max = 255)
     public String getBeatFrequency() {
         return this.beatFrequency;
     }
@@ -67,39 +59,6 @@ public class CkOutletMappingBeatFrequency implements Serializable {
      */
     public void setBeatFrequency(String beatFrequency) {
         this.beatFrequency = beatFrequency;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkOutletMappingBeatFrequency other = (CkOutletMappingBeatFrequency) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.beatFrequency == null) {
-            if (other.beatFrequency != null)
-                return false;
-        }
-        else if (!this.beatFrequency.equals(other.beatFrequency))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.beatFrequency == null) ? 0 : this.beatFrequency.hashCode());
-        return result;
     }
 
     @Override

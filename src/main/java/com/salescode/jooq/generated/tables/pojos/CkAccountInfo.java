@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,27 +20,27 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String accountId;
-    private String accountNumber;
-    private String accPayload;
-    private String authPersonName;
-    private String contactName;
-    private String email;
-    private String loginId;
-    private String mobile;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       accountId;
+    private String       accountNumber;
+    private String       accPayload;
+    private String       authPersonName;
+    private String       contactName;
+    private String       email;
+    private String       loginId;
+    private String       mobile;
 
     public CkAccountInfo() {}
 
@@ -72,27 +69,27 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     }
 
     public CkAccountInfo(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String accountId,
-        String accountNumber,
-        String accPayload,
-        String authPersonName,
-        String contactName,
-        String email,
-        String loginId,
-        String mobile
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       accountId,
+        String       accountNumber,
+        String       accPayload,
+        String       authPersonName,
+        String       contactName,
+        String       email,
+        String       loginId,
+        String       mobile
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -120,8 +117,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -150,7 +145,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -179,7 +173,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -250,7 +243,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -265,7 +257,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -280,7 +271,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -309,7 +299,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.account_id</code>.
      */
-    @Size(max = 255)
     public String getAccountId() {
         return this.accountId;
     }
@@ -324,7 +313,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.account_number</code>.
      */
-    @Size(max = 255)
     public String getAccountNumber() {
         return this.accountNumber;
     }
@@ -353,7 +341,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.auth_person_name</code>.
      */
-    @Size(max = 255)
     public String getAuthPersonName() {
         return this.authPersonName;
     }
@@ -368,7 +355,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.contact_name</code>.
      */
-    @Size(max = 255)
     public String getContactName() {
         return this.contactName;
     }
@@ -383,7 +369,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.email</code>.
      */
-    @Size(max = 255)
     public String getEmail() {
         return this.email;
     }
@@ -398,7 +383,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.login_id</code>.
      */
-    @Size(max = 255)
     public String getLoginId() {
         return this.loginId;
     }
@@ -413,7 +397,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_account_info.mobile</code>.
      */
-    @Size(max = 255)
     public String getMobile() {
         return this.mobile;
     }
@@ -423,172 +406,6 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkAccountInfo other = (CkAccountInfo) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.accountId == null) {
-            if (other.accountId != null)
-                return false;
-        }
-        else if (!this.accountId.equals(other.accountId))
-            return false;
-        if (this.accountNumber == null) {
-            if (other.accountNumber != null)
-                return false;
-        }
-        else if (!this.accountNumber.equals(other.accountNumber))
-            return false;
-        if (this.accPayload == null) {
-            if (other.accPayload != null)
-                return false;
-        }
-        else if (!this.accPayload.equals(other.accPayload))
-            return false;
-        if (this.authPersonName == null) {
-            if (other.authPersonName != null)
-                return false;
-        }
-        else if (!this.authPersonName.equals(other.authPersonName))
-            return false;
-        if (this.contactName == null) {
-            if (other.contactName != null)
-                return false;
-        }
-        else if (!this.contactName.equals(other.contactName))
-            return false;
-        if (this.email == null) {
-            if (other.email != null)
-                return false;
-        }
-        else if (!this.email.equals(other.email))
-            return false;
-        if (this.loginId == null) {
-            if (other.loginId != null)
-                return false;
-        }
-        else if (!this.loginId.equals(other.loginId))
-            return false;
-        if (this.mobile == null) {
-            if (other.mobile != null)
-                return false;
-        }
-        else if (!this.mobile.equals(other.mobile))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.accountId == null) ? 0 : this.accountId.hashCode());
-        result = prime * result + ((this.accountNumber == null) ? 0 : this.accountNumber.hashCode());
-        result = prime * result + ((this.accPayload == null) ? 0 : this.accPayload.hashCode());
-        result = prime * result + ((this.authPersonName == null) ? 0 : this.authPersonName.hashCode());
-        result = prime * result + ((this.contactName == null) ? 0 : this.contactName.hashCode());
-        result = prime * result + ((this.email == null) ? 0 : this.email.hashCode());
-        result = prime * result + ((this.loginId == null) ? 0 : this.loginId.hashCode());
-        result = prime * result + ((this.mobile == null) ? 0 : this.mobile.hashCode());
-        return result;
     }
 
     @Override

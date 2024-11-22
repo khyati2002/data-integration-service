@@ -6,16 +6,12 @@ package com.salescode.jooq.generated.tables;
 
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkHierarchyMetadata.CkHierarchyMetadataPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 
@@ -53,11 +49,11 @@ public class CkOutletDetailsHierarchymetadata extends TableImpl<Record> {
     public final TableField<Record, String> HIERARCHY_METADATA_ID = createField(DSL.name("hierarchy_metadata_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private CkOutletDetailsHierarchymetadata(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkOutletDetailsHierarchymetadata(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkOutletDetailsHierarchymetadata(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -83,37 +79,8 @@ public class CkOutletDetailsHierarchymetadata extends TableImpl<Record> {
         this(DSL.name("ck_outlet_details_hierarchymetadata"), null);
     }
 
-    public <O extends Record> CkOutletDetailsHierarchymetadata(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_OUTLET_DETAILS_HIERARCHYMETADATA);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkOutletDetailsHierarchymetadataPath extends CkOutletDetailsHierarchymetadata implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkOutletDetailsHierarchymetadataPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkOutletDetailsHierarchymetadataPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkOutletDetailsHierarchymetadataPath as(String alias) {
-            return new CkOutletDetailsHierarchymetadataPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkOutletDetailsHierarchymetadataPath as(Name alias) {
-            return new CkOutletDetailsHierarchymetadataPath(alias, this);
-        }
-
-        @Override
-        public CkOutletDetailsHierarchymetadataPath as(Table<?> alias) {
-            return new CkOutletDetailsHierarchymetadataPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkOutletDetailsHierarchymetadata(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_OUTLET_DETAILS_HIERARCHYMETADATA);
     }
 
     @Override
@@ -126,28 +93,27 @@ public class CkOutletDetailsHierarchymetadata extends TableImpl<Record> {
         return Arrays.asList(Keys.FK3DF73E7AVL4EMOAVBB8578XEJ, Keys.FKP03SEH4AEKF8R3ROXHBPT75BK);
     }
 
-    private transient CkOutletDetailsPath _ckOutletDetails;
+    private transient CkOutletDetails _ckOutletDetails;
+    private transient CkHierarchyMetadata _ckHierarchyMetadata;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FK3DF73E7AVL4EMOAVBB8578XEJ, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FK3DF73E7AVL4EMOAVBB8578XEJ);
 
         return _ckOutletDetails;
     }
-
-    private transient CkHierarchyMetadataPath _ckHierarchyMetadata;
 
     /**
      * Get the implicit join path to the
      * <code>ckroot.ck_hierarchy_metadata</code> table.
      */
-    public CkHierarchyMetadataPath ckHierarchyMetadata() {
+    public CkHierarchyMetadata ckHierarchyMetadata() {
         if (_ckHierarchyMetadata == null)
-            _ckHierarchyMetadata = new CkHierarchyMetadataPath(this, Keys.FKP03SEH4AEKF8R3ROXHBPT75BK, null);
+            _ckHierarchyMetadata = new CkHierarchyMetadata(this, Keys.FKP03SEH4AEKF8R3ROXHBPT75BK);
 
         return _ckHierarchyMetadata;
     }
@@ -160,11 +126,6 @@ public class CkOutletDetailsHierarchymetadata extends TableImpl<Record> {
     @Override
     public CkOutletDetailsHierarchymetadata as(Name alias) {
         return new CkOutletDetailsHierarchymetadata(alias, this);
-    }
-
-    @Override
-    public CkOutletDetailsHierarchymetadata as(Table<?> alias) {
-        return new CkOutletDetailsHierarchymetadata(alias.getQualifiedName(), this);
     }
 
     /**
@@ -181,97 +142,5 @@ public class CkOutletDetailsHierarchymetadata extends TableImpl<Record> {
     @Override
     public CkOutletDetailsHierarchymetadata rename(Name name) {
         return new CkOutletDetailsHierarchymetadata(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkOutletDetailsHierarchymetadata rename(Table<?> name) {
-        return new CkOutletDetailsHierarchymetadata(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetailsHierarchymetadata where(Condition condition) {
-        return new CkOutletDetailsHierarchymetadata(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetailsHierarchymetadata where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetailsHierarchymetadata where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetailsHierarchymetadata where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletDetailsHierarchymetadata where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletDetailsHierarchymetadata where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletDetailsHierarchymetadata where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletDetailsHierarchymetadata where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetailsHierarchymetadata whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetailsHierarchymetadata whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

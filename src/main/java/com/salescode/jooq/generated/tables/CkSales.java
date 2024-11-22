@@ -11,40 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkDeliveryInfo.CkDeliveryInfoPath;
-import com.salescode.jooq.generated.tables.CkDeliveryInfoSales.CkDeliveryInfoSalesPath;
-import com.salescode.jooq.generated.tables.CkHierarchyMetadata.CkHierarchyMetadataPath;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkSalesDetails.CkSalesDetailsPath;
-import com.salescode.jooq.generated.tables.CkSalesHistory.CkSalesHistoryPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -131,7 +106,7 @@ public class CkSales extends TableImpl<Record> {
     /**
      * The column <code>ck_sales.system_time</code>.
      */
-    public final TableField<Record, Date> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_sales.bill_amount</code>.
@@ -246,7 +221,7 @@ public class CkSales extends TableImpl<Record> {
     /**
      * The column <code>ck_sales.pay_by_date</code>.
      */
-    public final TableField<Record, Date> PAY_BY_DATE = createField(DSL.name("pay_by_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> PAY_BY_DATE = createField(DSL.name("pay_by_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_sales.changed</code>.
@@ -286,14 +261,14 @@ public class CkSales extends TableImpl<Record> {
     /**
      * The column <code>ck_sales.ordered_date</code>.
      */
-    public final TableField<Record, Date> ORDERED_DATE = createField(DSL.name("ordered_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> ORDERED_DATE = createField(DSL.name("ordered_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     private CkSales(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkSales(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkSales(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -317,37 +292,8 @@ public class CkSales extends TableImpl<Record> {
         this(DSL.name("ck_sales"), null);
     }
 
-    public <O extends Record> CkSales(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_SALES);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkSalesPath extends CkSales implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkSalesPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkSalesPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkSalesPath as(String alias) {
-            return new CkSalesPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkSalesPath as(Name alias) {
-            return new CkSalesPath(alias, this);
-        }
-
-        @Override
-        public CkSalesPath as(Table<?> alias) {
-            return new CkSalesPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkSales(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_SALES);
     }
 
     @Override
@@ -362,7 +308,7 @@ public class CkSales extends TableImpl<Record> {
 
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_SALES_UK_K8YPBRQIPQAKF806JXYXPGY6P);
+        return Arrays.asList(Keys.KEY_CK_SALES_UK_TM80OKQM5DEQT4GAP961B5NNC, Keys.KEY_CK_SALES_UK_K8YPBRQIPQAKF806JXYXPGY6P);
     }
 
     @Override
@@ -370,115 +316,64 @@ public class CkSales extends TableImpl<Record> {
         return Arrays.asList(Keys.FKC4R8UJN4T3VLJQ8KAXL4OR6WI, Keys.FK2I77HDOHIKVRDR98AP866D7NA, Keys.FKRVC7B61LJJN0LT2A6TXDKRB6Y, Keys.FKLPNBUSCFUNUFNCKTEB6MW0V0V, Keys.FK98JN52LG033JTUST494DD8F9U);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _fk2i77hdohikvrdr98ap866d7na;
+    private transient CkHierarchyMetadata _ckHierarchyMetadata;
+    private transient CkUser _fklpnbuscfunufnckteb6mw0v0v;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKC4R8UJN4T3VLJQ8KAXL4OR6WI, null);
+            _ckLocation = new CkLocation(this, Keys.FKC4R8UJN4T3VLJQ8KAXL4OR6WI);
 
         return _ckLocation;
     }
-
-    private transient CkUserPath _fk2i77hdohikvrdr98ap866d7na;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table, via
      * the <code>FK2i77hdohikvrdr98ap866d7na</code> key.
      */
-    public CkUserPath fk2i77hdohikvrdr98ap866d7na() {
+    public CkUser fk2i77hdohikvrdr98ap866d7na() {
         if (_fk2i77hdohikvrdr98ap866d7na == null)
-            _fk2i77hdohikvrdr98ap866d7na = new CkUserPath(this, Keys.FK2I77HDOHIKVRDR98AP866D7NA, null);
+            _fk2i77hdohikvrdr98ap866d7na = new CkUser(this, Keys.FK2I77HDOHIKVRDR98AP866D7NA);
 
         return _fk2i77hdohikvrdr98ap866d7na;
     }
-
-    private transient CkHierarchyMetadataPath _ckHierarchyMetadata;
 
     /**
      * Get the implicit join path to the
      * <code>ckroot.ck_hierarchy_metadata</code> table.
      */
-    public CkHierarchyMetadataPath ckHierarchyMetadata() {
+    public CkHierarchyMetadata ckHierarchyMetadata() {
         if (_ckHierarchyMetadata == null)
-            _ckHierarchyMetadata = new CkHierarchyMetadataPath(this, Keys.FKRVC7B61LJJN0LT2A6TXDKRB6Y, null);
+            _ckHierarchyMetadata = new CkHierarchyMetadata(this, Keys.FKRVC7B61LJJN0LT2A6TXDKRB6Y);
 
         return _ckHierarchyMetadata;
     }
-
-    private transient CkUserPath _fklpnbuscfunufnckteb6mw0v0v;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table, via
      * the <code>FKlpnbuscfunufnckteb6mw0v0v</code> key.
      */
-    public CkUserPath fklpnbuscfunufnckteb6mw0v0v() {
+    public CkUser fklpnbuscfunufnckteb6mw0v0v() {
         if (_fklpnbuscfunufnckteb6mw0v0v == null)
-            _fklpnbuscfunufnckteb6mw0v0v = new CkUserPath(this, Keys.FKLPNBUSCFUNUFNCKTEB6MW0V0V, null);
+            _fklpnbuscfunufnckteb6mw0v0v = new CkUser(this, Keys.FKLPNBUSCFUNUFNCKTEB6MW0V0V);
 
         return _fklpnbuscfunufnckteb6mw0v0v;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FK98JN52LG033JTUST494DD8F9U, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FK98JN52LG033JTUST494DD8F9U);
 
         return _ckOutletDetails;
-    }
-
-    private transient CkSalesDetailsPath _ckSalesDetails;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_sales_details</code> table
-     */
-    public CkSalesDetailsPath ckSalesDetails() {
-        if (_ckSalesDetails == null)
-            _ckSalesDetails = new CkSalesDetailsPath(this, null, Keys.FK1JNTVHXRQMECB333R5Y93IMO6.getInverseKey());
-
-        return _ckSalesDetails;
-    }
-
-    private transient CkDeliveryInfoSalesPath _ckDeliveryInfoSales;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_delivery_info_sales</code> table
-     */
-    public CkDeliveryInfoSalesPath ckDeliveryInfoSales() {
-        if (_ckDeliveryInfoSales == null)
-            _ckDeliveryInfoSales = new CkDeliveryInfoSalesPath(this, null, Keys.FK3EOTT4BW767G3FP3LAAR8ADCT.getInverseKey());
-
-        return _ckDeliveryInfoSales;
-    }
-
-    private transient CkSalesHistoryPath _ckSalesHistory;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_sales_history</code> table
-     */
-    public CkSalesHistoryPath ckSalesHistory() {
-        if (_ckSalesHistory == null)
-            _ckSalesHistory = new CkSalesHistoryPath(this, null, Keys.FK91Y0M3HLUILMNYY1SOJIISID6.getInverseKey());
-
-        return _ckSalesHistory;
-    }
-
-    /**
-     * Get the implicit many-to-many join path to the
-     * <code>ckroot.ck_delivery_info</code> table
-     */
-    public CkDeliveryInfoPath ckDeliveryInfo() {
-        return ckDeliveryInfoSales().ckDeliveryInfo();
     }
 
     @Override
@@ -489,11 +384,6 @@ public class CkSales extends TableImpl<Record> {
     @Override
     public CkSales as(Name alias) {
         return new CkSales(alias, this);
-    }
-
-    @Override
-    public CkSales as(Table<?> alias) {
-        return new CkSales(alias.getQualifiedName(), this);
     }
 
     /**
@@ -510,97 +400,5 @@ public class CkSales extends TableImpl<Record> {
     @Override
     public CkSales rename(Name name) {
         return new CkSales(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkSales rename(Table<?> name) {
-        return new CkSales(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSales where(Condition condition) {
-        return new CkSales(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSales where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSales where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSales where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSales where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSales where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSales where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSales where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSales whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSales whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

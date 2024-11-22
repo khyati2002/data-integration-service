@@ -1,36 +1,29 @@
 package com.salescode.jooq;
 
 import org.jooq.codegen.DefaultGeneratorStrategy;
+import org.jooq.meta.ColumnDefinition;
 import org.jooq.meta.Definition;
+import org.jooq.meta.mysql.MySQLTableDefinition;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CustomGeneratorStrategy extends DefaultGeneratorStrategy {
     @Override
     public String getJavaClassExtends(Definition definition, Mode mode) {
-        if (mode == Mode.POJO) {
+        boolean  flag;
+        try {
+            List<String> collect = ((MySQLTableDefinition) definition).getElements0().stream().map(s -> s.getName()).collect(Collectors.toList());
+            flag = collect.stream().filter(s->s.contains("extended_attributes")||s.contains("hash")).count() == 2;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (mode == Mode.POJO && flag) {
             return "com.salescode.channelkart.models.CommonDataModel";
         }
         return super.getJavaClassExtends(definition, mode);
     }
-
-    @Override
-    public String getJavaClassName(Definition definition, Mode mode) {
-//        if (definition instanceof TableDefinition) {
-//            TableDefinition table = (TableDefinition) definition;
-//            String tableName = table.getName();
-//
-//            // Customize class names per entity
-//            switch (tableName.toLowerCase()) {
-//                case "ck_outlet_details":
-//                    return "OutletDetails";
-//                case "ck_user":
-//                    return "User";
-//                default:
-//                    return super.getJavaClassName(definition, mode);
-//            }
-//        }
-        return super.getJavaClassName(definition, mode);
-    }
-
-
 
 }

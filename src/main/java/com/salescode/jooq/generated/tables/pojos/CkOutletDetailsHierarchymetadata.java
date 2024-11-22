@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -41,8 +36,6 @@ public class CkOutletDetailsHierarchymetadata implements Serializable {
     /**
      * Getter for <code>ck_outlet_details_hierarchymetadata.outlet_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getOutletId() {
         return this.outletId;
     }
@@ -58,8 +51,6 @@ public class CkOutletDetailsHierarchymetadata implements Serializable {
      * Getter for
      * <code>ck_outlet_details_hierarchymetadata.hierarchy_metadata_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getHierarchyMetadataId() {
         return this.hierarchyMetadataId;
     }
@@ -70,39 +61,6 @@ public class CkOutletDetailsHierarchymetadata implements Serializable {
      */
     public void setHierarchyMetadataId(String hierarchyMetadataId) {
         this.hierarchyMetadataId = hierarchyMetadataId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkOutletDetailsHierarchymetadata other = (CkOutletDetailsHierarchymetadata) obj;
-        if (this.outletId == null) {
-            if (other.outletId != null)
-                return false;
-        }
-        else if (!this.outletId.equals(other.outletId))
-            return false;
-        if (this.hierarchyMetadataId == null) {
-            if (other.hierarchyMetadataId != null)
-                return false;
-        }
-        else if (!this.hierarchyMetadataId.equals(other.hierarchyMetadataId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.outletId == null) ? 0 : this.outletId.hashCode());
-        result = prime * result + ((this.hierarchyMetadataId == null) ? 0 : this.hierarchyMetadataId.hashCode());
-        return result;
     }
 
     @Override

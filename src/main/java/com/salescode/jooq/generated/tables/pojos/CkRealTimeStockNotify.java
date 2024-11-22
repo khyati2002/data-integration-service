@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,22 +20,22 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String loginid;
-    private String skucode;
-    private String status;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       loginid;
+    private String       skucode;
+    private String       status;
 
     public CkRealTimeStockNotify() {}
 
@@ -62,22 +59,22 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
     }
 
     public CkRealTimeStockNotify(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String loginid,
-        String skucode,
-        String status
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       loginid,
+        String       skucode,
+        String       status
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -100,8 +97,6 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
     /**
      * Getter for <code>ck_real_time_stock_notify.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -130,7 +125,6 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
     /**
      * Getter for <code>ck_real_time_stock_notify.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -159,7 +153,6 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
     /**
      * Getter for <code>ck_real_time_stock_notify.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -230,7 +223,6 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
     /**
      * Getter for <code>ck_real_time_stock_notify.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -245,7 +237,6 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
     /**
      * Getter for <code>ck_real_time_stock_notify.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -260,7 +251,6 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
     /**
      * Getter for <code>ck_real_time_stock_notify.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -289,7 +279,6 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
     /**
      * Getter for <code>ck_real_time_stock_notify.loginid</code>.
      */
-    @Size(max = 255)
     public String getLoginid() {
         return this.loginid;
     }
@@ -304,7 +293,6 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
     /**
      * Getter for <code>ck_real_time_stock_notify.skucode</code>.
      */
-    @Size(max = 255)
     public String getSkucode() {
         return this.skucode;
     }
@@ -319,7 +307,6 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
     /**
      * Getter for <code>ck_real_time_stock_notify.status</code>.
      */
-    @Size(max = 255)
     public String getStatus() {
         return this.status;
     }
@@ -329,137 +316,6 @@ public class CkRealTimeStockNotify extends CommonDataModel implements Serializab
      */
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkRealTimeStockNotify other = (CkRealTimeStockNotify) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.skucode == null) {
-            if (other.skucode != null)
-                return false;
-        }
-        else if (!this.skucode.equals(other.skucode))
-            return false;
-        if (this.status == null) {
-            if (other.status != null)
-                return false;
-        }
-        else if (!this.status.equals(other.status))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.skucode == null) ? 0 : this.skucode.hashCode());
-        result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
-        return result;
     }
 
     @Override

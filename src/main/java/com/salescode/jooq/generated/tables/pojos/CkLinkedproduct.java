@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -41,8 +36,6 @@ public class CkLinkedproduct implements Serializable {
     /**
      * Getter for <code>ck_linkedproduct.program_number</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getProgramNumber() {
         return this.programNumber;
     }
@@ -57,7 +50,6 @@ public class CkLinkedproduct implements Serializable {
     /**
      * Getter for <code>ck_linkedproduct.linked_product</code>.
      */
-    @Size(max = 255)
     public String getLinkedProduct() {
         return this.linkedProduct;
     }
@@ -67,39 +59,6 @@ public class CkLinkedproduct implements Serializable {
      */
     public void setLinkedProduct(String linkedProduct) {
         this.linkedProduct = linkedProduct;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkLinkedproduct other = (CkLinkedproduct) obj;
-        if (this.programNumber == null) {
-            if (other.programNumber != null)
-                return false;
-        }
-        else if (!this.programNumber.equals(other.programNumber))
-            return false;
-        if (this.linkedProduct == null) {
-            if (other.linkedProduct != null)
-                return false;
-        }
-        else if (!this.linkedProduct.equals(other.linkedProduct))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.programNumber == null) ? 0 : this.programNumber.hashCode());
-        result = prime * result + ((this.linkedProduct == null) ? 0 : this.linkedProduct.hashCode());
-        return result;
     }
 
     @Override

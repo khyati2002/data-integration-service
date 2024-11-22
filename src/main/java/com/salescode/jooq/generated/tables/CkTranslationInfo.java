@@ -11,27 +11,12 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Collection;
-import java.util.Date;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Date;
 
 
 /**
@@ -151,11 +136,11 @@ public class CkTranslationInfo extends TableImpl<Record> {
     public final TableField<Record, String> TRANSLATION_NAME = createField(DSL.name("translation_name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private CkTranslationInfo(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkTranslationInfo(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkTranslationInfo(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -179,6 +164,10 @@ public class CkTranslationInfo extends TableImpl<Record> {
         this(DSL.name("ck_translation_info"), null);
     }
 
+    public <O extends Record> CkTranslationInfo(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_TRANSLATION_INFO);
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -199,11 +188,6 @@ public class CkTranslationInfo extends TableImpl<Record> {
         return new CkTranslationInfo(alias, this);
     }
 
-    @Override
-    public CkTranslationInfo as(Table<?> alias) {
-        return new CkTranslationInfo(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -218,97 +202,5 @@ public class CkTranslationInfo extends TableImpl<Record> {
     @Override
     public CkTranslationInfo rename(Name name) {
         return new CkTranslationInfo(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkTranslationInfo rename(Table<?> name) {
-        return new CkTranslationInfo(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTranslationInfo where(Condition condition) {
-        return new CkTranslationInfo(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTranslationInfo where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTranslationInfo where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTranslationInfo where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTranslationInfo where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTranslationInfo where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTranslationInfo where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTranslationInfo where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTranslationInfo whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTranslationInfo whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

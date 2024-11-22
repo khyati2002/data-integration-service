@@ -11,34 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -130,7 +111,7 @@ public class CkScore extends TableImpl<Record> {
     /**
      * The column <code>ck_score.end_date</code>.
      */
-    public final TableField<Record, Date> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_score.feature</code>.
@@ -150,7 +131,7 @@ public class CkScore extends TableImpl<Record> {
     /**
      * The column <code>ck_score.start_date</code>.
      */
-    public final TableField<Record, Date> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_score.total_points</code>.
@@ -173,11 +154,11 @@ public class CkScore extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkScore(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkScore(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkScore(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -201,37 +182,8 @@ public class CkScore extends TableImpl<Record> {
         this(DSL.name("ck_score"), null);
     }
 
-    public <O extends Record> CkScore(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_SCORE);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkScorePath extends CkScore implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkScorePath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkScorePath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkScorePath as(String alias) {
-            return new CkScorePath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkScorePath as(Name alias) {
-            return new CkScorePath(alias, this);
-        }
-
-        @Override
-        public CkScorePath as(Table<?> alias) {
-            return new CkScorePath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkScore(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_SCORE);
     }
 
     @Override
@@ -249,27 +201,26 @@ public class CkScore extends TableImpl<Record> {
         return Arrays.asList(Keys.FK1HGAB9OXJAGEB2PAHO1I2I8CW, Keys.FKKDVIJ9IH6U0G5HPDYE9R5UICW);
     }
 
-    private transient CkUserPath _ckUser;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FK1HGAB9OXJAGEB2PAHO1I2I8CW, null);
+            _ckUser = new CkUser(this, Keys.FK1HGAB9OXJAGEB2PAHO1I2I8CW);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FKKDVIJ9IH6U0G5HPDYE9R5UICW, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FKKDVIJ9IH6U0G5HPDYE9R5UICW);
 
         return _ckOutletDetails;
     }
@@ -282,11 +233,6 @@ public class CkScore extends TableImpl<Record> {
     @Override
     public CkScore as(Name alias) {
         return new CkScore(alias, this);
-    }
-
-    @Override
-    public CkScore as(Table<?> alias) {
-        return new CkScore(alias.getQualifiedName(), this);
     }
 
     /**
@@ -303,97 +249,5 @@ public class CkScore extends TableImpl<Record> {
     @Override
     public CkScore rename(Name name) {
         return new CkScore(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkScore rename(Table<?> name) {
-        return new CkScore(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkScore where(Condition condition) {
-        return new CkScore(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkScore where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkScore where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkScore where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkScore where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkScore where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkScore where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkScore where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkScore whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkScore whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

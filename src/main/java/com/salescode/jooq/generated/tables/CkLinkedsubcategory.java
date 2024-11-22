@@ -5,22 +5,7 @@ package com.salescode.jooq.generated.tables;
 
 
 import com.salescode.jooq.generated.DefaultSchema;
-
-import java.util.Collection;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
@@ -58,11 +43,11 @@ public class CkLinkedsubcategory extends TableImpl<Record> {
     public final TableField<Record, String> LINKED_SUB_CATEGORY = createField(DSL.name("linked_sub_category"), SQLDataType.VARCHAR(255), this, "");
 
     private CkLinkedsubcategory(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkLinkedsubcategory(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkLinkedsubcategory(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -86,6 +71,10 @@ public class CkLinkedsubcategory extends TableImpl<Record> {
         this(DSL.name("ck_linkedsubcategory"), null);
     }
 
+    public <O extends Record> CkLinkedsubcategory(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_LINKEDSUBCATEGORY);
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -99,11 +88,6 @@ public class CkLinkedsubcategory extends TableImpl<Record> {
     @Override
     public CkLinkedsubcategory as(Name alias) {
         return new CkLinkedsubcategory(alias, this);
-    }
-
-    @Override
-    public CkLinkedsubcategory as(Table<?> alias) {
-        return new CkLinkedsubcategory(alias.getQualifiedName(), this);
     }
 
     /**
@@ -120,97 +104,5 @@ public class CkLinkedsubcategory extends TableImpl<Record> {
     @Override
     public CkLinkedsubcategory rename(Name name) {
         return new CkLinkedsubcategory(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkLinkedsubcategory rename(Table<?> name) {
-        return new CkLinkedsubcategory(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLinkedsubcategory where(Condition condition) {
-        return new CkLinkedsubcategory(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLinkedsubcategory where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLinkedsubcategory where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLinkedsubcategory where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkLinkedsubcategory where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkLinkedsubcategory where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkLinkedsubcategory where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkLinkedsubcategory where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLinkedsubcategory whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLinkedsubcategory whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

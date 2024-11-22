@@ -12,37 +12,15 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkProductbarcode.CkProductbarcodePath;
-import com.salescode.jooq.generated.tables.CkProducttag.CkProducttagPath;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -482,11 +460,11 @@ public class CkProductdetails extends TableImpl<Record> {
     public final TableField<Record, String> EB2B_CODE = createField(DSL.name("eb2b_code"), SQLDataType.CLOB, this, "");
 
     private CkProductdetails(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkProductdetails(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkProductdetails(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -510,37 +488,8 @@ public class CkProductdetails extends TableImpl<Record> {
         this(DSL.name("ck_productdetails"), null);
     }
 
-    public <O extends Record> CkProductdetails(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_PRODUCTDETAILS);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkProductdetailsPath extends CkProductdetails implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkProductdetailsPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkProductdetailsPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkProductdetailsPath as(String alias) {
-            return new CkProductdetailsPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkProductdetailsPath as(Name alias) {
-            return new CkProductdetailsPath(alias, this);
-        }
-
-        @Override
-        public CkProductdetailsPath as(Table<?> alias) {
-            return new CkProductdetailsPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkProductdetails(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_PRODUCTDETAILS);
     }
 
     @Override
@@ -563,32 +512,6 @@ public class CkProductdetails extends TableImpl<Record> {
         return Arrays.asList(Keys.KEY_CK_PRODUCTDETAILS_UK_HO08NYWT0OOOHKHWLIVDVMCX5, Keys.KEY_CK_PRODUCTDETAILS_UK_F6H61U9T9GPY7LT2KTDIY1RY6);
     }
 
-    private transient CkProductbarcodePath _ckProductbarcode;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_productbarcode</code> table
-     */
-    public CkProductbarcodePath ckProductbarcode() {
-        if (_ckProductbarcode == null)
-            _ckProductbarcode = new CkProductbarcodePath(this, null, Keys.FK97W025M0EL7GOY08WJDOG74H1.getInverseKey());
-
-        return _ckProductbarcode;
-    }
-
-    private transient CkProducttagPath _ckProducttag;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_producttag</code> table
-     */
-    public CkProducttagPath ckProducttag() {
-        if (_ckProducttag == null)
-            _ckProducttag = new CkProducttagPath(this, null, Keys.FKCJV1SBU80GFRLOIW8LDXKICAP.getInverseKey());
-
-        return _ckProducttag;
-    }
-
     @Override
     public CkProductdetails as(String alias) {
         return new CkProductdetails(DSL.name(alias), this);
@@ -597,11 +520,6 @@ public class CkProductdetails extends TableImpl<Record> {
     @Override
     public CkProductdetails as(Name alias) {
         return new CkProductdetails(alias, this);
-    }
-
-    @Override
-    public CkProductdetails as(Table<?> alias) {
-        return new CkProductdetails(alias.getQualifiedName(), this);
     }
 
     /**
@@ -618,97 +536,5 @@ public class CkProductdetails extends TableImpl<Record> {
     @Override
     public CkProductdetails rename(Name name) {
         return new CkProductdetails(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkProductdetails rename(Table<?> name) {
-        return new CkProductdetails(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductdetails where(Condition condition) {
-        return new CkProductdetails(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductdetails where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductdetails where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductdetails where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductdetails where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductdetails where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductdetails where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductdetails where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductdetails whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductdetails whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -11,35 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkSellinaAiQuery.CkSellinaAiQueryPath;
-import com.salescode.jooq.generated.tables.CkSellinaAiQuerySuggestions.CkSellinaAiQuerySuggestionsPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -71,7 +50,7 @@ public class CkSellinaSuggestions extends TableImpl<Record> {
     /**
      * The column <code>ck_sellina_suggestions.active_status</code>.
      */
-//    public final TableField<Record, ActiveStatus> ACTIVE_STATUS = createField(DSL.name("active_status"), SQLDataType.VARCHAR(255), this, "", new ActiveStatusConverter());
+    public final TableField<Record, ActiveStatus> ACTIVE_STATUS = createField(DSL.name("active_status"), SQLDataType.VARCHAR(255), this, "", new ActiveStatusConverter());
 
     /**
      * The column <code>ck_sellina_suggestions.active_status_reason</code>.
@@ -149,11 +128,11 @@ public class CkSellinaSuggestions extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkSellinaSuggestions(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkSellinaSuggestions(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkSellinaSuggestions(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -177,37 +156,8 @@ public class CkSellinaSuggestions extends TableImpl<Record> {
         this(DSL.name("ck_sellina_suggestions"), null);
     }
 
-    public <O extends Record> CkSellinaSuggestions(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_SELLINA_SUGGESTIONS);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkSellinaSuggestionsPath extends CkSellinaSuggestions implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkSellinaSuggestionsPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkSellinaSuggestionsPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkSellinaSuggestionsPath as(String alias) {
-            return new CkSellinaSuggestionsPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkSellinaSuggestionsPath as(Name alias) {
-            return new CkSellinaSuggestionsPath(alias, this);
-        }
-
-        @Override
-        public CkSellinaSuggestionsPath as(Table<?> alias) {
-            return new CkSellinaSuggestionsPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkSellinaSuggestions(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_SELLINA_SUGGESTIONS);
     }
 
     @Override
@@ -225,27 +175,6 @@ public class CkSellinaSuggestions extends TableImpl<Record> {
         return Arrays.asList(Keys.KEY_CK_SELLINA_SUGGESTIONS_UNIQUE_INDEX);
     }
 
-    private transient CkSellinaAiQuerySuggestionsPath _ckSellinaAiQuerySuggestions;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_sellina_ai_query_suggestions</code> table
-     */
-    public CkSellinaAiQuerySuggestionsPath ckSellinaAiQuerySuggestions() {
-        if (_ckSellinaAiQuerySuggestions == null)
-            _ckSellinaAiQuerySuggestions = new CkSellinaAiQuerySuggestionsPath(this, null, Keys.SUGGESTION_ASSOCIATION_KEY.getInverseKey());
-
-        return _ckSellinaAiQuerySuggestions;
-    }
-
-    /**
-     * Get the implicit many-to-many join path to the
-     * <code>ckroot.ck_sellina_ai_query</code> table
-     */
-    public CkSellinaAiQueryPath ckSellinaAiQuery() {
-        return ckSellinaAiQuerySuggestions().ckSellinaAiQuery();
-    }
-
     @Override
     public CkSellinaSuggestions as(String alias) {
         return new CkSellinaSuggestions(DSL.name(alias), this);
@@ -254,11 +183,6 @@ public class CkSellinaSuggestions extends TableImpl<Record> {
     @Override
     public CkSellinaSuggestions as(Name alias) {
         return new CkSellinaSuggestions(alias, this);
-    }
-
-    @Override
-    public CkSellinaSuggestions as(Table<?> alias) {
-        return new CkSellinaSuggestions(alias.getQualifiedName(), this);
     }
 
     /**
@@ -275,97 +199,5 @@ public class CkSellinaSuggestions extends TableImpl<Record> {
     @Override
     public CkSellinaSuggestions rename(Name name) {
         return new CkSellinaSuggestions(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkSellinaSuggestions rename(Table<?> name) {
-        return new CkSellinaSuggestions(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaSuggestions where(Condition condition) {
-        return new CkSellinaSuggestions(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaSuggestions where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaSuggestions where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaSuggestions where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaSuggestions where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaSuggestions where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaSuggestions where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaSuggestions where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaSuggestions whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaSuggestions whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

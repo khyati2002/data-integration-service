@@ -11,29 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -125,7 +111,7 @@ public class CkInvoiceCollection extends TableImpl<Record> {
     /**
      * The column <code>ck_invoice_collection.invoice_date</code>.
      */
-    public final TableField<Record, Date> INVOICE_DATE = createField(DSL.name("invoice_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> INVOICE_DATE = createField(DSL.name("invoice_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_invoice_collection.invoice_number</code>.
@@ -153,11 +139,11 @@ public class CkInvoiceCollection extends TableImpl<Record> {
     public final TableField<Record, Double> TOTAL_AMOUNT = createField(DSL.name("total_amount"), SQLDataType.FLOAT.nullable(false), this, "");
 
     private CkInvoiceCollection(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkInvoiceCollection(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkInvoiceCollection(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -179,6 +165,10 @@ public class CkInvoiceCollection extends TableImpl<Record> {
      */
     public CkInvoiceCollection() {
         this(DSL.name("ck_invoice_collection"), null);
+    }
+
+    public <O extends Record> CkInvoiceCollection(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_INVOICE_COLLECTION);
     }
 
     @Override
@@ -206,11 +196,6 @@ public class CkInvoiceCollection extends TableImpl<Record> {
         return new CkInvoiceCollection(alias, this);
     }
 
-    @Override
-    public CkInvoiceCollection as(Table<?> alias) {
-        return new CkInvoiceCollection(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -225,97 +210,5 @@ public class CkInvoiceCollection extends TableImpl<Record> {
     @Override
     public CkInvoiceCollection rename(Name name) {
         return new CkInvoiceCollection(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkInvoiceCollection rename(Table<?> name) {
-        return new CkInvoiceCollection(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkInvoiceCollection where(Condition condition) {
-        return new CkInvoiceCollection(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkInvoiceCollection where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkInvoiceCollection where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkInvoiceCollection where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkInvoiceCollection where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkInvoiceCollection where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkInvoiceCollection where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkInvoiceCollection where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkInvoiceCollection whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkInvoiceCollection whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

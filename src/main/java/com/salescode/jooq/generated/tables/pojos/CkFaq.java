@@ -7,14 +7,10 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,28 +21,28 @@ public class CkFaq extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String answer;
-    private String embedLink;
-    private String question;
-    private String questionId;
-    private String suggestion;
-    private JSON tabSuggestions;
-    private String trainingtext;
-    private String type;
-    private String url;
-    private Byte changed;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       answer;
+    private String       embedLink;
+    private String       question;
+    private String       questionId;
+    private String       suggestion;
+    private JSON         tabSuggestions;
+    private String       trainingtext;
+    private String       type;
+    private String       url;
+    private Byte         changed;
 
     public CkFaq() {}
 
@@ -76,28 +72,28 @@ public class CkFaq extends CommonDataModel implements Serializable {
     }
 
     public CkFaq(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String answer,
-        String embedLink,
-        String question,
-        String questionId,
-        String suggestion,
-        JSON tabSuggestions,
-        String trainingtext,
-        String type,
-        String url,
-        Byte changed
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       answer,
+        String       embedLink,
+        String       question,
+        String       questionId,
+        String       suggestion,
+        JSON         tabSuggestions,
+        String       trainingtext,
+        String       type,
+        String       url,
+        Byte         changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -126,8 +122,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -156,7 +150,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -171,7 +164,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -242,7 +234,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -257,7 +248,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -272,7 +262,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -301,7 +290,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.answer</code>.
      */
-    @Size(max = 65535)
     public String getAnswer() {
         return this.answer;
     }
@@ -316,7 +304,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.embed_link</code>.
      */
-    @Size(max = 65535)
     public String getEmbedLink() {
         return this.embedLink;
     }
@@ -331,7 +318,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.question</code>.
      */
-    @Size(max = 65535)
     public String getQuestion() {
         return this.question;
     }
@@ -346,7 +332,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.question_id</code>.
      */
-    @Size(max = 255)
     public String getQuestionId() {
         return this.questionId;
     }
@@ -361,7 +346,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.suggestion</code>.
      */
-    @Size(max = 65535)
     public String getSuggestion() {
         return this.suggestion;
     }
@@ -390,7 +374,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.trainingtext</code>.
      */
-    @Size(max = 65535)
     public String getTrainingtext() {
         return this.trainingtext;
     }
@@ -405,7 +388,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -420,7 +402,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_faq.url</code>.
      */
-    @Size(max = 65535)
     public String getUrl() {
         return this.url;
     }
@@ -444,179 +425,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkFaq other = (CkFaq) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.answer == null) {
-            if (other.answer != null)
-                return false;
-        }
-        else if (!this.answer.equals(other.answer))
-            return false;
-        if (this.embedLink == null) {
-            if (other.embedLink != null)
-                return false;
-        }
-        else if (!this.embedLink.equals(other.embedLink))
-            return false;
-        if (this.question == null) {
-            if (other.question != null)
-                return false;
-        }
-        else if (!this.question.equals(other.question))
-            return false;
-        if (this.questionId == null) {
-            if (other.questionId != null)
-                return false;
-        }
-        else if (!this.questionId.equals(other.questionId))
-            return false;
-        if (this.suggestion == null) {
-            if (other.suggestion != null)
-                return false;
-        }
-        else if (!this.suggestion.equals(other.suggestion))
-            return false;
-        if (this.tabSuggestions == null) {
-            if (other.tabSuggestions != null)
-                return false;
-        }
-        else if (!this.tabSuggestions.equals(other.tabSuggestions))
-            return false;
-        if (this.trainingtext == null) {
-            if (other.trainingtext != null)
-                return false;
-        }
-        else if (!this.trainingtext.equals(other.trainingtext))
-            return false;
-        if (this.type == null) {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        if (this.url == null) {
-            if (other.url != null)
-                return false;
-        }
-        else if (!this.url.equals(other.url))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.answer == null) ? 0 : this.answer.hashCode());
-        result = prime * result + ((this.embedLink == null) ? 0 : this.embedLink.hashCode());
-        result = prime * result + ((this.question == null) ? 0 : this.question.hashCode());
-        result = prime * result + ((this.questionId == null) ? 0 : this.questionId.hashCode());
-        result = prime * result + ((this.suggestion == null) ? 0 : this.suggestion.hashCode());
-        result = prime * result + ((this.tabSuggestions == null) ? 0 : this.tabSuggestions.hashCode());
-        result = prime * result + ((this.trainingtext == null) ? 0 : this.trainingtext.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

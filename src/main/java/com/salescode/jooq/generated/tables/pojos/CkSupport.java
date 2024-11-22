@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,29 +20,29 @@ public class CkSupport extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String blobKey;
-    private String hierarchy;
-    private String imageName;
-    private String immediateId;
-    private String loginId;
-    private String remarks;
-    private String status;
-    private String supportClass;
-    private String supportCriteria;
-    private String supportId;
-    private Byte changed;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       blobKey;
+    private String       hierarchy;
+    private String       imageName;
+    private String       immediateId;
+    private String       loginId;
+    private String       remarks;
+    private String       status;
+    private String       supportClass;
+    private String       supportCriteria;
+    private String       supportId;
+    private Byte         changed;
 
     public CkSupport() {}
 
@@ -76,29 +73,29 @@ public class CkSupport extends CommonDataModel implements Serializable {
     }
 
     public CkSupport(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String blobKey,
-        String hierarchy,
-        String imageName,
-        String immediateId,
-        String loginId,
-        String remarks,
-        String status,
-        String supportClass,
-        String supportCriteria,
-        String supportId,
-        Byte changed
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       blobKey,
+        String       hierarchy,
+        String       imageName,
+        String       immediateId,
+        String       loginId,
+        String       remarks,
+        String       status,
+        String       supportClass,
+        String       supportCriteria,
+        String       supportId,
+        Byte         changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -128,8 +125,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -158,7 +153,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -173,7 +167,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -244,7 +237,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -259,7 +251,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -274,7 +265,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -303,7 +293,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.blob_key</code>.
      */
-    @Size(max = 255)
     public String getBlobKey() {
         return this.blobKey;
     }
@@ -332,7 +321,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.image_name</code>.
      */
-    @Size(max = 255)
     public String getImageName() {
         return this.imageName;
     }
@@ -347,7 +335,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.immediate_id</code>.
      */
-    @Size(max = 255)
     public String getImmediateId() {
         return this.immediateId;
     }
@@ -362,7 +349,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.login_id</code>.
      */
-    @Size(max = 255)
     public String getLoginId() {
         return this.loginId;
     }
@@ -377,7 +363,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.remarks</code>.
      */
-    @Size(max = 255)
     public String getRemarks() {
         return this.remarks;
     }
@@ -392,7 +377,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.status</code>.
      */
-    @Size(max = 255)
     public String getStatus() {
         return this.status;
     }
@@ -407,7 +391,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.support_class</code>.
      */
-    @Size(max = 255)
     public String getSupportClass() {
         return this.supportClass;
     }
@@ -422,7 +405,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.support_criteria</code>.
      */
-    @Size(max = 255)
     public String getSupportCriteria() {
         return this.supportCriteria;
     }
@@ -437,8 +419,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_support.support_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getSupportId() {
         return this.supportId;
     }
@@ -462,186 +442,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkSupport other = (CkSupport) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.blobKey == null) {
-            if (other.blobKey != null)
-                return false;
-        }
-        else if (!this.blobKey.equals(other.blobKey))
-            return false;
-        if (this.hierarchy == null) {
-            if (other.hierarchy != null)
-                return false;
-        }
-        else if (!this.hierarchy.equals(other.hierarchy))
-            return false;
-        if (this.imageName == null) {
-            if (other.imageName != null)
-                return false;
-        }
-        else if (!this.imageName.equals(other.imageName))
-            return false;
-        if (this.immediateId == null) {
-            if (other.immediateId != null)
-                return false;
-        }
-        else if (!this.immediateId.equals(other.immediateId))
-            return false;
-        if (this.loginId == null) {
-            if (other.loginId != null)
-                return false;
-        }
-        else if (!this.loginId.equals(other.loginId))
-            return false;
-        if (this.remarks == null) {
-            if (other.remarks != null)
-                return false;
-        }
-        else if (!this.remarks.equals(other.remarks))
-            return false;
-        if (this.status == null) {
-            if (other.status != null)
-                return false;
-        }
-        else if (!this.status.equals(other.status))
-            return false;
-        if (this.supportClass == null) {
-            if (other.supportClass != null)
-                return false;
-        }
-        else if (!this.supportClass.equals(other.supportClass))
-            return false;
-        if (this.supportCriteria == null) {
-            if (other.supportCriteria != null)
-                return false;
-        }
-        else if (!this.supportCriteria.equals(other.supportCriteria))
-            return false;
-        if (this.supportId == null) {
-            if (other.supportId != null)
-                return false;
-        }
-        else if (!this.supportId.equals(other.supportId))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.blobKey == null) ? 0 : this.blobKey.hashCode());
-        result = prime * result + ((this.hierarchy == null) ? 0 : this.hierarchy.hashCode());
-        result = prime * result + ((this.imageName == null) ? 0 : this.imageName.hashCode());
-        result = prime * result + ((this.immediateId == null) ? 0 : this.immediateId.hashCode());
-        result = prime * result + ((this.loginId == null) ? 0 : this.loginId.hashCode());
-        result = prime * result + ((this.remarks == null) ? 0 : this.remarks.hashCode());
-        result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
-        result = prime * result + ((this.supportClass == null) ? 0 : this.supportClass.hashCode());
-        result = prime * result + ((this.supportCriteria == null) ? 0 : this.supportCriteria.hashCode());
-        result = prime * result + ((this.supportId == null) ? 0 : this.supportId.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

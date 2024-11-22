@@ -6,32 +6,13 @@ package com.salescode.jooq.generated.tables;
 
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkBannerTemplate.CkBannerTemplatePath;
-import com.salescode.jooq.generated.tables.CkBannerTemplateElement.CkBannerTemplateElementPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -69,11 +50,11 @@ public class CkBannerTemplateTemplateElements extends TableImpl<Record> {
     public final TableField<Record, String> TEMPLATE_ELEMENTS_ID = createField(DSL.name("template_elements_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private CkBannerTemplateTemplateElements(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkBannerTemplateTemplateElements(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkBannerTemplateTemplateElements(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -100,37 +81,8 @@ public class CkBannerTemplateTemplateElements extends TableImpl<Record> {
         this(DSL.name("ck_banner_template_template_elements"), null);
     }
 
-    public <O extends Record> CkBannerTemplateTemplateElements(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_BANNER_TEMPLATE_TEMPLATE_ELEMENTS);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkBannerTemplateTemplateElementsPath extends CkBannerTemplateTemplateElements implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkBannerTemplateTemplateElementsPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkBannerTemplateTemplateElementsPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkBannerTemplateTemplateElementsPath as(String alias) {
-            return new CkBannerTemplateTemplateElementsPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkBannerTemplateTemplateElementsPath as(Name alias) {
-            return new CkBannerTemplateTemplateElementsPath(alias, this);
-        }
-
-        @Override
-        public CkBannerTemplateTemplateElementsPath as(Table<?> alias) {
-            return new CkBannerTemplateTemplateElementsPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkBannerTemplateTemplateElements(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_BANNER_TEMPLATE_TEMPLATE_ELEMENTS);
     }
 
     @Override
@@ -143,28 +95,27 @@ public class CkBannerTemplateTemplateElements extends TableImpl<Record> {
         return Arrays.asList(Keys.FKFYYDRYF05699DEXMKY4DQ3OSM, Keys.FK9QRNXEP9M8A4JHK629G9W3PP8);
     }
 
-    private transient CkBannerTemplatePath _ckBannerTemplate;
+    private transient CkBannerTemplate _ckBannerTemplate;
+    private transient CkBannerTemplateElement _ckBannerTemplateElement;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_banner_template</code>
      * table.
      */
-    public CkBannerTemplatePath ckBannerTemplate() {
+    public CkBannerTemplate ckBannerTemplate() {
         if (_ckBannerTemplate == null)
-            _ckBannerTemplate = new CkBannerTemplatePath(this, Keys.FKFYYDRYF05699DEXMKY4DQ3OSM, null);
+            _ckBannerTemplate = new CkBannerTemplate(this, Keys.FKFYYDRYF05699DEXMKY4DQ3OSM);
 
         return _ckBannerTemplate;
     }
-
-    private transient CkBannerTemplateElementPath _ckBannerTemplateElement;
 
     /**
      * Get the implicit join path to the
      * <code>ckroot.ck_banner_template_element</code> table.
      */
-    public CkBannerTemplateElementPath ckBannerTemplateElement() {
+    public CkBannerTemplateElement ckBannerTemplateElement() {
         if (_ckBannerTemplateElement == null)
-            _ckBannerTemplateElement = new CkBannerTemplateElementPath(this, Keys.FK9QRNXEP9M8A4JHK629G9W3PP8, null);
+            _ckBannerTemplateElement = new CkBannerTemplateElement(this, Keys.FK9QRNXEP9M8A4JHK629G9W3PP8);
 
         return _ckBannerTemplateElement;
     }
@@ -177,11 +128,6 @@ public class CkBannerTemplateTemplateElements extends TableImpl<Record> {
     @Override
     public CkBannerTemplateTemplateElements as(Name alias) {
         return new CkBannerTemplateTemplateElements(alias, this);
-    }
-
-    @Override
-    public CkBannerTemplateTemplateElements as(Table<?> alias) {
-        return new CkBannerTemplateTemplateElements(alias.getQualifiedName(), this);
     }
 
     /**
@@ -198,97 +144,5 @@ public class CkBannerTemplateTemplateElements extends TableImpl<Record> {
     @Override
     public CkBannerTemplateTemplateElements rename(Name name) {
         return new CkBannerTemplateTemplateElements(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkBannerTemplateTemplateElements rename(Table<?> name) {
-        return new CkBannerTemplateTemplateElements(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerTemplateTemplateElements where(Condition condition) {
-        return new CkBannerTemplateTemplateElements(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerTemplateTemplateElements where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerTemplateTemplateElements where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerTemplateTemplateElements where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerTemplateTemplateElements where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerTemplateTemplateElements where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerTemplateTemplateElements where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerTemplateTemplateElements where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerTemplateTemplateElements whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerTemplateTemplateElements whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

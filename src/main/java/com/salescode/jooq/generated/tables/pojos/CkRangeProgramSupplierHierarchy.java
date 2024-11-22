@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -42,8 +37,6 @@ public class CkRangeProgramSupplierHierarchy implements Serializable {
      * Getter for
      * <code>ck_range_program_supplier_hierarchy.range_program_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getRangeProgramId() {
         return this.rangeProgramId;
     }
@@ -60,8 +53,6 @@ public class CkRangeProgramSupplierHierarchy implements Serializable {
      * Getter for
      * <code>ck_range_program_supplier_hierarchy.supplier_hierarchy_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getSupplierHierarchyId() {
         return this.supplierHierarchyId;
     }
@@ -72,39 +63,6 @@ public class CkRangeProgramSupplierHierarchy implements Serializable {
      */
     public void setSupplierHierarchyId(String supplierHierarchyId) {
         this.supplierHierarchyId = supplierHierarchyId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkRangeProgramSupplierHierarchy other = (CkRangeProgramSupplierHierarchy) obj;
-        if (this.rangeProgramId == null) {
-            if (other.rangeProgramId != null)
-                return false;
-        }
-        else if (!this.rangeProgramId.equals(other.rangeProgramId))
-            return false;
-        if (this.supplierHierarchyId == null) {
-            if (other.supplierHierarchyId != null)
-                return false;
-        }
-        else if (!this.supplierHierarchyId.equals(other.supplierHierarchyId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.rangeProgramId == null) ? 0 : this.rangeProgramId.hashCode());
-        result = prime * result + ((this.supplierHierarchyId == null) ? 0 : this.supplierHierarchyId.hashCode());
-        return result;
     }
 
     @Override

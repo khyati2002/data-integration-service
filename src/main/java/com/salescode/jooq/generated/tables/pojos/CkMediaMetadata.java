@@ -7,14 +7,10 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,28 +21,28 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String blobKey;
-    private JSON cypherKeys;
-    private String cypherType;
-    private Long mediaSize;
-    private String mediaType;
-    private String name;
-    private String payload;
-    private String profileName;
-    private String profileType;
-    private Byte changed;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       blobKey;
+    private JSON         cypherKeys;
+    private String       cypherType;
+    private Long         mediaSize;
+    private String       mediaType;
+    private String       name;
+    private String       payload;
+    private String       profileName;
+    private String       profileType;
+    private Byte         changed;
 
     public CkMediaMetadata() {}
 
@@ -76,28 +72,28 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     }
 
     public CkMediaMetadata(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String blobKey,
-        JSON cypherKeys,
-        String cypherType,
-        Long mediaSize,
-        String mediaType,
-        String name,
-        String payload,
-        String profileName,
-        String profileType,
-        Byte changed
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       blobKey,
+        JSON         cypherKeys,
+        String       cypherType,
+        Long         mediaSize,
+        String       mediaType,
+        String       name,
+        String       payload,
+        String       profileName,
+        String       profileType,
+        Byte         changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -126,8 +122,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -156,7 +150,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -171,7 +164,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -242,7 +234,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -257,7 +248,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -272,7 +262,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -301,7 +290,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.blob_key</code>.
      */
-    @Size(max = 255)
     public String getBlobKey() {
         return this.blobKey;
     }
@@ -330,7 +318,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.cypher_type</code>.
      */
-    @Size(max = 255)
     public String getCypherType() {
         return this.cypherType;
     }
@@ -345,7 +332,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.media_size</code>.
      */
-    @NotNull
     public Long getMediaSize() {
         return this.mediaSize;
     }
@@ -360,7 +346,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.media_type</code>.
      */
-    @Size(max = 255)
     public String getMediaType() {
         return this.mediaType;
     }
@@ -375,7 +360,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -404,7 +388,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.profile_name</code>.
      */
-    @Size(max = 255)
     public String getProfileName() {
         return this.profileName;
     }
@@ -419,7 +402,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_media_metadata.profile_type</code>.
      */
-    @Size(max = 255)
     public String getProfileType() {
         return this.profileType;
     }
@@ -443,179 +425,6 @@ public class CkMediaMetadata extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkMediaMetadata other = (CkMediaMetadata) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.blobKey == null) {
-            if (other.blobKey != null)
-                return false;
-        }
-        else if (!this.blobKey.equals(other.blobKey))
-            return false;
-        if (this.cypherKeys == null) {
-            if (other.cypherKeys != null)
-                return false;
-        }
-        else if (!this.cypherKeys.equals(other.cypherKeys))
-            return false;
-        if (this.cypherType == null) {
-            if (other.cypherType != null)
-                return false;
-        }
-        else if (!this.cypherType.equals(other.cypherType))
-            return false;
-        if (this.mediaSize == null) {
-            if (other.mediaSize != null)
-                return false;
-        }
-        else if (!this.mediaSize.equals(other.mediaSize))
-            return false;
-        if (this.mediaType == null) {
-            if (other.mediaType != null)
-                return false;
-        }
-        else if (!this.mediaType.equals(other.mediaType))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.payload == null) {
-            if (other.payload != null)
-                return false;
-        }
-        else if (!this.payload.equals(other.payload))
-            return false;
-        if (this.profileName == null) {
-            if (other.profileName != null)
-                return false;
-        }
-        else if (!this.profileName.equals(other.profileName))
-            return false;
-        if (this.profileType == null) {
-            if (other.profileType != null)
-                return false;
-        }
-        else if (!this.profileType.equals(other.profileType))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.blobKey == null) ? 0 : this.blobKey.hashCode());
-        result = prime * result + ((this.cypherKeys == null) ? 0 : this.cypherKeys.hashCode());
-        result = prime * result + ((this.cypherType == null) ? 0 : this.cypherType.hashCode());
-        result = prime * result + ((this.mediaSize == null) ? 0 : this.mediaSize.hashCode());
-        result = prime * result + ((this.mediaType == null) ? 0 : this.mediaType.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.payload == null) ? 0 : this.payload.hashCode());
-        result = prime * result + ((this.profileName == null) ? 0 : this.profileName.hashCode());
-        result = prime * result + ((this.profileType == null) ? 0 : this.profileType.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

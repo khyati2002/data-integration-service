@@ -7,14 +7,10 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,41 +21,41 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String aggTable;
-    private String aggregateField;
-    private String aggregateType;
-    private String cadenceDateField;
-    private JSON cadenceTypes;
-    private String description;
-    private String kpiName;
-    private String pointerField;
-    private String primaryGroupBy;
-    private String primaryGroupName;
-    private Integer priority;
-    private String query;
-    private String rawTables;
-    private String rowId;
-    private String secondaryGroupBy;
-    private String secondaryGroupName;
-    private String tertiaryGroupBy;
-    private String tertiaryGroupName;
-    private String aggregationName;
-    private String category;
-    private String dataType;
-    private String operationType;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       aggTable;
+    private String       aggregateField;
+    private String       aggregateType;
+    private String       cadenceDateField;
+    private JSON         cadenceTypes;
+    private String       description;
+    private String       kpiName;
+    private String       pointerField;
+    private String       primaryGroupBy;
+    private String       primaryGroupName;
+    private Integer      priority;
+    private String       query;
+    private String       rawTables;
+    private String       rowId;
+    private String       secondaryGroupBy;
+    private String       secondaryGroupName;
+    private String       tertiaryGroupBy;
+    private String       tertiaryGroupName;
+    private String       aggregationName;
+    private String       category;
+    private String       dataType;
+    private String       operationType;
 
     public CkKpiRegistory() {}
 
@@ -102,41 +98,41 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     }
 
     public CkKpiRegistory(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String aggTable,
-        String aggregateField,
-        String aggregateType,
-        String cadenceDateField,
-        JSON cadenceTypes,
-        String description,
-        String kpiName,
-        String pointerField,
-        String primaryGroupBy,
-        String primaryGroupName,
-        Integer priority,
-        String query,
-        String rawTables,
-        String rowId,
-        String secondaryGroupBy,
-        String secondaryGroupName,
-        String tertiaryGroupBy,
-        String tertiaryGroupName,
-        String aggregationName,
-        String category,
-        String dataType,
-        String operationType
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       aggTable,
+        String       aggregateField,
+        String       aggregateType,
+        String       cadenceDateField,
+        JSON         cadenceTypes,
+        String       description,
+        String       kpiName,
+        String       pointerField,
+        String       primaryGroupBy,
+        String       primaryGroupName,
+        Integer      priority,
+        String       query,
+        String       rawTables,
+        String       rowId,
+        String       secondaryGroupBy,
+        String       secondaryGroupName,
+        String       tertiaryGroupBy,
+        String       tertiaryGroupName,
+        String       aggregationName,
+        String       category,
+        String       dataType,
+        String       operationType
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -178,8 +174,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -208,7 +202,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -237,7 +230,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -308,7 +300,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -323,7 +314,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -338,7 +328,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -367,7 +356,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.agg_table</code>.
      */
-    @Size(max = 255)
     public String getAggTable() {
         return this.aggTable;
     }
@@ -382,7 +370,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.aggregate_field</code>.
      */
-    @Size(max = 255)
     public String getAggregateField() {
         return this.aggregateField;
     }
@@ -397,7 +384,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.aggregate_type</code>.
      */
-    @Size(max = 255)
     public String getAggregateType() {
         return this.aggregateType;
     }
@@ -412,7 +398,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.cadence_date_field</code>.
      */
-    @Size(max = 255)
     public String getCadenceDateField() {
         return this.cadenceDateField;
     }
@@ -455,7 +440,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.kpi_name</code>.
      */
-    @Size(max = 255)
     public String getKpiName() {
         return this.kpiName;
     }
@@ -470,7 +454,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.pointer_field</code>.
      */
-    @Size(max = 255)
     public String getPointerField() {
         return this.pointerField;
     }
@@ -485,7 +468,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.primary_group_by</code>.
      */
-    @Size(max = 255)
     public String getPrimaryGroupBy() {
         return this.primaryGroupBy;
     }
@@ -500,7 +482,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.primary_group_name</code>.
      */
-    @Size(max = 255)
     public String getPrimaryGroupName() {
         return this.primaryGroupName;
     }
@@ -515,7 +496,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.priority</code>.
      */
-    @NotNull
     public Integer getPriority() {
         return this.priority;
     }
@@ -544,7 +524,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.raw_tables</code>.
      */
-    @Size(max = 255)
     public String getRawTables() {
         return this.rawTables;
     }
@@ -559,7 +538,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.row_id</code>.
      */
-    @Size(max = 255)
     public String getRowId() {
         return this.rowId;
     }
@@ -574,7 +552,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.secondary_group_by</code>.
      */
-    @Size(max = 255)
     public String getSecondaryGroupBy() {
         return this.secondaryGroupBy;
     }
@@ -589,7 +566,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.secondary_group_name</code>.
      */
-    @Size(max = 255)
     public String getSecondaryGroupName() {
         return this.secondaryGroupName;
     }
@@ -604,7 +580,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.tertiary_group_by</code>.
      */
-    @Size(max = 255)
     public String getTertiaryGroupBy() {
         return this.tertiaryGroupBy;
     }
@@ -619,7 +594,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.tertiary_group_name</code>.
      */
-    @Size(max = 255)
     public String getTertiaryGroupName() {
         return this.tertiaryGroupName;
     }
@@ -634,7 +608,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.aggregation_name</code>.
      */
-    @Size(max = 255)
     public String getAggregationName() {
         return this.aggregationName;
     }
@@ -649,7 +622,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.category</code>.
      */
-    @Size(max = 255)
     public String getCategory() {
         return this.category;
     }
@@ -664,7 +636,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.data_type</code>.
      */
-    @Size(max = 255)
     public String getDataType() {
         return this.dataType;
     }
@@ -679,7 +650,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_kpi_registory.operation_type</code>.
      */
-    @Size(max = 255)
     public String getOperationType() {
         return this.operationType;
     }
@@ -689,270 +659,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
      */
     public void setOperationType(String operationType) {
         this.operationType = operationType;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkKpiRegistory other = (CkKpiRegistory) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.aggTable == null) {
-            if (other.aggTable != null)
-                return false;
-        }
-        else if (!this.aggTable.equals(other.aggTable))
-            return false;
-        if (this.aggregateField == null) {
-            if (other.aggregateField != null)
-                return false;
-        }
-        else if (!this.aggregateField.equals(other.aggregateField))
-            return false;
-        if (this.aggregateType == null) {
-            if (other.aggregateType != null)
-                return false;
-        }
-        else if (!this.aggregateType.equals(other.aggregateType))
-            return false;
-        if (this.cadenceDateField == null) {
-            if (other.cadenceDateField != null)
-                return false;
-        }
-        else if (!this.cadenceDateField.equals(other.cadenceDateField))
-            return false;
-        if (this.cadenceTypes == null) {
-            if (other.cadenceTypes != null)
-                return false;
-        }
-        else if (!this.cadenceTypes.equals(other.cadenceTypes))
-            return false;
-        if (this.description == null) {
-            if (other.description != null)
-                return false;
-        }
-        else if (!this.description.equals(other.description))
-            return false;
-        if (this.kpiName == null) {
-            if (other.kpiName != null)
-                return false;
-        }
-        else if (!this.kpiName.equals(other.kpiName))
-            return false;
-        if (this.pointerField == null) {
-            if (other.pointerField != null)
-                return false;
-        }
-        else if (!this.pointerField.equals(other.pointerField))
-            return false;
-        if (this.primaryGroupBy == null) {
-            if (other.primaryGroupBy != null)
-                return false;
-        }
-        else if (!this.primaryGroupBy.equals(other.primaryGroupBy))
-            return false;
-        if (this.primaryGroupName == null) {
-            if (other.primaryGroupName != null)
-                return false;
-        }
-        else if (!this.primaryGroupName.equals(other.primaryGroupName))
-            return false;
-        if (this.priority == null) {
-            if (other.priority != null)
-                return false;
-        }
-        else if (!this.priority.equals(other.priority))
-            return false;
-        if (this.query == null) {
-            if (other.query != null)
-                return false;
-        }
-        else if (!this.query.equals(other.query))
-            return false;
-        if (this.rawTables == null) {
-            if (other.rawTables != null)
-                return false;
-        }
-        else if (!this.rawTables.equals(other.rawTables))
-            return false;
-        if (this.rowId == null) {
-            if (other.rowId != null)
-                return false;
-        }
-        else if (!this.rowId.equals(other.rowId))
-            return false;
-        if (this.secondaryGroupBy == null) {
-            if (other.secondaryGroupBy != null)
-                return false;
-        }
-        else if (!this.secondaryGroupBy.equals(other.secondaryGroupBy))
-            return false;
-        if (this.secondaryGroupName == null) {
-            if (other.secondaryGroupName != null)
-                return false;
-        }
-        else if (!this.secondaryGroupName.equals(other.secondaryGroupName))
-            return false;
-        if (this.tertiaryGroupBy == null) {
-            if (other.tertiaryGroupBy != null)
-                return false;
-        }
-        else if (!this.tertiaryGroupBy.equals(other.tertiaryGroupBy))
-            return false;
-        if (this.tertiaryGroupName == null) {
-            if (other.tertiaryGroupName != null)
-                return false;
-        }
-        else if (!this.tertiaryGroupName.equals(other.tertiaryGroupName))
-            return false;
-        if (this.aggregationName == null) {
-            if (other.aggregationName != null)
-                return false;
-        }
-        else if (!this.aggregationName.equals(other.aggregationName))
-            return false;
-        if (this.category == null) {
-            if (other.category != null)
-                return false;
-        }
-        else if (!this.category.equals(other.category))
-            return false;
-        if (this.dataType == null) {
-            if (other.dataType != null)
-                return false;
-        }
-        else if (!this.dataType.equals(other.dataType))
-            return false;
-        if (this.operationType == null) {
-            if (other.operationType != null)
-                return false;
-        }
-        else if (!this.operationType.equals(other.operationType))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.aggTable == null) ? 0 : this.aggTable.hashCode());
-        result = prime * result + ((this.aggregateField == null) ? 0 : this.aggregateField.hashCode());
-        result = prime * result + ((this.aggregateType == null) ? 0 : this.aggregateType.hashCode());
-        result = prime * result + ((this.cadenceDateField == null) ? 0 : this.cadenceDateField.hashCode());
-        result = prime * result + ((this.cadenceTypes == null) ? 0 : this.cadenceTypes.hashCode());
-        result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-        result = prime * result + ((this.kpiName == null) ? 0 : this.kpiName.hashCode());
-        result = prime * result + ((this.pointerField == null) ? 0 : this.pointerField.hashCode());
-        result = prime * result + ((this.primaryGroupBy == null) ? 0 : this.primaryGroupBy.hashCode());
-        result = prime * result + ((this.primaryGroupName == null) ? 0 : this.primaryGroupName.hashCode());
-        result = prime * result + ((this.priority == null) ? 0 : this.priority.hashCode());
-        result = prime * result + ((this.query == null) ? 0 : this.query.hashCode());
-        result = prime * result + ((this.rawTables == null) ? 0 : this.rawTables.hashCode());
-        result = prime * result + ((this.rowId == null) ? 0 : this.rowId.hashCode());
-        result = prime * result + ((this.secondaryGroupBy == null) ? 0 : this.secondaryGroupBy.hashCode());
-        result = prime * result + ((this.secondaryGroupName == null) ? 0 : this.secondaryGroupName.hashCode());
-        result = prime * result + ((this.tertiaryGroupBy == null) ? 0 : this.tertiaryGroupBy.hashCode());
-        result = prime * result + ((this.tertiaryGroupName == null) ? 0 : this.tertiaryGroupName.hashCode());
-        result = prime * result + ((this.aggregationName == null) ? 0 : this.aggregationName.hashCode());
-        result = prime * result + ((this.category == null) ? 0 : this.category.hashCode());
-        result = prime * result + ((this.dataType == null) ? 0 : this.dataType.hashCode());
-        result = prime * result + ((this.operationType == null) ? 0 : this.operationType.hashCode());
-        return result;
     }
 
     @Override

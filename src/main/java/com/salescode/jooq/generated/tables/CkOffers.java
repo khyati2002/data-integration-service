@@ -11,39 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOffersSupplierHierarchy.CkOffersSupplierHierarchyPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkRangeProgram.CkRangeProgramPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -165,7 +141,7 @@ public class CkOffers extends TableImpl<Record> {
     /**
      * The column <code>ck_offers.end_date</code>.
      */
-    public final TableField<Record, Date> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_offers.end_qty_or_val</code>.
@@ -260,7 +236,7 @@ public class CkOffers extends TableImpl<Record> {
     /**
      * The column <code>ck_offers.start_date</code>.
      */
-    public final TableField<Record, Date> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_offers.start_qty_or_val</code>.
@@ -378,11 +354,11 @@ public class CkOffers extends TableImpl<Record> {
     public final TableField<Record, String> FILTER_VALUE = createField(DSL.name("filter_value"), SQLDataType.VARCHAR(255), this, "");
 
     private CkOffers(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkOffers(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkOffers(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -406,37 +382,8 @@ public class CkOffers extends TableImpl<Record> {
         this(DSL.name("ck_offers"), null);
     }
 
-    public <O extends Record> CkOffers(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_OFFERS);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkOffersPath extends CkOffers implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkOffersPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkOffersPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkOffersPath as(String alias) {
-            return new CkOffersPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkOffersPath as(Name alias) {
-            return new CkOffersPath(alias, this);
-        }
-
-        @Override
-        public CkOffersPath as(Table<?> alias) {
-            return new CkOffersPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkOffers(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_OFFERS);
     }
 
     @Override
@@ -454,67 +401,51 @@ public class CkOffers extends TableImpl<Record> {
         return Arrays.asList(Keys.FKAAAIPY2ECHDMT3LTYOK3OTHM5, Keys.FKC9LGR4Q8I9UJHCGRVBHT0G2G0, Keys.FKB2RRASEVGPYV7DR64V8BVUJCN, Keys.FKI52M8URIVV3VW9HMIETHTYJKW);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
+    private transient CkRangeProgram _ckRangeProgram;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKAAAIPY2ECHDMT3LTYOK3OTHM5, null);
+            _ckLocation = new CkLocation(this, Keys.FKAAAIPY2ECHDMT3LTYOK3OTHM5);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKC9LGR4Q8I9UJHCGRVBHT0G2G0, null);
+            _ckUser = new CkUser(this, Keys.FKC9LGR4Q8I9UJHCGRVBHT0G2G0);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FKB2RRASEVGPYV7DR64V8BVUJCN, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FKB2RRASEVGPYV7DR64V8BVUJCN);
 
         return _ckOutletDetails;
     }
-
-    private transient CkRangeProgramPath _ckRangeProgram;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_range_program</code>
      * table.
      */
-    public CkRangeProgramPath ckRangeProgram() {
+    public CkRangeProgram ckRangeProgram() {
         if (_ckRangeProgram == null)
-            _ckRangeProgram = new CkRangeProgramPath(this, Keys.FKI52M8URIVV3VW9HMIETHTYJKW, null);
+            _ckRangeProgram = new CkRangeProgram(this, Keys.FKI52M8URIVV3VW9HMIETHTYJKW);
 
         return _ckRangeProgram;
-    }
-
-    private transient CkOffersSupplierHierarchyPath _ckOffersSupplierHierarchy;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_offers_supplier_hierarchy</code> table
-     */
-    public CkOffersSupplierHierarchyPath ckOffersSupplierHierarchy() {
-        if (_ckOffersSupplierHierarchy == null)
-            _ckOffersSupplierHierarchy = new CkOffersSupplierHierarchyPath(this, null, Keys.FK6EADO04F0M9A5NT4KNFOBLRIW.getInverseKey());
-
-        return _ckOffersSupplierHierarchy;
     }
 
     @Override
@@ -525,11 +456,6 @@ public class CkOffers extends TableImpl<Record> {
     @Override
     public CkOffers as(Name alias) {
         return new CkOffers(alias, this);
-    }
-
-    @Override
-    public CkOffers as(Table<?> alias) {
-        return new CkOffers(alias.getQualifiedName(), this);
     }
 
     /**
@@ -546,97 +472,5 @@ public class CkOffers extends TableImpl<Record> {
     @Override
     public CkOffers rename(Name name) {
         return new CkOffers(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkOffers rename(Table<?> name) {
-        return new CkOffers(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffers where(Condition condition) {
-        return new CkOffers(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffers where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffers where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffers where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOffers where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOffers where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOffers where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOffers where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffers whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffers whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

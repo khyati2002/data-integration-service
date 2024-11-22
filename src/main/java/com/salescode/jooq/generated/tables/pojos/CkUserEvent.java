@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,49 +22,49 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String answer;
-    private String creationLevelBrand;
-    private String creationLevelCategory;
-    private String creationLevelLoc;
-    private String creationLevelLocId;
-    private String creationLevelOutletCategory;
-    private String creationLevelOutletChannel;
-    private String creationLevelOutletCode;
-    private String creationLevelOutletType;
-    private String creationLevelProduct;
-    private String creationLevelSubCategory;
-    private String creationLevelUser;
-    private String creationLevelUserId;
-    private String embededUrl;
-    private Date endTime;
-    private String eventId;
-    private String eventImage;
-    private String eventName;
-    private String eventType;
-    private Boolean isMultipleOption;
-    private String optionType;
-    private JSON options;
-    private Integer qid;
-    private String question;
-    private String responseType;
-    private String role;
-    private Integer score;
-    private Date startTime;
-    private Long totalRecipient;
-    private String url;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        answer;
+    private String        creationLevelBrand;
+    private String        creationLevelCategory;
+    private String        creationLevelLoc;
+    private String        creationLevelLocId;
+    private String        creationLevelOutletCategory;
+    private String        creationLevelOutletChannel;
+    private String        creationLevelOutletCode;
+    private String        creationLevelOutletType;
+    private String        creationLevelProduct;
+    private String        creationLevelSubCategory;
+    private String        creationLevelUser;
+    private String        creationLevelUserId;
+    private String        embededUrl;
+    private LocalDateTime endTime;
+    private String        eventId;
+    private String        eventImage;
+    private String        eventName;
+    private String        eventType;
+    private Boolean       isMultipleOption;
+    private String        optionType;
+    private JSON          options;
+    private Integer       qid;
+    private String        question;
+    private String        responseType;
+    private String        role;
+    private Integer       score;
+    private LocalDateTime startTime;
+    private Long          totalRecipient;
+    private String        url;
+    private Byte          changed;
 
     public CkUserEvent() {}
 
@@ -118,49 +115,49 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     }
 
     public CkUserEvent(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String answer,
-        String creationLevelBrand,
-        String creationLevelCategory,
-        String creationLevelLoc,
-        String creationLevelLocId,
-        String creationLevelOutletCategory,
-        String creationLevelOutletChannel,
-        String creationLevelOutletCode,
-        String creationLevelOutletType,
-        String creationLevelProduct,
-        String creationLevelSubCategory,
-        String creationLevelUser,
-        String creationLevelUserId,
-        String embededUrl,
-        Date endTime,
-        String eventId,
-        String eventImage,
-        String eventName,
-        String eventType,
-        Boolean isMultipleOption,
-        String optionType,
-        JSON options,
-        Integer qid,
-        String question,
-        String responseType,
-        String role,
-        Integer score,
-        Date startTime,
-        Long totalRecipient,
-        String url,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        answer,
+        String        creationLevelBrand,
+        String        creationLevelCategory,
+        String        creationLevelLoc,
+        String        creationLevelLocId,
+        String        creationLevelOutletCategory,
+        String        creationLevelOutletChannel,
+        String        creationLevelOutletCode,
+        String        creationLevelOutletType,
+        String        creationLevelProduct,
+        String        creationLevelSubCategory,
+        String        creationLevelUser,
+        String        creationLevelUserId,
+        String        embededUrl,
+        LocalDateTime endTime,
+        String        eventId,
+        String        eventImage,
+        String        eventName,
+        String        eventType,
+        Boolean       isMultipleOption,
+        String        optionType,
+        JSON          options,
+        Integer       qid,
+        String        question,
+        String        responseType,
+        String        role,
+        Integer       score,
+        LocalDateTime startTime,
+        Long          totalRecipient,
+        String        url,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -210,8 +207,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -240,7 +235,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -255,7 +249,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -326,7 +319,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -341,7 +333,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -356,7 +347,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -385,7 +375,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.answer</code>.
      */
-    @Size(max = 255)
     public String getAnswer() {
         return this.answer;
     }
@@ -568,7 +557,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.embeded_url</code>.
      */
-    @Size(max = 255)
     public String getEmbededUrl() {
         return this.embededUrl;
     }
@@ -583,22 +571,20 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.end_time</code>.
      */
-    @NotNull
-    public Date getEndTime() {
+    public LocalDateTime getEndTime() {
         return this.endTime;
     }
 
     /**
      * Setter for <code>ck_user_event.end_time</code>.
      */
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
     /**
      * Getter for <code>ck_user_event.event_id</code>.
      */
-    @Size(max = 255)
     public String getEventId() {
         return this.eventId;
     }
@@ -613,7 +599,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.event_image</code>.
      */
-    @Size(max = 255)
     public String getEventImage() {
         return this.eventImage;
     }
@@ -628,7 +613,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.event_name</code>.
      */
-    @Size(max = 255)
     public String getEventName() {
         return this.eventName;
     }
@@ -643,7 +627,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.event_type</code>.
      */
-    @Size(max = 255)
     public String getEventType() {
         return this.eventType;
     }
@@ -658,7 +641,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.is_multiple_option</code>.
      */
-    @NotNull
     public Boolean getIsMultipleOption() {
         return this.isMultipleOption;
     }
@@ -673,7 +655,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.option_type</code>.
      */
-    @Size(max = 255)
     public String getOptionType() {
         return this.optionType;
     }
@@ -716,7 +697,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.question</code>.
      */
-    @Size(max = 65535)
     public String getQuestion() {
         return this.question;
     }
@@ -731,7 +711,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.response_type</code>.
      */
-    @Size(max = 255)
     public String getResponseType() {
         return this.responseType;
     }
@@ -746,7 +725,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.role</code>.
      */
-    @Size(max = 255)
     public String getRole() {
         return this.role;
     }
@@ -775,15 +753,14 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.start_time</code>.
      */
-    @NotNull
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return this.startTime;
     }
 
     /**
      * Setter for <code>ck_user_event.start_time</code>.
      */
-    public void setStartTime(Date startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -804,7 +781,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_event.url</code>.
      */
-    @Size(max = 255)
     public String getUrl() {
         return this.url;
     }
@@ -828,326 +804,6 @@ public class CkUserEvent extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkUserEvent other = (CkUserEvent) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.answer == null) {
-            if (other.answer != null)
-                return false;
-        }
-        else if (!this.answer.equals(other.answer))
-            return false;
-        if (this.creationLevelBrand == null) {
-            if (other.creationLevelBrand != null)
-                return false;
-        }
-        else if (!this.creationLevelBrand.equals(other.creationLevelBrand))
-            return false;
-        if (this.creationLevelCategory == null) {
-            if (other.creationLevelCategory != null)
-                return false;
-        }
-        else if (!this.creationLevelCategory.equals(other.creationLevelCategory))
-            return false;
-        if (this.creationLevelLoc == null) {
-            if (other.creationLevelLoc != null)
-                return false;
-        }
-        else if (!this.creationLevelLoc.equals(other.creationLevelLoc))
-            return false;
-        if (this.creationLevelLocId == null) {
-            if (other.creationLevelLocId != null)
-                return false;
-        }
-        else if (!this.creationLevelLocId.equals(other.creationLevelLocId))
-            return false;
-        if (this.creationLevelOutletCategory == null) {
-            if (other.creationLevelOutletCategory != null)
-                return false;
-        }
-        else if (!this.creationLevelOutletCategory.equals(other.creationLevelOutletCategory))
-            return false;
-        if (this.creationLevelOutletChannel == null) {
-            if (other.creationLevelOutletChannel != null)
-                return false;
-        }
-        else if (!this.creationLevelOutletChannel.equals(other.creationLevelOutletChannel))
-            return false;
-        if (this.creationLevelOutletCode == null) {
-            if (other.creationLevelOutletCode != null)
-                return false;
-        }
-        else if (!this.creationLevelOutletCode.equals(other.creationLevelOutletCode))
-            return false;
-        if (this.creationLevelOutletType == null) {
-            if (other.creationLevelOutletType != null)
-                return false;
-        }
-        else if (!this.creationLevelOutletType.equals(other.creationLevelOutletType))
-            return false;
-        if (this.creationLevelProduct == null) {
-            if (other.creationLevelProduct != null)
-                return false;
-        }
-        else if (!this.creationLevelProduct.equals(other.creationLevelProduct))
-            return false;
-        if (this.creationLevelSubCategory == null) {
-            if (other.creationLevelSubCategory != null)
-                return false;
-        }
-        else if (!this.creationLevelSubCategory.equals(other.creationLevelSubCategory))
-            return false;
-        if (this.creationLevelUser == null) {
-            if (other.creationLevelUser != null)
-                return false;
-        }
-        else if (!this.creationLevelUser.equals(other.creationLevelUser))
-            return false;
-        if (this.creationLevelUserId == null) {
-            if (other.creationLevelUserId != null)
-                return false;
-        }
-        else if (!this.creationLevelUserId.equals(other.creationLevelUserId))
-            return false;
-        if (this.embededUrl == null) {
-            if (other.embededUrl != null)
-                return false;
-        }
-        else if (!this.embededUrl.equals(other.embededUrl))
-            return false;
-        if (this.endTime == null) {
-            if (other.endTime != null)
-                return false;
-        }
-        else if (!this.endTime.equals(other.endTime))
-            return false;
-        if (this.eventId == null) {
-            if (other.eventId != null)
-                return false;
-        }
-        else if (!this.eventId.equals(other.eventId))
-            return false;
-        if (this.eventImage == null) {
-            if (other.eventImage != null)
-                return false;
-        }
-        else if (!this.eventImage.equals(other.eventImage))
-            return false;
-        if (this.eventName == null) {
-            if (other.eventName != null)
-                return false;
-        }
-        else if (!this.eventName.equals(other.eventName))
-            return false;
-        if (this.eventType == null) {
-            if (other.eventType != null)
-                return false;
-        }
-        else if (!this.eventType.equals(other.eventType))
-            return false;
-        if (this.isMultipleOption == null) {
-            if (other.isMultipleOption != null)
-                return false;
-        }
-        else if (!this.isMultipleOption.equals(other.isMultipleOption))
-            return false;
-        if (this.optionType == null) {
-            if (other.optionType != null)
-                return false;
-        }
-        else if (!this.optionType.equals(other.optionType))
-            return false;
-        if (this.options == null) {
-            if (other.options != null)
-                return false;
-        }
-        else if (!this.options.equals(other.options))
-            return false;
-        if (this.qid == null) {
-            if (other.qid != null)
-                return false;
-        }
-        else if (!this.qid.equals(other.qid))
-            return false;
-        if (this.question == null) {
-            if (other.question != null)
-                return false;
-        }
-        else if (!this.question.equals(other.question))
-            return false;
-        if (this.responseType == null) {
-            if (other.responseType != null)
-                return false;
-        }
-        else if (!this.responseType.equals(other.responseType))
-            return false;
-        if (this.role == null) {
-            if (other.role != null)
-                return false;
-        }
-        else if (!this.role.equals(other.role))
-            return false;
-        if (this.score == null) {
-            if (other.score != null)
-                return false;
-        }
-        else if (!this.score.equals(other.score))
-            return false;
-        if (this.startTime == null) {
-            if (other.startTime != null)
-                return false;
-        }
-        else if (!this.startTime.equals(other.startTime))
-            return false;
-        if (this.totalRecipient == null) {
-            if (other.totalRecipient != null)
-                return false;
-        }
-        else if (!this.totalRecipient.equals(other.totalRecipient))
-            return false;
-        if (this.url == null) {
-            if (other.url != null)
-                return false;
-        }
-        else if (!this.url.equals(other.url))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.answer == null) ? 0 : this.answer.hashCode());
-        result = prime * result + ((this.creationLevelBrand == null) ? 0 : this.creationLevelBrand.hashCode());
-        result = prime * result + ((this.creationLevelCategory == null) ? 0 : this.creationLevelCategory.hashCode());
-        result = prime * result + ((this.creationLevelLoc == null) ? 0 : this.creationLevelLoc.hashCode());
-        result = prime * result + ((this.creationLevelLocId == null) ? 0 : this.creationLevelLocId.hashCode());
-        result = prime * result + ((this.creationLevelOutletCategory == null) ? 0 : this.creationLevelOutletCategory.hashCode());
-        result = prime * result + ((this.creationLevelOutletChannel == null) ? 0 : this.creationLevelOutletChannel.hashCode());
-        result = prime * result + ((this.creationLevelOutletCode == null) ? 0 : this.creationLevelOutletCode.hashCode());
-        result = prime * result + ((this.creationLevelOutletType == null) ? 0 : this.creationLevelOutletType.hashCode());
-        result = prime * result + ((this.creationLevelProduct == null) ? 0 : this.creationLevelProduct.hashCode());
-        result = prime * result + ((this.creationLevelSubCategory == null) ? 0 : this.creationLevelSubCategory.hashCode());
-        result = prime * result + ((this.creationLevelUser == null) ? 0 : this.creationLevelUser.hashCode());
-        result = prime * result + ((this.creationLevelUserId == null) ? 0 : this.creationLevelUserId.hashCode());
-        result = prime * result + ((this.embededUrl == null) ? 0 : this.embededUrl.hashCode());
-        result = prime * result + ((this.endTime == null) ? 0 : this.endTime.hashCode());
-        result = prime * result + ((this.eventId == null) ? 0 : this.eventId.hashCode());
-        result = prime * result + ((this.eventImage == null) ? 0 : this.eventImage.hashCode());
-        result = prime * result + ((this.eventName == null) ? 0 : this.eventName.hashCode());
-        result = prime * result + ((this.eventType == null) ? 0 : this.eventType.hashCode());
-        result = prime * result + ((this.isMultipleOption == null) ? 0 : this.isMultipleOption.hashCode());
-        result = prime * result + ((this.optionType == null) ? 0 : this.optionType.hashCode());
-        result = prime * result + ((this.options == null) ? 0 : this.options.hashCode());
-        result = prime * result + ((this.qid == null) ? 0 : this.qid.hashCode());
-        result = prime * result + ((this.question == null) ? 0 : this.question.hashCode());
-        result = prime * result + ((this.responseType == null) ? 0 : this.responseType.hashCode());
-        result = prime * result + ((this.role == null) ? 0 : this.role.hashCode());
-        result = prime * result + ((this.score == null) ? 0 : this.score.hashCode());
-        result = prime * result + ((this.startTime == null) ? 0 : this.startTime.hashCode());
-        result = prime * result + ((this.totalRecipient == null) ? 0 : this.totalRecipient.hashCode());
-        result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,43 +21,43 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date systemTime;
-    private String appBrowserVersion;
-    private String appType;
-    private String appVersion;
-    private String availableExtMem;
-    private String availableInternalMem;
-    private String brand;
-    private String camera;
-    private String coarseLocation;
-    private String deviceId;
-    private String fineLocation;
-    private Boolean gpsAvailability;
-    private String userHierarchy;
-    private String internet;
-    private String loginid;
-    private String model;
-    private String ramMemory;
-    private String readsd;
-    private String sdkVersion;
-    private String totalExtMem;
-    private String totalInternalMem;
-    private String wifi;
-    private String writesd;
-    private Byte changed;
-    private String usercontext;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime systemTime;
+    private String        appBrowserVersion;
+    private String        appType;
+    private String        appVersion;
+    private String        availableExtMem;
+    private String        availableInternalMem;
+    private String        brand;
+    private String        camera;
+    private String        coarseLocation;
+    private String        deviceId;
+    private String        fineLocation;
+    private Boolean       gpsAvailability;
+    private String        userHierarchy;
+    private String        internet;
+    private String        loginid;
+    private String        model;
+    private String        ramMemory;
+    private String        readsd;
+    private String        sdkVersion;
+    private String        totalExtMem;
+    private String        totalInternalMem;
+    private String        wifi;
+    private String        writesd;
+    private Byte          changed;
+    private String        usercontext;
 
     public CkDeviceInfo() {}
 
@@ -104,43 +102,43 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     }
 
     public CkDeviceInfo(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date systemTime,
-        String appBrowserVersion,
-        String appType,
-        String appVersion,
-        String availableExtMem,
-        String availableInternalMem,
-        String brand,
-        String camera,
-        String coarseLocation,
-        String deviceId,
-        String fineLocation,
-        Boolean gpsAvailability,
-        String userHierarchy,
-        String internet,
-        String loginid,
-        String model,
-        String ramMemory,
-        String readsd,
-        String sdkVersion,
-        String totalExtMem,
-        String totalInternalMem,
-        String wifi,
-        String writesd,
-        Byte changed,
-        String usercontext
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime systemTime,
+        String        appBrowserVersion,
+        String        appType,
+        String        appVersion,
+        String        availableExtMem,
+        String        availableInternalMem,
+        String        brand,
+        String        camera,
+        String        coarseLocation,
+        String        deviceId,
+        String        fineLocation,
+        Boolean       gpsAvailability,
+        String        userHierarchy,
+        String        internet,
+        String        loginid,
+        String        model,
+        String        ramMemory,
+        String        readsd,
+        String        sdkVersion,
+        String        totalExtMem,
+        String        totalInternalMem,
+        String        wifi,
+        String        writesd,
+        Byte          changed,
+        String        usercontext
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -184,8 +182,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -214,7 +210,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -229,7 +224,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -300,7 +294,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -315,7 +308,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -330,7 +322,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -359,21 +350,20 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.system_time</code>.
      */
-    public Date getSystemTime() {
+    public LocalDateTime getSystemTime() {
         return this.systemTime;
     }
 
     /**
      * Setter for <code>ck_device_info.system_time</code>.
      */
-    public void setSystemTime(Date systemTime) {
+    public void setSystemTime(LocalDateTime systemTime) {
         this.systemTime = systemTime;
     }
 
     /**
      * Getter for <code>ck_device_info.app_browser_version</code>.
      */
-    @Size(max = 255)
     public String getAppBrowserVersion() {
         return this.appBrowserVersion;
     }
@@ -388,8 +378,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.app_type</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getAppType() {
         return this.appType;
     }
@@ -404,7 +392,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.app_version</code>.
      */
-    @Size(max = 255)
     public String getAppVersion() {
         return this.appVersion;
     }
@@ -419,7 +406,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.available_ext_mem</code>.
      */
-    @Size(max = 255)
     public String getAvailableExtMem() {
         return this.availableExtMem;
     }
@@ -434,7 +420,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.available_internal_mem</code>.
      */
-    @Size(max = 255)
     public String getAvailableInternalMem() {
         return this.availableInternalMem;
     }
@@ -449,7 +434,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.brand</code>.
      */
-    @Size(max = 255)
     public String getBrand() {
         return this.brand;
     }
@@ -464,7 +448,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.camera</code>.
      */
-    @Size(max = 255)
     public String getCamera() {
         return this.camera;
     }
@@ -479,7 +462,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.coarse_location</code>.
      */
-    @Size(max = 255)
     public String getCoarseLocation() {
         return this.coarseLocation;
     }
@@ -494,7 +476,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.device_id</code>.
      */
-    @Size(max = 255)
     public String getDeviceId() {
         return this.deviceId;
     }
@@ -509,7 +490,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.fine_location</code>.
      */
-    @Size(max = 255)
     public String getFineLocation() {
         return this.fineLocation;
     }
@@ -524,7 +504,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.gps_availability</code>.
      */
-    @NotNull
     public Boolean getGpsAvailability() {
         return this.gpsAvailability;
     }
@@ -553,7 +532,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.internet</code>.
      */
-    @Size(max = 255)
     public String getInternet() {
         return this.internet;
     }
@@ -568,8 +546,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.loginid</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getLoginid() {
         return this.loginid;
     }
@@ -584,8 +560,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.model</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getModel() {
         return this.model;
     }
@@ -600,7 +574,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.ram_memory</code>.
      */
-    @Size(max = 255)
     public String getRamMemory() {
         return this.ramMemory;
     }
@@ -615,7 +588,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.readsd</code>.
      */
-    @Size(max = 255)
     public String getReadsd() {
         return this.readsd;
     }
@@ -630,7 +602,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.sdk_version</code>.
      */
-    @Size(max = 255)
     public String getSdkVersion() {
         return this.sdkVersion;
     }
@@ -645,7 +616,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.total_ext_mem</code>.
      */
-    @Size(max = 255)
     public String getTotalExtMem() {
         return this.totalExtMem;
     }
@@ -660,7 +630,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.total_internal_mem</code>.
      */
-    @Size(max = 255)
     public String getTotalInternalMem() {
         return this.totalInternalMem;
     }
@@ -675,7 +644,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.wifi</code>.
      */
-    @Size(max = 255)
     public String getWifi() {
         return this.wifi;
     }
@@ -690,7 +658,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_device_info.writesd</code>.
      */
-    @Size(max = 255)
     public String getWritesd() {
         return this.writesd;
     }
@@ -728,284 +695,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
      */
     public void setUsercontext(String usercontext) {
         this.usercontext = usercontext;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkDeviceInfo other = (CkDeviceInfo) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.systemTime == null) {
-            if (other.systemTime != null)
-                return false;
-        }
-        else if (!this.systemTime.equals(other.systemTime))
-            return false;
-        if (this.appBrowserVersion == null) {
-            if (other.appBrowserVersion != null)
-                return false;
-        }
-        else if (!this.appBrowserVersion.equals(other.appBrowserVersion))
-            return false;
-        if (this.appType == null) {
-            if (other.appType != null)
-                return false;
-        }
-        else if (!this.appType.equals(other.appType))
-            return false;
-        if (this.appVersion == null) {
-            if (other.appVersion != null)
-                return false;
-        }
-        else if (!this.appVersion.equals(other.appVersion))
-            return false;
-        if (this.availableExtMem == null) {
-            if (other.availableExtMem != null)
-                return false;
-        }
-        else if (!this.availableExtMem.equals(other.availableExtMem))
-            return false;
-        if (this.availableInternalMem == null) {
-            if (other.availableInternalMem != null)
-                return false;
-        }
-        else if (!this.availableInternalMem.equals(other.availableInternalMem))
-            return false;
-        if (this.brand == null) {
-            if (other.brand != null)
-                return false;
-        }
-        else if (!this.brand.equals(other.brand))
-            return false;
-        if (this.camera == null) {
-            if (other.camera != null)
-                return false;
-        }
-        else if (!this.camera.equals(other.camera))
-            return false;
-        if (this.coarseLocation == null) {
-            if (other.coarseLocation != null)
-                return false;
-        }
-        else if (!this.coarseLocation.equals(other.coarseLocation))
-            return false;
-        if (this.deviceId == null) {
-            if (other.deviceId != null)
-                return false;
-        }
-        else if (!this.deviceId.equals(other.deviceId))
-            return false;
-        if (this.fineLocation == null) {
-            if (other.fineLocation != null)
-                return false;
-        }
-        else if (!this.fineLocation.equals(other.fineLocation))
-            return false;
-        if (this.gpsAvailability == null) {
-            if (other.gpsAvailability != null)
-                return false;
-        }
-        else if (!this.gpsAvailability.equals(other.gpsAvailability))
-            return false;
-        if (this.userHierarchy == null) {
-            if (other.userHierarchy != null)
-                return false;
-        }
-        else if (!this.userHierarchy.equals(other.userHierarchy))
-            return false;
-        if (this.internet == null) {
-            if (other.internet != null)
-                return false;
-        }
-        else if (!this.internet.equals(other.internet))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.model == null) {
-            if (other.model != null)
-                return false;
-        }
-        else if (!this.model.equals(other.model))
-            return false;
-        if (this.ramMemory == null) {
-            if (other.ramMemory != null)
-                return false;
-        }
-        else if (!this.ramMemory.equals(other.ramMemory))
-            return false;
-        if (this.readsd == null) {
-            if (other.readsd != null)
-                return false;
-        }
-        else if (!this.readsd.equals(other.readsd))
-            return false;
-        if (this.sdkVersion == null) {
-            if (other.sdkVersion != null)
-                return false;
-        }
-        else if (!this.sdkVersion.equals(other.sdkVersion))
-            return false;
-        if (this.totalExtMem == null) {
-            if (other.totalExtMem != null)
-                return false;
-        }
-        else if (!this.totalExtMem.equals(other.totalExtMem))
-            return false;
-        if (this.totalInternalMem == null) {
-            if (other.totalInternalMem != null)
-                return false;
-        }
-        else if (!this.totalInternalMem.equals(other.totalInternalMem))
-            return false;
-        if (this.wifi == null) {
-            if (other.wifi != null)
-                return false;
-        }
-        else if (!this.wifi.equals(other.wifi))
-            return false;
-        if (this.writesd == null) {
-            if (other.writesd != null)
-                return false;
-        }
-        else if (!this.writesd.equals(other.writesd))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.usercontext == null) {
-            if (other.usercontext != null)
-                return false;
-        }
-        else if (!this.usercontext.equals(other.usercontext))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.systemTime == null) ? 0 : this.systemTime.hashCode());
-        result = prime * result + ((this.appBrowserVersion == null) ? 0 : this.appBrowserVersion.hashCode());
-        result = prime * result + ((this.appType == null) ? 0 : this.appType.hashCode());
-        result = prime * result + ((this.appVersion == null) ? 0 : this.appVersion.hashCode());
-        result = prime * result + ((this.availableExtMem == null) ? 0 : this.availableExtMem.hashCode());
-        result = prime * result + ((this.availableInternalMem == null) ? 0 : this.availableInternalMem.hashCode());
-        result = prime * result + ((this.brand == null) ? 0 : this.brand.hashCode());
-        result = prime * result + ((this.camera == null) ? 0 : this.camera.hashCode());
-        result = prime * result + ((this.coarseLocation == null) ? 0 : this.coarseLocation.hashCode());
-        result = prime * result + ((this.deviceId == null) ? 0 : this.deviceId.hashCode());
-        result = prime * result + ((this.fineLocation == null) ? 0 : this.fineLocation.hashCode());
-        result = prime * result + ((this.gpsAvailability == null) ? 0 : this.gpsAvailability.hashCode());
-        result = prime * result + ((this.userHierarchy == null) ? 0 : this.userHierarchy.hashCode());
-        result = prime * result + ((this.internet == null) ? 0 : this.internet.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.model == null) ? 0 : this.model.hashCode());
-        result = prime * result + ((this.ramMemory == null) ? 0 : this.ramMemory.hashCode());
-        result = prime * result + ((this.readsd == null) ? 0 : this.readsd.hashCode());
-        result = prime * result + ((this.sdkVersion == null) ? 0 : this.sdkVersion.hashCode());
-        result = prime * result + ((this.totalExtMem == null) ? 0 : this.totalExtMem.hashCode());
-        result = prime * result + ((this.totalInternalMem == null) ? 0 : this.totalInternalMem.hashCode());
-        result = prime * result + ((this.wifi == null) ? 0 : this.wifi.hashCode());
-        result = prime * result + ((this.writesd == null) ? 0 : this.writesd.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.usercontext == null) ? 0 : this.usercontext.hashCode());
-        return result;
     }
 
     @Override

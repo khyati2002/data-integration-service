@@ -7,8 +7,6 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import org.jooq.JSON;
 
 import java.io.Serializable;
@@ -23,48 +21,48 @@ public class CkLocation extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private Integer version;
-    private String area;
-    private String areacode;
-    private String branch;
-    private String branchCode;
-    private String city;
-    private String cityCode;
-    private String cluster;
-    private String clusterCode;
-    private String country;
-    private String countryCode;
-    private String locationHierarchy;
-    private String locationName;
-    private String locationType;
-    private String name;
-    private String pincode;
-    private String region;
-    private String regionCode;
-    private String state;
-    private String stateCode;
-    private String territory;
-    private String territoryCode;
-    private String zone;
-    private String zoneCode;
-    private String source;
-    private String town;
-    private JSON accessibleBy;
-    private String hash;
-    private String district;
-    private String districtCode;
-    private String townCode;
-    private Byte changed;
-    private String salescodeId;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private Integer      version;
+    private String       area;
+    private String       areacode;
+    private String       branch;
+    private String       branchCode;
+    private String       city;
+    private String       cityCode;
+    private String       cluster;
+    private String       clusterCode;
+    private String       country;
+    private String       countryCode;
+    private String       locationHierarchy;
+    private String       locationName;
+    private String       locationType;
+    private String       name;
+    private String       pincode;
+    private String       region;
+    private String       regionCode;
+    private String       state;
+    private String       stateCode;
+    private String       territory;
+    private String       territoryCode;
+    private String       zone;
+    private String       zoneCode;
+    private String       source;
+    private String       town;
+    private JSON         accessibleBy;
+    private String       hash;
+    private String       district;
+    private String       districtCode;
+    private String       townCode;
+    private Byte         changed;
+    private String       salescodeId;
 
     public CkLocation() {}
 
@@ -114,48 +112,48 @@ public class CkLocation extends CommonDataModel implements Serializable {
     }
 
     public CkLocation(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        Integer version,
-        String area,
-        String areacode,
-        String branch,
-        String branchCode,
-        String city,
-        String cityCode,
-        String cluster,
-        String clusterCode,
-        String country,
-        String countryCode,
-        String locationHierarchy,
-        String locationName,
-        String locationType,
-        String name,
-        String pincode,
-        String region,
-        String regionCode,
-        String state,
-        String stateCode,
-        String territory,
-        String territoryCode,
-        String zone,
-        String zoneCode,
-        String source,
-        String town,
-        JSON accessibleBy,
-        String hash,
-        String district,
-        String districtCode,
-        String townCode,
-        Byte changed,
-        String salescodeId
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        Integer      version,
+        String       area,
+        String       areacode,
+        String       branch,
+        String       branchCode,
+        String       city,
+        String       cityCode,
+        String       cluster,
+        String       clusterCode,
+        String       country,
+        String       countryCode,
+        String       locationHierarchy,
+        String       locationName,
+        String       locationType,
+        String       name,
+        String       pincode,
+        String       region,
+        String       regionCode,
+        String       state,
+        String       stateCode,
+        String       territory,
+        String       territoryCode,
+        String       zone,
+        String       zoneCode,
+        String       source,
+        String       town,
+        JSON         accessibleBy,
+        String       hash,
+        String       district,
+        String       districtCode,
+        String       townCode,
+        Byte         changed,
+        String       salescodeId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -204,8 +202,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -234,7 +230,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -249,7 +244,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -306,7 +300,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -321,7 +314,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -336,7 +328,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.version</code>.
      */
-    @NotNull
     public Integer getVersion() {
         return this.version;
     }
@@ -351,7 +342,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.area</code>.
      */
-    @Size(max = 255)
     public String getArea() {
         return this.area;
     }
@@ -366,7 +356,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.areacode</code>.
      */
-    @Size(max = 255)
     public String getAreacode() {
         return this.areacode;
     }
@@ -381,7 +370,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.branch</code>.
      */
-    @Size(max = 255)
     public String getBranch() {
         return this.branch;
     }
@@ -396,7 +384,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.branch_code</code>.
      */
-    @Size(max = 255)
     public String getBranchCode() {
         return this.branchCode;
     }
@@ -411,7 +398,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.city</code>.
      */
-    @Size(max = 255)
     public String getCity() {
         return this.city;
     }
@@ -426,7 +412,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.city_code</code>.
      */
-    @Size(max = 255)
     public String getCityCode() {
         return this.cityCode;
     }
@@ -441,7 +426,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.cluster</code>.
      */
-    @Size(max = 255)
     public String getCluster() {
         return this.cluster;
     }
@@ -456,7 +440,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.cluster_code</code>.
      */
-    @Size(max = 255)
     public String getClusterCode() {
         return this.clusterCode;
     }
@@ -471,7 +454,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.country</code>.
      */
-    @Size(max = 255)
     public String getCountry() {
         return this.country;
     }
@@ -486,7 +468,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.country_code</code>.
      */
-    @Size(max = 255)
     public String getCountryCode() {
         return this.countryCode;
     }
@@ -501,7 +482,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -516,7 +496,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.location_name</code>.
      */
-    @Size(max = 255)
     public String getLocationName() {
         return this.locationName;
     }
@@ -531,7 +510,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.location_type</code>.
      */
-    @Size(max = 255)
     public String getLocationType() {
         return this.locationType;
     }
@@ -546,7 +524,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -561,7 +538,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.pincode</code>.
      */
-    @Size(max = 255)
     public String getPincode() {
         return this.pincode;
     }
@@ -576,7 +552,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.region</code>.
      */
-    @Size(max = 255)
     public String getRegion() {
         return this.region;
     }
@@ -591,7 +566,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.region_code</code>.
      */
-    @Size(max = 255)
     public String getRegionCode() {
         return this.regionCode;
     }
@@ -606,7 +580,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.state</code>.
      */
-    @Size(max = 255)
     public String getState() {
         return this.state;
     }
@@ -621,7 +594,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.state_code</code>.
      */
-    @Size(max = 255)
     public String getStateCode() {
         return this.stateCode;
     }
@@ -636,7 +608,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.territory</code>.
      */
-    @Size(max = 255)
     public String getTerritory() {
         return this.territory;
     }
@@ -651,7 +622,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.territory_code</code>.
      */
-    @Size(max = 255)
     public String getTerritoryCode() {
         return this.territoryCode;
     }
@@ -666,7 +636,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.zone</code>.
      */
-    @Size(max = 255)
     public String getZone() {
         return this.zone;
     }
@@ -681,7 +650,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.zone_code</code>.
      */
-    @Size(max = 255)
     public String getZoneCode() {
         return this.zoneCode;
     }
@@ -696,7 +664,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -711,7 +678,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.town</code>.
      */
-    @Size(max = 255)
     public String getTown() {
         return this.town;
     }
@@ -754,7 +720,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.district</code>.
      */
-    @Size(max = 255)
     public String getDistrict() {
         return this.district;
     }
@@ -769,7 +734,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.district_code</code>.
      */
-    @Size(max = 255)
     public String getDistrictCode() {
         return this.districtCode;
     }
@@ -784,7 +748,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.town_code</code>.
      */
-    @Size(max = 255)
     public String getTownCode() {
         return this.townCode;
     }
@@ -813,7 +776,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_location.salescode_id</code>.
      */
-    @Size(max = 255)
     public String getSalescodeId() {
         return this.salescodeId;
     }
@@ -823,319 +785,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
      */
     public void setSalescodeId(String salescodeId) {
         this.salescodeId = salescodeId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkLocation other = (CkLocation) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.area == null) {
-            if (other.area != null)
-                return false;
-        }
-        else if (!this.area.equals(other.area))
-            return false;
-        if (this.areacode == null) {
-            if (other.areacode != null)
-                return false;
-        }
-        else if (!this.areacode.equals(other.areacode))
-            return false;
-        if (this.branch == null) {
-            if (other.branch != null)
-                return false;
-        }
-        else if (!this.branch.equals(other.branch))
-            return false;
-        if (this.branchCode == null) {
-            if (other.branchCode != null)
-                return false;
-        }
-        else if (!this.branchCode.equals(other.branchCode))
-            return false;
-        if (this.city == null) {
-            if (other.city != null)
-                return false;
-        }
-        else if (!this.city.equals(other.city))
-            return false;
-        if (this.cityCode == null) {
-            if (other.cityCode != null)
-                return false;
-        }
-        else if (!this.cityCode.equals(other.cityCode))
-            return false;
-        if (this.cluster == null) {
-            if (other.cluster != null)
-                return false;
-        }
-        else if (!this.cluster.equals(other.cluster))
-            return false;
-        if (this.clusterCode == null) {
-            if (other.clusterCode != null)
-                return false;
-        }
-        else if (!this.clusterCode.equals(other.clusterCode))
-            return false;
-        if (this.country == null) {
-            if (other.country != null)
-                return false;
-        }
-        else if (!this.country.equals(other.country))
-            return false;
-        if (this.countryCode == null) {
-            if (other.countryCode != null)
-                return false;
-        }
-        else if (!this.countryCode.equals(other.countryCode))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.locationName == null) {
-            if (other.locationName != null)
-                return false;
-        }
-        else if (!this.locationName.equals(other.locationName))
-            return false;
-        if (this.locationType == null) {
-            if (other.locationType != null)
-                return false;
-        }
-        else if (!this.locationType.equals(other.locationType))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.pincode == null) {
-            if (other.pincode != null)
-                return false;
-        }
-        else if (!this.pincode.equals(other.pincode))
-            return false;
-        if (this.region == null) {
-            if (other.region != null)
-                return false;
-        }
-        else if (!this.region.equals(other.region))
-            return false;
-        if (this.regionCode == null) {
-            if (other.regionCode != null)
-                return false;
-        }
-        else if (!this.regionCode.equals(other.regionCode))
-            return false;
-        if (this.state == null) {
-            if (other.state != null)
-                return false;
-        }
-        else if (!this.state.equals(other.state))
-            return false;
-        if (this.stateCode == null) {
-            if (other.stateCode != null)
-                return false;
-        }
-        else if (!this.stateCode.equals(other.stateCode))
-            return false;
-        if (this.territory == null) {
-            if (other.territory != null)
-                return false;
-        }
-        else if (!this.territory.equals(other.territory))
-            return false;
-        if (this.territoryCode == null) {
-            if (other.territoryCode != null)
-                return false;
-        }
-        else if (!this.territoryCode.equals(other.territoryCode))
-            return false;
-        if (this.zone == null) {
-            if (other.zone != null)
-                return false;
-        }
-        else if (!this.zone.equals(other.zone))
-            return false;
-        if (this.zoneCode == null) {
-            if (other.zoneCode != null)
-                return false;
-        }
-        else if (!this.zoneCode.equals(other.zoneCode))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.town == null) {
-            if (other.town != null)
-                return false;
-        }
-        else if (!this.town.equals(other.town))
-            return false;
-        if (this.accessibleBy == null) {
-            if (other.accessibleBy != null)
-                return false;
-        }
-        else if (!this.accessibleBy.equals(other.accessibleBy))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.district == null) {
-            if (other.district != null)
-                return false;
-        }
-        else if (!this.district.equals(other.district))
-            return false;
-        if (this.districtCode == null) {
-            if (other.districtCode != null)
-                return false;
-        }
-        else if (!this.districtCode.equals(other.districtCode))
-            return false;
-        if (this.townCode == null) {
-            if (other.townCode != null)
-                return false;
-        }
-        else if (!this.townCode.equals(other.townCode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.salescodeId == null) {
-            if (other.salescodeId != null)
-                return false;
-        }
-        else if (!this.salescodeId.equals(other.salescodeId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.area == null) ? 0 : this.area.hashCode());
-        result = prime * result + ((this.areacode == null) ? 0 : this.areacode.hashCode());
-        result = prime * result + ((this.branch == null) ? 0 : this.branch.hashCode());
-        result = prime * result + ((this.branchCode == null) ? 0 : this.branchCode.hashCode());
-        result = prime * result + ((this.city == null) ? 0 : this.city.hashCode());
-        result = prime * result + ((this.cityCode == null) ? 0 : this.cityCode.hashCode());
-        result = prime * result + ((this.cluster == null) ? 0 : this.cluster.hashCode());
-        result = prime * result + ((this.clusterCode == null) ? 0 : this.clusterCode.hashCode());
-        result = prime * result + ((this.country == null) ? 0 : this.country.hashCode());
-        result = prime * result + ((this.countryCode == null) ? 0 : this.countryCode.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.locationName == null) ? 0 : this.locationName.hashCode());
-        result = prime * result + ((this.locationType == null) ? 0 : this.locationType.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.pincode == null) ? 0 : this.pincode.hashCode());
-        result = prime * result + ((this.region == null) ? 0 : this.region.hashCode());
-        result = prime * result + ((this.regionCode == null) ? 0 : this.regionCode.hashCode());
-        result = prime * result + ((this.state == null) ? 0 : this.state.hashCode());
-        result = prime * result + ((this.stateCode == null) ? 0 : this.stateCode.hashCode());
-        result = prime * result + ((this.territory == null) ? 0 : this.territory.hashCode());
-        result = prime * result + ((this.territoryCode == null) ? 0 : this.territoryCode.hashCode());
-        result = prime * result + ((this.zone == null) ? 0 : this.zone.hashCode());
-        result = prime * result + ((this.zoneCode == null) ? 0 : this.zoneCode.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.town == null) ? 0 : this.town.hashCode());
-        result = prime * result + ((this.accessibleBy == null) ? 0 : this.accessibleBy.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.district == null) ? 0 : this.district.hashCode());
-        result = prime * result + ((this.districtCode == null) ? 0 : this.districtCode.hashCode());
-        result = prime * result + ((this.townCode == null) ? 0 : this.townCode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.salescodeId == null) ? 0 : this.salescodeId.hashCode());
-        return result;
     }
 
     @Override

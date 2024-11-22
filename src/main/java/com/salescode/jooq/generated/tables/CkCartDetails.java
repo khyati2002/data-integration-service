@@ -11,34 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -193,11 +173,11 @@ public class CkCartDetails extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkCartDetails(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkCartDetails(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkCartDetails(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -221,37 +201,8 @@ public class CkCartDetails extends TableImpl<Record> {
         this(DSL.name("ck_cart_details"), null);
     }
 
-    public <O extends Record> CkCartDetails(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_CART_DETAILS);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkCartDetailsPath extends CkCartDetails implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkCartDetailsPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkCartDetailsPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkCartDetailsPath as(String alias) {
-            return new CkCartDetailsPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkCartDetailsPath as(Name alias) {
-            return new CkCartDetailsPath(alias, this);
-        }
-
-        @Override
-        public CkCartDetailsPath as(Table<?> alias) {
-            return new CkCartDetailsPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkCartDetails(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_CART_DETAILS);
     }
 
     @Override
@@ -269,27 +220,26 @@ public class CkCartDetails extends TableImpl<Record> {
         return Arrays.asList(Keys.FKJMRF92WQ8D9O80OGH974CWEQO, Keys.FKEJF3MD0M0Y7XACT6MAFW8KIPN);
     }
 
-    private transient CkUserPath _ckUser;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKJMRF92WQ8D9O80OGH974CWEQO, null);
+            _ckUser = new CkUser(this, Keys.FKJMRF92WQ8D9O80OGH974CWEQO);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FKEJF3MD0M0Y7XACT6MAFW8KIPN, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FKEJF3MD0M0Y7XACT6MAFW8KIPN);
 
         return _ckOutletDetails;
     }
@@ -302,11 +252,6 @@ public class CkCartDetails extends TableImpl<Record> {
     @Override
     public CkCartDetails as(Name alias) {
         return new CkCartDetails(alias, this);
-    }
-
-    @Override
-    public CkCartDetails as(Table<?> alias) {
-        return new CkCartDetails(alias.getQualifiedName(), this);
     }
 
     /**
@@ -323,97 +268,5 @@ public class CkCartDetails extends TableImpl<Record> {
     @Override
     public CkCartDetails rename(Name name) {
         return new CkCartDetails(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkCartDetails rename(Table<?> name) {
-        return new CkCartDetails(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCartDetails where(Condition condition) {
-        return new CkCartDetails(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCartDetails where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCartDetails where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCartDetails where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCartDetails where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCartDetails where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCartDetails where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCartDetails where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCartDetails whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCartDetails whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

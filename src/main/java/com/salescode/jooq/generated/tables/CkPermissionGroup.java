@@ -12,34 +12,14 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkFeatureEndpoints.CkFeatureEndpointsPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -144,11 +124,11 @@ public class CkPermissionGroup extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPermissionGroup(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkPermissionGroup(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkPermissionGroup(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -172,37 +152,8 @@ public class CkPermissionGroup extends TableImpl<Record> {
         this(DSL.name("ck_permission_group"), null);
     }
 
-    public <O extends Record> CkPermissionGroup(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_PERMISSION_GROUP);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkPermissionGroupPath extends CkPermissionGroup implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkPermissionGroupPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkPermissionGroupPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkPermissionGroupPath as(String alias) {
-            return new CkPermissionGroupPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkPermissionGroupPath as(Name alias) {
-            return new CkPermissionGroupPath(alias, this);
-        }
-
-        @Override
-        public CkPermissionGroupPath as(Table<?> alias) {
-            return new CkPermissionGroupPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkPermissionGroup(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_PERMISSION_GROUP);
     }
 
     @Override
@@ -225,15 +176,15 @@ public class CkPermissionGroup extends TableImpl<Record> {
         return Arrays.asList(Keys.FK120KDS1OEFLHJXVMCAB1U5I4R);
     }
 
-    private transient CkFeatureEndpointsPath _ckFeatureEndpoints;
+    private transient CkFeatureEndpoints _ckFeatureEndpoints;
 
     /**
      * Get the implicit join path to the
      * <code>ckroot.ck_feature_endpoints</code> table.
      */
-    public CkFeatureEndpointsPath ckFeatureEndpoints() {
+    public CkFeatureEndpoints ckFeatureEndpoints() {
         if (_ckFeatureEndpoints == null)
-            _ckFeatureEndpoints = new CkFeatureEndpointsPath(this, Keys.FK120KDS1OEFLHJXVMCAB1U5I4R, null);
+            _ckFeatureEndpoints = new CkFeatureEndpoints(this, Keys.FK120KDS1OEFLHJXVMCAB1U5I4R);
 
         return _ckFeatureEndpoints;
     }
@@ -246,11 +197,6 @@ public class CkPermissionGroup extends TableImpl<Record> {
     @Override
     public CkPermissionGroup as(Name alias) {
         return new CkPermissionGroup(alias, this);
-    }
-
-    @Override
-    public CkPermissionGroup as(Table<?> alias) {
-        return new CkPermissionGroup(alias.getQualifiedName(), this);
     }
 
     /**
@@ -267,97 +213,5 @@ public class CkPermissionGroup extends TableImpl<Record> {
     @Override
     public CkPermissionGroup rename(Name name) {
         return new CkPermissionGroup(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkPermissionGroup rename(Table<?> name) {
-        return new CkPermissionGroup(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionGroup where(Condition condition) {
-        return new CkPermissionGroup(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionGroup where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionGroup where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionGroup where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPermissionGroup where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPermissionGroup where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPermissionGroup where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPermissionGroup where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionGroup whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionGroup whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

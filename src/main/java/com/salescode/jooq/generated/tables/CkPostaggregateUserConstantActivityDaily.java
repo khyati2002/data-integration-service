@@ -11,35 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -139,13 +119,13 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
      * The column
      * <code>ck_postaggregate_user_constant_activity_daily.system_time</code>.
      */
-    public final TableField<Record, Date> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
      * <code>ck_postaggregate_user_constant_activity_daily.end_time</code>.
      */
-    public final TableField<Record, Date> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
@@ -187,13 +167,13 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
      * The column
      * <code>ck_postaggregate_user_constant_activity_daily.start_time</code>.
      */
-    public final TableField<Record, Date> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
      * <code>ck_postaggregate_user_constant_activity_daily.submission_time</code>.
      */
-    public final TableField<Record, Date> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
@@ -205,31 +185,31 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
      * The column
      * <code>ck_postaggregate_user_constant_activity_daily.date</code>.
      */
-    public final TableField<Record, Date> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
      * <code>ck_postaggregate_user_constant_activity_daily.first_login_time</code>.
      */
-    public final TableField<Record, Date> FIRST_LOGIN_TIME = createField(DSL.name("first_login_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> FIRST_LOGIN_TIME = createField(DSL.name("first_login_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
      * <code>ck_postaggregate_user_constant_activity_daily.first_register_time</code>.
      */
-    public final TableField<Record, Date> FIRST_REGISTER_TIME = createField(DSL.name("first_register_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> FIRST_REGISTER_TIME = createField(DSL.name("first_register_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
      * <code>ck_postaggregate_user_constant_activity_daily.last_login_time</code>.
      */
-    public final TableField<Record, Date> LAST_LOGIN_TIME = createField(DSL.name("last_login_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> LAST_LOGIN_TIME = createField(DSL.name("last_login_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
      * <code>ck_postaggregate_user_constant_activity_daily.last_register_time</code>.
      */
-    public final TableField<Record, Date> LAST_REGISTER_TIME = createField(DSL.name("last_register_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> LAST_REGISTER_TIME = createField(DSL.name("last_register_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
@@ -286,11 +266,11 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
     public final TableField<Record, Integer> UNIQUE_HITS_COUNT = createField(DSL.name("unique_hits_count"), SQLDataType.INTEGER.nullable(false), this, "");
 
     private CkPostaggregateUserConstantActivityDaily(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkPostaggregateUserConstantActivityDaily(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkPostaggregateUserConstantActivityDaily(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -319,37 +299,8 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
         this(DSL.name("ck_postaggregate_user_constant_activity_daily"), null);
     }
 
-    public <O extends Record> CkPostaggregateUserConstantActivityDaily(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_POSTAGGREGATE_USER_CONSTANT_ACTIVITY_DAILY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkPostaggregateUserConstantActivityDailyPath extends CkPostaggregateUserConstantActivityDaily implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkPostaggregateUserConstantActivityDailyPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkPostaggregateUserConstantActivityDailyPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkPostaggregateUserConstantActivityDailyPath as(String alias) {
-            return new CkPostaggregateUserConstantActivityDailyPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkPostaggregateUserConstantActivityDailyPath as(Name alias) {
-            return new CkPostaggregateUserConstantActivityDailyPath(alias, this);
-        }
-
-        @Override
-        public CkPostaggregateUserConstantActivityDailyPath as(Table<?> alias) {
-            return new CkPostaggregateUserConstantActivityDailyPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkPostaggregateUserConstantActivityDaily(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_POSTAGGREGATE_USER_CONSTANT_ACTIVITY_DAILY);
     }
 
     @Override
@@ -367,26 +318,25 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
         return Arrays.asList(Keys.FKQ4S39NTJ6OHC4JMJPW4T3YLV6, Keys.FKBAL55G315JCL1PFPXI1FHTCPS);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKQ4S39NTJ6OHC4JMJPW4T3YLV6, null);
+            _ckLocation = new CkLocation(this, Keys.FKQ4S39NTJ6OHC4JMJPW4T3YLV6);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKBAL55G315JCL1PFPXI1FHTCPS, null);
+            _ckUser = new CkUser(this, Keys.FKBAL55G315JCL1PFPXI1FHTCPS);
 
         return _ckUser;
     }
@@ -399,11 +349,6 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
     @Override
     public CkPostaggregateUserConstantActivityDaily as(Name alias) {
         return new CkPostaggregateUserConstantActivityDaily(alias, this);
-    }
-
-    @Override
-    public CkPostaggregateUserConstantActivityDaily as(Table<?> alias) {
-        return new CkPostaggregateUserConstantActivityDaily(alias.getQualifiedName(), this);
     }
 
     /**
@@ -420,97 +365,5 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
     @Override
     public CkPostaggregateUserConstantActivityDaily rename(Name name) {
         return new CkPostaggregateUserConstantActivityDaily(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkPostaggregateUserConstantActivityDaily rename(Table<?> name) {
-        return new CkPostaggregateUserConstantActivityDaily(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateUserConstantActivityDaily where(Condition condition) {
-        return new CkPostaggregateUserConstantActivityDaily(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateUserConstantActivityDaily where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateUserConstantActivityDaily where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateUserConstantActivityDaily where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateUserConstantActivityDaily where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateUserConstantActivityDaily where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateUserConstantActivityDaily where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateUserConstantActivityDaily where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateUserConstantActivityDaily whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateUserConstantActivityDaily whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

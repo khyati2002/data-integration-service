@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,24 +20,24 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String columnName;
-    private String columnValue;
-    private String description;
-    private String entityName;
-    private String loginid;
-    private Byte changed;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       columnName;
+    private String       columnValue;
+    private String       description;
+    private String       entityName;
+    private String       loginid;
+    private Byte         changed;
 
     public CkNotificationRule() {}
 
@@ -66,24 +63,24 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     }
 
     public CkNotificationRule(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String columnName,
-        String columnValue,
-        String description,
-        String entityName,
-        String loginid,
-        Byte changed
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       columnName,
+        String       columnValue,
+        String       description,
+        String       entityName,
+        String       loginid,
+        Byte         changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -108,8 +105,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -138,7 +133,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -153,7 +147,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -224,7 +217,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -239,7 +231,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -254,7 +245,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -283,7 +273,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.column_name</code>.
      */
-    @Size(max = 255)
     public String getColumnName() {
         return this.columnName;
     }
@@ -298,7 +287,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.column_value</code>.
      */
-    @Size(max = 255)
     public String getColumnValue() {
         return this.columnValue;
     }
@@ -313,7 +301,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.description</code>.
      */
-    @Size(max = 255)
     public String getDescription() {
         return this.description;
     }
@@ -328,7 +315,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.entity_name</code>.
      */
-    @Size(max = 255)
     public String getEntityName() {
         return this.entityName;
     }
@@ -343,7 +329,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_notification_rule.loginid</code>.
      */
-    @Size(max = 255)
     public String getLoginid() {
         return this.loginid;
     }
@@ -367,151 +352,6 @@ public class CkNotificationRule extends CommonDataModel implements Serializable 
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkNotificationRule other = (CkNotificationRule) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.columnName == null) {
-            if (other.columnName != null)
-                return false;
-        }
-        else if (!this.columnName.equals(other.columnName))
-            return false;
-        if (this.columnValue == null) {
-            if (other.columnValue != null)
-                return false;
-        }
-        else if (!this.columnValue.equals(other.columnValue))
-            return false;
-        if (this.description == null) {
-            if (other.description != null)
-                return false;
-        }
-        else if (!this.description.equals(other.description))
-            return false;
-        if (this.entityName == null) {
-            if (other.entityName != null)
-                return false;
-        }
-        else if (!this.entityName.equals(other.entityName))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.columnName == null) ? 0 : this.columnName.hashCode());
-        result = prime * result + ((this.columnValue == null) ? 0 : this.columnValue.hashCode());
-        result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-        result = prime * result + ((this.entityName == null) ? 0 : this.entityName.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

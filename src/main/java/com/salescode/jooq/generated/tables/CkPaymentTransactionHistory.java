@@ -13,33 +13,15 @@ import com.salescode.jooq.EnrichmentPhaseConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -139,7 +121,7 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     /**
      * The column <code>ck_payment_transaction_history.payment_date</code>.
      */
-    public final TableField<Record, Date> PAYMENT_DATE = createField(DSL.name("payment_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> PAYMENT_DATE = createField(DSL.name("payment_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_payment_transaction_history.paymentid</code>.
@@ -192,7 +174,7 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     /**
      * The column <code>ck_payment_transaction_history.invoice_date</code>.
      */
-    public final TableField<Record, Date> INVOICE_DATE = createField(DSL.name("invoice_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> INVOICE_DATE = createField(DSL.name("invoice_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_payment_transaction_history.invoice_number</code>.
@@ -202,7 +184,7 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     /**
      * The column <code>ck_payment_transaction_history.pay_by_date</code>.
      */
-    public final TableField<Record, Date> PAY_BY_DATE = createField(DSL.name("pay_by_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> PAY_BY_DATE = createField(DSL.name("pay_by_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_payment_transaction_history.service_provider</code>.
@@ -239,7 +221,7 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     /**
      * The column <code>ck_payment_transaction_history.ordered_date</code>.
      */
-    public final TableField<Record, Date> ORDERED_DATE = createField(DSL.name("ordered_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> ORDERED_DATE = createField(DSL.name("ordered_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_payment_transaction_history.changed</code>.
@@ -247,11 +229,11 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPaymentTransactionHistory(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkPaymentTransactionHistory(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkPaymentTransactionHistory(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -277,37 +259,8 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
         this(DSL.name("ck_payment_transaction_history"), null);
     }
 
-    public <O extends Record> CkPaymentTransactionHistory(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_PAYMENT_TRANSACTION_HISTORY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkPaymentTransactionHistoryPath extends CkPaymentTransactionHistory implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkPaymentTransactionHistoryPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkPaymentTransactionHistoryPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkPaymentTransactionHistoryPath as(String alias) {
-            return new CkPaymentTransactionHistoryPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkPaymentTransactionHistoryPath as(Name alias) {
-            return new CkPaymentTransactionHistoryPath(alias, this);
-        }
-
-        @Override
-        public CkPaymentTransactionHistoryPath as(Table<?> alias) {
-            return new CkPaymentTransactionHistoryPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkPaymentTransactionHistory(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_PAYMENT_TRANSACTION_HISTORY);
     }
 
     @Override
@@ -330,14 +283,14 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
         return Arrays.asList(Keys.FKAYU361DI35OXCL09BKO3A7AY0);
     }
 
-    private transient CkUserPath _ckUser;
+    private transient CkUser _ckUser;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKAYU361DI35OXCL09BKO3A7AY0, null);
+            _ckUser = new CkUser(this, Keys.FKAYU361DI35OXCL09BKO3A7AY0);
 
         return _ckUser;
     }
@@ -350,11 +303,6 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     @Override
     public CkPaymentTransactionHistory as(Name alias) {
         return new CkPaymentTransactionHistory(alias, this);
-    }
-
-    @Override
-    public CkPaymentTransactionHistory as(Table<?> alias) {
-        return new CkPaymentTransactionHistory(alias.getQualifiedName(), this);
     }
 
     /**
@@ -371,97 +319,5 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     @Override
     public CkPaymentTransactionHistory rename(Name name) {
         return new CkPaymentTransactionHistory(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkPaymentTransactionHistory rename(Table<?> name) {
-        return new CkPaymentTransactionHistory(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPaymentTransactionHistory where(Condition condition) {
-        return new CkPaymentTransactionHistory(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPaymentTransactionHistory where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPaymentTransactionHistory where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPaymentTransactionHistory where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPaymentTransactionHistory where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPaymentTransactionHistory where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPaymentTransactionHistory where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPaymentTransactionHistory where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPaymentTransactionHistory whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPaymentTransactionHistory whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

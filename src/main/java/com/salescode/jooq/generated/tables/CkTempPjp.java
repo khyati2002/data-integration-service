@@ -11,27 +11,12 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Collection;
-import java.util.Date;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Date;
 
 
 /**
@@ -146,11 +131,11 @@ public class CkTempPjp extends TableImpl<Record> {
     public final TableField<Record, String> SEQUENCE_WEEK = createField(DSL.name("sequence_week"), SQLDataType.VARCHAR(255), this, "");
 
     private CkTempPjp(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkTempPjp(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkTempPjp(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -174,6 +159,10 @@ public class CkTempPjp extends TableImpl<Record> {
         this(DSL.name("ck_temp_pjp"), null);
     }
 
+    public <O extends Record> CkTempPjp(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_TEMP_PJP);
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -194,11 +183,6 @@ public class CkTempPjp extends TableImpl<Record> {
         return new CkTempPjp(alias, this);
     }
 
-    @Override
-    public CkTempPjp as(Table<?> alias) {
-        return new CkTempPjp(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -213,97 +197,5 @@ public class CkTempPjp extends TableImpl<Record> {
     @Override
     public CkTempPjp rename(Name name) {
         return new CkTempPjp(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkTempPjp rename(Table<?> name) {
-        return new CkTempPjp(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTempPjp where(Condition condition) {
-        return new CkTempPjp(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTempPjp where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTempPjp where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTempPjp where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTempPjp where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTempPjp where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTempPjp where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTempPjp where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTempPjp whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTempPjp whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

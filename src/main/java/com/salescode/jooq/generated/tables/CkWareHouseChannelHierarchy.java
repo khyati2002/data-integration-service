@@ -6,32 +6,13 @@ package com.salescode.jooq.generated.tables;
 
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkChannelHierarchyMetadata.CkChannelHierarchyMetadataPath;
-import com.salescode.jooq.generated.tables.CkWareHouse.CkWareHousePath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -67,11 +48,11 @@ public class CkWareHouseChannelHierarchy extends TableImpl<Record> {
     public final TableField<Record, String> CHANNEL_HIERARCHY_ID = createField(DSL.name("channel_hierarchy_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private CkWareHouseChannelHierarchy(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkWareHouseChannelHierarchy(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkWareHouseChannelHierarchy(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -97,37 +78,8 @@ public class CkWareHouseChannelHierarchy extends TableImpl<Record> {
         this(DSL.name("ck_ware_house_channel_hierarchy"), null);
     }
 
-    public <O extends Record> CkWareHouseChannelHierarchy(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_WARE_HOUSE_CHANNEL_HIERARCHY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkWareHouseChannelHierarchyPath extends CkWareHouseChannelHierarchy implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkWareHouseChannelHierarchyPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkWareHouseChannelHierarchyPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkWareHouseChannelHierarchyPath as(String alias) {
-            return new CkWareHouseChannelHierarchyPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkWareHouseChannelHierarchyPath as(Name alias) {
-            return new CkWareHouseChannelHierarchyPath(alias, this);
-        }
-
-        @Override
-        public CkWareHouseChannelHierarchyPath as(Table<?> alias) {
-            return new CkWareHouseChannelHierarchyPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkWareHouseChannelHierarchy(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_WARE_HOUSE_CHANNEL_HIERARCHY);
     }
 
     @Override
@@ -140,28 +92,27 @@ public class CkWareHouseChannelHierarchy extends TableImpl<Record> {
         return Arrays.asList(Keys.FKKB4R9OYL74LFG74J7J6HIB5NW, Keys.FKLB17LR208YTL5IKN0P6KKQRML);
     }
 
-    private transient CkWareHousePath _ckWareHouse;
+    private transient CkWareHouse _ckWareHouse;
+    private transient CkChannelHierarchyMetadata _ckChannelHierarchyMetadata;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_ware_house</code>
      * table.
      */
-    public CkWareHousePath ckWareHouse() {
+    public CkWareHouse ckWareHouse() {
         if (_ckWareHouse == null)
-            _ckWareHouse = new CkWareHousePath(this, Keys.FKKB4R9OYL74LFG74J7J6HIB5NW, null);
+            _ckWareHouse = new CkWareHouse(this, Keys.FKKB4R9OYL74LFG74J7J6HIB5NW);
 
         return _ckWareHouse;
     }
-
-    private transient CkChannelHierarchyMetadataPath _ckChannelHierarchyMetadata;
 
     /**
      * Get the implicit join path to the
      * <code>ckroot.ck_channel_hierarchy_metadata</code> table.
      */
-    public CkChannelHierarchyMetadataPath ckChannelHierarchyMetadata() {
+    public CkChannelHierarchyMetadata ckChannelHierarchyMetadata() {
         if (_ckChannelHierarchyMetadata == null)
-            _ckChannelHierarchyMetadata = new CkChannelHierarchyMetadataPath(this, Keys.FKLB17LR208YTL5IKN0P6KKQRML, null);
+            _ckChannelHierarchyMetadata = new CkChannelHierarchyMetadata(this, Keys.FKLB17LR208YTL5IKN0P6KKQRML);
 
         return _ckChannelHierarchyMetadata;
     }
@@ -174,11 +125,6 @@ public class CkWareHouseChannelHierarchy extends TableImpl<Record> {
     @Override
     public CkWareHouseChannelHierarchy as(Name alias) {
         return new CkWareHouseChannelHierarchy(alias, this);
-    }
-
-    @Override
-    public CkWareHouseChannelHierarchy as(Table<?> alias) {
-        return new CkWareHouseChannelHierarchy(alias.getQualifiedName(), this);
     }
 
     /**
@@ -195,97 +141,5 @@ public class CkWareHouseChannelHierarchy extends TableImpl<Record> {
     @Override
     public CkWareHouseChannelHierarchy rename(Name name) {
         return new CkWareHouseChannelHierarchy(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkWareHouseChannelHierarchy rename(Table<?> name) {
-        return new CkWareHouseChannelHierarchy(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouseChannelHierarchy where(Condition condition) {
-        return new CkWareHouseChannelHierarchy(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouseChannelHierarchy where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouseChannelHierarchy where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouseChannelHierarchy where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkWareHouseChannelHierarchy where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkWareHouseChannelHierarchy where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkWareHouseChannelHierarchy where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkWareHouseChannelHierarchy where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouseChannelHierarchy whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouseChannelHierarchy whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -7,15 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -26,55 +22,55 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Double achievedValue;
-    private Double achievedVolume;
-    private Date endDate;
-    private Double lmtdSalesValue;
-    private Double lmtdSalesVolume;
-    private Double lymtdSaleValue;
-    private Double lymtdSalesVolume;
-    private JSON mtdBottomnbrands;
-    private JSON mtdBottomncategories;
-    private JSON mtdGrowthTrend;
-    private Double mtdSalesValue;
-    private JSON mtdSalesValueTrend;
-    private Double mtdSalesVolume;
-    private JSON mtdSalesVolumeTrend;
-    private JSON mtdTargetAchievedTrend;
-    private JSON mtdTopnbrands;
-    private JSON mtdTopncategories;
-    private Double pytdSalesValue;
-    private Double pytdSalesVolume;
-    private Date startDate;
-    private Double targetValue;
-    private Double targetVolume;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private Double        achievedValue;
+    private Double        achievedVolume;
+    private LocalDateTime endDate;
+    private Double        lmtdSalesValue;
+    private Double        lmtdSalesVolume;
+    private Double        lymtdSaleValue;
+    private Double        lymtdSalesVolume;
+    private JSON          mtdBottomnbrands;
+    private JSON          mtdBottomncategories;
+    private JSON          mtdGrowthTrend;
+    private Double        mtdSalesValue;
+    private JSON          mtdSalesValueTrend;
+    private Double        mtdSalesVolume;
+    private JSON          mtdSalesVolumeTrend;
+    private JSON          mtdTargetAchievedTrend;
+    private JSON          mtdTopnbrands;
+    private JSON          mtdTopncategories;
+    private Double        pytdSalesValue;
+    private Double        pytdSalesVolume;
+    private LocalDateTime startDate;
+    private Double        targetValue;
+    private Double        targetVolume;
     private LocalDateTime timeSinceLastOrder;
-    private JSON ytdBottomnbrands;
-    private JSON ytdBottomncategories;
-    private JSON ytdGrowthTrend;
-    private Double ytdSalesValue;
-    private JSON ytdSalesValueTrend;
-    private Double ytdSalesVolume;
-    private JSON ytdSalesVolumeTrend;
-    private JSON ytdTargetAchievedTrend;
-    private JSON ytdTopnbrands;
-    private JSON ytdTopncategories;
-    private String locationHierarchy;
-    private String outletcode;
-    private String loginid;
-    private Byte changed;
+    private JSON          ytdBottomnbrands;
+    private JSON          ytdBottomncategories;
+    private JSON          ytdGrowthTrend;
+    private Double        ytdSalesValue;
+    private JSON          ytdSalesValueTrend;
+    private Double        ytdSalesVolume;
+    private JSON          ytdSalesVolumeTrend;
+    private JSON          ytdTargetAchievedTrend;
+    private JSON          ytdTopnbrands;
+    private JSON          ytdTopncategories;
+    private String        locationHierarchy;
+    private String        outletcode;
+    private String        loginid;
+    private Byte          changed;
 
     public CkStaticOutletAggregation() {}
 
@@ -131,55 +127,55 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     }
 
     public CkStaticOutletAggregation(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Double achievedValue,
-        Double achievedVolume,
-        Date endDate,
-        Double lmtdSalesValue,
-        Double lmtdSalesVolume,
-        Double lymtdSaleValue,
-        Double lymtdSalesVolume,
-        JSON mtdBottomnbrands,
-        JSON mtdBottomncategories,
-        JSON mtdGrowthTrend,
-        Double mtdSalesValue,
-        JSON mtdSalesValueTrend,
-        Double mtdSalesVolume,
-        JSON mtdSalesVolumeTrend,
-        JSON mtdTargetAchievedTrend,
-        JSON mtdTopnbrands,
-        JSON mtdTopncategories,
-        Double pytdSalesValue,
-        Double pytdSalesVolume,
-        Date startDate,
-        Double targetValue,
-        Double targetVolume,
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        Double        achievedValue,
+        Double        achievedVolume,
+        LocalDateTime endDate,
+        Double        lmtdSalesValue,
+        Double        lmtdSalesVolume,
+        Double        lymtdSaleValue,
+        Double        lymtdSalesVolume,
+        JSON          mtdBottomnbrands,
+        JSON          mtdBottomncategories,
+        JSON          mtdGrowthTrend,
+        Double        mtdSalesValue,
+        JSON          mtdSalesValueTrend,
+        Double        mtdSalesVolume,
+        JSON          mtdSalesVolumeTrend,
+        JSON          mtdTargetAchievedTrend,
+        JSON          mtdTopnbrands,
+        JSON          mtdTopncategories,
+        Double        pytdSalesValue,
+        Double        pytdSalesVolume,
+        LocalDateTime startDate,
+        Double        targetValue,
+        Double        targetVolume,
         LocalDateTime timeSinceLastOrder,
-        JSON ytdBottomnbrands,
-        JSON ytdBottomncategories,
-        JSON ytdGrowthTrend,
-        Double ytdSalesValue,
-        JSON ytdSalesValueTrend,
-        Double ytdSalesVolume,
-        JSON ytdSalesVolumeTrend,
-        JSON ytdTargetAchievedTrend,
-        JSON ytdTopnbrands,
-        JSON ytdTopncategories,
-        String locationHierarchy,
-        String outletcode,
-        String loginid,
-        Byte changed
+        JSON          ytdBottomnbrands,
+        JSON          ytdBottomncategories,
+        JSON          ytdGrowthTrend,
+        Double        ytdSalesValue,
+        JSON          ytdSalesValueTrend,
+        Double        ytdSalesVolume,
+        JSON          ytdSalesVolumeTrend,
+        JSON          ytdTargetAchievedTrend,
+        JSON          ytdTopnbrands,
+        JSON          ytdTopncategories,
+        String        locationHierarchy,
+        String        outletcode,
+        String        loginid,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -235,8 +231,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -266,7 +260,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
      * Getter for
      * <code>ck_static_outlet_aggregation.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -282,7 +275,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -353,7 +345,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -368,7 +359,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -383,7 +373,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -412,7 +401,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.achieved_value</code>.
      */
-    @NotNull
     public Double getAchievedValue() {
         return this.achievedValue;
     }
@@ -427,7 +415,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.achieved_volume</code>.
      */
-    @NotNull
     public Double getAchievedVolume() {
         return this.achievedVolume;
     }
@@ -442,21 +429,20 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_static_outlet_aggregation.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
     /**
      * Getter for <code>ck_static_outlet_aggregation.lmtd_sales_value</code>.
      */
-    @NotNull
     public Double getLmtdSalesValue() {
         return this.lmtdSalesValue;
     }
@@ -471,7 +457,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.lmtd_sales_volume</code>.
      */
-    @NotNull
     public Double getLmtdSalesVolume() {
         return this.lmtdSalesVolume;
     }
@@ -486,7 +471,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.lymtd_sale_value</code>.
      */
-    @NotNull
     public Double getLymtdSaleValue() {
         return this.lymtdSaleValue;
     }
@@ -501,7 +485,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.lymtd_sales_volume</code>.
      */
-    @NotNull
     public Double getLymtdSalesVolume() {
         return this.lymtdSalesVolume;
     }
@@ -560,7 +543,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.mtd_sales_value</code>.
      */
-    @NotNull
     public Double getMtdSalesValue() {
         return this.mtdSalesValue;
     }
@@ -591,7 +573,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.mtd_sales_volume</code>.
      */
-    @NotNull
     public Double getMtdSalesVolume() {
         return this.mtdSalesVolume;
     }
@@ -666,7 +647,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.pytd_sales_value</code>.
      */
-    @NotNull
     public Double getPytdSalesValue() {
         return this.pytdSalesValue;
     }
@@ -681,7 +661,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.pytd_sales_volume</code>.
      */
-    @NotNull
     public Double getPytdSalesVolume() {
         return this.pytdSalesVolume;
     }
@@ -696,21 +675,20 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_static_outlet_aggregation.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_static_outlet_aggregation.target_value</code>.
      */
-    @NotNull
     public Double getTargetValue() {
         return this.targetValue;
     }
@@ -725,7 +703,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.target_volume</code>.
      */
-    @NotNull
     public Double getTargetVolume() {
         return this.targetVolume;
     }
@@ -800,7 +777,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.ytd_sales_value</code>.
      */
-    @NotNull
     public Double getYtdSalesValue() {
         return this.ytdSalesValue;
     }
@@ -831,7 +807,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.ytd_sales_volume</code>.
      */
-    @NotNull
     public Double getYtdSalesVolume() {
         return this.ytdSalesVolume;
     }
@@ -906,7 +881,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -921,7 +895,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -936,7 +909,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_static_outlet_aggregation.loginid</code>.
      */
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -960,368 +932,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkStaticOutletAggregation other = (CkStaticOutletAggregation) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.achievedValue == null) {
-            if (other.achievedValue != null)
-                return false;
-        }
-        else if (!this.achievedValue.equals(other.achievedValue))
-            return false;
-        if (this.achievedVolume == null) {
-            if (other.achievedVolume != null)
-                return false;
-        }
-        else if (!this.achievedVolume.equals(other.achievedVolume))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.lmtdSalesValue == null) {
-            if (other.lmtdSalesValue != null)
-                return false;
-        }
-        else if (!this.lmtdSalesValue.equals(other.lmtdSalesValue))
-            return false;
-        if (this.lmtdSalesVolume == null) {
-            if (other.lmtdSalesVolume != null)
-                return false;
-        }
-        else if (!this.lmtdSalesVolume.equals(other.lmtdSalesVolume))
-            return false;
-        if (this.lymtdSaleValue == null) {
-            if (other.lymtdSaleValue != null)
-                return false;
-        }
-        else if (!this.lymtdSaleValue.equals(other.lymtdSaleValue))
-            return false;
-        if (this.lymtdSalesVolume == null) {
-            if (other.lymtdSalesVolume != null)
-                return false;
-        }
-        else if (!this.lymtdSalesVolume.equals(other.lymtdSalesVolume))
-            return false;
-        if (this.mtdBottomnbrands == null) {
-            if (other.mtdBottomnbrands != null)
-                return false;
-        }
-        else if (!this.mtdBottomnbrands.equals(other.mtdBottomnbrands))
-            return false;
-        if (this.mtdBottomncategories == null) {
-            if (other.mtdBottomncategories != null)
-                return false;
-        }
-        else if (!this.mtdBottomncategories.equals(other.mtdBottomncategories))
-            return false;
-        if (this.mtdGrowthTrend == null) {
-            if (other.mtdGrowthTrend != null)
-                return false;
-        }
-        else if (!this.mtdGrowthTrend.equals(other.mtdGrowthTrend))
-            return false;
-        if (this.mtdSalesValue == null) {
-            if (other.mtdSalesValue != null)
-                return false;
-        }
-        else if (!this.mtdSalesValue.equals(other.mtdSalesValue))
-            return false;
-        if (this.mtdSalesValueTrend == null) {
-            if (other.mtdSalesValueTrend != null)
-                return false;
-        }
-        else if (!this.mtdSalesValueTrend.equals(other.mtdSalesValueTrend))
-            return false;
-        if (this.mtdSalesVolume == null) {
-            if (other.mtdSalesVolume != null)
-                return false;
-        }
-        else if (!this.mtdSalesVolume.equals(other.mtdSalesVolume))
-            return false;
-        if (this.mtdSalesVolumeTrend == null) {
-            if (other.mtdSalesVolumeTrend != null)
-                return false;
-        }
-        else if (!this.mtdSalesVolumeTrend.equals(other.mtdSalesVolumeTrend))
-            return false;
-        if (this.mtdTargetAchievedTrend == null) {
-            if (other.mtdTargetAchievedTrend != null)
-                return false;
-        }
-        else if (!this.mtdTargetAchievedTrend.equals(other.mtdTargetAchievedTrend))
-            return false;
-        if (this.mtdTopnbrands == null) {
-            if (other.mtdTopnbrands != null)
-                return false;
-        }
-        else if (!this.mtdTopnbrands.equals(other.mtdTopnbrands))
-            return false;
-        if (this.mtdTopncategories == null) {
-            if (other.mtdTopncategories != null)
-                return false;
-        }
-        else if (!this.mtdTopncategories.equals(other.mtdTopncategories))
-            return false;
-        if (this.pytdSalesValue == null) {
-            if (other.pytdSalesValue != null)
-                return false;
-        }
-        else if (!this.pytdSalesValue.equals(other.pytdSalesValue))
-            return false;
-        if (this.pytdSalesVolume == null) {
-            if (other.pytdSalesVolume != null)
-                return false;
-        }
-        else if (!this.pytdSalesVolume.equals(other.pytdSalesVolume))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.targetValue == null) {
-            if (other.targetValue != null)
-                return false;
-        }
-        else if (!this.targetValue.equals(other.targetValue))
-            return false;
-        if (this.targetVolume == null) {
-            if (other.targetVolume != null)
-                return false;
-        }
-        else if (!this.targetVolume.equals(other.targetVolume))
-            return false;
-        if (this.timeSinceLastOrder == null) {
-            if (other.timeSinceLastOrder != null)
-                return false;
-        }
-        else if (!this.timeSinceLastOrder.equals(other.timeSinceLastOrder))
-            return false;
-        if (this.ytdBottomnbrands == null) {
-            if (other.ytdBottomnbrands != null)
-                return false;
-        }
-        else if (!this.ytdBottomnbrands.equals(other.ytdBottomnbrands))
-            return false;
-        if (this.ytdBottomncategories == null) {
-            if (other.ytdBottomncategories != null)
-                return false;
-        }
-        else if (!this.ytdBottomncategories.equals(other.ytdBottomncategories))
-            return false;
-        if (this.ytdGrowthTrend == null) {
-            if (other.ytdGrowthTrend != null)
-                return false;
-        }
-        else if (!this.ytdGrowthTrend.equals(other.ytdGrowthTrend))
-            return false;
-        if (this.ytdSalesValue == null) {
-            if (other.ytdSalesValue != null)
-                return false;
-        }
-        else if (!this.ytdSalesValue.equals(other.ytdSalesValue))
-            return false;
-        if (this.ytdSalesValueTrend == null) {
-            if (other.ytdSalesValueTrend != null)
-                return false;
-        }
-        else if (!this.ytdSalesValueTrend.equals(other.ytdSalesValueTrend))
-            return false;
-        if (this.ytdSalesVolume == null) {
-            if (other.ytdSalesVolume != null)
-                return false;
-        }
-        else if (!this.ytdSalesVolume.equals(other.ytdSalesVolume))
-            return false;
-        if (this.ytdSalesVolumeTrend == null) {
-            if (other.ytdSalesVolumeTrend != null)
-                return false;
-        }
-        else if (!this.ytdSalesVolumeTrend.equals(other.ytdSalesVolumeTrend))
-            return false;
-        if (this.ytdTargetAchievedTrend == null) {
-            if (other.ytdTargetAchievedTrend != null)
-                return false;
-        }
-        else if (!this.ytdTargetAchievedTrend.equals(other.ytdTargetAchievedTrend))
-            return false;
-        if (this.ytdTopnbrands == null) {
-            if (other.ytdTopnbrands != null)
-                return false;
-        }
-        else if (!this.ytdTopnbrands.equals(other.ytdTopnbrands))
-            return false;
-        if (this.ytdTopncategories == null) {
-            if (other.ytdTopncategories != null)
-                return false;
-        }
-        else if (!this.ytdTopncategories.equals(other.ytdTopncategories))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.achievedValue == null) ? 0 : this.achievedValue.hashCode());
-        result = prime * result + ((this.achievedVolume == null) ? 0 : this.achievedVolume.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.lmtdSalesValue == null) ? 0 : this.lmtdSalesValue.hashCode());
-        result = prime * result + ((this.lmtdSalesVolume == null) ? 0 : this.lmtdSalesVolume.hashCode());
-        result = prime * result + ((this.lymtdSaleValue == null) ? 0 : this.lymtdSaleValue.hashCode());
-        result = prime * result + ((this.lymtdSalesVolume == null) ? 0 : this.lymtdSalesVolume.hashCode());
-        result = prime * result + ((this.mtdBottomnbrands == null) ? 0 : this.mtdBottomnbrands.hashCode());
-        result = prime * result + ((this.mtdBottomncategories == null) ? 0 : this.mtdBottomncategories.hashCode());
-        result = prime * result + ((this.mtdGrowthTrend == null) ? 0 : this.mtdGrowthTrend.hashCode());
-        result = prime * result + ((this.mtdSalesValue == null) ? 0 : this.mtdSalesValue.hashCode());
-        result = prime * result + ((this.mtdSalesValueTrend == null) ? 0 : this.mtdSalesValueTrend.hashCode());
-        result = prime * result + ((this.mtdSalesVolume == null) ? 0 : this.mtdSalesVolume.hashCode());
-        result = prime * result + ((this.mtdSalesVolumeTrend == null) ? 0 : this.mtdSalesVolumeTrend.hashCode());
-        result = prime * result + ((this.mtdTargetAchievedTrend == null) ? 0 : this.mtdTargetAchievedTrend.hashCode());
-        result = prime * result + ((this.mtdTopnbrands == null) ? 0 : this.mtdTopnbrands.hashCode());
-        result = prime * result + ((this.mtdTopncategories == null) ? 0 : this.mtdTopncategories.hashCode());
-        result = prime * result + ((this.pytdSalesValue == null) ? 0 : this.pytdSalesValue.hashCode());
-        result = prime * result + ((this.pytdSalesVolume == null) ? 0 : this.pytdSalesVolume.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.targetValue == null) ? 0 : this.targetValue.hashCode());
-        result = prime * result + ((this.targetVolume == null) ? 0 : this.targetVolume.hashCode());
-        result = prime * result + ((this.timeSinceLastOrder == null) ? 0 : this.timeSinceLastOrder.hashCode());
-        result = prime * result + ((this.ytdBottomnbrands == null) ? 0 : this.ytdBottomnbrands.hashCode());
-        result = prime * result + ((this.ytdBottomncategories == null) ? 0 : this.ytdBottomncategories.hashCode());
-        result = prime * result + ((this.ytdGrowthTrend == null) ? 0 : this.ytdGrowthTrend.hashCode());
-        result = prime * result + ((this.ytdSalesValue == null) ? 0 : this.ytdSalesValue.hashCode());
-        result = prime * result + ((this.ytdSalesValueTrend == null) ? 0 : this.ytdSalesValueTrend.hashCode());
-        result = prime * result + ((this.ytdSalesVolume == null) ? 0 : this.ytdSalesVolume.hashCode());
-        result = prime * result + ((this.ytdSalesVolumeTrend == null) ? 0 : this.ytdSalesVolumeTrend.hashCode());
-        result = prime * result + ((this.ytdTargetAchievedTrend == null) ? 0 : this.ytdTargetAchievedTrend.hashCode());
-        result = prime * result + ((this.ytdTopnbrands == null) ? 0 : this.ytdTopnbrands.hashCode());
-        result = prime * result + ((this.ytdTopncategories == null) ? 0 : this.ytdTopncategories.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

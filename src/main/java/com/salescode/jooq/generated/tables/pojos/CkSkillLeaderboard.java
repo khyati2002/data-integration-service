@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,63 +20,63 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Integer actualCalls;
-    private Integer actualCallsRank;
-    private Double complianceRate;
-    private Integer complianceRateRank;
-    private Double contributionPercentage;
-    private Integer contributionPercentageRank;
-    private Date creationDate;
-    private Double distributionRate;
-    private Integer distributionRateRank;
-    private Double dropSize;
-    private Integer dropSizeRank;
-    private Double focusProductDistribution;
-    private Integer focusProductDistributionRank;
-    private Double growth;
-    private Integer growthRank;
-    private String loginId;
-    private Integer missedCalls;
-    private Integer missedCallsRank;
-    private Integer offBeatCalls;
-    private Integer overallRank;
-    private Double overallScore;
-    private Integer plannedCalls;
-    private Double skusPerOrder;
-    private Integer skusPerOrderRank;
-    private Double skusPerOutlet;
-    private Integer skusPerOutletRank;
-    private Double salesPerOrder;
-    private Integer salesPerOrderRank;
-    private Integer salesRank;
-    private Double salesScore;
-    private Integer skillRank;
-    private Double skillScore;
-    private Double strikeCalls;
-    private Integer strikeCallsRank;
-    private Double strikeRate;
-    private Integer strikeRateRank;
-    private String supervisor;
-    private Double targetAchievement;
-    private Integer targetAchievementRank;
-    private String timeSpentInOutlet;
-    private Integer timeSpentInOutletRank;
-    private String userRating;
-    private Integer willRank;
-    private Double willScore;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private Integer      actualCalls;
+    private Integer      actualCallsRank;
+    private Double       complianceRate;
+    private Integer      complianceRateRank;
+    private Double       contributionPercentage;
+    private Integer      contributionPercentageRank;
+    private Date         creationDate;
+    private Double       distributionRate;
+    private Integer      distributionRateRank;
+    private Double       dropSize;
+    private Integer      dropSizeRank;
+    private Double       focusProductDistribution;
+    private Integer      focusProductDistributionRank;
+    private Double       growth;
+    private Integer      growthRank;
+    private String       loginId;
+    private Integer      missedCalls;
+    private Integer      missedCallsRank;
+    private Integer      offBeatCalls;
+    private Integer      overallRank;
+    private Double       overallScore;
+    private Integer      plannedCalls;
+    private Double       skusPerOrder;
+    private Integer      skusPerOrderRank;
+    private Double       skusPerOutlet;
+    private Integer      skusPerOutletRank;
+    private Double       salesPerOrder;
+    private Integer      salesPerOrderRank;
+    private Integer      salesRank;
+    private Double       salesScore;
+    private Integer      skillRank;
+    private Double       skillScore;
+    private Double       strikeCalls;
+    private Integer      strikeCallsRank;
+    private Double       strikeRate;
+    private Integer      strikeRateRank;
+    private String       supervisor;
+    private Double       targetAchievement;
+    private Integer      targetAchievementRank;
+    private String       timeSpentInOutlet;
+    private Integer      timeSpentInOutletRank;
+    private String       userRating;
+    private Integer      willRank;
+    private Double       willScore;
 
     public CkSkillLeaderboard() {}
 
@@ -144,63 +141,63 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     }
 
     public CkSkillLeaderboard(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Integer actualCalls,
-        Integer actualCallsRank,
-        Double complianceRate,
-        Integer complianceRateRank,
-        Double contributionPercentage,
-        Integer contributionPercentageRank,
-        Date creationDate,
-        Double distributionRate,
-        Integer distributionRateRank,
-        Double dropSize,
-        Integer dropSizeRank,
-        Double focusProductDistribution,
-        Integer focusProductDistributionRank,
-        Double growth,
-        Integer growthRank,
-        String loginId,
-        Integer missedCalls,
-        Integer missedCallsRank,
-        Integer offBeatCalls,
-        Integer overallRank,
-        Double overallScore,
-        Integer plannedCalls,
-        Double skusPerOrder,
-        Integer skusPerOrderRank,
-        Double skusPerOutlet,
-        Integer skusPerOutletRank,
-        Double salesPerOrder,
-        Integer salesPerOrderRank,
-        Integer salesRank,
-        Double salesScore,
-        Integer skillRank,
-        Double skillScore,
-        Double strikeCalls,
-        Integer strikeCallsRank,
-        Double strikeRate,
-        Integer strikeRateRank,
-        String supervisor,
-        Double targetAchievement,
-        Integer targetAchievementRank,
-        String timeSpentInOutlet,
-        Integer timeSpentInOutletRank,
-        String userRating,
-        Integer willRank,
-        Double willScore
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        Integer      actualCalls,
+        Integer      actualCallsRank,
+        Double       complianceRate,
+        Integer      complianceRateRank,
+        Double       contributionPercentage,
+        Integer      contributionPercentageRank,
+        Date         creationDate,
+        Double       distributionRate,
+        Integer      distributionRateRank,
+        Double       dropSize,
+        Integer      dropSizeRank,
+        Double       focusProductDistribution,
+        Integer      focusProductDistributionRank,
+        Double       growth,
+        Integer      growthRank,
+        String       loginId,
+        Integer      missedCalls,
+        Integer      missedCallsRank,
+        Integer      offBeatCalls,
+        Integer      overallRank,
+        Double       overallScore,
+        Integer      plannedCalls,
+        Double       skusPerOrder,
+        Integer      skusPerOrderRank,
+        Double       skusPerOutlet,
+        Integer      skusPerOutletRank,
+        Double       salesPerOrder,
+        Integer      salesPerOrderRank,
+        Integer      salesRank,
+        Double       salesScore,
+        Integer      skillRank,
+        Double       skillScore,
+        Double       strikeCalls,
+        Integer      strikeCallsRank,
+        Double       strikeRate,
+        Integer      strikeRateRank,
+        String       supervisor,
+        Double       targetAchievement,
+        Integer      targetAchievementRank,
+        String       timeSpentInOutlet,
+        Integer      timeSpentInOutletRank,
+        String       userRating,
+        Integer      willRank,
+        Double       willScore
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -264,8 +261,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_skill_leaderboard.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -294,7 +289,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_skill_leaderboard.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -323,7 +317,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_skill_leaderboard.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -394,7 +387,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_skill_leaderboard.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -409,7 +401,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_skill_leaderboard.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -424,7 +415,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_skill_leaderboard.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -667,8 +657,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_skill_leaderboard.login_id</code>.
      */
-    @NotNull
-    @Size(max = 200)
     public String getLoginId() {
         return this.loginId;
     }
@@ -963,7 +951,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_skill_leaderboard.supervisor</code>.
      */
-    @Size(max = 255)
     public String getSupervisor() {
         return this.supervisor;
     }
@@ -1006,7 +993,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_skill_leaderboard.time_spent_in_outlet</code>.
      */
-    @Size(max = 255)
     public String getTimeSpentInOutlet() {
         return this.timeSpentInOutlet;
     }
@@ -1035,7 +1021,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_skill_leaderboard.user_rating</code>.
      */
-    @Size(max = 255)
     public String getUserRating() {
         return this.userRating;
     }
@@ -1073,424 +1058,6 @@ public class CkSkillLeaderboard extends CommonDataModel implements Serializable 
      */
     public void setWillScore(Double willScore) {
         this.willScore = willScore;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkSkillLeaderboard other = (CkSkillLeaderboard) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.actualCalls == null) {
-            if (other.actualCalls != null)
-                return false;
-        }
-        else if (!this.actualCalls.equals(other.actualCalls))
-            return false;
-        if (this.actualCallsRank == null) {
-            if (other.actualCallsRank != null)
-                return false;
-        }
-        else if (!this.actualCallsRank.equals(other.actualCallsRank))
-            return false;
-        if (this.complianceRate == null) {
-            if (other.complianceRate != null)
-                return false;
-        }
-        else if (!this.complianceRate.equals(other.complianceRate))
-            return false;
-        if (this.complianceRateRank == null) {
-            if (other.complianceRateRank != null)
-                return false;
-        }
-        else if (!this.complianceRateRank.equals(other.complianceRateRank))
-            return false;
-        if (this.contributionPercentage == null) {
-            if (other.contributionPercentage != null)
-                return false;
-        }
-        else if (!this.contributionPercentage.equals(other.contributionPercentage))
-            return false;
-        if (this.contributionPercentageRank == null) {
-            if (other.contributionPercentageRank != null)
-                return false;
-        }
-        else if (!this.contributionPercentageRank.equals(other.contributionPercentageRank))
-            return false;
-        if (this.creationDate == null) {
-            if (other.creationDate != null)
-                return false;
-        }
-        else if (!this.creationDate.equals(other.creationDate))
-            return false;
-        if (this.distributionRate == null) {
-            if (other.distributionRate != null)
-                return false;
-        }
-        else if (!this.distributionRate.equals(other.distributionRate))
-            return false;
-        if (this.distributionRateRank == null) {
-            if (other.distributionRateRank != null)
-                return false;
-        }
-        else if (!this.distributionRateRank.equals(other.distributionRateRank))
-            return false;
-        if (this.dropSize == null) {
-            if (other.dropSize != null)
-                return false;
-        }
-        else if (!this.dropSize.equals(other.dropSize))
-            return false;
-        if (this.dropSizeRank == null) {
-            if (other.dropSizeRank != null)
-                return false;
-        }
-        else if (!this.dropSizeRank.equals(other.dropSizeRank))
-            return false;
-        if (this.focusProductDistribution == null) {
-            if (other.focusProductDistribution != null)
-                return false;
-        }
-        else if (!this.focusProductDistribution.equals(other.focusProductDistribution))
-            return false;
-        if (this.focusProductDistributionRank == null) {
-            if (other.focusProductDistributionRank != null)
-                return false;
-        }
-        else if (!this.focusProductDistributionRank.equals(other.focusProductDistributionRank))
-            return false;
-        if (this.growth == null) {
-            if (other.growth != null)
-                return false;
-        }
-        else if (!this.growth.equals(other.growth))
-            return false;
-        if (this.growthRank == null) {
-            if (other.growthRank != null)
-                return false;
-        }
-        else if (!this.growthRank.equals(other.growthRank))
-            return false;
-        if (this.loginId == null) {
-            if (other.loginId != null)
-                return false;
-        }
-        else if (!this.loginId.equals(other.loginId))
-            return false;
-        if (this.missedCalls == null) {
-            if (other.missedCalls != null)
-                return false;
-        }
-        else if (!this.missedCalls.equals(other.missedCalls))
-            return false;
-        if (this.missedCallsRank == null) {
-            if (other.missedCallsRank != null)
-                return false;
-        }
-        else if (!this.missedCallsRank.equals(other.missedCallsRank))
-            return false;
-        if (this.offBeatCalls == null) {
-            if (other.offBeatCalls != null)
-                return false;
-        }
-        else if (!this.offBeatCalls.equals(other.offBeatCalls))
-            return false;
-        if (this.overallRank == null) {
-            if (other.overallRank != null)
-                return false;
-        }
-        else if (!this.overallRank.equals(other.overallRank))
-            return false;
-        if (this.overallScore == null) {
-            if (other.overallScore != null)
-                return false;
-        }
-        else if (!this.overallScore.equals(other.overallScore))
-            return false;
-        if (this.plannedCalls == null) {
-            if (other.plannedCalls != null)
-                return false;
-        }
-        else if (!this.plannedCalls.equals(other.plannedCalls))
-            return false;
-        if (this.skusPerOrder == null) {
-            if (other.skusPerOrder != null)
-                return false;
-        }
-        else if (!this.skusPerOrder.equals(other.skusPerOrder))
-            return false;
-        if (this.skusPerOrderRank == null) {
-            if (other.skusPerOrderRank != null)
-                return false;
-        }
-        else if (!this.skusPerOrderRank.equals(other.skusPerOrderRank))
-            return false;
-        if (this.skusPerOutlet == null) {
-            if (other.skusPerOutlet != null)
-                return false;
-        }
-        else if (!this.skusPerOutlet.equals(other.skusPerOutlet))
-            return false;
-        if (this.skusPerOutletRank == null) {
-            if (other.skusPerOutletRank != null)
-                return false;
-        }
-        else if (!this.skusPerOutletRank.equals(other.skusPerOutletRank))
-            return false;
-        if (this.salesPerOrder == null) {
-            if (other.salesPerOrder != null)
-                return false;
-        }
-        else if (!this.salesPerOrder.equals(other.salesPerOrder))
-            return false;
-        if (this.salesPerOrderRank == null) {
-            if (other.salesPerOrderRank != null)
-                return false;
-        }
-        else if (!this.salesPerOrderRank.equals(other.salesPerOrderRank))
-            return false;
-        if (this.salesRank == null) {
-            if (other.salesRank != null)
-                return false;
-        }
-        else if (!this.salesRank.equals(other.salesRank))
-            return false;
-        if (this.salesScore == null) {
-            if (other.salesScore != null)
-                return false;
-        }
-        else if (!this.salesScore.equals(other.salesScore))
-            return false;
-        if (this.skillRank == null) {
-            if (other.skillRank != null)
-                return false;
-        }
-        else if (!this.skillRank.equals(other.skillRank))
-            return false;
-        if (this.skillScore == null) {
-            if (other.skillScore != null)
-                return false;
-        }
-        else if (!this.skillScore.equals(other.skillScore))
-            return false;
-        if (this.strikeCalls == null) {
-            if (other.strikeCalls != null)
-                return false;
-        }
-        else if (!this.strikeCalls.equals(other.strikeCalls))
-            return false;
-        if (this.strikeCallsRank == null) {
-            if (other.strikeCallsRank != null)
-                return false;
-        }
-        else if (!this.strikeCallsRank.equals(other.strikeCallsRank))
-            return false;
-        if (this.strikeRate == null) {
-            if (other.strikeRate != null)
-                return false;
-        }
-        else if (!this.strikeRate.equals(other.strikeRate))
-            return false;
-        if (this.strikeRateRank == null) {
-            if (other.strikeRateRank != null)
-                return false;
-        }
-        else if (!this.strikeRateRank.equals(other.strikeRateRank))
-            return false;
-        if (this.supervisor == null) {
-            if (other.supervisor != null)
-                return false;
-        }
-        else if (!this.supervisor.equals(other.supervisor))
-            return false;
-        if (this.targetAchievement == null) {
-            if (other.targetAchievement != null)
-                return false;
-        }
-        else if (!this.targetAchievement.equals(other.targetAchievement))
-            return false;
-        if (this.targetAchievementRank == null) {
-            if (other.targetAchievementRank != null)
-                return false;
-        }
-        else if (!this.targetAchievementRank.equals(other.targetAchievementRank))
-            return false;
-        if (this.timeSpentInOutlet == null) {
-            if (other.timeSpentInOutlet != null)
-                return false;
-        }
-        else if (!this.timeSpentInOutlet.equals(other.timeSpentInOutlet))
-            return false;
-        if (this.timeSpentInOutletRank == null) {
-            if (other.timeSpentInOutletRank != null)
-                return false;
-        }
-        else if (!this.timeSpentInOutletRank.equals(other.timeSpentInOutletRank))
-            return false;
-        if (this.userRating == null) {
-            if (other.userRating != null)
-                return false;
-        }
-        else if (!this.userRating.equals(other.userRating))
-            return false;
-        if (this.willRank == null) {
-            if (other.willRank != null)
-                return false;
-        }
-        else if (!this.willRank.equals(other.willRank))
-            return false;
-        if (this.willScore == null) {
-            if (other.willScore != null)
-                return false;
-        }
-        else if (!this.willScore.equals(other.willScore))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.actualCalls == null) ? 0 : this.actualCalls.hashCode());
-        result = prime * result + ((this.actualCallsRank == null) ? 0 : this.actualCallsRank.hashCode());
-        result = prime * result + ((this.complianceRate == null) ? 0 : this.complianceRate.hashCode());
-        result = prime * result + ((this.complianceRateRank == null) ? 0 : this.complianceRateRank.hashCode());
-        result = prime * result + ((this.contributionPercentage == null) ? 0 : this.contributionPercentage.hashCode());
-        result = prime * result + ((this.contributionPercentageRank == null) ? 0 : this.contributionPercentageRank.hashCode());
-        result = prime * result + ((this.creationDate == null) ? 0 : this.creationDate.hashCode());
-        result = prime * result + ((this.distributionRate == null) ? 0 : this.distributionRate.hashCode());
-        result = prime * result + ((this.distributionRateRank == null) ? 0 : this.distributionRateRank.hashCode());
-        result = prime * result + ((this.dropSize == null) ? 0 : this.dropSize.hashCode());
-        result = prime * result + ((this.dropSizeRank == null) ? 0 : this.dropSizeRank.hashCode());
-        result = prime * result + ((this.focusProductDistribution == null) ? 0 : this.focusProductDistribution.hashCode());
-        result = prime * result + ((this.focusProductDistributionRank == null) ? 0 : this.focusProductDistributionRank.hashCode());
-        result = prime * result + ((this.growth == null) ? 0 : this.growth.hashCode());
-        result = prime * result + ((this.growthRank == null) ? 0 : this.growthRank.hashCode());
-        result = prime * result + ((this.loginId == null) ? 0 : this.loginId.hashCode());
-        result = prime * result + ((this.missedCalls == null) ? 0 : this.missedCalls.hashCode());
-        result = prime * result + ((this.missedCallsRank == null) ? 0 : this.missedCallsRank.hashCode());
-        result = prime * result + ((this.offBeatCalls == null) ? 0 : this.offBeatCalls.hashCode());
-        result = prime * result + ((this.overallRank == null) ? 0 : this.overallRank.hashCode());
-        result = prime * result + ((this.overallScore == null) ? 0 : this.overallScore.hashCode());
-        result = prime * result + ((this.plannedCalls == null) ? 0 : this.plannedCalls.hashCode());
-        result = prime * result + ((this.skusPerOrder == null) ? 0 : this.skusPerOrder.hashCode());
-        result = prime * result + ((this.skusPerOrderRank == null) ? 0 : this.skusPerOrderRank.hashCode());
-        result = prime * result + ((this.skusPerOutlet == null) ? 0 : this.skusPerOutlet.hashCode());
-        result = prime * result + ((this.skusPerOutletRank == null) ? 0 : this.skusPerOutletRank.hashCode());
-        result = prime * result + ((this.salesPerOrder == null) ? 0 : this.salesPerOrder.hashCode());
-        result = prime * result + ((this.salesPerOrderRank == null) ? 0 : this.salesPerOrderRank.hashCode());
-        result = prime * result + ((this.salesRank == null) ? 0 : this.salesRank.hashCode());
-        result = prime * result + ((this.salesScore == null) ? 0 : this.salesScore.hashCode());
-        result = prime * result + ((this.skillRank == null) ? 0 : this.skillRank.hashCode());
-        result = prime * result + ((this.skillScore == null) ? 0 : this.skillScore.hashCode());
-        result = prime * result + ((this.strikeCalls == null) ? 0 : this.strikeCalls.hashCode());
-        result = prime * result + ((this.strikeCallsRank == null) ? 0 : this.strikeCallsRank.hashCode());
-        result = prime * result + ((this.strikeRate == null) ? 0 : this.strikeRate.hashCode());
-        result = prime * result + ((this.strikeRateRank == null) ? 0 : this.strikeRateRank.hashCode());
-        result = prime * result + ((this.supervisor == null) ? 0 : this.supervisor.hashCode());
-        result = prime * result + ((this.targetAchievement == null) ? 0 : this.targetAchievement.hashCode());
-        result = prime * result + ((this.targetAchievementRank == null) ? 0 : this.targetAchievementRank.hashCode());
-        result = prime * result + ((this.timeSpentInOutlet == null) ? 0 : this.timeSpentInOutlet.hashCode());
-        result = prime * result + ((this.timeSpentInOutletRank == null) ? 0 : this.timeSpentInOutletRank.hashCode());
-        result = prime * result + ((this.userRating == null) ? 0 : this.userRating.hashCode());
-        result = prime * result + ((this.willRank == null) ? 0 : this.willRank.hashCode());
-        result = prime * result + ((this.willScore == null) ? 0 : this.willScore.hashCode());
-        return result;
     }
 
     @Override

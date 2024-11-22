@@ -5,7 +5,6 @@ package com.salescode.jooq.generated.tables;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
@@ -13,28 +12,12 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkBannerDistributionSupplier.CkBannerDistributionSupplierPath;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOffersSupplierHierarchy.CkOffersSupplierHierarchyPath;
-import com.salescode.jooq.generated.tables.CkOrderDetails.CkOrderDetailsPath;
-import com.salescode.jooq.generated.tables.CkOrders.CkOrdersPath;
-import com.salescode.jooq.generated.tables.CkOutletDetailsHierarchymetadata.CkOutletDetailsHierarchymetadataPath;
-import com.salescode.jooq.generated.tables.CkRangeProgramSupplierHierarchy.CkRangeProgramSupplierHierarchyPath;
-import com.salescode.jooq.generated.tables.CkSales.CkSalesPath;
-import com.salescode.jooq.generated.tables.CkSalesDetails.CkSalesDetailsPath;
-import com.salescode.jooq.generated.tables.CkSchemesSupplierHierarchy.CkSchemesSupplierHierarchyPath;
-import com.salescode.jooq.generated.tables.CkScoreProgramSupplierHierarchy.CkScoreProgramSupplierHierarchyPath;
-import com.salescode.jooq.generated.tables.CkStockHierarchy.CkStockHierarchyPath;
-import com.salescode.jooq.generated.tables.CkStockHistoryHierarchy.CkStockHistoryHierarchyPath;
-import com.salescode.jooq.generated.tables.CkUserImmediateParent.CkUserImmediateParentPath;
-import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -146,11 +129,11 @@ public class CkHierarchyMetadata extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkHierarchyMetadata(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkHierarchyMetadata(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkHierarchyMetadata(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -174,37 +157,8 @@ public class CkHierarchyMetadata extends TableImpl<Record> {
         this(DSL.name("ck_hierarchy_metadata"), null);
     }
 
-    public <O extends Record> CkHierarchyMetadata(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_HIERARCHY_METADATA);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkHierarchyMetadataPath extends CkHierarchyMetadata implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkHierarchyMetadataPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkHierarchyMetadataPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkHierarchyMetadataPath as(String alias) {
-            return new CkHierarchyMetadataPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkHierarchyMetadataPath as(Name alias) {
-            return new CkHierarchyMetadataPath(alias, this);
-        }
-
-        @Override
-        public CkHierarchyMetadataPath as(Table<?> alias) {
-            return new CkHierarchyMetadataPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkHierarchyMetadata(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_HIERARCHY_METADATA);
     }
 
     @Override
@@ -232,185 +186,16 @@ public class CkHierarchyMetadata extends TableImpl<Record> {
         return Arrays.asList(Keys.FK9HYG786MH8XFLN12QQKQRQPP9);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FK9HYG786MH8XFLN12QQKQRQPP9, null);
+            _ckLocation = new CkLocation(this, Keys.FK9HYG786MH8XFLN12QQKQRQPP9);
 
         return _ckLocation;
-    }
-
-    private transient CkBannerDistributionSupplierPath _ckBannerDistributionSupplier;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_banner_distribution_supplier</code> table
-     */
-    public CkBannerDistributionSupplierPath ckBannerDistributionSupplier() {
-        if (_ckBannerDistributionSupplier == null)
-            _ckBannerDistributionSupplier = new CkBannerDistributionSupplierPath(this, null, Keys.FK2FLHANPXFWSIL9STEKNDNBHTR.getInverseKey());
-
-        return _ckBannerDistributionSupplier;
-    }
-
-    private transient CkStockHistoryHierarchyPath _ckStockHistoryHierarchy;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_stock_history_hierarchy</code> table
-     */
-    public CkStockHistoryHierarchyPath ckStockHistoryHierarchy() {
-        if (_ckStockHistoryHierarchy == null)
-            _ckStockHistoryHierarchy = new CkStockHistoryHierarchyPath(this, null, Keys.FKA0F3JS5OR5K0SY8KVA63PPG01.getInverseKey());
-
-        return _ckStockHistoryHierarchy;
-    }
-
-    private transient CkOffersSupplierHierarchyPath _ckOffersSupplierHierarchy;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_offers_supplier_hierarchy</code> table
-     */
-    public CkOffersSupplierHierarchyPath ckOffersSupplierHierarchy() {
-        if (_ckOffersSupplierHierarchy == null)
-            _ckOffersSupplierHierarchy = new CkOffersSupplierHierarchyPath(this, null, Keys.FKBE9NQ1U4FU8H3PE37G47CUPR9.getInverseKey());
-
-        return _ckOffersSupplierHierarchy;
-    }
-
-    private transient CkSchemesSupplierHierarchyPath _ckSchemesSupplierHierarchy;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_schemes_supplier_hierarchy</code> table
-     */
-    public CkSchemesSupplierHierarchyPath ckSchemesSupplierHierarchy() {
-        if (_ckSchemesSupplierHierarchy == null)
-            _ckSchemesSupplierHierarchy = new CkSchemesSupplierHierarchyPath(this, null, Keys.FKF69JR83FC5S6FF1RJ5RDGCXHM.getInverseKey());
-
-        return _ckSchemesSupplierHierarchy;
-    }
-
-    private transient CkStockHierarchyPath _ckStockHierarchy;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_stock_hierarchy</code> table
-     */
-    public CkStockHierarchyPath ckStockHierarchy() {
-        if (_ckStockHierarchy == null)
-            _ckStockHierarchy = new CkStockHierarchyPath(this, null, Keys.FKHEECPS6HXT4J7B6XMLULG12NT.getInverseKey());
-
-        return _ckStockHierarchy;
-    }
-
-    private transient CkScoreProgramSupplierHierarchyPath _ckScoreProgramSupplierHierarchy;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_score_program_supplier_hierarchy</code> table
-     */
-    public CkScoreProgramSupplierHierarchyPath ckScoreProgramSupplierHierarchy() {
-        if (_ckScoreProgramSupplierHierarchy == null)
-            _ckScoreProgramSupplierHierarchy = new CkScoreProgramSupplierHierarchyPath(this, null, Keys.FKMK7PYRKXX1GIJURST0AKCPOCJ.getInverseKey());
-
-        return _ckScoreProgramSupplierHierarchy;
-    }
-
-    private transient CkUserImmediateParentPath _ckUserImmediateParent;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_user_immediate_parent</code> table
-     */
-    public CkUserImmediateParentPath ckUserImmediateParent() {
-        if (_ckUserImmediateParent == null)
-            _ckUserImmediateParent = new CkUserImmediateParentPath(this, null, Keys.FKNDK8B1HP9FKNKNCAWWGPX75D.getInverseKey());
-
-        return _ckUserImmediateParent;
-    }
-
-    private transient CkRangeProgramSupplierHierarchyPath _ckRangeProgramSupplierHierarchy;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_range_program_supplier_hierarchy</code> table
-     */
-    public CkRangeProgramSupplierHierarchyPath ckRangeProgramSupplierHierarchy() {
-        if (_ckRangeProgramSupplierHierarchy == null)
-            _ckRangeProgramSupplierHierarchy = new CkRangeProgramSupplierHierarchyPath(this, null, Keys.FKOQWWGICF3NH3473U7YIJNNEKP.getInverseKey());
-
-        return _ckRangeProgramSupplierHierarchy;
-    }
-
-    private transient CkOutletDetailsHierarchymetadataPath _ckOutletDetailsHierarchymetadata;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_outlet_details_hierarchymetadata</code> table
-     */
-    public CkOutletDetailsHierarchymetadataPath ckOutletDetailsHierarchymetadata() {
-        if (_ckOutletDetailsHierarchymetadata == null)
-            _ckOutletDetailsHierarchymetadata = new CkOutletDetailsHierarchymetadataPath(this, null, Keys.FKP03SEH4AEKF8R3ROXHBPT75BK.getInverseKey());
-
-        return _ckOutletDetailsHierarchymetadata;
-    }
-
-    private transient CkOrdersPath _ckOrders;
-
-    /**
-     * Get the implicit to-many join path to the <code>ckroot.ck_orders</code>
-     * table
-     */
-    public CkOrdersPath ckOrders() {
-        if (_ckOrders == null)
-            _ckOrders = new CkOrdersPath(this, null, Keys.FK94MT6W9T2QLRLPVL7J0X4WVN8.getInverseKey());
-
-        return _ckOrders;
-    }
-
-    private transient CkOrderDetailsPath _ckOrderDetails;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_order_details</code> table
-     */
-    public CkOrderDetailsPath ckOrderDetails() {
-        if (_ckOrderDetails == null)
-            _ckOrderDetails = new CkOrderDetailsPath(this, null, Keys.FKBJTJS35YGT5XL5H3JGSRJ7Q1G.getInverseKey());
-
-        return _ckOrderDetails;
-    }
-
-    private transient CkSalesDetailsPath _ckSalesDetails;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_sales_details</code> table
-     */
-    public CkSalesDetailsPath ckSalesDetails() {
-        if (_ckSalesDetails == null)
-            _ckSalesDetails = new CkSalesDetailsPath(this, null, Keys.FKD2I8NSCXGXM982ODG2KB0I3B1.getInverseKey());
-
-        return _ckSalesDetails;
-    }
-
-    private transient CkSalesPath _ckSales;
-
-    /**
-     * Get the implicit to-many join path to the <code>ckroot.ck_sales</code>
-     * table
-     */
-    public CkSalesPath ckSales() {
-        if (_ckSales == null)
-            _ckSales = new CkSalesPath(this, null, Keys.FKRVC7B61LJJN0LT2A6TXDKRB6Y.getInverseKey());
-
-        return _ckSales;
     }
 
     @Override
@@ -421,11 +206,6 @@ public class CkHierarchyMetadata extends TableImpl<Record> {
     @Override
     public CkHierarchyMetadata as(Name alias) {
         return new CkHierarchyMetadata(alias, this);
-    }
-
-    @Override
-    public CkHierarchyMetadata as(Table<?> alias) {
-        return new CkHierarchyMetadata(alias.getQualifiedName(), this);
     }
 
     /**
@@ -442,97 +222,5 @@ public class CkHierarchyMetadata extends TableImpl<Record> {
     @Override
     public CkHierarchyMetadata rename(Name name) {
         return new CkHierarchyMetadata(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkHierarchyMetadata rename(Table<?> name) {
-        return new CkHierarchyMetadata(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkHierarchyMetadata where(Condition condition) {
-        return new CkHierarchyMetadata(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkHierarchyMetadata where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkHierarchyMetadata where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkHierarchyMetadata where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkHierarchyMetadata where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkHierarchyMetadata where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkHierarchyMetadata where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkHierarchyMetadata where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkHierarchyMetadata whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkHierarchyMetadata whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,23 +20,23 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String attribute;
-    private String entity;
-    private String groupName;
-    private String value;
-    private Byte changed;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       attribute;
+    private String       entity;
+    private String       groupName;
+    private String       value;
+    private Byte         changed;
 
     public CkPermissionGroupMembers() {}
 
@@ -64,23 +61,23 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     }
 
     public CkPermissionGroupMembers(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String attribute,
-        String entity,
-        String groupName,
-        String value,
-        Byte changed
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       attribute,
+        String       entity,
+        String       groupName,
+        String       value,
+        Byte         changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -104,8 +101,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     /**
      * Getter for <code>ck_permission_group_members.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -134,7 +129,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     /**
      * Getter for <code>ck_permission_group_members.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -149,7 +143,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     /**
      * Getter for <code>ck_permission_group_members.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -220,7 +213,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     /**
      * Getter for <code>ck_permission_group_members.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -235,7 +227,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     /**
      * Getter for <code>ck_permission_group_members.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -250,7 +241,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     /**
      * Getter for <code>ck_permission_group_members.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -279,8 +269,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     /**
      * Getter for <code>ck_permission_group_members.attribute</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getAttribute() {
         return this.attribute;
     }
@@ -295,8 +283,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     /**
      * Getter for <code>ck_permission_group_members.entity</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getEntity() {
         return this.entity;
     }
@@ -311,8 +297,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     /**
      * Getter for <code>ck_permission_group_members.group_name</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getGroupName() {
         return this.groupName;
     }
@@ -327,8 +311,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     /**
      * Getter for <code>ck_permission_group_members.value</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getValue() {
         return this.value;
     }
@@ -352,144 +334,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkPermissionGroupMembers other = (CkPermissionGroupMembers) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.attribute == null) {
-            if (other.attribute != null)
-                return false;
-        }
-        else if (!this.attribute.equals(other.attribute))
-            return false;
-        if (this.entity == null) {
-            if (other.entity != null)
-                return false;
-        }
-        else if (!this.entity.equals(other.entity))
-            return false;
-        if (this.groupName == null) {
-            if (other.groupName != null)
-                return false;
-        }
-        else if (!this.groupName.equals(other.groupName))
-            return false;
-        if (this.value == null) {
-            if (other.value != null)
-                return false;
-        }
-        else if (!this.value.equals(other.value))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.attribute == null) ? 0 : this.attribute.hashCode());
-        result = prime * result + ((this.entity == null) ? 0 : this.entity.hashCode());
-        result = prime * result + ((this.groupName == null) ? 0 : this.groupName.hashCode());
-        result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

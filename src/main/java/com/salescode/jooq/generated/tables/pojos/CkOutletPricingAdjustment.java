@@ -8,11 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 
 
@@ -24,21 +20,21 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String outletcode;
-    private byte[] pricingAdjustment;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       outletcode;
+    private byte[]       pricingAdjustment;
 
     public CkOutletPricingAdjustment() {}
 
@@ -61,21 +57,21 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
     }
 
     public CkOutletPricingAdjustment(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String outletcode,
-        byte[] pricingAdjustment
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       outletcode,
+        byte[]       pricingAdjustment
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -97,8 +93,6 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_outlet_pricing_adjustment.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -128,7 +122,6 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
      * Getter for
      * <code>ck_outlet_pricing_adjustment.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -158,7 +151,6 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_outlet_pricing_adjustment.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -229,7 +221,6 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_outlet_pricing_adjustment.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -244,7 +235,6 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_outlet_pricing_adjustment.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -259,7 +249,6 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_outlet_pricing_adjustment.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -288,7 +277,6 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_outlet_pricing_adjustment.outletcode</code>.
      */
-    @Size(max = 255)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -303,7 +291,6 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_outlet_pricing_adjustment.pricing_adjustment</code>.
      */
-    @Size(max = 255)
     public byte[] getPricingAdjustment() {
         return this.pricingAdjustment;
     }
@@ -313,130 +300,6 @@ public class CkOutletPricingAdjustment extends CommonDataModel implements Serial
      */
     public void setPricingAdjustment(byte[] pricingAdjustment) {
         this.pricingAdjustment = pricingAdjustment;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkOutletPricingAdjustment other = (CkOutletPricingAdjustment) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.pricingAdjustment == null) {
-            if (other.pricingAdjustment != null)
-                return false;
-        }
-        else if (!Arrays.equals(this.pricingAdjustment, other.pricingAdjustment))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.pricingAdjustment == null) ? 0 : Arrays.hashCode(this.pricingAdjustment));
-        return result;
     }
 
     @Override

@@ -6,8 +6,6 @@ package com.salescode.jooq.generated.tables.pojos;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,23 +19,23 @@ public class CkChannelHierarchyMetadata implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String level1supplier;
-    private String level1supplierName;
-    private String level2supplier;
-    private String level2supplierName;
-    private String level3supplier;
-    private String level3supplierName;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       level1supplier;
+    private String       level1supplierName;
+    private String       level2supplier;
+    private String       level2supplierName;
+    private String       level3supplier;
+    private String       level3supplierName;
 
     public CkChannelHierarchyMetadata() {}
 
@@ -62,23 +60,23 @@ public class CkChannelHierarchyMetadata implements Serializable {
     }
 
     public CkChannelHierarchyMetadata(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String level1supplier,
-        String level1supplierName,
-        String level2supplier,
-        String level2supplierName,
-        String level3supplier,
-        String level3supplierName
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       level1supplier,
+        String       level1supplierName,
+        String       level2supplier,
+        String       level2supplierName,
+        String       level3supplier,
+        String       level3supplierName
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -102,8 +100,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
     /**
      * Getter for <code>ck_channel_hierarchy_metadata.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -133,7 +129,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
      * Getter for
      * <code>ck_channel_hierarchy_metadata.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -149,7 +144,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
     /**
      * Getter for <code>ck_channel_hierarchy_metadata.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -208,7 +202,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
     /**
      * Getter for <code>ck_channel_hierarchy_metadata.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -223,7 +216,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
     /**
      * Getter for <code>ck_channel_hierarchy_metadata.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -238,7 +230,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
     /**
      * Getter for <code>ck_channel_hierarchy_metadata.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -253,7 +244,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
     /**
      * Getter for <code>ck_channel_hierarchy_metadata.version</code>.
      */
-    @NotNull
     public Integer getVersion() {
         return this.version;
     }
@@ -268,7 +258,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
     /**
      * Getter for <code>ck_channel_hierarchy_metadata.level1supplier</code>.
      */
-    @Size(max = 100)
     public String getLevel1supplier() {
         return this.level1supplier;
     }
@@ -284,7 +273,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
      * Getter for
      * <code>ck_channel_hierarchy_metadata.level1supplier_name</code>.
      */
-    @Size(max = 255)
     public String getLevel1supplierName() {
         return this.level1supplierName;
     }
@@ -300,7 +288,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
     /**
      * Getter for <code>ck_channel_hierarchy_metadata.level2supplier</code>.
      */
-    @Size(max = 100)
     public String getLevel2supplier() {
         return this.level2supplier;
     }
@@ -316,7 +303,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
      * Getter for
      * <code>ck_channel_hierarchy_metadata.level2supplier_name</code>.
      */
-    @Size(max = 255)
     public String getLevel2supplierName() {
         return this.level2supplierName;
     }
@@ -332,7 +318,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
     /**
      * Getter for <code>ck_channel_hierarchy_metadata.level3supplier</code>.
      */
-    @Size(max = 100)
     public String getLevel3supplier() {
         return this.level3supplier;
     }
@@ -348,7 +333,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
      * Getter for
      * <code>ck_channel_hierarchy_metadata.level3supplier_name</code>.
      */
-    @Size(max = 255)
     public String getLevel3supplierName() {
         return this.level3supplierName;
     }
@@ -359,144 +343,6 @@ public class CkChannelHierarchyMetadata implements Serializable {
      */
     public void setLevel3supplierName(String level3supplierName) {
         this.level3supplierName = level3supplierName;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkChannelHierarchyMetadata other = (CkChannelHierarchyMetadata) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.level1supplier == null) {
-            if (other.level1supplier != null)
-                return false;
-        }
-        else if (!this.level1supplier.equals(other.level1supplier))
-            return false;
-        if (this.level1supplierName == null) {
-            if (other.level1supplierName != null)
-                return false;
-        }
-        else if (!this.level1supplierName.equals(other.level1supplierName))
-            return false;
-        if (this.level2supplier == null) {
-            if (other.level2supplier != null)
-                return false;
-        }
-        else if (!this.level2supplier.equals(other.level2supplier))
-            return false;
-        if (this.level2supplierName == null) {
-            if (other.level2supplierName != null)
-                return false;
-        }
-        else if (!this.level2supplierName.equals(other.level2supplierName))
-            return false;
-        if (this.level3supplier == null) {
-            if (other.level3supplier != null)
-                return false;
-        }
-        else if (!this.level3supplier.equals(other.level3supplier))
-            return false;
-        if (this.level3supplierName == null) {
-            if (other.level3supplierName != null)
-                return false;
-        }
-        else if (!this.level3supplierName.equals(other.level3supplierName))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.level1supplier == null) ? 0 : this.level1supplier.hashCode());
-        result = prime * result + ((this.level1supplierName == null) ? 0 : this.level1supplierName.hashCode());
-        result = prime * result + ((this.level2supplier == null) ? 0 : this.level2supplier.hashCode());
-        result = prime * result + ((this.level2supplierName == null) ? 0 : this.level2supplierName.hashCode());
-        result = prime * result + ((this.level3supplier == null) ? 0 : this.level3supplier.hashCode());
-        result = prime * result + ((this.level3supplierName == null) ? 0 : this.level3supplierName.hashCode());
-        return result;
     }
 
     @Override

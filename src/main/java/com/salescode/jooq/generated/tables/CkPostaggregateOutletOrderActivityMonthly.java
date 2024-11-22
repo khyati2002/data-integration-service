@@ -11,36 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -141,13 +120,13 @@ public class CkPostaggregateOutletOrderActivityMonthly extends TableImpl<Record>
      * The column
      * <code>ck_postaggregate_outlet_order_activity_monthly.system_time</code>.
      */
-    public final TableField<Record, Date> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
      * <code>ck_postaggregate_outlet_order_activity_monthly.end_time</code>.
      */
-    public final TableField<Record, Date> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
@@ -189,13 +168,13 @@ public class CkPostaggregateOutletOrderActivityMonthly extends TableImpl<Record>
      * The column
      * <code>ck_postaggregate_outlet_order_activity_monthly.start_time</code>.
      */
-    public final TableField<Record, Date> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
      * <code>ck_postaggregate_outlet_order_activity_monthly.submission_time</code>.
      */
-    public final TableField<Record, Date> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
@@ -207,7 +186,7 @@ public class CkPostaggregateOutletOrderActivityMonthly extends TableImpl<Record>
      * The column
      * <code>ck_postaggregate_outlet_order_activity_monthly.last_ordered_date</code>.
      */
-    public final TableField<Record, Date> LAST_ORDERED_DATE = createField(DSL.name("last_ordered_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> LAST_ORDERED_DATE = createField(DSL.name("last_ordered_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column
@@ -300,11 +279,11 @@ public class CkPostaggregateOutletOrderActivityMonthly extends TableImpl<Record>
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPostaggregateOutletOrderActivityMonthly(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkPostaggregateOutletOrderActivityMonthly(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkPostaggregateOutletOrderActivityMonthly(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -333,37 +312,8 @@ public class CkPostaggregateOutletOrderActivityMonthly extends TableImpl<Record>
         this(DSL.name("ck_postaggregate_outlet_order_activity_monthly"), null);
     }
 
-    public <O extends Record> CkPostaggregateOutletOrderActivityMonthly(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_POSTAGGREGATE_OUTLET_ORDER_ACTIVITY_MONTHLY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkPostaggregateOutletOrderActivityMonthlyPath extends CkPostaggregateOutletOrderActivityMonthly implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkPostaggregateOutletOrderActivityMonthlyPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkPostaggregateOutletOrderActivityMonthlyPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkPostaggregateOutletOrderActivityMonthlyPath as(String alias) {
-            return new CkPostaggregateOutletOrderActivityMonthlyPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkPostaggregateOutletOrderActivityMonthlyPath as(Name alias) {
-            return new CkPostaggregateOutletOrderActivityMonthlyPath(alias, this);
-        }
-
-        @Override
-        public CkPostaggregateOutletOrderActivityMonthlyPath as(Table<?> alias) {
-            return new CkPostaggregateOutletOrderActivityMonthlyPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkPostaggregateOutletOrderActivityMonthly(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_POSTAGGREGATE_OUTLET_ORDER_ACTIVITY_MONTHLY);
     }
 
     @Override
@@ -381,39 +331,37 @@ public class CkPostaggregateOutletOrderActivityMonthly extends TableImpl<Record>
         return Arrays.asList(Keys.FKLV0APKGDVSYM73W8KC5Y94IN0, Keys.FKAMMH6B94LI74BOJI3P1156OWE, Keys.FKT96TQLY32CNF251QWJM9E3JNI);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKLV0APKGDVSYM73W8KC5Y94IN0, null);
+            _ckLocation = new CkLocation(this, Keys.FKLV0APKGDVSYM73W8KC5Y94IN0);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKAMMH6B94LI74BOJI3P1156OWE, null);
+            _ckUser = new CkUser(this, Keys.FKAMMH6B94LI74BOJI3P1156OWE);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FKT96TQLY32CNF251QWJM9E3JNI, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FKT96TQLY32CNF251QWJM9E3JNI);
 
         return _ckOutletDetails;
     }
@@ -426,11 +374,6 @@ public class CkPostaggregateOutletOrderActivityMonthly extends TableImpl<Record>
     @Override
     public CkPostaggregateOutletOrderActivityMonthly as(Name alias) {
         return new CkPostaggregateOutletOrderActivityMonthly(alias, this);
-    }
-
-    @Override
-    public CkPostaggregateOutletOrderActivityMonthly as(Table<?> alias) {
-        return new CkPostaggregateOutletOrderActivityMonthly(alias.getQualifiedName(), this);
     }
 
     /**
@@ -447,97 +390,5 @@ public class CkPostaggregateOutletOrderActivityMonthly extends TableImpl<Record>
     @Override
     public CkPostaggregateOutletOrderActivityMonthly rename(Name name) {
         return new CkPostaggregateOutletOrderActivityMonthly(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkPostaggregateOutletOrderActivityMonthly rename(Table<?> name) {
-        return new CkPostaggregateOutletOrderActivityMonthly(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateOutletOrderActivityMonthly where(Condition condition) {
-        return new CkPostaggregateOutletOrderActivityMonthly(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateOutletOrderActivityMonthly where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateOutletOrderActivityMonthly where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateOutletOrderActivityMonthly where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateOutletOrderActivityMonthly where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateOutletOrderActivityMonthly where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateOutletOrderActivityMonthly where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPostaggregateOutletOrderActivityMonthly where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateOutletOrderActivityMonthly whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPostaggregateOutletOrderActivityMonthly whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -12,36 +12,14 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkAuthResource.CkAuthResourcePath;
-import com.salescode.jooq.generated.tables.CkPermissionResources.CkPermissionResourcesPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -156,11 +134,11 @@ public class CkPermissionInfo extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPermissionInfo(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkPermissionInfo(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkPermissionInfo(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -184,37 +162,8 @@ public class CkPermissionInfo extends TableImpl<Record> {
         this(DSL.name("ck_permission_info"), null);
     }
 
-    public <O extends Record> CkPermissionInfo(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_PERMISSION_INFO);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkPermissionInfoPath extends CkPermissionInfo implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkPermissionInfoPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkPermissionInfoPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkPermissionInfoPath as(String alias) {
-            return new CkPermissionInfoPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkPermissionInfoPath as(Name alias) {
-            return new CkPermissionInfoPath(alias, this);
-        }
-
-        @Override
-        public CkPermissionInfoPath as(Table<?> alias) {
-            return new CkPermissionInfoPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkPermissionInfo(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_PERMISSION_INFO);
     }
 
     @Override
@@ -237,27 +186,6 @@ public class CkPermissionInfo extends TableImpl<Record> {
         return Arrays.asList(Keys.KEY_CK_PERMISSION_INFO_UK_NRR8PXIY0NRTQG2HRYFFPCRM7);
     }
 
-    private transient CkPermissionResourcesPath _ckPermissionResources;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_permission_resources</code> table
-     */
-    public CkPermissionResourcesPath ckPermissionResources() {
-        if (_ckPermissionResources == null)
-            _ckPermissionResources = new CkPermissionResourcesPath(this, null, Keys.FK6H6YX9D6ST9NJH40PLBU8MAGW.getInverseKey());
-
-        return _ckPermissionResources;
-    }
-
-    /**
-     * Get the implicit many-to-many join path to the
-     * <code>ckroot.ck_auth_resource</code> table
-     */
-    public CkAuthResourcePath ckAuthResource() {
-        return ckPermissionResources().ckAuthResource();
-    }
-
     @Override
     public CkPermissionInfo as(String alias) {
         return new CkPermissionInfo(DSL.name(alias), this);
@@ -266,11 +194,6 @@ public class CkPermissionInfo extends TableImpl<Record> {
     @Override
     public CkPermissionInfo as(Name alias) {
         return new CkPermissionInfo(alias, this);
-    }
-
-    @Override
-    public CkPermissionInfo as(Table<?> alias) {
-        return new CkPermissionInfo(alias.getQualifiedName(), this);
     }
 
     /**
@@ -287,97 +210,5 @@ public class CkPermissionInfo extends TableImpl<Record> {
     @Override
     public CkPermissionInfo rename(Name name) {
         return new CkPermissionInfo(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkPermissionInfo rename(Table<?> name) {
-        return new CkPermissionInfo(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionInfo where(Condition condition) {
-        return new CkPermissionInfo(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionInfo where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionInfo where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionInfo where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPermissionInfo where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPermissionInfo where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPermissionInfo where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPermissionInfo where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionInfo whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPermissionInfo whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

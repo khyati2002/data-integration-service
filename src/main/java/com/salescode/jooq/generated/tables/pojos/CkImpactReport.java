@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,27 +20,27 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String discriminator;
-    private String discriminatorValue;
-    private String kpiName;
-    private Double kpiValue;
-    private Long orderKpiTotal;
-    private String period;
-    private String periodValue;
-    private Long recommendedKpiTotal;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       discriminator;
+    private String       discriminatorValue;
+    private String       kpiName;
+    private Double       kpiValue;
+    private Long         orderKpiTotal;
+    private String       period;
+    private String       periodValue;
+    private Long         recommendedKpiTotal;
 
     public CkImpactReport() {}
 
@@ -72,27 +69,27 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     }
 
     public CkImpactReport(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String discriminator,
-        String discriminatorValue,
-        String kpiName,
-        Double kpiValue,
-        Long orderKpiTotal,
-        String period,
-        String periodValue,
-        Long recommendedKpiTotal
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       discriminator,
+        String       discriminatorValue,
+        String       kpiName,
+        Double       kpiValue,
+        Long         orderKpiTotal,
+        String       period,
+        String       periodValue,
+        Long         recommendedKpiTotal
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -120,8 +117,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -150,7 +145,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -179,7 +173,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -250,7 +243,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -265,7 +257,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -280,7 +271,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -309,7 +299,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.discriminator</code>.
      */
-    @Size(max = 255)
     public String getDiscriminator() {
         return this.discriminator;
     }
@@ -324,7 +313,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.discriminator_value</code>.
      */
-    @Size(max = 255)
     public String getDiscriminatorValue() {
         return this.discriminatorValue;
     }
@@ -339,7 +327,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.kpi_name</code>.
      */
-    @Size(max = 255)
     public String getKpiName() {
         return this.kpiName;
     }
@@ -354,7 +341,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.kpi_value</code>.
      */
-    @NotNull
     public Double getKpiValue() {
         return this.kpiValue;
     }
@@ -369,7 +355,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.order_kpi_total</code>.
      */
-    @NotNull
     public Long getOrderKpiTotal() {
         return this.orderKpiTotal;
     }
@@ -384,7 +369,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.period</code>.
      */
-    @Size(max = 255)
     public String getPeriod() {
         return this.period;
     }
@@ -399,7 +383,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.period_value</code>.
      */
-    @Size(max = 255)
     public String getPeriodValue() {
         return this.periodValue;
     }
@@ -414,7 +397,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_impact_report.recommended_kpi_total</code>.
      */
-    @NotNull
     public Long getRecommendedKpiTotal() {
         return this.recommendedKpiTotal;
     }
@@ -424,172 +406,6 @@ public class CkImpactReport extends CommonDataModel implements Serializable {
      */
     public void setRecommendedKpiTotal(Long recommendedKpiTotal) {
         this.recommendedKpiTotal = recommendedKpiTotal;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkImpactReport other = (CkImpactReport) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.discriminator == null) {
-            if (other.discriminator != null)
-                return false;
-        }
-        else if (!this.discriminator.equals(other.discriminator))
-            return false;
-        if (this.discriminatorValue == null) {
-            if (other.discriminatorValue != null)
-                return false;
-        }
-        else if (!this.discriminatorValue.equals(other.discriminatorValue))
-            return false;
-        if (this.kpiName == null) {
-            if (other.kpiName != null)
-                return false;
-        }
-        else if (!this.kpiName.equals(other.kpiName))
-            return false;
-        if (this.kpiValue == null) {
-            if (other.kpiValue != null)
-                return false;
-        }
-        else if (!this.kpiValue.equals(other.kpiValue))
-            return false;
-        if (this.orderKpiTotal == null) {
-            if (other.orderKpiTotal != null)
-                return false;
-        }
-        else if (!this.orderKpiTotal.equals(other.orderKpiTotal))
-            return false;
-        if (this.period == null) {
-            if (other.period != null)
-                return false;
-        }
-        else if (!this.period.equals(other.period))
-            return false;
-        if (this.periodValue == null) {
-            if (other.periodValue != null)
-                return false;
-        }
-        else if (!this.periodValue.equals(other.periodValue))
-            return false;
-        if (this.recommendedKpiTotal == null) {
-            if (other.recommendedKpiTotal != null)
-                return false;
-        }
-        else if (!this.recommendedKpiTotal.equals(other.recommendedKpiTotal))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.discriminator == null) ? 0 : this.discriminator.hashCode());
-        result = prime * result + ((this.discriminatorValue == null) ? 0 : this.discriminatorValue.hashCode());
-        result = prime * result + ((this.kpiName == null) ? 0 : this.kpiName.hashCode());
-        result = prime * result + ((this.kpiValue == null) ? 0 : this.kpiValue.hashCode());
-        result = prime * result + ((this.orderKpiTotal == null) ? 0 : this.orderKpiTotal.hashCode());
-        result = prime * result + ((this.period == null) ? 0 : this.period.hashCode());
-        result = prime * result + ((this.periodValue == null) ? 0 : this.periodValue.hashCode());
-        result = prime * result + ((this.recommendedKpiTotal == null) ? 0 : this.recommendedKpiTotal.hashCode());
-        return result;
     }
 
     @Override

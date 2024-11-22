@@ -11,27 +11,13 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Collection;
-import java.util.Date;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 
 /**
@@ -123,7 +109,7 @@ public class CkUserOtp extends TableImpl<Record> {
     /**
      * The column <code>ck_user_otp.expiry_time</code>.
      */
-    public final TableField<Record, Date> EXPIRY_TIME = createField(DSL.name("expiry_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> EXPIRY_TIME = createField(DSL.name("expiry_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_user_otp.mobile_number</code>.
@@ -136,11 +122,11 @@ public class CkUserOtp extends TableImpl<Record> {
     public final TableField<Record, String> OTPSTRING = createField(DSL.name("otpstring"), SQLDataType.VARCHAR(15).nullable(false), this, "");
 
     private CkUserOtp(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkUserOtp(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkUserOtp(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -164,6 +150,10 @@ public class CkUserOtp extends TableImpl<Record> {
         this(DSL.name("ck_user_otp"), null);
     }
 
+    public <O extends Record> CkUserOtp(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_USER_OTP);
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -184,11 +174,6 @@ public class CkUserOtp extends TableImpl<Record> {
         return new CkUserOtp(alias, this);
     }
 
-    @Override
-    public CkUserOtp as(Table<?> alias) {
-        return new CkUserOtp(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -203,97 +188,5 @@ public class CkUserOtp extends TableImpl<Record> {
     @Override
     public CkUserOtp rename(Name name) {
         return new CkUserOtp(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkUserOtp rename(Table<?> name) {
-        return new CkUserOtp(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserOtp where(Condition condition) {
-        return new CkUserOtp(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserOtp where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserOtp where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserOtp where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserOtp where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserOtp where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserOtp where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserOtp where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserOtp whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserOtp whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

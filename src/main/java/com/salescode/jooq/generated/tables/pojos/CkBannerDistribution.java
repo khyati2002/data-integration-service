@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,33 +21,33 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String account;
-    private String channel;
-    private Date endDate;
-    private String outletCategory;
-    private String outletClass;
-    private String outletType;
-    private Date startDate;
-    private String bannerBannerName;
-    private String locationHierarchy;
-    private Byte changed;
-    private String loyaltyType;
-    private String locSalescodeid;
-    private String outletCode;
-    private String subTerritory;
-    private String supplier;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        account;
+    private String        channel;
+    private LocalDateTime endDate;
+    private String        outletCategory;
+    private String        outletClass;
+    private String        outletType;
+    private LocalDateTime startDate;
+    private String        bannerBannerName;
+    private String        locationHierarchy;
+    private Byte          changed;
+    private String        loyaltyType;
+    private String        outletCode;
+    private String        subTerritory;
+    private String        supplier;
+    private String        locSalescodeid;
 
     public CkBannerDistribution() {}
 
@@ -77,40 +75,40 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
         this.locationHierarchy = value.locationHierarchy;
         this.changed = value.changed;
         this.loyaltyType = value.loyaltyType;
-        this.locSalescodeid = value.locSalescodeid;
         this.outletCode = value.outletCode;
         this.subTerritory = value.subTerritory;
         this.supplier = value.supplier;
+        this.locSalescodeid = value.locSalescodeid;
     }
 
     public CkBannerDistribution(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String account,
-        String channel,
-        Date endDate,
-        String outletCategory,
-        String outletClass,
-        String outletType,
-        Date startDate,
-        String bannerBannerName,
-        String locationHierarchy,
-        Byte changed,
-        String loyaltyType,
-        String locSalescodeid,
-        String outletCode,
-        String subTerritory,
-        String supplier
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        account,
+        String        channel,
+        LocalDateTime endDate,
+        String        outletCategory,
+        String        outletClass,
+        String        outletType,
+        LocalDateTime startDate,
+        String        bannerBannerName,
+        String        locationHierarchy,
+        Byte          changed,
+        String        loyaltyType,
+        String        outletCode,
+        String        subTerritory,
+        String        supplier,
+        String        locSalescodeid
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -135,17 +133,15 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
         this.locationHierarchy = locationHierarchy;
         this.changed = changed;
         this.loyaltyType = loyaltyType;
-        this.locSalescodeid = locSalescodeid;
         this.outletCode = outletCode;
         this.subTerritory = subTerritory;
         this.supplier = supplier;
+        this.locSalescodeid = locSalescodeid;
     }
 
     /**
      * Getter for <code>ck_banner_distribution.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -174,7 +170,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -189,7 +184,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -260,7 +254,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -275,7 +268,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -290,7 +282,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -319,7 +310,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.account</code>.
      */
-    @Size(max = 255)
     public String getAccount() {
         return this.account;
     }
@@ -334,7 +324,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.channel</code>.
      */
-    @Size(max = 255)
     public String getChannel() {
         return this.channel;
     }
@@ -349,21 +338,20 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_banner_distribution.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
     /**
      * Getter for <code>ck_banner_distribution.outlet_category</code>.
      */
-    @Size(max = 255)
     public String getOutletCategory() {
         return this.outletCategory;
     }
@@ -378,7 +366,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.outlet_class</code>.
      */
-    @Size(max = 255)
     public String getOutletClass() {
         return this.outletClass;
     }
@@ -393,7 +380,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.outlet_type</code>.
      */
-    @Size(max = 255)
     public String getOutletType() {
         return this.outletType;
     }
@@ -408,21 +394,20 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_banner_distribution.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_banner_distribution.banner_banner_name</code>.
      */
-    @Size(max = 255)
     public String getBannerBannerName() {
         return this.bannerBannerName;
     }
@@ -437,7 +422,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -466,7 +450,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.loyalty_type</code>.
      */
-    @Size(max = 65535)
     public String getLoyaltyType() {
         return this.loyaltyType;
     }
@@ -479,24 +462,8 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     }
 
     /**
-     * Getter for <code>ck_banner_distribution.loc_salescodeid</code>.
-     */
-    @Size(max = 255)
-    public String getLocSalescodeid() {
-        return this.locSalescodeid;
-    }
-
-    /**
-     * Setter for <code>ck_banner_distribution.loc_salescodeid</code>.
-     */
-    public void setLocSalescodeid(String locSalescodeid) {
-        this.locSalescodeid = locSalescodeid;
-    }
-
-    /**
      * Getter for <code>ck_banner_distribution.outlet_code</code>.
      */
-    @Size(max = 255)
     public String getOutletCode() {
         return this.outletCode;
     }
@@ -511,7 +478,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.sub_territory</code>.
      */
-    @Size(max = 255)
     public String getSubTerritory() {
         return this.subTerritory;
     }
@@ -526,7 +492,6 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_banner_distribution.supplier</code>.
      */
-    @Size(max = 65535)
     public String getSupplier() {
         return this.supplier;
     }
@@ -538,212 +503,18 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
         this.supplier = supplier;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkBannerDistribution other = (CkBannerDistribution) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.account == null) {
-            if (other.account != null)
-                return false;
-        }
-        else if (!this.account.equals(other.account))
-            return false;
-        if (this.channel == null) {
-            if (other.channel != null)
-                return false;
-        }
-        else if (!this.channel.equals(other.channel))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.outletCategory == null) {
-            if (other.outletCategory != null)
-                return false;
-        }
-        else if (!this.outletCategory.equals(other.outletCategory))
-            return false;
-        if (this.outletClass == null) {
-            if (other.outletClass != null)
-                return false;
-        }
-        else if (!this.outletClass.equals(other.outletClass))
-            return false;
-        if (this.outletType == null) {
-            if (other.outletType != null)
-                return false;
-        }
-        else if (!this.outletType.equals(other.outletType))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.bannerBannerName == null) {
-            if (other.bannerBannerName != null)
-                return false;
-        }
-        else if (!this.bannerBannerName.equals(other.bannerBannerName))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.loyaltyType == null) {
-            if (other.loyaltyType != null)
-                return false;
-        }
-        else if (!this.loyaltyType.equals(other.loyaltyType))
-            return false;
-        if (this.locSalescodeid == null) {
-            if (other.locSalescodeid != null)
-                return false;
-        }
-        else if (!this.locSalescodeid.equals(other.locSalescodeid))
-            return false;
-        if (this.outletCode == null) {
-            if (other.outletCode != null)
-                return false;
-        }
-        else if (!this.outletCode.equals(other.outletCode))
-            return false;
-        if (this.subTerritory == null) {
-            if (other.subTerritory != null)
-                return false;
-        }
-        else if (!this.subTerritory.equals(other.subTerritory))
-            return false;
-        if (this.supplier == null) {
-            if (other.supplier != null)
-                return false;
-        }
-        else if (!this.supplier.equals(other.supplier))
-            return false;
-        return true;
+    /**
+     * Getter for <code>ck_banner_distribution.loc_salescodeid</code>.
+     */
+    public String getLocSalescodeid() {
+        return this.locSalescodeid;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
-        result = prime * result + ((this.channel == null) ? 0 : this.channel.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.outletCategory == null) ? 0 : this.outletCategory.hashCode());
-        result = prime * result + ((this.outletClass == null) ? 0 : this.outletClass.hashCode());
-        result = prime * result + ((this.outletType == null) ? 0 : this.outletType.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.bannerBannerName == null) ? 0 : this.bannerBannerName.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.loyaltyType == null) ? 0 : this.loyaltyType.hashCode());
-        result = prime * result + ((this.locSalescodeid == null) ? 0 : this.locSalescodeid.hashCode());
-        result = prime * result + ((this.outletCode == null) ? 0 : this.outletCode.hashCode());
-        result = prime * result + ((this.subTerritory == null) ? 0 : this.subTerritory.hashCode());
-        result = prime * result + ((this.supplier == null) ? 0 : this.supplier.hashCode());
-        return result;
+    /**
+     * Setter for <code>ck_banner_distribution.loc_salescodeid</code>.
+     */
+    public void setLocSalescodeid(String locSalescodeid) {
+        this.locSalescodeid = locSalescodeid;
     }
 
     @Override
@@ -773,10 +544,10 @@ public class CkBannerDistribution extends CommonDataModel implements Serializabl
         sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(changed);
         sb.append(", ").append(loyaltyType);
-        sb.append(", ").append(locSalescodeid);
         sb.append(", ").append(outletCode);
         sb.append(", ").append(subTerritory);
         sb.append(", ").append(supplier);
+        sb.append(", ").append(locSalescodeid);
 
         sb.append(")");
         return sb.toString();

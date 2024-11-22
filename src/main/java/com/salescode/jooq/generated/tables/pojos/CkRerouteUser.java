@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,24 +21,24 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date endTime;
-    private String originalLoginid;
-    private String reroutedLoginid;
-    private String routeId;
-    private Date startTime;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime endTime;
+    private String        originalLoginid;
+    private String        reroutedLoginid;
+    private String        routeId;
+    private LocalDateTime startTime;
 
     public CkRerouteUser() {}
 
@@ -66,24 +64,24 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     }
 
     public CkRerouteUser(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date endTime,
-        String originalLoginid,
-        String reroutedLoginid,
-        String routeId,
-        Date startTime
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime endTime,
+        String        originalLoginid,
+        String        reroutedLoginid,
+        String        routeId,
+        LocalDateTime startTime
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -108,8 +106,6 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_reroute_user.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -138,7 +134,6 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_reroute_user.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -167,7 +162,6 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_reroute_user.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -238,7 +232,6 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_reroute_user.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -253,7 +246,6 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_reroute_user.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -268,7 +260,6 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_reroute_user.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -297,21 +288,20 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_reroute_user.end_time</code>.
      */
-    public Date getEndTime() {
+    public LocalDateTime getEndTime() {
         return this.endTime;
     }
 
     /**
      * Setter for <code>ck_reroute_user.end_time</code>.
      */
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
     /**
      * Getter for <code>ck_reroute_user.original_loginid</code>.
      */
-    @Size(max = 255)
     public String getOriginalLoginid() {
         return this.originalLoginid;
     }
@@ -326,7 +316,6 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_reroute_user.rerouted_loginid</code>.
      */
-    @Size(max = 255)
     public String getReroutedLoginid() {
         return this.reroutedLoginid;
     }
@@ -341,7 +330,6 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_reroute_user.route_id</code>.
      */
-    @Size(max = 255)
     public String getRouteId() {
         return this.routeId;
     }
@@ -356,160 +344,15 @@ public class CkRerouteUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_reroute_user.start_time</code>.
      */
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return this.startTime;
     }
 
     /**
      * Setter for <code>ck_reroute_user.start_time</code>.
      */
-    public void setStartTime(Date startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkRerouteUser other = (CkRerouteUser) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.endTime == null) {
-            if (other.endTime != null)
-                return false;
-        }
-        else if (!this.endTime.equals(other.endTime))
-            return false;
-        if (this.originalLoginid == null) {
-            if (other.originalLoginid != null)
-                return false;
-        }
-        else if (!this.originalLoginid.equals(other.originalLoginid))
-            return false;
-        if (this.reroutedLoginid == null) {
-            if (other.reroutedLoginid != null)
-                return false;
-        }
-        else if (!this.reroutedLoginid.equals(other.reroutedLoginid))
-            return false;
-        if (this.routeId == null) {
-            if (other.routeId != null)
-                return false;
-        }
-        else if (!this.routeId.equals(other.routeId))
-            return false;
-        if (this.startTime == null) {
-            if (other.startTime != null)
-                return false;
-        }
-        else if (!this.startTime.equals(other.startTime))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.endTime == null) ? 0 : this.endTime.hashCode());
-        result = prime * result + ((this.originalLoginid == null) ? 0 : this.originalLoginid.hashCode());
-        result = prime * result + ((this.reroutedLoginid == null) ? 0 : this.reroutedLoginid.hashCode());
-        result = prime * result + ((this.routeId == null) ? 0 : this.routeId.hashCode());
-        result = prime * result + ((this.startTime == null) ? 0 : this.startTime.hashCode());
-        return result;
     }
 
     @Override

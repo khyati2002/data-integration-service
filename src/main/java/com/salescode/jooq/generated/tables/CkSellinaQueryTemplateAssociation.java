@@ -11,33 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkSellinaAiQuery.CkSellinaAiQueryPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -71,7 +52,7 @@ public class CkSellinaQueryTemplateAssociation extends TableImpl<Record> {
      * The column
      * <code>ck_sellina_query_template_association.active_status</code>.
      */
-//    public final TableField<Record, ActiveStatus> ACTIVE_STATUS = createField(DSL.name("active_status"), SQLDataType.VARCHAR(255), this, "", new ActiveStatusConverter());
+    public final TableField<Record, ActiveStatus> ACTIVE_STATUS = createField(DSL.name("active_status"), SQLDataType.VARCHAR(255), this, "", new ActiveStatusConverter());
 
     /**
      * The column
@@ -184,11 +165,11 @@ public class CkSellinaQueryTemplateAssociation extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkSellinaQueryTemplateAssociation(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkSellinaQueryTemplateAssociation(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkSellinaQueryTemplateAssociation(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -215,37 +196,8 @@ public class CkSellinaQueryTemplateAssociation extends TableImpl<Record> {
         this(DSL.name("ck_sellina_query_template_association"), null);
     }
 
-    public <O extends Record> CkSellinaQueryTemplateAssociation(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_SELLINA_QUERY_TEMPLATE_ASSOCIATION);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkSellinaQueryTemplateAssociationPath extends CkSellinaQueryTemplateAssociation implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkSellinaQueryTemplateAssociationPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkSellinaQueryTemplateAssociationPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkSellinaQueryTemplateAssociationPath as(String alias) {
-            return new CkSellinaQueryTemplateAssociationPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkSellinaQueryTemplateAssociationPath as(Name alias) {
-            return new CkSellinaQueryTemplateAssociationPath(alias, this);
-        }
-
-        @Override
-        public CkSellinaQueryTemplateAssociationPath as(Table<?> alias) {
-            return new CkSellinaQueryTemplateAssociationPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkSellinaQueryTemplateAssociation(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_SELLINA_QUERY_TEMPLATE_ASSOCIATION);
     }
 
     @Override
@@ -263,15 +215,15 @@ public class CkSellinaQueryTemplateAssociation extends TableImpl<Record> {
         return Arrays.asList(Keys.FKSJA5FN08Q6U03XMR8KHHQK1V4);
     }
 
-    private transient CkSellinaAiQueryPath _ckSellinaAiQuery;
+    private transient CkSellinaAiQuery _ckSellinaAiQuery;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_sellina_ai_query</code>
      * table.
      */
-    public CkSellinaAiQueryPath ckSellinaAiQuery() {
+    public CkSellinaAiQuery ckSellinaAiQuery() {
         if (_ckSellinaAiQuery == null)
-            _ckSellinaAiQuery = new CkSellinaAiQueryPath(this, Keys.FKSJA5FN08Q6U03XMR8KHHQK1V4, null);
+            _ckSellinaAiQuery = new CkSellinaAiQuery(this, Keys.FKSJA5FN08Q6U03XMR8KHHQK1V4);
 
         return _ckSellinaAiQuery;
     }
@@ -284,11 +236,6 @@ public class CkSellinaQueryTemplateAssociation extends TableImpl<Record> {
     @Override
     public CkSellinaQueryTemplateAssociation as(Name alias) {
         return new CkSellinaQueryTemplateAssociation(alias, this);
-    }
-
-    @Override
-    public CkSellinaQueryTemplateAssociation as(Table<?> alias) {
-        return new CkSellinaQueryTemplateAssociation(alias.getQualifiedName(), this);
     }
 
     /**
@@ -305,97 +252,5 @@ public class CkSellinaQueryTemplateAssociation extends TableImpl<Record> {
     @Override
     public CkSellinaQueryTemplateAssociation rename(Name name) {
         return new CkSellinaQueryTemplateAssociation(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkSellinaQueryTemplateAssociation rename(Table<?> name) {
-        return new CkSellinaQueryTemplateAssociation(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaQueryTemplateAssociation where(Condition condition) {
-        return new CkSellinaQueryTemplateAssociation(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaQueryTemplateAssociation where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaQueryTemplateAssociation where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaQueryTemplateAssociation where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaQueryTemplateAssociation where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaQueryTemplateAssociation where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaQueryTemplateAssociation where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaQueryTemplateAssociation where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaQueryTemplateAssociation whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaQueryTemplateAssociation whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

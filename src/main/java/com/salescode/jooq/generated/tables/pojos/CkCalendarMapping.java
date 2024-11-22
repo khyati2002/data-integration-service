@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,35 +21,35 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String finacialMonth;
-    private String finacialPeriod;
-    private String finacialYear;
-    private Date fromDate;
-    private String month;
-    private String period;
-    private String periodName;
-    private String periodType;
-    private String periodWeek;
-    private String quarter;
-    private Date toDate;
-    private String week;
-    private String weekDay;
-    private String year;
-    private String yearDay;
-    private String yearWeek;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        finacialMonth;
+    private String        finacialPeriod;
+    private String        finacialYear;
+    private LocalDateTime fromDate;
+    private String        month;
+    private String        period;
+    private String        periodName;
+    private String        periodType;
+    private String        periodWeek;
+    private String        quarter;
+    private LocalDateTime toDate;
+    private String        week;
+    private String        weekDay;
+    private String        year;
+    private String        yearDay;
+    private String        yearWeek;
+    private Byte          changed;
 
     public CkCalendarMapping() {}
 
@@ -88,35 +86,35 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     }
 
     public CkCalendarMapping(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String finacialMonth,
-        String finacialPeriod,
-        String finacialYear,
-        Date fromDate,
-        String month,
-        String period,
-        String periodName,
-        String periodType,
-        String periodWeek,
-        String quarter,
-        Date toDate,
-        String week,
-        String weekDay,
-        String year,
-        String yearDay,
-        String yearWeek,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        finacialMonth,
+        String        finacialPeriod,
+        String        finacialYear,
+        LocalDateTime fromDate,
+        String        month,
+        String        period,
+        String        periodName,
+        String        periodType,
+        String        periodWeek,
+        String        quarter,
+        LocalDateTime toDate,
+        String        week,
+        String        weekDay,
+        String        year,
+        String        yearDay,
+        String        yearWeek,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -152,8 +150,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -182,7 +178,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -197,7 +192,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -268,7 +262,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -283,7 +276,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -298,7 +290,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -327,7 +318,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.finacial_month</code>.
      */
-    @Size(max = 255)
     public String getFinacialMonth() {
         return this.finacialMonth;
     }
@@ -342,7 +332,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.finacial_period</code>.
      */
-    @Size(max = 255)
     public String getFinacialPeriod() {
         return this.finacialPeriod;
     }
@@ -357,7 +346,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.finacial_year</code>.
      */
-    @Size(max = 255)
     public String getFinacialYear() {
         return this.finacialYear;
     }
@@ -372,22 +360,20 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.from_date</code>.
      */
-    @NotNull
-    public Date getFromDate() {
+    public LocalDateTime getFromDate() {
         return this.fromDate;
     }
 
     /**
      * Setter for <code>ck_calendar_mapping.from_date</code>.
      */
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
 
     /**
      * Getter for <code>ck_calendar_mapping.month</code>.
      */
-    @Size(max = 255)
     public String getMonth() {
         return this.month;
     }
@@ -402,7 +388,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.period</code>.
      */
-    @Size(max = 255)
     public String getPeriod() {
         return this.period;
     }
@@ -417,8 +402,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.period_name</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getPeriodName() {
         return this.periodName;
     }
@@ -433,8 +416,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.period_type</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getPeriodType() {
         return this.periodType;
     }
@@ -449,7 +430,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.period_week</code>.
      */
-    @Size(max = 255)
     public String getPeriodWeek() {
         return this.periodWeek;
     }
@@ -464,7 +444,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.quarter</code>.
      */
-    @Size(max = 255)
     public String getQuarter() {
         return this.quarter;
     }
@@ -479,22 +458,20 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.to_date</code>.
      */
-    @NotNull
-    public Date getToDate() {
+    public LocalDateTime getToDate() {
         return this.toDate;
     }
 
     /**
      * Setter for <code>ck_calendar_mapping.to_date</code>.
      */
-    public void setToDate(Date toDate) {
+    public void setToDate(LocalDateTime toDate) {
         this.toDate = toDate;
     }
 
     /**
      * Getter for <code>ck_calendar_mapping.week</code>.
      */
-    @Size(max = 255)
     public String getWeek() {
         return this.week;
     }
@@ -509,7 +486,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.week_day</code>.
      */
-    @Size(max = 255)
     public String getWeekDay() {
         return this.weekDay;
     }
@@ -524,8 +500,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.year</code>.
      */
-    @NotNull
-    @Size(max = 4)
     public String getYear() {
         return this.year;
     }
@@ -540,7 +514,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.year_day</code>.
      */
-    @Size(max = 255)
     public String getYearDay() {
         return this.yearDay;
     }
@@ -555,7 +528,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_calendar_mapping.year_week</code>.
      */
-    @Size(max = 255)
     public String getYearWeek() {
         return this.yearWeek;
     }
@@ -579,228 +551,6 @@ public class CkCalendarMapping extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkCalendarMapping other = (CkCalendarMapping) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.finacialMonth == null) {
-            if (other.finacialMonth != null)
-                return false;
-        }
-        else if (!this.finacialMonth.equals(other.finacialMonth))
-            return false;
-        if (this.finacialPeriod == null) {
-            if (other.finacialPeriod != null)
-                return false;
-        }
-        else if (!this.finacialPeriod.equals(other.finacialPeriod))
-            return false;
-        if (this.finacialYear == null) {
-            if (other.finacialYear != null)
-                return false;
-        }
-        else if (!this.finacialYear.equals(other.finacialYear))
-            return false;
-        if (this.fromDate == null) {
-            if (other.fromDate != null)
-                return false;
-        }
-        else if (!this.fromDate.equals(other.fromDate))
-            return false;
-        if (this.month == null) {
-            if (other.month != null)
-                return false;
-        }
-        else if (!this.month.equals(other.month))
-            return false;
-        if (this.period == null) {
-            if (other.period != null)
-                return false;
-        }
-        else if (!this.period.equals(other.period))
-            return false;
-        if (this.periodName == null) {
-            if (other.periodName != null)
-                return false;
-        }
-        else if (!this.periodName.equals(other.periodName))
-            return false;
-        if (this.periodType == null) {
-            if (other.periodType != null)
-                return false;
-        }
-        else if (!this.periodType.equals(other.periodType))
-            return false;
-        if (this.periodWeek == null) {
-            if (other.periodWeek != null)
-                return false;
-        }
-        else if (!this.periodWeek.equals(other.periodWeek))
-            return false;
-        if (this.quarter == null) {
-            if (other.quarter != null)
-                return false;
-        }
-        else if (!this.quarter.equals(other.quarter))
-            return false;
-        if (this.toDate == null) {
-            if (other.toDate != null)
-                return false;
-        }
-        else if (!this.toDate.equals(other.toDate))
-            return false;
-        if (this.week == null) {
-            if (other.week != null)
-                return false;
-        }
-        else if (!this.week.equals(other.week))
-            return false;
-        if (this.weekDay == null) {
-            if (other.weekDay != null)
-                return false;
-        }
-        else if (!this.weekDay.equals(other.weekDay))
-            return false;
-        if (this.year == null) {
-            if (other.year != null)
-                return false;
-        }
-        else if (!this.year.equals(other.year))
-            return false;
-        if (this.yearDay == null) {
-            if (other.yearDay != null)
-                return false;
-        }
-        else if (!this.yearDay.equals(other.yearDay))
-            return false;
-        if (this.yearWeek == null) {
-            if (other.yearWeek != null)
-                return false;
-        }
-        else if (!this.yearWeek.equals(other.yearWeek))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.finacialMonth == null) ? 0 : this.finacialMonth.hashCode());
-        result = prime * result + ((this.finacialPeriod == null) ? 0 : this.finacialPeriod.hashCode());
-        result = prime * result + ((this.finacialYear == null) ? 0 : this.finacialYear.hashCode());
-        result = prime * result + ((this.fromDate == null) ? 0 : this.fromDate.hashCode());
-        result = prime * result + ((this.month == null) ? 0 : this.month.hashCode());
-        result = prime * result + ((this.period == null) ? 0 : this.period.hashCode());
-        result = prime * result + ((this.periodName == null) ? 0 : this.periodName.hashCode());
-        result = prime * result + ((this.periodType == null) ? 0 : this.periodType.hashCode());
-        result = prime * result + ((this.periodWeek == null) ? 0 : this.periodWeek.hashCode());
-        result = prime * result + ((this.quarter == null) ? 0 : this.quarter.hashCode());
-        result = prime * result + ((this.toDate == null) ? 0 : this.toDate.hashCode());
-        result = prime * result + ((this.week == null) ? 0 : this.week.hashCode());
-        result = prime * result + ((this.weekDay == null) ? 0 : this.weekDay.hashCode());
-        result = prime * result + ((this.year == null) ? 0 : this.year.hashCode());
-        result = prime * result + ((this.yearDay == null) ? 0 : this.yearDay.hashCode());
-        result = prime * result + ((this.yearWeek == null) ? 0 : this.yearWeek.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

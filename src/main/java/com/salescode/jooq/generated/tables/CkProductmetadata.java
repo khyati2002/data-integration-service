@@ -12,36 +12,16 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -253,12 +233,12 @@ public class CkProductmetadata extends TableImpl<Record> {
     /**
      * The column <code>ck_productmetadata.from_date</code>.
      */
-    public final TableField<Record, Date> FROM_DATE = createField(DSL.name("from_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> FROM_DATE = createField(DSL.name("from_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_productmetadata.to_date</code>.
      */
-    public final TableField<Record, Date> TO_DATE = createField(DSL.name("to_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> TO_DATE = createField(DSL.name("to_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_productmetadata.case_to_other_unit_quantity</code>.
@@ -281,21 +261,21 @@ public class CkProductmetadata extends TableImpl<Record> {
     public final TableField<Record, BigDecimal> PIECE_TO_OTHER_UNIT_QUANTITY = createField(DSL.name("piece_to_other_unit_quantity"), SQLDataType.DECIMAL(10, 2).defaultValue(DSL.inline("0.00", SQLDataType.DECIMAL)), this, "");
 
     /**
-     * The column <code>ck_productmetadata.priority</code>.
-     */
-    public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
      * The column <code>ck_productmetadata.ssp</code>.
      */
     public final TableField<Record, BigDecimal> SSP = createField(DSL.name("ssp"), SQLDataType.DECIMAL(15, 5).defaultValue(DSL.inline("0.00000", SQLDataType.DECIMAL)), this, "");
 
+    /**
+     * The column <code>ck_productmetadata.priority</code>.
+     */
+    public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER.nullable(false), this, "");
+
     private CkProductmetadata(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkProductmetadata(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkProductmetadata(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -319,37 +299,8 @@ public class CkProductmetadata extends TableImpl<Record> {
         this(DSL.name("ck_productmetadata"), null);
     }
 
-    public <O extends Record> CkProductmetadata(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_PRODUCTMETADATA);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkProductmetadataPath extends CkProductmetadata implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkProductmetadataPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkProductmetadataPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkProductmetadataPath as(String alias) {
-            return new CkProductmetadataPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkProductmetadataPath as(Name alias) {
-            return new CkProductmetadataPath(alias, this);
-        }
-
-        @Override
-        public CkProductmetadataPath as(Table<?> alias) {
-            return new CkProductmetadataPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkProductmetadata(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_PRODUCTMETADATA);
     }
 
     @Override
@@ -372,26 +323,25 @@ public class CkProductmetadata extends TableImpl<Record> {
         return Arrays.asList(Keys.FKTG5FATSS3QOMR37MWY767623I, Keys.FKO7VXJUL1K9BS3MDAG05B4TGQ9);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKTG5FATSS3QOMR37MWY767623I, null);
+            _ckLocation = new CkLocation(this, Keys.FKTG5FATSS3QOMR37MWY767623I);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKO7VXJUL1K9BS3MDAG05B4TGQ9, null);
+            _ckUser = new CkUser(this, Keys.FKO7VXJUL1K9BS3MDAG05B4TGQ9);
 
         return _ckUser;
     }
@@ -404,11 +354,6 @@ public class CkProductmetadata extends TableImpl<Record> {
     @Override
     public CkProductmetadata as(Name alias) {
         return new CkProductmetadata(alias, this);
-    }
-
-    @Override
-    public CkProductmetadata as(Table<?> alias) {
-        return new CkProductmetadata(alias.getQualifiedName(), this);
     }
 
     /**
@@ -425,97 +370,5 @@ public class CkProductmetadata extends TableImpl<Record> {
     @Override
     public CkProductmetadata rename(Name name) {
         return new CkProductmetadata(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkProductmetadata rename(Table<?> name) {
-        return new CkProductmetadata(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductmetadata where(Condition condition) {
-        return new CkProductmetadata(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductmetadata where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductmetadata where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductmetadata where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductmetadata where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductmetadata where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductmetadata where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductmetadata where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductmetadata whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductmetadata whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

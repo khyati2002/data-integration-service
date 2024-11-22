@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,34 +21,34 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date systemTime;
-    private String beatCode;
-    private String beatName;
-    private String deviatedBeatCode;
-    private String deviatedBeatName;
-    private String deviationApproverId;
-    private String deviationApproverName;
-    private Date pjpDate;
-    private String pjpId;
-    private String pjpStatus;
-    private String status;
-    private String statusRemarks;
-    private String deviatedoutletcode;
-    private String loginid;
-    private String outletcode;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime systemTime;
+    private String        beatCode;
+    private String        beatName;
+    private String        deviatedBeatCode;
+    private String        deviatedBeatName;
+    private String        deviationApproverId;
+    private String        deviationApproverName;
+    private LocalDateTime pjpDate;
+    private String        pjpId;
+    private String        pjpStatus;
+    private String        status;
+    private String        statusRemarks;
+    private String        deviatedoutletcode;
+    private String        loginid;
+    private String        outletcode;
+    private Byte          changed;
 
     public CkPjpVisitPlan() {}
 
@@ -86,34 +84,34 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     }
 
     public CkPjpVisitPlan(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date systemTime,
-        String beatCode,
-        String beatName,
-        String deviatedBeatCode,
-        String deviatedBeatName,
-        String deviationApproverId,
-        String deviationApproverName,
-        Date pjpDate,
-        String pjpId,
-        String pjpStatus,
-        String status,
-        String statusRemarks,
-        String deviatedoutletcode,
-        String loginid,
-        String outletcode,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime systemTime,
+        String        beatCode,
+        String        beatName,
+        String        deviatedBeatCode,
+        String        deviatedBeatName,
+        String        deviationApproverId,
+        String        deviationApproverName,
+        LocalDateTime pjpDate,
+        String        pjpId,
+        String        pjpStatus,
+        String        status,
+        String        statusRemarks,
+        String        deviatedoutletcode,
+        String        loginid,
+        String        outletcode,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -148,8 +146,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -178,7 +174,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -193,7 +188,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -264,7 +258,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -279,7 +272,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -294,7 +286,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -323,21 +314,20 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.system_time</code>.
      */
-    public Date getSystemTime() {
+    public LocalDateTime getSystemTime() {
         return this.systemTime;
     }
 
     /**
      * Setter for <code>ck_pjp_visit_plan.system_time</code>.
      */
-    public void setSystemTime(Date systemTime) {
+    public void setSystemTime(LocalDateTime systemTime) {
         this.systemTime = systemTime;
     }
 
     /**
      * Getter for <code>ck_pjp_visit_plan.beat_code</code>.
      */
-    @Size(max = 255)
     public String getBeatCode() {
         return this.beatCode;
     }
@@ -352,7 +342,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.beat_name</code>.
      */
-    @Size(max = 255)
     public String getBeatName() {
         return this.beatName;
     }
@@ -367,7 +356,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.deviated_beat_code</code>.
      */
-    @Size(max = 255)
     public String getDeviatedBeatCode() {
         return this.deviatedBeatCode;
     }
@@ -382,7 +370,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.deviated_beat_name</code>.
      */
-    @Size(max = 255)
     public String getDeviatedBeatName() {
         return this.deviatedBeatName;
     }
@@ -397,7 +384,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.deviation_approver_id</code>.
      */
-    @Size(max = 255)
     public String getDeviationApproverId() {
         return this.deviationApproverId;
     }
@@ -412,7 +398,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.deviation_approver_name</code>.
      */
-    @Size(max = 255)
     public String getDeviationApproverName() {
         return this.deviationApproverName;
     }
@@ -427,21 +412,20 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.pjp_date</code>.
      */
-    public Date getPjpDate() {
+    public LocalDateTime getPjpDate() {
         return this.pjpDate;
     }
 
     /**
      * Setter for <code>ck_pjp_visit_plan.pjp_date</code>.
      */
-    public void setPjpDate(Date pjpDate) {
+    public void setPjpDate(LocalDateTime pjpDate) {
         this.pjpDate = pjpDate;
     }
 
     /**
      * Getter for <code>ck_pjp_visit_plan.pjp_id</code>.
      */
-    @Size(max = 255)
     public String getPjpId() {
         return this.pjpId;
     }
@@ -456,7 +440,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.pjp_status</code>.
      */
-    @Size(max = 255)
     public String getPjpStatus() {
         return this.pjpStatus;
     }
@@ -471,7 +454,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.status</code>.
      */
-    @Size(max = 255)
     public String getStatus() {
         return this.status;
     }
@@ -486,7 +468,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.status_remarks</code>.
      */
-    @Size(max = 255)
     public String getStatusRemarks() {
         return this.statusRemarks;
     }
@@ -501,7 +482,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.deviatedoutletcode</code>.
      */
-    @Size(max = 200)
     public String getDeviatedoutletcode() {
         return this.deviatedoutletcode;
     }
@@ -516,7 +496,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.loginid</code>.
      */
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -531,7 +510,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_pjp_visit_plan.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -555,221 +533,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkPjpVisitPlan other = (CkPjpVisitPlan) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.systemTime == null) {
-            if (other.systemTime != null)
-                return false;
-        }
-        else if (!this.systemTime.equals(other.systemTime))
-            return false;
-        if (this.beatCode == null) {
-            if (other.beatCode != null)
-                return false;
-        }
-        else if (!this.beatCode.equals(other.beatCode))
-            return false;
-        if (this.beatName == null) {
-            if (other.beatName != null)
-                return false;
-        }
-        else if (!this.beatName.equals(other.beatName))
-            return false;
-        if (this.deviatedBeatCode == null) {
-            if (other.deviatedBeatCode != null)
-                return false;
-        }
-        else if (!this.deviatedBeatCode.equals(other.deviatedBeatCode))
-            return false;
-        if (this.deviatedBeatName == null) {
-            if (other.deviatedBeatName != null)
-                return false;
-        }
-        else if (!this.deviatedBeatName.equals(other.deviatedBeatName))
-            return false;
-        if (this.deviationApproverId == null) {
-            if (other.deviationApproverId != null)
-                return false;
-        }
-        else if (!this.deviationApproverId.equals(other.deviationApproverId))
-            return false;
-        if (this.deviationApproverName == null) {
-            if (other.deviationApproverName != null)
-                return false;
-        }
-        else if (!this.deviationApproverName.equals(other.deviationApproverName))
-            return false;
-        if (this.pjpDate == null) {
-            if (other.pjpDate != null)
-                return false;
-        }
-        else if (!this.pjpDate.equals(other.pjpDate))
-            return false;
-        if (this.pjpId == null) {
-            if (other.pjpId != null)
-                return false;
-        }
-        else if (!this.pjpId.equals(other.pjpId))
-            return false;
-        if (this.pjpStatus == null) {
-            if (other.pjpStatus != null)
-                return false;
-        }
-        else if (!this.pjpStatus.equals(other.pjpStatus))
-            return false;
-        if (this.status == null) {
-            if (other.status != null)
-                return false;
-        }
-        else if (!this.status.equals(other.status))
-            return false;
-        if (this.statusRemarks == null) {
-            if (other.statusRemarks != null)
-                return false;
-        }
-        else if (!this.statusRemarks.equals(other.statusRemarks))
-            return false;
-        if (this.deviatedoutletcode == null) {
-            if (other.deviatedoutletcode != null)
-                return false;
-        }
-        else if (!this.deviatedoutletcode.equals(other.deviatedoutletcode))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.systemTime == null) ? 0 : this.systemTime.hashCode());
-        result = prime * result + ((this.beatCode == null) ? 0 : this.beatCode.hashCode());
-        result = prime * result + ((this.beatName == null) ? 0 : this.beatName.hashCode());
-        result = prime * result + ((this.deviatedBeatCode == null) ? 0 : this.deviatedBeatCode.hashCode());
-        result = prime * result + ((this.deviatedBeatName == null) ? 0 : this.deviatedBeatName.hashCode());
-        result = prime * result + ((this.deviationApproverId == null) ? 0 : this.deviationApproverId.hashCode());
-        result = prime * result + ((this.deviationApproverName == null) ? 0 : this.deviationApproverName.hashCode());
-        result = prime * result + ((this.pjpDate == null) ? 0 : this.pjpDate.hashCode());
-        result = prime * result + ((this.pjpId == null) ? 0 : this.pjpId.hashCode());
-        result = prime * result + ((this.pjpStatus == null) ? 0 : this.pjpStatus.hashCode());
-        result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
-        result = prime * result + ((this.statusRemarks == null) ? 0 : this.statusRemarks.hashCode());
-        result = prime * result + ((this.deviatedoutletcode == null) ? 0 : this.deviatedoutletcode.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

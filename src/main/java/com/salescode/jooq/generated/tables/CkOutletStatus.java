@@ -12,31 +12,15 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Index;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -128,22 +112,22 @@ public class CkOutletStatus extends TableImpl<Record> {
     /**
      * The column <code>ck_outlet_status.last_billed_date</code>.
      */
-    public final TableField<Record, Date> LAST_BILLED_DATE = createField(DSL.name("last_billed_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> LAST_BILLED_DATE = createField(DSL.name("last_billed_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_outlet_status.last_clicked_date</code>.
      */
-    public final TableField<Record, Date> LAST_CLICKED_DATE = createField(DSL.name("last_clicked_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> LAST_CLICKED_DATE = createField(DSL.name("last_clicked_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_outlet_status.last_ordered_date</code>.
      */
-    public final TableField<Record, Date> LAST_ORDERED_DATE = createField(DSL.name("last_ordered_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> LAST_ORDERED_DATE = createField(DSL.name("last_ordered_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_outlet_status.last_visit_date</code>.
      */
-    public final TableField<Record, Date> LAST_VISIT_DATE = createField(DSL.name("last_visit_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> LAST_VISIT_DATE = createField(DSL.name("last_visit_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_outlet_status.outletcode</code>.
@@ -168,22 +152,22 @@ public class CkOutletStatus extends TableImpl<Record> {
     /**
      * The column <code>ck_outlet_status.first_billed_date</code>.
      */
-    public final TableField<Record, Date> FIRST_BILLED_DATE = createField(DSL.name("first_billed_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> FIRST_BILLED_DATE = createField(DSL.name("first_billed_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_outlet_status.first_clicked_date</code>.
      */
-    public final TableField<Record, Date> FIRST_CLICKED_DATE = createField(DSL.name("first_clicked_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> FIRST_CLICKED_DATE = createField(DSL.name("first_clicked_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_outlet_status.first_ordered_date</code>.
      */
-    public final TableField<Record, Date> FIRST_ORDERED_DATE = createField(DSL.name("first_ordered_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> FIRST_ORDERED_DATE = createField(DSL.name("first_ordered_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_outlet_status.last_cross_sell_date</code>.
      */
-    public final TableField<Record, Date> LAST_CROSS_SELL_DATE = createField(DSL.name("last_cross_sell_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> LAST_CROSS_SELL_DATE = createField(DSL.name("last_cross_sell_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_outlet_status.last_cross_sell_recommended</code>.
@@ -193,12 +177,12 @@ public class CkOutletStatus extends TableImpl<Record> {
     /**
      * The column <code>ck_outlet_status.last_pjp_date</code>.
      */
-    public final TableField<Record, Date> LAST_PJP_DATE = createField(DSL.name("last_pjp_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> LAST_PJP_DATE = createField(DSL.name("last_pjp_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_outlet_status.last_up_sell_date</code>.
      */
-    public final TableField<Record, Date> LAST_UP_SELL_DATE = createField(DSL.name("last_up_sell_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> LAST_UP_SELL_DATE = createField(DSL.name("last_up_sell_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_outlet_status.last_up_sell_recommended</code>.
@@ -211,11 +195,11 @@ public class CkOutletStatus extends TableImpl<Record> {
     public final TableField<Record, String> ORDER_NUMBER = createField(DSL.name("order_number"), SQLDataType.VARCHAR(255), this, "");
 
     private CkOutletStatus(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkOutletStatus(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkOutletStatus(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -237,6 +221,10 @@ public class CkOutletStatus extends TableImpl<Record> {
      */
     public CkOutletStatus() {
         this(DSL.name("ck_outlet_status"), null);
+    }
+
+    public <O extends Record> CkOutletStatus(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_OUTLET_STATUS);
     }
 
     @Override
@@ -269,11 +257,6 @@ public class CkOutletStatus extends TableImpl<Record> {
         return new CkOutletStatus(alias, this);
     }
 
-    @Override
-    public CkOutletStatus as(Table<?> alias) {
-        return new CkOutletStatus(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -288,97 +271,5 @@ public class CkOutletStatus extends TableImpl<Record> {
     @Override
     public CkOutletStatus rename(Name name) {
         return new CkOutletStatus(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkOutletStatus rename(Table<?> name) {
-        return new CkOutletStatus(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletStatus where(Condition condition) {
-        return new CkOutletStatus(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletStatus where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletStatus where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletStatus where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletStatus where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletStatus where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletStatus where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletStatus where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletStatus whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletStatus whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

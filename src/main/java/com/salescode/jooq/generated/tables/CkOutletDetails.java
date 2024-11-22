@@ -12,36 +12,15 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -256,6 +235,17 @@ public class CkOutletDetails extends TableImpl<Record> {
     public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
 
     /**
+     * @deprecated Unknown data type. If this is a qualified, user-defined type,
+     * it may have been excluded from code generation. If this is a built-in
+     * type, you can define an explicit {@link org.jooq.Binding} to specify how
+     * this type should be handled. Deprecation can be turned off using
+     * {@literal <deprecationOnUnknownTypes/>} in your code generator
+     * configuration.
+     */
+    @Deprecated
+    public final TableField<Record, Object> COORDINATE = createField(DSL.name("coordinate"), org.jooq.impl.DefaultDataType.getDefaultDataType("\"ckroot\".\"ck_outlet_details_coordinate\""), this, "");
+
+    /**
      * The column <code>ck_outlet_details.doo</code>.
      */
     public final TableField<Record, Date> DOO = createField(DSL.name("doo"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
@@ -326,11 +316,11 @@ public class CkOutletDetails extends TableImpl<Record> {
     public final TableField<Record, String> PRICE_LIST_ID = createField(DSL.name("price_list_id"), SQLDataType.VARCHAR(255), this, "");
 
     private CkOutletDetails(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkOutletDetails(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkOutletDetails(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -354,37 +344,8 @@ public class CkOutletDetails extends TableImpl<Record> {
         this(DSL.name("ck_outlet_details"), null);
     }
 
-    public <O extends Record> CkOutletDetails(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_OUTLET_DETAILS);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkOutletDetailsPath extends CkOutletDetails implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkOutletDetailsPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkOutletDetailsPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkOutletDetailsPath as(String alias) {
-            return new CkOutletDetailsPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkOutletDetailsPath as(Name alias) {
-            return new CkOutletDetailsPath(alias, this);
-        }
-
-        @Override
-        public CkOutletDetailsPath as(Table<?> alias) {
-            return new CkOutletDetailsPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkOutletDetails(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_OUTLET_DETAILS);
     }
 
     @Override
@@ -409,17 +370,28 @@ public class CkOutletDetails extends TableImpl<Record> {
 
     @Override
     public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK34TJNHKXR2ESQXCCD5LJL3UAK);
+        return Arrays.asList(Keys.FKJLJEIMTDDCM2WTM7HSTDG7BJ6, Keys.FK34TJNHKXR2ESQXCCD5LJL3UAK);
     }
 
-    private transient CkUserPath _ckUser;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
+
+    /**
+     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
+     */
+    public CkLocation ckLocation() {
+        if (_ckLocation == null)
+            _ckLocation = new CkLocation(this, Keys.FKJLJEIMTDDCM2WTM7HSTDG7BJ6);
+
+        return _ckLocation;
+    }
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FK34TJNHKXR2ESQXCCD5LJL3UAK, null);
+            _ckUser = new CkUser(this, Keys.FK34TJNHKXR2ESQXCCD5LJL3UAK);
 
         return _ckUser;
     }
@@ -432,11 +404,6 @@ public class CkOutletDetails extends TableImpl<Record> {
     @Override
     public CkOutletDetails as(Name alias) {
         return new CkOutletDetails(alias, this);
-    }
-
-    @Override
-    public CkOutletDetails as(Table<?> alias) {
-        return new CkOutletDetails(alias.getQualifiedName(), this);
     }
 
     /**
@@ -453,97 +420,5 @@ public class CkOutletDetails extends TableImpl<Record> {
     @Override
     public CkOutletDetails rename(Name name) {
         return new CkOutletDetails(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkOutletDetails rename(Table<?> name) {
-        return new CkOutletDetails(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetails where(Condition condition) {
-        return new CkOutletDetails(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetails where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetails where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetails where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletDetails where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletDetails where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletDetails where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletDetails where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetails whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletDetails whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

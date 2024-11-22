@@ -6,32 +6,13 @@ package com.salescode.jooq.generated.tables;
 
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkHierarchyMetadata.CkHierarchyMetadataPath;
-import com.salescode.jooq.generated.tables.CkOffers.CkOffersPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -67,11 +48,11 @@ public class CkOffersSupplierHierarchy extends TableImpl<Record> {
     public final TableField<Record, String> SUPPLIER_HIERARCHY_ID = createField(DSL.name("supplier_hierarchy_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private CkOffersSupplierHierarchy(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkOffersSupplierHierarchy(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkOffersSupplierHierarchy(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -97,37 +78,8 @@ public class CkOffersSupplierHierarchy extends TableImpl<Record> {
         this(DSL.name("ck_offers_supplier_hierarchy"), null);
     }
 
-    public <O extends Record> CkOffersSupplierHierarchy(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_OFFERS_SUPPLIER_HIERARCHY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkOffersSupplierHierarchyPath extends CkOffersSupplierHierarchy implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkOffersSupplierHierarchyPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkOffersSupplierHierarchyPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkOffersSupplierHierarchyPath as(String alias) {
-            return new CkOffersSupplierHierarchyPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkOffersSupplierHierarchyPath as(Name alias) {
-            return new CkOffersSupplierHierarchyPath(alias, this);
-        }
-
-        @Override
-        public CkOffersSupplierHierarchyPath as(Table<?> alias) {
-            return new CkOffersSupplierHierarchyPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkOffersSupplierHierarchy(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_OFFERS_SUPPLIER_HIERARCHY);
     }
 
     @Override
@@ -140,27 +92,26 @@ public class CkOffersSupplierHierarchy extends TableImpl<Record> {
         return Arrays.asList(Keys.FK6EADO04F0M9A5NT4KNFOBLRIW, Keys.FKBE9NQ1U4FU8H3PE37G47CUPR9);
     }
 
-    private transient CkOffersPath _ckOffers;
+    private transient CkOffers _ckOffers;
+    private transient CkHierarchyMetadata _ckHierarchyMetadata;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_offers</code> table.
      */
-    public CkOffersPath ckOffers() {
+    public CkOffers ckOffers() {
         if (_ckOffers == null)
-            _ckOffers = new CkOffersPath(this, Keys.FK6EADO04F0M9A5NT4KNFOBLRIW, null);
+            _ckOffers = new CkOffers(this, Keys.FK6EADO04F0M9A5NT4KNFOBLRIW);
 
         return _ckOffers;
     }
-
-    private transient CkHierarchyMetadataPath _ckHierarchyMetadata;
 
     /**
      * Get the implicit join path to the
      * <code>ckroot.ck_hierarchy_metadata</code> table.
      */
-    public CkHierarchyMetadataPath ckHierarchyMetadata() {
+    public CkHierarchyMetadata ckHierarchyMetadata() {
         if (_ckHierarchyMetadata == null)
-            _ckHierarchyMetadata = new CkHierarchyMetadataPath(this, Keys.FKBE9NQ1U4FU8H3PE37G47CUPR9, null);
+            _ckHierarchyMetadata = new CkHierarchyMetadata(this, Keys.FKBE9NQ1U4FU8H3PE37G47CUPR9);
 
         return _ckHierarchyMetadata;
     }
@@ -173,11 +124,6 @@ public class CkOffersSupplierHierarchy extends TableImpl<Record> {
     @Override
     public CkOffersSupplierHierarchy as(Name alias) {
         return new CkOffersSupplierHierarchy(alias, this);
-    }
-
-    @Override
-    public CkOffersSupplierHierarchy as(Table<?> alias) {
-        return new CkOffersSupplierHierarchy(alias.getQualifiedName(), this);
     }
 
     /**
@@ -194,97 +140,5 @@ public class CkOffersSupplierHierarchy extends TableImpl<Record> {
     @Override
     public CkOffersSupplierHierarchy rename(Name name) {
         return new CkOffersSupplierHierarchy(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkOffersSupplierHierarchy rename(Table<?> name) {
-        return new CkOffersSupplierHierarchy(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffersSupplierHierarchy where(Condition condition) {
-        return new CkOffersSupplierHierarchy(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffersSupplierHierarchy where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffersSupplierHierarchy where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffersSupplierHierarchy where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOffersSupplierHierarchy where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOffersSupplierHierarchy where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOffersSupplierHierarchy where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOffersSupplierHierarchy where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffersSupplierHierarchy whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOffersSupplierHierarchy whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -6,28 +6,13 @@ package com.salescode.jooq.generated.tables;
 
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Index;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -62,11 +47,11 @@ public class CkUserdesignation extends TableImpl<Record> {
     public final TableField<Record, String> DESIGNATION = createField(DSL.name("designation"), SQLDataType.VARCHAR(255), this, "");
 
     private CkUserdesignation(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkUserdesignation(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkUserdesignation(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -90,6 +75,10 @@ public class CkUserdesignation extends TableImpl<Record> {
         this(DSL.name("ck_userdesignation"), null);
     }
 
+    public <O extends Record> CkUserdesignation(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_USERDESIGNATION);
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -110,11 +99,6 @@ public class CkUserdesignation extends TableImpl<Record> {
         return new CkUserdesignation(alias, this);
     }
 
-    @Override
-    public CkUserdesignation as(Table<?> alias) {
-        return new CkUserdesignation(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -129,97 +113,5 @@ public class CkUserdesignation extends TableImpl<Record> {
     @Override
     public CkUserdesignation rename(Name name) {
         return new CkUserdesignation(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkUserdesignation rename(Table<?> name) {
-        return new CkUserdesignation(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserdesignation where(Condition condition) {
-        return new CkUserdesignation(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserdesignation where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserdesignation where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserdesignation where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserdesignation where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserdesignation where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserdesignation where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserdesignation where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserdesignation whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserdesignation whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

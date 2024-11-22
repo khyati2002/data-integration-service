@@ -4,13 +4,7 @@
 package com.salescode.jooq.generated;
 
 
-import com.salescode.jooq.generated.tables.CkEnrichmentInfo;
-import com.salescode.jooq.generated.tables.CkMetadata;
-import com.salescode.jooq.generated.tables.CkOutletDetails;
-import com.salescode.jooq.generated.tables.CkTransformerInfo;
-import com.salescode.jooq.generated.tables.CkUser;
-import com.salescode.jooq.generated.tables.CkValidationRule;
-import com.salescode.jooq.generated.tables.Profile;
+import com.salescode.jooq.generated.tables.*;
 
 
 /**
@@ -20,9 +14,384 @@ import com.salescode.jooq.generated.tables.Profile;
 public class Tables {
 
     /**
+     * The table <code>ck_account_info</code>.
+     */
+    public static final CkAccountInfo CK_ACCOUNT_INFO = CkAccountInfo.CK_ACCOUNT_INFO;
+
+    /**
+     * The table <code>ck_activity_reminder</code>.
+     */
+    public static final CkActivityReminder CK_ACTIVITY_REMINDER = CkActivityReminder.CK_ACTIVITY_REMINDER;
+
+    /**
+     * The table <code>ck_aggregation_info</code>.
+     */
+    public static final CkAggregationInfo CK_AGGREGATION_INFO = CkAggregationInfo.CK_AGGREGATION_INFO;
+
+    /**
+     * The table <code>ck_analytics</code>.
+     */
+    public static final CkAnalytics CK_ANALYTICS = CkAnalytics.CK_ANALYTICS;
+
+    /**
+     * The table <code>ck_api_transaction_log</code>.
+     */
+    public static final CkApiTransactionLog CK_API_TRANSACTION_LOG = CkApiTransactionLog.CK_API_TRANSACTION_LOG;
+
+    /**
+     * The table <code>ck_app_notification_info</code>.
+     */
+    public static final CkAppNotificationInfo CK_APP_NOTIFICATION_INFO = CkAppNotificationInfo.CK_APP_NOTIFICATION_INFO;
+
+    /**
+     * The table <code>ck_approval_info</code>.
+     */
+    public static final CkApprovalInfo CK_APPROVAL_INFO = CkApprovalInfo.CK_APPROVAL_INFO;
+
+    /**
+     * The table <code>ck_approval_meta_data</code>.
+     */
+    public static final CkApprovalMetaData CK_APPROVAL_META_DATA = CkApprovalMetaData.CK_APPROVAL_META_DATA;
+
+    /**
+     * The table <code>ck_attendance</code>.
+     */
+    public static final CkAttendance CK_ATTENDANCE = CkAttendance.CK_ATTENDANCE;
+
+    /**
+     * The table <code>ck_auth_resource</code>.
+     */
+    public static final CkAuthResource CK_AUTH_RESOURCE = CkAuthResource.CK_AUTH_RESOURCE;
+
+    /**
+     * The table <code>ck_auth_role</code>.
+     */
+    public static final CkAuthRole CK_AUTH_ROLE = CkAuthRole.CK_AUTH_ROLE;
+
+    /**
+     * The table <code>ck_auth_role_resources</code>.
+     */
+    public static final CkAuthRoleResources CK_AUTH_ROLE_RESOURCES = CkAuthRoleResources.CK_AUTH_ROLE_RESOURCES;
+
+    /**
+     * The table <code>ck_banner</code>.
+     */
+    public static final CkBanner CK_BANNER = CkBanner.CK_BANNER;
+
+    /**
+     * The table <code>ck_banner_banner_elements</code>.
+     */
+    public static final CkBannerBannerElements CK_BANNER_BANNER_ELEMENTS = CkBannerBannerElements.CK_BANNER_BANNER_ELEMENTS;
+
+    /**
+     * The table <code>ck_banner_distribution</code>.
+     */
+    public static final CkBannerDistribution CK_BANNER_DISTRIBUTION = CkBannerDistribution.CK_BANNER_DISTRIBUTION;
+
+    /**
+     * The table <code>ck_banner_distribution_supplier</code>.
+     */
+    public static final CkBannerDistributionSupplier CK_BANNER_DISTRIBUTION_SUPPLIER = CkBannerDistributionSupplier.CK_BANNER_DISTRIBUTION_SUPPLIER;
+
+    /**
+     * The table <code>ck_banner_element</code>.
+     */
+    public static final CkBannerElement CK_BANNER_ELEMENT = CkBannerElement.CK_BANNER_ELEMENT;
+
+    /**
+     * The table <code>ck_banner_template</code>.
+     */
+    public static final CkBannerTemplate CK_BANNER_TEMPLATE = CkBannerTemplate.CK_BANNER_TEMPLATE;
+
+    /**
+     * The table <code>ck_banner_template_element</code>.
+     */
+    public static final CkBannerTemplateElement CK_BANNER_TEMPLATE_ELEMENT = CkBannerTemplateElement.CK_BANNER_TEMPLATE_ELEMENT;
+
+    /**
+     * The table <code>ck_banner_template_template_elements</code>.
+     */
+    public static final CkBannerTemplateTemplateElements CK_BANNER_TEMPLATE_TEMPLATE_ELEMENTS = CkBannerTemplateTemplateElements.CK_BANNER_TEMPLATE_TEMPLATE_ELEMENTS;
+
+    /**
+     * The table <code>ck_calendar_mapping</code>.
+     */
+    public static final CkCalendarMapping CK_CALENDAR_MAPPING = CkCalendarMapping.CK_CALENDAR_MAPPING;
+
+    /**
+     * The table <code>ck_cart_details</code>.
+     */
+    public static final CkCartDetails CK_CART_DETAILS = CkCartDetails.CK_CART_DETAILS;
+
+    /**
+     * The table <code>ck_category_info</code>.
+     */
+    public static final CkCategoryInfo CK_CATEGORY_INFO = CkCategoryInfo.CK_CATEGORY_INFO;
+
+    /**
+     * The table <code>ck_channel_hierarchy_metadata</code>.
+     */
+    public static final CkChannelHierarchyMetadata CK_CHANNEL_HIERARCHY_METADATA = CkChannelHierarchyMetadata.CK_CHANNEL_HIERARCHY_METADATA;
+
+    /**
+     * The table <code>ck_cloud_trails</code>.
+     */
+    public static final CkCloudTrails CK_CLOUD_TRAILS = CkCloudTrails.CK_CLOUD_TRAILS;
+
+    /**
+     * The table <code>ck_competition_activity</code>.
+     */
+    public static final CkCompetitionActivity CK_COMPETITION_ACTIVITY = CkCompetitionActivity.CK_COMPETITION_ACTIVITY;
+
+    /**
+     * The table <code>ck_competitor</code>.
+     */
+    public static final CkCompetitor CK_COMPETITOR = CkCompetitor.CK_COMPETITOR;
+
+    /**
+     * The table <code>ck_consent_info</code>.
+     */
+    public static final CkConsentInfo CK_CONSENT_INFO = CkConsentInfo.CK_CONSENT_INFO;
+
+    /**
+     * The table <code>ck_credit_status</code>.
+     */
+    public static final CkCreditStatus CK_CREDIT_STATUS = CkCreditStatus.CK_CREDIT_STATUS;
+
+    /**
+     * The table <code>ck_customer_account</code>.
+     */
+    public static final CkCustomerAccount CK_CUSTOMER_ACCOUNT = CkCustomerAccount.CK_CUSTOMER_ACCOUNT;
+
+    /**
+     * The table <code>ck_delta_configuration</code>.
+     */
+    public static final CkDeltaConfiguration CK_DELTA_CONFIGURATION = CkDeltaConfiguration.CK_DELTA_CONFIGURATION;
+
+    /**
+     * The table <code>ck_delta_info</code>.
+     */
+    public static final CkDeltaInfo CK_DELTA_INFO = CkDeltaInfo.CK_DELTA_INFO;
+
+    /**
+     * The table <code>ck_device_info</code>.
+     */
+    public static final CkDeviceInfo CK_DEVICE_INFO = CkDeviceInfo.CK_DEVICE_INFO;
+
+    /**
+     * The table <code>ck_discount</code>.
+     */
+    public static final CkDiscount CK_DISCOUNT = CkDiscount.CK_DISCOUNT;
+
+    /**
+     * The table <code>ck_division</code>.
+     */
+    public static final CkDivision CK_DIVISION = CkDivision.CK_DIVISION;
+
+    /**
+     * The table <code>ck_division_roles</code>.
+     */
+    public static final CkDivisionRoles CK_DIVISION_ROLES = CkDivisionRoles.CK_DIVISION_ROLES;
+
+    /**
+     * The table <code>ck_dynamic_outlet_aggregation</code>.
+     */
+    public static final CkDynamicOutletAggregation CK_DYNAMIC_OUTLET_AGGREGATION = CkDynamicOutletAggregation.CK_DYNAMIC_OUTLET_AGGREGATION;
+
+    /**
+     * The table <code>ck_dynamic_user_aggregation</code>.
+     */
+    public static final CkDynamicUserAggregation CK_DYNAMIC_USER_AGGREGATION = CkDynamicUserAggregation.CK_DYNAMIC_USER_AGGREGATION;
+
+    /**
      * The table <code>ck_enrichment_info</code>.
      */
     public static final CkEnrichmentInfo CK_ENRICHMENT_INFO = CkEnrichmentInfo.CK_ENRICHMENT_INFO;
+
+    /**
+     * The table <code>ck_entity_approval</code>.
+     */
+    public static final CkEntityApproval CK_ENTITY_APPROVAL = CkEntityApproval.CK_ENTITY_APPROVAL;
+
+    /**
+     * The table <code>ck_entity_approval_history</code>.
+     */
+    public static final CkEntityApprovalHistory CK_ENTITY_APPROVAL_HISTORY = CkEntityApprovalHistory.CK_ENTITY_APPROVAL_HISTORY;
+
+    /**
+     * The table <code>ck_entity_fields_unique_id</code>.
+     */
+    public static final CkEntityFieldsUniqueId CK_ENTITY_FIELDS_UNIQUE_ID = CkEntityFieldsUniqueId.CK_ENTITY_FIELDS_UNIQUE_ID;
+
+    /**
+     * The table <code>ck_event_listener_info</code>.
+     */
+    public static final CkEventListenerInfo CK_EVENT_LISTENER_INFO = CkEventListenerInfo.CK_EVENT_LISTENER_INFO;
+
+    /**
+     * The table <code>ck_expense</code>.
+     */
+    public static final CkExpense CK_EXPENSE = CkExpense.CK_EXPENSE;
+
+    /**
+     * The table <code>ck_extended_attributes</code>.
+     */
+    public static final CkExtendedAttributes CK_EXTENDED_ATTRIBUTES = CkExtendedAttributes.CK_EXTENDED_ATTRIBUTES;
+
+    /**
+     * The table <code>ck_faq</code>.
+     */
+    public static final CkFaq CK_FAQ = CkFaq.CK_FAQ;
+
+    /**
+     * The table <code>ck_favorite_sku</code>.
+     */
+    public static final CkFavoriteSku CK_FAVORITE_SKU = CkFavoriteSku.CK_FAVORITE_SKU;
+
+    /**
+     * The table <code>ck_feature_endpoints</code>.
+     */
+    public static final CkFeatureEndpoints CK_FEATURE_ENDPOINTS = CkFeatureEndpoints.CK_FEATURE_ENDPOINTS;
+
+    /**
+     * The table <code>ck_feature_metadata</code>.
+     */
+    public static final CkFeatureMetadata CK_FEATURE_METADATA = CkFeatureMetadata.CK_FEATURE_METADATA;
+
+    /**
+     * The table <code>ck_file_status</code>.
+     */
+    public static final CkFileStatus CK_FILE_STATUS = CkFileStatus.CK_FILE_STATUS;
+
+    /**
+     * The table <code>ck_function_info</code>.
+     */
+    public static final CkFunctionInfo CK_FUNCTION_INFO = CkFunctionInfo.CK_FUNCTION_INFO;
+
+    /**
+     * The table <code>ck_generic_object</code>.
+     */
+    public static final CkGenericObject CK_GENERIC_OBJECT = CkGenericObject.CK_GENERIC_OBJECT;
+
+    /**
+     * The table <code>ck_generic_schema</code>.
+     */
+    public static final CkGenericSchema CK_GENERIC_SCHEMA = CkGenericSchema.CK_GENERIC_SCHEMA;
+
+    /**
+     * The table <code>ck_grn_info</code>.
+     */
+    public static final CkGrnInfo CK_GRN_INFO = CkGrnInfo.CK_GRN_INFO;
+
+    /**
+     * The table <code>ck_hierarchy_metadata</code>.
+     */
+    public static final CkHierarchyMetadata CK_HIERARCHY_METADATA = CkHierarchyMetadata.CK_HIERARCHY_METADATA;
+
+    /**
+     * The table <code>ck_holidaycalendar</code>.
+     */
+    public static final CkHolidaycalendar CK_HOLIDAYCALENDAR = CkHolidaycalendar.CK_HOLIDAYCALENDAR;
+
+    /**
+     * The table <code>ck_impact_report</code>.
+     */
+    public static final CkImpactReport CK_IMPACT_REPORT = CkImpactReport.CK_IMPACT_REPORT;
+
+    /**
+     * The table <code>ck_integration_history</code>.
+     */
+    public static final CkIntegrationHistory CK_INTEGRATION_HISTORY = CkIntegrationHistory.CK_INTEGRATION_HISTORY;
+
+    /**
+     * The table <code>ck_invoice_collection</code>.
+     */
+    public static final CkInvoiceCollection CK_INVOICE_COLLECTION = CkInvoiceCollection.CK_INVOICE_COLLECTION;
+
+    /**
+     * The table <code>ck_itemwise_rackdetail</code>.
+     */
+    public static final CkItemwiseRackdetail CK_ITEMWISE_RACKDETAIL = CkItemwiseRackdetail.CK_ITEMWISE_RACKDETAIL;
+
+    /**
+     * The table <code>ck_jenkins_configuration</code>.
+     */
+    public static final CkJenkinsConfiguration CK_JENKINS_CONFIGURATION = CkJenkinsConfiguration.CK_JENKINS_CONFIGURATION;
+
+    /**
+     * The table <code>ck_kpi_data</code>.
+     */
+    public static final CkKpiData CK_KPI_DATA = CkKpiData.CK_KPI_DATA;
+
+    /**
+     * The table <code>ck_kpi_info</code>.
+     */
+    public static final CkKpiInfo CK_KPI_INFO = CkKpiInfo.CK_KPI_INFO;
+
+    /**
+     * The table <code>ck_kpi_registory</code>.
+     */
+    public static final CkKpiRegistory CK_KPI_REGISTORY = CkKpiRegistory.CK_KPI_REGISTORY;
+
+    /**
+     * The table <code>ck_link_program</code>.
+     */
+    public static final CkLinkProgram CK_LINK_PROGRAM = CkLinkProgram.CK_LINK_PROGRAM;
+
+    /**
+     * The table <code>ck_linkedbrand</code>.
+     */
+    public static final CkLinkedbrand CK_LINKEDBRAND = CkLinkedbrand.CK_LINKEDBRAND;
+
+    /**
+     * The table <code>ck_linkedcategory</code>.
+     */
+    public static final CkLinkedcategory CK_LINKEDCATEGORY = CkLinkedcategory.CK_LINKEDCATEGORY;
+
+    /**
+     * The table <code>ck_linkeditemclass</code>.
+     */
+    public static final CkLinkeditemclass CK_LINKEDITEMCLASS = CkLinkeditemclass.CK_LINKEDITEMCLASS;
+
+    /**
+     * The table <code>ck_linkedproduct</code>.
+     */
+    public static final CkLinkedproduct CK_LINKEDPRODUCT = CkLinkedproduct.CK_LINKEDPRODUCT;
+
+    /**
+     * The table <code>ck_linkedsku</code>.
+     */
+    public static final CkLinkedsku CK_LINKEDSKU = CkLinkedsku.CK_LINKEDSKU;
+
+    /**
+     * The table <code>ck_linkedsubcategory</code>.
+     */
+    public static final CkLinkedsubcategory CK_LINKEDSUBCATEGORY = CkLinkedsubcategory.CK_LINKEDSUBCATEGORY;
+
+    /**
+     * The table <code>ck_location</code>.
+     */
+    public static final CkLocation CK_LOCATION = CkLocation.CK_LOCATION;
+
+    /**
+     * The table <code>ck_loyalty_score</code>.
+     */
+    public static final CkLoyaltyScore CK_LOYALTY_SCORE = CkLoyaltyScore.CK_LOYALTY_SCORE;
+
+    /**
+     * The table <code>ck_media_metadata</code>.
+     */
+    public static final CkMediaMetadata CK_MEDIA_METADATA = CkMediaMetadata.CK_MEDIA_METADATA;
+
+    /**
+     * The table <code>ck_meetingmaster</code>.
+     */
+    public static final CkMeetingmaster CK_MEETINGMASTER = CkMeetingmaster.CK_MEETINGMASTER;
+
+    /**
+     * The table <code>ck_merchandising</code>.
+     */
+    public static final CkMerchandising CK_MERCHANDISING = CkMerchandising.CK_MERCHANDISING;
 
     /**
      * The table <code>ck_metadata</code>.
@@ -30,9 +399,704 @@ public class Tables {
     public static final CkMetadata CK_METADATA = CkMetadata.CK_METADATA;
 
     /**
+     * The table <code>ck_monthlysku_compliance</code>.
+     */
+    public static final CkMonthlyskuCompliance CK_MONTHLYSKU_COMPLIANCE = CkMonthlyskuCompliance.CK_MONTHLYSKU_COMPLIANCE;
+
+    /**
+     * The table <code>ck_night_hall_town</code>.
+     */
+    public static final CkNightHallTown CK_NIGHT_HALL_TOWN = CkNightHallTown.CK_NIGHT_HALL_TOWN;
+
+    /**
+     * The table <code>ck_notification_history</code>.
+     */
+    public static final CkNotificationHistory CK_NOTIFICATION_HISTORY = CkNotificationHistory.CK_NOTIFICATION_HISTORY;
+
+    /**
+     * The table <code>ck_notification_rule</code>.
+     */
+    public static final CkNotificationRule CK_NOTIFICATION_RULE = CkNotificationRule.CK_NOTIFICATION_RULE;
+
+    /**
+     * The table <code>ck_offers</code>.
+     */
+    public static final CkOffers CK_OFFERS = CkOffers.CK_OFFERS;
+
+    /**
+     * The table <code>ck_offers_supplier_hierarchy</code>.
+     */
+    public static final CkOffersSupplierHierarchy CK_OFFERS_SUPPLIER_HIERARCHY = CkOffersSupplierHierarchy.CK_OFFERS_SUPPLIER_HIERARCHY;
+
+    /**
+     * The table <code>ck_ondc_recommendation</code>.
+     */
+    public static final CkOndcRecommendation CK_ONDC_RECOMMENDATION = CkOndcRecommendation.CK_ONDC_RECOMMENDATION;
+
+    /**
+     * The table <code>ck_order_details</code>.
+     */
+    public static final CkOrderDetails CK_ORDER_DETAILS = CkOrderDetails.CK_ORDER_DETAILS;
+
+    /**
+     * The table <code>ck_order_history</code>.
+     */
+    public static final CkOrderHistory CK_ORDER_HISTORY = CkOrderHistory.CK_ORDER_HISTORY;
+
+    /**
+     * The table <code>ck_order_recohistory</code>.
+     */
+    public static final CkOrderRecohistory CK_ORDER_RECOHISTORY = CkOrderRecohistory.CK_ORDER_RECOHISTORY;
+
+    /**
+     * The table <code>ck_orders</code>.
+     */
+    public static final CkOrders CK_ORDERS = CkOrders.CK_ORDERS;
+
+    /**
+     * The table <code>ck_outlet_activity</code>.
+     */
+    public static final CkOutletActivity CK_OUTLET_ACTIVITY = CkOutletActivity.CK_OUTLET_ACTIVITY;
+
+    /**
      * The table <code>ck_outlet_details</code>.
      */
     public static final CkOutletDetails CK_OUTLET_DETAILS = CkOutletDetails.CK_OUTLET_DETAILS;
+
+    /**
+     * The table <code>ck_outlet_details_hierarchymetadata</code>.
+     */
+    public static final CkOutletDetailsHierarchymetadata CK_OUTLET_DETAILS_HIERARCHYMETADATA = CkOutletDetailsHierarchymetadata.CK_OUTLET_DETAILS_HIERARCHYMETADATA;
+
+    /**
+     * The table <code>ck_outlet_level_recommendation</code>.
+     */
+    public static final CkOutletLevelRecommendation CK_OUTLET_LEVEL_RECOMMENDATION = CkOutletLevelRecommendation.CK_OUTLET_LEVEL_RECOMMENDATION;
+
+    /**
+     * The table <code>ck_outlet_location</code>.
+     */
+    public static final CkOutletLocation CK_OUTLET_LOCATION = CkOutletLocation.CK_OUTLET_LOCATION;
+
+    /**
+     * The table <code>ck_outlet_mapping</code>.
+     */
+    public static final CkOutletMapping CK_OUTLET_MAPPING = CkOutletMapping.CK_OUTLET_MAPPING;
+
+    /**
+     * The table <code>ck_outlet_mapping_beat_frequency</code>.
+     */
+    public static final CkOutletMappingBeatFrequency CK_OUTLET_MAPPING_BEAT_FREQUENCY = CkOutletMappingBeatFrequency.CK_OUTLET_MAPPING_BEAT_FREQUENCY;
+
+    /**
+     * The table <code>ck_outlet_pricing_adjustment</code>.
+     */
+    public static final CkOutletPricingAdjustment CK_OUTLET_PRICING_ADJUSTMENT = CkOutletPricingAdjustment.CK_OUTLET_PRICING_ADJUSTMENT;
+
+    /**
+     * The table <code>ck_outlet_product_info</code>.
+     */
+    public static final CkOutletProductInfo CK_OUTLET_PRODUCT_INFO = CkOutletProductInfo.CK_OUTLET_PRODUCT_INFO;
+
+    /**
+     * The table <code>ck_outlet_sku_metadata</code>.
+     */
+    public static final CkOutletSkuMetadata CK_OUTLET_SKU_METADATA = CkOutletSkuMetadata.CK_OUTLET_SKU_METADATA;
+
+    /**
+     * The table <code>ck_outlet_status</code>.
+     */
+    public static final CkOutletStatus CK_OUTLET_STATUS = CkOutletStatus.CK_OUTLET_STATUS;
+
+    /**
+     * The table <code>ck_outlet_target</code>.
+     */
+    public static final CkOutletTarget CK_OUTLET_TARGET = CkOutletTarget.CK_OUTLET_TARGET;
+
+    /**
+     * The table <code>ck_outletwise_planograminformation</code>.
+     */
+    public static final CkOutletwisePlanograminformation CK_OUTLETWISE_PLANOGRAMINFORMATION = CkOutletwisePlanograminformation.CK_OUTLETWISE_PLANOGRAMINFORMATION;
+
+    /**
+     * The table <code>ck_outletwise_skulist</code>.
+     */
+    public static final CkOutletwiseSkulist CK_OUTLETWISE_SKULIST = CkOutletwiseSkulist.CK_OUTLETWISE_SKULIST;
+
+    /**
+     * The table <code>ck_payment_collection</code>.
+     */
+    public static final CkPaymentCollection CK_PAYMENT_COLLECTION = CkPaymentCollection.CK_PAYMENT_COLLECTION;
+
+    /**
+     * The table <code>ck_payment_subscription</code>.
+     */
+    public static final CkPaymentSubscription CK_PAYMENT_SUBSCRIPTION = CkPaymentSubscription.CK_PAYMENT_SUBSCRIPTION;
+
+    /**
+     * The table <code>ck_payment_transaction_history</code>.
+     */
+    public static final CkPaymentTransactionHistory CK_PAYMENT_TRANSACTION_HISTORY = CkPaymentTransactionHistory.CK_PAYMENT_TRANSACTION_HISTORY;
+
+    /**
+     * The table <code>ck_permission_group</code>.
+     */
+    public static final CkPermissionGroup CK_PERMISSION_GROUP = CkPermissionGroup.CK_PERMISSION_GROUP;
+
+    /**
+     * The table <code>ck_permission_group_members</code>.
+     */
+    public static final CkPermissionGroupMembers CK_PERMISSION_GROUP_MEMBERS = CkPermissionGroupMembers.CK_PERMISSION_GROUP_MEMBERS;
+
+    /**
+     * The table <code>ck_permission_info</code>.
+     */
+    public static final CkPermissionInfo CK_PERMISSION_INFO = CkPermissionInfo.CK_PERMISSION_INFO;
+
+    /**
+     * The table <code>ck_permission_resources</code>.
+     */
+    public static final CkPermissionResources CK_PERMISSION_RESOURCES = CkPermissionResources.CK_PERMISSION_RESOURCES;
+
+    /**
+     * The table <code>ck_pjp_visit_plan</code>.
+     */
+    public static final CkPjpVisitPlan CK_PJP_VISIT_PLAN = CkPjpVisitPlan.CK_PJP_VISIT_PLAN;
+
+    /**
+     * The table <code>ck_plan_visit_aggregation</code>.
+     */
+    public static final CkPlanVisitAggregation CK_PLAN_VISIT_AGGREGATION = CkPlanVisitAggregation.CK_PLAN_VISIT_AGGREGATION;
+
+    /**
+     * The table <code>ck_planogram_recommendation</code>.
+     */
+    public static final CkPlanogramRecommendation CK_PLANOGRAM_RECOMMENDATION = CkPlanogramRecommendation.CK_PLANOGRAM_RECOMMENDATION;
+
+    /**
+     * The table <code>ck_postaggregate_global_constant_activity</code>.
+     */
+    public static final CkPostaggregateGlobalConstantActivity CK_POSTAGGREGATE_GLOBAL_CONSTANT_ACTIVITY = CkPostaggregateGlobalConstantActivity.CK_POSTAGGREGATE_GLOBAL_CONSTANT_ACTIVITY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_activity_daily</code>.
+     */
+    public static final CkPostaggregateOutletActivityDaily CK_POSTAGGREGATE_OUTLET_ACTIVITY_DAILY = CkPostaggregateOutletActivityDaily.CK_POSTAGGREGATE_OUTLET_ACTIVITY_DAILY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_activity_monthly</code>.
+     */
+    public static final CkPostaggregateOutletActivityMonthly CK_POSTAGGREGATE_OUTLET_ACTIVITY_MONTHLY = CkPostaggregateOutletActivityMonthly.CK_POSTAGGREGATE_OUTLET_ACTIVITY_MONTHLY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_activity_yearly</code>.
+     */
+    public static final CkPostaggregateOutletActivityYearly CK_POSTAGGREGATE_OUTLET_ACTIVITY_YEARLY = CkPostaggregateOutletActivityYearly.CK_POSTAGGREGATE_OUTLET_ACTIVITY_YEARLY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_constant_activity</code>.
+     */
+    public static final CkPostaggregateOutletConstantActivity CK_POSTAGGREGATE_OUTLET_CONSTANT_ACTIVITY = CkPostaggregateOutletConstantActivity.CK_POSTAGGREGATE_OUTLET_CONSTANT_ACTIVITY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_event_activity_daily</code>.
+     */
+    public static final CkPostaggregateOutletEventActivityDaily CK_POSTAGGREGATE_OUTLET_EVENT_ACTIVITY_DAILY = CkPostaggregateOutletEventActivityDaily.CK_POSTAGGREGATE_OUTLET_EVENT_ACTIVITY_DAILY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_event_activity_monthly</code>.
+     */
+    public static final CkPostaggregateOutletEventActivityMonthly CK_POSTAGGREGATE_OUTLET_EVENT_ACTIVITY_MONTHLY = CkPostaggregateOutletEventActivityMonthly.CK_POSTAGGREGATE_OUTLET_EVENT_ACTIVITY_MONTHLY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_event_activity_yearly</code>.
+     */
+    public static final CkPostaggregateOutletEventActivityYearly CK_POSTAGGREGATE_OUTLET_EVENT_ACTIVITY_YEARLY = CkPostaggregateOutletEventActivityYearly.CK_POSTAGGREGATE_OUTLET_EVENT_ACTIVITY_YEARLY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_kpi_daily</code>.
+     */
+    public static final CkPostaggregateOutletKpiDaily CK_POSTAGGREGATE_OUTLET_KPI_DAILY = CkPostaggregateOutletKpiDaily.CK_POSTAGGREGATE_OUTLET_KPI_DAILY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_kpi_monthly</code>.
+     */
+    public static final CkPostaggregateOutletKpiMonthly CK_POSTAGGREGATE_OUTLET_KPI_MONTHLY = CkPostaggregateOutletKpiMonthly.CK_POSTAGGREGATE_OUTLET_KPI_MONTHLY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_kpi_yearly</code>.
+     */
+    public static final CkPostaggregateOutletKpiYearly CK_POSTAGGREGATE_OUTLET_KPI_YEARLY = CkPostaggregateOutletKpiYearly.CK_POSTAGGREGATE_OUTLET_KPI_YEARLY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_order_activity_daily</code>.
+     */
+    public static final CkPostaggregateOutletOrderActivityDaily CK_POSTAGGREGATE_OUTLET_ORDER_ACTIVITY_DAILY = CkPostaggregateOutletOrderActivityDaily.CK_POSTAGGREGATE_OUTLET_ORDER_ACTIVITY_DAILY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_order_activity_monthly</code>.
+     */
+    public static final CkPostaggregateOutletOrderActivityMonthly CK_POSTAGGREGATE_OUTLET_ORDER_ACTIVITY_MONTHLY = CkPostaggregateOutletOrderActivityMonthly.CK_POSTAGGREGATE_OUTLET_ORDER_ACTIVITY_MONTHLY;
+
+    /**
+     * The table <code>ck_postaggregate_outlet_order_activity_yearly</code>.
+     */
+    public static final CkPostaggregateOutletOrderActivityYearly CK_POSTAGGREGATE_OUTLET_ORDER_ACTIVITY_YEARLY = CkPostaggregateOutletOrderActivityYearly.CK_POSTAGGREGATE_OUTLET_ORDER_ACTIVITY_YEARLY;
+
+    /**
+     * The table
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily</code>.
+     */
+    public static final CkPostaggregateOutletProductRecommendedActivityDaily CK_POSTAGGREGATE_OUTLET_PRODUCT_RECOMMENDED_ACTIVITY_DAILY = CkPostaggregateOutletProductRecommendedActivityDaily.CK_POSTAGGREGATE_OUTLET_PRODUCT_RECOMMENDED_ACTIVITY_DAILY;
+
+    /**
+     * The table
+     * <code>ck_postaggregate_outlet_product_recommended_activity_monthly</code>.
+     */
+    public static final CkPostaggregateOutletProductRecommendedActivityMonthly CK_POSTAGGREGATE_OUTLET_PRODUCT_RECOMMENDED_ACTIVITY_MONTHLY = CkPostaggregateOutletProductRecommendedActivityMonthly.CK_POSTAGGREGATE_OUTLET_PRODUCT_RECOMMENDED_ACTIVITY_MONTHLY;
+
+    /**
+     * The table
+     * <code>ck_postaggregate_outlet_product_recommended_activity_yearly</code>.
+     */
+    public static final CkPostaggregateOutletProductRecommendedActivityYearly CK_POSTAGGREGATE_OUTLET_PRODUCT_RECOMMENDED_ACTIVITY_YEARLY = CkPostaggregateOutletProductRecommendedActivityYearly.CK_POSTAGGREGATE_OUTLET_PRODUCT_RECOMMENDED_ACTIVITY_YEARLY;
+
+    /**
+     * The table
+     * <code>ck_postaggregate_outlet_recommended_activity_daily</code>.
+     */
+    public static final CkPostaggregateOutletRecommendedActivityDaily CK_POSTAGGREGATE_OUTLET_RECOMMENDED_ACTIVITY_DAILY = CkPostaggregateOutletRecommendedActivityDaily.CK_POSTAGGREGATE_OUTLET_RECOMMENDED_ACTIVITY_DAILY;
+
+    /**
+     * The table
+     * <code>ck_postaggregate_outlet_recommended_activity_monthly</code>.
+     */
+    public static final CkPostaggregateOutletRecommendedActivityMonthly CK_POSTAGGREGATE_OUTLET_RECOMMENDED_ACTIVITY_MONTHLY = CkPostaggregateOutletRecommendedActivityMonthly.CK_POSTAGGREGATE_OUTLET_RECOMMENDED_ACTIVITY_MONTHLY;
+
+    /**
+     * The table <code>ck_postaggregate_user_activity_daily</code>.
+     */
+    public static final CkPostaggregateUserActivityDaily CK_POSTAGGREGATE_USER_ACTIVITY_DAILY = CkPostaggregateUserActivityDaily.CK_POSTAGGREGATE_USER_ACTIVITY_DAILY;
+
+    /**
+     * The table <code>ck_postaggregate_user_activity_monthly</code>.
+     */
+    public static final CkPostaggregateUserActivityMonthly CK_POSTAGGREGATE_USER_ACTIVITY_MONTHLY = CkPostaggregateUserActivityMonthly.CK_POSTAGGREGATE_USER_ACTIVITY_MONTHLY;
+
+    /**
+     * The table <code>ck_postaggregate_user_activity_yearly</code>.
+     */
+    public static final CkPostaggregateUserActivityYearly CK_POSTAGGREGATE_USER_ACTIVITY_YEARLY = CkPostaggregateUserActivityYearly.CK_POSTAGGREGATE_USER_ACTIVITY_YEARLY;
+
+    /**
+     * The table <code>ck_postaggregate_user_constant_activity_daily</code>.
+     */
+    public static final CkPostaggregateUserConstantActivityDaily CK_POSTAGGREGATE_USER_CONSTANT_ACTIVITY_DAILY = CkPostaggregateUserConstantActivityDaily.CK_POSTAGGREGATE_USER_CONSTANT_ACTIVITY_DAILY;
+
+    /**
+     * The table <code>ck_postaggregate_user_constant_activity_monthly</code>.
+     */
+    public static final CkPostaggregateUserConstantActivityMonthly CK_POSTAGGREGATE_USER_CONSTANT_ACTIVITY_MONTHLY = CkPostaggregateUserConstantActivityMonthly.CK_POSTAGGREGATE_USER_CONSTANT_ACTIVITY_MONTHLY;
+
+    /**
+     * The table <code>ck_postaggregate_user_constant_activity_yearly</code>.
+     */
+    public static final CkPostaggregateUserConstantActivityYearly CK_POSTAGGREGATE_USER_CONSTANT_ACTIVITY_YEARLY = CkPostaggregateUserConstantActivityYearly.CK_POSTAGGREGATE_USER_CONSTANT_ACTIVITY_YEARLY;
+
+    /**
+     * The table <code>ck_postaggregate_user_event_activity_daily</code>.
+     */
+    public static final CkPostaggregateUserEventActivityDaily CK_POSTAGGREGATE_USER_EVENT_ACTIVITY_DAILY = CkPostaggregateUserEventActivityDaily.CK_POSTAGGREGATE_USER_EVENT_ACTIVITY_DAILY;
+
+    /**
+     * The table <code>ck_postaggregate_user_event_activity_monthly</code>.
+     */
+    public static final CkPostaggregateUserEventActivityMonthly CK_POSTAGGREGATE_USER_EVENT_ACTIVITY_MONTHLY = CkPostaggregateUserEventActivityMonthly.CK_POSTAGGREGATE_USER_EVENT_ACTIVITY_MONTHLY;
+
+    /**
+     * The table <code>ck_postaggregate_user_event_activity_yearly</code>.
+     */
+    public static final CkPostaggregateUserEventActivityYearly CK_POSTAGGREGATE_USER_EVENT_ACTIVITY_YEARLY = CkPostaggregateUserEventActivityYearly.CK_POSTAGGREGATE_USER_EVENT_ACTIVITY_YEARLY;
+
+    /**
+     * The table <code>ck_postaggregate_user_kpi_daily</code>.
+     */
+    public static final CkPostaggregateUserKpiDaily CK_POSTAGGREGATE_USER_KPI_DAILY = CkPostaggregateUserKpiDaily.CK_POSTAGGREGATE_USER_KPI_DAILY;
+
+    /**
+     * The table <code>ck_postaggregate_user_kpi_monthly</code>.
+     */
+    public static final CkPostaggregateUserKpiMonthly CK_POSTAGGREGATE_USER_KPI_MONTHLY = CkPostaggregateUserKpiMonthly.CK_POSTAGGREGATE_USER_KPI_MONTHLY;
+
+    /**
+     * The table <code>ck_postaggregate_user_kpi_yearly</code>.
+     */
+    public static final CkPostaggregateUserKpiYearly CK_POSTAGGREGATE_USER_KPI_YEARLY = CkPostaggregateUserKpiYearly.CK_POSTAGGREGATE_USER_KPI_YEARLY;
+
+    /**
+     * The table <code>ck_postaggregate_user_order_activity_daily</code>.
+     */
+    public static final CkPostaggregateUserOrderActivityDaily CK_POSTAGGREGATE_USER_ORDER_ACTIVITY_DAILY = CkPostaggregateUserOrderActivityDaily.CK_POSTAGGREGATE_USER_ORDER_ACTIVITY_DAILY;
+
+    /**
+     * The table <code>ck_postaggregate_user_order_activity_monthly</code>.
+     */
+    public static final CkPostaggregateUserOrderActivityMonthly CK_POSTAGGREGATE_USER_ORDER_ACTIVITY_MONTHLY = CkPostaggregateUserOrderActivityMonthly.CK_POSTAGGREGATE_USER_ORDER_ACTIVITY_MONTHLY;
+
+    /**
+     * The table <code>ck_postaggregate_user_order_activity_yearly</code>.
+     */
+    public static final CkPostaggregateUserOrderActivityYearly CK_POSTAGGREGATE_USER_ORDER_ACTIVITY_YEARLY = CkPostaggregateUserOrderActivityYearly.CK_POSTAGGREGATE_USER_ORDER_ACTIVITY_YEARLY;
+
+    /**
+     * The table <code>ck_product_activity</code>.
+     */
+    public static final CkProductActivity CK_PRODUCT_ACTIVITY = CkProductActivity.CK_PRODUCT_ACTIVITY;
+
+    /**
+     * The table <code>ck_product_target</code>.
+     */
+    public static final CkProductTarget CK_PRODUCT_TARGET = CkProductTarget.CK_PRODUCT_TARGET;
+
+    /**
+     * The table <code>ck_productbarcode</code>.
+     */
+    public static final CkProductbarcode CK_PRODUCTBARCODE = CkProductbarcode.CK_PRODUCTBARCODE;
+
+    /**
+     * The table <code>ck_productdetails</code>.
+     */
+    public static final CkProductdetails CK_PRODUCTDETAILS = CkProductdetails.CK_PRODUCTDETAILS;
+
+    /**
+     * The table <code>ck_productmetadata</code>.
+     */
+    public static final CkProductmetadata CK_PRODUCTMETADATA = CkProductmetadata.CK_PRODUCTMETADATA;
+
+    /**
+     * The table <code>ck_producttag</code>.
+     */
+    public static final CkProducttag CK_PRODUCTTAG = CkProducttag.CK_PRODUCTTAG;
+
+    /**
+     * The table <code>ck_query_info</code>.
+     */
+    public static final CkQueryInfo CK_QUERY_INFO = CkQueryInfo.CK_QUERY_INFO;
+
+    /**
+     * The table <code>ck_rackdetail_standard</code>.
+     */
+    public static final CkRackdetailStandard CK_RACKDETAIL_STANDARD = CkRackdetailStandard.CK_RACKDETAIL_STANDARD;
+
+    /**
+     * The table <code>ck_range_program</code>.
+     */
+    public static final CkRangeProgram CK_RANGE_PROGRAM = CkRangeProgram.CK_RANGE_PROGRAM;
+
+    /**
+     * The table <code>ck_range_program_max_term</code>.
+     */
+    public static final CkRangeProgramMaxTerm CK_RANGE_PROGRAM_MAX_TERM = CkRangeProgramMaxTerm.CK_RANGE_PROGRAM_MAX_TERM;
+
+    /**
+     * The table <code>ck_range_program_supplier_hierarchy</code>.
+     */
+    public static final CkRangeProgramSupplierHierarchy CK_RANGE_PROGRAM_SUPPLIER_HIERARCHY = CkRangeProgramSupplierHierarchy.CK_RANGE_PROGRAM_SUPPLIER_HIERARCHY;
+
+    /**
+     * The table <code>ck_ratemaster</code>.
+     */
+    public static final CkRatemaster CK_RATEMASTER = CkRatemaster.CK_RATEMASTER;
+
+    /**
+     * The table <code>ck_rctreport</code>.
+     */
+    public static final CkRctreport CK_RCTREPORT = CkRctreport.CK_RCTREPORT;
+
+    /**
+     * The table <code>ck_real_time_stock_notify</code>.
+     */
+    public static final CkRealTimeStockNotify CK_REAL_TIME_STOCK_NOTIFY = CkRealTimeStockNotify.CK_REAL_TIME_STOCK_NOTIFY;
+
+    /**
+     * The table <code>ck_recohistory</code>.
+     */
+    public static final CkRecohistory CK_RECOHISTORY = CkRecohistory.CK_RECOHISTORY;
+
+    /**
+     * The table <code>ck_recommended_order</code>.
+     */
+    public static final CkRecommendedOrder CK_RECOMMENDED_ORDER = CkRecommendedOrder.CK_RECOMMENDED_ORDER;
+
+    /**
+     * The table <code>ck_redeem_activity</code>.
+     */
+    public static final CkRedeemActivity CK_REDEEM_ACTIVITY = CkRedeemActivity.CK_REDEEM_ACTIVITY;
+
+    /**
+     * The table <code>ck_report_info</code>.
+     */
+    public static final CkReportInfo CK_REPORT_INFO = CkReportInfo.CK_REPORT_INFO;
+
+    /**
+     * The table <code>ck_reroute_user</code>.
+     */
+    public static final CkRerouteUser CK_REROUTE_USER = CkRerouteUser.CK_REROUTE_USER;
+
+    /**
+     * The table <code>ck_resource_access_role</code>.
+     */
+    public static final CkResourceAccessRole CK_RESOURCE_ACCESS_ROLE = CkResourceAccessRole.CK_RESOURCE_ACCESS_ROLE;
+
+    /**
+     * The table <code>ck_return_product</code>.
+     */
+    public static final CkReturnProduct CK_RETURN_PRODUCT = CkReturnProduct.CK_RETURN_PRODUCT;
+
+    /**
+     * The table <code>ck_routemaster</code>.
+     */
+    public static final CkRoutemaster CK_ROUTEMASTER = CkRoutemaster.CK_ROUTEMASTER;
+
+    /**
+     * The table <code>ck_sales</code>.
+     */
+    public static final CkSales CK_SALES = CkSales.CK_SALES;
+
+    /**
+     * The table <code>ck_sales_details</code>.
+     */
+    public static final CkSalesDetails CK_SALES_DETAILS = CkSalesDetails.CK_SALES_DETAILS;
+
+    /**
+     * The table <code>ck_sales_history</code>.
+     */
+    public static final CkSalesHistory CK_SALES_HISTORY = CkSalesHistory.CK_SALES_HISTORY;
+
+    /**
+     * The table <code>ck_sales_lost</code>.
+     */
+    public static final CkSalesLost CK_SALES_LOST = CkSalesLost.CK_SALES_LOST;
+
+    /**
+     * The table <code>ck_scheduler_info</code>.
+     */
+    public static final CkSchedulerInfo CK_SCHEDULER_INFO = CkSchedulerInfo.CK_SCHEDULER_INFO;
+
+    /**
+     * The table <code>ck_score</code>.
+     */
+    public static final CkScore CK_SCORE = CkScore.CK_SCORE;
+
+    /**
+     * The table <code>ck_score_details</code>.
+     */
+    public static final CkScoreDetails CK_SCORE_DETAILS = CkScoreDetails.CK_SCORE_DETAILS;
+
+    /**
+     * The table <code>ck_score_program</code>.
+     */
+    public static final CkScoreProgram CK_SCORE_PROGRAM = CkScoreProgram.CK_SCORE_PROGRAM;
+
+    /**
+     * The table <code>ck_score_program_supplier_hierarchy</code>.
+     */
+    public static final CkScoreProgramSupplierHierarchy CK_SCORE_PROGRAM_SUPPLIER_HIERARCHY = CkScoreProgramSupplierHierarchy.CK_SCORE_PROGRAM_SUPPLIER_HIERARCHY;
+
+    /**
+     * The table <code>ck_secondary_product</code>.
+     */
+    public static final CkSecondaryProduct CK_SECONDARY_PRODUCT = CkSecondaryProduct.CK_SECONDARY_PRODUCT;
+
+    /**
+     * The table <code>ck_sellina_ai_query</code>.
+     */
+    public static final CkSellinaAiQuery CK_SELLINA_AI_QUERY = CkSellinaAiQuery.CK_SELLINA_AI_QUERY;
+
+    /**
+     * The table <code>ck_sellina_ai_query_default_response</code>.
+     */
+    public static final CkSellinaAiQueryDefaultResponse CK_SELLINA_AI_QUERY_DEFAULT_RESPONSE = CkSellinaAiQueryDefaultResponse.CK_SELLINA_AI_QUERY_DEFAULT_RESPONSE;
+
+    /**
+     * The table <code>ck_sellina_ai_query_entity</code>.
+     */
+    public static final CkSellinaAiQueryEntity CK_SELLINA_AI_QUERY_ENTITY = CkSellinaAiQueryEntity.CK_SELLINA_AI_QUERY_ENTITY;
+
+    /**
+     * The table <code>ck_sellina_ai_query_suggestions</code>.
+     */
+    public static final CkSellinaAiQuerySuggestions CK_SELLINA_AI_QUERY_SUGGESTIONS = CkSellinaAiQuerySuggestions.CK_SELLINA_AI_QUERY_SUGGESTIONS;
+
+    /**
+     * The table <code>ck_sellina_ai_query_training_text</code>.
+     */
+    public static final CkSellinaAiQueryTrainingText CK_SELLINA_AI_QUERY_TRAINING_TEXT = CkSellinaAiQueryTrainingText.CK_SELLINA_AI_QUERY_TRAINING_TEXT;
+
+    /**
+     * The table <code>ck_sellina_entities</code>.
+     */
+    public static final CkSellinaEntities CK_SELLINA_ENTITIES = CkSellinaEntities.CK_SELLINA_ENTITIES;
+
+    /**
+     * The table <code>ck_sellina_query_template_association</code>.
+     */
+    public static final CkSellinaQueryTemplateAssociation CK_SELLINA_QUERY_TEMPLATE_ASSOCIATION = CkSellinaQueryTemplateAssociation.CK_SELLINA_QUERY_TEMPLATE_ASSOCIATION;
+
+    /**
+     * The table <code>ck_sellina_suggestions</code>.
+     */
+    public static final CkSellinaSuggestions CK_SELLINA_SUGGESTIONS = CkSellinaSuggestions.CK_SELLINA_SUGGESTIONS;
+
+    /**
+     * The table <code>ck_sellina_synonym</code>.
+     */
+    public static final CkSellinaSynonym CK_SELLINA_SYNONYM = CkSellinaSynonym.CK_SELLINA_SYNONYM;
+
+    /**
+     * The table <code>ck_sequence_info</code>.
+     */
+    public static final CkSequenceInfo CK_SEQUENCE_INFO = CkSequenceInfo.CK_SEQUENCE_INFO;
+
+    /**
+     * The table <code>ck_sequences</code>.
+     */
+    public static final CkSequences CK_SEQUENCES = CkSequences.CK_SEQUENCES;
+
+    /**
+     * The table <code>ck_skill_leaderboard</code>.
+     */
+    public static final CkSkillLeaderboard CK_SKILL_LEADERBOARD = CkSkillLeaderboard.CK_SKILL_LEADERBOARD;
+
+    /**
+     * The table <code>ck_skucode_status</code>.
+     */
+    public static final CkSkucodeStatus CK_SKUCODE_STATUS = CkSkucodeStatus.CK_SKUCODE_STATUS;
+
+    /**
+     * The table <code>ck_smart_trigger_info</code>.
+     */
+    public static final CkSmartTriggerInfo CK_SMART_TRIGGER_INFO = CkSmartTriggerInfo.CK_SMART_TRIGGER_INFO;
+
+    /**
+     * The table <code>ck_smart_trigger_info_dispatchers</code>.
+     */
+    public static final CkSmartTriggerInfoDispatchers CK_SMART_TRIGGER_INFO_DISPATCHERS = CkSmartTriggerInfoDispatchers.CK_SMART_TRIGGER_INFO_DISPATCHERS;
+
+    /**
+     * The table <code>ck_static_outlet_aggregation</code>.
+     */
+    public static final CkStaticOutletAggregation CK_STATIC_OUTLET_AGGREGATION = CkStaticOutletAggregation.CK_STATIC_OUTLET_AGGREGATION;
+
+    /**
+     * The table <code>ck_static_user_aggregation</code>.
+     */
+    public static final CkStaticUserAggregation CK_STATIC_USER_AGGREGATION = CkStaticUserAggregation.CK_STATIC_USER_AGGREGATION;
+
+    /**
+     * The table <code>ck_stock</code>.
+     */
+    public static final CkStock CK_STOCK = CkStock.CK_STOCK;
+
+    /**
+     * The table <code>ck_stock_hierarchy</code>.
+     */
+    public static final CkStockHierarchy CK_STOCK_HIERARCHY = CkStockHierarchy.CK_STOCK_HIERARCHY;
+
+    /**
+     * The table <code>ck_stock_history</code>.
+     */
+    public static final CkStockHistory CK_STOCK_HISTORY = CkStockHistory.CK_STOCK_HISTORY;
+
+    /**
+     * The table <code>ck_stock_history_hierarchy</code>.
+     */
+    public static final CkStockHistoryHierarchy CK_STOCK_HISTORY_HIERARCHY = CkStockHistoryHierarchy.CK_STOCK_HISTORY_HIERARCHY;
+
+    /**
+     * The table <code>ck_storein</code>.
+     */
+    public static final CkStorein CK_STOREIN = CkStorein.CK_STOREIN;
+
+    /**
+     * The table <code>ck_subscription</code>.
+     */
+    public static final CkSubscription CK_SUBSCRIPTION = CkSubscription.CK_SUBSCRIPTION;
+
+    /**
+     * The table <code>ck_subscription_resource</code>.
+     */
+    public static final CkSubscriptionResource CK_SUBSCRIPTION_RESOURCE = CkSubscriptionResource.CK_SUBSCRIPTION_RESOURCE;
+
+    /**
+     * The table <code>ck_supplier_metadata</code>.
+     */
+    public static final CkSupplierMetadata CK_SUPPLIER_METADATA = CkSupplierMetadata.CK_SUPPLIER_METADATA;
+
+    /**
+     * The table <code>ck_support</code>.
+     */
+    public static final CkSupport CK_SUPPORT = CkSupport.CK_SUPPORT;
+
+    /**
+     * The table <code>ck_support_master</code>.
+     */
+    public static final CkSupportMaster CK_SUPPORT_MASTER = CkSupportMaster.CK_SUPPORT_MASTER;
+
+    /**
+     * The table <code>ck_support_tracking</code>.
+     */
+    public static final CkSupportTracking CK_SUPPORT_TRACKING = CkSupportTracking.CK_SUPPORT_TRACKING;
+
+    /**
+     * The table <code>ck_targer_groupby</code>.
+     */
+    public static final CkTargerGroupby CK_TARGER_GROUPBY = CkTargerGroupby.CK_TARGER_GROUPBY;
+
+    /**
+     * The table <code>ck_target_results</code>.
+     */
+    public static final CkTargetResults CK_TARGET_RESULTS = CkTargetResults.CK_TARGET_RESULTS;
+
+    /**
+     * The table <code>ck_targets</code>.
+     */
+    public static final CkTargets CK_TARGETS = CkTargets.CK_TARGETS;
+
+    /**
+     * The table <code>ck_task</code>.
+     */
+    public static final CkTask CK_TASK = CkTask.CK_TASK;
+
+    /**
+     * The table <code>ck_tax</code>.
+     */
+    public static final CkTax CK_TAX = CkTax.CK_TAX;
+
+    /**
+     * The table <code>ck_tax_calculation</code>.
+     */
+    public static final CkTaxCalculation CK_TAX_CALCULATION = CkTaxCalculation.CK_TAX_CALCULATION;
+
+    /**
+     * The table <code>ck_temp_aggr</code>.
+     */
+    public static final CkTempAggr CK_TEMP_AGGR = CkTempAggr.CK_TEMP_AGGR;
+
+    /**
+     * The table <code>ck_temp_master_mapping</code>.
+     */
+    public static final CkTempMasterMapping CK_TEMP_MASTER_MAPPING = CkTempMasterMapping.CK_TEMP_MASTER_MAPPING;
+
+    /**
+     * The table <code>ck_temp_pjp</code>.
+     */
+    public static final CkTempPjp CK_TEMP_PJP = CkTempPjp.CK_TEMP_PJP;
+
+    /**
+     * The table <code>ck_token</code>.
+     */
+    public static final CkToken CK_TOKEN = CkToken.CK_TOKEN;
 
     /**
      * The table <code>ck_transformer_info</code>.
@@ -40,14 +1104,119 @@ public class Tables {
     public static final CkTransformerInfo CK_TRANSFORMER_INFO = CkTransformerInfo.CK_TRANSFORMER_INFO;
 
     /**
+     * The table <code>ck_translation_info</code>.
+     */
+    public static final CkTranslationInfo CK_TRANSLATION_INFO = CkTranslationInfo.CK_TRANSLATION_INFO;
+
+    /**
+     * The table <code>ck_trigger_dispatcher_info</code>.
+     */
+    public static final CkTriggerDispatcherInfo CK_TRIGGER_DISPATCHER_INFO = CkTriggerDispatcherInfo.CK_TRIGGER_DISPATCHER_INFO;
+
+    /**
      * The table <code>ck_user</code>.
      */
     public static final CkUser CK_USER = CkUser.CK_USER;
 
     /**
+     * The table <code>ck_user_account</code>.
+     */
+    public static final CkUserAccount CK_USER_ACCOUNT = CkUserAccount.CK_USER_ACCOUNT;
+
+    /**
+     * The table <code>ck_user_activity</code>.
+     */
+    public static final CkUserActivity CK_USER_ACTIVITY = CkUserActivity.CK_USER_ACTIVITY;
+
+    /**
+     * The table <code>ck_user_event</code>.
+     */
+    public static final CkUserEvent CK_USER_EVENT = CkUserEvent.CK_USER_EVENT;
+
+    /**
+     * The table <code>ck_user_event_response</code>.
+     */
+    public static final CkUserEventResponse CK_USER_EVENT_RESPONSE = CkUserEventResponse.CK_USER_EVENT_RESPONSE;
+
+    /**
+     * The table <code>ck_user_immediate_parent</code>.
+     */
+    public static final CkUserImmediateParent CK_USER_IMMEDIATE_PARENT = CkUserImmediateParent.CK_USER_IMMEDIATE_PARENT;
+
+    /**
+     * The table <code>ck_user_messenger_info</code>.
+     */
+    public static final CkUserMessengerInfo CK_USER_MESSENGER_INFO = CkUserMessengerInfo.CK_USER_MESSENGER_INFO;
+
+    /**
+     * The table <code>ck_user_metadata</code>.
+     */
+    public static final CkUserMetadata CK_USER_METADATA = CkUserMetadata.CK_USER_METADATA;
+
+    /**
+     * The table <code>ck_user_otp</code>.
+     */
+    public static final CkUserOtp CK_USER_OTP = CkUserOtp.CK_USER_OTP;
+
+    /**
+     * The table <code>ck_user_parent</code>.
+     */
+    public static final CkUserParent CK_USER_PARENT = CkUserParent.CK_USER_PARENT;
+
+    /**
+     * The table <code>ck_user_roles</code>.
+     */
+    public static final CkUserRoles CK_USER_ROLES = CkUserRoles.CK_USER_ROLES;
+
+    /**
+     * The table <code>ck_user_status</code>.
+     */
+    public static final CkUserStatus CK_USER_STATUS = CkUserStatus.CK_USER_STATUS;
+
+    /**
+     * The table <code>ck_user_subscription_activity</code>.
+     */
+    public static final CkUserSubscriptionActivity CK_USER_SUBSCRIPTION_ACTIVITY = CkUserSubscriptionActivity.CK_USER_SUBSCRIPTION_ACTIVITY;
+
+    /**
+     * The table <code>ck_user_subscriptions</code>.
+     */
+    public static final CkUserSubscriptions CK_USER_SUBSCRIPTIONS = CkUserSubscriptions.CK_USER_SUBSCRIPTIONS;
+
+    /**
+     * The table <code>ck_user_target</code>.
+     */
+    public static final CkUserTarget CK_USER_TARGET = CkUserTarget.CK_USER_TARGET;
+
+    /**
+     * The table <code>ck_user_task_info</code>.
+     */
+    public static final CkUserTaskInfo CK_USER_TASK_INFO = CkUserTaskInfo.CK_USER_TASK_INFO;
+
+    /**
+     * The table <code>ck_userdesignation</code>.
+     */
+    public static final CkUserdesignation CK_USERDESIGNATION = CkUserdesignation.CK_USERDESIGNATION;
+
+    /**
      * The table <code>ck_validation_rule</code>.
      */
     public static final CkValidationRule CK_VALIDATION_RULE = CkValidationRule.CK_VALIDATION_RULE;
+
+    /**
+     * The table <code>ck_visibility_score</code>.
+     */
+    public static final CkVisibilityScore CK_VISIBILITY_SCORE = CkVisibilityScore.CK_VISIBILITY_SCORE;
+
+    /**
+     * The table <code>ck_ware_house</code>.
+     */
+    public static final CkWareHouse CK_WARE_HOUSE = CkWareHouse.CK_WARE_HOUSE;
+
+    /**
+     * The table <code>ck_ware_house_channel_hierarchy</code>.
+     */
+    public static final CkWareHouseChannelHierarchy CK_WARE_HOUSE_CHANNEL_HIERARCHY = CkWareHouseChannelHierarchy.CK_WARE_HOUSE_CHANNEL_HIERARCHY;
 
     /**
      * The table <code>profile</code>.

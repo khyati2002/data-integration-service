@@ -11,30 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -149,11 +134,11 @@ public class CkUserStatus extends TableImpl<Record> {
     public final TableField<Record, LocalDateTime> LAST_TIME_LOGIN = createField(DSL.name("last_time_login"), SQLDataType.LOCALDATETIME(0), this, "");
 
     private CkUserStatus(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkUserStatus(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkUserStatus(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -175,6 +160,10 @@ public class CkUserStatus extends TableImpl<Record> {
      */
     public CkUserStatus() {
         this(DSL.name("ck_user_status"), null);
+    }
+
+    public <O extends Record> CkUserStatus(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_USER_STATUS);
     }
 
     @Override
@@ -202,11 +191,6 @@ public class CkUserStatus extends TableImpl<Record> {
         return new CkUserStatus(alias, this);
     }
 
-    @Override
-    public CkUserStatus as(Table<?> alias) {
-        return new CkUserStatus(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -221,97 +205,5 @@ public class CkUserStatus extends TableImpl<Record> {
     @Override
     public CkUserStatus rename(Name name) {
         return new CkUserStatus(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkUserStatus rename(Table<?> name) {
-        return new CkUserStatus(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserStatus where(Condition condition) {
-        return new CkUserStatus(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserStatus where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserStatus where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserStatus where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserStatus where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserStatus where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserStatus where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserStatus where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserStatus whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserStatus whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -41,8 +36,6 @@ public class CkPermissionResources implements Serializable {
     /**
      * Getter for <code>ck_permission_resources.permission_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getPermissionId() {
         return this.permissionId;
     }
@@ -57,8 +50,6 @@ public class CkPermissionResources implements Serializable {
     /**
      * Getter for <code>ck_permission_resources.resource_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getResourceId() {
         return this.resourceId;
     }
@@ -68,39 +59,6 @@ public class CkPermissionResources implements Serializable {
      */
     public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkPermissionResources other = (CkPermissionResources) obj;
-        if (this.permissionId == null) {
-            if (other.permissionId != null)
-                return false;
-        }
-        else if (!this.permissionId.equals(other.permissionId))
-            return false;
-        if (this.resourceId == null) {
-            if (other.resourceId != null)
-                return false;
-        }
-        else if (!this.resourceId.equals(other.resourceId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.permissionId == null) ? 0 : this.permissionId.hashCode());
-        result = prime * result + ((this.resourceId == null) ? 0 : this.resourceId.hashCode());
-        return result;
     }
 
     @Override

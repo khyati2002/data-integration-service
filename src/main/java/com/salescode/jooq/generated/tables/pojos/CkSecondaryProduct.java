@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,53 +22,53 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String account;
-    private String batchCode;
-    private String beat;
-    private JSON blobKeys;
-    private String brand;
-    private String brandCode;
-    private String category;
-    private String categoryCode;
-    private String channel;
-    private String companyName;
-    private String description;
-    private Date endTime;
-    private String feature;
-    private String marketSku;
-    private String marketSkuCode;
-    private String outletCategory;
-    private String outletClass;
-    private String outletType;
-    private String product;
-    private String productCode;
-    private Double quantity;
-    private String skuCode;
-    private String skuDescription;
-    private Date startTime;
-    private String subCategory;
-    private String subCategoryCode;
-    private String locationHierarchy;
-    private String outletcode;
-    private Byte changed;
-    private String itemType;
-    private String itemName;
-    private String filterKey;
-    private String filterValue;
-    private String loginid;
-    private String productTag;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        account;
+    private String        batchCode;
+    private String        beat;
+    private JSON          blobKeys;
+    private String        brand;
+    private String        brandCode;
+    private String        category;
+    private String        categoryCode;
+    private String        channel;
+    private String        companyName;
+    private String        description;
+    private LocalDateTime endTime;
+    private String        feature;
+    private String        marketSku;
+    private String        marketSkuCode;
+    private String        outletCategory;
+    private String        outletClass;
+    private String        outletType;
+    private String        product;
+    private String        productCode;
+    private Double        quantity;
+    private String        skuCode;
+    private String        skuDescription;
+    private LocalDateTime startTime;
+    private String        subCategory;
+    private String        subCategoryCode;
+    private String        locationHierarchy;
+    private String        outletcode;
+    private Byte          changed;
+    private String        itemType;
+    private String        itemName;
+    private String        filterKey;
+    private String        filterValue;
+    private String        loginid;
+    private String        productTag;
 
     public CkSecondaryProduct() {}
 
@@ -126,53 +123,53 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     }
 
     public CkSecondaryProduct(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String account,
-        String batchCode,
-        String beat,
-        JSON blobKeys,
-        String brand,
-        String brandCode,
-        String category,
-        String categoryCode,
-        String channel,
-        String companyName,
-        String description,
-        Date endTime,
-        String feature,
-        String marketSku,
-        String marketSkuCode,
-        String outletCategory,
-        String outletClass,
-        String outletType,
-        String product,
-        String productCode,
-        Double quantity,
-        String skuCode,
-        String skuDescription,
-        Date startTime,
-        String subCategory,
-        String subCategoryCode,
-        String locationHierarchy,
-        String outletcode,
-        Byte changed,
-        String itemType,
-        String itemName,
-        String filterKey,
-        String filterValue,
-        String loginid,
-        String productTag
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        account,
+        String        batchCode,
+        String        beat,
+        JSON          blobKeys,
+        String        brand,
+        String        brandCode,
+        String        category,
+        String        categoryCode,
+        String        channel,
+        String        companyName,
+        String        description,
+        LocalDateTime endTime,
+        String        feature,
+        String        marketSku,
+        String        marketSkuCode,
+        String        outletCategory,
+        String        outletClass,
+        String        outletType,
+        String        product,
+        String        productCode,
+        Double        quantity,
+        String        skuCode,
+        String        skuDescription,
+        LocalDateTime startTime,
+        String        subCategory,
+        String        subCategoryCode,
+        String        locationHierarchy,
+        String        outletcode,
+        Byte          changed,
+        String        itemType,
+        String        itemName,
+        String        filterKey,
+        String        filterValue,
+        String        loginid,
+        String        productTag
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -226,8 +223,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -256,7 +251,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -271,7 +265,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -342,7 +335,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -357,7 +349,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -372,7 +363,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -401,7 +391,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.account</code>.
      */
-    @Size(max = 255)
     public String getAccount() {
         return this.account;
     }
@@ -416,7 +405,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.batch_code</code>.
      */
-    @Size(max = 255)
     public String getBatchCode() {
         return this.batchCode;
     }
@@ -431,7 +419,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.beat</code>.
      */
-    @Size(max = 255)
     public String getBeat() {
         return this.beat;
     }
@@ -460,7 +447,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.brand</code>.
      */
-    @Size(max = 255)
     public String getBrand() {
         return this.brand;
     }
@@ -475,7 +461,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.brand_code</code>.
      */
-    @Size(max = 255)
     public String getBrandCode() {
         return this.brandCode;
     }
@@ -490,7 +475,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.category</code>.
      */
-    @Size(max = 255)
     public String getCategory() {
         return this.category;
     }
@@ -505,7 +489,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.category_code</code>.
      */
-    @Size(max = 255)
     public String getCategoryCode() {
         return this.categoryCode;
     }
@@ -520,7 +503,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.channel</code>.
      */
-    @Size(max = 255)
     public String getChannel() {
         return this.channel;
     }
@@ -535,7 +517,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.company_name</code>.
      */
-    @Size(max = 255)
     public String getCompanyName() {
         return this.companyName;
     }
@@ -550,7 +531,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.description</code>.
      */
-    @Size(max = 255)
     public String getDescription() {
         return this.description;
     }
@@ -565,21 +545,20 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.end_time</code>.
      */
-    public Date getEndTime() {
+    public LocalDateTime getEndTime() {
         return this.endTime;
     }
 
     /**
      * Setter for <code>ck_secondary_product.end_time</code>.
      */
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
     /**
      * Getter for <code>ck_secondary_product.feature</code>.
      */
-    @Size(max = 255)
     public String getFeature() {
         return this.feature;
     }
@@ -594,7 +573,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.market_sku</code>.
      */
-    @Size(max = 255)
     public String getMarketSku() {
         return this.marketSku;
     }
@@ -609,7 +587,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.market_sku_code</code>.
      */
-    @Size(max = 255)
     public String getMarketSkuCode() {
         return this.marketSkuCode;
     }
@@ -624,7 +601,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.outlet_category</code>.
      */
-    @Size(max = 255)
     public String getOutletCategory() {
         return this.outletCategory;
     }
@@ -639,7 +615,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.outlet_class</code>.
      */
-    @Size(max = 255)
     public String getOutletClass() {
         return this.outletClass;
     }
@@ -654,7 +629,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.outlet_type</code>.
      */
-    @Size(max = 255)
     public String getOutletType() {
         return this.outletType;
     }
@@ -669,7 +643,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.product</code>.
      */
-    @Size(max = 255)
     public String getProduct() {
         return this.product;
     }
@@ -684,7 +657,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.product_code</code>.
      */
-    @Size(max = 255)
     public String getProductCode() {
         return this.productCode;
     }
@@ -699,7 +671,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.quantity</code>.
      */
-    @NotNull
     public Double getQuantity() {
         return this.quantity;
     }
@@ -714,7 +685,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.sku_code</code>.
      */
-    @Size(max = 255)
     public String getSkuCode() {
         return this.skuCode;
     }
@@ -729,7 +699,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.sku_description</code>.
      */
-    @Size(max = 255)
     public String getSkuDescription() {
         return this.skuDescription;
     }
@@ -744,21 +713,20 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.start_time</code>.
      */
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return this.startTime;
     }
 
     /**
      * Setter for <code>ck_secondary_product.start_time</code>.
      */
-    public void setStartTime(Date startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
     /**
      * Getter for <code>ck_secondary_product.sub_category</code>.
      */
-    @Size(max = 255)
     public String getSubCategory() {
         return this.subCategory;
     }
@@ -773,7 +741,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.sub_category_code</code>.
      */
-    @Size(max = 255)
     public String getSubCategoryCode() {
         return this.subCategoryCode;
     }
@@ -788,7 +755,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -803,7 +769,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -832,7 +797,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.item_type</code>.
      */
-    @Size(max = 255)
     public String getItemType() {
         return this.itemType;
     }
@@ -847,7 +811,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.item_name</code>.
      */
-    @Size(max = 255)
     public String getItemName() {
         return this.itemName;
     }
@@ -862,7 +825,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.filter_key</code>.
      */
-    @Size(max = 255)
     public String getFilterKey() {
         return this.filterKey;
     }
@@ -877,7 +839,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.filter_value</code>.
      */
-    @Size(max = 255)
     public String getFilterValue() {
         return this.filterValue;
     }
@@ -892,7 +853,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.loginid</code>.
      */
-    @Size(max = 255)
     public String getLoginid() {
         return this.loginid;
     }
@@ -907,7 +867,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_secondary_product.product_tag</code>.
      */
-    @Size(max = 255)
     public String getProductTag() {
         return this.productTag;
     }
@@ -917,354 +876,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
      */
     public void setProductTag(String productTag) {
         this.productTag = productTag;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkSecondaryProduct other = (CkSecondaryProduct) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.account == null) {
-            if (other.account != null)
-                return false;
-        }
-        else if (!this.account.equals(other.account))
-            return false;
-        if (this.batchCode == null) {
-            if (other.batchCode != null)
-                return false;
-        }
-        else if (!this.batchCode.equals(other.batchCode))
-            return false;
-        if (this.beat == null) {
-            if (other.beat != null)
-                return false;
-        }
-        else if (!this.beat.equals(other.beat))
-            return false;
-        if (this.blobKeys == null) {
-            if (other.blobKeys != null)
-                return false;
-        }
-        else if (!this.blobKeys.equals(other.blobKeys))
-            return false;
-        if (this.brand == null) {
-            if (other.brand != null)
-                return false;
-        }
-        else if (!this.brand.equals(other.brand))
-            return false;
-        if (this.brandCode == null) {
-            if (other.brandCode != null)
-                return false;
-        }
-        else if (!this.brandCode.equals(other.brandCode))
-            return false;
-        if (this.category == null) {
-            if (other.category != null)
-                return false;
-        }
-        else if (!this.category.equals(other.category))
-            return false;
-        if (this.categoryCode == null) {
-            if (other.categoryCode != null)
-                return false;
-        }
-        else if (!this.categoryCode.equals(other.categoryCode))
-            return false;
-        if (this.channel == null) {
-            if (other.channel != null)
-                return false;
-        }
-        else if (!this.channel.equals(other.channel))
-            return false;
-        if (this.companyName == null) {
-            if (other.companyName != null)
-                return false;
-        }
-        else if (!this.companyName.equals(other.companyName))
-            return false;
-        if (this.description == null) {
-            if (other.description != null)
-                return false;
-        }
-        else if (!this.description.equals(other.description))
-            return false;
-        if (this.endTime == null) {
-            if (other.endTime != null)
-                return false;
-        }
-        else if (!this.endTime.equals(other.endTime))
-            return false;
-        if (this.feature == null) {
-            if (other.feature != null)
-                return false;
-        }
-        else if (!this.feature.equals(other.feature))
-            return false;
-        if (this.marketSku == null) {
-            if (other.marketSku != null)
-                return false;
-        }
-        else if (!this.marketSku.equals(other.marketSku))
-            return false;
-        if (this.marketSkuCode == null) {
-            if (other.marketSkuCode != null)
-                return false;
-        }
-        else if (!this.marketSkuCode.equals(other.marketSkuCode))
-            return false;
-        if (this.outletCategory == null) {
-            if (other.outletCategory != null)
-                return false;
-        }
-        else if (!this.outletCategory.equals(other.outletCategory))
-            return false;
-        if (this.outletClass == null) {
-            if (other.outletClass != null)
-                return false;
-        }
-        else if (!this.outletClass.equals(other.outletClass))
-            return false;
-        if (this.outletType == null) {
-            if (other.outletType != null)
-                return false;
-        }
-        else if (!this.outletType.equals(other.outletType))
-            return false;
-        if (this.product == null) {
-            if (other.product != null)
-                return false;
-        }
-        else if (!this.product.equals(other.product))
-            return false;
-        if (this.productCode == null) {
-            if (other.productCode != null)
-                return false;
-        }
-        else if (!this.productCode.equals(other.productCode))
-            return false;
-        if (this.quantity == null) {
-            if (other.quantity != null)
-                return false;
-        }
-        else if (!this.quantity.equals(other.quantity))
-            return false;
-        if (this.skuCode == null) {
-            if (other.skuCode != null)
-                return false;
-        }
-        else if (!this.skuCode.equals(other.skuCode))
-            return false;
-        if (this.skuDescription == null) {
-            if (other.skuDescription != null)
-                return false;
-        }
-        else if (!this.skuDescription.equals(other.skuDescription))
-            return false;
-        if (this.startTime == null) {
-            if (other.startTime != null)
-                return false;
-        }
-        else if (!this.startTime.equals(other.startTime))
-            return false;
-        if (this.subCategory == null) {
-            if (other.subCategory != null)
-                return false;
-        }
-        else if (!this.subCategory.equals(other.subCategory))
-            return false;
-        if (this.subCategoryCode == null) {
-            if (other.subCategoryCode != null)
-                return false;
-        }
-        else if (!this.subCategoryCode.equals(other.subCategoryCode))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.itemType == null) {
-            if (other.itemType != null)
-                return false;
-        }
-        else if (!this.itemType.equals(other.itemType))
-            return false;
-        if (this.itemName == null) {
-            if (other.itemName != null)
-                return false;
-        }
-        else if (!this.itemName.equals(other.itemName))
-            return false;
-        if (this.filterKey == null) {
-            if (other.filterKey != null)
-                return false;
-        }
-        else if (!this.filterKey.equals(other.filterKey))
-            return false;
-        if (this.filterValue == null) {
-            if (other.filterValue != null)
-                return false;
-        }
-        else if (!this.filterValue.equals(other.filterValue))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.productTag == null) {
-            if (other.productTag != null)
-                return false;
-        }
-        else if (!this.productTag.equals(other.productTag))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
-        result = prime * result + ((this.batchCode == null) ? 0 : this.batchCode.hashCode());
-        result = prime * result + ((this.beat == null) ? 0 : this.beat.hashCode());
-        result = prime * result + ((this.blobKeys == null) ? 0 : this.blobKeys.hashCode());
-        result = prime * result + ((this.brand == null) ? 0 : this.brand.hashCode());
-        result = prime * result + ((this.brandCode == null) ? 0 : this.brandCode.hashCode());
-        result = prime * result + ((this.category == null) ? 0 : this.category.hashCode());
-        result = prime * result + ((this.categoryCode == null) ? 0 : this.categoryCode.hashCode());
-        result = prime * result + ((this.channel == null) ? 0 : this.channel.hashCode());
-        result = prime * result + ((this.companyName == null) ? 0 : this.companyName.hashCode());
-        result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-        result = prime * result + ((this.endTime == null) ? 0 : this.endTime.hashCode());
-        result = prime * result + ((this.feature == null) ? 0 : this.feature.hashCode());
-        result = prime * result + ((this.marketSku == null) ? 0 : this.marketSku.hashCode());
-        result = prime * result + ((this.marketSkuCode == null) ? 0 : this.marketSkuCode.hashCode());
-        result = prime * result + ((this.outletCategory == null) ? 0 : this.outletCategory.hashCode());
-        result = prime * result + ((this.outletClass == null) ? 0 : this.outletClass.hashCode());
-        result = prime * result + ((this.outletType == null) ? 0 : this.outletType.hashCode());
-        result = prime * result + ((this.product == null) ? 0 : this.product.hashCode());
-        result = prime * result + ((this.productCode == null) ? 0 : this.productCode.hashCode());
-        result = prime * result + ((this.quantity == null) ? 0 : this.quantity.hashCode());
-        result = prime * result + ((this.skuCode == null) ? 0 : this.skuCode.hashCode());
-        result = prime * result + ((this.skuDescription == null) ? 0 : this.skuDescription.hashCode());
-        result = prime * result + ((this.startTime == null) ? 0 : this.startTime.hashCode());
-        result = prime * result + ((this.subCategory == null) ? 0 : this.subCategory.hashCode());
-        result = prime * result + ((this.subCategoryCode == null) ? 0 : this.subCategoryCode.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.itemType == null) ? 0 : this.itemType.hashCode());
-        result = prime * result + ((this.itemName == null) ? 0 : this.itemName.hashCode());
-        result = prime * result + ((this.filterKey == null) ? 0 : this.filterKey.hashCode());
-        result = prime * result + ((this.filterValue == null) ? 0 : this.filterValue.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.productTag == null) ? 0 : this.productTag.hashCode());
-        return result;
     }
 
     @Override

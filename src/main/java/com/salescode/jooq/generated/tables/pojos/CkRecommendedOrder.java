@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,47 +21,47 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Double avgOutletProb;
-    private String batchCode;
-    private Double billAmount;
-    private Double caseQuantity;
-    private String category;
-    private String channel;
-    private String compliantId;
-    private String compliantType;
-    private Date endDate;
-    private String inBeat;
-    private String itemType;
-    private String loginid;
-    private Double otherQuantity;
-    private Double outletProb;
-    private Double pieceQuantity;
-    private Double priority;
-    private String recommendationType;
-    private String size;
-    private String skuCode;
-    private Double skuPriority;
-    private Date startDate;
-    private String supportkpi;
-    private Double totalAmount;
-    private Double totalInitialAmt;
-    private Double totalMrp;
-    private Double totalQuantity;
-    private String outletcode;
-    private Byte changed;
-    private String basketId;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private Double        avgOutletProb;
+    private String        batchCode;
+    private Double        billAmount;
+    private Double        caseQuantity;
+    private String        category;
+    private String        channel;
+    private String        compliantId;
+    private String        compliantType;
+    private LocalDateTime endDate;
+    private String        inBeat;
+    private String        itemType;
+    private String        loginid;
+    private Double        otherQuantity;
+    private Double        outletProb;
+    private Double        pieceQuantity;
+    private Double        priority;
+    private String        recommendationType;
+    private String        size;
+    private String        skuCode;
+    private Double        skuPriority;
+    private LocalDateTime startDate;
+    private String        supportkpi;
+    private Double        totalAmount;
+    private Double        totalInitialAmt;
+    private Double        totalMrp;
+    private Double        totalQuantity;
+    private String        outletcode;
+    private Byte          changed;
+    private String        basketId;
 
     public CkRecommendedOrder() {}
 
@@ -112,47 +110,47 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     }
 
     public CkRecommendedOrder(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Double avgOutletProb,
-        String batchCode,
-        Double billAmount,
-        Double caseQuantity,
-        String category,
-        String channel,
-        String compliantId,
-        String compliantType,
-        Date endDate,
-        String inBeat,
-        String itemType,
-        String loginid,
-        Double otherQuantity,
-        Double outletProb,
-        Double pieceQuantity,
-        Double priority,
-        String recommendationType,
-        String size,
-        String skuCode,
-        Double skuPriority,
-        Date startDate,
-        String supportkpi,
-        Double totalAmount,
-        Double totalInitialAmt,
-        Double totalMrp,
-        Double totalQuantity,
-        String outletcode,
-        Byte changed,
-        String basketId
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        Double        avgOutletProb,
+        String        batchCode,
+        Double        billAmount,
+        Double        caseQuantity,
+        String        category,
+        String        channel,
+        String        compliantId,
+        String        compliantType,
+        LocalDateTime endDate,
+        String        inBeat,
+        String        itemType,
+        String        loginid,
+        Double        otherQuantity,
+        Double        outletProb,
+        Double        pieceQuantity,
+        Double        priority,
+        String        recommendationType,
+        String        size,
+        String        skuCode,
+        Double        skuPriority,
+        LocalDateTime startDate,
+        String        supportkpi,
+        Double        totalAmount,
+        Double        totalInitialAmt,
+        Double        totalMrp,
+        Double        totalQuantity,
+        String        outletcode,
+        Byte          changed,
+        String        basketId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -200,8 +198,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -230,7 +226,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -245,7 +240,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -316,7 +310,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -331,7 +324,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -346,7 +338,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -375,7 +366,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.avg_outlet_prob</code>.
      */
-    @NotNull
     public Double getAvgOutletProb() {
         return this.avgOutletProb;
     }
@@ -390,7 +380,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.batch_code</code>.
      */
-    @Size(max = 255)
     public String getBatchCode() {
         return this.batchCode;
     }
@@ -405,7 +394,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.bill_amount</code>.
      */
-    @NotNull
     public Double getBillAmount() {
         return this.billAmount;
     }
@@ -420,7 +408,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.case_quantity</code>.
      */
-    @NotNull
     public Double getCaseQuantity() {
         return this.caseQuantity;
     }
@@ -435,7 +422,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.category</code>.
      */
-    @Size(max = 255)
     public String getCategory() {
         return this.category;
     }
@@ -450,7 +436,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.channel</code>.
      */
-    @Size(max = 255)
     public String getChannel() {
         return this.channel;
     }
@@ -465,7 +450,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.compliant_id</code>.
      */
-    @Size(max = 255)
     public String getCompliantId() {
         return this.compliantId;
     }
@@ -480,7 +464,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.compliant_type</code>.
      */
-    @Size(max = 255)
     public String getCompliantType() {
         return this.compliantType;
     }
@@ -495,21 +478,20 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_recommended_order.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
     /**
      * Getter for <code>ck_recommended_order.in_beat</code>.
      */
-    @Size(max = 255)
     public String getInBeat() {
         return this.inBeat;
     }
@@ -524,7 +506,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.item_type</code>.
      */
-    @Size(max = 255)
     public String getItemType() {
         return this.itemType;
     }
@@ -539,7 +520,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.loginid</code>.
      */
-    @Size(max = 255)
     public String getLoginid() {
         return this.loginid;
     }
@@ -554,7 +534,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.other_quantity</code>.
      */
-    @NotNull
     public Double getOtherQuantity() {
         return this.otherQuantity;
     }
@@ -569,7 +548,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.outlet_prob</code>.
      */
-    @NotNull
     public Double getOutletProb() {
         return this.outletProb;
     }
@@ -584,7 +562,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.piece_quantity</code>.
      */
-    @NotNull
     public Double getPieceQuantity() {
         return this.pieceQuantity;
     }
@@ -599,7 +576,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.priority</code>.
      */
-    @NotNull
     public Double getPriority() {
         return this.priority;
     }
@@ -614,7 +590,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.recommendation_type</code>.
      */
-    @Size(max = 255)
     public String getRecommendationType() {
         return this.recommendationType;
     }
@@ -629,7 +604,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.size</code>.
      */
-    @Size(max = 255)
     public String getSize() {
         return this.size;
     }
@@ -644,7 +618,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.sku_code</code>.
      */
-    @Size(max = 255)
     public String getSkuCode() {
         return this.skuCode;
     }
@@ -659,7 +632,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.sku_priority</code>.
      */
-    @NotNull
     public Double getSkuPriority() {
         return this.skuPriority;
     }
@@ -674,21 +646,20 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_recommended_order.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_recommended_order.supportkpi</code>.
      */
-    @Size(max = 255)
     public String getSupportkpi() {
         return this.supportkpi;
     }
@@ -703,7 +674,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.total_amount</code>.
      */
-    @NotNull
     public Double getTotalAmount() {
         return this.totalAmount;
     }
@@ -718,7 +688,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.total_initial_amt</code>.
      */
-    @NotNull
     public Double getTotalInitialAmt() {
         return this.totalInitialAmt;
     }
@@ -733,7 +702,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.total_mrp</code>.
      */
-    @NotNull
     public Double getTotalMrp() {
         return this.totalMrp;
     }
@@ -748,7 +716,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.total_quantity</code>.
      */
-    @NotNull
     public Double getTotalQuantity() {
         return this.totalQuantity;
     }
@@ -763,7 +730,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -792,7 +758,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     /**
      * Getter for <code>ck_recommended_order.basket_id</code>.
      */
-    @Size(max = 255)
     public String getBasketId() {
         return this.basketId;
     }
@@ -802,312 +767,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
      */
     public void setBasketId(String basketId) {
         this.basketId = basketId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkRecommendedOrder other = (CkRecommendedOrder) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.avgOutletProb == null) {
-            if (other.avgOutletProb != null)
-                return false;
-        }
-        else if (!this.avgOutletProb.equals(other.avgOutletProb))
-            return false;
-        if (this.batchCode == null) {
-            if (other.batchCode != null)
-                return false;
-        }
-        else if (!this.batchCode.equals(other.batchCode))
-            return false;
-        if (this.billAmount == null) {
-            if (other.billAmount != null)
-                return false;
-        }
-        else if (!this.billAmount.equals(other.billAmount))
-            return false;
-        if (this.caseQuantity == null) {
-            if (other.caseQuantity != null)
-                return false;
-        }
-        else if (!this.caseQuantity.equals(other.caseQuantity))
-            return false;
-        if (this.category == null) {
-            if (other.category != null)
-                return false;
-        }
-        else if (!this.category.equals(other.category))
-            return false;
-        if (this.channel == null) {
-            if (other.channel != null)
-                return false;
-        }
-        else if (!this.channel.equals(other.channel))
-            return false;
-        if (this.compliantId == null) {
-            if (other.compliantId != null)
-                return false;
-        }
-        else if (!this.compliantId.equals(other.compliantId))
-            return false;
-        if (this.compliantType == null) {
-            if (other.compliantType != null)
-                return false;
-        }
-        else if (!this.compliantType.equals(other.compliantType))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.inBeat == null) {
-            if (other.inBeat != null)
-                return false;
-        }
-        else if (!this.inBeat.equals(other.inBeat))
-            return false;
-        if (this.itemType == null) {
-            if (other.itemType != null)
-                return false;
-        }
-        else if (!this.itemType.equals(other.itemType))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.otherQuantity == null) {
-            if (other.otherQuantity != null)
-                return false;
-        }
-        else if (!this.otherQuantity.equals(other.otherQuantity))
-            return false;
-        if (this.outletProb == null) {
-            if (other.outletProb != null)
-                return false;
-        }
-        else if (!this.outletProb.equals(other.outletProb))
-            return false;
-        if (this.pieceQuantity == null) {
-            if (other.pieceQuantity != null)
-                return false;
-        }
-        else if (!this.pieceQuantity.equals(other.pieceQuantity))
-            return false;
-        if (this.priority == null) {
-            if (other.priority != null)
-                return false;
-        }
-        else if (!this.priority.equals(other.priority))
-            return false;
-        if (this.recommendationType == null) {
-            if (other.recommendationType != null)
-                return false;
-        }
-        else if (!this.recommendationType.equals(other.recommendationType))
-            return false;
-        if (this.size == null) {
-            if (other.size != null)
-                return false;
-        }
-        else if (!this.size.equals(other.size))
-            return false;
-        if (this.skuCode == null) {
-            if (other.skuCode != null)
-                return false;
-        }
-        else if (!this.skuCode.equals(other.skuCode))
-            return false;
-        if (this.skuPriority == null) {
-            if (other.skuPriority != null)
-                return false;
-        }
-        else if (!this.skuPriority.equals(other.skuPriority))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.supportkpi == null) {
-            if (other.supportkpi != null)
-                return false;
-        }
-        else if (!this.supportkpi.equals(other.supportkpi))
-            return false;
-        if (this.totalAmount == null) {
-            if (other.totalAmount != null)
-                return false;
-        }
-        else if (!this.totalAmount.equals(other.totalAmount))
-            return false;
-        if (this.totalInitialAmt == null) {
-            if (other.totalInitialAmt != null)
-                return false;
-        }
-        else if (!this.totalInitialAmt.equals(other.totalInitialAmt))
-            return false;
-        if (this.totalMrp == null) {
-            if (other.totalMrp != null)
-                return false;
-        }
-        else if (!this.totalMrp.equals(other.totalMrp))
-            return false;
-        if (this.totalQuantity == null) {
-            if (other.totalQuantity != null)
-                return false;
-        }
-        else if (!this.totalQuantity.equals(other.totalQuantity))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.basketId == null) {
-            if (other.basketId != null)
-                return false;
-        }
-        else if (!this.basketId.equals(other.basketId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.avgOutletProb == null) ? 0 : this.avgOutletProb.hashCode());
-        result = prime * result + ((this.batchCode == null) ? 0 : this.batchCode.hashCode());
-        result = prime * result + ((this.billAmount == null) ? 0 : this.billAmount.hashCode());
-        result = prime * result + ((this.caseQuantity == null) ? 0 : this.caseQuantity.hashCode());
-        result = prime * result + ((this.category == null) ? 0 : this.category.hashCode());
-        result = prime * result + ((this.channel == null) ? 0 : this.channel.hashCode());
-        result = prime * result + ((this.compliantId == null) ? 0 : this.compliantId.hashCode());
-        result = prime * result + ((this.compliantType == null) ? 0 : this.compliantType.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.inBeat == null) ? 0 : this.inBeat.hashCode());
-        result = prime * result + ((this.itemType == null) ? 0 : this.itemType.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.otherQuantity == null) ? 0 : this.otherQuantity.hashCode());
-        result = prime * result + ((this.outletProb == null) ? 0 : this.outletProb.hashCode());
-        result = prime * result + ((this.pieceQuantity == null) ? 0 : this.pieceQuantity.hashCode());
-        result = prime * result + ((this.priority == null) ? 0 : this.priority.hashCode());
-        result = prime * result + ((this.recommendationType == null) ? 0 : this.recommendationType.hashCode());
-        result = prime * result + ((this.size == null) ? 0 : this.size.hashCode());
-        result = prime * result + ((this.skuCode == null) ? 0 : this.skuCode.hashCode());
-        result = prime * result + ((this.skuPriority == null) ? 0 : this.skuPriority.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.supportkpi == null) ? 0 : this.supportkpi.hashCode());
-        result = prime * result + ((this.totalAmount == null) ? 0 : this.totalAmount.hashCode());
-        result = prime * result + ((this.totalInitialAmt == null) ? 0 : this.totalInitialAmt.hashCode());
-        result = prime * result + ((this.totalMrp == null) ? 0 : this.totalMrp.hashCode());
-        result = prime * result + ((this.totalQuantity == null) ? 0 : this.totalQuantity.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.basketId == null) ? 0 : this.basketId.hashCode());
-        return result;
     }
 
     @Override

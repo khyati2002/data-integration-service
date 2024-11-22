@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -41,8 +36,6 @@ public class CkBannerDistributionSupplier implements Serializable {
     /**
      * Getter for <code>ck_banner_distribution_supplier.immediateparent</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getImmediateparent() {
         return this.immediateparent;
     }
@@ -57,8 +50,6 @@ public class CkBannerDistributionSupplier implements Serializable {
     /**
      * Getter for <code>ck_banner_distribution_supplier.supplier</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getSupplier() {
         return this.supplier;
     }
@@ -68,39 +59,6 @@ public class CkBannerDistributionSupplier implements Serializable {
      */
     public void setSupplier(String supplier) {
         this.supplier = supplier;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkBannerDistributionSupplier other = (CkBannerDistributionSupplier) obj;
-        if (this.immediateparent == null) {
-            if (other.immediateparent != null)
-                return false;
-        }
-        else if (!this.immediateparent.equals(other.immediateparent))
-            return false;
-        if (this.supplier == null) {
-            if (other.supplier != null)
-                return false;
-        }
-        else if (!this.supplier.equals(other.supplier))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.immediateparent == null) ? 0 : this.immediateparent.hashCode());
-        result = prime * result + ((this.supplier == null) ? 0 : this.supplier.hashCode());
-        return result;
     }
 
     @Override

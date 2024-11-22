@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,45 +22,45 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String aggregateField;
-    private String aggregationName;
-    private String cadenceDateField;
-    private JSON cadenceTypes;
-    private String category;
-    private String dataType;
-    private String description;
-    private String kpiName;
-    private String operationType;
-    private String pointerField;
-    private String primaryGroupBy;
-    private String primaryGroupName;
-    private Integer priority;
-    private String query;
-    private String rawTables;
-    private String rowId;
-    private String secondaryGroupBy;
-    private String secondaryGroupName;
-    private String targetTable;
-    private String tertiaryGroupBy;
-    private String tertiaryGroupName;
-    private String level;
-    private String cronExpression;
-    private String implementation;
-    private Date nextScheduledTime;
-    private JSON configuration;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        aggregateField;
+    private String        aggregationName;
+    private String        cadenceDateField;
+    private JSON          cadenceTypes;
+    private String        category;
+    private String        dataType;
+    private String        description;
+    private String        kpiName;
+    private String        operationType;
+    private String        pointerField;
+    private String        primaryGroupBy;
+    private String        primaryGroupName;
+    private Integer       priority;
+    private String        query;
+    private String        rawTables;
+    private String        rowId;
+    private String        secondaryGroupBy;
+    private String        secondaryGroupName;
+    private String        targetTable;
+    private String        tertiaryGroupBy;
+    private String        tertiaryGroupName;
+    private String        level;
+    private String        cronExpression;
+    private String        implementation;
+    private LocalDateTime nextScheduledTime;
+    private JSON          configuration;
 
     public CkAggregationInfo() {}
 
@@ -110,45 +107,45 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     }
 
     public CkAggregationInfo(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String aggregateField,
-        String aggregationName,
-        String cadenceDateField,
-        JSON cadenceTypes,
-        String category,
-        String dataType,
-        String description,
-        String kpiName,
-        String operationType,
-        String pointerField,
-        String primaryGroupBy,
-        String primaryGroupName,
-        Integer priority,
-        String query,
-        String rawTables,
-        String rowId,
-        String secondaryGroupBy,
-        String secondaryGroupName,
-        String targetTable,
-        String tertiaryGroupBy,
-        String tertiaryGroupName,
-        String level,
-        String cronExpression,
-        String implementation,
-        Date nextScheduledTime,
-        JSON configuration
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        aggregateField,
+        String        aggregationName,
+        String        cadenceDateField,
+        JSON          cadenceTypes,
+        String        category,
+        String        dataType,
+        String        description,
+        String        kpiName,
+        String        operationType,
+        String        pointerField,
+        String        primaryGroupBy,
+        String        primaryGroupName,
+        Integer       priority,
+        String        query,
+        String        rawTables,
+        String        rowId,
+        String        secondaryGroupBy,
+        String        secondaryGroupName,
+        String        targetTable,
+        String        tertiaryGroupBy,
+        String        tertiaryGroupName,
+        String        level,
+        String        cronExpression,
+        String        implementation,
+        LocalDateTime nextScheduledTime,
+        JSON          configuration
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -194,8 +191,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -224,7 +219,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -253,7 +247,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -324,7 +317,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -339,7 +331,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -354,7 +345,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -383,7 +373,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.aggregate_field</code>.
      */
-    @Size(max = 255)
     public String getAggregateField() {
         return this.aggregateField;
     }
@@ -398,7 +387,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.aggregation_name</code>.
      */
-    @Size(max = 255)
     public String getAggregationName() {
         return this.aggregationName;
     }
@@ -413,7 +401,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.cadence_date_field</code>.
      */
-    @Size(max = 255)
     public String getCadenceDateField() {
         return this.cadenceDateField;
     }
@@ -442,7 +429,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.category</code>.
      */
-    @Size(max = 255)
     public String getCategory() {
         return this.category;
     }
@@ -457,7 +443,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.data_type</code>.
      */
-    @Size(max = 255)
     public String getDataType() {
         return this.dataType;
     }
@@ -486,7 +471,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.kpi_name</code>.
      */
-    @Size(max = 255)
     public String getKpiName() {
         return this.kpiName;
     }
@@ -501,7 +485,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.operation_type</code>.
      */
-    @Size(max = 255)
     public String getOperationType() {
         return this.operationType;
     }
@@ -516,7 +499,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.pointer_field</code>.
      */
-    @Size(max = 255)
     public String getPointerField() {
         return this.pointerField;
     }
@@ -531,7 +513,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.primary_group_by</code>.
      */
-    @Size(max = 255)
     public String getPrimaryGroupBy() {
         return this.primaryGroupBy;
     }
@@ -546,7 +527,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.primary_group_name</code>.
      */
-    @Size(max = 255)
     public String getPrimaryGroupName() {
         return this.primaryGroupName;
     }
@@ -561,7 +541,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.priority</code>.
      */
-    @NotNull
     public Integer getPriority() {
         return this.priority;
     }
@@ -590,7 +569,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.raw_tables</code>.
      */
-    @Size(max = 255)
     public String getRawTables() {
         return this.rawTables;
     }
@@ -605,7 +583,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.row_id</code>.
      */
-    @Size(max = 255)
     public String getRowId() {
         return this.rowId;
     }
@@ -620,7 +597,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.secondary_group_by</code>.
      */
-    @Size(max = 255)
     public String getSecondaryGroupBy() {
         return this.secondaryGroupBy;
     }
@@ -635,7 +611,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.secondary_group_name</code>.
      */
-    @Size(max = 255)
     public String getSecondaryGroupName() {
         return this.secondaryGroupName;
     }
@@ -650,7 +625,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.target_table</code>.
      */
-    @Size(max = 255)
     public String getTargetTable() {
         return this.targetTable;
     }
@@ -665,7 +639,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.tertiary_group_by</code>.
      */
-    @Size(max = 255)
     public String getTertiaryGroupBy() {
         return this.tertiaryGroupBy;
     }
@@ -680,7 +653,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.tertiary_group_name</code>.
      */
-    @Size(max = 255)
     public String getTertiaryGroupName() {
         return this.tertiaryGroupName;
     }
@@ -695,7 +667,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.level</code>.
      */
-    @Size(max = 255)
     public String getLevel() {
         return this.level;
     }
@@ -710,7 +681,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.cron_expression</code>.
      */
-    @Size(max = 255)
     public String getCronExpression() {
         return this.cronExpression;
     }
@@ -725,7 +695,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.implementation</code>.
      */
-    @Size(max = 255)
     public String getImplementation() {
         return this.implementation;
     }
@@ -740,14 +709,14 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_aggregation_info.next_scheduled_time</code>.
      */
-    public Date getNextScheduledTime() {
+    public LocalDateTime getNextScheduledTime() {
         return this.nextScheduledTime;
     }
 
     /**
      * Setter for <code>ck_aggregation_info.next_scheduled_time</code>.
      */
-    public void setNextScheduledTime(Date nextScheduledTime) {
+    public void setNextScheduledTime(LocalDateTime nextScheduledTime) {
         this.nextScheduledTime = nextScheduledTime;
     }
 
@@ -763,298 +732,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
      */
     public void setConfiguration(JSON configuration) {
         this.configuration = configuration;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkAggregationInfo other = (CkAggregationInfo) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.aggregateField == null) {
-            if (other.aggregateField != null)
-                return false;
-        }
-        else if (!this.aggregateField.equals(other.aggregateField))
-            return false;
-        if (this.aggregationName == null) {
-            if (other.aggregationName != null)
-                return false;
-        }
-        else if (!this.aggregationName.equals(other.aggregationName))
-            return false;
-        if (this.cadenceDateField == null) {
-            if (other.cadenceDateField != null)
-                return false;
-        }
-        else if (!this.cadenceDateField.equals(other.cadenceDateField))
-            return false;
-        if (this.cadenceTypes == null) {
-            if (other.cadenceTypes != null)
-                return false;
-        }
-        else if (!this.cadenceTypes.equals(other.cadenceTypes))
-            return false;
-        if (this.category == null) {
-            if (other.category != null)
-                return false;
-        }
-        else if (!this.category.equals(other.category))
-            return false;
-        if (this.dataType == null) {
-            if (other.dataType != null)
-                return false;
-        }
-        else if (!this.dataType.equals(other.dataType))
-            return false;
-        if (this.description == null) {
-            if (other.description != null)
-                return false;
-        }
-        else if (!this.description.equals(other.description))
-            return false;
-        if (this.kpiName == null) {
-            if (other.kpiName != null)
-                return false;
-        }
-        else if (!this.kpiName.equals(other.kpiName))
-            return false;
-        if (this.operationType == null) {
-            if (other.operationType != null)
-                return false;
-        }
-        else if (!this.operationType.equals(other.operationType))
-            return false;
-        if (this.pointerField == null) {
-            if (other.pointerField != null)
-                return false;
-        }
-        else if (!this.pointerField.equals(other.pointerField))
-            return false;
-        if (this.primaryGroupBy == null) {
-            if (other.primaryGroupBy != null)
-                return false;
-        }
-        else if (!this.primaryGroupBy.equals(other.primaryGroupBy))
-            return false;
-        if (this.primaryGroupName == null) {
-            if (other.primaryGroupName != null)
-                return false;
-        }
-        else if (!this.primaryGroupName.equals(other.primaryGroupName))
-            return false;
-        if (this.priority == null) {
-            if (other.priority != null)
-                return false;
-        }
-        else if (!this.priority.equals(other.priority))
-            return false;
-        if (this.query == null) {
-            if (other.query != null)
-                return false;
-        }
-        else if (!this.query.equals(other.query))
-            return false;
-        if (this.rawTables == null) {
-            if (other.rawTables != null)
-                return false;
-        }
-        else if (!this.rawTables.equals(other.rawTables))
-            return false;
-        if (this.rowId == null) {
-            if (other.rowId != null)
-                return false;
-        }
-        else if (!this.rowId.equals(other.rowId))
-            return false;
-        if (this.secondaryGroupBy == null) {
-            if (other.secondaryGroupBy != null)
-                return false;
-        }
-        else if (!this.secondaryGroupBy.equals(other.secondaryGroupBy))
-            return false;
-        if (this.secondaryGroupName == null) {
-            if (other.secondaryGroupName != null)
-                return false;
-        }
-        else if (!this.secondaryGroupName.equals(other.secondaryGroupName))
-            return false;
-        if (this.targetTable == null) {
-            if (other.targetTable != null)
-                return false;
-        }
-        else if (!this.targetTable.equals(other.targetTable))
-            return false;
-        if (this.tertiaryGroupBy == null) {
-            if (other.tertiaryGroupBy != null)
-                return false;
-        }
-        else if (!this.tertiaryGroupBy.equals(other.tertiaryGroupBy))
-            return false;
-        if (this.tertiaryGroupName == null) {
-            if (other.tertiaryGroupName != null)
-                return false;
-        }
-        else if (!this.tertiaryGroupName.equals(other.tertiaryGroupName))
-            return false;
-        if (this.level == null) {
-            if (other.level != null)
-                return false;
-        }
-        else if (!this.level.equals(other.level))
-            return false;
-        if (this.cronExpression == null) {
-            if (other.cronExpression != null)
-                return false;
-        }
-        else if (!this.cronExpression.equals(other.cronExpression))
-            return false;
-        if (this.implementation == null) {
-            if (other.implementation != null)
-                return false;
-        }
-        else if (!this.implementation.equals(other.implementation))
-            return false;
-        if (this.nextScheduledTime == null) {
-            if (other.nextScheduledTime != null)
-                return false;
-        }
-        else if (!this.nextScheduledTime.equals(other.nextScheduledTime))
-            return false;
-        if (this.configuration == null) {
-            if (other.configuration != null)
-                return false;
-        }
-        else if (!this.configuration.equals(other.configuration))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.aggregateField == null) ? 0 : this.aggregateField.hashCode());
-        result = prime * result + ((this.aggregationName == null) ? 0 : this.aggregationName.hashCode());
-        result = prime * result + ((this.cadenceDateField == null) ? 0 : this.cadenceDateField.hashCode());
-        result = prime * result + ((this.cadenceTypes == null) ? 0 : this.cadenceTypes.hashCode());
-        result = prime * result + ((this.category == null) ? 0 : this.category.hashCode());
-        result = prime * result + ((this.dataType == null) ? 0 : this.dataType.hashCode());
-        result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-        result = prime * result + ((this.kpiName == null) ? 0 : this.kpiName.hashCode());
-        result = prime * result + ((this.operationType == null) ? 0 : this.operationType.hashCode());
-        result = prime * result + ((this.pointerField == null) ? 0 : this.pointerField.hashCode());
-        result = prime * result + ((this.primaryGroupBy == null) ? 0 : this.primaryGroupBy.hashCode());
-        result = prime * result + ((this.primaryGroupName == null) ? 0 : this.primaryGroupName.hashCode());
-        result = prime * result + ((this.priority == null) ? 0 : this.priority.hashCode());
-        result = prime * result + ((this.query == null) ? 0 : this.query.hashCode());
-        result = prime * result + ((this.rawTables == null) ? 0 : this.rawTables.hashCode());
-        result = prime * result + ((this.rowId == null) ? 0 : this.rowId.hashCode());
-        result = prime * result + ((this.secondaryGroupBy == null) ? 0 : this.secondaryGroupBy.hashCode());
-        result = prime * result + ((this.secondaryGroupName == null) ? 0 : this.secondaryGroupName.hashCode());
-        result = prime * result + ((this.targetTable == null) ? 0 : this.targetTable.hashCode());
-        result = prime * result + ((this.tertiaryGroupBy == null) ? 0 : this.tertiaryGroupBy.hashCode());
-        result = prime * result + ((this.tertiaryGroupName == null) ? 0 : this.tertiaryGroupName.hashCode());
-        result = prime * result + ((this.level == null) ? 0 : this.level.hashCode());
-        result = prime * result + ((this.cronExpression == null) ? 0 : this.cronExpression.hashCode());
-        result = prime * result + ((this.implementation == null) ? 0 : this.implementation.hashCode());
-        result = prime * result + ((this.nextScheduledTime == null) ? 0 : this.nextScheduledTime.hashCode());
-        result = prime * result + ((this.configuration == null) ? 0 : this.configuration.hashCode());
-        return result;
     }
 
     @Override

@@ -13,27 +13,12 @@ import com.salescode.jooq.EnrichmentPhaseConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Collection;
-import java.util.Date;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Date;
 
 
 /**
@@ -80,7 +65,7 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
     /**
      * The column <code>ck_enrichment_info.creation_time</code>.
      */
-    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
+    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
 
     /**
      * The column <code>ck_enrichment_info.extended_attributes</code>.
@@ -88,9 +73,14 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
     public final TableField<Record, JsonNode> EXTENDED_ATTRIBUTES = createField(DSL.name("extended_attributes"), SQLDataType.JSON, this, "", new JsonNodeConverter());
 
     /**
+     * The column <code>ck_enrichment_info.hash</code>.
+     */
+    public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
+
+    /**
      * The column <code>ck_enrichment_info.last_modified_time</code>.
      */
-    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
+    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
 
     /**
      * The column <code>ck_enrichment_info.lob</code>.
@@ -103,14 +93,34 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
     public final TableField<Record, String> MODIFIED_BY = createField(DSL.name("modified_by"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_enrichment_info.source</code>.
+     */
+    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_enrichment_info.version</code>.
      */
-    public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
+
+    /**
+     * The column <code>ck_enrichment_info.code</code>.
+     */
+    public final TableField<Record, String> CODE = createField(DSL.name("code"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_enrichment_info.description</code>.
      */
     public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_enrichment_info.document_link</code>.
+     */
+    public final TableField<Record, String> DOCUMENT_LINK = createField(DSL.name("document_link"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_enrichment_info.enabled</code>.
+     */
+    public final TableField<Record, Boolean> ENABLED = createField(DSL.name("enabled"), SQLDataType.BIT.nullable(false), this, "");
 
     /**
      * The column <code>ck_enrichment_info.implementation</code>.
@@ -143,26 +153,16 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
     public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_enrichment_info.source</code>.
-     */
-    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_enrichment_info.hash</code>.
-     */
-    public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
-
-    /**
      * The column <code>ck_enrichment_info.changed</code>.
      */
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkEnrichmentInfo(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkEnrichmentInfo(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkEnrichmentInfo(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -186,6 +186,10 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
         this(DSL.name("ck_enrichment_info"), null);
     }
 
+    public <O extends Record> CkEnrichmentInfo(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_ENRICHMENT_INFO);
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -206,11 +210,6 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
         return new CkEnrichmentInfo(alias, this);
     }
 
-    @Override
-    public CkEnrichmentInfo as(Table<?> alias) {
-        return new CkEnrichmentInfo(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -225,97 +224,5 @@ public class CkEnrichmentInfo extends TableImpl<Record> {
     @Override
     public CkEnrichmentInfo rename(Name name) {
         return new CkEnrichmentInfo(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkEnrichmentInfo rename(Table<?> name) {
-        return new CkEnrichmentInfo(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkEnrichmentInfo where(Condition condition) {
-        return new CkEnrichmentInfo(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkEnrichmentInfo where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkEnrichmentInfo where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkEnrichmentInfo where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkEnrichmentInfo where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkEnrichmentInfo where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkEnrichmentInfo where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkEnrichmentInfo where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkEnrichmentInfo whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkEnrichmentInfo whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

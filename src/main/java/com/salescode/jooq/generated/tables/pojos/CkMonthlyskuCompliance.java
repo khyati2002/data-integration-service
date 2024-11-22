@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,32 +20,32 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Long invoiceCount;
-    private Long invoiceValue;
-    private String kpiName;
-    private String month;
-    private Long orderedCount;
-    private Long orderedValue;
-    private String outletcode;
-    private Long recommendation;
-    private Long recommendedUniqueSku;
-    private String skuCode;
-    private String task;
-    private String year;
-    private String skuName;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private Long         invoiceCount;
+    private Long         invoiceValue;
+    private String       kpiName;
+    private String       month;
+    private Long         orderedCount;
+    private Long         orderedValue;
+    private String       outletcode;
+    private Long         recommendation;
+    private Long         recommendedUniqueSku;
+    private String       skuCode;
+    private String       task;
+    private String       year;
+    private String       skuName;
 
     public CkMonthlyskuCompliance() {}
 
@@ -82,32 +79,32 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     }
 
     public CkMonthlyskuCompliance(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Long invoiceCount,
-        Long invoiceValue,
-        String kpiName,
-        String month,
-        Long orderedCount,
-        Long orderedValue,
-        String outletcode,
-        Long recommendation,
-        Long recommendedUniqueSku,
-        String skuCode,
-        String task,
-        String year,
-        String skuName
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        Long         invoiceCount,
+        Long         invoiceValue,
+        String       kpiName,
+        String       month,
+        Long         orderedCount,
+        Long         orderedValue,
+        String       outletcode,
+        Long         recommendation,
+        Long         recommendedUniqueSku,
+        String       skuCode,
+        String       task,
+        String       year,
+        String       skuName
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -140,8 +137,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -170,7 +165,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -199,7 +193,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -270,7 +263,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -285,7 +277,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -300,7 +291,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -329,7 +319,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.invoice_count</code>.
      */
-    @NotNull
     public Long getInvoiceCount() {
         return this.invoiceCount;
     }
@@ -344,7 +333,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.invoice_value</code>.
      */
-    @NotNull
     public Long getInvoiceValue() {
         return this.invoiceValue;
     }
@@ -359,7 +347,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.kpi_name</code>.
      */
-    @Size(max = 255)
     public String getKpiName() {
         return this.kpiName;
     }
@@ -374,7 +361,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.month</code>.
      */
-    @Size(max = 255)
     public String getMonth() {
         return this.month;
     }
@@ -389,7 +375,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.ordered_count</code>.
      */
-    @NotNull
     public Long getOrderedCount() {
         return this.orderedCount;
     }
@@ -404,7 +389,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.ordered_value</code>.
      */
-    @NotNull
     public Long getOrderedValue() {
         return this.orderedValue;
     }
@@ -419,8 +403,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.outletcode</code>.
      */
-    @NotNull
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -435,7 +417,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.recommendation</code>.
      */
-    @NotNull
     public Long getRecommendation() {
         return this.recommendation;
     }
@@ -450,7 +431,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.recommended_unique_sku</code>.
      */
-    @NotNull
     public Long getRecommendedUniqueSku() {
         return this.recommendedUniqueSku;
     }
@@ -465,7 +445,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.sku_code</code>.
      */
-    @Size(max = 255)
     public String getSkuCode() {
         return this.skuCode;
     }
@@ -480,7 +459,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.task</code>.
      */
-    @Size(max = 255)
     public String getTask() {
         return this.task;
     }
@@ -495,7 +473,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.year</code>.
      */
-    @Size(max = 255)
     public String getYear() {
         return this.year;
     }
@@ -510,7 +487,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_monthlysku_compliance.sku_name</code>.
      */
-    @Size(max = 255)
     public String getSkuName() {
         return this.skuName;
     }
@@ -520,207 +496,6 @@ public class CkMonthlyskuCompliance extends CommonDataModel implements Serializa
      */
     public void setSkuName(String skuName) {
         this.skuName = skuName;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkMonthlyskuCompliance other = (CkMonthlyskuCompliance) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.invoiceCount == null) {
-            if (other.invoiceCount != null)
-                return false;
-        }
-        else if (!this.invoiceCount.equals(other.invoiceCount))
-            return false;
-        if (this.invoiceValue == null) {
-            if (other.invoiceValue != null)
-                return false;
-        }
-        else if (!this.invoiceValue.equals(other.invoiceValue))
-            return false;
-        if (this.kpiName == null) {
-            if (other.kpiName != null)
-                return false;
-        }
-        else if (!this.kpiName.equals(other.kpiName))
-            return false;
-        if (this.month == null) {
-            if (other.month != null)
-                return false;
-        }
-        else if (!this.month.equals(other.month))
-            return false;
-        if (this.orderedCount == null) {
-            if (other.orderedCount != null)
-                return false;
-        }
-        else if (!this.orderedCount.equals(other.orderedCount))
-            return false;
-        if (this.orderedValue == null) {
-            if (other.orderedValue != null)
-                return false;
-        }
-        else if (!this.orderedValue.equals(other.orderedValue))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.recommendation == null) {
-            if (other.recommendation != null)
-                return false;
-        }
-        else if (!this.recommendation.equals(other.recommendation))
-            return false;
-        if (this.recommendedUniqueSku == null) {
-            if (other.recommendedUniqueSku != null)
-                return false;
-        }
-        else if (!this.recommendedUniqueSku.equals(other.recommendedUniqueSku))
-            return false;
-        if (this.skuCode == null) {
-            if (other.skuCode != null)
-                return false;
-        }
-        else if (!this.skuCode.equals(other.skuCode))
-            return false;
-        if (this.task == null) {
-            if (other.task != null)
-                return false;
-        }
-        else if (!this.task.equals(other.task))
-            return false;
-        if (this.year == null) {
-            if (other.year != null)
-                return false;
-        }
-        else if (!this.year.equals(other.year))
-            return false;
-        if (this.skuName == null) {
-            if (other.skuName != null)
-                return false;
-        }
-        else if (!this.skuName.equals(other.skuName))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.invoiceCount == null) ? 0 : this.invoiceCount.hashCode());
-        result = prime * result + ((this.invoiceValue == null) ? 0 : this.invoiceValue.hashCode());
-        result = prime * result + ((this.kpiName == null) ? 0 : this.kpiName.hashCode());
-        result = prime * result + ((this.month == null) ? 0 : this.month.hashCode());
-        result = prime * result + ((this.orderedCount == null) ? 0 : this.orderedCount.hashCode());
-        result = prime * result + ((this.orderedValue == null) ? 0 : this.orderedValue.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.recommendation == null) ? 0 : this.recommendation.hashCode());
-        result = prime * result + ((this.recommendedUniqueSku == null) ? 0 : this.recommendedUniqueSku.hashCode());
-        result = prime * result + ((this.skuCode == null) ? 0 : this.skuCode.hashCode());
-        result = prime * result + ((this.task == null) ? 0 : this.task.hashCode());
-        result = prime * result + ((this.year == null) ? 0 : this.year.hashCode());
-        result = prime * result + ((this.skuName == null) ? 0 : this.skuName.hashCode());
-        return result;
     }
 
     @Override

@@ -11,35 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -126,12 +106,12 @@ public class CkAttendance extends TableImpl<Record> {
     /**
      * The column <code>ck_attendance.system_time</code>.
      */
-    public final TableField<Record, Date> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_attendance.end_time</code>.
      */
-    public final TableField<Record, Date> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_attendance.gps_latitude</code>.
@@ -166,12 +146,12 @@ public class CkAttendance extends TableImpl<Record> {
     /**
      * The column <code>ck_attendance.start_time</code>.
      */
-    public final TableField<Record, Date> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_attendance.submission_time</code>.
      */
-    public final TableField<Record, Date> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_attendance.target_key</code>.
@@ -224,11 +204,11 @@ public class CkAttendance extends TableImpl<Record> {
     public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(50), this, "");
 
     private CkAttendance(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkAttendance(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkAttendance(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -252,37 +232,8 @@ public class CkAttendance extends TableImpl<Record> {
         this(DSL.name("ck_attendance"), null);
     }
 
-    public <O extends Record> CkAttendance(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_ATTENDANCE);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkAttendancePath extends CkAttendance implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkAttendancePath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkAttendancePath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkAttendancePath as(String alias) {
-            return new CkAttendancePath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkAttendancePath as(Name alias) {
-            return new CkAttendancePath(alias, this);
-        }
-
-        @Override
-        public CkAttendancePath as(Table<?> alias) {
-            return new CkAttendancePath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkAttendance(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_ATTENDANCE);
     }
 
     @Override
@@ -300,26 +251,25 @@ public class CkAttendance extends TableImpl<Record> {
         return Arrays.asList(Keys.FKECRHD7HPE7A5RE9V8YE1UIVFA, Keys.FKDSHL6V2DRK2XUE64LVVU6S9BL);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKECRHD7HPE7A5RE9V8YE1UIVFA, null);
+            _ckLocation = new CkLocation(this, Keys.FKECRHD7HPE7A5RE9V8YE1UIVFA);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKDSHL6V2DRK2XUE64LVVU6S9BL, null);
+            _ckUser = new CkUser(this, Keys.FKDSHL6V2DRK2XUE64LVVU6S9BL);
 
         return _ckUser;
     }
@@ -332,11 +282,6 @@ public class CkAttendance extends TableImpl<Record> {
     @Override
     public CkAttendance as(Name alias) {
         return new CkAttendance(alias, this);
-    }
-
-    @Override
-    public CkAttendance as(Table<?> alias) {
-        return new CkAttendance(alias.getQualifiedName(), this);
     }
 
     /**
@@ -353,97 +298,5 @@ public class CkAttendance extends TableImpl<Record> {
     @Override
     public CkAttendance rename(Name name) {
         return new CkAttendance(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkAttendance rename(Table<?> name) {
-        return new CkAttendance(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAttendance where(Condition condition) {
-        return new CkAttendance(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAttendance where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAttendance where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAttendance where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkAttendance where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkAttendance where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkAttendance where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkAttendance where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAttendance whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAttendance whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

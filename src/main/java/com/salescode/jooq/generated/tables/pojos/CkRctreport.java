@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,35 +20,35 @@ public class CkRctreport extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Double cgBaseline;
-    private Double cgGrowth;
-    private Double cgMtd;
-    private Double igBaseline;
-    private Double igGrowth;
-    private Double igMtd;
-    private String kpi;
-    private String loginid;
-    private Integer month;
-    private String name;
-    private Double uplift;
-    private Integer year;
-    private Double impact;
-    private Double ig1Baseline;
-    private Double ig1growth;
-    private Double ig1mtd;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private Double       cgBaseline;
+    private Double       cgGrowth;
+    private Double       cgMtd;
+    private Double       igBaseline;
+    private Double       igGrowth;
+    private Double       igMtd;
+    private String       kpi;
+    private String       loginid;
+    private Integer      month;
+    private String       name;
+    private Double       uplift;
+    private Integer      year;
+    private Double       impact;
+    private Double       ig1Baseline;
+    private Double       ig1growth;
+    private Double       ig1mtd;
 
     public CkRctreport() {}
 
@@ -88,35 +85,35 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     }
 
     public CkRctreport(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Double cgBaseline,
-        Double cgGrowth,
-        Double cgMtd,
-        Double igBaseline,
-        Double igGrowth,
-        Double igMtd,
-        String kpi,
-        String loginid,
-        Integer month,
-        String name,
-        Double uplift,
-        Integer year,
-        Double impact,
-        Double ig1Baseline,
-        Double ig1growth,
-        Double ig1mtd
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        Double       cgBaseline,
+        Double       cgGrowth,
+        Double       cgMtd,
+        Double       igBaseline,
+        Double       igGrowth,
+        Double       igMtd,
+        String       kpi,
+        String       loginid,
+        Integer      month,
+        String       name,
+        Double       uplift,
+        Integer      year,
+        Double       impact,
+        Double       ig1Baseline,
+        Double       ig1growth,
+        Double       ig1mtd
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -152,8 +149,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -182,7 +177,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -211,7 +205,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -282,7 +275,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -297,7 +289,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -312,7 +303,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -355,7 +345,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.cg_growth</code>.
      */
-    @NotNull
     public Double getCgGrowth() {
         return this.cgGrowth;
     }
@@ -370,7 +359,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.cg_mtd</code>.
      */
-    @NotNull
     public Double getCgMtd() {
         return this.cgMtd;
     }
@@ -399,7 +387,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.ig_growth</code>.
      */
-    @NotNull
     public Double getIgGrowth() {
         return this.igGrowth;
     }
@@ -414,7 +401,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.ig_mtd</code>.
      */
-    @NotNull
     public Double getIgMtd() {
         return this.igMtd;
     }
@@ -429,7 +415,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.kpi</code>.
      */
-    @Size(max = 255)
     public String getKpi() {
         return this.kpi;
     }
@@ -444,7 +429,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.loginid</code>.
      */
-    @Size(max = 255)
     public String getLoginid() {
         return this.loginid;
     }
@@ -459,7 +443,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.month</code>.
      */
-    @NotNull
     public Integer getMonth() {
         return this.month;
     }
@@ -474,7 +457,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -489,7 +471,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.uplift</code>.
      */
-    @NotNull
     public Double getUplift() {
         return this.uplift;
     }
@@ -504,7 +485,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.year</code>.
      */
-    @NotNull
     public Integer getYear() {
         return this.year;
     }
@@ -519,7 +499,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.impact</code>.
      */
-    @NotNull
     public Double getImpact() {
         return this.impact;
     }
@@ -548,7 +527,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.ig1growth</code>.
      */
-    @NotNull
     public Double getIg1growth() {
         return this.ig1growth;
     }
@@ -563,7 +541,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_rctreport.ig1mtd</code>.
      */
-    @NotNull
     public Double getIg1mtd() {
         return this.ig1mtd;
     }
@@ -573,228 +550,6 @@ public class CkRctreport extends CommonDataModel implements Serializable {
      */
     public void setIg1mtd(Double ig1mtd) {
         this.ig1mtd = ig1mtd;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkRctreport other = (CkRctreport) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.cgBaseline == null) {
-            if (other.cgBaseline != null)
-                return false;
-        }
-        else if (!this.cgBaseline.equals(other.cgBaseline))
-            return false;
-        if (this.cgGrowth == null) {
-            if (other.cgGrowth != null)
-                return false;
-        }
-        else if (!this.cgGrowth.equals(other.cgGrowth))
-            return false;
-        if (this.cgMtd == null) {
-            if (other.cgMtd != null)
-                return false;
-        }
-        else if (!this.cgMtd.equals(other.cgMtd))
-            return false;
-        if (this.igBaseline == null) {
-            if (other.igBaseline != null)
-                return false;
-        }
-        else if (!this.igBaseline.equals(other.igBaseline))
-            return false;
-        if (this.igGrowth == null) {
-            if (other.igGrowth != null)
-                return false;
-        }
-        else if (!this.igGrowth.equals(other.igGrowth))
-            return false;
-        if (this.igMtd == null) {
-            if (other.igMtd != null)
-                return false;
-        }
-        else if (!this.igMtd.equals(other.igMtd))
-            return false;
-        if (this.kpi == null) {
-            if (other.kpi != null)
-                return false;
-        }
-        else if (!this.kpi.equals(other.kpi))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.month == null) {
-            if (other.month != null)
-                return false;
-        }
-        else if (!this.month.equals(other.month))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.uplift == null) {
-            if (other.uplift != null)
-                return false;
-        }
-        else if (!this.uplift.equals(other.uplift))
-            return false;
-        if (this.year == null) {
-            if (other.year != null)
-                return false;
-        }
-        else if (!this.year.equals(other.year))
-            return false;
-        if (this.impact == null) {
-            if (other.impact != null)
-                return false;
-        }
-        else if (!this.impact.equals(other.impact))
-            return false;
-        if (this.ig1Baseline == null) {
-            if (other.ig1Baseline != null)
-                return false;
-        }
-        else if (!this.ig1Baseline.equals(other.ig1Baseline))
-            return false;
-        if (this.ig1growth == null) {
-            if (other.ig1growth != null)
-                return false;
-        }
-        else if (!this.ig1growth.equals(other.ig1growth))
-            return false;
-        if (this.ig1mtd == null) {
-            if (other.ig1mtd != null)
-                return false;
-        }
-        else if (!this.ig1mtd.equals(other.ig1mtd))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.cgBaseline == null) ? 0 : this.cgBaseline.hashCode());
-        result = prime * result + ((this.cgGrowth == null) ? 0 : this.cgGrowth.hashCode());
-        result = prime * result + ((this.cgMtd == null) ? 0 : this.cgMtd.hashCode());
-        result = prime * result + ((this.igBaseline == null) ? 0 : this.igBaseline.hashCode());
-        result = prime * result + ((this.igGrowth == null) ? 0 : this.igGrowth.hashCode());
-        result = prime * result + ((this.igMtd == null) ? 0 : this.igMtd.hashCode());
-        result = prime * result + ((this.kpi == null) ? 0 : this.kpi.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.month == null) ? 0 : this.month.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.uplift == null) ? 0 : this.uplift.hashCode());
-        result = prime * result + ((this.year == null) ? 0 : this.year.hashCode());
-        result = prime * result + ((this.impact == null) ? 0 : this.impact.hashCode());
-        result = prime * result + ((this.ig1Baseline == null) ? 0 : this.ig1Baseline.hashCode());
-        result = prime * result + ((this.ig1growth == null) ? 0 : this.ig1growth.hashCode());
-        result = prime * result + ((this.ig1mtd == null) ? 0 : this.ig1mtd.hashCode());
-        return result;
     }
 
     @Override

@@ -6,31 +6,13 @@ package com.salescode.jooq.generated.tables;
 
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkSellinaAiQuery.CkSellinaAiQueryPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -67,11 +49,11 @@ public class CkSellinaAiQueryDefaultResponse extends TableImpl<Record> {
     public final TableField<Record, String> DEFAULT_RESPONSE = createField(DSL.name("default_response"), SQLDataType.VARCHAR(255), this, "");
 
     private CkSellinaAiQueryDefaultResponse(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkSellinaAiQueryDefaultResponse(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkSellinaAiQueryDefaultResponse(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -98,37 +80,8 @@ public class CkSellinaAiQueryDefaultResponse extends TableImpl<Record> {
         this(DSL.name("ck_sellina_ai_query_default_response"), null);
     }
 
-    public <O extends Record> CkSellinaAiQueryDefaultResponse(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_SELLINA_AI_QUERY_DEFAULT_RESPONSE);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkSellinaAiQueryDefaultResponsePath extends CkSellinaAiQueryDefaultResponse implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkSellinaAiQueryDefaultResponsePath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkSellinaAiQueryDefaultResponsePath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkSellinaAiQueryDefaultResponsePath as(String alias) {
-            return new CkSellinaAiQueryDefaultResponsePath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkSellinaAiQueryDefaultResponsePath as(Name alias) {
-            return new CkSellinaAiQueryDefaultResponsePath(alias, this);
-        }
-
-        @Override
-        public CkSellinaAiQueryDefaultResponsePath as(Table<?> alias) {
-            return new CkSellinaAiQueryDefaultResponsePath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkSellinaAiQueryDefaultResponse(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_SELLINA_AI_QUERY_DEFAULT_RESPONSE);
     }
 
     @Override
@@ -141,15 +94,15 @@ public class CkSellinaAiQueryDefaultResponse extends TableImpl<Record> {
         return Arrays.asList(Keys.FKD02VXF845XBFJC0FW43JMOSQE);
     }
 
-    private transient CkSellinaAiQueryPath _ckSellinaAiQuery;
+    private transient CkSellinaAiQuery _ckSellinaAiQuery;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_sellina_ai_query</code>
      * table.
      */
-    public CkSellinaAiQueryPath ckSellinaAiQuery() {
+    public CkSellinaAiQuery ckSellinaAiQuery() {
         if (_ckSellinaAiQuery == null)
-            _ckSellinaAiQuery = new CkSellinaAiQueryPath(this, Keys.FKD02VXF845XBFJC0FW43JMOSQE, null);
+            _ckSellinaAiQuery = new CkSellinaAiQuery(this, Keys.FKD02VXF845XBFJC0FW43JMOSQE);
 
         return _ckSellinaAiQuery;
     }
@@ -162,11 +115,6 @@ public class CkSellinaAiQueryDefaultResponse extends TableImpl<Record> {
     @Override
     public CkSellinaAiQueryDefaultResponse as(Name alias) {
         return new CkSellinaAiQueryDefaultResponse(alias, this);
-    }
-
-    @Override
-    public CkSellinaAiQueryDefaultResponse as(Table<?> alias) {
-        return new CkSellinaAiQueryDefaultResponse(alias.getQualifiedName(), this);
     }
 
     /**
@@ -183,97 +131,5 @@ public class CkSellinaAiQueryDefaultResponse extends TableImpl<Record> {
     @Override
     public CkSellinaAiQueryDefaultResponse rename(Name name) {
         return new CkSellinaAiQueryDefaultResponse(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkSellinaAiQueryDefaultResponse rename(Table<?> name) {
-        return new CkSellinaAiQueryDefaultResponse(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaAiQueryDefaultResponse where(Condition condition) {
-        return new CkSellinaAiQueryDefaultResponse(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaAiQueryDefaultResponse where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaAiQueryDefaultResponse where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaAiQueryDefaultResponse where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaAiQueryDefaultResponse where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaAiQueryDefaultResponse where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaAiQueryDefaultResponse where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSellinaAiQueryDefaultResponse where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaAiQueryDefaultResponse whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSellinaAiQueryDefaultResponse whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

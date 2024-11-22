@@ -11,29 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -134,11 +119,11 @@ public class CkOutletPricingAdjustment extends TableImpl<Record> {
     public final TableField<Record, byte[]> PRICING_ADJUSTMENT = createField(DSL.name("pricing_adjustment"), SQLDataType.BLOB, this, "");
 
     private CkOutletPricingAdjustment(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkOutletPricingAdjustment(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkOutletPricingAdjustment(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -162,6 +147,10 @@ public class CkOutletPricingAdjustment extends TableImpl<Record> {
      */
     public CkOutletPricingAdjustment() {
         this(DSL.name("ck_outlet_pricing_adjustment"), null);
+    }
+
+    public <O extends Record> CkOutletPricingAdjustment(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_OUTLET_PRICING_ADJUSTMENT);
     }
 
     @Override
@@ -189,11 +178,6 @@ public class CkOutletPricingAdjustment extends TableImpl<Record> {
         return new CkOutletPricingAdjustment(alias, this);
     }
 
-    @Override
-    public CkOutletPricingAdjustment as(Table<?> alias) {
-        return new CkOutletPricingAdjustment(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -208,97 +192,5 @@ public class CkOutletPricingAdjustment extends TableImpl<Record> {
     @Override
     public CkOutletPricingAdjustment rename(Name name) {
         return new CkOutletPricingAdjustment(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkOutletPricingAdjustment rename(Table<?> name) {
-        return new CkOutletPricingAdjustment(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletPricingAdjustment where(Condition condition) {
-        return new CkOutletPricingAdjustment(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletPricingAdjustment where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletPricingAdjustment where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletPricingAdjustment where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletPricingAdjustment where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletPricingAdjustment where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletPricingAdjustment where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkOutletPricingAdjustment where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletPricingAdjustment whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkOutletPricingAdjustment whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -24,45 +21,45 @@ public class CkStock extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String batchCode;
-    private String batchId;
-    private Double batchPrice;
-    private String brand;
-    private String cat;
-    private String channel;
-    private String compKey;
-    private String design;
-    private Double initialQty;
-    private Double initialStock;
-    private Integer minQty;
-    private Double price;
-    private Double qty;
-    private String skuCode;
-    private String skuDesc;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        batchCode;
+    private String        batchId;
+    private Double        batchPrice;
+    private String        brand;
+    private String        cat;
+    private String        channel;
+    private String        compKey;
+    private String        design;
+    private Double        initialQty;
+    private Double        initialStock;
+    private Integer       minQty;
+    private Double        price;
+    private Double        qty;
+    private String        skuCode;
+    private String        skuDesc;
     private LocalDateTime stockReceived;
-    private String subCat;
-    private String supplier;
-    private String tradeType;
-    private Date transferDate;
-    private String type;
-    private String warehouseCode;
-    private String locationHierarchy;
-    private String outletcode;
-    private String fkStock;
-    private Byte changed;
-    private Double stockValue;
+    private String        subCat;
+    private String        supplier;
+    private String        tradeType;
+    private LocalDateTime transferDate;
+    private String        type;
+    private String        warehouseCode;
+    private String        locationHierarchy;
+    private String        outletcode;
+    private String        fkStock;
+    private Byte          changed;
+    private Double        stockValue;
 
     public CkStock() {}
 
@@ -109,45 +106,45 @@ public class CkStock extends CommonDataModel implements Serializable {
     }
 
     public CkStock(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String batchCode,
-        String batchId,
-        Double batchPrice,
-        String brand,
-        String cat,
-        String channel,
-        String compKey,
-        String design,
-        Double initialQty,
-        Double initialStock,
-        Integer minQty,
-        Double price,
-        Double qty,
-        String skuCode,
-        String skuDesc,
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        batchCode,
+        String        batchId,
+        Double        batchPrice,
+        String        brand,
+        String        cat,
+        String        channel,
+        String        compKey,
+        String        design,
+        Double        initialQty,
+        Double        initialStock,
+        Integer       minQty,
+        Double        price,
+        Double        qty,
+        String        skuCode,
+        String        skuDesc,
         LocalDateTime stockReceived,
-        String subCat,
-        String supplier,
-        String tradeType,
-        Date transferDate,
-        String type,
-        String warehouseCode,
-        String locationHierarchy,
-        String outletcode,
-        String fkStock,
-        Byte changed,
-        Double stockValue
+        String        subCat,
+        String        supplier,
+        String        tradeType,
+        LocalDateTime transferDate,
+        String        type,
+        String        warehouseCode,
+        String        locationHierarchy,
+        String        outletcode,
+        String        fkStock,
+        Byte          changed,
+        Double        stockValue
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -193,8 +190,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -223,7 +218,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -238,7 +232,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -309,7 +302,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -324,7 +316,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -339,7 +330,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -368,7 +358,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.batch_code</code>.
      */
-    @Size(max = 200)
     public String getBatchCode() {
         return this.batchCode;
     }
@@ -383,7 +372,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.batch_id</code>.
      */
-    @Size(max = 255)
     public String getBatchId() {
         return this.batchId;
     }
@@ -398,7 +386,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.batch_price</code>.
      */
-    @NotNull
     public Double getBatchPrice() {
         return this.batchPrice;
     }
@@ -413,7 +400,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.brand</code>.
      */
-    @Size(max = 255)
     public String getBrand() {
         return this.brand;
     }
@@ -428,7 +414,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.cat</code>.
      */
-    @Size(max = 255)
     public String getCat() {
         return this.cat;
     }
@@ -443,7 +428,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.channel</code>.
      */
-    @Size(max = 255)
     public String getChannel() {
         return this.channel;
     }
@@ -458,7 +442,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.comp_key</code>.
      */
-    @Size(max = 255)
     public String getCompKey() {
         return this.compKey;
     }
@@ -473,7 +456,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.design</code>.
      */
-    @Size(max = 255)
     public String getDesign() {
         return this.design;
     }
@@ -488,7 +470,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.initial_qty</code>.
      */
-    @NotNull
     public Double getInitialQty() {
         return this.initialQty;
     }
@@ -503,7 +484,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.initial_stock</code>.
      */
-    @NotNull
     public Double getInitialStock() {
         return this.initialStock;
     }
@@ -518,7 +498,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.min_qty</code>.
      */
-    @NotNull
     public Integer getMinQty() {
         return this.minQty;
     }
@@ -533,7 +512,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.price</code>.
      */
-    @NotNull
     public Double getPrice() {
         return this.price;
     }
@@ -562,7 +540,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.sku_code</code>.
      */
-    @Size(max = 255)
     public String getSkuCode() {
         return this.skuCode;
     }
@@ -577,7 +554,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.sku_desc</code>.
      */
-    @Size(max = 255)
     public String getSkuDesc() {
         return this.skuDesc;
     }
@@ -606,7 +582,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.sub_cat</code>.
      */
-    @Size(max = 255)
     public String getSubCat() {
         return this.subCat;
     }
@@ -621,7 +596,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.supplier</code>.
      */
-    @Size(max = 255)
     public String getSupplier() {
         return this.supplier;
     }
@@ -636,7 +610,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.trade_type</code>.
      */
-    @Size(max = 255)
     public String getTradeType() {
         return this.tradeType;
     }
@@ -651,21 +624,20 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.transfer_date</code>.
      */
-    public Date getTransferDate() {
+    public LocalDateTime getTransferDate() {
         return this.transferDate;
     }
 
     /**
      * Setter for <code>ck_stock.transfer_date</code>.
      */
-    public void setTransferDate(Date transferDate) {
+    public void setTransferDate(LocalDateTime transferDate) {
         this.transferDate = transferDate;
     }
 
     /**
      * Getter for <code>ck_stock.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -680,7 +652,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.warehouse_code</code>.
      */
-    @Size(max = 255)
     public String getWarehouseCode() {
         return this.warehouseCode;
     }
@@ -695,7 +666,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -710,7 +680,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -725,7 +694,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.fk_stock</code>.
      */
-    @Size(max = 255)
     public String getFkStock() {
         return this.fkStock;
     }
@@ -754,7 +722,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock.stock_value</code>.
      */
-    @NotNull
     public Double getStockValue() {
         return this.stockValue;
     }
@@ -764,298 +731,6 @@ public class CkStock extends CommonDataModel implements Serializable {
      */
     public void setStockValue(Double stockValue) {
         this.stockValue = stockValue;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkStock other = (CkStock) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.batchCode == null) {
-            if (other.batchCode != null)
-                return false;
-        }
-        else if (!this.batchCode.equals(other.batchCode))
-            return false;
-        if (this.batchId == null) {
-            if (other.batchId != null)
-                return false;
-        }
-        else if (!this.batchId.equals(other.batchId))
-            return false;
-        if (this.batchPrice == null) {
-            if (other.batchPrice != null)
-                return false;
-        }
-        else if (!this.batchPrice.equals(other.batchPrice))
-            return false;
-        if (this.brand == null) {
-            if (other.brand != null)
-                return false;
-        }
-        else if (!this.brand.equals(other.brand))
-            return false;
-        if (this.cat == null) {
-            if (other.cat != null)
-                return false;
-        }
-        else if (!this.cat.equals(other.cat))
-            return false;
-        if (this.channel == null) {
-            if (other.channel != null)
-                return false;
-        }
-        else if (!this.channel.equals(other.channel))
-            return false;
-        if (this.compKey == null) {
-            if (other.compKey != null)
-                return false;
-        }
-        else if (!this.compKey.equals(other.compKey))
-            return false;
-        if (this.design == null) {
-            if (other.design != null)
-                return false;
-        }
-        else if (!this.design.equals(other.design))
-            return false;
-        if (this.initialQty == null) {
-            if (other.initialQty != null)
-                return false;
-        }
-        else if (!this.initialQty.equals(other.initialQty))
-            return false;
-        if (this.initialStock == null) {
-            if (other.initialStock != null)
-                return false;
-        }
-        else if (!this.initialStock.equals(other.initialStock))
-            return false;
-        if (this.minQty == null) {
-            if (other.minQty != null)
-                return false;
-        }
-        else if (!this.minQty.equals(other.minQty))
-            return false;
-        if (this.price == null) {
-            if (other.price != null)
-                return false;
-        }
-        else if (!this.price.equals(other.price))
-            return false;
-        if (this.qty == null) {
-            if (other.qty != null)
-                return false;
-        }
-        else if (!this.qty.equals(other.qty))
-            return false;
-        if (this.skuCode == null) {
-            if (other.skuCode != null)
-                return false;
-        }
-        else if (!this.skuCode.equals(other.skuCode))
-            return false;
-        if (this.skuDesc == null) {
-            if (other.skuDesc != null)
-                return false;
-        }
-        else if (!this.skuDesc.equals(other.skuDesc))
-            return false;
-        if (this.stockReceived == null) {
-            if (other.stockReceived != null)
-                return false;
-        }
-        else if (!this.stockReceived.equals(other.stockReceived))
-            return false;
-        if (this.subCat == null) {
-            if (other.subCat != null)
-                return false;
-        }
-        else if (!this.subCat.equals(other.subCat))
-            return false;
-        if (this.supplier == null) {
-            if (other.supplier != null)
-                return false;
-        }
-        else if (!this.supplier.equals(other.supplier))
-            return false;
-        if (this.tradeType == null) {
-            if (other.tradeType != null)
-                return false;
-        }
-        else if (!this.tradeType.equals(other.tradeType))
-            return false;
-        if (this.transferDate == null) {
-            if (other.transferDate != null)
-                return false;
-        }
-        else if (!this.transferDate.equals(other.transferDate))
-            return false;
-        if (this.type == null) {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        if (this.warehouseCode == null) {
-            if (other.warehouseCode != null)
-                return false;
-        }
-        else if (!this.warehouseCode.equals(other.warehouseCode))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.fkStock == null) {
-            if (other.fkStock != null)
-                return false;
-        }
-        else if (!this.fkStock.equals(other.fkStock))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.stockValue == null) {
-            if (other.stockValue != null)
-                return false;
-        }
-        else if (!this.stockValue.equals(other.stockValue))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.batchCode == null) ? 0 : this.batchCode.hashCode());
-        result = prime * result + ((this.batchId == null) ? 0 : this.batchId.hashCode());
-        result = prime * result + ((this.batchPrice == null) ? 0 : this.batchPrice.hashCode());
-        result = prime * result + ((this.brand == null) ? 0 : this.brand.hashCode());
-        result = prime * result + ((this.cat == null) ? 0 : this.cat.hashCode());
-        result = prime * result + ((this.channel == null) ? 0 : this.channel.hashCode());
-        result = prime * result + ((this.compKey == null) ? 0 : this.compKey.hashCode());
-        result = prime * result + ((this.design == null) ? 0 : this.design.hashCode());
-        result = prime * result + ((this.initialQty == null) ? 0 : this.initialQty.hashCode());
-        result = prime * result + ((this.initialStock == null) ? 0 : this.initialStock.hashCode());
-        result = prime * result + ((this.minQty == null) ? 0 : this.minQty.hashCode());
-        result = prime * result + ((this.price == null) ? 0 : this.price.hashCode());
-        result = prime * result + ((this.qty == null) ? 0 : this.qty.hashCode());
-        result = prime * result + ((this.skuCode == null) ? 0 : this.skuCode.hashCode());
-        result = prime * result + ((this.skuDesc == null) ? 0 : this.skuDesc.hashCode());
-        result = prime * result + ((this.stockReceived == null) ? 0 : this.stockReceived.hashCode());
-        result = prime * result + ((this.subCat == null) ? 0 : this.subCat.hashCode());
-        result = prime * result + ((this.supplier == null) ? 0 : this.supplier.hashCode());
-        result = prime * result + ((this.tradeType == null) ? 0 : this.tradeType.hashCode());
-        result = prime * result + ((this.transferDate == null) ? 0 : this.transferDate.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        result = prime * result + ((this.warehouseCode == null) ? 0 : this.warehouseCode.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.fkStock == null) ? 0 : this.fkStock.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.stockValue == null) ? 0 : this.stockValue.hashCode());
-        return result;
     }
 
     @Override

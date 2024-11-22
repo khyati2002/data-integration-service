@@ -12,37 +12,15 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -129,12 +107,12 @@ public class CkProductActivity extends TableImpl<Record> {
     /**
      * The column <code>ck_product_activity.system_time</code>.
      */
-    public final TableField<Record, Date> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_product_activity.end_time</code>.
      */
-    public final TableField<Record, Date> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_product_activity.gps_latitude</code>.
@@ -169,12 +147,12 @@ public class CkProductActivity extends TableImpl<Record> {
     /**
      * The column <code>ck_product_activity.start_time</code>.
      */
-    public final TableField<Record, Date> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_product_activity.submission_time</code>.
      */
-    public final TableField<Record, Date> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_product_activity.target_key</code>.
@@ -267,11 +245,11 @@ public class CkProductActivity extends TableImpl<Record> {
     public final TableField<Record, String> SUB_ACTIVITY = createField(DSL.name("sub_activity"), SQLDataType.VARCHAR(255), this, "");
 
     private CkProductActivity(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkProductActivity(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkProductActivity(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -295,37 +273,8 @@ public class CkProductActivity extends TableImpl<Record> {
         this(DSL.name("ck_product_activity"), null);
     }
 
-    public <O extends Record> CkProductActivity(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_PRODUCT_ACTIVITY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkProductActivityPath extends CkProductActivity implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkProductActivityPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkProductActivityPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkProductActivityPath as(String alias) {
-            return new CkProductActivityPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkProductActivityPath as(Name alias) {
-            return new CkProductActivityPath(alias, this);
-        }
-
-        @Override
-        public CkProductActivityPath as(Table<?> alias) {
-            return new CkProductActivityPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkProductActivity(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_PRODUCT_ACTIVITY);
     }
 
     @Override
@@ -348,39 +297,37 @@ public class CkProductActivity extends TableImpl<Record> {
         return Arrays.asList(Keys.FKABC0PYSBERSTXSII325FAH29Q, Keys.FK1V7NLW3K6SQF8KTDRTVP6OUTI, Keys.FK8L5XMR7YXLIGISDV8KR44RXYQ);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKABC0PYSBERSTXSII325FAH29Q, null);
+            _ckLocation = new CkLocation(this, Keys.FKABC0PYSBERSTXSII325FAH29Q);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FK1V7NLW3K6SQF8KTDRTVP6OUTI, null);
+            _ckUser = new CkUser(this, Keys.FK1V7NLW3K6SQF8KTDRTVP6OUTI);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FK8L5XMR7YXLIGISDV8KR44RXYQ, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FK8L5XMR7YXLIGISDV8KR44RXYQ);
 
         return _ckOutletDetails;
     }
@@ -393,11 +340,6 @@ public class CkProductActivity extends TableImpl<Record> {
     @Override
     public CkProductActivity as(Name alias) {
         return new CkProductActivity(alias, this);
-    }
-
-    @Override
-    public CkProductActivity as(Table<?> alias) {
-        return new CkProductActivity(alias.getQualifiedName(), this);
     }
 
     /**
@@ -414,97 +356,5 @@ public class CkProductActivity extends TableImpl<Record> {
     @Override
     public CkProductActivity rename(Name name) {
         return new CkProductActivity(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkProductActivity rename(Table<?> name) {
-        return new CkProductActivity(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductActivity where(Condition condition) {
-        return new CkProductActivity(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductActivity where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductActivity where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductActivity where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductActivity where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductActivity where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductActivity where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProductActivity where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductActivity whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProductActivity whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

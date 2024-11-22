@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -42,8 +37,6 @@ public class CkBannerTemplateTemplateElements implements Serializable {
      * Getter for
      * <code>ck_banner_template_template_elements.banner_template_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getBannerTemplateId() {
         return this.bannerTemplateId;
     }
@@ -60,8 +53,6 @@ public class CkBannerTemplateTemplateElements implements Serializable {
      * Getter for
      * <code>ck_banner_template_template_elements.template_elements_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getTemplateElementsId() {
         return this.templateElementsId;
     }
@@ -72,39 +63,6 @@ public class CkBannerTemplateTemplateElements implements Serializable {
      */
     public void setTemplateElementsId(String templateElementsId) {
         this.templateElementsId = templateElementsId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkBannerTemplateTemplateElements other = (CkBannerTemplateTemplateElements) obj;
-        if (this.bannerTemplateId == null) {
-            if (other.bannerTemplateId != null)
-                return false;
-        }
-        else if (!this.bannerTemplateId.equals(other.bannerTemplateId))
-            return false;
-        if (this.templateElementsId == null) {
-            if (other.templateElementsId != null)
-                return false;
-        }
-        else if (!this.templateElementsId.equals(other.templateElementsId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.bannerTemplateId == null) ? 0 : this.bannerTemplateId.hashCode());
-        result = prime * result + ((this.templateElementsId == null) ? 0 : this.templateElementsId.hashCode());
-        return result;
     }
 
     @Override

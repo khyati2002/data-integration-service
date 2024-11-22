@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -24,24 +21,24 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date lastCrossSellDate;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime lastCrossSellDate;
     private LocalDateTime lastCrossSellRecommended;
-    private Date lastUpSellDate;
+    private LocalDateTime lastUpSellDate;
     private LocalDateTime lastUpSellRecommended;
-    private String skucode;
+    private String        skucode;
 
     public CkSkucodeStatus() {}
 
@@ -67,24 +64,24 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
     }
 
     public CkSkucodeStatus(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date lastCrossSellDate,
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime lastCrossSellDate,
         LocalDateTime lastCrossSellRecommended,
-        Date lastUpSellDate,
+        LocalDateTime lastUpSellDate,
         LocalDateTime lastUpSellRecommended,
-        String skucode
+        String        skucode
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -109,8 +106,6 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_skucode_status.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -139,7 +134,6 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_skucode_status.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -168,7 +162,6 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_skucode_status.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -239,7 +232,6 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_skucode_status.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -254,7 +246,6 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_skucode_status.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -269,7 +260,6 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_skucode_status.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -298,14 +288,14 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_skucode_status.last_cross_sell_date</code>.
      */
-    public Date getLastCrossSellDate() {
+    public LocalDateTime getLastCrossSellDate() {
         return this.lastCrossSellDate;
     }
 
     /**
      * Setter for <code>ck_skucode_status.last_cross_sell_date</code>.
      */
-    public void setLastCrossSellDate(Date lastCrossSellDate) {
+    public void setLastCrossSellDate(LocalDateTime lastCrossSellDate) {
         this.lastCrossSellDate = lastCrossSellDate;
     }
 
@@ -326,14 +316,14 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_skucode_status.last_up_sell_date</code>.
      */
-    public Date getLastUpSellDate() {
+    public LocalDateTime getLastUpSellDate() {
         return this.lastUpSellDate;
     }
 
     /**
      * Setter for <code>ck_skucode_status.last_up_sell_date</code>.
      */
-    public void setLastUpSellDate(Date lastUpSellDate) {
+    public void setLastUpSellDate(LocalDateTime lastUpSellDate) {
         this.lastUpSellDate = lastUpSellDate;
     }
 
@@ -354,7 +344,6 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_skucode_status.skucode</code>.
      */
-    @Size(max = 255)
     public String getSkucode() {
         return this.skucode;
     }
@@ -364,151 +353,6 @@ public class CkSkucodeStatus extends CommonDataModel implements Serializable {
      */
     public void setSkucode(String skucode) {
         this.skucode = skucode;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkSkucodeStatus other = (CkSkucodeStatus) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.lastCrossSellDate == null) {
-            if (other.lastCrossSellDate != null)
-                return false;
-        }
-        else if (!this.lastCrossSellDate.equals(other.lastCrossSellDate))
-            return false;
-        if (this.lastCrossSellRecommended == null) {
-            if (other.lastCrossSellRecommended != null)
-                return false;
-        }
-        else if (!this.lastCrossSellRecommended.equals(other.lastCrossSellRecommended))
-            return false;
-        if (this.lastUpSellDate == null) {
-            if (other.lastUpSellDate != null)
-                return false;
-        }
-        else if (!this.lastUpSellDate.equals(other.lastUpSellDate))
-            return false;
-        if (this.lastUpSellRecommended == null) {
-            if (other.lastUpSellRecommended != null)
-                return false;
-        }
-        else if (!this.lastUpSellRecommended.equals(other.lastUpSellRecommended))
-            return false;
-        if (this.skucode == null) {
-            if (other.skucode != null)
-                return false;
-        }
-        else if (!this.skucode.equals(other.skucode))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.lastCrossSellDate == null) ? 0 : this.lastCrossSellDate.hashCode());
-        result = prime * result + ((this.lastCrossSellRecommended == null) ? 0 : this.lastCrossSellRecommended.hashCode());
-        result = prime * result + ((this.lastUpSellDate == null) ? 0 : this.lastUpSellDate.hashCode());
-        result = prime * result + ((this.lastUpSellRecommended == null) ? 0 : this.lastUpSellRecommended.hashCode());
-        result = prime * result + ((this.skucode == null) ? 0 : this.skucode.hashCode());
-        return result;
     }
 
     @Override

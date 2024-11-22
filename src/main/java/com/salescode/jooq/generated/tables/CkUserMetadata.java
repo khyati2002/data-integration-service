@@ -11,13 +11,11 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
-import java.util.Collection;
 import java.util.Date;
 
 
@@ -128,11 +126,11 @@ public class CkUserMetadata extends TableImpl<Record> {
     public final TableField<Record, String> VALUE = createField(DSL.name("value"), SQLDataType.CLOB, this, "");
 
     private CkUserMetadata(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkUserMetadata(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkUserMetadata(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -156,6 +154,10 @@ public class CkUserMetadata extends TableImpl<Record> {
         this(DSL.name("ck_user_metadata"), null);
     }
 
+    public <O extends Record> CkUserMetadata(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_USER_METADATA);
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -176,11 +178,6 @@ public class CkUserMetadata extends TableImpl<Record> {
         return new CkUserMetadata(alias, this);
     }
 
-    @Override
-    public CkUserMetadata as(Table<?> alias) {
-        return new CkUserMetadata(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -195,97 +192,5 @@ public class CkUserMetadata extends TableImpl<Record> {
     @Override
     public CkUserMetadata rename(Name name) {
         return new CkUserMetadata(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkUserMetadata rename(Table<?> name) {
-        return new CkUserMetadata(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserMetadata where(Condition condition) {
-        return new CkUserMetadata(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserMetadata where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserMetadata where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserMetadata where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserMetadata where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserMetadata where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserMetadata where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserMetadata where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserMetadata whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserMetadata whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

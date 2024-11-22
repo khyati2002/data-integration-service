@@ -11,36 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-import com.salescode.jooq.generated.tables.CkWareHouseChannelHierarchy.CkWareHouseChannelHierarchyPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -190,11 +168,11 @@ public class CkWareHouse extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkWareHouse(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkWareHouse(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkWareHouse(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -218,37 +196,8 @@ public class CkWareHouse extends TableImpl<Record> {
         this(DSL.name("ck_ware_house"), null);
     }
 
-    public <O extends Record> CkWareHouse(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_WARE_HOUSE);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkWareHousePath extends CkWareHouse implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkWareHousePath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkWareHousePath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkWareHousePath as(String alias) {
-            return new CkWareHousePath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkWareHousePath as(Name alias) {
-            return new CkWareHousePath(alias, this);
-        }
-
-        @Override
-        public CkWareHousePath as(Table<?> alias) {
-            return new CkWareHousePath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkWareHouse(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_WARE_HOUSE);
     }
 
     @Override
@@ -266,41 +215,27 @@ public class CkWareHouse extends TableImpl<Record> {
         return Arrays.asList(Keys.FK2LLPGCN0PRDJBBOBO2GXOKNEC, Keys.FKLKQRAH7D5BWY8RDHSXLOQ05XX);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FK2LLPGCN0PRDJBBOBO2GXOKNEC, null);
+            _ckLocation = new CkLocation(this, Keys.FK2LLPGCN0PRDJBBOBO2GXOKNEC);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKLKQRAH7D5BWY8RDHSXLOQ05XX, null);
+            _ckUser = new CkUser(this, Keys.FKLKQRAH7D5BWY8RDHSXLOQ05XX);
 
         return _ckUser;
-    }
-
-    private transient CkWareHouseChannelHierarchyPath _ckWareHouseChannelHierarchy;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_ware_house_channel_hierarchy</code> table
-     */
-    public CkWareHouseChannelHierarchyPath ckWareHouseChannelHierarchy() {
-        if (_ckWareHouseChannelHierarchy == null)
-            _ckWareHouseChannelHierarchy = new CkWareHouseChannelHierarchyPath(this, null, Keys.FKKB4R9OYL74LFG74J7J6HIB5NW.getInverseKey());
-
-        return _ckWareHouseChannelHierarchy;
     }
 
     @Override
@@ -311,11 +246,6 @@ public class CkWareHouse extends TableImpl<Record> {
     @Override
     public CkWareHouse as(Name alias) {
         return new CkWareHouse(alias, this);
-    }
-
-    @Override
-    public CkWareHouse as(Table<?> alias) {
-        return new CkWareHouse(alias.getQualifiedName(), this);
     }
 
     /**
@@ -332,97 +262,5 @@ public class CkWareHouse extends TableImpl<Record> {
     @Override
     public CkWareHouse rename(Name name) {
         return new CkWareHouse(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkWareHouse rename(Table<?> name) {
-        return new CkWareHouse(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouse where(Condition condition) {
-        return new CkWareHouse(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouse where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouse where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouse where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkWareHouse where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkWareHouse where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkWareHouse where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkWareHouse where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouse whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkWareHouse whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,28 +21,28 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private JsonNode attributes;
-    private String discription;
-    private Date endDate;
-    private String jobName;
-    private String jobType;
-    private Date startDate;
-    private String taskId;
-    private String timeZone;
-    private Date triggerTime;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private JsonNode      attributes;
+    private String        discription;
+    private LocalDateTime endDate;
+    private String        jobName;
+    private String        jobType;
+    private LocalDateTime startDate;
+    private String        taskId;
+    private String        timeZone;
+    private String        triggerTime;
+    private Byte          changed;
 
     public CkJenkinsConfiguration() {}
 
@@ -74,28 +72,28 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     }
 
     public CkJenkinsConfiguration(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        JsonNode attributes,
-        String discription,
-        Date endDate,
-        String jobName,
-        String jobType,
-        Date startDate,
-        String taskId,
-        String timeZone,
-        Date triggerTime,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        JsonNode      attributes,
+        String        discription,
+        LocalDateTime endDate,
+        String        jobName,
+        String        jobType,
+        LocalDateTime startDate,
+        String        taskId,
+        String        timeZone,
+        String        triggerTime,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -124,8 +122,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -154,7 +150,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -169,7 +164,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -240,7 +234,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -255,7 +248,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -270,7 +262,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -313,7 +304,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.discription</code>.
      */
-    @Size(max = 255)
     public String getDiscription() {
         return this.discription;
     }
@@ -328,21 +318,20 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_jenkins_configuration.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
     /**
      * Getter for <code>ck_jenkins_configuration.job_name</code>.
      */
-    @Size(max = 255)
     public String getJobName() {
         return this.jobName;
     }
@@ -357,8 +346,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.job_type</code>.
      */
-    @NotNull
-    @Size(max = 32)
     public String getJobType() {
         return this.jobType;
     }
@@ -373,21 +360,20 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_jenkins_configuration.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_jenkins_configuration.task_id</code>.
      */
-    @Size(max = 255)
     public String getTaskId() {
         return this.taskId;
     }
@@ -402,7 +388,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.time_zone</code>.
      */
-    @Size(max = 255)
     public String getTimeZone() {
         return this.timeZone;
     }
@@ -417,14 +402,14 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_jenkins_configuration.trigger_time</code>.
      */
-    public Date getTriggerTime() {
+    public String getTriggerTime() {
         return this.triggerTime;
     }
 
     /**
      * Setter for <code>ck_jenkins_configuration.trigger_time</code>.
      */
-    public void setTriggerTime(Date triggerTime) {
+    public void setTriggerTime(String triggerTime) {
         this.triggerTime = triggerTime;
     }
 
@@ -440,179 +425,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkJenkinsConfiguration other = (CkJenkinsConfiguration) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.attributes == null) {
-            if (other.attributes != null)
-                return false;
-        }
-        else if (!this.attributes.equals(other.attributes))
-            return false;
-        if (this.discription == null) {
-            if (other.discription != null)
-                return false;
-        }
-        else if (!this.discription.equals(other.discription))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.jobName == null) {
-            if (other.jobName != null)
-                return false;
-        }
-        else if (!this.jobName.equals(other.jobName))
-            return false;
-        if (this.jobType == null) {
-            if (other.jobType != null)
-                return false;
-        }
-        else if (!this.jobType.equals(other.jobType))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.taskId == null) {
-            if (other.taskId != null)
-                return false;
-        }
-        else if (!this.taskId.equals(other.taskId))
-            return false;
-        if (this.timeZone == null) {
-            if (other.timeZone != null)
-                return false;
-        }
-        else if (!this.timeZone.equals(other.timeZone))
-            return false;
-        if (this.triggerTime == null) {
-            if (other.triggerTime != null)
-                return false;
-        }
-        else if (!this.triggerTime.equals(other.triggerTime))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.attributes == null) ? 0 : this.attributes.hashCode());
-        result = prime * result + ((this.discription == null) ? 0 : this.discription.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.jobName == null) ? 0 : this.jobName.hashCode());
-        result = prime * result + ((this.jobType == null) ? 0 : this.jobType.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.taskId == null) ? 0 : this.taskId.hashCode());
-        result = prime * result + ((this.timeZone == null) ? 0 : this.timeZone.hashCode());
-        result = prime * result + ((this.triggerTime == null) ? 0 : this.triggerTime.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

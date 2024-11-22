@@ -11,34 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -125,7 +106,7 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
     /**
      * The column <code>ck_pjp_visit_plan.system_time</code>.
      */
-    public final TableField<Record, Date> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_pjp_visit_plan.beat_code</code>.
@@ -160,7 +141,7 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
     /**
      * The column <code>ck_pjp_visit_plan.pjp_date</code>.
      */
-    public final TableField<Record, Date> PJP_DATE = createField(DSL.name("pjp_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> PJP_DATE = createField(DSL.name("pjp_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_pjp_visit_plan.pjp_id</code>.
@@ -203,11 +184,11 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPjpVisitPlan(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkPjpVisitPlan(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkPjpVisitPlan(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -231,37 +212,8 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
         this(DSL.name("ck_pjp_visit_plan"), null);
     }
 
-    public <O extends Record> CkPjpVisitPlan(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_PJP_VISIT_PLAN);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkPjpVisitPlanPath extends CkPjpVisitPlan implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkPjpVisitPlanPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkPjpVisitPlanPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkPjpVisitPlanPath as(String alias) {
-            return new CkPjpVisitPlanPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkPjpVisitPlanPath as(Name alias) {
-            return new CkPjpVisitPlanPath(alias, this);
-        }
-
-        @Override
-        public CkPjpVisitPlanPath as(Table<?> alias) {
-            return new CkPjpVisitPlanPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkPjpVisitPlan(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_PJP_VISIT_PLAN);
     }
 
     @Override
@@ -279,40 +231,38 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
         return Arrays.asList(Keys.FKAVFJ3T2O2DG5XDXJL7EWQE5D5, Keys.FKK6WK9TBVSY16C7IF2J7ACTI7R, Keys.FKGOJCK09WRWHCA1F608FO440OG);
     }
 
-    private transient CkOutletDetailsPath _fkavfj3t2o2dg5xdxjl7ewqe5d5;
+    private transient CkOutletDetails _fkavfj3t2o2dg5xdxjl7ewqe5d5;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _fkgojck09wrwhca1f608fo440og;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table, via the <code>FKavfj3t2o2dg5xdxjl7ewqe5d5</code> key.
      */
-    public CkOutletDetailsPath fkavfj3t2o2dg5xdxjl7ewqe5d5() {
+    public CkOutletDetails fkavfj3t2o2dg5xdxjl7ewqe5d5() {
         if (_fkavfj3t2o2dg5xdxjl7ewqe5d5 == null)
-            _fkavfj3t2o2dg5xdxjl7ewqe5d5 = new CkOutletDetailsPath(this, Keys.FKAVFJ3T2O2DG5XDXJL7EWQE5D5, null);
+            _fkavfj3t2o2dg5xdxjl7ewqe5d5 = new CkOutletDetails(this, Keys.FKAVFJ3T2O2DG5XDXJL7EWQE5D5);
 
         return _fkavfj3t2o2dg5xdxjl7ewqe5d5;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKK6WK9TBVSY16C7IF2J7ACTI7R, null);
+            _ckUser = new CkUser(this, Keys.FKK6WK9TBVSY16C7IF2J7ACTI7R);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _fkgojck09wrwhca1f608fo440og;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table, via the <code>FKgojck09wrwhca1f608fo440og</code> key.
      */
-    public CkOutletDetailsPath fkgojck09wrwhca1f608fo440og() {
+    public CkOutletDetails fkgojck09wrwhca1f608fo440og() {
         if (_fkgojck09wrwhca1f608fo440og == null)
-            _fkgojck09wrwhca1f608fo440og = new CkOutletDetailsPath(this, Keys.FKGOJCK09WRWHCA1F608FO440OG, null);
+            _fkgojck09wrwhca1f608fo440og = new CkOutletDetails(this, Keys.FKGOJCK09WRWHCA1F608FO440OG);
 
         return _fkgojck09wrwhca1f608fo440og;
     }
@@ -325,11 +275,6 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
     @Override
     public CkPjpVisitPlan as(Name alias) {
         return new CkPjpVisitPlan(alias, this);
-    }
-
-    @Override
-    public CkPjpVisitPlan as(Table<?> alias) {
-        return new CkPjpVisitPlan(alias.getQualifiedName(), this);
     }
 
     /**
@@ -346,97 +291,5 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
     @Override
     public CkPjpVisitPlan rename(Name name) {
         return new CkPjpVisitPlan(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkPjpVisitPlan rename(Table<?> name) {
-        return new CkPjpVisitPlan(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPjpVisitPlan where(Condition condition) {
-        return new CkPjpVisitPlan(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPjpVisitPlan where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPjpVisitPlan where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPjpVisitPlan where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPjpVisitPlan where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPjpVisitPlan where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPjpVisitPlan where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkPjpVisitPlan where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPjpVisitPlan whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkPjpVisitPlan whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

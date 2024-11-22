@@ -11,37 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkAuthResource.CkAuthResourcePath;
-import com.salescode.jooq.generated.tables.CkAuthRoleResources.CkAuthRoleResourcesPath;
-import com.salescode.jooq.generated.tables.CkDivisionRoles.CkDivisionRolesPath;
-import com.salescode.jooq.generated.tables.CkResourceAccessRole.CkResourceAccessRolePath;
-import com.salescode.jooq.generated.tables.CkUserRoles.CkUserRolesPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -136,11 +113,11 @@ public class CkAuthRole extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkAuthRole(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkAuthRole(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkAuthRole(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -164,37 +141,8 @@ public class CkAuthRole extends TableImpl<Record> {
         this(DSL.name("ck_auth_role"), null);
     }
 
-    public <O extends Record> CkAuthRole(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_AUTH_ROLE);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkAuthRolePath extends CkAuthRole implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkAuthRolePath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkAuthRolePath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkAuthRolePath as(String alias) {
-            return new CkAuthRolePath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkAuthRolePath as(Name alias) {
-            return new CkAuthRolePath(alias, this);
-        }
-
-        @Override
-        public CkAuthRolePath as(Table<?> alias) {
-            return new CkAuthRolePath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkAuthRole(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_AUTH_ROLE);
     }
 
     @Override
@@ -212,66 +160,6 @@ public class CkAuthRole extends TableImpl<Record> {
         return Arrays.asList(Keys.KEY_CK_AUTH_ROLE_UK_5N232KHC2J4YY7E19QBTULAVA);
     }
 
-    private transient CkDivisionRolesPath _ckDivisionRoles;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_division_roles</code> table
-     */
-    public CkDivisionRolesPath ckDivisionRoles() {
-        if (_ckDivisionRoles == null)
-            _ckDivisionRoles = new CkDivisionRolesPath(this, null, Keys.FK4MTHALLSMGFMWN5BGJ14CQHTM.getInverseKey());
-
-        return _ckDivisionRoles;
-    }
-
-    private transient CkUserRolesPath _ckUserRoles;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_user_roles</code> table
-     */
-    public CkUserRolesPath ckUserRoles() {
-        if (_ckUserRoles == null)
-            _ckUserRoles = new CkUserRolesPath(this, null, Keys.FK80H4VE82BLK3CPXMPWCH93F6Q.getInverseKey());
-
-        return _ckUserRoles;
-    }
-
-    private transient CkResourceAccessRolePath _ckResourceAccessRole;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_resource_access_role</code> table
-     */
-    public CkResourceAccessRolePath ckResourceAccessRole() {
-        if (_ckResourceAccessRole == null)
-            _ckResourceAccessRole = new CkResourceAccessRolePath(this, null, Keys.FKC4USQ078871C9UMSCEO6RQQ54.getInverseKey());
-
-        return _ckResourceAccessRole;
-    }
-
-    private transient CkAuthRoleResourcesPath _ckAuthRoleResources;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_auth_role_resources</code> table
-     */
-    public CkAuthRoleResourcesPath ckAuthRoleResources() {
-        if (_ckAuthRoleResources == null)
-            _ckAuthRoleResources = new CkAuthRoleResourcesPath(this, null, Keys.FKL82QJE0YS8QBFKCCE5S41RIOU.getInverseKey());
-
-        return _ckAuthRoleResources;
-    }
-
-    /**
-     * Get the implicit many-to-many join path to the
-     * <code>ckroot.ck_auth_resource</code> table
-     */
-    public CkAuthResourcePath ckAuthResource() {
-        return ckAuthRoleResources().ckAuthResource();
-    }
-
     @Override
     public CkAuthRole as(String alias) {
         return new CkAuthRole(DSL.name(alias), this);
@@ -280,11 +168,6 @@ public class CkAuthRole extends TableImpl<Record> {
     @Override
     public CkAuthRole as(Name alias) {
         return new CkAuthRole(alias, this);
-    }
-
-    @Override
-    public CkAuthRole as(Table<?> alias) {
-        return new CkAuthRole(alias.getQualifiedName(), this);
     }
 
     /**
@@ -301,97 +184,5 @@ public class CkAuthRole extends TableImpl<Record> {
     @Override
     public CkAuthRole rename(Name name) {
         return new CkAuthRole(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkAuthRole rename(Table<?> name) {
-        return new CkAuthRole(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAuthRole where(Condition condition) {
-        return new CkAuthRole(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAuthRole where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAuthRole where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAuthRole where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkAuthRole where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkAuthRole where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkAuthRole where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkAuthRole where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAuthRole whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkAuthRole whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,31 +21,31 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Integer absentDays;
-    private Integer actualVisit;
-    private Date date;
-    private String loginid;
-    private Integer pjpOutlets;
-    private Integer presentDays;
-    private String salesLostType;
-    private Double salesLostValue;
-    private Double totalSales;
-    private String username;
-    private Integer visitLoss;
-    private Integer workingDay;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private Integer       absentDays;
+    private Integer       actualVisit;
+    private LocalDateTime date;
+    private String        loginid;
+    private Integer       pjpOutlets;
+    private Integer       presentDays;
+    private String        salesLostType;
+    private Double        salesLostValue;
+    private Double        totalSales;
+    private String        username;
+    private Integer       visitLoss;
+    private Integer       workingDay;
 
     public CkSalesLost() {}
 
@@ -80,31 +78,31 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     }
 
     public CkSalesLost(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Integer absentDays,
-        Integer actualVisit,
-        Date date,
-        String loginid,
-        Integer pjpOutlets,
-        Integer presentDays,
-        String salesLostType,
-        Double salesLostValue,
-        Double totalSales,
-        String username,
-        Integer visitLoss,
-        Integer workingDay
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        Integer       absentDays,
+        Integer       actualVisit,
+        LocalDateTime date,
+        String        loginid,
+        Integer       pjpOutlets,
+        Integer       presentDays,
+        String        salesLostType,
+        Double        salesLostValue,
+        Double        totalSales,
+        String        username,
+        Integer       visitLoss,
+        Integer       workingDay
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -136,8 +134,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -166,7 +162,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -195,7 +190,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -266,7 +260,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -281,7 +274,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -296,7 +288,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -325,7 +316,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.absent_days</code>.
      */
-    @NotNull
     public Integer getAbsentDays() {
         return this.absentDays;
     }
@@ -340,7 +330,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.actual_visit</code>.
      */
-    @NotNull
     public Integer getActualVisit() {
         return this.actualVisit;
     }
@@ -355,23 +344,20 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.date</code>.
      */
-    @NotNull
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return this.date;
     }
 
     /**
      * Setter for <code>ck_sales_lost.date</code>.
      */
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
     /**
      * Getter for <code>ck_sales_lost.loginid</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getLoginid() {
         return this.loginid;
     }
@@ -386,7 +372,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.pjp_outlets</code>.
      */
-    @NotNull
     public Integer getPjpOutlets() {
         return this.pjpOutlets;
     }
@@ -401,7 +386,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.present_days</code>.
      */
-    @NotNull
     public Integer getPresentDays() {
         return this.presentDays;
     }
@@ -416,8 +400,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.sales_lost_type</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getSalesLostType() {
         return this.salesLostType;
     }
@@ -432,7 +414,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.sales_lost_value</code>.
      */
-    @NotNull
     public Double getSalesLostValue() {
         return this.salesLostValue;
     }
@@ -447,7 +428,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.total_sales</code>.
      */
-    @NotNull
     public Double getTotalSales() {
         return this.totalSales;
     }
@@ -462,8 +442,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.username</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getUsername() {
         return this.username;
     }
@@ -478,7 +456,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.visit_loss</code>.
      */
-    @NotNull
     public Integer getVisitLoss() {
         return this.visitLoss;
     }
@@ -493,7 +470,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_sales_lost.working_day</code>.
      */
-    @NotNull
     public Integer getWorkingDay() {
         return this.workingDay;
     }
@@ -503,200 +479,6 @@ public class CkSalesLost extends CommonDataModel implements Serializable {
      */
     public void setWorkingDay(Integer workingDay) {
         this.workingDay = workingDay;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkSalesLost other = (CkSalesLost) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.absentDays == null) {
-            if (other.absentDays != null)
-                return false;
-        }
-        else if (!this.absentDays.equals(other.absentDays))
-            return false;
-        if (this.actualVisit == null) {
-            if (other.actualVisit != null)
-                return false;
-        }
-        else if (!this.actualVisit.equals(other.actualVisit))
-            return false;
-        if (this.date == null) {
-            if (other.date != null)
-                return false;
-        }
-        else if (!this.date.equals(other.date))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.pjpOutlets == null) {
-            if (other.pjpOutlets != null)
-                return false;
-        }
-        else if (!this.pjpOutlets.equals(other.pjpOutlets))
-            return false;
-        if (this.presentDays == null) {
-            if (other.presentDays != null)
-                return false;
-        }
-        else if (!this.presentDays.equals(other.presentDays))
-            return false;
-        if (this.salesLostType == null) {
-            if (other.salesLostType != null)
-                return false;
-        }
-        else if (!this.salesLostType.equals(other.salesLostType))
-            return false;
-        if (this.salesLostValue == null) {
-            if (other.salesLostValue != null)
-                return false;
-        }
-        else if (!this.salesLostValue.equals(other.salesLostValue))
-            return false;
-        if (this.totalSales == null) {
-            if (other.totalSales != null)
-                return false;
-        }
-        else if (!this.totalSales.equals(other.totalSales))
-            return false;
-        if (this.username == null) {
-            if (other.username != null)
-                return false;
-        }
-        else if (!this.username.equals(other.username))
-            return false;
-        if (this.visitLoss == null) {
-            if (other.visitLoss != null)
-                return false;
-        }
-        else if (!this.visitLoss.equals(other.visitLoss))
-            return false;
-        if (this.workingDay == null) {
-            if (other.workingDay != null)
-                return false;
-        }
-        else if (!this.workingDay.equals(other.workingDay))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.absentDays == null) ? 0 : this.absentDays.hashCode());
-        result = prime * result + ((this.actualVisit == null) ? 0 : this.actualVisit.hashCode());
-        result = prime * result + ((this.date == null) ? 0 : this.date.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.pjpOutlets == null) ? 0 : this.pjpOutlets.hashCode());
-        result = prime * result + ((this.presentDays == null) ? 0 : this.presentDays.hashCode());
-        result = prime * result + ((this.salesLostType == null) ? 0 : this.salesLostType.hashCode());
-        result = prime * result + ((this.salesLostValue == null) ? 0 : this.salesLostValue.hashCode());
-        result = prime * result + ((this.totalSales == null) ? 0 : this.totalSales.hashCode());
-        result = prime * result + ((this.username == null) ? 0 : this.username.hashCode());
-        result = prime * result + ((this.visitLoss == null) ? 0 : this.visitLoss.hashCode());
-        result = prime * result + ((this.workingDay == null) ? 0 : this.workingDay.hashCode());
-        return result;
     }
 
     @Override

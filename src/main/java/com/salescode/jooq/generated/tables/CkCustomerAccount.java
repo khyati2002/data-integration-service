@@ -11,15 +11,12 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -171,11 +168,11 @@ public class CkCustomerAccount extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkCustomerAccount(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkCustomerAccount(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkCustomerAccount(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -199,37 +196,8 @@ public class CkCustomerAccount extends TableImpl<Record> {
         this(DSL.name("ck_customer_account"), null);
     }
 
-    public <O extends Record> CkCustomerAccount(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_CUSTOMER_ACCOUNT);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkCustomerAccountPath extends CkCustomerAccount implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkCustomerAccountPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkCustomerAccountPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkCustomerAccountPath as(String alias) {
-            return new CkCustomerAccountPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkCustomerAccountPath as(Name alias) {
-            return new CkCustomerAccountPath(alias, this);
-        }
-
-        @Override
-        public CkCustomerAccountPath as(Table<?> alias) {
-            return new CkCustomerAccountPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkCustomerAccount(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_CUSTOMER_ACCOUNT);
     }
 
     @Override
@@ -247,14 +215,14 @@ public class CkCustomerAccount extends TableImpl<Record> {
         return Arrays.asList(Keys.FKA5YT7H5QFKEM22UBOVW1VWYS4);
     }
 
-    private transient CkUserPath _ckUser;
+    private transient CkUser _ckUser;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKA5YT7H5QFKEM22UBOVW1VWYS4, null);
+            _ckUser = new CkUser(this, Keys.FKA5YT7H5QFKEM22UBOVW1VWYS4);
 
         return _ckUser;
     }
@@ -267,11 +235,6 @@ public class CkCustomerAccount extends TableImpl<Record> {
     @Override
     public CkCustomerAccount as(Name alias) {
         return new CkCustomerAccount(alias, this);
-    }
-
-    @Override
-    public CkCustomerAccount as(Table<?> alias) {
-        return new CkCustomerAccount(alias.getQualifiedName(), this);
     }
 
     /**
@@ -288,97 +251,5 @@ public class CkCustomerAccount extends TableImpl<Record> {
     @Override
     public CkCustomerAccount rename(Name name) {
         return new CkCustomerAccount(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkCustomerAccount rename(Table<?> name) {
-        return new CkCustomerAccount(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCustomerAccount where(Condition condition) {
-        return new CkCustomerAccount(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCustomerAccount where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCustomerAccount where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCustomerAccount where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCustomerAccount where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCustomerAccount where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCustomerAccount where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCustomerAccount where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCustomerAccount whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCustomerAccount whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

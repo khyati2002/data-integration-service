@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,37 +22,37 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date systemTime;
-    private Date endTime;
-    private String gpsLatitude;
-    private String gpsLongitude;
-    private String hierarchy;
-    private JSON images;
-    private String name;
-    private String referenceNumber;
-    private Date startTime;
-    private Date submissionTime;
-    private String targetKey;
-    private Date date;
-    private String isRecommended;
-    private String recommendationType;
-    private Integer toOrder;
-    private String locationHierarchy;
-    private String loginid;
-    private String outletcode;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime systemTime;
+    private LocalDateTime endTime;
+    private String        gpsLatitude;
+    private String        gpsLongitude;
+    private String        hierarchy;
+    private JSON          images;
+    private String        name;
+    private String        referenceNumber;
+    private LocalDateTime startTime;
+    private LocalDateTime submissionTime;
+    private String        targetKey;
+    private LocalDateTime date;
+    private String        isRecommended;
+    private String        recommendationType;
+    private Integer       toOrder;
+    private String        locationHierarchy;
+    private String        loginid;
+    private String        outletcode;
+    private Byte          changed;
 
     public CkPostaggregateOutletRecommendedActivityDaily() {}
 
@@ -94,37 +91,37 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
     }
 
     public CkPostaggregateOutletRecommendedActivityDaily(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date systemTime,
-        Date endTime,
-        String gpsLatitude,
-        String gpsLongitude,
-        String hierarchy,
-        JSON images,
-        String name,
-        String referenceNumber,
-        Date startTime,
-        Date submissionTime,
-        String targetKey,
-        Date date,
-        String isRecommended,
-        String recommendationType,
-        Integer toOrder,
-        String locationHierarchy,
-        String loginid,
-        String outletcode,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime systemTime,
+        LocalDateTime endTime,
+        String        gpsLatitude,
+        String        gpsLongitude,
+        String        hierarchy,
+        JSON          images,
+        String        name,
+        String        referenceNumber,
+        LocalDateTime startTime,
+        LocalDateTime submissionTime,
+        String        targetKey,
+        LocalDateTime date,
+        String        isRecommended,
+        String        recommendationType,
+        Integer       toOrder,
+        String        locationHierarchy,
+        String        loginid,
+        String        outletcode,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -163,8 +160,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -197,7 +192,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -214,7 +208,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -295,7 +288,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -312,7 +304,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -329,7 +320,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -362,7 +352,7 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.system_time</code>.
      */
-    public Date getSystemTime() {
+    public LocalDateTime getSystemTime() {
         return this.systemTime;
     }
 
@@ -370,7 +360,7 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Setter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.system_time</code>.
      */
-    public void setSystemTime(Date systemTime) {
+    public void setSystemTime(LocalDateTime systemTime) {
         this.systemTime = systemTime;
     }
 
@@ -378,7 +368,7 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.end_time</code>.
      */
-    public Date getEndTime() {
+    public LocalDateTime getEndTime() {
         return this.endTime;
     }
 
@@ -386,7 +376,7 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Setter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.end_time</code>.
      */
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -394,7 +384,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.gps_latitude</code>.
      */
-    @Size(max = 255)
     public String getGpsLatitude() {
         return this.gpsLatitude;
     }
@@ -411,7 +400,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.gps_longitude</code>.
      */
-    @Size(max = 255)
     public String getGpsLongitude() {
         return this.gpsLongitude;
     }
@@ -460,7 +448,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -477,7 +464,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.reference_number</code>.
      */
-    @Size(max = 255)
     public String getReferenceNumber() {
         return this.referenceNumber;
     }
@@ -494,7 +480,7 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.start_time</code>.
      */
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return this.startTime;
     }
 
@@ -502,7 +488,7 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Setter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.start_time</code>.
      */
-    public void setStartTime(Date startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -510,7 +496,7 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.submission_time</code>.
      */
-    public Date getSubmissionTime() {
+    public LocalDateTime getSubmissionTime() {
         return this.submissionTime;
     }
 
@@ -518,7 +504,7 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Setter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.submission_time</code>.
      */
-    public void setSubmissionTime(Date submissionTime) {
+    public void setSubmissionTime(LocalDateTime submissionTime) {
         this.submissionTime = submissionTime;
     }
 
@@ -526,7 +512,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.target_key</code>.
      */
-    @Size(max = 255)
     public String getTargetKey() {
         return this.targetKey;
     }
@@ -543,7 +528,7 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.date</code>.
      */
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return this.date;
     }
 
@@ -551,7 +536,7 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Setter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.date</code>.
      */
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -559,7 +544,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.is_recommended</code>.
      */
-    @Size(max = 255)
     public String getIsRecommended() {
         return this.isRecommended;
     }
@@ -576,7 +560,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.recommendation_type</code>.
      */
-    @Size(max = 255)
     public String getRecommendationType() {
         return this.recommendationType;
     }
@@ -609,7 +592,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -626,7 +608,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.loginid</code>.
      */
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -643,7 +624,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      * Getter for
      * <code>ck_postaggregate_outlet_recommended_activity_daily.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -670,242 +650,6 @@ public class CkPostaggregateOutletRecommendedActivityDaily extends CommonDataMod
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkPostaggregateOutletRecommendedActivityDaily other = (CkPostaggregateOutletRecommendedActivityDaily) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.systemTime == null) {
-            if (other.systemTime != null)
-                return false;
-        }
-        else if (!this.systemTime.equals(other.systemTime))
-            return false;
-        if (this.endTime == null) {
-            if (other.endTime != null)
-                return false;
-        }
-        else if (!this.endTime.equals(other.endTime))
-            return false;
-        if (this.gpsLatitude == null) {
-            if (other.gpsLatitude != null)
-                return false;
-        }
-        else if (!this.gpsLatitude.equals(other.gpsLatitude))
-            return false;
-        if (this.gpsLongitude == null) {
-            if (other.gpsLongitude != null)
-                return false;
-        }
-        else if (!this.gpsLongitude.equals(other.gpsLongitude))
-            return false;
-        if (this.hierarchy == null) {
-            if (other.hierarchy != null)
-                return false;
-        }
-        else if (!this.hierarchy.equals(other.hierarchy))
-            return false;
-        if (this.images == null) {
-            if (other.images != null)
-                return false;
-        }
-        else if (!this.images.equals(other.images))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.referenceNumber == null) {
-            if (other.referenceNumber != null)
-                return false;
-        }
-        else if (!this.referenceNumber.equals(other.referenceNumber))
-            return false;
-        if (this.startTime == null) {
-            if (other.startTime != null)
-                return false;
-        }
-        else if (!this.startTime.equals(other.startTime))
-            return false;
-        if (this.submissionTime == null) {
-            if (other.submissionTime != null)
-                return false;
-        }
-        else if (!this.submissionTime.equals(other.submissionTime))
-            return false;
-        if (this.targetKey == null) {
-            if (other.targetKey != null)
-                return false;
-        }
-        else if (!this.targetKey.equals(other.targetKey))
-            return false;
-        if (this.date == null) {
-            if (other.date != null)
-                return false;
-        }
-        else if (!this.date.equals(other.date))
-            return false;
-        if (this.isRecommended == null) {
-            if (other.isRecommended != null)
-                return false;
-        }
-        else if (!this.isRecommended.equals(other.isRecommended))
-            return false;
-        if (this.recommendationType == null) {
-            if (other.recommendationType != null)
-                return false;
-        }
-        else if (!this.recommendationType.equals(other.recommendationType))
-            return false;
-        if (this.toOrder == null) {
-            if (other.toOrder != null)
-                return false;
-        }
-        else if (!this.toOrder.equals(other.toOrder))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.systemTime == null) ? 0 : this.systemTime.hashCode());
-        result = prime * result + ((this.endTime == null) ? 0 : this.endTime.hashCode());
-        result = prime * result + ((this.gpsLatitude == null) ? 0 : this.gpsLatitude.hashCode());
-        result = prime * result + ((this.gpsLongitude == null) ? 0 : this.gpsLongitude.hashCode());
-        result = prime * result + ((this.hierarchy == null) ? 0 : this.hierarchy.hashCode());
-        result = prime * result + ((this.images == null) ? 0 : this.images.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.referenceNumber == null) ? 0 : this.referenceNumber.hashCode());
-        result = prime * result + ((this.startTime == null) ? 0 : this.startTime.hashCode());
-        result = prime * result + ((this.submissionTime == null) ? 0 : this.submissionTime.hashCode());
-        result = prime * result + ((this.targetKey == null) ? 0 : this.targetKey.hashCode());
-        result = prime * result + ((this.date == null) ? 0 : this.date.hashCode());
-        result = prime * result + ((this.isRecommended == null) ? 0 : this.isRecommended.hashCode());
-        result = prime * result + ((this.recommendationType == null) ? 0 : this.recommendationType.hashCode());
-        result = prime * result + ((this.toOrder == null) ? 0 : this.toOrder.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -41,8 +36,6 @@ public class CkDivisionRoles implements Serializable {
     /**
      * Getter for <code>ck_division_roles.division_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getDivisionId() {
         return this.divisionId;
     }
@@ -57,8 +50,6 @@ public class CkDivisionRoles implements Serializable {
     /**
      * Getter for <code>ck_division_roles.roles_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getRolesId() {
         return this.rolesId;
     }
@@ -68,39 +59,6 @@ public class CkDivisionRoles implements Serializable {
      */
     public void setRolesId(String rolesId) {
         this.rolesId = rolesId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkDivisionRoles other = (CkDivisionRoles) obj;
-        if (this.divisionId == null) {
-            if (other.divisionId != null)
-                return false;
-        }
-        else if (!this.divisionId.equals(other.divisionId))
-            return false;
-        if (this.rolesId == null) {
-            if (other.rolesId != null)
-                return false;
-        }
-        else if (!this.rolesId.equals(other.rolesId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.divisionId == null) ? 0 : this.divisionId.hashCode());
-        result = prime * result + ((this.rolesId == null) ? 0 : this.rolesId.hashCode());
-        return result;
     }
 
     @Override

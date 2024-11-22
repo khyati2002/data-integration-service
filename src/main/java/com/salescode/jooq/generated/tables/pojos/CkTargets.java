@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,37 +22,37 @@ public class CkTargets extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date endDate;
-    private String outletType;
-    private JSON outletValue;
-    private String productType;
-    private JSON productValue;
-    private Date startDate;
-    private Double target;
-    private String targetId;
-    private String targetName;
-    private String targetTable;
-    private String targetType;
-    private String unit;
-    private String userType;
-    private JSON userValue;
-    private Byte changed;
-    private Double targetcondition;
-    private String targetconditionunit;
-    private String outletValueStr;
-    private String userValueStr;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime endDate;
+    private String        outletType;
+    private JSON          outletValue;
+    private String        productType;
+    private JSON          productValue;
+    private LocalDateTime startDate;
+    private Double        target;
+    private String        targetId;
+    private String        targetName;
+    private String        targetTable;
+    private String        targetType;
+    private String        unit;
+    private String        userType;
+    private JSON          userValue;
+    private Byte          changed;
+    private Double        targetcondition;
+    private String        targetconditionunit;
+    private String        outletValueStr;
+    private String        userValueStr;
 
     public CkTargets() {}
 
@@ -94,37 +91,37 @@ public class CkTargets extends CommonDataModel implements Serializable {
     }
 
     public CkTargets(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date endDate,
-        String outletType,
-        JSON outletValue,
-        String productType,
-        JSON productValue,
-        Date startDate,
-        Double target,
-        String targetId,
-        String targetName,
-        String targetTable,
-        String targetType,
-        String unit,
-        String userType,
-        JSON userValue,
-        Byte changed,
-        Double targetcondition,
-        String targetconditionunit,
-        String outletValueStr,
-        String userValueStr
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime endDate,
+        String        outletType,
+        JSON          outletValue,
+        String        productType,
+        JSON          productValue,
+        LocalDateTime startDate,
+        Double        target,
+        String        targetId,
+        String        targetName,
+        String        targetTable,
+        String        targetType,
+        String        unit,
+        String        userType,
+        JSON          userValue,
+        Byte          changed,
+        Double        targetcondition,
+        String        targetconditionunit,
+        String        outletValueStr,
+        String        userValueStr
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -162,8 +159,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -192,7 +187,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -207,7 +201,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -278,7 +271,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -293,7 +285,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -308,7 +299,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -337,21 +327,20 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_targets.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
     /**
      * Getter for <code>ck_targets.outlet_type</code>.
      */
-    @Size(max = 255)
     public String getOutletType() {
         return this.outletType;
     }
@@ -380,7 +369,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.product_type</code>.
      */
-    @Size(max = 255)
     public String getProductType() {
         return this.productType;
     }
@@ -409,21 +397,20 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_targets.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_targets.target</code>.
      */
-    @NotNull
     public Double getTarget() {
         return this.target;
     }
@@ -438,7 +425,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.target_id</code>.
      */
-    @Size(max = 255)
     public String getTargetId() {
         return this.targetId;
     }
@@ -453,7 +439,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.target_name</code>.
      */
-    @Size(max = 255)
     public String getTargetName() {
         return this.targetName;
     }
@@ -468,7 +453,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.target_table</code>.
      */
-    @Size(max = 255)
     public String getTargetTable() {
         return this.targetTable;
     }
@@ -483,7 +467,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.target_type</code>.
      */
-    @Size(max = 32)
     public String getTargetType() {
         return this.targetType;
     }
@@ -498,7 +481,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.unit</code>.
      */
-    @Size(max = 255)
     public String getUnit() {
         return this.unit;
     }
@@ -513,7 +495,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.user_type</code>.
      */
-    @Size(max = 255)
     public String getUserType() {
         return this.userType;
     }
@@ -570,7 +551,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.targetconditionunit</code>.
      */
-    @Size(max = 255)
     public String getTargetconditionunit() {
         return this.targetconditionunit;
     }
@@ -585,7 +565,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.outlet_value_str</code>.
      */
-    @Size(max = 255)
     public String getOutletValueStr() {
         return this.outletValueStr;
     }
@@ -600,7 +579,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_targets.user_value_str</code>.
      */
-    @Size(max = 255)
     public String getUserValueStr() {
         return this.userValueStr;
     }
@@ -610,242 +588,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
      */
     public void setUserValueStr(String userValueStr) {
         this.userValueStr = userValueStr;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkTargets other = (CkTargets) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.outletType == null) {
-            if (other.outletType != null)
-                return false;
-        }
-        else if (!this.outletType.equals(other.outletType))
-            return false;
-        if (this.outletValue == null) {
-            if (other.outletValue != null)
-                return false;
-        }
-        else if (!this.outletValue.equals(other.outletValue))
-            return false;
-        if (this.productType == null) {
-            if (other.productType != null)
-                return false;
-        }
-        else if (!this.productType.equals(other.productType))
-            return false;
-        if (this.productValue == null) {
-            if (other.productValue != null)
-                return false;
-        }
-        else if (!this.productValue.equals(other.productValue))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.target == null) {
-            if (other.target != null)
-                return false;
-        }
-        else if (!this.target.equals(other.target))
-            return false;
-        if (this.targetId == null) {
-            if (other.targetId != null)
-                return false;
-        }
-        else if (!this.targetId.equals(other.targetId))
-            return false;
-        if (this.targetName == null) {
-            if (other.targetName != null)
-                return false;
-        }
-        else if (!this.targetName.equals(other.targetName))
-            return false;
-        if (this.targetTable == null) {
-            if (other.targetTable != null)
-                return false;
-        }
-        else if (!this.targetTable.equals(other.targetTable))
-            return false;
-        if (this.targetType == null) {
-            if (other.targetType != null)
-                return false;
-        }
-        else if (!this.targetType.equals(other.targetType))
-            return false;
-        if (this.unit == null) {
-            if (other.unit != null)
-                return false;
-        }
-        else if (!this.unit.equals(other.unit))
-            return false;
-        if (this.userType == null) {
-            if (other.userType != null)
-                return false;
-        }
-        else if (!this.userType.equals(other.userType))
-            return false;
-        if (this.userValue == null) {
-            if (other.userValue != null)
-                return false;
-        }
-        else if (!this.userValue.equals(other.userValue))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.targetcondition == null) {
-            if (other.targetcondition != null)
-                return false;
-        }
-        else if (!this.targetcondition.equals(other.targetcondition))
-            return false;
-        if (this.targetconditionunit == null) {
-            if (other.targetconditionunit != null)
-                return false;
-        }
-        else if (!this.targetconditionunit.equals(other.targetconditionunit))
-            return false;
-        if (this.outletValueStr == null) {
-            if (other.outletValueStr != null)
-                return false;
-        }
-        else if (!this.outletValueStr.equals(other.outletValueStr))
-            return false;
-        if (this.userValueStr == null) {
-            if (other.userValueStr != null)
-                return false;
-        }
-        else if (!this.userValueStr.equals(other.userValueStr))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.outletType == null) ? 0 : this.outletType.hashCode());
-        result = prime * result + ((this.outletValue == null) ? 0 : this.outletValue.hashCode());
-        result = prime * result + ((this.productType == null) ? 0 : this.productType.hashCode());
-        result = prime * result + ((this.productValue == null) ? 0 : this.productValue.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
-        result = prime * result + ((this.targetId == null) ? 0 : this.targetId.hashCode());
-        result = prime * result + ((this.targetName == null) ? 0 : this.targetName.hashCode());
-        result = prime * result + ((this.targetTable == null) ? 0 : this.targetTable.hashCode());
-        result = prime * result + ((this.targetType == null) ? 0 : this.targetType.hashCode());
-        result = prime * result + ((this.unit == null) ? 0 : this.unit.hashCode());
-        result = prime * result + ((this.userType == null) ? 0 : this.userType.hashCode());
-        result = prime * result + ((this.userValue == null) ? 0 : this.userValue.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.targetcondition == null) ? 0 : this.targetcondition.hashCode());
-        result = prime * result + ((this.targetconditionunit == null) ? 0 : this.targetconditionunit.hashCode());
-        result = prime * result + ((this.outletValueStr == null) ? 0 : this.outletValueStr.hashCode());
-        result = prime * result + ((this.userValueStr == null) ? 0 : this.userValueStr.hashCode());
-        return result;
     }
 
     @Override

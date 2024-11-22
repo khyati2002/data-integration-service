@@ -11,36 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkTargets.CkTargetsPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -160,11 +138,11 @@ public class CkTargetResults extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkTargetResults(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkTargetResults(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkTargetResults(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -188,37 +166,8 @@ public class CkTargetResults extends TableImpl<Record> {
         this(DSL.name("ck_target_results"), null);
     }
 
-    public <O extends Record> CkTargetResults(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_TARGET_RESULTS);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkTargetResultsPath extends CkTargetResults implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkTargetResultsPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkTargetResultsPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkTargetResultsPath as(String alias) {
-            return new CkTargetResultsPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkTargetResultsPath as(Name alias) {
-            return new CkTargetResultsPath(alias, this);
-        }
-
-        @Override
-        public CkTargetResultsPath as(Table<?> alias) {
-            return new CkTargetResultsPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkTargetResults(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_TARGET_RESULTS);
     }
 
     @Override
@@ -236,51 +185,48 @@ public class CkTargetResults extends TableImpl<Record> {
         return Arrays.asList(Keys.FK4A5C9W03SI6MKSOVPSA36SH0H, Keys.FKNJMU0WVJJSAXLPGQG6KW0556G, Keys.FK5ASM71M6PGPUYIUJ85KAAQYS0, Keys.FKNUOABAUKTSP5SL5O3I7DJRF4P);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
+    private transient CkTargets _ckTargets;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FK4A5C9W03SI6MKSOVPSA36SH0H, null);
+            _ckLocation = new CkLocation(this, Keys.FK4A5C9W03SI6MKSOVPSA36SH0H);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKNJMU0WVJJSAXLPGQG6KW0556G, null);
+            _ckUser = new CkUser(this, Keys.FKNJMU0WVJJSAXLPGQG6KW0556G);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FK5ASM71M6PGPUYIUJ85KAAQYS0, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FK5ASM71M6PGPUYIUJ85KAAQYS0);
 
         return _ckOutletDetails;
     }
 
-    private transient CkTargetsPath _ckTargets;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_targets</code> table.
      */
-    public CkTargetsPath ckTargets() {
+    public CkTargets ckTargets() {
         if (_ckTargets == null)
-            _ckTargets = new CkTargetsPath(this, Keys.FKNUOABAUKTSP5SL5O3I7DJRF4P, null);
+            _ckTargets = new CkTargets(this, Keys.FKNUOABAUKTSP5SL5O3I7DJRF4P);
 
         return _ckTargets;
     }
@@ -293,11 +239,6 @@ public class CkTargetResults extends TableImpl<Record> {
     @Override
     public CkTargetResults as(Name alias) {
         return new CkTargetResults(alias, this);
-    }
-
-    @Override
-    public CkTargetResults as(Table<?> alias) {
-        return new CkTargetResults(alias.getQualifiedName(), this);
     }
 
     /**
@@ -314,97 +255,5 @@ public class CkTargetResults extends TableImpl<Record> {
     @Override
     public CkTargetResults rename(Name name) {
         return new CkTargetResults(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkTargetResults rename(Table<?> name) {
-        return new CkTargetResults(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTargetResults where(Condition condition) {
-        return new CkTargetResults(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTargetResults where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTargetResults where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTargetResults where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTargetResults where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTargetResults where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTargetResults where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkTargetResults where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTargetResults whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkTargetResults whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

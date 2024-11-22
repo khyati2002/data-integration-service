@@ -11,28 +11,13 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Collection;
-import java.util.Date;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 
 /**
@@ -124,7 +109,7 @@ public class CkApiTransactionLog extends TableImpl<Record> {
     /**
      * The column <code>ck_api_transaction_log.system_time</code>.
      */
-    public final TableField<Record, Date> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_api_transaction_log.interface_name</code>.
@@ -157,11 +142,11 @@ public class CkApiTransactionLog extends TableImpl<Record> {
     public final TableField<Record, String> SERVICE_PROVIDER = createField(DSL.name("service_provider"), SQLDataType.VARCHAR(255), this, "");
 
     private CkApiTransactionLog(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkApiTransactionLog(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkApiTransactionLog(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -185,6 +170,10 @@ public class CkApiTransactionLog extends TableImpl<Record> {
         this(DSL.name("ck_api_transaction_log"), null);
     }
 
+    public <O extends Record> CkApiTransactionLog(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_API_TRANSACTION_LOG);
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -205,11 +194,6 @@ public class CkApiTransactionLog extends TableImpl<Record> {
         return new CkApiTransactionLog(alias, this);
     }
 
-    @Override
-    public CkApiTransactionLog as(Table<?> alias) {
-        return new CkApiTransactionLog(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -224,97 +208,5 @@ public class CkApiTransactionLog extends TableImpl<Record> {
     @Override
     public CkApiTransactionLog rename(Name name) {
         return new CkApiTransactionLog(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkApiTransactionLog rename(Table<?> name) {
-        return new CkApiTransactionLog(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkApiTransactionLog where(Condition condition) {
-        return new CkApiTransactionLog(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkApiTransactionLog where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkApiTransactionLog where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkApiTransactionLog where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkApiTransactionLog where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkApiTransactionLog where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkApiTransactionLog where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkApiTransactionLog where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkApiTransactionLog whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkApiTransactionLog whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

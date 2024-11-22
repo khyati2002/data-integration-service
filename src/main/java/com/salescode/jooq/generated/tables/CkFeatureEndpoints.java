@@ -12,35 +12,14 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkPermissionGroup.CkPermissionGroupPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -140,11 +119,11 @@ public class CkFeatureEndpoints extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkFeatureEndpoints(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkFeatureEndpoints(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkFeatureEndpoints(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -168,37 +147,8 @@ public class CkFeatureEndpoints extends TableImpl<Record> {
         this(DSL.name("ck_feature_endpoints"), null);
     }
 
-    public <O extends Record> CkFeatureEndpoints(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_FEATURE_ENDPOINTS);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkFeatureEndpointsPath extends CkFeatureEndpoints implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkFeatureEndpointsPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkFeatureEndpointsPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkFeatureEndpointsPath as(String alias) {
-            return new CkFeatureEndpointsPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkFeatureEndpointsPath as(Name alias) {
-            return new CkFeatureEndpointsPath(alias, this);
-        }
-
-        @Override
-        public CkFeatureEndpointsPath as(Table<?> alias) {
-            return new CkFeatureEndpointsPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkFeatureEndpoints(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_FEATURE_ENDPOINTS);
     }
 
     @Override
@@ -221,19 +171,6 @@ public class CkFeatureEndpoints extends TableImpl<Record> {
         return Arrays.asList(Keys.KEY_CK_FEATURE_ENDPOINTS_UK_LXN9Q5NALB42KR1T3TE5NP810);
     }
 
-    private transient CkPermissionGroupPath _ckPermissionGroup;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_permission_group</code> table
-     */
-    public CkPermissionGroupPath ckPermissionGroup() {
-        if (_ckPermissionGroup == null)
-            _ckPermissionGroup = new CkPermissionGroupPath(this, null, Keys.FK120KDS1OEFLHJXVMCAB1U5I4R.getInverseKey());
-
-        return _ckPermissionGroup;
-    }
-
     @Override
     public CkFeatureEndpoints as(String alias) {
         return new CkFeatureEndpoints(DSL.name(alias), this);
@@ -242,11 +179,6 @@ public class CkFeatureEndpoints extends TableImpl<Record> {
     @Override
     public CkFeatureEndpoints as(Name alias) {
         return new CkFeatureEndpoints(alias, this);
-    }
-
-    @Override
-    public CkFeatureEndpoints as(Table<?> alias) {
-        return new CkFeatureEndpoints(alias.getQualifiedName(), this);
     }
 
     /**
@@ -263,97 +195,5 @@ public class CkFeatureEndpoints extends TableImpl<Record> {
     @Override
     public CkFeatureEndpoints rename(Name name) {
         return new CkFeatureEndpoints(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkFeatureEndpoints rename(Table<?> name) {
-        return new CkFeatureEndpoints(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFeatureEndpoints where(Condition condition) {
-        return new CkFeatureEndpoints(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFeatureEndpoints where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFeatureEndpoints where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFeatureEndpoints where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkFeatureEndpoints where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkFeatureEndpoints where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkFeatureEndpoints where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkFeatureEndpoints where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFeatureEndpoints whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFeatureEndpoints whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

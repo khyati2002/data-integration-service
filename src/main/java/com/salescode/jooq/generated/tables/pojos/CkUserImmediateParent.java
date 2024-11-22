@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -41,8 +36,6 @@ public class CkUserImmediateParent implements Serializable {
     /**
      * Getter for <code>ck_user_immediate_parent.immediateparent</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getImmediateparent() {
         return this.immediateparent;
     }
@@ -57,8 +50,6 @@ public class CkUserImmediateParent implements Serializable {
     /**
      * Getter for <code>ck_user_immediate_parent.parent</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getParent() {
         return this.parent;
     }
@@ -68,39 +59,6 @@ public class CkUserImmediateParent implements Serializable {
      */
     public void setParent(String parent) {
         this.parent = parent;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkUserImmediateParent other = (CkUserImmediateParent) obj;
-        if (this.immediateparent == null) {
-            if (other.immediateparent != null)
-                return false;
-        }
-        else if (!this.immediateparent.equals(other.immediateparent))
-            return false;
-        if (this.parent == null) {
-            if (other.parent != null)
-                return false;
-        }
-        else if (!this.parent.equals(other.parent))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.immediateparent == null) ? 0 : this.immediateparent.hashCode());
-        result = prime * result + ((this.parent == null) ? 0 : this.parent.hashCode());
-        return result;
     }
 
     @Override

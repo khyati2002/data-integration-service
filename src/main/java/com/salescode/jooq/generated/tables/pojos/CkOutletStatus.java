@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -24,36 +21,36 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date lastBilledDate;
-    private Date lastClickedDate;
-    private Date lastOrderedDate;
-    private Date lastVisitDate;
-    private String outletcode;
-    private Boolean topStore;
-    private Long totalBilled;
-    private Long totalOrder;
-    private Date firstBilledDate;
-    private Date firstClickedDate;
-    private Date firstOrderedDate;
-    private Date lastCrossSellDate;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime lastBilledDate;
+    private LocalDateTime lastClickedDate;
+    private LocalDateTime lastOrderedDate;
+    private LocalDateTime lastVisitDate;
+    private String        outletcode;
+    private Boolean       topStore;
+    private Long          totalBilled;
+    private Long          totalOrder;
+    private LocalDateTime firstBilledDate;
+    private LocalDateTime firstClickedDate;
+    private LocalDateTime firstOrderedDate;
+    private LocalDateTime lastCrossSellDate;
     private LocalDateTime lastCrossSellRecommended;
-    private Date lastPjpDate;
-    private Date lastUpSellDate;
+    private LocalDateTime lastPjpDate;
+    private LocalDateTime lastUpSellDate;
     private LocalDateTime lastUpSellRecommended;
-    private String orderNumber;
+    private String        orderNumber;
 
     public CkOutletStatus() {}
 
@@ -91,36 +88,36 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     }
 
     public CkOutletStatus(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date lastBilledDate,
-        Date lastClickedDate,
-        Date lastOrderedDate,
-        Date lastVisitDate,
-        String outletcode,
-        Boolean topStore,
-        Long totalBilled,
-        Long totalOrder,
-        Date firstBilledDate,
-        Date firstClickedDate,
-        Date firstOrderedDate,
-        Date lastCrossSellDate,
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime lastBilledDate,
+        LocalDateTime lastClickedDate,
+        LocalDateTime lastOrderedDate,
+        LocalDateTime lastVisitDate,
+        String        outletcode,
+        Boolean       topStore,
+        Long          totalBilled,
+        Long          totalOrder,
+        LocalDateTime firstBilledDate,
+        LocalDateTime firstClickedDate,
+        LocalDateTime firstOrderedDate,
+        LocalDateTime lastCrossSellDate,
         LocalDateTime lastCrossSellRecommended,
-        Date lastPjpDate,
-        Date lastUpSellDate,
+        LocalDateTime lastPjpDate,
+        LocalDateTime lastUpSellDate,
         LocalDateTime lastUpSellRecommended,
-        String orderNumber
+        String        orderNumber
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -157,8 +154,6 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_status.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -187,7 +182,6 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_status.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -216,7 +210,6 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_status.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -287,7 +280,6 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_status.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -302,7 +294,6 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_status.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -317,7 +308,6 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_status.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -346,64 +336,62 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_status.last_billed_date</code>.
      */
-    public Date getLastBilledDate() {
+    public LocalDateTime getLastBilledDate() {
         return this.lastBilledDate;
     }
 
     /**
      * Setter for <code>ck_outlet_status.last_billed_date</code>.
      */
-    public void setLastBilledDate(Date lastBilledDate) {
+    public void setLastBilledDate(LocalDateTime lastBilledDate) {
         this.lastBilledDate = lastBilledDate;
     }
 
     /**
      * Getter for <code>ck_outlet_status.last_clicked_date</code>.
      */
-    public Date getLastClickedDate() {
+    public LocalDateTime getLastClickedDate() {
         return this.lastClickedDate;
     }
 
     /**
      * Setter for <code>ck_outlet_status.last_clicked_date</code>.
      */
-    public void setLastClickedDate(Date lastClickedDate) {
+    public void setLastClickedDate(LocalDateTime lastClickedDate) {
         this.lastClickedDate = lastClickedDate;
     }
 
     /**
      * Getter for <code>ck_outlet_status.last_ordered_date</code>.
      */
-    public Date getLastOrderedDate() {
+    public LocalDateTime getLastOrderedDate() {
         return this.lastOrderedDate;
     }
 
     /**
      * Setter for <code>ck_outlet_status.last_ordered_date</code>.
      */
-    public void setLastOrderedDate(Date lastOrderedDate) {
+    public void setLastOrderedDate(LocalDateTime lastOrderedDate) {
         this.lastOrderedDate = lastOrderedDate;
     }
 
     /**
      * Getter for <code>ck_outlet_status.last_visit_date</code>.
      */
-    public Date getLastVisitDate() {
+    public LocalDateTime getLastVisitDate() {
         return this.lastVisitDate;
     }
 
     /**
      * Setter for <code>ck_outlet_status.last_visit_date</code>.
      */
-    public void setLastVisitDate(Date lastVisitDate) {
+    public void setLastVisitDate(LocalDateTime lastVisitDate) {
         this.lastVisitDate = lastVisitDate;
     }
 
     /**
      * Getter for <code>ck_outlet_status.outletcode</code>.
      */
-    @NotNull
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -460,56 +448,56 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_status.first_billed_date</code>.
      */
-    public Date getFirstBilledDate() {
+    public LocalDateTime getFirstBilledDate() {
         return this.firstBilledDate;
     }
 
     /**
      * Setter for <code>ck_outlet_status.first_billed_date</code>.
      */
-    public void setFirstBilledDate(Date firstBilledDate) {
+    public void setFirstBilledDate(LocalDateTime firstBilledDate) {
         this.firstBilledDate = firstBilledDate;
     }
 
     /**
      * Getter for <code>ck_outlet_status.first_clicked_date</code>.
      */
-    public Date getFirstClickedDate() {
+    public LocalDateTime getFirstClickedDate() {
         return this.firstClickedDate;
     }
 
     /**
      * Setter for <code>ck_outlet_status.first_clicked_date</code>.
      */
-    public void setFirstClickedDate(Date firstClickedDate) {
+    public void setFirstClickedDate(LocalDateTime firstClickedDate) {
         this.firstClickedDate = firstClickedDate;
     }
 
     /**
      * Getter for <code>ck_outlet_status.first_ordered_date</code>.
      */
-    public Date getFirstOrderedDate() {
+    public LocalDateTime getFirstOrderedDate() {
         return this.firstOrderedDate;
     }
 
     /**
      * Setter for <code>ck_outlet_status.first_ordered_date</code>.
      */
-    public void setFirstOrderedDate(Date firstOrderedDate) {
+    public void setFirstOrderedDate(LocalDateTime firstOrderedDate) {
         this.firstOrderedDate = firstOrderedDate;
     }
 
     /**
      * Getter for <code>ck_outlet_status.last_cross_sell_date</code>.
      */
-    public Date getLastCrossSellDate() {
+    public LocalDateTime getLastCrossSellDate() {
         return this.lastCrossSellDate;
     }
 
     /**
      * Setter for <code>ck_outlet_status.last_cross_sell_date</code>.
      */
-    public void setLastCrossSellDate(Date lastCrossSellDate) {
+    public void setLastCrossSellDate(LocalDateTime lastCrossSellDate) {
         this.lastCrossSellDate = lastCrossSellDate;
     }
 
@@ -530,28 +518,28 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_status.last_pjp_date</code>.
      */
-    public Date getLastPjpDate() {
+    public LocalDateTime getLastPjpDate() {
         return this.lastPjpDate;
     }
 
     /**
      * Setter for <code>ck_outlet_status.last_pjp_date</code>.
      */
-    public void setLastPjpDate(Date lastPjpDate) {
+    public void setLastPjpDate(LocalDateTime lastPjpDate) {
         this.lastPjpDate = lastPjpDate;
     }
 
     /**
      * Getter for <code>ck_outlet_status.last_up_sell_date</code>.
      */
-    public Date getLastUpSellDate() {
+    public LocalDateTime getLastUpSellDate() {
         return this.lastUpSellDate;
     }
 
     /**
      * Setter for <code>ck_outlet_status.last_up_sell_date</code>.
      */
-    public void setLastUpSellDate(Date lastUpSellDate) {
+    public void setLastUpSellDate(LocalDateTime lastUpSellDate) {
         this.lastUpSellDate = lastUpSellDate;
     }
 
@@ -572,7 +560,6 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_outlet_status.order_number</code>.
      */
-    @Size(max = 255)
     public String getOrderNumber() {
         return this.orderNumber;
     }
@@ -582,235 +569,6 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
      */
     public void setOrderNumber(String orderNumber) {
         this.orderNumber = orderNumber;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkOutletStatus other = (CkOutletStatus) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.lastBilledDate == null) {
-            if (other.lastBilledDate != null)
-                return false;
-        }
-        else if (!this.lastBilledDate.equals(other.lastBilledDate))
-            return false;
-        if (this.lastClickedDate == null) {
-            if (other.lastClickedDate != null)
-                return false;
-        }
-        else if (!this.lastClickedDate.equals(other.lastClickedDate))
-            return false;
-        if (this.lastOrderedDate == null) {
-            if (other.lastOrderedDate != null)
-                return false;
-        }
-        else if (!this.lastOrderedDate.equals(other.lastOrderedDate))
-            return false;
-        if (this.lastVisitDate == null) {
-            if (other.lastVisitDate != null)
-                return false;
-        }
-        else if (!this.lastVisitDate.equals(other.lastVisitDate))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.topStore == null) {
-            if (other.topStore != null)
-                return false;
-        }
-        else if (!this.topStore.equals(other.topStore))
-            return false;
-        if (this.totalBilled == null) {
-            if (other.totalBilled != null)
-                return false;
-        }
-        else if (!this.totalBilled.equals(other.totalBilled))
-            return false;
-        if (this.totalOrder == null) {
-            if (other.totalOrder != null)
-                return false;
-        }
-        else if (!this.totalOrder.equals(other.totalOrder))
-            return false;
-        if (this.firstBilledDate == null) {
-            if (other.firstBilledDate != null)
-                return false;
-        }
-        else if (!this.firstBilledDate.equals(other.firstBilledDate))
-            return false;
-        if (this.firstClickedDate == null) {
-            if (other.firstClickedDate != null)
-                return false;
-        }
-        else if (!this.firstClickedDate.equals(other.firstClickedDate))
-            return false;
-        if (this.firstOrderedDate == null) {
-            if (other.firstOrderedDate != null)
-                return false;
-        }
-        else if (!this.firstOrderedDate.equals(other.firstOrderedDate))
-            return false;
-        if (this.lastCrossSellDate == null) {
-            if (other.lastCrossSellDate != null)
-                return false;
-        }
-        else if (!this.lastCrossSellDate.equals(other.lastCrossSellDate))
-            return false;
-        if (this.lastCrossSellRecommended == null) {
-            if (other.lastCrossSellRecommended != null)
-                return false;
-        }
-        else if (!this.lastCrossSellRecommended.equals(other.lastCrossSellRecommended))
-            return false;
-        if (this.lastPjpDate == null) {
-            if (other.lastPjpDate != null)
-                return false;
-        }
-        else if (!this.lastPjpDate.equals(other.lastPjpDate))
-            return false;
-        if (this.lastUpSellDate == null) {
-            if (other.lastUpSellDate != null)
-                return false;
-        }
-        else if (!this.lastUpSellDate.equals(other.lastUpSellDate))
-            return false;
-        if (this.lastUpSellRecommended == null) {
-            if (other.lastUpSellRecommended != null)
-                return false;
-        }
-        else if (!this.lastUpSellRecommended.equals(other.lastUpSellRecommended))
-            return false;
-        if (this.orderNumber == null) {
-            if (other.orderNumber != null)
-                return false;
-        }
-        else if (!this.orderNumber.equals(other.orderNumber))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.lastBilledDate == null) ? 0 : this.lastBilledDate.hashCode());
-        result = prime * result + ((this.lastClickedDate == null) ? 0 : this.lastClickedDate.hashCode());
-        result = prime * result + ((this.lastOrderedDate == null) ? 0 : this.lastOrderedDate.hashCode());
-        result = prime * result + ((this.lastVisitDate == null) ? 0 : this.lastVisitDate.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.topStore == null) ? 0 : this.topStore.hashCode());
-        result = prime * result + ((this.totalBilled == null) ? 0 : this.totalBilled.hashCode());
-        result = prime * result + ((this.totalOrder == null) ? 0 : this.totalOrder.hashCode());
-        result = prime * result + ((this.firstBilledDate == null) ? 0 : this.firstBilledDate.hashCode());
-        result = prime * result + ((this.firstClickedDate == null) ? 0 : this.firstClickedDate.hashCode());
-        result = prime * result + ((this.firstOrderedDate == null) ? 0 : this.firstOrderedDate.hashCode());
-        result = prime * result + ((this.lastCrossSellDate == null) ? 0 : this.lastCrossSellDate.hashCode());
-        result = prime * result + ((this.lastCrossSellRecommended == null) ? 0 : this.lastCrossSellRecommended.hashCode());
-        result = prime * result + ((this.lastPjpDate == null) ? 0 : this.lastPjpDate.hashCode());
-        result = prime * result + ((this.lastUpSellDate == null) ? 0 : this.lastUpSellDate.hashCode());
-        result = prime * result + ((this.lastUpSellRecommended == null) ? 0 : this.lastUpSellRecommended.hashCode());
-        result = prime * result + ((this.orderNumber == null) ? 0 : this.orderNumber.hashCode());
-        return result;
     }
 
     @Override

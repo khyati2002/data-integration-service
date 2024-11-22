@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,55 +22,55 @@ public class CkOrders extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date systemTime;
-    private Double billAmount;
-    private String channel;
-    private JSON discountInfo;
-    private String gpsLatitude;
-    private String gpsLongitude;
-    private String userHierarchy;
-    private Integer lineCount;
-    private String loginid;
-    private Double netAmount;
-    private Double normalizedQuantity;
-    private String orderNumber;
-    private String referenceNumber;
-    private String remarks;
-    private String shipId;
-    private Double totalAmount;
-    private Double totalInitialAmt;
-    private Double totalInitialQuantity;
-    private Double totalMrp;
-    private Double totalQuantity;
-    private String type;
-    private Date deliveryDate;
-    private String status;
-    private String locationHierarchy;
-    private String outletcode;
-    private String supplierid;
-    private String hierarchy;
-    private String statusReason;
-    private Byte changed;
-    private String groupId;
-    private String beat;
-    private String beatName;
-    private Double initialNormalizedQuantity;
-    private Double normalizedVolume;
-    private String processingStatus;
-    private Date salesDate;
-    private Double salesValue;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime systemTime;
+    private Double        billAmount;
+    private String        channel;
+    private JSON          discountInfo;
+    private String        gpsLatitude;
+    private String        gpsLongitude;
+    private String        userHierarchy;
+    private Integer       lineCount;
+    private String        loginid;
+    private Double        netAmount;
+    private Double        normalizedQuantity;
+    private String        orderNumber;
+    private String        referenceNumber;
+    private String        remarks;
+    private String        shipId;
+    private Double        totalAmount;
+    private Double        totalInitialAmt;
+    private Double        totalInitialQuantity;
+    private Double        totalMrp;
+    private Double        totalQuantity;
+    private String        type;
+    private LocalDateTime deliveryDate;
+    private String        status;
+    private String        locationHierarchy;
+    private String        outletcode;
+    private String        supplierid;
+    private String        hierarchy;
+    private String        statusReason;
+    private Byte          changed;
+    private String        groupId;
+    private String        beat;
+    private String        beatName;
+    private Double        initialNormalizedQuantity;
+    private Double        normalizedVolume;
+    private String        processingStatus;
+    private LocalDateTime salesDate;
+    private Double        salesValue;
 
     public CkOrders() {}
 
@@ -130,55 +127,55 @@ public class CkOrders extends CommonDataModel implements Serializable {
     }
 
     public CkOrders(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date systemTime,
-        Double billAmount,
-        String channel,
-        JSON discountInfo,
-        String gpsLatitude,
-        String gpsLongitude,
-        String userHierarchy,
-        Integer lineCount,
-        String loginid,
-        Double netAmount,
-        Double normalizedQuantity,
-        String orderNumber,
-        String referenceNumber,
-        String remarks,
-        String shipId,
-        Double totalAmount,
-        Double totalInitialAmt,
-        Double totalInitialQuantity,
-        Double totalMrp,
-        Double totalQuantity,
-        String type,
-        Date deliveryDate,
-        String status,
-        String locationHierarchy,
-        String outletcode,
-        String supplierid,
-        String hierarchy,
-        String statusReason,
-        Byte changed,
-        String groupId,
-        String beat,
-        String beatName,
-        Double initialNormalizedQuantity,
-        Double normalizedVolume,
-        String processingStatus,
-        Date salesDate,
-        Double salesValue
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime systemTime,
+        Double        billAmount,
+        String        channel,
+        JSON          discountInfo,
+        String        gpsLatitude,
+        String        gpsLongitude,
+        String        userHierarchy,
+        Integer       lineCount,
+        String        loginid,
+        Double        netAmount,
+        Double        normalizedQuantity,
+        String        orderNumber,
+        String        referenceNumber,
+        String        remarks,
+        String        shipId,
+        Double        totalAmount,
+        Double        totalInitialAmt,
+        Double        totalInitialQuantity,
+        Double        totalMrp,
+        Double        totalQuantity,
+        String        type,
+        LocalDateTime deliveryDate,
+        String        status,
+        String        locationHierarchy,
+        String        outletcode,
+        String        supplierid,
+        String        hierarchy,
+        String        statusReason,
+        Byte          changed,
+        String        groupId,
+        String        beat,
+        String        beatName,
+        Double        initialNormalizedQuantity,
+        Double        normalizedVolume,
+        String        processingStatus,
+        LocalDateTime salesDate,
+        Double        salesValue
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -234,8 +231,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -264,7 +259,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -279,7 +273,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -350,7 +343,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -365,7 +357,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -380,7 +371,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -409,21 +399,20 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.system_time</code>.
      */
-    public Date getSystemTime() {
+    public LocalDateTime getSystemTime() {
         return this.systemTime;
     }
 
     /**
      * Setter for <code>ck_orders.system_time</code>.
      */
-    public void setSystemTime(Date systemTime) {
+    public void setSystemTime(LocalDateTime systemTime) {
         this.systemTime = systemTime;
     }
 
     /**
      * Getter for <code>ck_orders.bill_amount</code>.
      */
-    @NotNull
     public Double getBillAmount() {
         return this.billAmount;
     }
@@ -438,7 +427,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.channel</code>.
      */
-    @Size(max = 255)
     public String getChannel() {
         return this.channel;
     }
@@ -467,7 +455,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.gps_latitude</code>.
      */
-    @Size(max = 255)
     public String getGpsLatitude() {
         return this.gpsLatitude;
     }
@@ -482,7 +469,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.gps_longitude</code>.
      */
-    @Size(max = 255)
     public String getGpsLongitude() {
         return this.gpsLongitude;
     }
@@ -511,7 +497,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.line_count</code>.
      */
-    @NotNull
     public Integer getLineCount() {
         return this.lineCount;
     }
@@ -526,7 +511,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.loginid</code>.
      */
-    @Size(max = 255)
     public String getLoginid() {
         return this.loginid;
     }
@@ -541,7 +525,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.net_amount</code>.
      */
-    @NotNull
     public Double getNetAmount() {
         return this.netAmount;
     }
@@ -556,7 +539,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.normalized_quantity</code>.
      */
-    @NotNull
     public Double getNormalizedQuantity() {
         return this.normalizedQuantity;
     }
@@ -571,8 +553,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.order_number</code>.
      */
-    @NotNull
-    @Size(max = 200)
     public String getOrderNumber() {
         return this.orderNumber;
     }
@@ -587,7 +567,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.reference_number</code>.
      */
-    @Size(max = 255)
     public String getReferenceNumber() {
         return this.referenceNumber;
     }
@@ -602,7 +581,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.remarks</code>.
      */
-    @Size(max = 255)
     public String getRemarks() {
         return this.remarks;
     }
@@ -617,7 +595,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.ship_id</code>.
      */
-    @Size(max = 255)
     public String getShipId() {
         return this.shipId;
     }
@@ -632,7 +609,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.total_amount</code>.
      */
-    @NotNull
     public Double getTotalAmount() {
         return this.totalAmount;
     }
@@ -647,7 +623,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.total_initial_amt</code>.
      */
-    @NotNull
     public Double getTotalInitialAmt() {
         return this.totalInitialAmt;
     }
@@ -662,7 +637,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.total_initial_quantity</code>.
      */
-    @NotNull
     public Double getTotalInitialQuantity() {
         return this.totalInitialQuantity;
     }
@@ -677,7 +651,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.total_mrp</code>.
      */
-    @NotNull
     public Double getTotalMrp() {
         return this.totalMrp;
     }
@@ -692,7 +665,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.total_quantity</code>.
      */
-    @NotNull
     public Double getTotalQuantity() {
         return this.totalQuantity;
     }
@@ -707,7 +679,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -722,21 +693,20 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.delivery_date</code>.
      */
-    public Date getDeliveryDate() {
+    public LocalDateTime getDeliveryDate() {
         return this.deliveryDate;
     }
 
     /**
      * Setter for <code>ck_orders.delivery_date</code>.
      */
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(LocalDateTime deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 
     /**
      * Getter for <code>ck_orders.status</code>.
      */
-    @Size(max = 32)
     public String getStatus() {
         return this.status;
     }
@@ -751,8 +721,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.location_hierarchy</code>.
      */
-    @NotNull
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -767,8 +735,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.outletcode</code>.
      */
-    @NotNull
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -783,8 +749,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.supplierid</code>.
      */
-    @NotNull
-    @Size(max = 50)
     public String getSupplierid() {
         return this.supplierid;
     }
@@ -799,8 +763,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.hierarchy</code>.
      */
-    @NotNull
-    @Size(max = 750)
     public String getHierarchy() {
         return this.hierarchy;
     }
@@ -815,7 +777,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.status_reason</code>.
      */
-    @Size(max = 255)
     public String getStatusReason() {
         return this.statusReason;
     }
@@ -844,7 +805,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.group_id</code>.
      */
-    @Size(max = 255)
     public String getGroupId() {
         return this.groupId;
     }
@@ -859,7 +819,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.beat</code>.
      */
-    @Size(max = 255)
     public String getBeat() {
         return this.beat;
     }
@@ -874,7 +833,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.beat_name</code>.
      */
-    @Size(max = 255)
     public String getBeatName() {
         return this.beatName;
     }
@@ -889,7 +847,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.initial_normalized_quantity</code>.
      */
-    @NotNull
     public Double getInitialNormalizedQuantity() {
         return this.initialNormalizedQuantity;
     }
@@ -918,7 +875,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.processing_status</code>.
      */
-    @Size(max = 32)
     public String getProcessingStatus() {
         return this.processingStatus;
     }
@@ -933,21 +889,20 @@ public class CkOrders extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_orders.sales_date</code>.
      */
-    public Date getSalesDate() {
+    public LocalDateTime getSalesDate() {
         return this.salesDate;
     }
 
     /**
      * Setter for <code>ck_orders.sales_date</code>.
      */
-    public void setSalesDate(Date salesDate) {
+    public void setSalesDate(LocalDateTime salesDate) {
         this.salesDate = salesDate;
     }
 
     /**
      * Getter for <code>ck_orders.sales_value</code>.
      */
-    @NotNull
     public Double getSalesValue() {
         return this.salesValue;
     }
@@ -957,368 +912,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
      */
     public void setSalesValue(Double salesValue) {
         this.salesValue = salesValue;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkOrders other = (CkOrders) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.systemTime == null) {
-            if (other.systemTime != null)
-                return false;
-        }
-        else if (!this.systemTime.equals(other.systemTime))
-            return false;
-        if (this.billAmount == null) {
-            if (other.billAmount != null)
-                return false;
-        }
-        else if (!this.billAmount.equals(other.billAmount))
-            return false;
-        if (this.channel == null) {
-            if (other.channel != null)
-                return false;
-        }
-        else if (!this.channel.equals(other.channel))
-            return false;
-        if (this.discountInfo == null) {
-            if (other.discountInfo != null)
-                return false;
-        }
-        else if (!this.discountInfo.equals(other.discountInfo))
-            return false;
-        if (this.gpsLatitude == null) {
-            if (other.gpsLatitude != null)
-                return false;
-        }
-        else if (!this.gpsLatitude.equals(other.gpsLatitude))
-            return false;
-        if (this.gpsLongitude == null) {
-            if (other.gpsLongitude != null)
-                return false;
-        }
-        else if (!this.gpsLongitude.equals(other.gpsLongitude))
-            return false;
-        if (this.userHierarchy == null) {
-            if (other.userHierarchy != null)
-                return false;
-        }
-        else if (!this.userHierarchy.equals(other.userHierarchy))
-            return false;
-        if (this.lineCount == null) {
-            if (other.lineCount != null)
-                return false;
-        }
-        else if (!this.lineCount.equals(other.lineCount))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.netAmount == null) {
-            if (other.netAmount != null)
-                return false;
-        }
-        else if (!this.netAmount.equals(other.netAmount))
-            return false;
-        if (this.normalizedQuantity == null) {
-            if (other.normalizedQuantity != null)
-                return false;
-        }
-        else if (!this.normalizedQuantity.equals(other.normalizedQuantity))
-            return false;
-        if (this.orderNumber == null) {
-            if (other.orderNumber != null)
-                return false;
-        }
-        else if (!this.orderNumber.equals(other.orderNumber))
-            return false;
-        if (this.referenceNumber == null) {
-            if (other.referenceNumber != null)
-                return false;
-        }
-        else if (!this.referenceNumber.equals(other.referenceNumber))
-            return false;
-        if (this.remarks == null) {
-            if (other.remarks != null)
-                return false;
-        }
-        else if (!this.remarks.equals(other.remarks))
-            return false;
-        if (this.shipId == null) {
-            if (other.shipId != null)
-                return false;
-        }
-        else if (!this.shipId.equals(other.shipId))
-            return false;
-        if (this.totalAmount == null) {
-            if (other.totalAmount != null)
-                return false;
-        }
-        else if (!this.totalAmount.equals(other.totalAmount))
-            return false;
-        if (this.totalInitialAmt == null) {
-            if (other.totalInitialAmt != null)
-                return false;
-        }
-        else if (!this.totalInitialAmt.equals(other.totalInitialAmt))
-            return false;
-        if (this.totalInitialQuantity == null) {
-            if (other.totalInitialQuantity != null)
-                return false;
-        }
-        else if (!this.totalInitialQuantity.equals(other.totalInitialQuantity))
-            return false;
-        if (this.totalMrp == null) {
-            if (other.totalMrp != null)
-                return false;
-        }
-        else if (!this.totalMrp.equals(other.totalMrp))
-            return false;
-        if (this.totalQuantity == null) {
-            if (other.totalQuantity != null)
-                return false;
-        }
-        else if (!this.totalQuantity.equals(other.totalQuantity))
-            return false;
-        if (this.type == null) {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        if (this.deliveryDate == null) {
-            if (other.deliveryDate != null)
-                return false;
-        }
-        else if (!this.deliveryDate.equals(other.deliveryDate))
-            return false;
-        if (this.status == null) {
-            if (other.status != null)
-                return false;
-        }
-        else if (!this.status.equals(other.status))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.supplierid == null) {
-            if (other.supplierid != null)
-                return false;
-        }
-        else if (!this.supplierid.equals(other.supplierid))
-            return false;
-        if (this.hierarchy == null) {
-            if (other.hierarchy != null)
-                return false;
-        }
-        else if (!this.hierarchy.equals(other.hierarchy))
-            return false;
-        if (this.statusReason == null) {
-            if (other.statusReason != null)
-                return false;
-        }
-        else if (!this.statusReason.equals(other.statusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.groupId == null) {
-            if (other.groupId != null)
-                return false;
-        }
-        else if (!this.groupId.equals(other.groupId))
-            return false;
-        if (this.beat == null) {
-            if (other.beat != null)
-                return false;
-        }
-        else if (!this.beat.equals(other.beat))
-            return false;
-        if (this.beatName == null) {
-            if (other.beatName != null)
-                return false;
-        }
-        else if (!this.beatName.equals(other.beatName))
-            return false;
-        if (this.initialNormalizedQuantity == null) {
-            if (other.initialNormalizedQuantity != null)
-                return false;
-        }
-        else if (!this.initialNormalizedQuantity.equals(other.initialNormalizedQuantity))
-            return false;
-        if (this.normalizedVolume == null) {
-            if (other.normalizedVolume != null)
-                return false;
-        }
-        else if (!this.normalizedVolume.equals(other.normalizedVolume))
-            return false;
-        if (this.processingStatus == null) {
-            if (other.processingStatus != null)
-                return false;
-        }
-        else if (!this.processingStatus.equals(other.processingStatus))
-            return false;
-        if (this.salesDate == null) {
-            if (other.salesDate != null)
-                return false;
-        }
-        else if (!this.salesDate.equals(other.salesDate))
-            return false;
-        if (this.salesValue == null) {
-            if (other.salesValue != null)
-                return false;
-        }
-        else if (!this.salesValue.equals(other.salesValue))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.systemTime == null) ? 0 : this.systemTime.hashCode());
-        result = prime * result + ((this.billAmount == null) ? 0 : this.billAmount.hashCode());
-        result = prime * result + ((this.channel == null) ? 0 : this.channel.hashCode());
-        result = prime * result + ((this.discountInfo == null) ? 0 : this.discountInfo.hashCode());
-        result = prime * result + ((this.gpsLatitude == null) ? 0 : this.gpsLatitude.hashCode());
-        result = prime * result + ((this.gpsLongitude == null) ? 0 : this.gpsLongitude.hashCode());
-        result = prime * result + ((this.userHierarchy == null) ? 0 : this.userHierarchy.hashCode());
-        result = prime * result + ((this.lineCount == null) ? 0 : this.lineCount.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.netAmount == null) ? 0 : this.netAmount.hashCode());
-        result = prime * result + ((this.normalizedQuantity == null) ? 0 : this.normalizedQuantity.hashCode());
-        result = prime * result + ((this.orderNumber == null) ? 0 : this.orderNumber.hashCode());
-        result = prime * result + ((this.referenceNumber == null) ? 0 : this.referenceNumber.hashCode());
-        result = prime * result + ((this.remarks == null) ? 0 : this.remarks.hashCode());
-        result = prime * result + ((this.shipId == null) ? 0 : this.shipId.hashCode());
-        result = prime * result + ((this.totalAmount == null) ? 0 : this.totalAmount.hashCode());
-        result = prime * result + ((this.totalInitialAmt == null) ? 0 : this.totalInitialAmt.hashCode());
-        result = prime * result + ((this.totalInitialQuantity == null) ? 0 : this.totalInitialQuantity.hashCode());
-        result = prime * result + ((this.totalMrp == null) ? 0 : this.totalMrp.hashCode());
-        result = prime * result + ((this.totalQuantity == null) ? 0 : this.totalQuantity.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        result = prime * result + ((this.deliveryDate == null) ? 0 : this.deliveryDate.hashCode());
-        result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.supplierid == null) ? 0 : this.supplierid.hashCode());
-        result = prime * result + ((this.hierarchy == null) ? 0 : this.hierarchy.hashCode());
-        result = prime * result + ((this.statusReason == null) ? 0 : this.statusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.groupId == null) ? 0 : this.groupId.hashCode());
-        result = prime * result + ((this.beat == null) ? 0 : this.beat.hashCode());
-        result = prime * result + ((this.beatName == null) ? 0 : this.beatName.hashCode());
-        result = prime * result + ((this.initialNormalizedQuantity == null) ? 0 : this.initialNormalizedQuantity.hashCode());
-        result = prime * result + ((this.normalizedVolume == null) ? 0 : this.normalizedVolume.hashCode());
-        result = prime * result + ((this.processingStatus == null) ? 0 : this.processingStatus.hashCode());
-        result = prime * result + ((this.salesDate == null) ? 0 : this.salesDate.hashCode());
-        result = prime * result + ((this.salesValue == null) ? 0 : this.salesValue.hashCode());
-        return result;
     }
 
     @Override

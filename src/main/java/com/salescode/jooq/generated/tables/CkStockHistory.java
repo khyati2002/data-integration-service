@@ -11,35 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkStockHistoryHierarchy.CkStockHistoryHierarchyPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -196,7 +176,7 @@ public class CkStockHistory extends TableImpl<Record> {
     /**
      * The column <code>ck_stock_history.transfer_date</code>.
      */
-    public final TableField<Record, Date> TRANSFER_DATE = createField(DSL.name("transfer_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> TRANSFER_DATE = createField(DSL.name("transfer_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_stock_history.warehouse_code</code>.
@@ -224,11 +204,11 @@ public class CkStockHistory extends TableImpl<Record> {
     public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
 
     private CkStockHistory(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkStockHistory(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkStockHistory(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -252,37 +232,8 @@ public class CkStockHistory extends TableImpl<Record> {
         this(DSL.name("ck_stock_history"), null);
     }
 
-    public <O extends Record> CkStockHistory(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_STOCK_HISTORY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkStockHistoryPath extends CkStockHistory implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkStockHistoryPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkStockHistoryPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkStockHistoryPath as(String alias) {
-            return new CkStockHistoryPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkStockHistoryPath as(Name alias) {
-            return new CkStockHistoryPath(alias, this);
-        }
-
-        @Override
-        public CkStockHistoryPath as(Table<?> alias) {
-            return new CkStockHistoryPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkStockHistory(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_STOCK_HISTORY);
     }
 
     @Override
@@ -300,42 +251,28 @@ public class CkStockHistory extends TableImpl<Record> {
         return Arrays.asList(Keys.FKAGKC39RFGGU9ITCDEQ04FCOE7, Keys.FKK34MPGJSQMXS8J88JXSEBR5Q1);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKAGKC39RFGGU9ITCDEQ04FCOE7, null);
+            _ckLocation = new CkLocation(this, Keys.FKAGKC39RFGGU9ITCDEQ04FCOE7);
 
         return _ckLocation;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FKK34MPGJSQMXS8J88JXSEBR5Q1, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FKK34MPGJSQMXS8J88JXSEBR5Q1);
 
         return _ckOutletDetails;
-    }
-
-    private transient CkStockHistoryHierarchyPath _ckStockHistoryHierarchy;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_stock_history_hierarchy</code> table
-     */
-    public CkStockHistoryHierarchyPath ckStockHistoryHierarchy() {
-        if (_ckStockHistoryHierarchy == null)
-            _ckStockHistoryHierarchy = new CkStockHistoryHierarchyPath(this, null, Keys.FK6ROKE26FPA199E3OTEK5MNQ5R.getInverseKey());
-
-        return _ckStockHistoryHierarchy;
     }
 
     @Override
@@ -346,11 +283,6 @@ public class CkStockHistory extends TableImpl<Record> {
     @Override
     public CkStockHistory as(Name alias) {
         return new CkStockHistory(alias, this);
-    }
-
-    @Override
-    public CkStockHistory as(Table<?> alias) {
-        return new CkStockHistory(alias.getQualifiedName(), this);
     }
 
     /**
@@ -367,97 +299,5 @@ public class CkStockHistory extends TableImpl<Record> {
     @Override
     public CkStockHistory rename(Name name) {
         return new CkStockHistory(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkStockHistory rename(Table<?> name) {
-        return new CkStockHistory(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkStockHistory where(Condition condition) {
-        return new CkStockHistory(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkStockHistory where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkStockHistory where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkStockHistory where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkStockHistory where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkStockHistory where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkStockHistory where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkStockHistory where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkStockHistory whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkStockHistory whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

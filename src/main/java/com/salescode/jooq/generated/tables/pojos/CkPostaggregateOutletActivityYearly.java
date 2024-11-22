@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,38 +22,38 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date systemTime;
-    private Date endTime;
-    private String gpsLatitude;
-    private String gpsLongitude;
-    private String hierarchy;
-    private JSON images;
-    private String name;
-    private String referenceNumber;
-    private Date startTime;
-    private Date submissionTime;
-    private String targetKey;
-    private Integer nonPjpOutletVisited;
-    private Integer outletVisited;
-    private Integer pjpOutletVisited;
-    private Integer uniqueOutletsVisited;
-    private Integer year;
-    private String locationHierarchy;
-    private String loginid;
-    private String outletcode;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime systemTime;
+    private LocalDateTime endTime;
+    private String        gpsLatitude;
+    private String        gpsLongitude;
+    private String        hierarchy;
+    private JSON          images;
+    private String        name;
+    private String        referenceNumber;
+    private LocalDateTime startTime;
+    private LocalDateTime submissionTime;
+    private String        targetKey;
+    private Integer       nonPjpOutletVisited;
+    private Integer       outletVisited;
+    private Integer       pjpOutletVisited;
+    private Integer       uniqueOutletsVisited;
+    private Integer       year;
+    private String        locationHierarchy;
+    private String        loginid;
+    private String        outletcode;
+    private Byte          changed;
 
     public CkPostaggregateOutletActivityYearly() {}
 
@@ -96,38 +93,38 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
     }
 
     public CkPostaggregateOutletActivityYearly(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date systemTime,
-        Date endTime,
-        String gpsLatitude,
-        String gpsLongitude,
-        String hierarchy,
-        JSON images,
-        String name,
-        String referenceNumber,
-        Date startTime,
-        Date submissionTime,
-        String targetKey,
-        Integer nonPjpOutletVisited,
-        Integer outletVisited,
-        Integer pjpOutletVisited,
-        Integer uniqueOutletsVisited,
-        Integer year,
-        String locationHierarchy,
-        String loginid,
-        String outletcode,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime systemTime,
+        LocalDateTime endTime,
+        String        gpsLatitude,
+        String        gpsLongitude,
+        String        hierarchy,
+        JSON          images,
+        String        name,
+        String        referenceNumber,
+        LocalDateTime startTime,
+        LocalDateTime submissionTime,
+        String        targetKey,
+        Integer       nonPjpOutletVisited,
+        Integer       outletVisited,
+        Integer       pjpOutletVisited,
+        Integer       uniqueOutletsVisited,
+        Integer       year,
+        String        locationHierarchy,
+        String        loginid,
+        String        outletcode,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -166,8 +163,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
     /**
      * Getter for <code>ck_postaggregate_outlet_activity_yearly.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -199,7 +194,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -216,7 +210,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -294,7 +287,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
     /**
      * Getter for <code>ck_postaggregate_outlet_activity_yearly.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -310,7 +302,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -326,7 +317,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
     /**
      * Getter for <code>ck_postaggregate_outlet_activity_yearly.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -356,7 +346,7 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.system_time</code>.
      */
-    public Date getSystemTime() {
+    public LocalDateTime getSystemTime() {
         return this.systemTime;
     }
 
@@ -364,21 +354,21 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Setter for
      * <code>ck_postaggregate_outlet_activity_yearly.system_time</code>.
      */
-    public void setSystemTime(Date systemTime) {
+    public void setSystemTime(LocalDateTime systemTime) {
         this.systemTime = systemTime;
     }
 
     /**
      * Getter for <code>ck_postaggregate_outlet_activity_yearly.end_time</code>.
      */
-    public Date getEndTime() {
+    public LocalDateTime getEndTime() {
         return this.endTime;
     }
 
     /**
      * Setter for <code>ck_postaggregate_outlet_activity_yearly.end_time</code>.
      */
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -386,7 +376,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.gps_latitude</code>.
      */
-    @Size(max = 255)
     public String getGpsLatitude() {
         return this.gpsLatitude;
     }
@@ -403,7 +392,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.gps_longitude</code>.
      */
-    @Size(max = 255)
     public String getGpsLongitude() {
         return this.gpsLongitude;
     }
@@ -449,7 +437,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
     /**
      * Getter for <code>ck_postaggregate_outlet_activity_yearly.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -465,7 +452,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.reference_number</code>.
      */
-    @Size(max = 255)
     public String getReferenceNumber() {
         return this.referenceNumber;
     }
@@ -482,7 +468,7 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.start_time</code>.
      */
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return this.startTime;
     }
 
@@ -490,7 +476,7 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Setter for
      * <code>ck_postaggregate_outlet_activity_yearly.start_time</code>.
      */
-    public void setStartTime(Date startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -498,7 +484,7 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.submission_time</code>.
      */
-    public Date getSubmissionTime() {
+    public LocalDateTime getSubmissionTime() {
         return this.submissionTime;
     }
 
@@ -506,7 +492,7 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Setter for
      * <code>ck_postaggregate_outlet_activity_yearly.submission_time</code>.
      */
-    public void setSubmissionTime(Date submissionTime) {
+    public void setSubmissionTime(LocalDateTime submissionTime) {
         this.submissionTime = submissionTime;
     }
 
@@ -514,7 +500,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.target_key</code>.
      */
-    @Size(max = 255)
     public String getTargetKey() {
         return this.targetKey;
     }
@@ -531,7 +516,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.non_pjp_outlet_visited</code>.
      */
-    @NotNull
     public Integer getNonPjpOutletVisited() {
         return this.nonPjpOutletVisited;
     }
@@ -548,7 +532,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.outlet_visited</code>.
      */
-    @NotNull
     public Integer getOutletVisited() {
         return this.outletVisited;
     }
@@ -565,7 +548,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.pjp_outlet_visited</code>.
      */
-    @NotNull
     public Integer getPjpOutletVisited() {
         return this.pjpOutletVisited;
     }
@@ -582,7 +564,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.unique_outlets_visited</code>.
      */
-    @NotNull
     public Integer getUniqueOutletsVisited() {
         return this.uniqueOutletsVisited;
     }
@@ -598,7 +579,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
     /**
      * Getter for <code>ck_postaggregate_outlet_activity_yearly.year</code>.
      */
-    @NotNull
     public Integer getYear() {
         return this.year;
     }
@@ -614,7 +594,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -630,7 +609,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
     /**
      * Getter for <code>ck_postaggregate_outlet_activity_yearly.loginid</code>.
      */
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -646,7 +624,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      * Getter for
      * <code>ck_postaggregate_outlet_activity_yearly.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -671,249 +648,6 @@ public class CkPostaggregateOutletActivityYearly extends CommonDataModel impleme
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkPostaggregateOutletActivityYearly other = (CkPostaggregateOutletActivityYearly) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.systemTime == null) {
-            if (other.systemTime != null)
-                return false;
-        }
-        else if (!this.systemTime.equals(other.systemTime))
-            return false;
-        if (this.endTime == null) {
-            if (other.endTime != null)
-                return false;
-        }
-        else if (!this.endTime.equals(other.endTime))
-            return false;
-        if (this.gpsLatitude == null) {
-            if (other.gpsLatitude != null)
-                return false;
-        }
-        else if (!this.gpsLatitude.equals(other.gpsLatitude))
-            return false;
-        if (this.gpsLongitude == null) {
-            if (other.gpsLongitude != null)
-                return false;
-        }
-        else if (!this.gpsLongitude.equals(other.gpsLongitude))
-            return false;
-        if (this.hierarchy == null) {
-            if (other.hierarchy != null)
-                return false;
-        }
-        else if (!this.hierarchy.equals(other.hierarchy))
-            return false;
-        if (this.images == null) {
-            if (other.images != null)
-                return false;
-        }
-        else if (!this.images.equals(other.images))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.referenceNumber == null) {
-            if (other.referenceNumber != null)
-                return false;
-        }
-        else if (!this.referenceNumber.equals(other.referenceNumber))
-            return false;
-        if (this.startTime == null) {
-            if (other.startTime != null)
-                return false;
-        }
-        else if (!this.startTime.equals(other.startTime))
-            return false;
-        if (this.submissionTime == null) {
-            if (other.submissionTime != null)
-                return false;
-        }
-        else if (!this.submissionTime.equals(other.submissionTime))
-            return false;
-        if (this.targetKey == null) {
-            if (other.targetKey != null)
-                return false;
-        }
-        else if (!this.targetKey.equals(other.targetKey))
-            return false;
-        if (this.nonPjpOutletVisited == null) {
-            if (other.nonPjpOutletVisited != null)
-                return false;
-        }
-        else if (!this.nonPjpOutletVisited.equals(other.nonPjpOutletVisited))
-            return false;
-        if (this.outletVisited == null) {
-            if (other.outletVisited != null)
-                return false;
-        }
-        else if (!this.outletVisited.equals(other.outletVisited))
-            return false;
-        if (this.pjpOutletVisited == null) {
-            if (other.pjpOutletVisited != null)
-                return false;
-        }
-        else if (!this.pjpOutletVisited.equals(other.pjpOutletVisited))
-            return false;
-        if (this.uniqueOutletsVisited == null) {
-            if (other.uniqueOutletsVisited != null)
-                return false;
-        }
-        else if (!this.uniqueOutletsVisited.equals(other.uniqueOutletsVisited))
-            return false;
-        if (this.year == null) {
-            if (other.year != null)
-                return false;
-        }
-        else if (!this.year.equals(other.year))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.systemTime == null) ? 0 : this.systemTime.hashCode());
-        result = prime * result + ((this.endTime == null) ? 0 : this.endTime.hashCode());
-        result = prime * result + ((this.gpsLatitude == null) ? 0 : this.gpsLatitude.hashCode());
-        result = prime * result + ((this.gpsLongitude == null) ? 0 : this.gpsLongitude.hashCode());
-        result = prime * result + ((this.hierarchy == null) ? 0 : this.hierarchy.hashCode());
-        result = prime * result + ((this.images == null) ? 0 : this.images.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.referenceNumber == null) ? 0 : this.referenceNumber.hashCode());
-        result = prime * result + ((this.startTime == null) ? 0 : this.startTime.hashCode());
-        result = prime * result + ((this.submissionTime == null) ? 0 : this.submissionTime.hashCode());
-        result = prime * result + ((this.targetKey == null) ? 0 : this.targetKey.hashCode());
-        result = prime * result + ((this.nonPjpOutletVisited == null) ? 0 : this.nonPjpOutletVisited.hashCode());
-        result = prime * result + ((this.outletVisited == null) ? 0 : this.outletVisited.hashCode());
-        result = prime * result + ((this.pjpOutletVisited == null) ? 0 : this.pjpOutletVisited.hashCode());
-        result = prime * result + ((this.uniqueOutletsVisited == null) ? 0 : this.uniqueOutletsVisited.hashCode());
-        result = prime * result + ((this.year == null) ? 0 : this.year.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

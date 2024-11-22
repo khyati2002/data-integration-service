@@ -11,34 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkUserEvent.CkUserEventPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -163,11 +143,11 @@ public class CkUserEventResponse extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkUserEventResponse(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkUserEventResponse(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkUserEventResponse(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -191,37 +171,8 @@ public class CkUserEventResponse extends TableImpl<Record> {
         this(DSL.name("ck_user_event_response"), null);
     }
 
-    public <O extends Record> CkUserEventResponse(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_USER_EVENT_RESPONSE);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkUserEventResponsePath extends CkUserEventResponse implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkUserEventResponsePath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkUserEventResponsePath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkUserEventResponsePath as(String alias) {
-            return new CkUserEventResponsePath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkUserEventResponsePath as(Name alias) {
-            return new CkUserEventResponsePath(alias, this);
-        }
-
-        @Override
-        public CkUserEventResponsePath as(Table<?> alias) {
-            return new CkUserEventResponsePath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkUserEventResponse(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_USER_EVENT_RESPONSE);
     }
 
     @Override
@@ -239,15 +190,15 @@ public class CkUserEventResponse extends TableImpl<Record> {
         return Arrays.asList(Keys.FKD563W3VDEXFQUGKI6I1LM3491);
     }
 
-    private transient CkUserEventPath _ckUserEvent;
+    private transient CkUserEvent _ckUserEvent;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_user_event</code>
      * table.
      */
-    public CkUserEventPath ckUserEvent() {
+    public CkUserEvent ckUserEvent() {
         if (_ckUserEvent == null)
-            _ckUserEvent = new CkUserEventPath(this, Keys.FKD563W3VDEXFQUGKI6I1LM3491, null);
+            _ckUserEvent = new CkUserEvent(this, Keys.FKD563W3VDEXFQUGKI6I1LM3491);
 
         return _ckUserEvent;
     }
@@ -260,11 +211,6 @@ public class CkUserEventResponse extends TableImpl<Record> {
     @Override
     public CkUserEventResponse as(Name alias) {
         return new CkUserEventResponse(alias, this);
-    }
-
-    @Override
-    public CkUserEventResponse as(Table<?> alias) {
-        return new CkUserEventResponse(alias.getQualifiedName(), this);
     }
 
     /**
@@ -281,97 +227,5 @@ public class CkUserEventResponse extends TableImpl<Record> {
     @Override
     public CkUserEventResponse rename(Name name) {
         return new CkUserEventResponse(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkUserEventResponse rename(Table<?> name) {
-        return new CkUserEventResponse(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserEventResponse where(Condition condition) {
-        return new CkUserEventResponse(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserEventResponse where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserEventResponse where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserEventResponse where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserEventResponse where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserEventResponse where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserEventResponse where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserEventResponse where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserEventResponse whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserEventResponse whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

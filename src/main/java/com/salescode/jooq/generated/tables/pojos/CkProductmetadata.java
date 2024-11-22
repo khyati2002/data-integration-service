@@ -8,11 +8,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -24,51 +22,51 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String account;
-    private BigDecimal basePrice;
-    private String batchCode;
-    private BigDecimal casePtr;
-    private String channel;
-    private BigDecimal gst;
-    private String level;
-    private Integer maxQty;
-    private Integer minQty;
-    private BigDecimal mrp;
-    private BigDecimal otherUnitPtr;
-    private BigDecimal packPtr;
-    private String priceList;
-    private String skuCode;
-    private String tax;
-    private BigDecimal taxAmount;
-    private String whCode;
-    private String locationHierarchy;
-    private String loginid;
-    private String fkProductmetadata;
-    private Byte changed;
-    private String subChannel;
-    private String outletcode;
-    private BigDecimal caseMrp;
-    private BigDecimal otherUnitMrp;
-    private Date fromDate;
-    private Date toDate;
-    private BigDecimal caseToOtherUnitQuantity;
-    private BigDecimal caseToPieceQuantity;
-    private BigDecimal otherUnitToPieceQuantity;
-    private BigDecimal pieceToOtherUnitQuantity;
-    private Integer priority;
-    private BigDecimal ssp;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        account;
+    private BigDecimal    basePrice;
+    private String        batchCode;
+    private BigDecimal    casePtr;
+    private String        channel;
+    private BigDecimal    gst;
+    private String        level;
+    private Integer       maxQty;
+    private Integer       minQty;
+    private BigDecimal    mrp;
+    private BigDecimal    otherUnitPtr;
+    private BigDecimal    packPtr;
+    private String        priceList;
+    private String        skuCode;
+    private String        tax;
+    private BigDecimal    taxAmount;
+    private String        whCode;
+    private String        locationHierarchy;
+    private String        loginid;
+    private String        fkProductmetadata;
+    private Byte          changed;
+    private String        subChannel;
+    private String        outletcode;
+    private BigDecimal    caseMrp;
+    private BigDecimal    otherUnitMrp;
+    private LocalDateTime fromDate;
+    private LocalDateTime toDate;
+    private BigDecimal    caseToOtherUnitQuantity;
+    private BigDecimal    caseToPieceQuantity;
+    private BigDecimal    otherUnitToPieceQuantity;
+    private BigDecimal    pieceToOtherUnitQuantity;
+    private BigDecimal    ssp;
+    private Integer       priority;
 
     public CkProductmetadata() {}
 
@@ -116,56 +114,56 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         this.caseToPieceQuantity = value.caseToPieceQuantity;
         this.otherUnitToPieceQuantity = value.otherUnitToPieceQuantity;
         this.pieceToOtherUnitQuantity = value.pieceToOtherUnitQuantity;
-        this.priority = value.priority;
         this.ssp = value.ssp;
+        this.priority = value.priority;
     }
 
     public CkProductmetadata(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String account,
-        BigDecimal basePrice,
-        String batchCode,
-        BigDecimal casePtr,
-        String channel,
-        BigDecimal gst,
-        String level,
-        Integer maxQty,
-        Integer minQty,
-        BigDecimal mrp,
-        BigDecimal otherUnitPtr,
-        BigDecimal packPtr,
-        String priceList,
-        String skuCode,
-        String tax,
-        BigDecimal taxAmount,
-        String whCode,
-        String locationHierarchy,
-        String loginid,
-        String fkProductmetadata,
-        Byte changed,
-        String subChannel,
-        String outletcode,
-        BigDecimal caseMrp,
-        BigDecimal otherUnitMrp,
-        Date fromDate,
-        Date toDate,
-        BigDecimal caseToOtherUnitQuantity,
-        BigDecimal caseToPieceQuantity,
-        BigDecimal otherUnitToPieceQuantity,
-        BigDecimal pieceToOtherUnitQuantity,
-        Integer priority,
-        BigDecimal ssp
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        account,
+        BigDecimal    basePrice,
+        String        batchCode,
+        BigDecimal    casePtr,
+        String        channel,
+        BigDecimal    gst,
+        String        level,
+        Integer       maxQty,
+        Integer       minQty,
+        BigDecimal    mrp,
+        BigDecimal    otherUnitPtr,
+        BigDecimal    packPtr,
+        String        priceList,
+        String        skuCode,
+        String        tax,
+        BigDecimal    taxAmount,
+        String        whCode,
+        String        locationHierarchy,
+        String        loginid,
+        String        fkProductmetadata,
+        Byte          changed,
+        String        subChannel,
+        String        outletcode,
+        BigDecimal    caseMrp,
+        BigDecimal    otherUnitMrp,
+        LocalDateTime fromDate,
+        LocalDateTime toDate,
+        BigDecimal    caseToOtherUnitQuantity,
+        BigDecimal    caseToPieceQuantity,
+        BigDecimal    otherUnitToPieceQuantity,
+        BigDecimal    pieceToOtherUnitQuantity,
+        BigDecimal    ssp,
+        Integer       priority
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -210,15 +208,13 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         this.caseToPieceQuantity = caseToPieceQuantity;
         this.otherUnitToPieceQuantity = otherUnitToPieceQuantity;
         this.pieceToOtherUnitQuantity = pieceToOtherUnitQuantity;
-        this.priority = priority;
         this.ssp = ssp;
+        this.priority = priority;
     }
 
     /**
      * Getter for <code>ck_productmetadata.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -247,7 +243,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -262,7 +257,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -333,7 +327,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -348,7 +341,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -363,7 +355,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -392,7 +383,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.account</code>.
      */
-    @Size(max = 255)
     public String getAccount() {
         return this.account;
     }
@@ -421,7 +411,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.batch_code</code>.
      */
-    @Size(max = 200)
     public String getBatchCode() {
         return this.batchCode;
     }
@@ -450,7 +439,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.channel</code>.
      */
-    @Size(max = 255)
     public String getChannel() {
         return this.channel;
     }
@@ -479,7 +467,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.level</code>.
      */
-    @Size(max = 255)
     public String getLevel() {
         return this.level;
     }
@@ -564,7 +551,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.price_list</code>.
      */
-    @Size(max = 255)
     public String getPriceList() {
         return this.priceList;
     }
@@ -579,7 +565,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.sku_code</code>.
      */
-    @Size(max = 255)
     public String getSkuCode() {
         return this.skuCode;
     }
@@ -594,7 +579,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.tax</code>.
      */
-    @Size(max = 255)
     public String getTax() {
         return this.tax;
     }
@@ -623,7 +607,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.wh_code</code>.
      */
-    @Size(max = 255)
     public String getWhCode() {
         return this.whCode;
     }
@@ -638,7 +621,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -653,7 +635,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.loginid</code>.
      */
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -668,7 +649,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.fk_productmetadata</code>.
      */
-    @Size(max = 255)
     public String getFkProductmetadata() {
         return this.fkProductmetadata;
     }
@@ -697,7 +677,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.sub_channel</code>.
      */
-    @Size(max = 255)
     public String getSubChannel() {
         return this.subChannel;
     }
@@ -712,7 +691,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.outletcode</code>.
      */
-    @Size(max = 255)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -755,28 +733,28 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_productmetadata.from_date</code>.
      */
-    public Date getFromDate() {
+    public LocalDateTime getFromDate() {
         return this.fromDate;
     }
 
     /**
      * Setter for <code>ck_productmetadata.from_date</code>.
      */
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
 
     /**
      * Getter for <code>ck_productmetadata.to_date</code>.
      */
-    public Date getToDate() {
+    public LocalDateTime getToDate() {
         return this.toDate;
     }
 
     /**
      * Setter for <code>ck_productmetadata.to_date</code>.
      */
-    public void setToDate(Date toDate) {
+    public void setToDate(LocalDateTime toDate) {
         this.toDate = toDate;
     }
 
@@ -837,21 +815,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_productmetadata.priority</code>.
-     */
-    @NotNull
-    public Integer getPriority() {
-        return this.priority;
-    }
-
-    /**
-     * Setter for <code>ck_productmetadata.priority</code>.
-     */
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
-    /**
      * Getter for <code>ck_productmetadata.ssp</code>.
      */
     public BigDecimal getSsp() {
@@ -865,338 +828,18 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         this.ssp = ssp;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkProductmetadata other = (CkProductmetadata) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.account == null) {
-            if (other.account != null)
-                return false;
-        }
-        else if (!this.account.equals(other.account))
-            return false;
-        if (this.basePrice == null) {
-            if (other.basePrice != null)
-                return false;
-        }
-        else if (!this.basePrice.equals(other.basePrice))
-            return false;
-        if (this.batchCode == null) {
-            if (other.batchCode != null)
-                return false;
-        }
-        else if (!this.batchCode.equals(other.batchCode))
-            return false;
-        if (this.casePtr == null) {
-            if (other.casePtr != null)
-                return false;
-        }
-        else if (!this.casePtr.equals(other.casePtr))
-            return false;
-        if (this.channel == null) {
-            if (other.channel != null)
-                return false;
-        }
-        else if (!this.channel.equals(other.channel))
-            return false;
-        if (this.gst == null) {
-            if (other.gst != null)
-                return false;
-        }
-        else if (!this.gst.equals(other.gst))
-            return false;
-        if (this.level == null) {
-            if (other.level != null)
-                return false;
-        }
-        else if (!this.level.equals(other.level))
-            return false;
-        if (this.maxQty == null) {
-            if (other.maxQty != null)
-                return false;
-        }
-        else if (!this.maxQty.equals(other.maxQty))
-            return false;
-        if (this.minQty == null) {
-            if (other.minQty != null)
-                return false;
-        }
-        else if (!this.minQty.equals(other.minQty))
-            return false;
-        if (this.mrp == null) {
-            if (other.mrp != null)
-                return false;
-        }
-        else if (!this.mrp.equals(other.mrp))
-            return false;
-        if (this.otherUnitPtr == null) {
-            if (other.otherUnitPtr != null)
-                return false;
-        }
-        else if (!this.otherUnitPtr.equals(other.otherUnitPtr))
-            return false;
-        if (this.packPtr == null) {
-            if (other.packPtr != null)
-                return false;
-        }
-        else if (!this.packPtr.equals(other.packPtr))
-            return false;
-        if (this.priceList == null) {
-            if (other.priceList != null)
-                return false;
-        }
-        else if (!this.priceList.equals(other.priceList))
-            return false;
-        if (this.skuCode == null) {
-            if (other.skuCode != null)
-                return false;
-        }
-        else if (!this.skuCode.equals(other.skuCode))
-            return false;
-        if (this.tax == null) {
-            if (other.tax != null)
-                return false;
-        }
-        else if (!this.tax.equals(other.tax))
-            return false;
-        if (this.taxAmount == null) {
-            if (other.taxAmount != null)
-                return false;
-        }
-        else if (!this.taxAmount.equals(other.taxAmount))
-            return false;
-        if (this.whCode == null) {
-            if (other.whCode != null)
-                return false;
-        }
-        else if (!this.whCode.equals(other.whCode))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.fkProductmetadata == null) {
-            if (other.fkProductmetadata != null)
-                return false;
-        }
-        else if (!this.fkProductmetadata.equals(other.fkProductmetadata))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.subChannel == null) {
-            if (other.subChannel != null)
-                return false;
-        }
-        else if (!this.subChannel.equals(other.subChannel))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.caseMrp == null) {
-            if (other.caseMrp != null)
-                return false;
-        }
-        else if (!this.caseMrp.equals(other.caseMrp))
-            return false;
-        if (this.otherUnitMrp == null) {
-            if (other.otherUnitMrp != null)
-                return false;
-        }
-        else if (!this.otherUnitMrp.equals(other.otherUnitMrp))
-            return false;
-        if (this.fromDate == null) {
-            if (other.fromDate != null)
-                return false;
-        }
-        else if (!this.fromDate.equals(other.fromDate))
-            return false;
-        if (this.toDate == null) {
-            if (other.toDate != null)
-                return false;
-        }
-        else if (!this.toDate.equals(other.toDate))
-            return false;
-        if (this.caseToOtherUnitQuantity == null) {
-            if (other.caseToOtherUnitQuantity != null)
-                return false;
-        }
-        else if (!this.caseToOtherUnitQuantity.equals(other.caseToOtherUnitQuantity))
-            return false;
-        if (this.caseToPieceQuantity == null) {
-            if (other.caseToPieceQuantity != null)
-                return false;
-        }
-        else if (!this.caseToPieceQuantity.equals(other.caseToPieceQuantity))
-            return false;
-        if (this.otherUnitToPieceQuantity == null) {
-            if (other.otherUnitToPieceQuantity != null)
-                return false;
-        }
-        else if (!this.otherUnitToPieceQuantity.equals(other.otherUnitToPieceQuantity))
-            return false;
-        if (this.pieceToOtherUnitQuantity == null) {
-            if (other.pieceToOtherUnitQuantity != null)
-                return false;
-        }
-        else if (!this.pieceToOtherUnitQuantity.equals(other.pieceToOtherUnitQuantity))
-            return false;
-        if (this.priority == null) {
-            if (other.priority != null)
-                return false;
-        }
-        else if (!this.priority.equals(other.priority))
-            return false;
-        if (this.ssp == null) {
-            if (other.ssp != null)
-                return false;
-        }
-        else if (!this.ssp.equals(other.ssp))
-            return false;
-        return true;
+    /**
+     * Getter for <code>ck_productmetadata.priority</code>.
+     */
+    public Integer getPriority() {
+        return this.priority;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.account == null) ? 0 : this.account.hashCode());
-        result = prime * result + ((this.basePrice == null) ? 0 : this.basePrice.hashCode());
-        result = prime * result + ((this.batchCode == null) ? 0 : this.batchCode.hashCode());
-        result = prime * result + ((this.casePtr == null) ? 0 : this.casePtr.hashCode());
-        result = prime * result + ((this.channel == null) ? 0 : this.channel.hashCode());
-        result = prime * result + ((this.gst == null) ? 0 : this.gst.hashCode());
-        result = prime * result + ((this.level == null) ? 0 : this.level.hashCode());
-        result = prime * result + ((this.maxQty == null) ? 0 : this.maxQty.hashCode());
-        result = prime * result + ((this.minQty == null) ? 0 : this.minQty.hashCode());
-        result = prime * result + ((this.mrp == null) ? 0 : this.mrp.hashCode());
-        result = prime * result + ((this.otherUnitPtr == null) ? 0 : this.otherUnitPtr.hashCode());
-        result = prime * result + ((this.packPtr == null) ? 0 : this.packPtr.hashCode());
-        result = prime * result + ((this.priceList == null) ? 0 : this.priceList.hashCode());
-        result = prime * result + ((this.skuCode == null) ? 0 : this.skuCode.hashCode());
-        result = prime * result + ((this.tax == null) ? 0 : this.tax.hashCode());
-        result = prime * result + ((this.taxAmount == null) ? 0 : this.taxAmount.hashCode());
-        result = prime * result + ((this.whCode == null) ? 0 : this.whCode.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.fkProductmetadata == null) ? 0 : this.fkProductmetadata.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.subChannel == null) ? 0 : this.subChannel.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.caseMrp == null) ? 0 : this.caseMrp.hashCode());
-        result = prime * result + ((this.otherUnitMrp == null) ? 0 : this.otherUnitMrp.hashCode());
-        result = prime * result + ((this.fromDate == null) ? 0 : this.fromDate.hashCode());
-        result = prime * result + ((this.toDate == null) ? 0 : this.toDate.hashCode());
-        result = prime * result + ((this.caseToOtherUnitQuantity == null) ? 0 : this.caseToOtherUnitQuantity.hashCode());
-        result = prime * result + ((this.caseToPieceQuantity == null) ? 0 : this.caseToPieceQuantity.hashCode());
-        result = prime * result + ((this.otherUnitToPieceQuantity == null) ? 0 : this.otherUnitToPieceQuantity.hashCode());
-        result = prime * result + ((this.pieceToOtherUnitQuantity == null) ? 0 : this.pieceToOtherUnitQuantity.hashCode());
-        result = prime * result + ((this.priority == null) ? 0 : this.priority.hashCode());
-        result = prime * result + ((this.ssp == null) ? 0 : this.ssp.hashCode());
-        return result;
+    /**
+     * Setter for <code>ck_productmetadata.priority</code>.
+     */
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     @Override
@@ -1246,8 +889,8 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         sb.append(", ").append(caseToPieceQuantity);
         sb.append(", ").append(otherUnitToPieceQuantity);
         sb.append(", ").append(pieceToOtherUnitQuantity);
-        sb.append(", ").append(priority);
         sb.append(", ").append(ssp);
+        sb.append(", ").append(priority);
 
         sb.append(")");
         return sb.toString();

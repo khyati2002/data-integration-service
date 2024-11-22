@@ -11,36 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -127,7 +106,7 @@ public class CkCreditStatus extends TableImpl<Record> {
     /**
      * The column <code>ck_credit_status.system_time</code>.
      */
-    public final TableField<Record, Date> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_credit_status.amount_last_received</code>.
@@ -147,7 +126,7 @@ public class CkCreditStatus extends TableImpl<Record> {
     /**
      * The column <code>ck_credit_status.credit_due_date</code>.
      */
-    public final TableField<Record, Date> CREDIT_DUE_DATE = createField(DSL.name("credit_due_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> CREDIT_DUE_DATE = createField(DSL.name("credit_due_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_credit_status.credit_expiry</code>.
@@ -167,7 +146,7 @@ public class CkCreditStatus extends TableImpl<Record> {
     /**
      * The column <code>ck_credit_status.date</code>.
      */
-    public final TableField<Record, Date> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_credit_status.hierarchy</code>.
@@ -183,12 +162,12 @@ public class CkCreditStatus extends TableImpl<Record> {
     /**
      * The column <code>ck_credit_status.over_draft_creation_date</code>.
      */
-    public final TableField<Record, Date> OVER_DRAFT_CREATION_DATE = createField(DSL.name("over_draft_creation_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> OVER_DRAFT_CREATION_DATE = createField(DSL.name("over_draft_creation_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_credit_status.submission_time</code>.
      */
-    public final TableField<Record, Date> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_credit_status.total_due_days</code>.
@@ -246,11 +225,11 @@ public class CkCreditStatus extends TableImpl<Record> {
     public final TableField<Record, String> SUPPLIER = createField(DSL.name("supplier"), SQLDataType.VARCHAR(255), this, "");
 
     private CkCreditStatus(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkCreditStatus(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkCreditStatus(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -274,37 +253,8 @@ public class CkCreditStatus extends TableImpl<Record> {
         this(DSL.name("ck_credit_status"), null);
     }
 
-    public <O extends Record> CkCreditStatus(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_CREDIT_STATUS);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkCreditStatusPath extends CkCreditStatus implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkCreditStatusPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkCreditStatusPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkCreditStatusPath as(String alias) {
-            return new CkCreditStatusPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkCreditStatusPath as(Name alias) {
-            return new CkCreditStatusPath(alias, this);
-        }
-
-        @Override
-        public CkCreditStatusPath as(Table<?> alias) {
-            return new CkCreditStatusPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkCreditStatus(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_CREDIT_STATUS);
     }
 
     @Override
@@ -327,39 +277,37 @@ public class CkCreditStatus extends TableImpl<Record> {
         return Arrays.asList(Keys.FK2YOT33KCT3LFUI22ID375L6I3, Keys.FK6OR9480UBIGHW3NMHVVL7O1LT, Keys.FKQ0SWJDLYDMPG4KO8O2NP51CYA);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FK2YOT33KCT3LFUI22ID375L6I3, null);
+            _ckLocation = new CkLocation(this, Keys.FK2YOT33KCT3LFUI22ID375L6I3);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FK6OR9480UBIGHW3NMHVVL7O1LT, null);
+            _ckUser = new CkUser(this, Keys.FK6OR9480UBIGHW3NMHVVL7O1LT);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FKQ0SWJDLYDMPG4KO8O2NP51CYA, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FKQ0SWJDLYDMPG4KO8O2NP51CYA);
 
         return _ckOutletDetails;
     }
@@ -372,11 +320,6 @@ public class CkCreditStatus extends TableImpl<Record> {
     @Override
     public CkCreditStatus as(Name alias) {
         return new CkCreditStatus(alias, this);
-    }
-
-    @Override
-    public CkCreditStatus as(Table<?> alias) {
-        return new CkCreditStatus(alias.getQualifiedName(), this);
     }
 
     /**
@@ -393,97 +336,5 @@ public class CkCreditStatus extends TableImpl<Record> {
     @Override
     public CkCreditStatus rename(Name name) {
         return new CkCreditStatus(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkCreditStatus rename(Table<?> name) {
-        return new CkCreditStatus(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCreditStatus where(Condition condition) {
-        return new CkCreditStatus(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCreditStatus where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCreditStatus where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCreditStatus where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCreditStatus where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCreditStatus where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCreditStatus where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkCreditStatus where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCreditStatus whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkCreditStatus whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

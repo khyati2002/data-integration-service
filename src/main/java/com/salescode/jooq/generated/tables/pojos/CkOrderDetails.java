@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,59 +22,59 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date systemTime;
-    private String batchCode;
-    private Double billAmount;
-    private Double caseQuantity;
-    private String color;
-    private String discountNumber;
-    private JSON discountInfo;
-    private Double initialAmount;
-    private Double initialCaseQuantity;
-    private Double initialOtherUnitQuantity;
-    private Double initialPieceQuantity;
-    private Double initialQuantity;
-    private Double mrp;
-    private String name;
-    private Double netAmount;
-    private Double normalizedQuantity;
-    private Double otherUnitQuantity;
-    private Double pieceQuantity;
-    private JSON productInfo;
-    private String productKey;
-    private String quantityUnit;
-    private String size;
-    private String skucode;
-    private String status;
-    private String type;
-    private String unitOfMeasurement;
-    private Double price;
-    private String locationHierarchy;
-    private String hierarchy;
-    private String orderId;
-    private String statusReason;
-    private Byte changed;
-    private String gpsLatitude;
-    private String gpsLongitude;
-    private Double initialNormalizedQuantity;
-    private Integer lineCount;
-    private Double normalizedVolume;
-    private Double casePrice;
-    private Double otherUnitPrice;
-    private Double salesQuantity;
-    private Double salesValue;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime systemTime;
+    private String        batchCode;
+    private Double        billAmount;
+    private Double        caseQuantity;
+    private String        color;
+    private String        discountNumber;
+    private JSON          discountInfo;
+    private Double        initialAmount;
+    private Double        initialCaseQuantity;
+    private Double        initialOtherUnitQuantity;
+    private Double        initialPieceQuantity;
+    private Double        initialQuantity;
+    private Double        mrp;
+    private String        name;
+    private Double        netAmount;
+    private Double        normalizedQuantity;
+    private Double        otherUnitQuantity;
+    private Double        pieceQuantity;
+    private JSON          productInfo;
+    private String        productKey;
+    private String        quantityUnit;
+    private String        size;
+    private String        skucode;
+    private String        status;
+    private String        type;
+    private String        unitOfMeasurement;
+    private Double        price;
+    private String        locationHierarchy;
+    private String        hierarchy;
+    private String        orderId;
+    private String        statusReason;
+    private Byte          changed;
+    private String        gpsLatitude;
+    private String        gpsLongitude;
+    private Double        initialNormalizedQuantity;
+    private Integer       lineCount;
+    private Double        normalizedVolume;
+    private Double        casePrice;
+    private Double        otherUnitPrice;
+    private Double        salesQuantity;
+    private Double        salesValue;
 
     public CkOrderDetails() {}
 
@@ -138,59 +135,59 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     }
 
     public CkOrderDetails(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date systemTime,
-        String batchCode,
-        Double billAmount,
-        Double caseQuantity,
-        String color,
-        String discountNumber,
-        JSON discountInfo,
-        Double initialAmount,
-        Double initialCaseQuantity,
-        Double initialOtherUnitQuantity,
-        Double initialPieceQuantity,
-        Double initialQuantity,
-        Double mrp,
-        String name,
-        Double netAmount,
-        Double normalizedQuantity,
-        Double otherUnitQuantity,
-        Double pieceQuantity,
-        JSON productInfo,
-        String productKey,
-        String quantityUnit,
-        String size,
-        String skucode,
-        String status,
-        String type,
-        String unitOfMeasurement,
-        Double price,
-        String locationHierarchy,
-        String hierarchy,
-        String orderId,
-        String statusReason,
-        Byte changed,
-        String gpsLatitude,
-        String gpsLongitude,
-        Double initialNormalizedQuantity,
-        Integer lineCount,
-        Double normalizedVolume,
-        Double casePrice,
-        Double otherUnitPrice,
-        Double salesQuantity,
-        Double salesValue
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime systemTime,
+        String        batchCode,
+        Double        billAmount,
+        Double        caseQuantity,
+        String        color,
+        String        discountNumber,
+        JSON          discountInfo,
+        Double        initialAmount,
+        Double        initialCaseQuantity,
+        Double        initialOtherUnitQuantity,
+        Double        initialPieceQuantity,
+        Double        initialQuantity,
+        Double        mrp,
+        String        name,
+        Double        netAmount,
+        Double        normalizedQuantity,
+        Double        otherUnitQuantity,
+        Double        pieceQuantity,
+        JSON          productInfo,
+        String        productKey,
+        String        quantityUnit,
+        String        size,
+        String        skucode,
+        String        status,
+        String        type,
+        String        unitOfMeasurement,
+        Double        price,
+        String        locationHierarchy,
+        String        hierarchy,
+        String        orderId,
+        String        statusReason,
+        Byte          changed,
+        String        gpsLatitude,
+        String        gpsLongitude,
+        Double        initialNormalizedQuantity,
+        Integer       lineCount,
+        Double        normalizedVolume,
+        Double        casePrice,
+        Double        otherUnitPrice,
+        Double        salesQuantity,
+        Double        salesValue
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -250,8 +247,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -280,7 +275,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -295,7 +289,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -366,7 +359,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -381,7 +373,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -396,7 +387,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -425,21 +415,20 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.system_time</code>.
      */
-    public Date getSystemTime() {
+    public LocalDateTime getSystemTime() {
         return this.systemTime;
     }
 
     /**
      * Setter for <code>ck_order_details.system_time</code>.
      */
-    public void setSystemTime(Date systemTime) {
+    public void setSystemTime(LocalDateTime systemTime) {
         this.systemTime = systemTime;
     }
 
     /**
      * Getter for <code>ck_order_details.batch_code</code>.
      */
-    @Size(max = 200)
     public String getBatchCode() {
         return this.batchCode;
     }
@@ -454,7 +443,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.bill_amount</code>.
      */
-    @NotNull
     public Double getBillAmount() {
         return this.billAmount;
     }
@@ -469,7 +457,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.case_quantity</code>.
      */
-    @NotNull
     public Double getCaseQuantity() {
         return this.caseQuantity;
     }
@@ -484,7 +471,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.color</code>.
      */
-    @Size(max = 255)
     public String getColor() {
         return this.color;
     }
@@ -499,7 +485,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.discount_number</code>.
      */
-    @Size(max = 255)
     public String getDiscountNumber() {
         return this.discountNumber;
     }
@@ -528,7 +513,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.initial_amount</code>.
      */
-    @NotNull
     public Double getInitialAmount() {
         return this.initialAmount;
     }
@@ -543,7 +527,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.initial_case_quantity</code>.
      */
-    @NotNull
     public Double getInitialCaseQuantity() {
         return this.initialCaseQuantity;
     }
@@ -558,7 +541,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.initial_other_unit_quantity</code>.
      */
-    @NotNull
     public Double getInitialOtherUnitQuantity() {
         return this.initialOtherUnitQuantity;
     }
@@ -573,7 +555,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.initial_piece_quantity</code>.
      */
-    @NotNull
     public Double getInitialPieceQuantity() {
         return this.initialPieceQuantity;
     }
@@ -588,7 +569,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.initial_quantity</code>.
      */
-    @NotNull
     public Double getInitialQuantity() {
         return this.initialQuantity;
     }
@@ -603,7 +583,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.mrp</code>.
      */
-    @NotNull
     public Double getMrp() {
         return this.mrp;
     }
@@ -618,7 +597,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -633,7 +611,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.net_amount</code>.
      */
-    @NotNull
     public Double getNetAmount() {
         return this.netAmount;
     }
@@ -648,7 +625,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.normalized_quantity</code>.
      */
-    @NotNull
     public Double getNormalizedQuantity() {
         return this.normalizedQuantity;
     }
@@ -663,7 +639,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.other_unit_quantity</code>.
      */
-    @NotNull
     public Double getOtherUnitQuantity() {
         return this.otherUnitQuantity;
     }
@@ -678,7 +653,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.piece_quantity</code>.
      */
-    @NotNull
     public Double getPieceQuantity() {
         return this.pieceQuantity;
     }
@@ -707,7 +681,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.product_key</code>.
      */
-    @Size(max = 255)
     public String getProductKey() {
         return this.productKey;
     }
@@ -722,7 +695,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.quantity_unit</code>.
      */
-    @Size(max = 255)
     public String getQuantityUnit() {
         return this.quantityUnit;
     }
@@ -737,7 +709,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.size</code>.
      */
-    @Size(max = 255)
     public String getSize() {
         return this.size;
     }
@@ -752,8 +723,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.skucode</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getSkucode() {
         return this.skucode;
     }
@@ -768,7 +737,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.status</code>.
      */
-    @Size(max = 255)
     public String getStatus() {
         return this.status;
     }
@@ -783,7 +751,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -798,7 +765,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.unit_of_measurement</code>.
      */
-    @Size(max = 255)
     public String getUnitOfMeasurement() {
         return this.unitOfMeasurement;
     }
@@ -813,7 +779,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.price</code>.
      */
-    @NotNull
     public Double getPrice() {
         return this.price;
     }
@@ -828,7 +793,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -843,8 +807,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.hierarchy</code>.
      */
-    @NotNull
-    @Size(max = 750)
     public String getHierarchy() {
         return this.hierarchy;
     }
@@ -859,8 +821,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.order_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getOrderId() {
         return this.orderId;
     }
@@ -875,7 +835,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.status_reason</code>.
      */
-    @Size(max = 255)
     public String getStatusReason() {
         return this.statusReason;
     }
@@ -904,7 +863,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.gps_latitude</code>.
      */
-    @Size(max = 255)
     public String getGpsLatitude() {
         return this.gpsLatitude;
     }
@@ -919,7 +877,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.gps_longitude</code>.
      */
-    @Size(max = 255)
     public String getGpsLongitude() {
         return this.gpsLongitude;
     }
@@ -934,7 +891,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.initial_normalized_quantity</code>.
      */
-    @NotNull
     public Double getInitialNormalizedQuantity() {
         return this.initialNormalizedQuantity;
     }
@@ -977,7 +933,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.case_price</code>.
      */
-    @NotNull
     public Double getCasePrice() {
         return this.casePrice;
     }
@@ -992,7 +947,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.other_unit_price</code>.
      */
-    @NotNull
     public Double getOtherUnitPrice() {
         return this.otherUnitPrice;
     }
@@ -1007,7 +961,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.sales_quantity</code>.
      */
-    @NotNull
     public Double getSalesQuantity() {
         return this.salesQuantity;
     }
@@ -1022,7 +975,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_order_details.sales_value</code>.
      */
-    @NotNull
     public Double getSalesValue() {
         return this.salesValue;
     }
@@ -1032,396 +984,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
      */
     public void setSalesValue(Double salesValue) {
         this.salesValue = salesValue;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkOrderDetails other = (CkOrderDetails) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.systemTime == null) {
-            if (other.systemTime != null)
-                return false;
-        }
-        else if (!this.systemTime.equals(other.systemTime))
-            return false;
-        if (this.batchCode == null) {
-            if (other.batchCode != null)
-                return false;
-        }
-        else if (!this.batchCode.equals(other.batchCode))
-            return false;
-        if (this.billAmount == null) {
-            if (other.billAmount != null)
-                return false;
-        }
-        else if (!this.billAmount.equals(other.billAmount))
-            return false;
-        if (this.caseQuantity == null) {
-            if (other.caseQuantity != null)
-                return false;
-        }
-        else if (!this.caseQuantity.equals(other.caseQuantity))
-            return false;
-        if (this.color == null) {
-            if (other.color != null)
-                return false;
-        }
-        else if (!this.color.equals(other.color))
-            return false;
-        if (this.discountNumber == null) {
-            if (other.discountNumber != null)
-                return false;
-        }
-        else if (!this.discountNumber.equals(other.discountNumber))
-            return false;
-        if (this.discountInfo == null) {
-            if (other.discountInfo != null)
-                return false;
-        }
-        else if (!this.discountInfo.equals(other.discountInfo))
-            return false;
-        if (this.initialAmount == null) {
-            if (other.initialAmount != null)
-                return false;
-        }
-        else if (!this.initialAmount.equals(other.initialAmount))
-            return false;
-        if (this.initialCaseQuantity == null) {
-            if (other.initialCaseQuantity != null)
-                return false;
-        }
-        else if (!this.initialCaseQuantity.equals(other.initialCaseQuantity))
-            return false;
-        if (this.initialOtherUnitQuantity == null) {
-            if (other.initialOtherUnitQuantity != null)
-                return false;
-        }
-        else if (!this.initialOtherUnitQuantity.equals(other.initialOtherUnitQuantity))
-            return false;
-        if (this.initialPieceQuantity == null) {
-            if (other.initialPieceQuantity != null)
-                return false;
-        }
-        else if (!this.initialPieceQuantity.equals(other.initialPieceQuantity))
-            return false;
-        if (this.initialQuantity == null) {
-            if (other.initialQuantity != null)
-                return false;
-        }
-        else if (!this.initialQuantity.equals(other.initialQuantity))
-            return false;
-        if (this.mrp == null) {
-            if (other.mrp != null)
-                return false;
-        }
-        else if (!this.mrp.equals(other.mrp))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.netAmount == null) {
-            if (other.netAmount != null)
-                return false;
-        }
-        else if (!this.netAmount.equals(other.netAmount))
-            return false;
-        if (this.normalizedQuantity == null) {
-            if (other.normalizedQuantity != null)
-                return false;
-        }
-        else if (!this.normalizedQuantity.equals(other.normalizedQuantity))
-            return false;
-        if (this.otherUnitQuantity == null) {
-            if (other.otherUnitQuantity != null)
-                return false;
-        }
-        else if (!this.otherUnitQuantity.equals(other.otherUnitQuantity))
-            return false;
-        if (this.pieceQuantity == null) {
-            if (other.pieceQuantity != null)
-                return false;
-        }
-        else if (!this.pieceQuantity.equals(other.pieceQuantity))
-            return false;
-        if (this.productInfo == null) {
-            if (other.productInfo != null)
-                return false;
-        }
-        else if (!this.productInfo.equals(other.productInfo))
-            return false;
-        if (this.productKey == null) {
-            if (other.productKey != null)
-                return false;
-        }
-        else if (!this.productKey.equals(other.productKey))
-            return false;
-        if (this.quantityUnit == null) {
-            if (other.quantityUnit != null)
-                return false;
-        }
-        else if (!this.quantityUnit.equals(other.quantityUnit))
-            return false;
-        if (this.size == null) {
-            if (other.size != null)
-                return false;
-        }
-        else if (!this.size.equals(other.size))
-            return false;
-        if (this.skucode == null) {
-            if (other.skucode != null)
-                return false;
-        }
-        else if (!this.skucode.equals(other.skucode))
-            return false;
-        if (this.status == null) {
-            if (other.status != null)
-                return false;
-        }
-        else if (!this.status.equals(other.status))
-            return false;
-        if (this.type == null) {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        if (this.unitOfMeasurement == null) {
-            if (other.unitOfMeasurement != null)
-                return false;
-        }
-        else if (!this.unitOfMeasurement.equals(other.unitOfMeasurement))
-            return false;
-        if (this.price == null) {
-            if (other.price != null)
-                return false;
-        }
-        else if (!this.price.equals(other.price))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.hierarchy == null) {
-            if (other.hierarchy != null)
-                return false;
-        }
-        else if (!this.hierarchy.equals(other.hierarchy))
-            return false;
-        if (this.orderId == null) {
-            if (other.orderId != null)
-                return false;
-        }
-        else if (!this.orderId.equals(other.orderId))
-            return false;
-        if (this.statusReason == null) {
-            if (other.statusReason != null)
-                return false;
-        }
-        else if (!this.statusReason.equals(other.statusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.gpsLatitude == null) {
-            if (other.gpsLatitude != null)
-                return false;
-        }
-        else if (!this.gpsLatitude.equals(other.gpsLatitude))
-            return false;
-        if (this.gpsLongitude == null) {
-            if (other.gpsLongitude != null)
-                return false;
-        }
-        else if (!this.gpsLongitude.equals(other.gpsLongitude))
-            return false;
-        if (this.initialNormalizedQuantity == null) {
-            if (other.initialNormalizedQuantity != null)
-                return false;
-        }
-        else if (!this.initialNormalizedQuantity.equals(other.initialNormalizedQuantity))
-            return false;
-        if (this.lineCount == null) {
-            if (other.lineCount != null)
-                return false;
-        }
-        else if (!this.lineCount.equals(other.lineCount))
-            return false;
-        if (this.normalizedVolume == null) {
-            if (other.normalizedVolume != null)
-                return false;
-        }
-        else if (!this.normalizedVolume.equals(other.normalizedVolume))
-            return false;
-        if (this.casePrice == null) {
-            if (other.casePrice != null)
-                return false;
-        }
-        else if (!this.casePrice.equals(other.casePrice))
-            return false;
-        if (this.otherUnitPrice == null) {
-            if (other.otherUnitPrice != null)
-                return false;
-        }
-        else if (!this.otherUnitPrice.equals(other.otherUnitPrice))
-            return false;
-        if (this.salesQuantity == null) {
-            if (other.salesQuantity != null)
-                return false;
-        }
-        else if (!this.salesQuantity.equals(other.salesQuantity))
-            return false;
-        if (this.salesValue == null) {
-            if (other.salesValue != null)
-                return false;
-        }
-        else if (!this.salesValue.equals(other.salesValue))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.systemTime == null) ? 0 : this.systemTime.hashCode());
-        result = prime * result + ((this.batchCode == null) ? 0 : this.batchCode.hashCode());
-        result = prime * result + ((this.billAmount == null) ? 0 : this.billAmount.hashCode());
-        result = prime * result + ((this.caseQuantity == null) ? 0 : this.caseQuantity.hashCode());
-        result = prime * result + ((this.color == null) ? 0 : this.color.hashCode());
-        result = prime * result + ((this.discountNumber == null) ? 0 : this.discountNumber.hashCode());
-        result = prime * result + ((this.discountInfo == null) ? 0 : this.discountInfo.hashCode());
-        result = prime * result + ((this.initialAmount == null) ? 0 : this.initialAmount.hashCode());
-        result = prime * result + ((this.initialCaseQuantity == null) ? 0 : this.initialCaseQuantity.hashCode());
-        result = prime * result + ((this.initialOtherUnitQuantity == null) ? 0 : this.initialOtherUnitQuantity.hashCode());
-        result = prime * result + ((this.initialPieceQuantity == null) ? 0 : this.initialPieceQuantity.hashCode());
-        result = prime * result + ((this.initialQuantity == null) ? 0 : this.initialQuantity.hashCode());
-        result = prime * result + ((this.mrp == null) ? 0 : this.mrp.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.netAmount == null) ? 0 : this.netAmount.hashCode());
-        result = prime * result + ((this.normalizedQuantity == null) ? 0 : this.normalizedQuantity.hashCode());
-        result = prime * result + ((this.otherUnitQuantity == null) ? 0 : this.otherUnitQuantity.hashCode());
-        result = prime * result + ((this.pieceQuantity == null) ? 0 : this.pieceQuantity.hashCode());
-        result = prime * result + ((this.productInfo == null) ? 0 : this.productInfo.hashCode());
-        result = prime * result + ((this.productKey == null) ? 0 : this.productKey.hashCode());
-        result = prime * result + ((this.quantityUnit == null) ? 0 : this.quantityUnit.hashCode());
-        result = prime * result + ((this.size == null) ? 0 : this.size.hashCode());
-        result = prime * result + ((this.skucode == null) ? 0 : this.skucode.hashCode());
-        result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        result = prime * result + ((this.unitOfMeasurement == null) ? 0 : this.unitOfMeasurement.hashCode());
-        result = prime * result + ((this.price == null) ? 0 : this.price.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.hierarchy == null) ? 0 : this.hierarchy.hashCode());
-        result = prime * result + ((this.orderId == null) ? 0 : this.orderId.hashCode());
-        result = prime * result + ((this.statusReason == null) ? 0 : this.statusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.gpsLatitude == null) ? 0 : this.gpsLatitude.hashCode());
-        result = prime * result + ((this.gpsLongitude == null) ? 0 : this.gpsLongitude.hashCode());
-        result = prime * result + ((this.initialNormalizedQuantity == null) ? 0 : this.initialNormalizedQuantity.hashCode());
-        result = prime * result + ((this.lineCount == null) ? 0 : this.lineCount.hashCode());
-        result = prime * result + ((this.normalizedVolume == null) ? 0 : this.normalizedVolume.hashCode());
-        result = prime * result + ((this.casePrice == null) ? 0 : this.casePrice.hashCode());
-        result = prime * result + ((this.otherUnitPrice == null) ? 0 : this.otherUnitPrice.hashCode());
-        result = prime * result + ((this.salesQuantity == null) ? 0 : this.salesQuantity.hashCode());
-        result = prime * result + ((this.salesValue == null) ? 0 : this.salesValue.hashCode());
-        return result;
     }
 
     @Override

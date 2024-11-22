@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,38 +21,38 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String batchCode;
-    private String batchId;
-    private Double currentCaseQty;
-    private Double currentOtherUnitQty;
-    private Double currentPcQty;
-    private Double currentQty;
-    private String operationType;
-    private Double previousCaseQty;
-    private Double previousOtherUnitQty;
-    private Double previousPcQty;
-    private Double previousQty;
-    private String size;
-    private String skuCode;
-    private String supplier;
-    private Date transferDate;
-    private String warehouseCode;
-    private String locationHierarchy;
-    private String outletcode;
-    private Byte changed;
-    private String type;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        batchCode;
+    private String        batchId;
+    private Double        currentCaseQty;
+    private Double        currentOtherUnitQty;
+    private Double        currentPcQty;
+    private Double        currentQty;
+    private String        operationType;
+    private Double        previousCaseQty;
+    private Double        previousOtherUnitQty;
+    private Double        previousPcQty;
+    private Double        previousQty;
+    private String        size;
+    private String        skuCode;
+    private String        supplier;
+    private LocalDateTime transferDate;
+    private String        warehouseCode;
+    private String        locationHierarchy;
+    private String        outletcode;
+    private Byte          changed;
+    private String        type;
 
     public CkStockHistory() {}
 
@@ -94,38 +92,38 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     }
 
     public CkStockHistory(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String batchCode,
-        String batchId,
-        Double currentCaseQty,
-        Double currentOtherUnitQty,
-        Double currentPcQty,
-        Double currentQty,
-        String operationType,
-        Double previousCaseQty,
-        Double previousOtherUnitQty,
-        Double previousPcQty,
-        Double previousQty,
-        String size,
-        String skuCode,
-        String supplier,
-        Date transferDate,
-        String warehouseCode,
-        String locationHierarchy,
-        String outletcode,
-        Byte changed,
-        String type
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        batchCode,
+        String        batchId,
+        Double        currentCaseQty,
+        Double        currentOtherUnitQty,
+        Double        currentPcQty,
+        Double        currentQty,
+        String        operationType,
+        Double        previousCaseQty,
+        Double        previousOtherUnitQty,
+        Double        previousPcQty,
+        Double        previousQty,
+        String        size,
+        String        skuCode,
+        String        supplier,
+        LocalDateTime transferDate,
+        String        warehouseCode,
+        String        locationHierarchy,
+        String        outletcode,
+        Byte          changed,
+        String        type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -164,8 +162,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -194,7 +190,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -209,7 +204,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -280,7 +274,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -295,7 +288,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -310,7 +302,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -339,7 +330,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.batch_code</code>.
      */
-    @Size(max = 200)
     public String getBatchCode() {
         return this.batchCode;
     }
@@ -354,7 +344,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.batch_id</code>.
      */
-    @Size(max = 255)
     public String getBatchId() {
         return this.batchId;
     }
@@ -369,7 +358,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.current_case_qty</code>.
      */
-    @NotNull
     public Double getCurrentCaseQty() {
         return this.currentCaseQty;
     }
@@ -384,7 +372,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.current_other_unit_qty</code>.
      */
-    @NotNull
     public Double getCurrentOtherUnitQty() {
         return this.currentOtherUnitQty;
     }
@@ -399,7 +386,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.current_pc_qty</code>.
      */
-    @NotNull
     public Double getCurrentPcQty() {
         return this.currentPcQty;
     }
@@ -414,7 +400,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.current_qty</code>.
      */
-    @NotNull
     public Double getCurrentQty() {
         return this.currentQty;
     }
@@ -429,7 +414,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.operation_type</code>.
      */
-    @Size(max = 255)
     public String getOperationType() {
         return this.operationType;
     }
@@ -444,7 +428,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.previous_case_qty</code>.
      */
-    @NotNull
     public Double getPreviousCaseQty() {
         return this.previousCaseQty;
     }
@@ -459,7 +442,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.previous_other_unit_qty</code>.
      */
-    @NotNull
     public Double getPreviousOtherUnitQty() {
         return this.previousOtherUnitQty;
     }
@@ -474,7 +456,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.previous_pc_qty</code>.
      */
-    @NotNull
     public Double getPreviousPcQty() {
         return this.previousPcQty;
     }
@@ -489,7 +470,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.previous_qty</code>.
      */
-    @NotNull
     public Double getPreviousQty() {
         return this.previousQty;
     }
@@ -504,7 +484,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.size</code>.
      */
-    @Size(max = 255)
     public String getSize() {
         return this.size;
     }
@@ -519,7 +498,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.sku_code</code>.
      */
-    @Size(max = 255)
     public String getSkuCode() {
         return this.skuCode;
     }
@@ -534,7 +512,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.supplier</code>.
      */
-    @Size(max = 255)
     public String getSupplier() {
         return this.supplier;
     }
@@ -549,21 +526,20 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.transfer_date</code>.
      */
-    public Date getTransferDate() {
+    public LocalDateTime getTransferDate() {
         return this.transferDate;
     }
 
     /**
      * Setter for <code>ck_stock_history.transfer_date</code>.
      */
-    public void setTransferDate(Date transferDate) {
+    public void setTransferDate(LocalDateTime transferDate) {
         this.transferDate = transferDate;
     }
 
     /**
      * Getter for <code>ck_stock_history.warehouse_code</code>.
      */
-    @Size(max = 255)
     public String getWarehouseCode() {
         return this.warehouseCode;
     }
@@ -578,7 +554,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -593,7 +568,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -622,7 +596,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_stock_history.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -632,249 +605,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
      */
     public void setType(String type) {
         this.type = type;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkStockHistory other = (CkStockHistory) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.batchCode == null) {
-            if (other.batchCode != null)
-                return false;
-        }
-        else if (!this.batchCode.equals(other.batchCode))
-            return false;
-        if (this.batchId == null) {
-            if (other.batchId != null)
-                return false;
-        }
-        else if (!this.batchId.equals(other.batchId))
-            return false;
-        if (this.currentCaseQty == null) {
-            if (other.currentCaseQty != null)
-                return false;
-        }
-        else if (!this.currentCaseQty.equals(other.currentCaseQty))
-            return false;
-        if (this.currentOtherUnitQty == null) {
-            if (other.currentOtherUnitQty != null)
-                return false;
-        }
-        else if (!this.currentOtherUnitQty.equals(other.currentOtherUnitQty))
-            return false;
-        if (this.currentPcQty == null) {
-            if (other.currentPcQty != null)
-                return false;
-        }
-        else if (!this.currentPcQty.equals(other.currentPcQty))
-            return false;
-        if (this.currentQty == null) {
-            if (other.currentQty != null)
-                return false;
-        }
-        else if (!this.currentQty.equals(other.currentQty))
-            return false;
-        if (this.operationType == null) {
-            if (other.operationType != null)
-                return false;
-        }
-        else if (!this.operationType.equals(other.operationType))
-            return false;
-        if (this.previousCaseQty == null) {
-            if (other.previousCaseQty != null)
-                return false;
-        }
-        else if (!this.previousCaseQty.equals(other.previousCaseQty))
-            return false;
-        if (this.previousOtherUnitQty == null) {
-            if (other.previousOtherUnitQty != null)
-                return false;
-        }
-        else if (!this.previousOtherUnitQty.equals(other.previousOtherUnitQty))
-            return false;
-        if (this.previousPcQty == null) {
-            if (other.previousPcQty != null)
-                return false;
-        }
-        else if (!this.previousPcQty.equals(other.previousPcQty))
-            return false;
-        if (this.previousQty == null) {
-            if (other.previousQty != null)
-                return false;
-        }
-        else if (!this.previousQty.equals(other.previousQty))
-            return false;
-        if (this.size == null) {
-            if (other.size != null)
-                return false;
-        }
-        else if (!this.size.equals(other.size))
-            return false;
-        if (this.skuCode == null) {
-            if (other.skuCode != null)
-                return false;
-        }
-        else if (!this.skuCode.equals(other.skuCode))
-            return false;
-        if (this.supplier == null) {
-            if (other.supplier != null)
-                return false;
-        }
-        else if (!this.supplier.equals(other.supplier))
-            return false;
-        if (this.transferDate == null) {
-            if (other.transferDate != null)
-                return false;
-        }
-        else if (!this.transferDate.equals(other.transferDate))
-            return false;
-        if (this.warehouseCode == null) {
-            if (other.warehouseCode != null)
-                return false;
-        }
-        else if (!this.warehouseCode.equals(other.warehouseCode))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.type == null) {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.batchCode == null) ? 0 : this.batchCode.hashCode());
-        result = prime * result + ((this.batchId == null) ? 0 : this.batchId.hashCode());
-        result = prime * result + ((this.currentCaseQty == null) ? 0 : this.currentCaseQty.hashCode());
-        result = prime * result + ((this.currentOtherUnitQty == null) ? 0 : this.currentOtherUnitQty.hashCode());
-        result = prime * result + ((this.currentPcQty == null) ? 0 : this.currentPcQty.hashCode());
-        result = prime * result + ((this.currentQty == null) ? 0 : this.currentQty.hashCode());
-        result = prime * result + ((this.operationType == null) ? 0 : this.operationType.hashCode());
-        result = prime * result + ((this.previousCaseQty == null) ? 0 : this.previousCaseQty.hashCode());
-        result = prime * result + ((this.previousOtherUnitQty == null) ? 0 : this.previousOtherUnitQty.hashCode());
-        result = prime * result + ((this.previousPcQty == null) ? 0 : this.previousPcQty.hashCode());
-        result = prime * result + ((this.previousQty == null) ? 0 : this.previousQty.hashCode());
-        result = prime * result + ((this.size == null) ? 0 : this.size.hashCode());
-        result = prime * result + ((this.skuCode == null) ? 0 : this.skuCode.hashCode());
-        result = prime * result + ((this.supplier == null) ? 0 : this.supplier.hashCode());
-        result = prime * result + ((this.transferDate == null) ? 0 : this.transferDate.hashCode());
-        result = prime * result + ((this.warehouseCode == null) ? 0 : this.warehouseCode.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        return result;
     }
 
     @Override

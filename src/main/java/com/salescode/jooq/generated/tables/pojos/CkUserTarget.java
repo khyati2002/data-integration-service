@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,32 +22,32 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Double achieved;
-    private Date endDate;
-    private JSON groupBy;
-    private String groupType;
-    private String name;
-    private Date startDate;
-    private Double target;
-    private String targetName;
-    private String targetType;
-    private String unit;
-    private String category;
-    private String channel;
-    private String loginid;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private Double        achieved;
+    private LocalDateTime endDate;
+    private JSON          groupBy;
+    private String        groupType;
+    private String        name;
+    private LocalDateTime startDate;
+    private Double        target;
+    private String        targetName;
+    private String        targetType;
+    private String        unit;
+    private String        category;
+    private String        channel;
+    private String        loginid;
+    private Byte          changed;
 
     public CkUserTarget() {}
 
@@ -84,32 +81,32 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     }
 
     public CkUserTarget(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Double achieved,
-        Date endDate,
-        JSON groupBy,
-        String groupType,
-        String name,
-        Date startDate,
-        Double target,
-        String targetName,
-        String targetType,
-        String unit,
-        String category,
-        String channel,
-        String loginid,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        Double        achieved,
+        LocalDateTime endDate,
+        JSON          groupBy,
+        String        groupType,
+        String        name,
+        LocalDateTime startDate,
+        Double        target,
+        String        targetName,
+        String        targetType,
+        String        unit,
+        String        category,
+        String        channel,
+        String        loginid,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -142,8 +139,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -172,7 +167,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -187,7 +181,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -258,7 +251,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -273,7 +265,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -288,7 +279,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -317,7 +307,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.achieved</code>.
      */
-    @NotNull
     public Double getAchieved() {
         return this.achieved;
     }
@@ -332,14 +321,14 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_user_target.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -360,7 +349,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.group_type</code>.
      */
-    @Size(max = 255)
     public String getGroupType() {
         return this.groupType;
     }
@@ -375,7 +363,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -390,21 +377,20 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_user_target.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_user_target.target</code>.
      */
-    @NotNull
     public Double getTarget() {
         return this.target;
     }
@@ -419,7 +405,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.target_name</code>.
      */
-    @Size(max = 255)
     public String getTargetName() {
         return this.targetName;
     }
@@ -434,7 +419,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.target_type</code>.
      */
-    @Size(max = 255)
     public String getTargetType() {
         return this.targetType;
     }
@@ -449,7 +433,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.unit</code>.
      */
-    @Size(max = 255)
     public String getUnit() {
         return this.unit;
     }
@@ -464,7 +447,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.category</code>.
      */
-    @Size(max = 255)
     public String getCategory() {
         return this.category;
     }
@@ -479,7 +461,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.channel</code>.
      */
-    @Size(max = 255)
     public String getChannel() {
         return this.channel;
     }
@@ -494,7 +475,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user_target.loginid</code>.
      */
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -518,207 +498,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkUserTarget other = (CkUserTarget) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.achieved == null) {
-            if (other.achieved != null)
-                return false;
-        }
-        else if (!this.achieved.equals(other.achieved))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.groupBy == null) {
-            if (other.groupBy != null)
-                return false;
-        }
-        else if (!this.groupBy.equals(other.groupBy))
-            return false;
-        if (this.groupType == null) {
-            if (other.groupType != null)
-                return false;
-        }
-        else if (!this.groupType.equals(other.groupType))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.target == null) {
-            if (other.target != null)
-                return false;
-        }
-        else if (!this.target.equals(other.target))
-            return false;
-        if (this.targetName == null) {
-            if (other.targetName != null)
-                return false;
-        }
-        else if (!this.targetName.equals(other.targetName))
-            return false;
-        if (this.targetType == null) {
-            if (other.targetType != null)
-                return false;
-        }
-        else if (!this.targetType.equals(other.targetType))
-            return false;
-        if (this.unit == null) {
-            if (other.unit != null)
-                return false;
-        }
-        else if (!this.unit.equals(other.unit))
-            return false;
-        if (this.category == null) {
-            if (other.category != null)
-                return false;
-        }
-        else if (!this.category.equals(other.category))
-            return false;
-        if (this.channel == null) {
-            if (other.channel != null)
-                return false;
-        }
-        else if (!this.channel.equals(other.channel))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.achieved == null) ? 0 : this.achieved.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.groupBy == null) ? 0 : this.groupBy.hashCode());
-        result = prime * result + ((this.groupType == null) ? 0 : this.groupType.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
-        result = prime * result + ((this.targetName == null) ? 0 : this.targetName.hashCode());
-        result = prime * result + ((this.targetType == null) ? 0 : this.targetType.hashCode());
-        result = prime * result + ((this.unit == null) ? 0 : this.unit.hashCode());
-        result = prime * result + ((this.category == null) ? 0 : this.category.hashCode());
-        result = prime * result + ((this.channel == null) ? 0 : this.channel.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

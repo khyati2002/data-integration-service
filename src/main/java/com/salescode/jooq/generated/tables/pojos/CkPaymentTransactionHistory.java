@@ -9,10 +9,8 @@ import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -24,41 +22,41 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String amount;
-    private String gateway;
-    private Date paymentDate;
-    private String paymentid;
-    private String referenceNumber;
-    private String remarks;
-    private String serviceName;
-    private String status;
-    private String statusResponse;
-    private JsonNode transactionAttributes;
-    private String transactionReferenceNumber;
-    private JsonNode transactionResponseAttributes;
-    private Date invoiceDate;
-    private String invoiceNumber;
-    private Date payByDate;
-    private String serviceProvider;
-    private String statusDescription;
-    private String transactionResponseReferenceNumber;
-    private String loginid;
+    private String          id;
+    private ActiveStatus    activeStatus;
+    private String          activeStatusReason;
+    private String          createdBy;
+    private Date            creationTime;
+    private JsonNode        extendedAttributes;
+    private String          hash;
+    private Date            lastModifiedTime;
+    private String          lob;
+    private String          modifiedBy;
+    private String          source;
+    private Integer         version;
+    private String          amount;
+    private String          gateway;
+    private LocalDateTime   paymentDate;
+    private String          paymentid;
+    private String          referenceNumber;
+    private String          remarks;
+    private String          serviceName;
+    private String          status;
+    private String          statusResponse;
+    private JsonNode        transactionAttributes;
+    private String          transactionReferenceNumber;
+    private JsonNode        transactionResponseAttributes;
+    private LocalDateTime   invoiceDate;
+    private String          invoiceNumber;
+    private LocalDateTime   payByDate;
+    private String          serviceProvider;
+    private String          statusDescription;
+    private String          transactionResponseReferenceNumber;
+    private String          loginid;
     private EnrichmentPhase phase;
-    private String orderNumber;
-    private Date orderedDate;
-    private Byte changed;
+    private String          orderNumber;
+    private LocalDateTime   orderedDate;
+    private Byte            changed;
 
     public CkPaymentTransactionHistory() {}
 
@@ -101,41 +99,41 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     }
 
     public CkPaymentTransactionHistory(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String amount,
-        String gateway,
-        Date paymentDate,
-        String paymentid,
-        String referenceNumber,
-        String remarks,
-        String serviceName,
-        String status,
-        String statusResponse,
-        JsonNode transactionAttributes,
-        String transactionReferenceNumber,
-        JsonNode transactionResponseAttributes,
-        Date invoiceDate,
-        String invoiceNumber,
-        Date payByDate,
-        String serviceProvider,
-        String statusDescription,
-        String transactionResponseReferenceNumber,
-        String loginid,
+        String          id,
+        ActiveStatus    activeStatus,
+        String          activeStatusReason,
+        String          createdBy,
+        Date            creationTime,
+        JsonNode        extendedAttributes,
+        String          hash,
+        Date            lastModifiedTime,
+        String          lob,
+        String          modifiedBy,
+        String          source,
+        Integer         version,
+        String          amount,
+        String          gateway,
+        LocalDateTime   paymentDate,
+        String          paymentid,
+        String          referenceNumber,
+        String          remarks,
+        String          serviceName,
+        String          status,
+        String          statusResponse,
+        JsonNode        transactionAttributes,
+        String          transactionReferenceNumber,
+        JsonNode        transactionResponseAttributes,
+        LocalDateTime   invoiceDate,
+        String          invoiceNumber,
+        LocalDateTime   payByDate,
+        String          serviceProvider,
+        String          statusDescription,
+        String          transactionResponseReferenceNumber,
+        String          loginid,
         EnrichmentPhase phase,
-        String orderNumber,
-        Date orderedDate,
-        Byte changed
+        String          orderNumber,
+        LocalDateTime   orderedDate,
+        Byte            changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -177,8 +175,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -208,7 +204,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
      * Getter for
      * <code>ck_payment_transaction_history.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -224,7 +219,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -299,7 +293,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -314,7 +307,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -329,7 +321,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -358,7 +349,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.amount</code>.
      */
-    @Size(max = 255)
     public String getAmount() {
         return this.amount;
     }
@@ -373,7 +363,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.gateway</code>.
      */
-    @Size(max = 255)
     public String getGateway() {
         return this.gateway;
     }
@@ -388,21 +377,20 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.payment_date</code>.
      */
-    public Date getPaymentDate() {
+    public LocalDateTime getPaymentDate() {
         return this.paymentDate;
     }
 
     /**
      * Setter for <code>ck_payment_transaction_history.payment_date</code>.
      */
-    public void setPaymentDate(Date paymentDate) {
+    public void setPaymentDate(LocalDateTime paymentDate) {
         this.paymentDate = paymentDate;
     }
 
     /**
      * Getter for <code>ck_payment_transaction_history.paymentid</code>.
      */
-    @Size(max = 255)
     public String getPaymentid() {
         return this.paymentid;
     }
@@ -417,7 +405,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.reference_number</code>.
      */
-    @Size(max = 255)
     public String getReferenceNumber() {
         return this.referenceNumber;
     }
@@ -432,7 +419,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.remarks</code>.
      */
-    @Size(max = 255)
     public String getRemarks() {
         return this.remarks;
     }
@@ -447,7 +433,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.service_name</code>.
      */
-    @Size(max = 255)
     public String getServiceName() {
         return this.serviceName;
     }
@@ -462,7 +447,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.status</code>.
      */
-    @Size(max = 255)
     public String getStatus() {
         return this.status;
     }
@@ -477,7 +461,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.status_response</code>.
      */
-    @Size(max = 255)
     public String getStatusResponse() {
         return this.statusResponse;
     }
@@ -509,7 +492,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
      * Getter for
      * <code>ck_payment_transaction_history.transaction_reference_number</code>.
      */
-    @Size(max = 255)
     public String getTransactionReferenceNumber() {
         return this.transactionReferenceNumber;
     }
@@ -541,21 +523,20 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.invoice_date</code>.
      */
-    public Date getInvoiceDate() {
+    public LocalDateTime getInvoiceDate() {
         return this.invoiceDate;
     }
 
     /**
      * Setter for <code>ck_payment_transaction_history.invoice_date</code>.
      */
-    public void setInvoiceDate(Date invoiceDate) {
+    public void setInvoiceDate(LocalDateTime invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
 
     /**
      * Getter for <code>ck_payment_transaction_history.invoice_number</code>.
      */
-    @Size(max = 255)
     public String getInvoiceNumber() {
         return this.invoiceNumber;
     }
@@ -570,21 +551,20 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.pay_by_date</code>.
      */
-    public Date getPayByDate() {
+    public LocalDateTime getPayByDate() {
         return this.payByDate;
     }
 
     /**
      * Setter for <code>ck_payment_transaction_history.pay_by_date</code>.
      */
-    public void setPayByDate(Date payByDate) {
+    public void setPayByDate(LocalDateTime payByDate) {
         this.payByDate = payByDate;
     }
 
     /**
      * Getter for <code>ck_payment_transaction_history.service_provider</code>.
      */
-    @Size(max = 255)
     public String getServiceProvider() {
         return this.serviceProvider;
     }
@@ -600,7 +580,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
      * Getter for
      * <code>ck_payment_transaction_history.status_description</code>.
      */
-    @Size(max = 255)
     public String getStatusDescription() {
         return this.statusDescription;
     }
@@ -617,7 +596,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
      * Getter for
      * <code>ck_payment_transaction_history.transaction_response_reference_number</code>.
      */
-    @Size(max = 255)
     public String getTransactionResponseReferenceNumber() {
         return this.transactionResponseReferenceNumber;
     }
@@ -633,7 +611,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.loginid</code>.
      */
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -662,7 +639,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.order_number</code>.
      */
-    @Size(max = 255)
     public String getOrderNumber() {
         return this.orderNumber;
     }
@@ -677,14 +653,14 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_payment_transaction_history.ordered_date</code>.
      */
-    public Date getOrderedDate() {
+    public LocalDateTime getOrderedDate() {
         return this.orderedDate;
     }
 
     /**
      * Setter for <code>ck_payment_transaction_history.ordered_date</code>.
      */
-    public void setOrderedDate(Date orderedDate) {
+    public void setOrderedDate(LocalDateTime orderedDate) {
         this.orderedDate = orderedDate;
     }
 
@@ -700,270 +676,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkPaymentTransactionHistory other = (CkPaymentTransactionHistory) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.amount == null) {
-            if (other.amount != null)
-                return false;
-        }
-        else if (!this.amount.equals(other.amount))
-            return false;
-        if (this.gateway == null) {
-            if (other.gateway != null)
-                return false;
-        }
-        else if (!this.gateway.equals(other.gateway))
-            return false;
-        if (this.paymentDate == null) {
-            if (other.paymentDate != null)
-                return false;
-        }
-        else if (!this.paymentDate.equals(other.paymentDate))
-            return false;
-        if (this.paymentid == null) {
-            if (other.paymentid != null)
-                return false;
-        }
-        else if (!this.paymentid.equals(other.paymentid))
-            return false;
-        if (this.referenceNumber == null) {
-            if (other.referenceNumber != null)
-                return false;
-        }
-        else if (!this.referenceNumber.equals(other.referenceNumber))
-            return false;
-        if (this.remarks == null) {
-            if (other.remarks != null)
-                return false;
-        }
-        else if (!this.remarks.equals(other.remarks))
-            return false;
-        if (this.serviceName == null) {
-            if (other.serviceName != null)
-                return false;
-        }
-        else if (!this.serviceName.equals(other.serviceName))
-            return false;
-        if (this.status == null) {
-            if (other.status != null)
-                return false;
-        }
-        else if (!this.status.equals(other.status))
-            return false;
-        if (this.statusResponse == null) {
-            if (other.statusResponse != null)
-                return false;
-        }
-        else if (!this.statusResponse.equals(other.statusResponse))
-            return false;
-        if (this.transactionAttributes == null) {
-            if (other.transactionAttributes != null)
-                return false;
-        }
-        else if (!this.transactionAttributes.equals(other.transactionAttributes))
-            return false;
-        if (this.transactionReferenceNumber == null) {
-            if (other.transactionReferenceNumber != null)
-                return false;
-        }
-        else if (!this.transactionReferenceNumber.equals(other.transactionReferenceNumber))
-            return false;
-        if (this.transactionResponseAttributes == null) {
-            if (other.transactionResponseAttributes != null)
-                return false;
-        }
-        else if (!this.transactionResponseAttributes.equals(other.transactionResponseAttributes))
-            return false;
-        if (this.invoiceDate == null) {
-            if (other.invoiceDate != null)
-                return false;
-        }
-        else if (!this.invoiceDate.equals(other.invoiceDate))
-            return false;
-        if (this.invoiceNumber == null) {
-            if (other.invoiceNumber != null)
-                return false;
-        }
-        else if (!this.invoiceNumber.equals(other.invoiceNumber))
-            return false;
-        if (this.payByDate == null) {
-            if (other.payByDate != null)
-                return false;
-        }
-        else if (!this.payByDate.equals(other.payByDate))
-            return false;
-        if (this.serviceProvider == null) {
-            if (other.serviceProvider != null)
-                return false;
-        }
-        else if (!this.serviceProvider.equals(other.serviceProvider))
-            return false;
-        if (this.statusDescription == null) {
-            if (other.statusDescription != null)
-                return false;
-        }
-        else if (!this.statusDescription.equals(other.statusDescription))
-            return false;
-        if (this.transactionResponseReferenceNumber == null) {
-            if (other.transactionResponseReferenceNumber != null)
-                return false;
-        }
-        else if (!this.transactionResponseReferenceNumber.equals(other.transactionResponseReferenceNumber))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.phase == null) {
-            if (other.phase != null)
-                return false;
-        }
-        else if (!this.phase.equals(other.phase))
-            return false;
-        if (this.orderNumber == null) {
-            if (other.orderNumber != null)
-                return false;
-        }
-        else if (!this.orderNumber.equals(other.orderNumber))
-            return false;
-        if (this.orderedDate == null) {
-            if (other.orderedDate != null)
-                return false;
-        }
-        else if (!this.orderedDate.equals(other.orderedDate))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.amount == null) ? 0 : this.amount.hashCode());
-        result = prime * result + ((this.gateway == null) ? 0 : this.gateway.hashCode());
-        result = prime * result + ((this.paymentDate == null) ? 0 : this.paymentDate.hashCode());
-        result = prime * result + ((this.paymentid == null) ? 0 : this.paymentid.hashCode());
-        result = prime * result + ((this.referenceNumber == null) ? 0 : this.referenceNumber.hashCode());
-        result = prime * result + ((this.remarks == null) ? 0 : this.remarks.hashCode());
-        result = prime * result + ((this.serviceName == null) ? 0 : this.serviceName.hashCode());
-        result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
-        result = prime * result + ((this.statusResponse == null) ? 0 : this.statusResponse.hashCode());
-        result = prime * result + ((this.transactionAttributes == null) ? 0 : this.transactionAttributes.hashCode());
-        result = prime * result + ((this.transactionReferenceNumber == null) ? 0 : this.transactionReferenceNumber.hashCode());
-        result = prime * result + ((this.transactionResponseAttributes == null) ? 0 : this.transactionResponseAttributes.hashCode());
-        result = prime * result + ((this.invoiceDate == null) ? 0 : this.invoiceDate.hashCode());
-        result = prime * result + ((this.invoiceNumber == null) ? 0 : this.invoiceNumber.hashCode());
-        result = prime * result + ((this.payByDate == null) ? 0 : this.payByDate.hashCode());
-        result = prime * result + ((this.serviceProvider == null) ? 0 : this.serviceProvider.hashCode());
-        result = prime * result + ((this.statusDescription == null) ? 0 : this.statusDescription.hashCode());
-        result = prime * result + ((this.transactionResponseReferenceNumber == null) ? 0 : this.transactionResponseReferenceNumber.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.phase == null) ? 0 : this.phase.hashCode());
-        result = prime * result + ((this.orderNumber == null) ? 0 : this.orderNumber.hashCode());
-        result = prime * result + ((this.orderedDate == null) ? 0 : this.orderedDate.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

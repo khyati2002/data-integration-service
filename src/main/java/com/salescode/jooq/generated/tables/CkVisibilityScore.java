@@ -11,35 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -126,7 +106,7 @@ public class CkVisibilityScore extends TableImpl<Record> {
     /**
      * The column <code>ck_visibility_score.end_date</code>.
      */
-    public final TableField<Record, Date> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_visibility_score.hierarchy</code>.
@@ -136,7 +116,7 @@ public class CkVisibilityScore extends TableImpl<Record> {
     /**
      * The column <code>ck_visibility_score.start_date</code>.
      */
-    public final TableField<Record, Date> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_visibility_score.type</code>.
@@ -169,11 +149,11 @@ public class CkVisibilityScore extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkVisibilityScore(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkVisibilityScore(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkVisibilityScore(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -197,37 +177,8 @@ public class CkVisibilityScore extends TableImpl<Record> {
         this(DSL.name("ck_visibility_score"), null);
     }
 
-    public <O extends Record> CkVisibilityScore(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_VISIBILITY_SCORE);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkVisibilityScorePath extends CkVisibilityScore implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkVisibilityScorePath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkVisibilityScorePath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkVisibilityScorePath as(String alias) {
-            return new CkVisibilityScorePath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkVisibilityScorePath as(Name alias) {
-            return new CkVisibilityScorePath(alias, this);
-        }
-
-        @Override
-        public CkVisibilityScorePath as(Table<?> alias) {
-            return new CkVisibilityScorePath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkVisibilityScore(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_VISIBILITY_SCORE);
     }
 
     @Override
@@ -245,39 +196,37 @@ public class CkVisibilityScore extends TableImpl<Record> {
         return Arrays.asList(Keys.FKEPEJ358E64A32E569B9NAKY96, Keys.FKILDAXB9456L789N7MVN20J8H5, Keys.FK8HNMB3RQ0U7AOJN385S0GY4ES);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKEPEJ358E64A32E569B9NAKY96, null);
+            _ckLocation = new CkLocation(this, Keys.FKEPEJ358E64A32E569B9NAKY96);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKILDAXB9456L789N7MVN20J8H5, null);
+            _ckUser = new CkUser(this, Keys.FKILDAXB9456L789N7MVN20J8H5);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FK8HNMB3RQ0U7AOJN385S0GY4ES, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FK8HNMB3RQ0U7AOJN385S0GY4ES);
 
         return _ckOutletDetails;
     }
@@ -290,11 +239,6 @@ public class CkVisibilityScore extends TableImpl<Record> {
     @Override
     public CkVisibilityScore as(Name alias) {
         return new CkVisibilityScore(alias, this);
-    }
-
-    @Override
-    public CkVisibilityScore as(Table<?> alias) {
-        return new CkVisibilityScore(alias.getQualifiedName(), this);
     }
 
     /**
@@ -311,97 +255,5 @@ public class CkVisibilityScore extends TableImpl<Record> {
     @Override
     public CkVisibilityScore rename(Name name) {
         return new CkVisibilityScore(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkVisibilityScore rename(Table<?> name) {
-        return new CkVisibilityScore(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkVisibilityScore where(Condition condition) {
-        return new CkVisibilityScore(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkVisibilityScore where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkVisibilityScore where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkVisibilityScore where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkVisibilityScore where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkVisibilityScore where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkVisibilityScore where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkVisibilityScore where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkVisibilityScore whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkVisibilityScore whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

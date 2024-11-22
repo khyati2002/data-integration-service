@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,36 +20,36 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String blobKey;
-    private String blobKeyA;
-    private String blobKeyB;
-    private String blobKeyC;
-    private String blobKeyF;
-    private String blobKeyL;
-    private Integer capacity;
-    private Integer facing;
-    private String fileName;
-    private String fileNameA;
-    private String fileNameB;
-    private String fileNameC;
-    private String fileNameF;
-    private String fileNameL;
-    private String itemId;
-    private String rackName;
-    private Integer shelves;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       blobKey;
+    private String       blobKeyA;
+    private String       blobKeyB;
+    private String       blobKeyC;
+    private String       blobKeyF;
+    private String       blobKeyL;
+    private Integer      capacity;
+    private Integer      facing;
+    private String       fileName;
+    private String       fileNameA;
+    private String       fileNameB;
+    private String       fileNameC;
+    private String       fileNameF;
+    private String       fileNameL;
+    private String       itemId;
+    private String       rackName;
+    private Integer      shelves;
 
     public CkItemwiseRackdetail() {}
 
@@ -90,36 +87,36 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     }
 
     public CkItemwiseRackdetail(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String blobKey,
-        String blobKeyA,
-        String blobKeyB,
-        String blobKeyC,
-        String blobKeyF,
-        String blobKeyL,
-        Integer capacity,
-        Integer facing,
-        String fileName,
-        String fileNameA,
-        String fileNameB,
-        String fileNameC,
-        String fileNameF,
-        String fileNameL,
-        String itemId,
-        String rackName,
-        Integer shelves
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       blobKey,
+        String       blobKeyA,
+        String       blobKeyB,
+        String       blobKeyC,
+        String       blobKeyF,
+        String       blobKeyL,
+        Integer      capacity,
+        Integer      facing,
+        String       fileName,
+        String       fileNameA,
+        String       fileNameB,
+        String       fileNameC,
+        String       fileNameF,
+        String       fileNameL,
+        String       itemId,
+        String       rackName,
+        Integer      shelves
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -156,8 +153,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -186,7 +181,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -215,7 +209,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -286,7 +279,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -301,7 +293,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -316,7 +307,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -345,7 +335,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.blob_key</code>.
      */
-    @Size(max = 255)
     public String getBlobKey() {
         return this.blobKey;
     }
@@ -360,7 +349,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.blob_key_a</code>.
      */
-    @Size(max = 255)
     public String getBlobKeyA() {
         return this.blobKeyA;
     }
@@ -375,7 +363,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.blob_key_b</code>.
      */
-    @Size(max = 255)
     public String getBlobKeyB() {
         return this.blobKeyB;
     }
@@ -390,7 +377,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.blob_key_c</code>.
      */
-    @Size(max = 255)
     public String getBlobKeyC() {
         return this.blobKeyC;
     }
@@ -405,7 +391,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.blob_key_f</code>.
      */
-    @Size(max = 255)
     public String getBlobKeyF() {
         return this.blobKeyF;
     }
@@ -420,7 +405,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.blob_key_l</code>.
      */
-    @Size(max = 255)
     public String getBlobKeyL() {
         return this.blobKeyL;
     }
@@ -435,7 +419,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.capacity</code>.
      */
-    @NotNull
     public Integer getCapacity() {
         return this.capacity;
     }
@@ -450,7 +433,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.facing</code>.
      */
-    @NotNull
     public Integer getFacing() {
         return this.facing;
     }
@@ -465,7 +447,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.file_name</code>.
      */
-    @Size(max = 255)
     public String getFileName() {
         return this.fileName;
     }
@@ -480,7 +461,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.file_name_a</code>.
      */
-    @Size(max = 255)
     public String getFileNameA() {
         return this.fileNameA;
     }
@@ -495,7 +475,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.file_name_b</code>.
      */
-    @Size(max = 255)
     public String getFileNameB() {
         return this.fileNameB;
     }
@@ -510,7 +489,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.file_name_c</code>.
      */
-    @Size(max = 255)
     public String getFileNameC() {
         return this.fileNameC;
     }
@@ -525,7 +503,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.file_name_f</code>.
      */
-    @Size(max = 255)
     public String getFileNameF() {
         return this.fileNameF;
     }
@@ -540,7 +517,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.file_name_l</code>.
      */
-    @Size(max = 255)
     public String getFileNameL() {
         return this.fileNameL;
     }
@@ -555,7 +531,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.item_id</code>.
      */
-    @Size(max = 255)
     public String getItemId() {
         return this.itemId;
     }
@@ -570,7 +545,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.rack_name</code>.
      */
-    @Size(max = 255)
     public String getRackName() {
         return this.rackName;
     }
@@ -585,7 +559,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
     /**
      * Getter for <code>ck_itemwise_rackdetail.shelves</code>.
      */
-    @NotNull
     public Integer getShelves() {
         return this.shelves;
     }
@@ -595,235 +568,6 @@ public class CkItemwiseRackdetail extends CommonDataModel implements Serializabl
      */
     public void setShelves(Integer shelves) {
         this.shelves = shelves;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkItemwiseRackdetail other = (CkItemwiseRackdetail) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.blobKey == null) {
-            if (other.blobKey != null)
-                return false;
-        }
-        else if (!this.blobKey.equals(other.blobKey))
-            return false;
-        if (this.blobKeyA == null) {
-            if (other.blobKeyA != null)
-                return false;
-        }
-        else if (!this.blobKeyA.equals(other.blobKeyA))
-            return false;
-        if (this.blobKeyB == null) {
-            if (other.blobKeyB != null)
-                return false;
-        }
-        else if (!this.blobKeyB.equals(other.blobKeyB))
-            return false;
-        if (this.blobKeyC == null) {
-            if (other.blobKeyC != null)
-                return false;
-        }
-        else if (!this.blobKeyC.equals(other.blobKeyC))
-            return false;
-        if (this.blobKeyF == null) {
-            if (other.blobKeyF != null)
-                return false;
-        }
-        else if (!this.blobKeyF.equals(other.blobKeyF))
-            return false;
-        if (this.blobKeyL == null) {
-            if (other.blobKeyL != null)
-                return false;
-        }
-        else if (!this.blobKeyL.equals(other.blobKeyL))
-            return false;
-        if (this.capacity == null) {
-            if (other.capacity != null)
-                return false;
-        }
-        else if (!this.capacity.equals(other.capacity))
-            return false;
-        if (this.facing == null) {
-            if (other.facing != null)
-                return false;
-        }
-        else if (!this.facing.equals(other.facing))
-            return false;
-        if (this.fileName == null) {
-            if (other.fileName != null)
-                return false;
-        }
-        else if (!this.fileName.equals(other.fileName))
-            return false;
-        if (this.fileNameA == null) {
-            if (other.fileNameA != null)
-                return false;
-        }
-        else if (!this.fileNameA.equals(other.fileNameA))
-            return false;
-        if (this.fileNameB == null) {
-            if (other.fileNameB != null)
-                return false;
-        }
-        else if (!this.fileNameB.equals(other.fileNameB))
-            return false;
-        if (this.fileNameC == null) {
-            if (other.fileNameC != null)
-                return false;
-        }
-        else if (!this.fileNameC.equals(other.fileNameC))
-            return false;
-        if (this.fileNameF == null) {
-            if (other.fileNameF != null)
-                return false;
-        }
-        else if (!this.fileNameF.equals(other.fileNameF))
-            return false;
-        if (this.fileNameL == null) {
-            if (other.fileNameL != null)
-                return false;
-        }
-        else if (!this.fileNameL.equals(other.fileNameL))
-            return false;
-        if (this.itemId == null) {
-            if (other.itemId != null)
-                return false;
-        }
-        else if (!this.itemId.equals(other.itemId))
-            return false;
-        if (this.rackName == null) {
-            if (other.rackName != null)
-                return false;
-        }
-        else if (!this.rackName.equals(other.rackName))
-            return false;
-        if (this.shelves == null) {
-            if (other.shelves != null)
-                return false;
-        }
-        else if (!this.shelves.equals(other.shelves))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.blobKey == null) ? 0 : this.blobKey.hashCode());
-        result = prime * result + ((this.blobKeyA == null) ? 0 : this.blobKeyA.hashCode());
-        result = prime * result + ((this.blobKeyB == null) ? 0 : this.blobKeyB.hashCode());
-        result = prime * result + ((this.blobKeyC == null) ? 0 : this.blobKeyC.hashCode());
-        result = prime * result + ((this.blobKeyF == null) ? 0 : this.blobKeyF.hashCode());
-        result = prime * result + ((this.blobKeyL == null) ? 0 : this.blobKeyL.hashCode());
-        result = prime * result + ((this.capacity == null) ? 0 : this.capacity.hashCode());
-        result = prime * result + ((this.facing == null) ? 0 : this.facing.hashCode());
-        result = prime * result + ((this.fileName == null) ? 0 : this.fileName.hashCode());
-        result = prime * result + ((this.fileNameA == null) ? 0 : this.fileNameA.hashCode());
-        result = prime * result + ((this.fileNameB == null) ? 0 : this.fileNameB.hashCode());
-        result = prime * result + ((this.fileNameC == null) ? 0 : this.fileNameC.hashCode());
-        result = prime * result + ((this.fileNameF == null) ? 0 : this.fileNameF.hashCode());
-        result = prime * result + ((this.fileNameL == null) ? 0 : this.fileNameL.hashCode());
-        result = prime * result + ((this.itemId == null) ? 0 : this.itemId.hashCode());
-        result = prime * result + ((this.rackName == null) ? 0 : this.rackName.hashCode());
-        result = prime * result + ((this.shelves == null) ? 0 : this.shelves.hashCode());
-        return result;
     }
 
     @Override

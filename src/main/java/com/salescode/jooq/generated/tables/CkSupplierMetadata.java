@@ -11,33 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -152,11 +133,11 @@ public class CkSupplierMetadata extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkSupplierMetadata(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkSupplierMetadata(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkSupplierMetadata(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -180,37 +161,8 @@ public class CkSupplierMetadata extends TableImpl<Record> {
         this(DSL.name("ck_supplier_metadata"), null);
     }
 
-    public <O extends Record> CkSupplierMetadata(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_SUPPLIER_METADATA);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkSupplierMetadataPath extends CkSupplierMetadata implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkSupplierMetadataPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkSupplierMetadataPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkSupplierMetadataPath as(String alias) {
-            return new CkSupplierMetadataPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkSupplierMetadataPath as(Name alias) {
-            return new CkSupplierMetadataPath(alias, this);
-        }
-
-        @Override
-        public CkSupplierMetadataPath as(Table<?> alias) {
-            return new CkSupplierMetadataPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkSupplierMetadata(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_SUPPLIER_METADATA);
     }
 
     @Override
@@ -228,14 +180,14 @@ public class CkSupplierMetadata extends TableImpl<Record> {
         return Arrays.asList(Keys.FKQ7KA2IJO4849CNW20G72CGCQU);
     }
 
-    private transient CkUserPath _ckUser;
+    private transient CkUser _ckUser;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FKQ7KA2IJO4849CNW20G72CGCQU, null);
+            _ckUser = new CkUser(this, Keys.FKQ7KA2IJO4849CNW20G72CGCQU);
 
         return _ckUser;
     }
@@ -248,11 +200,6 @@ public class CkSupplierMetadata extends TableImpl<Record> {
     @Override
     public CkSupplierMetadata as(Name alias) {
         return new CkSupplierMetadata(alias, this);
-    }
-
-    @Override
-    public CkSupplierMetadata as(Table<?> alias) {
-        return new CkSupplierMetadata(alias.getQualifiedName(), this);
     }
 
     /**
@@ -269,97 +216,5 @@ public class CkSupplierMetadata extends TableImpl<Record> {
     @Override
     public CkSupplierMetadata rename(Name name) {
         return new CkSupplierMetadata(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkSupplierMetadata rename(Table<?> name) {
-        return new CkSupplierMetadata(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSupplierMetadata where(Condition condition) {
-        return new CkSupplierMetadata(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSupplierMetadata where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSupplierMetadata where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSupplierMetadata where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSupplierMetadata where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSupplierMetadata where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSupplierMetadata where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSupplierMetadata where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSupplierMetadata whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSupplierMetadata whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

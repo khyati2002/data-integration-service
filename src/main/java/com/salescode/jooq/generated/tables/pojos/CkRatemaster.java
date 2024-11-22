@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,38 +21,38 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String approvedBy;
-    private String approvedRemarks;
-    private String city;
-    private Double da;
-    private String designation;
-    private Double distance;
-    private Date fromDate;
-    private String fromTownCode;
-    private String fromTownName;
-    private Double newTownSearch;
-    private Double nightAllowance;
-    private Double rate;
-    private String routeCode;
-    private String routeName;
-    private String status;
-    private Double ta;
-    private Date toDate;
-    private String toTownCode;
-    private String toTownName;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        approvedBy;
+    private String        approvedRemarks;
+    private String        city;
+    private Double        da;
+    private String        designation;
+    private Double        distance;
+    private LocalDateTime fromDate;
+    private String        fromTownCode;
+    private String        fromTownName;
+    private Double        newTownSearch;
+    private Double        nightAllowance;
+    private Double        rate;
+    private String        routeCode;
+    private String        routeName;
+    private String        status;
+    private Double        ta;
+    private LocalDateTime toDate;
+    private String        toTownCode;
+    private String        toTownName;
+    private Byte          changed;
 
     public CkRatemaster() {}
 
@@ -94,38 +92,38 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     }
 
     public CkRatemaster(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String approvedBy,
-        String approvedRemarks,
-        String city,
-        Double da,
-        String designation,
-        Double distance,
-        Date fromDate,
-        String fromTownCode,
-        String fromTownName,
-        Double newTownSearch,
-        Double nightAllowance,
-        Double rate,
-        String routeCode,
-        String routeName,
-        String status,
-        Double ta,
-        Date toDate,
-        String toTownCode,
-        String toTownName,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        approvedBy,
+        String        approvedRemarks,
+        String        city,
+        Double        da,
+        String        designation,
+        Double        distance,
+        LocalDateTime fromDate,
+        String        fromTownCode,
+        String        fromTownName,
+        Double        newTownSearch,
+        Double        nightAllowance,
+        Double        rate,
+        String        routeCode,
+        String        routeName,
+        String        status,
+        Double        ta,
+        LocalDateTime toDate,
+        String        toTownCode,
+        String        toTownName,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -164,8 +162,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -194,7 +190,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -209,7 +204,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -280,7 +274,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -295,7 +288,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -310,7 +302,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -339,7 +330,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.approved_by</code>.
      */
-    @Size(max = 255)
     public String getApprovedBy() {
         return this.approvedBy;
     }
@@ -354,7 +344,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.approved_remarks</code>.
      */
-    @Size(max = 255)
     public String getApprovedRemarks() {
         return this.approvedRemarks;
     }
@@ -369,7 +358,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.city</code>.
      */
-    @Size(max = 255)
     public String getCity() {
         return this.city;
     }
@@ -384,7 +372,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.da</code>.
      */
-    @NotNull
     public Double getDa() {
         return this.da;
     }
@@ -399,7 +386,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.designation</code>.
      */
-    @Size(max = 255)
     public String getDesignation() {
         return this.designation;
     }
@@ -414,7 +400,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.distance</code>.
      */
-    @NotNull
     public Double getDistance() {
         return this.distance;
     }
@@ -429,22 +414,20 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.from_date</code>.
      */
-    @NotNull
-    public Date getFromDate() {
+    public LocalDateTime getFromDate() {
         return this.fromDate;
     }
 
     /**
      * Setter for <code>ck_ratemaster.from_date</code>.
      */
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
 
     /**
      * Getter for <code>ck_ratemaster.from_town_code</code>.
      */
-    @Size(max = 255)
     public String getFromTownCode() {
         return this.fromTownCode;
     }
@@ -459,7 +442,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.from_town_name</code>.
      */
-    @Size(max = 255)
     public String getFromTownName() {
         return this.fromTownName;
     }
@@ -474,7 +456,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.new_town_search</code>.
      */
-    @NotNull
     public Double getNewTownSearch() {
         return this.newTownSearch;
     }
@@ -489,7 +470,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.night_allowance</code>.
      */
-    @NotNull
     public Double getNightAllowance() {
         return this.nightAllowance;
     }
@@ -504,7 +484,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.rate</code>.
      */
-    @NotNull
     public Double getRate() {
         return this.rate;
     }
@@ -519,7 +498,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.route_code</code>.
      */
-    @Size(max = 255)
     public String getRouteCode() {
         return this.routeCode;
     }
@@ -534,7 +512,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.route_name</code>.
      */
-    @Size(max = 255)
     public String getRouteName() {
         return this.routeName;
     }
@@ -549,7 +526,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.status</code>.
      */
-    @Size(max = 255)
     public String getStatus() {
         return this.status;
     }
@@ -564,7 +540,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.ta</code>.
      */
-    @NotNull
     public Double getTa() {
         return this.ta;
     }
@@ -579,21 +554,20 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.to_date</code>.
      */
-    public Date getToDate() {
+    public LocalDateTime getToDate() {
         return this.toDate;
     }
 
     /**
      * Setter for <code>ck_ratemaster.to_date</code>.
      */
-    public void setToDate(Date toDate) {
+    public void setToDate(LocalDateTime toDate) {
         this.toDate = toDate;
     }
 
     /**
      * Getter for <code>ck_ratemaster.to_town_code</code>.
      */
-    @Size(max = 255)
     public String getToTownCode() {
         return this.toTownCode;
     }
@@ -608,7 +582,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_ratemaster.to_town_name</code>.
      */
-    @Size(max = 255)
     public String getToTownName() {
         return this.toTownName;
     }
@@ -632,249 +605,6 @@ public class CkRatemaster extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkRatemaster other = (CkRatemaster) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.approvedBy == null) {
-            if (other.approvedBy != null)
-                return false;
-        }
-        else if (!this.approvedBy.equals(other.approvedBy))
-            return false;
-        if (this.approvedRemarks == null) {
-            if (other.approvedRemarks != null)
-                return false;
-        }
-        else if (!this.approvedRemarks.equals(other.approvedRemarks))
-            return false;
-        if (this.city == null) {
-            if (other.city != null)
-                return false;
-        }
-        else if (!this.city.equals(other.city))
-            return false;
-        if (this.da == null) {
-            if (other.da != null)
-                return false;
-        }
-        else if (!this.da.equals(other.da))
-            return false;
-        if (this.designation == null) {
-            if (other.designation != null)
-                return false;
-        }
-        else if (!this.designation.equals(other.designation))
-            return false;
-        if (this.distance == null) {
-            if (other.distance != null)
-                return false;
-        }
-        else if (!this.distance.equals(other.distance))
-            return false;
-        if (this.fromDate == null) {
-            if (other.fromDate != null)
-                return false;
-        }
-        else if (!this.fromDate.equals(other.fromDate))
-            return false;
-        if (this.fromTownCode == null) {
-            if (other.fromTownCode != null)
-                return false;
-        }
-        else if (!this.fromTownCode.equals(other.fromTownCode))
-            return false;
-        if (this.fromTownName == null) {
-            if (other.fromTownName != null)
-                return false;
-        }
-        else if (!this.fromTownName.equals(other.fromTownName))
-            return false;
-        if (this.newTownSearch == null) {
-            if (other.newTownSearch != null)
-                return false;
-        }
-        else if (!this.newTownSearch.equals(other.newTownSearch))
-            return false;
-        if (this.nightAllowance == null) {
-            if (other.nightAllowance != null)
-                return false;
-        }
-        else if (!this.nightAllowance.equals(other.nightAllowance))
-            return false;
-        if (this.rate == null) {
-            if (other.rate != null)
-                return false;
-        }
-        else if (!this.rate.equals(other.rate))
-            return false;
-        if (this.routeCode == null) {
-            if (other.routeCode != null)
-                return false;
-        }
-        else if (!this.routeCode.equals(other.routeCode))
-            return false;
-        if (this.routeName == null) {
-            if (other.routeName != null)
-                return false;
-        }
-        else if (!this.routeName.equals(other.routeName))
-            return false;
-        if (this.status == null) {
-            if (other.status != null)
-                return false;
-        }
-        else if (!this.status.equals(other.status))
-            return false;
-        if (this.ta == null) {
-            if (other.ta != null)
-                return false;
-        }
-        else if (!this.ta.equals(other.ta))
-            return false;
-        if (this.toDate == null) {
-            if (other.toDate != null)
-                return false;
-        }
-        else if (!this.toDate.equals(other.toDate))
-            return false;
-        if (this.toTownCode == null) {
-            if (other.toTownCode != null)
-                return false;
-        }
-        else if (!this.toTownCode.equals(other.toTownCode))
-            return false;
-        if (this.toTownName == null) {
-            if (other.toTownName != null)
-                return false;
-        }
-        else if (!this.toTownName.equals(other.toTownName))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.approvedBy == null) ? 0 : this.approvedBy.hashCode());
-        result = prime * result + ((this.approvedRemarks == null) ? 0 : this.approvedRemarks.hashCode());
-        result = prime * result + ((this.city == null) ? 0 : this.city.hashCode());
-        result = prime * result + ((this.da == null) ? 0 : this.da.hashCode());
-        result = prime * result + ((this.designation == null) ? 0 : this.designation.hashCode());
-        result = prime * result + ((this.distance == null) ? 0 : this.distance.hashCode());
-        result = prime * result + ((this.fromDate == null) ? 0 : this.fromDate.hashCode());
-        result = prime * result + ((this.fromTownCode == null) ? 0 : this.fromTownCode.hashCode());
-        result = prime * result + ((this.fromTownName == null) ? 0 : this.fromTownName.hashCode());
-        result = prime * result + ((this.newTownSearch == null) ? 0 : this.newTownSearch.hashCode());
-        result = prime * result + ((this.nightAllowance == null) ? 0 : this.nightAllowance.hashCode());
-        result = prime * result + ((this.rate == null) ? 0 : this.rate.hashCode());
-        result = prime * result + ((this.routeCode == null) ? 0 : this.routeCode.hashCode());
-        result = prime * result + ((this.routeName == null) ? 0 : this.routeName.hashCode());
-        result = prime * result + ((this.status == null) ? 0 : this.status.hashCode());
-        result = prime * result + ((this.ta == null) ? 0 : this.ta.hashCode());
-        result = prime * result + ((this.toDate == null) ? 0 : this.toDate.hashCode());
-        result = prime * result + ((this.toTownCode == null) ? 0 : this.toTownCode.hashCode());
-        result = prime * result + ((this.toTownName == null) ? 0 : this.toTownName.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

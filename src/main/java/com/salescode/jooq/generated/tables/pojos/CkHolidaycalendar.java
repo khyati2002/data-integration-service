@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,25 +21,25 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Integer currentMonth;
-    private Integer currentMonthHoliday;
-    private String description;
-    private String pjpPlan;
-    private String state;
-    private Date visitDate;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private Integer       currentMonth;
+    private Integer       currentMonthHoliday;
+    private String        description;
+    private String        pjpPlan;
+    private String        state;
+    private LocalDateTime visitDate;
+    private Byte          changed;
 
     public CkHolidaycalendar() {}
 
@@ -68,25 +66,25 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     }
 
     public CkHolidaycalendar(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Integer currentMonth,
-        Integer currentMonthHoliday,
-        String description,
-        String pjpPlan,
-        String state,
-        Date visitDate,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        Integer       currentMonth,
+        Integer       currentMonthHoliday,
+        String        description,
+        String        pjpPlan,
+        String        state,
+        LocalDateTime visitDate,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -112,8 +110,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -142,7 +138,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -157,7 +152,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -228,7 +222,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -243,7 +236,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -258,7 +250,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -287,7 +278,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.current_month</code>.
      */
-    @NotNull
     public Integer getCurrentMonth() {
         return this.currentMonth;
     }
@@ -302,7 +292,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.current_month_holiday</code>.
      */
-    @NotNull
     public Integer getCurrentMonthHoliday() {
         return this.currentMonthHoliday;
     }
@@ -317,7 +306,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.description</code>.
      */
-    @Size(max = 255)
     public String getDescription() {
         return this.description;
     }
@@ -332,7 +320,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.pjp_plan</code>.
      */
-    @Size(max = 255)
     public String getPjpPlan() {
         return this.pjpPlan;
     }
@@ -347,7 +334,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.state</code>.
      */
-    @Size(max = 255)
     public String getState() {
         return this.state;
     }
@@ -362,15 +348,14 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_holidaycalendar.visit_date</code>.
      */
-    @NotNull
-    public Date getVisitDate() {
+    public LocalDateTime getVisitDate() {
         return this.visitDate;
     }
 
     /**
      * Setter for <code>ck_holidaycalendar.visit_date</code>.
      */
-    public void setVisitDate(Date visitDate) {
+    public void setVisitDate(LocalDateTime visitDate) {
         this.visitDate = visitDate;
     }
 
@@ -386,158 +371,6 @@ public class CkHolidaycalendar extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkHolidaycalendar other = (CkHolidaycalendar) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.currentMonth == null) {
-            if (other.currentMonth != null)
-                return false;
-        }
-        else if (!this.currentMonth.equals(other.currentMonth))
-            return false;
-        if (this.currentMonthHoliday == null) {
-            if (other.currentMonthHoliday != null)
-                return false;
-        }
-        else if (!this.currentMonthHoliday.equals(other.currentMonthHoliday))
-            return false;
-        if (this.description == null) {
-            if (other.description != null)
-                return false;
-        }
-        else if (!this.description.equals(other.description))
-            return false;
-        if (this.pjpPlan == null) {
-            if (other.pjpPlan != null)
-                return false;
-        }
-        else if (!this.pjpPlan.equals(other.pjpPlan))
-            return false;
-        if (this.state == null) {
-            if (other.state != null)
-                return false;
-        }
-        else if (!this.state.equals(other.state))
-            return false;
-        if (this.visitDate == null) {
-            if (other.visitDate != null)
-                return false;
-        }
-        else if (!this.visitDate.equals(other.visitDate))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.currentMonth == null) ? 0 : this.currentMonth.hashCode());
-        result = prime * result + ((this.currentMonthHoliday == null) ? 0 : this.currentMonthHoliday.hashCode());
-        result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-        result = prime * result + ((this.pjpPlan == null) ? 0 : this.pjpPlan.hashCode());
-        result = prime * result + ((this.state == null) ? 0 : this.state.hashCode());
-        result = prime * result + ((this.visitDate == null) ? 0 : this.visitDate.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

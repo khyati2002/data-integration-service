@@ -11,29 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -123,19 +108,9 @@ public class CkGrnInfo extends TableImpl<Record> {
     public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>ck_grn_info.grn_number</code>.
-     */
-    public final TableField<Record, String> GRN_NUMBER = createField(DSL.name("grn_number"), SQLDataType.VARCHAR(200).nullable(false), this, "");
-
-    /**
      * The column <code>ck_grn_info.grn_status</code>.
      */
     public final TableField<Record, String> GRN_STATUS = createField(DSL.name("grn_status"), SQLDataType.VARCHAR(50).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_grn_info.invoice_number</code>.
-     */
-    public final TableField<Record, String> INVOICE_NUMBER = createField(DSL.name("invoice_number"), SQLDataType.VARCHAR(50).nullable(false), this, "");
 
     /**
      * The column <code>ck_grn_info.login_id</code>.
@@ -143,21 +118,21 @@ public class CkGrnInfo extends TableImpl<Record> {
     public final TableField<Record, String> LOGIN_ID = createField(DSL.name("login_id"), SQLDataType.VARCHAR(50).nullable(false), this, "");
 
     /**
-     * The column <code>ck_grn_info.order_number</code>.
-     */
-    public final TableField<Record, String> ORDER_NUMBER = createField(DSL.name("order_number"), SQLDataType.VARCHAR(50).nullable(false), this, "");
-
-    /**
      * The column <code>ck_grn_info.rejection_reason</code>.
      */
     public final TableField<Record, String> REJECTION_REASON = createField(DSL.name("rejection_reason"), SQLDataType.VARCHAR(200), this, "");
 
+    /**
+     * The column <code>ck_grn_info.invoice_number</code>.
+     */
+    public final TableField<Record, String> INVOICE_NUMBER = createField(DSL.name("invoice_number"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
     private CkGrnInfo(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkGrnInfo(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkGrnInfo(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -181,6 +156,10 @@ public class CkGrnInfo extends TableImpl<Record> {
         this(DSL.name("ck_grn_info"), null);
     }
 
+    public <O extends Record> CkGrnInfo(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_GRN_INFO);
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -193,7 +172,24 @@ public class CkGrnInfo extends TableImpl<Record> {
 
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_GRN_INFO_GRN_NUMBER, Keys.KEY_CK_GRN_INFO_UK_OJAFSW3W4GUHDSOQGVEB73V23, Keys.KEY_CK_GRN_INFO_UK_KK0A72JWMLLQD9YYETJ0DLF1C);
+        return Arrays.asList(Keys.KEY_CK_GRN_INFO_UK_OJAFSW3W4GUHDSOQGVEB73V23, Keys.KEY_CK_GRN_INFO_UKOJAFSW3W4GUHDSOQGVEB73V23);
+    }
+
+    @Override
+    public List<ForeignKey<Record, ?>> getReferences() {
+        return Arrays.asList(Keys.FK2ENSXP5ISO5J28Q22778Y9KBT);
+    }
+
+    private transient CkSales _ckSales;
+
+    /**
+     * Get the implicit join path to the <code>ckroot.ck_sales</code> table.
+     */
+    public CkSales ckSales() {
+        if (_ckSales == null)
+            _ckSales = new CkSales(this, Keys.FK2ENSXP5ISO5J28Q22778Y9KBT);
+
+        return _ckSales;
     }
 
     @Override
@@ -204,11 +200,6 @@ public class CkGrnInfo extends TableImpl<Record> {
     @Override
     public CkGrnInfo as(Name alias) {
         return new CkGrnInfo(alias, this);
-    }
-
-    @Override
-    public CkGrnInfo as(Table<?> alias) {
-        return new CkGrnInfo(alias.getQualifiedName(), this);
     }
 
     /**
@@ -225,97 +216,5 @@ public class CkGrnInfo extends TableImpl<Record> {
     @Override
     public CkGrnInfo rename(Name name) {
         return new CkGrnInfo(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkGrnInfo rename(Table<?> name) {
-        return new CkGrnInfo(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkGrnInfo where(Condition condition) {
-        return new CkGrnInfo(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkGrnInfo where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkGrnInfo where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkGrnInfo where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkGrnInfo where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkGrnInfo where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkGrnInfo where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkGrnInfo where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkGrnInfo whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkGrnInfo whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

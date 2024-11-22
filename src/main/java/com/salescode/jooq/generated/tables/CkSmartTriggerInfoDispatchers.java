@@ -6,32 +6,13 @@ package com.salescode.jooq.generated.tables;
 
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkSmartTriggerInfo.CkSmartTriggerInfoPath;
-import com.salescode.jooq.generated.tables.CkTriggerDispatcherInfo.CkTriggerDispatcherInfoPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -67,11 +48,11 @@ public class CkSmartTriggerInfoDispatchers extends TableImpl<Record> {
     public final TableField<Record, String> DISPATCHERS_ID = createField(DSL.name("dispatchers_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private CkSmartTriggerInfoDispatchers(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkSmartTriggerInfoDispatchers(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkSmartTriggerInfoDispatchers(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -97,37 +78,8 @@ public class CkSmartTriggerInfoDispatchers extends TableImpl<Record> {
         this(DSL.name("ck_smart_trigger_info_dispatchers"), null);
     }
 
-    public <O extends Record> CkSmartTriggerInfoDispatchers(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_SMART_TRIGGER_INFO_DISPATCHERS);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkSmartTriggerInfoDispatchersPath extends CkSmartTriggerInfoDispatchers implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkSmartTriggerInfoDispatchersPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkSmartTriggerInfoDispatchersPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkSmartTriggerInfoDispatchersPath as(String alias) {
-            return new CkSmartTriggerInfoDispatchersPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkSmartTriggerInfoDispatchersPath as(Name alias) {
-            return new CkSmartTriggerInfoDispatchersPath(alias, this);
-        }
-
-        @Override
-        public CkSmartTriggerInfoDispatchersPath as(Table<?> alias) {
-            return new CkSmartTriggerInfoDispatchersPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkSmartTriggerInfoDispatchers(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_SMART_TRIGGER_INFO_DISPATCHERS);
     }
 
     @Override
@@ -140,28 +92,27 @@ public class CkSmartTriggerInfoDispatchers extends TableImpl<Record> {
         return Arrays.asList(Keys.FK1GSG33C2BFYUSNYCI831OO4IJ, Keys.FKTF1BL772QUJB9EA0B6FGJA02N);
     }
 
-    private transient CkSmartTriggerInfoPath _ckSmartTriggerInfo;
+    private transient CkSmartTriggerInfo _ckSmartTriggerInfo;
+    private transient CkTriggerDispatcherInfo _ckTriggerDispatcherInfo;
 
     /**
      * Get the implicit join path to the
      * <code>ckroot.ck_smart_trigger_info</code> table.
      */
-    public CkSmartTriggerInfoPath ckSmartTriggerInfo() {
+    public CkSmartTriggerInfo ckSmartTriggerInfo() {
         if (_ckSmartTriggerInfo == null)
-            _ckSmartTriggerInfo = new CkSmartTriggerInfoPath(this, Keys.FK1GSG33C2BFYUSNYCI831OO4IJ, null);
+            _ckSmartTriggerInfo = new CkSmartTriggerInfo(this, Keys.FK1GSG33C2BFYUSNYCI831OO4IJ);
 
         return _ckSmartTriggerInfo;
     }
-
-    private transient CkTriggerDispatcherInfoPath _ckTriggerDispatcherInfo;
 
     /**
      * Get the implicit join path to the
      * <code>ckroot.ck_trigger_dispatcher_info</code> table.
      */
-    public CkTriggerDispatcherInfoPath ckTriggerDispatcherInfo() {
+    public CkTriggerDispatcherInfo ckTriggerDispatcherInfo() {
         if (_ckTriggerDispatcherInfo == null)
-            _ckTriggerDispatcherInfo = new CkTriggerDispatcherInfoPath(this, Keys.FKTF1BL772QUJB9EA0B6FGJA02N, null);
+            _ckTriggerDispatcherInfo = new CkTriggerDispatcherInfo(this, Keys.FKTF1BL772QUJB9EA0B6FGJA02N);
 
         return _ckTriggerDispatcherInfo;
     }
@@ -174,11 +125,6 @@ public class CkSmartTriggerInfoDispatchers extends TableImpl<Record> {
     @Override
     public CkSmartTriggerInfoDispatchers as(Name alias) {
         return new CkSmartTriggerInfoDispatchers(alias, this);
-    }
-
-    @Override
-    public CkSmartTriggerInfoDispatchers as(Table<?> alias) {
-        return new CkSmartTriggerInfoDispatchers(alias.getQualifiedName(), this);
     }
 
     /**
@@ -195,97 +141,5 @@ public class CkSmartTriggerInfoDispatchers extends TableImpl<Record> {
     @Override
     public CkSmartTriggerInfoDispatchers rename(Name name) {
         return new CkSmartTriggerInfoDispatchers(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkSmartTriggerInfoDispatchers rename(Table<?> name) {
-        return new CkSmartTriggerInfoDispatchers(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSmartTriggerInfoDispatchers where(Condition condition) {
-        return new CkSmartTriggerInfoDispatchers(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSmartTriggerInfoDispatchers where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSmartTriggerInfoDispatchers where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSmartTriggerInfoDispatchers where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSmartTriggerInfoDispatchers where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSmartTriggerInfoDispatchers where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSmartTriggerInfoDispatchers where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSmartTriggerInfoDispatchers where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSmartTriggerInfoDispatchers whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSmartTriggerInfoDispatchers whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

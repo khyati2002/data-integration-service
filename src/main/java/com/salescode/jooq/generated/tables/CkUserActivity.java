@@ -12,36 +12,15 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -128,12 +107,12 @@ public class CkUserActivity extends TableImpl<Record> {
     /**
      * The column <code>ck_user_activity.system_time</code>.
      */
-    public final TableField<Record, Date> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_user_activity.end_time</code>.
      */
-    public final TableField<Record, Date> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_user_activity.gps_latitude</code>.
@@ -168,12 +147,12 @@ public class CkUserActivity extends TableImpl<Record> {
     /**
      * The column <code>ck_user_activity.start_time</code>.
      */
-    public final TableField<Record, Date> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_user_activity.submission_time</code>.
      */
-    public final TableField<Record, Date> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> SUBMISSION_TIME = createField(DSL.name("submission_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_user_activity.target_key</code>.
@@ -206,11 +185,11 @@ public class CkUserActivity extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkUserActivity(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkUserActivity(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkUserActivity(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -234,37 +213,8 @@ public class CkUserActivity extends TableImpl<Record> {
         this(DSL.name("ck_user_activity"), null);
     }
 
-    public <O extends Record> CkUserActivity(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_USER_ACTIVITY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkUserActivityPath extends CkUserActivity implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkUserActivityPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkUserActivityPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkUserActivityPath as(String alias) {
-            return new CkUserActivityPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkUserActivityPath as(Name alias) {
-            return new CkUserActivityPath(alias, this);
-        }
-
-        @Override
-        public CkUserActivityPath as(Table<?> alias) {
-            return new CkUserActivityPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkUserActivity(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_USER_ACTIVITY);
     }
 
     @Override
@@ -287,26 +237,25 @@ public class CkUserActivity extends TableImpl<Record> {
         return Arrays.asList(Keys.FK510EKVR1KP4F1UPELA4Y8NOPG, Keys.FK6FTSV44806K2GYWHWGC82201S);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FK510EKVR1KP4F1UPELA4Y8NOPG, null);
+            _ckLocation = new CkLocation(this, Keys.FK510EKVR1KP4F1UPELA4Y8NOPG);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FK6FTSV44806K2GYWHWGC82201S, null);
+            _ckUser = new CkUser(this, Keys.FK6FTSV44806K2GYWHWGC82201S);
 
         return _ckUser;
     }
@@ -319,11 +268,6 @@ public class CkUserActivity extends TableImpl<Record> {
     @Override
     public CkUserActivity as(Name alias) {
         return new CkUserActivity(alias, this);
-    }
-
-    @Override
-    public CkUserActivity as(Table<?> alias) {
-        return new CkUserActivity(alias.getQualifiedName(), this);
     }
 
     /**
@@ -340,97 +284,5 @@ public class CkUserActivity extends TableImpl<Record> {
     @Override
     public CkUserActivity rename(Name name) {
         return new CkUserActivity(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkUserActivity rename(Table<?> name) {
-        return new CkUserActivity(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserActivity where(Condition condition) {
-        return new CkUserActivity(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserActivity where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserActivity where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserActivity where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserActivity where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserActivity where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserActivity where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserActivity where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserActivity whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserActivity whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

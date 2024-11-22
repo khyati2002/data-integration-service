@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,31 +21,31 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Long actualVisits;
-    private String cadenceKey;
-    private String cadenceType;
-    private Long extraVisits;
-    private Long lastmodified;
-    private String loginId;
-    private Long missedVisits;
-    private Date plannedDate;
-    private Long plannedVisits;
-    private Long rowid;
-    private String loginid;
-    private Long totalProductiveCalls;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private Long          actualVisits;
+    private String        cadenceKey;
+    private String        cadenceType;
+    private Long          extraVisits;
+    private Long          lastmodified;
+    private String        loginId;
+    private Long          missedVisits;
+    private LocalDateTime plannedDate;
+    private Long          plannedVisits;
+    private Long          rowid;
+    private String        loginid;
+    private Long          totalProductiveCalls;
 
     public CkPlanVisitAggregation() {}
 
@@ -80,31 +78,31 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     }
 
     public CkPlanVisitAggregation(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Long actualVisits,
-        String cadenceKey,
-        String cadenceType,
-        Long extraVisits,
-        Long lastmodified,
-        String loginId,
-        Long missedVisits,
-        Date plannedDate,
-        Long plannedVisits,
-        Long rowid,
-        String loginid,
-        Long totalProductiveCalls
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        Long          actualVisits,
+        String        cadenceKey,
+        String        cadenceType,
+        Long          extraVisits,
+        Long          lastmodified,
+        String        loginId,
+        Long          missedVisits,
+        LocalDateTime plannedDate,
+        Long          plannedVisits,
+        Long          rowid,
+        String        loginid,
+        Long          totalProductiveCalls
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -136,8 +134,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -166,7 +162,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -195,7 +190,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -266,7 +260,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -281,7 +274,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -296,7 +288,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -325,7 +316,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.actual_visits</code>.
      */
-    @NotNull
     public Long getActualVisits() {
         return this.actualVisits;
     }
@@ -340,7 +330,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.cadence_key</code>.
      */
-    @Size(max = 255)
     public String getCadenceKey() {
         return this.cadenceKey;
     }
@@ -355,7 +344,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.cadence_type</code>.
      */
-    @Size(max = 255)
     public String getCadenceType() {
         return this.cadenceType;
     }
@@ -370,7 +358,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.extra_visits</code>.
      */
-    @NotNull
     public Long getExtraVisits() {
         return this.extraVisits;
     }
@@ -385,7 +372,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.lastmodified</code>.
      */
-    @NotNull
     public Long getLastmodified() {
         return this.lastmodified;
     }
@@ -400,7 +386,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.login_id</code>.
      */
-    @Size(max = 255)
     public String getLoginId() {
         return this.loginId;
     }
@@ -415,7 +400,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.missed_visits</code>.
      */
-    @NotNull
     public Long getMissedVisits() {
         return this.missedVisits;
     }
@@ -430,21 +414,20 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.planned_date</code>.
      */
-    public Date getPlannedDate() {
+    public LocalDateTime getPlannedDate() {
         return this.plannedDate;
     }
 
     /**
      * Setter for <code>ck_plan_visit_aggregation.planned_date</code>.
      */
-    public void setPlannedDate(Date plannedDate) {
+    public void setPlannedDate(LocalDateTime plannedDate) {
         this.plannedDate = plannedDate;
     }
 
     /**
      * Getter for <code>ck_plan_visit_aggregation.planned_visits</code>.
      */
-    @NotNull
     public Long getPlannedVisits() {
         return this.plannedVisits;
     }
@@ -459,7 +442,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.rowid</code>.
      */
-    @NotNull
     public Long getRowid() {
         return this.rowid;
     }
@@ -474,7 +456,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.loginid</code>.
      */
-    @Size(max = 255)
     public String getLoginid() {
         return this.loginid;
     }
@@ -489,7 +470,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     /**
      * Getter for <code>ck_plan_visit_aggregation.total_productive_calls</code>.
      */
-    @NotNull
     public Long getTotalProductiveCalls() {
         return this.totalProductiveCalls;
     }
@@ -499,200 +479,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
      */
     public void setTotalProductiveCalls(Long totalProductiveCalls) {
         this.totalProductiveCalls = totalProductiveCalls;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkPlanVisitAggregation other = (CkPlanVisitAggregation) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.actualVisits == null) {
-            if (other.actualVisits != null)
-                return false;
-        }
-        else if (!this.actualVisits.equals(other.actualVisits))
-            return false;
-        if (this.cadenceKey == null) {
-            if (other.cadenceKey != null)
-                return false;
-        }
-        else if (!this.cadenceKey.equals(other.cadenceKey))
-            return false;
-        if (this.cadenceType == null) {
-            if (other.cadenceType != null)
-                return false;
-        }
-        else if (!this.cadenceType.equals(other.cadenceType))
-            return false;
-        if (this.extraVisits == null) {
-            if (other.extraVisits != null)
-                return false;
-        }
-        else if (!this.extraVisits.equals(other.extraVisits))
-            return false;
-        if (this.lastmodified == null) {
-            if (other.lastmodified != null)
-                return false;
-        }
-        else if (!this.lastmodified.equals(other.lastmodified))
-            return false;
-        if (this.loginId == null) {
-            if (other.loginId != null)
-                return false;
-        }
-        else if (!this.loginId.equals(other.loginId))
-            return false;
-        if (this.missedVisits == null) {
-            if (other.missedVisits != null)
-                return false;
-        }
-        else if (!this.missedVisits.equals(other.missedVisits))
-            return false;
-        if (this.plannedDate == null) {
-            if (other.plannedDate != null)
-                return false;
-        }
-        else if (!this.plannedDate.equals(other.plannedDate))
-            return false;
-        if (this.plannedVisits == null) {
-            if (other.plannedVisits != null)
-                return false;
-        }
-        else if (!this.plannedVisits.equals(other.plannedVisits))
-            return false;
-        if (this.rowid == null) {
-            if (other.rowid != null)
-                return false;
-        }
-        else if (!this.rowid.equals(other.rowid))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.totalProductiveCalls == null) {
-            if (other.totalProductiveCalls != null)
-                return false;
-        }
-        else if (!this.totalProductiveCalls.equals(other.totalProductiveCalls))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.actualVisits == null) ? 0 : this.actualVisits.hashCode());
-        result = prime * result + ((this.cadenceKey == null) ? 0 : this.cadenceKey.hashCode());
-        result = prime * result + ((this.cadenceType == null) ? 0 : this.cadenceType.hashCode());
-        result = prime * result + ((this.extraVisits == null) ? 0 : this.extraVisits.hashCode());
-        result = prime * result + ((this.lastmodified == null) ? 0 : this.lastmodified.hashCode());
-        result = prime * result + ((this.loginId == null) ? 0 : this.loginId.hashCode());
-        result = prime * result + ((this.missedVisits == null) ? 0 : this.missedVisits.hashCode());
-        result = prime * result + ((this.plannedDate == null) ? 0 : this.plannedDate.hashCode());
-        result = prime * result + ((this.plannedVisits == null) ? 0 : this.plannedVisits.hashCode());
-        result = prime * result + ((this.rowid == null) ? 0 : this.rowid.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.totalProductiveCalls == null) ? 0 : this.totalProductiveCalls.hashCode());
-        return result;
     }
 
     @Override

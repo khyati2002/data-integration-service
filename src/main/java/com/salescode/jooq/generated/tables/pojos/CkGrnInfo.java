@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,25 +20,23 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String grnNumber;
-    private String grnStatus;
-    private String invoiceNumber;
-    private String loginId;
-    private String orderNumber;
-    private String rejectionReason;
+    private String       activeStatusReason;
+    private Boolean      changed;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       grnStatus;
+    private String       loginId;
+    private String       rejectionReason;
+    private String       invoiceNumber;
 
     public CkGrnInfo() {}
 
@@ -59,34 +54,30 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
         this.modifiedBy = value.modifiedBy;
         this.source = value.source;
         this.version = value.version;
-        this.grnNumber = value.grnNumber;
         this.grnStatus = value.grnStatus;
-        this.invoiceNumber = value.invoiceNumber;
         this.loginId = value.loginId;
-        this.orderNumber = value.orderNumber;
         this.rejectionReason = value.rejectionReason;
+        this.invoiceNumber = value.invoiceNumber;
     }
 
     public CkGrnInfo(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String grnNumber,
-        String grnStatus,
-        String invoiceNumber,
-        String loginId,
-        String orderNumber,
-        String rejectionReason
+        String       activeStatusReason,
+        Boolean      changed,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       grnStatus,
+        String       loginId,
+        String       rejectionReason,
+        String       invoiceNumber
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -101,19 +92,15 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
         this.modifiedBy = modifiedBy;
         this.source = source;
         this.version = version;
-        this.grnNumber = grnNumber;
         this.grnStatus = grnStatus;
-        this.invoiceNumber = invoiceNumber;
         this.loginId = loginId;
-        this.orderNumber = orderNumber;
         this.rejectionReason = rejectionReason;
+        this.invoiceNumber = invoiceNumber;
     }
 
     /**
      * Getter for <code>ck_grn_info.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -142,7 +129,6 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_grn_info.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -171,7 +157,6 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_grn_info.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -242,7 +227,6 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_grn_info.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -257,7 +241,6 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_grn_info.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -272,7 +255,6 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_grn_info.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -299,26 +281,8 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_grn_info.grn_number</code>.
-     */
-    @NotNull
-    @Size(max = 200)
-    public String getGrnNumber() {
-        return this.grnNumber;
-    }
-
-    /**
-     * Setter for <code>ck_grn_info.grn_number</code>.
-     */
-    public void setGrnNumber(String grnNumber) {
-        this.grnNumber = grnNumber;
-    }
-
-    /**
      * Getter for <code>ck_grn_info.grn_status</code>.
      */
-    @NotNull
-    @Size(max = 50)
     public String getGrnStatus() {
         return this.grnStatus;
     }
@@ -331,26 +295,8 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_grn_info.invoice_number</code>.
-     */
-    @NotNull
-    @Size(max = 50)
-    public String getInvoiceNumber() {
-        return this.invoiceNumber;
-    }
-
-    /**
-     * Setter for <code>ck_grn_info.invoice_number</code>.
-     */
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
-
-    /**
      * Getter for <code>ck_grn_info.login_id</code>.
      */
-    @NotNull
-    @Size(max = 50)
     public String getLoginId() {
         return this.loginId;
     }
@@ -363,25 +309,8 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_grn_info.order_number</code>.
-     */
-    @NotNull
-    @Size(max = 50)
-    public String getOrderNumber() {
-        return this.orderNumber;
-    }
-
-    /**
-     * Setter for <code>ck_grn_info.order_number</code>.
-     */
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    /**
      * Getter for <code>ck_grn_info.rejection_reason</code>.
      */
-    @Size(max = 200)
     public String getRejectionReason() {
         return this.rejectionReason;
     }
@@ -393,156 +322,18 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
         this.rejectionReason = rejectionReason;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkGrnInfo other = (CkGrnInfo) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.grnNumber == null) {
-            if (other.grnNumber != null)
-                return false;
-        }
-        else if (!this.grnNumber.equals(other.grnNumber))
-            return false;
-        if (this.grnStatus == null) {
-            if (other.grnStatus != null)
-                return false;
-        }
-        else if (!this.grnStatus.equals(other.grnStatus))
-            return false;
-        if (this.invoiceNumber == null) {
-            if (other.invoiceNumber != null)
-                return false;
-        }
-        else if (!this.invoiceNumber.equals(other.invoiceNumber))
-            return false;
-        if (this.loginId == null) {
-            if (other.loginId != null)
-                return false;
-        }
-        else if (!this.loginId.equals(other.loginId))
-            return false;
-        if (this.orderNumber == null) {
-            if (other.orderNumber != null)
-                return false;
-        }
-        else if (!this.orderNumber.equals(other.orderNumber))
-            return false;
-        if (this.rejectionReason == null) {
-            if (other.rejectionReason != null)
-                return false;
-        }
-        else if (!this.rejectionReason.equals(other.rejectionReason))
-            return false;
-        return true;
+    /**
+     * Getter for <code>ck_grn_info.invoice_number</code>.
+     */
+    public String getInvoiceNumber() {
+        return this.invoiceNumber;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.grnNumber == null) ? 0 : this.grnNumber.hashCode());
-        result = prime * result + ((this.grnStatus == null) ? 0 : this.grnStatus.hashCode());
-        result = prime * result + ((this.invoiceNumber == null) ? 0 : this.invoiceNumber.hashCode());
-        result = prime * result + ((this.loginId == null) ? 0 : this.loginId.hashCode());
-        result = prime * result + ((this.orderNumber == null) ? 0 : this.orderNumber.hashCode());
-        result = prime * result + ((this.rejectionReason == null) ? 0 : this.rejectionReason.hashCode());
-        return result;
+    /**
+     * Setter for <code>ck_grn_info.invoice_number</code>.
+     */
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
     @Override
@@ -562,12 +353,10 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(modifiedBy);
         sb.append(", ").append(source);
         sb.append(", ").append(version);
-        sb.append(", ").append(grnNumber);
         sb.append(", ").append(grnStatus);
-        sb.append(", ").append(invoiceNumber);
         sb.append(", ").append(loginId);
-        sb.append(", ").append(orderNumber);
         sb.append(", ").append(rejectionReason);
+        sb.append(", ").append(invoiceNumber);
 
         sb.append(")");
         return sb.toString();

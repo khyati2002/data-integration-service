@@ -12,31 +12,14 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Index;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -161,11 +144,11 @@ public class CkFunctionInfo extends TableImpl<Record> {
     public final TableField<Record, String> RETURN_TYPE = createField(DSL.name("return_type"), SQLDataType.VARCHAR(255), this, "");
 
     private CkFunctionInfo(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkFunctionInfo(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkFunctionInfo(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -187,6 +170,10 @@ public class CkFunctionInfo extends TableImpl<Record> {
      */
     public CkFunctionInfo() {
         this(DSL.name("ck_function_info"), null);
+    }
+
+    public <O extends Record> CkFunctionInfo(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_FUNCTION_INFO);
     }
 
     @Override
@@ -219,11 +206,6 @@ public class CkFunctionInfo extends TableImpl<Record> {
         return new CkFunctionInfo(alias, this);
     }
 
-    @Override
-    public CkFunctionInfo as(Table<?> alias) {
-        return new CkFunctionInfo(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -238,97 +220,5 @@ public class CkFunctionInfo extends TableImpl<Record> {
     @Override
     public CkFunctionInfo rename(Name name) {
         return new CkFunctionInfo(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkFunctionInfo rename(Table<?> name) {
-        return new CkFunctionInfo(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFunctionInfo where(Condition condition) {
-        return new CkFunctionInfo(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFunctionInfo where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFunctionInfo where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFunctionInfo where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkFunctionInfo where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkFunctionInfo where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkFunctionInfo where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkFunctionInfo where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFunctionInfo whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkFunctionInfo whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -11,36 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -127,7 +106,7 @@ public class CkLoyaltyScore extends TableImpl<Record> {
     /**
      * The column <code>ck_loyalty_score.end_date</code>.
      */
-    public final TableField<Record, Date> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
      * The column <code>ck_loyalty_score.feature</code>.
@@ -147,7 +126,7 @@ public class CkLoyaltyScore extends TableImpl<Record> {
     /**
      * The column <code>ck_loyalty_score.start_date</code>.
      */
-    public final TableField<Record, Date> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
      * The column <code>ck_loyalty_score.total_points</code>.
@@ -190,11 +169,11 @@ public class CkLoyaltyScore extends TableImpl<Record> {
     public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
 
     private CkLoyaltyScore(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkLoyaltyScore(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkLoyaltyScore(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -218,37 +197,8 @@ public class CkLoyaltyScore extends TableImpl<Record> {
         this(DSL.name("ck_loyalty_score"), null);
     }
 
-    public <O extends Record> CkLoyaltyScore(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_LOYALTY_SCORE);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkLoyaltyScorePath extends CkLoyaltyScore implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkLoyaltyScorePath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkLoyaltyScorePath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkLoyaltyScorePath as(String alias) {
-            return new CkLoyaltyScorePath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkLoyaltyScorePath as(Name alias) {
-            return new CkLoyaltyScorePath(alias, this);
-        }
-
-        @Override
-        public CkLoyaltyScorePath as(Table<?> alias) {
-            return new CkLoyaltyScorePath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkLoyaltyScore(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_LOYALTY_SCORE);
     }
 
     @Override
@@ -266,39 +216,37 @@ public class CkLoyaltyScore extends TableImpl<Record> {
         return Arrays.asList(Keys.FKQF241O63L0F0UB2R2VK48VWH7, Keys.FK65KJ5I1VK4M88FO9QKMFPD20S, Keys.FKE7X4T8N4303EFCH5PTPNX3XN7);
     }
 
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKQF241O63L0F0UB2R2VK48VWH7, null);
+            _ckLocation = new CkLocation(this, Keys.FKQF241O63L0F0UB2R2VK48VWH7);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FK65KJ5I1VK4M88FO9QKMFPD20S, null);
+            _ckUser = new CkUser(this, Keys.FK65KJ5I1VK4M88FO9QKMFPD20S);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FKE7X4T8N4303EFCH5PTPNX3XN7, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FKE7X4T8N4303EFCH5PTPNX3XN7);
 
         return _ckOutletDetails;
     }
@@ -311,11 +259,6 @@ public class CkLoyaltyScore extends TableImpl<Record> {
     @Override
     public CkLoyaltyScore as(Name alias) {
         return new CkLoyaltyScore(alias, this);
-    }
-
-    @Override
-    public CkLoyaltyScore as(Table<?> alias) {
-        return new CkLoyaltyScore(alias.getQualifiedName(), this);
     }
 
     /**
@@ -332,97 +275,5 @@ public class CkLoyaltyScore extends TableImpl<Record> {
     @Override
     public CkLoyaltyScore rename(Name name) {
         return new CkLoyaltyScore(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkLoyaltyScore rename(Table<?> name) {
-        return new CkLoyaltyScore(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLoyaltyScore where(Condition condition) {
-        return new CkLoyaltyScore(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLoyaltyScore where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLoyaltyScore where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLoyaltyScore where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkLoyaltyScore where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkLoyaltyScore where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkLoyaltyScore where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkLoyaltyScore where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLoyaltyScore whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkLoyaltyScore whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

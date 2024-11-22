@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -41,8 +36,6 @@ public class CkSellinaAiQuerySuggestions implements Serializable {
     /**
      * Getter for <code>ck_sellina_ai_query_suggestions.intent_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getIntentId() {
         return this.intentId;
     }
@@ -57,8 +50,6 @@ public class CkSellinaAiQuerySuggestions implements Serializable {
     /**
      * Getter for <code>ck_sellina_ai_query_suggestions.suggestion_id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getSuggestionId() {
         return this.suggestionId;
     }
@@ -68,39 +59,6 @@ public class CkSellinaAiQuerySuggestions implements Serializable {
      */
     public void setSuggestionId(String suggestionId) {
         this.suggestionId = suggestionId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkSellinaAiQuerySuggestions other = (CkSellinaAiQuerySuggestions) obj;
-        if (this.intentId == null) {
-            if (other.intentId != null)
-                return false;
-        }
-        else if (!this.intentId.equals(other.intentId))
-            return false;
-        if (this.suggestionId == null) {
-            if (other.suggestionId != null)
-                return false;
-        }
-        else if (!this.suggestionId.equals(other.suggestionId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.intentId == null) ? 0 : this.intentId.hashCode());
-        result = prime * result + ((this.suggestionId == null) ? 0 : this.suggestionId.hashCode());
-        return result;
     }
 
     @Override

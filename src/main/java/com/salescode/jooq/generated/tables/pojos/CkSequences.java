@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -21,7 +16,7 @@ public class CkSequences implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String sequenceName;
-    private Long sequenceValue;
+    private Long   sequenceValue;
 
     public CkSequences() {}
 
@@ -32,7 +27,7 @@ public class CkSequences implements Serializable {
 
     public CkSequences(
         String sequenceName,
-        Long sequenceValue
+        Long   sequenceValue
     ) {
         this.sequenceName = sequenceName;
         this.sequenceValue = sequenceValue;
@@ -41,8 +36,6 @@ public class CkSequences implements Serializable {
     /**
      * Getter for <code>ck_sequences.sequence_name</code>.
      */
-    @NotNull
-    @Size(max = 32)
     public String getSequenceName() {
         return this.sequenceName;
     }
@@ -57,7 +50,6 @@ public class CkSequences implements Serializable {
     /**
      * Getter for <code>ck_sequences.sequence_value</code>.
      */
-    @NotNull
     public Long getSequenceValue() {
         return this.sequenceValue;
     }
@@ -67,39 +59,6 @@ public class CkSequences implements Serializable {
      */
     public void setSequenceValue(Long sequenceValue) {
         this.sequenceValue = sequenceValue;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkSequences other = (CkSequences) obj;
-        if (this.sequenceName == null) {
-            if (other.sequenceName != null)
-                return false;
-        }
-        else if (!this.sequenceName.equals(other.sequenceName))
-            return false;
-        if (this.sequenceValue == null) {
-            if (other.sequenceValue != null)
-                return false;
-        }
-        else if (!this.sequenceValue.equals(other.sequenceValue))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.sequenceName == null) ? 0 : this.sequenceName.hashCode());
-        result = prime * result + ((this.sequenceValue == null) ? 0 : this.sequenceValue.hashCode());
-        return result;
     }
 
     @Override

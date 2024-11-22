@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,36 +21,36 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String childOutletCode;
-    private String destChannel;
-    private Double destLatitude;
-    private Double destLongitude;
-    private String destOutletName;
-    private Double destSkuValue;
-    private Double destSkuVolume;
-    private Double distance;
-    private Date endDate;
-    private String parentOutletcode;
-    private String skuCode;
-    private Integer skuPriority;
-    private Double sourceLatitude;
-    private Double sourceLongitude;
-    private String sourceOutletName;
-    private Date startDate;
-    private String type;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        childOutletCode;
+    private String        destChannel;
+    private Double        destLatitude;
+    private Double        destLongitude;
+    private String        destOutletName;
+    private Double        destSkuValue;
+    private Double        destSkuVolume;
+    private Double        distance;
+    private LocalDateTime endDate;
+    private String        parentOutletcode;
+    private String        skuCode;
+    private Integer       skuPriority;
+    private Double        sourceLatitude;
+    private Double        sourceLongitude;
+    private String        sourceOutletName;
+    private LocalDateTime startDate;
+    private String        type;
 
     public CkOutletLevelRecommendation() {}
 
@@ -90,36 +88,36 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     }
 
     public CkOutletLevelRecommendation(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String childOutletCode,
-        String destChannel,
-        Double destLatitude,
-        Double destLongitude,
-        String destOutletName,
-        Double destSkuValue,
-        Double destSkuVolume,
-        Double distance,
-        Date endDate,
-        String parentOutletcode,
-        String skuCode,
-        Integer skuPriority,
-        Double sourceLatitude,
-        Double sourceLongitude,
-        String sourceOutletName,
-        Date startDate,
-        String type
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        childOutletCode,
+        String        destChannel,
+        Double        destLatitude,
+        Double        destLongitude,
+        String        destOutletName,
+        Double        destSkuValue,
+        Double        destSkuVolume,
+        Double        distance,
+        LocalDateTime endDate,
+        String        parentOutletcode,
+        String        skuCode,
+        Integer       skuPriority,
+        Double        sourceLatitude,
+        Double        sourceLongitude,
+        String        sourceOutletName,
+        LocalDateTime startDate,
+        String        type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -156,8 +154,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -187,7 +183,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
      * Getter for
      * <code>ck_outlet_level_recommendation.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -217,7 +212,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -292,7 +286,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -307,7 +300,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -322,7 +314,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -351,7 +342,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.child_outlet_code</code>.
      */
-    @Size(max = 255)
     public String getChildOutletCode() {
         return this.childOutletCode;
     }
@@ -366,7 +356,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.dest_channel</code>.
      */
-    @Size(max = 255)
     public String getDestChannel() {
         return this.destChannel;
     }
@@ -381,7 +370,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.dest_latitude</code>.
      */
-    @NotNull
     public Double getDestLatitude() {
         return this.destLatitude;
     }
@@ -396,7 +384,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.dest_longitude</code>.
      */
-    @NotNull
     public Double getDestLongitude() {
         return this.destLongitude;
     }
@@ -411,7 +398,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.dest_outlet_name</code>.
      */
-    @Size(max = 255)
     public String getDestOutletName() {
         return this.destOutletName;
     }
@@ -426,7 +412,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.dest_sku_value</code>.
      */
-    @NotNull
     public Double getDestSkuValue() {
         return this.destSkuValue;
     }
@@ -441,7 +426,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.dest_sku_volume</code>.
      */
-    @NotNull
     public Double getDestSkuVolume() {
         return this.destSkuVolume;
     }
@@ -456,7 +440,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.distance</code>.
      */
-    @NotNull
     public Double getDistance() {
         return this.distance;
     }
@@ -471,21 +454,20 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_outlet_level_recommendation.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
     /**
      * Getter for <code>ck_outlet_level_recommendation.parent_outletcode</code>.
      */
-    @Size(max = 255)
     public String getParentOutletcode() {
         return this.parentOutletcode;
     }
@@ -500,7 +482,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.sku_code</code>.
      */
-    @Size(max = 255)
     public String getSkuCode() {
         return this.skuCode;
     }
@@ -515,7 +496,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.sku_priority</code>.
      */
-    @NotNull
     public Integer getSkuPriority() {
         return this.skuPriority;
     }
@@ -530,7 +510,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.source_latitude</code>.
      */
-    @NotNull
     public Double getSourceLatitude() {
         return this.sourceLatitude;
     }
@@ -545,7 +524,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.source_longitude</code>.
      */
-    @NotNull
     public Double getSourceLongitude() {
         return this.sourceLongitude;
     }
@@ -561,7 +539,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
      * Getter for
      * <code>ck_outlet_level_recommendation.source_outlet_name</code>.
      */
-    @Size(max = 255)
     public String getSourceOutletName() {
         return this.sourceOutletName;
     }
@@ -577,21 +554,20 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
     /**
      * Getter for <code>ck_outlet_level_recommendation.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_outlet_level_recommendation.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_outlet_level_recommendation.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -601,235 +577,6 @@ public class CkOutletLevelRecommendation extends CommonDataModel implements Seri
      */
     public void setType(String type) {
         this.type = type;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkOutletLevelRecommendation other = (CkOutletLevelRecommendation) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.childOutletCode == null) {
-            if (other.childOutletCode != null)
-                return false;
-        }
-        else if (!this.childOutletCode.equals(other.childOutletCode))
-            return false;
-        if (this.destChannel == null) {
-            if (other.destChannel != null)
-                return false;
-        }
-        else if (!this.destChannel.equals(other.destChannel))
-            return false;
-        if (this.destLatitude == null) {
-            if (other.destLatitude != null)
-                return false;
-        }
-        else if (!this.destLatitude.equals(other.destLatitude))
-            return false;
-        if (this.destLongitude == null) {
-            if (other.destLongitude != null)
-                return false;
-        }
-        else if (!this.destLongitude.equals(other.destLongitude))
-            return false;
-        if (this.destOutletName == null) {
-            if (other.destOutletName != null)
-                return false;
-        }
-        else if (!this.destOutletName.equals(other.destOutletName))
-            return false;
-        if (this.destSkuValue == null) {
-            if (other.destSkuValue != null)
-                return false;
-        }
-        else if (!this.destSkuValue.equals(other.destSkuValue))
-            return false;
-        if (this.destSkuVolume == null) {
-            if (other.destSkuVolume != null)
-                return false;
-        }
-        else if (!this.destSkuVolume.equals(other.destSkuVolume))
-            return false;
-        if (this.distance == null) {
-            if (other.distance != null)
-                return false;
-        }
-        else if (!this.distance.equals(other.distance))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.parentOutletcode == null) {
-            if (other.parentOutletcode != null)
-                return false;
-        }
-        else if (!this.parentOutletcode.equals(other.parentOutletcode))
-            return false;
-        if (this.skuCode == null) {
-            if (other.skuCode != null)
-                return false;
-        }
-        else if (!this.skuCode.equals(other.skuCode))
-            return false;
-        if (this.skuPriority == null) {
-            if (other.skuPriority != null)
-                return false;
-        }
-        else if (!this.skuPriority.equals(other.skuPriority))
-            return false;
-        if (this.sourceLatitude == null) {
-            if (other.sourceLatitude != null)
-                return false;
-        }
-        else if (!this.sourceLatitude.equals(other.sourceLatitude))
-            return false;
-        if (this.sourceLongitude == null) {
-            if (other.sourceLongitude != null)
-                return false;
-        }
-        else if (!this.sourceLongitude.equals(other.sourceLongitude))
-            return false;
-        if (this.sourceOutletName == null) {
-            if (other.sourceOutletName != null)
-                return false;
-        }
-        else if (!this.sourceOutletName.equals(other.sourceOutletName))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.type == null) {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.childOutletCode == null) ? 0 : this.childOutletCode.hashCode());
-        result = prime * result + ((this.destChannel == null) ? 0 : this.destChannel.hashCode());
-        result = prime * result + ((this.destLatitude == null) ? 0 : this.destLatitude.hashCode());
-        result = prime * result + ((this.destLongitude == null) ? 0 : this.destLongitude.hashCode());
-        result = prime * result + ((this.destOutletName == null) ? 0 : this.destOutletName.hashCode());
-        result = prime * result + ((this.destSkuValue == null) ? 0 : this.destSkuValue.hashCode());
-        result = prime * result + ((this.destSkuVolume == null) ? 0 : this.destSkuVolume.hashCode());
-        result = prime * result + ((this.distance == null) ? 0 : this.distance.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.parentOutletcode == null) ? 0 : this.parentOutletcode.hashCode());
-        result = prime * result + ((this.skuCode == null) ? 0 : this.skuCode.hashCode());
-        result = prime * result + ((this.skuPriority == null) ? 0 : this.skuPriority.hashCode());
-        result = prime * result + ((this.sourceLatitude == null) ? 0 : this.sourceLatitude.hashCode());
-        result = prime * result + ((this.sourceLongitude == null) ? 0 : this.sourceLongitude.hashCode());
-        result = prime * result + ((this.sourceOutletName == null) ? 0 : this.sourceOutletName.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        return result;
     }
 
     @Override

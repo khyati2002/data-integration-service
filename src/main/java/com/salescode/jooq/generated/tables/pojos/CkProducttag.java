@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,29 +21,29 @@ public class CkProducttag extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String countryCode;
-    private Date endDate;
-    private Date startDate;
-    private String tagCode;
-    private String tagDescription;
-    private String outletCode;
-    private String skuCode;
-    private String productType;
-    private String productValue;
-    private String tagGroup;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        countryCode;
+    private LocalDateTime endDate;
+    private LocalDateTime startDate;
+    private String        tagCode;
+    private String        tagDescription;
+    private String        outletCode;
+    private String        skuCode;
+    private String        productType;
+    private String        productValue;
+    private String        tagGroup;
+    private Byte          changed;
 
     public CkProducttag() {}
 
@@ -76,29 +74,29 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     }
 
     public CkProducttag(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String countryCode,
-        Date endDate,
-        Date startDate,
-        String tagCode,
-        String tagDescription,
-        String outletCode,
-        String skuCode,
-        String productType,
-        String productValue,
-        String tagGroup,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        countryCode,
+        LocalDateTime endDate,
+        LocalDateTime startDate,
+        String        tagCode,
+        String        tagDescription,
+        String        outletCode,
+        String        skuCode,
+        String        productType,
+        String        productValue,
+        String        tagGroup,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -128,8 +126,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -158,7 +154,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -173,7 +168,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -244,7 +238,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -259,7 +252,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -274,7 +266,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -303,7 +294,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.country_code</code>.
      */
-    @Size(max = 255)
     public String getCountryCode() {
         return this.countryCode;
     }
@@ -318,35 +308,34 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_producttag.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
     /**
      * Getter for <code>ck_producttag.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_producttag.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_producttag.tag_code</code>.
      */
-    @Size(max = 200)
     public String getTagCode() {
         return this.tagCode;
     }
@@ -361,7 +350,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.tag_description</code>.
      */
-    @Size(max = 255)
     public String getTagDescription() {
         return this.tagDescription;
     }
@@ -376,7 +364,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.outlet_code</code>.
      */
-    @Size(max = 200)
     public String getOutletCode() {
         return this.outletCode;
     }
@@ -391,7 +378,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.sku_code</code>.
      */
-    @Size(max = 255)
     public String getSkuCode() {
         return this.skuCode;
     }
@@ -406,7 +392,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.product_type</code>.
      */
-    @Size(max = 255)
     public String getProductType() {
         return this.productType;
     }
@@ -421,7 +406,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.product_value</code>.
      */
-    @Size(max = 255)
     public String getProductValue() {
         return this.productValue;
     }
@@ -436,7 +420,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_producttag.tag_group</code>.
      */
-    @Size(max = 255)
     public String getTagGroup() {
         return this.tagGroup;
     }
@@ -460,186 +443,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkProducttag other = (CkProducttag) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.countryCode == null) {
-            if (other.countryCode != null)
-                return false;
-        }
-        else if (!this.countryCode.equals(other.countryCode))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.tagCode == null) {
-            if (other.tagCode != null)
-                return false;
-        }
-        else if (!this.tagCode.equals(other.tagCode))
-            return false;
-        if (this.tagDescription == null) {
-            if (other.tagDescription != null)
-                return false;
-        }
-        else if (!this.tagDescription.equals(other.tagDescription))
-            return false;
-        if (this.outletCode == null) {
-            if (other.outletCode != null)
-                return false;
-        }
-        else if (!this.outletCode.equals(other.outletCode))
-            return false;
-        if (this.skuCode == null) {
-            if (other.skuCode != null)
-                return false;
-        }
-        else if (!this.skuCode.equals(other.skuCode))
-            return false;
-        if (this.productType == null) {
-            if (other.productType != null)
-                return false;
-        }
-        else if (!this.productType.equals(other.productType))
-            return false;
-        if (this.productValue == null) {
-            if (other.productValue != null)
-                return false;
-        }
-        else if (!this.productValue.equals(other.productValue))
-            return false;
-        if (this.tagGroup == null) {
-            if (other.tagGroup != null)
-                return false;
-        }
-        else if (!this.tagGroup.equals(other.tagGroup))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.countryCode == null) ? 0 : this.countryCode.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.tagCode == null) ? 0 : this.tagCode.hashCode());
-        result = prime * result + ((this.tagDescription == null) ? 0 : this.tagDescription.hashCode());
-        result = prime * result + ((this.outletCode == null) ? 0 : this.outletCode.hashCode());
-        result = prime * result + ((this.skuCode == null) ? 0 : this.skuCode.hashCode());
-        result = prime * result + ((this.productType == null) ? 0 : this.productType.hashCode());
-        result = prime * result + ((this.productValue == null) ? 0 : this.productValue.hashCode());
-        result = prime * result + ((this.tagGroup == null) ? 0 : this.tagGroup.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

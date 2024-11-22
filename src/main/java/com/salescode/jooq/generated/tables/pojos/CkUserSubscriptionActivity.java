@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,28 +21,28 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Date activationDate;
-    private Date firstOrderDate;
-    private String loginId;
-    private String mobileNumber;
-    private Boolean otpVerified;
-    private String outletCode;
-    private String principalLoginId;
-    private String principalOutletCode;
-    private Date registrationDate;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private LocalDateTime activationDate;
+    private LocalDateTime firstOrderDate;
+    private String        loginId;
+    private String        mobileNumber;
+    private Boolean       otpVerified;
+    private String        outletCode;
+    private String        principalLoginId;
+    private String        principalOutletCode;
+    private LocalDateTime registrationDate;
 
     public CkUserSubscriptionActivity() {}
 
@@ -74,28 +72,28 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     }
 
     public CkUserSubscriptionActivity(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Date activationDate,
-        Date firstOrderDate,
-        String loginId,
-        String mobileNumber,
-        Boolean otpVerified,
-        String outletCode,
-        String principalLoginId,
-        String principalOutletCode,
-        Date registrationDate
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        LocalDateTime activationDate,
+        LocalDateTime firstOrderDate,
+        String        loginId,
+        String        mobileNumber,
+        Boolean       otpVerified,
+        String        outletCode,
+        String        principalLoginId,
+        String        principalOutletCode,
+        LocalDateTime registrationDate
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -124,8 +122,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -155,7 +151,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
      * Getter for
      * <code>ck_user_subscription_activity.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -185,7 +180,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -258,7 +252,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -273,7 +266,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -288,7 +280,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -317,35 +308,34 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.activation_date</code>.
      */
-    public Date getActivationDate() {
+    public LocalDateTime getActivationDate() {
         return this.activationDate;
     }
 
     /**
      * Setter for <code>ck_user_subscription_activity.activation_date</code>.
      */
-    public void setActivationDate(Date activationDate) {
+    public void setActivationDate(LocalDateTime activationDate) {
         this.activationDate = activationDate;
     }
 
     /**
      * Getter for <code>ck_user_subscription_activity.first_order_date</code>.
      */
-    public Date getFirstOrderDate() {
+    public LocalDateTime getFirstOrderDate() {
         return this.firstOrderDate;
     }
 
     /**
      * Setter for <code>ck_user_subscription_activity.first_order_date</code>.
      */
-    public void setFirstOrderDate(Date firstOrderDate) {
+    public void setFirstOrderDate(LocalDateTime firstOrderDate) {
         this.firstOrderDate = firstOrderDate;
     }
 
     /**
      * Getter for <code>ck_user_subscription_activity.login_id</code>.
      */
-    @Size(max = 255)
     public String getLoginId() {
         return this.loginId;
     }
@@ -360,8 +350,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.mobile_number</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getMobileNumber() {
         return this.mobileNumber;
     }
@@ -376,7 +364,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.otp_verified</code>.
      */
-    @NotNull
     public Boolean getOtpVerified() {
         return this.otpVerified;
     }
@@ -391,7 +378,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.outlet_code</code>.
      */
-    @Size(max = 255)
     public String getOutletCode() {
         return this.outletCode;
     }
@@ -406,7 +392,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.principal_login_id</code>.
      */
-    @Size(max = 255)
     public String getPrincipalLoginId() {
         return this.principalLoginId;
     }
@@ -422,7 +407,6 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
      * Getter for
      * <code>ck_user_subscription_activity.principal_outlet_code</code>.
      */
-    @Size(max = 255)
     public String getPrincipalOutletCode() {
         return this.principalOutletCode;
     }
@@ -438,188 +422,15 @@ public class CkUserSubscriptionActivity extends CommonDataModel implements Seria
     /**
      * Getter for <code>ck_user_subscription_activity.registration_date</code>.
      */
-    public Date getRegistrationDate() {
+    public LocalDateTime getRegistrationDate() {
         return this.registrationDate;
     }
 
     /**
      * Setter for <code>ck_user_subscription_activity.registration_date</code>.
      */
-    public void setRegistrationDate(Date registrationDate) {
+    public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkUserSubscriptionActivity other = (CkUserSubscriptionActivity) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.activationDate == null) {
-            if (other.activationDate != null)
-                return false;
-        }
-        else if (!this.activationDate.equals(other.activationDate))
-            return false;
-        if (this.firstOrderDate == null) {
-            if (other.firstOrderDate != null)
-                return false;
-        }
-        else if (!this.firstOrderDate.equals(other.firstOrderDate))
-            return false;
-        if (this.loginId == null) {
-            if (other.loginId != null)
-                return false;
-        }
-        else if (!this.loginId.equals(other.loginId))
-            return false;
-        if (this.mobileNumber == null) {
-            if (other.mobileNumber != null)
-                return false;
-        }
-        else if (!this.mobileNumber.equals(other.mobileNumber))
-            return false;
-        if (this.otpVerified == null) {
-            if (other.otpVerified != null)
-                return false;
-        }
-        else if (!this.otpVerified.equals(other.otpVerified))
-            return false;
-        if (this.outletCode == null) {
-            if (other.outletCode != null)
-                return false;
-        }
-        else if (!this.outletCode.equals(other.outletCode))
-            return false;
-        if (this.principalLoginId == null) {
-            if (other.principalLoginId != null)
-                return false;
-        }
-        else if (!this.principalLoginId.equals(other.principalLoginId))
-            return false;
-        if (this.principalOutletCode == null) {
-            if (other.principalOutletCode != null)
-                return false;
-        }
-        else if (!this.principalOutletCode.equals(other.principalOutletCode))
-            return false;
-        if (this.registrationDate == null) {
-            if (other.registrationDate != null)
-                return false;
-        }
-        else if (!this.registrationDate.equals(other.registrationDate))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.activationDate == null) ? 0 : this.activationDate.hashCode());
-        result = prime * result + ((this.firstOrderDate == null) ? 0 : this.firstOrderDate.hashCode());
-        result = prime * result + ((this.loginId == null) ? 0 : this.loginId.hashCode());
-        result = prime * result + ((this.mobileNumber == null) ? 0 : this.mobileNumber.hashCode());
-        result = prime * result + ((this.otpVerified == null) ? 0 : this.otpVerified.hashCode());
-        result = prime * result + ((this.outletCode == null) ? 0 : this.outletCode.hashCode());
-        result = prime * result + ((this.principalLoginId == null) ? 0 : this.principalLoginId.hashCode());
-        result = prime * result + ((this.principalOutletCode == null) ? 0 : this.principalOutletCode.hashCode());
-        result = prime * result + ((this.registrationDate == null) ? 0 : this.registrationDate.hashCode());
-        return result;
     }
 
     @Override

@@ -11,35 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkBanner.CkBannerPath;
-import com.salescode.jooq.generated.tables.CkBannerDistributionSupplier.CkBannerDistributionSupplierPath;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -136,7 +116,7 @@ public class CkBannerDistribution extends TableImpl<Record> {
     /**
      * The column <code>ck_banner_distribution.end_date</code>.
      */
-    public final TableField<Record, Date> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_banner_distribution.outlet_category</code>.
@@ -156,7 +136,7 @@ public class CkBannerDistribution extends TableImpl<Record> {
     /**
      * The column <code>ck_banner_distribution.start_date</code>.
      */
-    public final TableField<Record, Date> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_banner_distribution.banner_banner_name</code>.
@@ -179,11 +159,6 @@ public class CkBannerDistribution extends TableImpl<Record> {
     public final TableField<Record, String> LOYALTY_TYPE = createField(DSL.name("loyalty_type"), SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>ck_banner_distribution.loc_salescodeid</code>.
-     */
-    public final TableField<Record, String> LOC_SALESCODEID = createField(DSL.name("loc_salescodeid"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_banner_distribution.outlet_code</code>.
      */
     public final TableField<Record, String> OUTLET_CODE = createField(DSL.name("outlet_code"), SQLDataType.VARCHAR(255), this, "");
@@ -198,12 +173,17 @@ public class CkBannerDistribution extends TableImpl<Record> {
      */
     public final TableField<Record, String> SUPPLIER = createField(DSL.name("supplier"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column <code>ck_banner_distribution.loc_salescodeid</code>.
+     */
+    public final TableField<Record, String> LOC_SALESCODEID = createField(DSL.name("loc_salescodeid"), SQLDataType.VARCHAR(255), this, "");
+
     private CkBannerDistribution(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkBannerDistribution(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkBannerDistribution(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -227,37 +207,8 @@ public class CkBannerDistribution extends TableImpl<Record> {
         this(DSL.name("ck_banner_distribution"), null);
     }
 
-    public <O extends Record> CkBannerDistribution(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_BANNER_DISTRIBUTION);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkBannerDistributionPath extends CkBannerDistribution implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkBannerDistributionPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkBannerDistributionPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkBannerDistributionPath as(String alias) {
-            return new CkBannerDistributionPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkBannerDistributionPath as(Name alias) {
-            return new CkBannerDistributionPath(alias, this);
-        }
-
-        @Override
-        public CkBannerDistributionPath as(Table<?> alias) {
-            return new CkBannerDistributionPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkBannerDistribution(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_BANNER_DISTRIBUTION);
     }
 
     @Override
@@ -275,41 +226,27 @@ public class CkBannerDistribution extends TableImpl<Record> {
         return Arrays.asList(Keys.FKGMLCDX2TVA8Q3S00OWKECHO8, Keys.FKLQ9UHSR6FKSVECBM8PU7WD256);
     }
 
-    private transient CkBannerPath _ckBanner;
+    private transient CkBanner _ckBanner;
+    private transient CkLocation _ckLocation;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_banner</code> table.
      */
-    public CkBannerPath ckBanner() {
+    public CkBanner ckBanner() {
         if (_ckBanner == null)
-            _ckBanner = new CkBannerPath(this, Keys.FKGMLCDX2TVA8Q3S00OWKECHO8, null);
+            _ckBanner = new CkBanner(this, Keys.FKGMLCDX2TVA8Q3S00OWKECHO8);
 
         return _ckBanner;
     }
 
-    private transient CkLocationPath _ckLocation;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKLQ9UHSR6FKSVECBM8PU7WD256, null);
+            _ckLocation = new CkLocation(this, Keys.FKLQ9UHSR6FKSVECBM8PU7WD256);
 
         return _ckLocation;
-    }
-
-    private transient CkBannerDistributionSupplierPath _ckBannerDistributionSupplier;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_banner_distribution_supplier</code> table
-     */
-    public CkBannerDistributionSupplierPath ckBannerDistributionSupplier() {
-        if (_ckBannerDistributionSupplier == null)
-            _ckBannerDistributionSupplier = new CkBannerDistributionSupplierPath(this, null, Keys.FKQ98R2SEKKD6KG49JG4K2SIS8B.getInverseKey());
-
-        return _ckBannerDistributionSupplier;
     }
 
     @Override
@@ -320,11 +257,6 @@ public class CkBannerDistribution extends TableImpl<Record> {
     @Override
     public CkBannerDistribution as(Name alias) {
         return new CkBannerDistribution(alias, this);
-    }
-
-    @Override
-    public CkBannerDistribution as(Table<?> alias) {
-        return new CkBannerDistribution(alias.getQualifiedName(), this);
     }
 
     /**
@@ -341,97 +273,5 @@ public class CkBannerDistribution extends TableImpl<Record> {
     @Override
     public CkBannerDistribution rename(Name name) {
         return new CkBannerDistribution(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkBannerDistribution rename(Table<?> name) {
-        return new CkBannerDistribution(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerDistribution where(Condition condition) {
-        return new CkBannerDistribution(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerDistribution where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerDistribution where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerDistribution where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerDistribution where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerDistribution where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerDistribution where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerDistribution where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerDistribution whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerDistribution whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

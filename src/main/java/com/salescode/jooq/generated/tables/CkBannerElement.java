@@ -11,35 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkBanner.CkBannerPath;
-import com.salescode.jooq.generated.tables.CkBannerBannerElements.CkBannerBannerElementsPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -179,11 +158,11 @@ public class CkBannerElement extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkBannerElement(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkBannerElement(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkBannerElement(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -207,37 +186,8 @@ public class CkBannerElement extends TableImpl<Record> {
         this(DSL.name("ck_banner_element"), null);
     }
 
-    public <O extends Record> CkBannerElement(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_BANNER_ELEMENT);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkBannerElementPath extends CkBannerElement implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkBannerElementPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkBannerElementPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkBannerElementPath as(String alias) {
-            return new CkBannerElementPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkBannerElementPath as(Name alias) {
-            return new CkBannerElementPath(alias, this);
-        }
-
-        @Override
-        public CkBannerElementPath as(Table<?> alias) {
-            return new CkBannerElementPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkBannerElement(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_BANNER_ELEMENT);
     }
 
     @Override
@@ -255,29 +205,16 @@ public class CkBannerElement extends TableImpl<Record> {
         return Arrays.asList(Keys.FKCCACUOUCDFBATUWBDKFCTBJMJ);
     }
 
-    private transient CkBannerPath _ckBanner;
+    private transient CkBanner _ckBanner;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_banner</code> table.
      */
-    public CkBannerPath ckBanner() {
+    public CkBanner ckBanner() {
         if (_ckBanner == null)
-            _ckBanner = new CkBannerPath(this, Keys.FKCCACUOUCDFBATUWBDKFCTBJMJ, null);
+            _ckBanner = new CkBanner(this, Keys.FKCCACUOUCDFBATUWBDKFCTBJMJ);
 
         return _ckBanner;
-    }
-
-    private transient CkBannerBannerElementsPath _ckBannerBannerElements;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_banner_banner_elements</code> table
-     */
-    public CkBannerBannerElementsPath ckBannerBannerElements() {
-        if (_ckBannerBannerElements == null)
-            _ckBannerBannerElements = new CkBannerBannerElementsPath(this, null, Keys.FKMTSPCI496D27XWHG6KKON083S.getInverseKey());
-
-        return _ckBannerBannerElements;
     }
 
     @Override
@@ -288,11 +225,6 @@ public class CkBannerElement extends TableImpl<Record> {
     @Override
     public CkBannerElement as(Name alias) {
         return new CkBannerElement(alias, this);
-    }
-
-    @Override
-    public CkBannerElement as(Table<?> alias) {
-        return new CkBannerElement(alias.getQualifiedName(), this);
     }
 
     /**
@@ -309,97 +241,5 @@ public class CkBannerElement extends TableImpl<Record> {
     @Override
     public CkBannerElement rename(Name name) {
         return new CkBannerElement(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkBannerElement rename(Table<?> name) {
-        return new CkBannerElement(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerElement where(Condition condition) {
-        return new CkBannerElement(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerElement where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerElement where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerElement where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerElement where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerElement where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerElement where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkBannerElement where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerElement whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkBannerElement whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

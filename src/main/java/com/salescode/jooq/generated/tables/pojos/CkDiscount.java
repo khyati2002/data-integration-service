@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,48 +21,48 @@ public class CkDiscount extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String category;
-    private String channel;
-    private String commonAttribute;
-    private String criteria;
-    private String discountLevel;
-    private String discountLevelValue;
-    private String discountMode;
-    private String discountNumber;
-    private String discountType;
-    private String discountedItemCode;
-    private String discountedUnit;
-    private Date endDate;
-    private String freeProductName;
-    private Integer maxOrderCount;
-    private Integer maxQty;
-    private Integer minQty;
-    private Integer qty;
-    private String repeatDiscount;
-    private String schemeText;
-    private String scope;
-    private String skuCode;
-    private String skuName;
-    private Date startDate;
-    private String subCategory;
-    private String typeOfDiscount;
-    private String unit;
-    private String locationHierarchy;
-    private String supplierLoginid;
-    private String fkDiscount;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        category;
+    private String        channel;
+    private String        commonAttribute;
+    private String        criteria;
+    private String        discountLevel;
+    private String        discountLevelValue;
+    private String        discountMode;
+    private String        discountNumber;
+    private String        discountType;
+    private String        discountedItemCode;
+    private String        discountedUnit;
+    private LocalDateTime endDate;
+    private String        freeProductName;
+    private Integer       maxOrderCount;
+    private Integer       maxQty;
+    private Integer       minQty;
+    private Integer       qty;
+    private String        repeatDiscount;
+    private String        schemeText;
+    private String        scope;
+    private String        skuCode;
+    private String        skuName;
+    private LocalDateTime startDate;
+    private String        subCategory;
+    private String        typeOfDiscount;
+    private String        unit;
+    private String        locationHierarchy;
+    private String        supplierLoginid;
+    private String        fkDiscount;
+    private Byte          changed;
 
     public CkDiscount() {}
 
@@ -114,48 +112,48 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     }
 
     public CkDiscount(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String category,
-        String channel,
-        String commonAttribute,
-        String criteria,
-        String discountLevel,
-        String discountLevelValue,
-        String discountMode,
-        String discountNumber,
-        String discountType,
-        String discountedItemCode,
-        String discountedUnit,
-        Date endDate,
-        String freeProductName,
-        Integer maxOrderCount,
-        Integer maxQty,
-        Integer minQty,
-        Integer qty,
-        String repeatDiscount,
-        String schemeText,
-        String scope,
-        String skuCode,
-        String skuName,
-        Date startDate,
-        String subCategory,
-        String typeOfDiscount,
-        String unit,
-        String locationHierarchy,
-        String supplierLoginid,
-        String fkDiscount,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        category,
+        String        channel,
+        String        commonAttribute,
+        String        criteria,
+        String        discountLevel,
+        String        discountLevelValue,
+        String        discountMode,
+        String        discountNumber,
+        String        discountType,
+        String        discountedItemCode,
+        String        discountedUnit,
+        LocalDateTime endDate,
+        String        freeProductName,
+        Integer       maxOrderCount,
+        Integer       maxQty,
+        Integer       minQty,
+        Integer       qty,
+        String        repeatDiscount,
+        String        schemeText,
+        String        scope,
+        String        skuCode,
+        String        skuName,
+        LocalDateTime startDate,
+        String        subCategory,
+        String        typeOfDiscount,
+        String        unit,
+        String        locationHierarchy,
+        String        supplierLoginid,
+        String        fkDiscount,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -204,8 +202,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -234,7 +230,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -249,7 +244,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -320,7 +314,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -335,7 +328,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -350,7 +342,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -379,7 +370,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.category</code>.
      */
-    @Size(max = 255)
     public String getCategory() {
         return this.category;
     }
@@ -394,7 +384,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.channel</code>.
      */
-    @Size(max = 255)
     public String getChannel() {
         return this.channel;
     }
@@ -409,7 +398,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.common_attribute</code>.
      */
-    @Size(max = 255)
     public String getCommonAttribute() {
         return this.commonAttribute;
     }
@@ -424,7 +412,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.criteria</code>.
      */
-    @Size(max = 255)
     public String getCriteria() {
         return this.criteria;
     }
@@ -439,7 +426,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.discount_level</code>.
      */
-    @Size(max = 255)
     public String getDiscountLevel() {
         return this.discountLevel;
     }
@@ -454,7 +440,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.discount_level_value</code>.
      */
-    @Size(max = 255)
     public String getDiscountLevelValue() {
         return this.discountLevelValue;
     }
@@ -469,7 +454,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.discount_mode</code>.
      */
-    @Size(max = 255)
     public String getDiscountMode() {
         return this.discountMode;
     }
@@ -484,8 +468,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.discount_number</code>.
      */
-    @NotNull
-    @Size(max = 200)
     public String getDiscountNumber() {
         return this.discountNumber;
     }
@@ -500,7 +482,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.discount_type</code>.
      */
-    @Size(max = 255)
     public String getDiscountType() {
         return this.discountType;
     }
@@ -515,7 +496,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.discounted_item_code</code>.
      */
-    @Size(max = 255)
     public String getDiscountedItemCode() {
         return this.discountedItemCode;
     }
@@ -530,7 +510,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.discounted_unit</code>.
      */
-    @Size(max = 255)
     public String getDiscountedUnit() {
         return this.discountedUnit;
     }
@@ -545,21 +524,20 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_discount.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
     /**
      * Getter for <code>ck_discount.free_product_name</code>.
      */
-    @Size(max = 255)
     public String getFreeProductName() {
         return this.freeProductName;
     }
@@ -574,7 +552,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.max_order_count</code>.
      */
-    @NotNull
     public Integer getMaxOrderCount() {
         return this.maxOrderCount;
     }
@@ -589,7 +566,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.max_qty</code>.
      */
-    @NotNull
     public Integer getMaxQty() {
         return this.maxQty;
     }
@@ -604,7 +580,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.min_qty</code>.
      */
-    @NotNull
     public Integer getMinQty() {
         return this.minQty;
     }
@@ -619,7 +594,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.qty</code>.
      */
-    @NotNull
     public Integer getQty() {
         return this.qty;
     }
@@ -634,7 +608,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.repeat_discount</code>.
      */
-    @Size(max = 255)
     public String getRepeatDiscount() {
         return this.repeatDiscount;
     }
@@ -649,7 +622,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.scheme_text</code>.
      */
-    @Size(max = 255)
     public String getSchemeText() {
         return this.schemeText;
     }
@@ -664,7 +636,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.scope</code>.
      */
-    @Size(max = 255)
     public String getScope() {
         return this.scope;
     }
@@ -679,7 +650,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.sku_code</code>.
      */
-    @Size(max = 255)
     public String getSkuCode() {
         return this.skuCode;
     }
@@ -694,7 +664,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.sku_name</code>.
      */
-    @Size(max = 255)
     public String getSkuName() {
         return this.skuName;
     }
@@ -709,21 +678,20 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_discount.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_discount.sub_category</code>.
      */
-    @Size(max = 255)
     public String getSubCategory() {
         return this.subCategory;
     }
@@ -738,7 +706,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.type_of_discount</code>.
      */
-    @Size(max = 255)
     public String getTypeOfDiscount() {
         return this.typeOfDiscount;
     }
@@ -753,7 +720,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.unit</code>.
      */
-    @Size(max = 255)
     public String getUnit() {
         return this.unit;
     }
@@ -768,7 +734,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -783,7 +748,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.supplier_loginid</code>.
      */
-    @Size(max = 50)
     public String getSupplierLoginid() {
         return this.supplierLoginid;
     }
@@ -798,7 +762,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_discount.fk_discount</code>.
      */
-    @Size(max = 255)
     public String getFkDiscount() {
         return this.fkDiscount;
     }
@@ -822,319 +785,6 @@ public class CkDiscount extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkDiscount other = (CkDiscount) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.category == null) {
-            if (other.category != null)
-                return false;
-        }
-        else if (!this.category.equals(other.category))
-            return false;
-        if (this.channel == null) {
-            if (other.channel != null)
-                return false;
-        }
-        else if (!this.channel.equals(other.channel))
-            return false;
-        if (this.commonAttribute == null) {
-            if (other.commonAttribute != null)
-                return false;
-        }
-        else if (!this.commonAttribute.equals(other.commonAttribute))
-            return false;
-        if (this.criteria == null) {
-            if (other.criteria != null)
-                return false;
-        }
-        else if (!this.criteria.equals(other.criteria))
-            return false;
-        if (this.discountLevel == null) {
-            if (other.discountLevel != null)
-                return false;
-        }
-        else if (!this.discountLevel.equals(other.discountLevel))
-            return false;
-        if (this.discountLevelValue == null) {
-            if (other.discountLevelValue != null)
-                return false;
-        }
-        else if (!this.discountLevelValue.equals(other.discountLevelValue))
-            return false;
-        if (this.discountMode == null) {
-            if (other.discountMode != null)
-                return false;
-        }
-        else if (!this.discountMode.equals(other.discountMode))
-            return false;
-        if (this.discountNumber == null) {
-            if (other.discountNumber != null)
-                return false;
-        }
-        else if (!this.discountNumber.equals(other.discountNumber))
-            return false;
-        if (this.discountType == null) {
-            if (other.discountType != null)
-                return false;
-        }
-        else if (!this.discountType.equals(other.discountType))
-            return false;
-        if (this.discountedItemCode == null) {
-            if (other.discountedItemCode != null)
-                return false;
-        }
-        else if (!this.discountedItemCode.equals(other.discountedItemCode))
-            return false;
-        if (this.discountedUnit == null) {
-            if (other.discountedUnit != null)
-                return false;
-        }
-        else if (!this.discountedUnit.equals(other.discountedUnit))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.freeProductName == null) {
-            if (other.freeProductName != null)
-                return false;
-        }
-        else if (!this.freeProductName.equals(other.freeProductName))
-            return false;
-        if (this.maxOrderCount == null) {
-            if (other.maxOrderCount != null)
-                return false;
-        }
-        else if (!this.maxOrderCount.equals(other.maxOrderCount))
-            return false;
-        if (this.maxQty == null) {
-            if (other.maxQty != null)
-                return false;
-        }
-        else if (!this.maxQty.equals(other.maxQty))
-            return false;
-        if (this.minQty == null) {
-            if (other.minQty != null)
-                return false;
-        }
-        else if (!this.minQty.equals(other.minQty))
-            return false;
-        if (this.qty == null) {
-            if (other.qty != null)
-                return false;
-        }
-        else if (!this.qty.equals(other.qty))
-            return false;
-        if (this.repeatDiscount == null) {
-            if (other.repeatDiscount != null)
-                return false;
-        }
-        else if (!this.repeatDiscount.equals(other.repeatDiscount))
-            return false;
-        if (this.schemeText == null) {
-            if (other.schemeText != null)
-                return false;
-        }
-        else if (!this.schemeText.equals(other.schemeText))
-            return false;
-        if (this.scope == null) {
-            if (other.scope != null)
-                return false;
-        }
-        else if (!this.scope.equals(other.scope))
-            return false;
-        if (this.skuCode == null) {
-            if (other.skuCode != null)
-                return false;
-        }
-        else if (!this.skuCode.equals(other.skuCode))
-            return false;
-        if (this.skuName == null) {
-            if (other.skuName != null)
-                return false;
-        }
-        else if (!this.skuName.equals(other.skuName))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.subCategory == null) {
-            if (other.subCategory != null)
-                return false;
-        }
-        else if (!this.subCategory.equals(other.subCategory))
-            return false;
-        if (this.typeOfDiscount == null) {
-            if (other.typeOfDiscount != null)
-                return false;
-        }
-        else if (!this.typeOfDiscount.equals(other.typeOfDiscount))
-            return false;
-        if (this.unit == null) {
-            if (other.unit != null)
-                return false;
-        }
-        else if (!this.unit.equals(other.unit))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.supplierLoginid == null) {
-            if (other.supplierLoginid != null)
-                return false;
-        }
-        else if (!this.supplierLoginid.equals(other.supplierLoginid))
-            return false;
-        if (this.fkDiscount == null) {
-            if (other.fkDiscount != null)
-                return false;
-        }
-        else if (!this.fkDiscount.equals(other.fkDiscount))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.category == null) ? 0 : this.category.hashCode());
-        result = prime * result + ((this.channel == null) ? 0 : this.channel.hashCode());
-        result = prime * result + ((this.commonAttribute == null) ? 0 : this.commonAttribute.hashCode());
-        result = prime * result + ((this.criteria == null) ? 0 : this.criteria.hashCode());
-        result = prime * result + ((this.discountLevel == null) ? 0 : this.discountLevel.hashCode());
-        result = prime * result + ((this.discountLevelValue == null) ? 0 : this.discountLevelValue.hashCode());
-        result = prime * result + ((this.discountMode == null) ? 0 : this.discountMode.hashCode());
-        result = prime * result + ((this.discountNumber == null) ? 0 : this.discountNumber.hashCode());
-        result = prime * result + ((this.discountType == null) ? 0 : this.discountType.hashCode());
-        result = prime * result + ((this.discountedItemCode == null) ? 0 : this.discountedItemCode.hashCode());
-        result = prime * result + ((this.discountedUnit == null) ? 0 : this.discountedUnit.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.freeProductName == null) ? 0 : this.freeProductName.hashCode());
-        result = prime * result + ((this.maxOrderCount == null) ? 0 : this.maxOrderCount.hashCode());
-        result = prime * result + ((this.maxQty == null) ? 0 : this.maxQty.hashCode());
-        result = prime * result + ((this.minQty == null) ? 0 : this.minQty.hashCode());
-        result = prime * result + ((this.qty == null) ? 0 : this.qty.hashCode());
-        result = prime * result + ((this.repeatDiscount == null) ? 0 : this.repeatDiscount.hashCode());
-        result = prime * result + ((this.schemeText == null) ? 0 : this.schemeText.hashCode());
-        result = prime * result + ((this.scope == null) ? 0 : this.scope.hashCode());
-        result = prime * result + ((this.skuCode == null) ? 0 : this.skuCode.hashCode());
-        result = prime * result + ((this.skuName == null) ? 0 : this.skuName.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.subCategory == null) ? 0 : this.subCategory.hashCode());
-        result = prime * result + ((this.typeOfDiscount == null) ? 0 : this.typeOfDiscount.hashCode());
-        result = prime * result + ((this.unit == null) ? 0 : this.unit.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.supplierLoginid == null) ? 0 : this.supplierLoginid.hashCode());
-        result = prime * result + ((this.fkDiscount == null) ? 0 : this.fkDiscount.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

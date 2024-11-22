@@ -11,27 +11,13 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Collection;
-import java.util.Date;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 
 /**
@@ -133,7 +119,7 @@ public class CkSalesLost extends TableImpl<Record> {
     /**
      * The column <code>ck_sales_lost.date</code>.
      */
-    public final TableField<Record, Date> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0).nullable(false), this, "");
 
     /**
      * The column <code>ck_sales_lost.loginid</code>.
@@ -181,11 +167,11 @@ public class CkSalesLost extends TableImpl<Record> {
     public final TableField<Record, Integer> WORKING_DAY = createField(DSL.name("working_day"), SQLDataType.INTEGER.nullable(false), this, "");
 
     private CkSalesLost(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkSalesLost(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkSalesLost(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -209,6 +195,10 @@ public class CkSalesLost extends TableImpl<Record> {
         this(DSL.name("ck_sales_lost"), null);
     }
 
+    public <O extends Record> CkSalesLost(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_SALES_LOST);
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -229,11 +219,6 @@ public class CkSalesLost extends TableImpl<Record> {
         return new CkSalesLost(alias, this);
     }
 
-    @Override
-    public CkSalesLost as(Table<?> alias) {
-        return new CkSalesLost(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -248,97 +233,5 @@ public class CkSalesLost extends TableImpl<Record> {
     @Override
     public CkSalesLost rename(Name name) {
         return new CkSalesLost(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkSalesLost rename(Table<?> name) {
-        return new CkSalesLost(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSalesLost where(Condition condition) {
-        return new CkSalesLost(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSalesLost where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSalesLost where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSalesLost where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSalesLost where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSalesLost where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSalesLost where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkSalesLost where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSalesLost whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkSalesLost whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

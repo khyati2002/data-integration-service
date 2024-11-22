@@ -6,32 +6,13 @@ package com.salescode.jooq.generated.tables;
 
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkHierarchyMetadata.CkHierarchyMetadataPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -66,11 +47,11 @@ public class CkUserImmediateParent extends TableImpl<Record> {
     public final TableField<Record, String> PARENT = createField(DSL.name("parent"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private CkUserImmediateParent(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkUserImmediateParent(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkUserImmediateParent(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -94,37 +75,8 @@ public class CkUserImmediateParent extends TableImpl<Record> {
         this(DSL.name("ck_user_immediate_parent"), null);
     }
 
-    public <O extends Record> CkUserImmediateParent(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_USER_IMMEDIATE_PARENT);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkUserImmediateParentPath extends CkUserImmediateParent implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkUserImmediateParentPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkUserImmediateParentPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkUserImmediateParentPath as(String alias) {
-            return new CkUserImmediateParentPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkUserImmediateParentPath as(Name alias) {
-            return new CkUserImmediateParentPath(alias, this);
-        }
-
-        @Override
-        public CkUserImmediateParentPath as(Table<?> alias) {
-            return new CkUserImmediateParentPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkUserImmediateParent(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_USER_IMMEDIATE_PARENT);
     }
 
     @Override
@@ -137,27 +89,26 @@ public class CkUserImmediateParent extends TableImpl<Record> {
         return Arrays.asList(Keys.FK8MT6B8MLBSXTLKW9A8DU5US4W, Keys.FKNDK8B1HP9FKNKNCAWWGPX75D);
     }
 
-    private transient CkUserPath _ckUser;
+    private transient CkUser _ckUser;
+    private transient CkHierarchyMetadata _ckHierarchyMetadata;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FK8MT6B8MLBSXTLKW9A8DU5US4W, null);
+            _ckUser = new CkUser(this, Keys.FK8MT6B8MLBSXTLKW9A8DU5US4W);
 
         return _ckUser;
     }
-
-    private transient CkHierarchyMetadataPath _ckHierarchyMetadata;
 
     /**
      * Get the implicit join path to the
      * <code>ckroot.ck_hierarchy_metadata</code> table.
      */
-    public CkHierarchyMetadataPath ckHierarchyMetadata() {
+    public CkHierarchyMetadata ckHierarchyMetadata() {
         if (_ckHierarchyMetadata == null)
-            _ckHierarchyMetadata = new CkHierarchyMetadataPath(this, Keys.FKNDK8B1HP9FKNKNCAWWGPX75D, null);
+            _ckHierarchyMetadata = new CkHierarchyMetadata(this, Keys.FKNDK8B1HP9FKNKNCAWWGPX75D);
 
         return _ckHierarchyMetadata;
     }
@@ -170,11 +121,6 @@ public class CkUserImmediateParent extends TableImpl<Record> {
     @Override
     public CkUserImmediateParent as(Name alias) {
         return new CkUserImmediateParent(alias, this);
-    }
-
-    @Override
-    public CkUserImmediateParent as(Table<?> alias) {
-        return new CkUserImmediateParent(alias.getQualifiedName(), this);
     }
 
     /**
@@ -191,97 +137,5 @@ public class CkUserImmediateParent extends TableImpl<Record> {
     @Override
     public CkUserImmediateParent rename(Name name) {
         return new CkUserImmediateParent(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkUserImmediateParent rename(Table<?> name) {
-        return new CkUserImmediateParent(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserImmediateParent where(Condition condition) {
-        return new CkUserImmediateParent(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserImmediateParent where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserImmediateParent where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserImmediateParent where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserImmediateParent where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserImmediateParent where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserImmediateParent where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkUserImmediateParent where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserImmediateParent whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkUserImmediateParent whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

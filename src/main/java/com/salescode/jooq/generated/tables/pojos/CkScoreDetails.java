@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,31 +22,31 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private Double closingPoints;
-    private Double currentVolumn;
-    private Date endDate;
-    private String feature;
-    private Double openingPoints;
-    private JSON pointsBreakup;
-    private String programNumber;
-    private Date startDate;
-    private Double totalPoints;
-    private String locationHierarchy;
-    private String loginid;
-    private String outletcode;
-    private Byte changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private Double        closingPoints;
+    private Double        currentVolumn;
+    private LocalDateTime endDate;
+    private String        feature;
+    private Double        openingPoints;
+    private JSON          pointsBreakup;
+    private String        programNumber;
+    private LocalDateTime startDate;
+    private Double        totalPoints;
+    private String        locationHierarchy;
+    private String        loginid;
+    private String        outletcode;
+    private Byte          changed;
 
     public CkScoreDetails() {}
 
@@ -82,31 +79,31 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     }
 
     public CkScoreDetails(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        Double closingPoints,
-        Double currentVolumn,
-        Date endDate,
-        String feature,
-        Double openingPoints,
-        JSON pointsBreakup,
-        String programNumber,
-        Date startDate,
-        Double totalPoints,
-        String locationHierarchy,
-        String loginid,
-        String outletcode,
-        Byte changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        Double        closingPoints,
+        Double        currentVolumn,
+        LocalDateTime endDate,
+        String        feature,
+        Double        openingPoints,
+        JSON          pointsBreakup,
+        String        programNumber,
+        LocalDateTime startDate,
+        Double        totalPoints,
+        String        locationHierarchy,
+        String        loginid,
+        String        outletcode,
+        Byte          changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -138,8 +135,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -168,7 +163,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -183,7 +177,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -254,7 +247,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -269,7 +261,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -284,7 +275,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -313,7 +303,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.closing_points</code>.
      */
-    @NotNull
     public Double getClosingPoints() {
         return this.closingPoints;
     }
@@ -328,7 +317,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.current_volumn</code>.
      */
-    @NotNull
     public Double getCurrentVolumn() {
         return this.currentVolumn;
     }
@@ -343,21 +331,20 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.end_date</code>.
      */
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return this.endDate;
     }
 
     /**
      * Setter for <code>ck_score_details.end_date</code>.
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
     /**
      * Getter for <code>ck_score_details.feature</code>.
      */
-    @Size(max = 255)
     public String getFeature() {
         return this.feature;
     }
@@ -372,7 +359,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.opening_points</code>.
      */
-    @NotNull
     public Double getOpeningPoints() {
         return this.openingPoints;
     }
@@ -401,7 +387,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.program_number</code>.
      */
-    @Size(max = 255)
     public String getProgramNumber() {
         return this.programNumber;
     }
@@ -416,21 +401,20 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.start_date</code>.
      */
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return this.startDate;
     }
 
     /**
      * Setter for <code>ck_score_details.start_date</code>.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
     /**
      * Getter for <code>ck_score_details.total_points</code>.
      */
-    @NotNull
     public Double getTotalPoints() {
         return this.totalPoints;
     }
@@ -445,7 +429,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.location_hierarchy</code>.
      */
-    @Size(max = 500)
     public String getLocationHierarchy() {
         return this.locationHierarchy;
     }
@@ -460,7 +443,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.loginid</code>.
      */
-    @Size(max = 50)
     public String getLoginid() {
         return this.loginid;
     }
@@ -475,7 +457,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_score_details.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -499,200 +480,6 @@ public class CkScoreDetails extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkScoreDetails other = (CkScoreDetails) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.closingPoints == null) {
-            if (other.closingPoints != null)
-                return false;
-        }
-        else if (!this.closingPoints.equals(other.closingPoints))
-            return false;
-        if (this.currentVolumn == null) {
-            if (other.currentVolumn != null)
-                return false;
-        }
-        else if (!this.currentVolumn.equals(other.currentVolumn))
-            return false;
-        if (this.endDate == null) {
-            if (other.endDate != null)
-                return false;
-        }
-        else if (!this.endDate.equals(other.endDate))
-            return false;
-        if (this.feature == null) {
-            if (other.feature != null)
-                return false;
-        }
-        else if (!this.feature.equals(other.feature))
-            return false;
-        if (this.openingPoints == null) {
-            if (other.openingPoints != null)
-                return false;
-        }
-        else if (!this.openingPoints.equals(other.openingPoints))
-            return false;
-        if (this.pointsBreakup == null) {
-            if (other.pointsBreakup != null)
-                return false;
-        }
-        else if (!this.pointsBreakup.equals(other.pointsBreakup))
-            return false;
-        if (this.programNumber == null) {
-            if (other.programNumber != null)
-                return false;
-        }
-        else if (!this.programNumber.equals(other.programNumber))
-            return false;
-        if (this.startDate == null) {
-            if (other.startDate != null)
-                return false;
-        }
-        else if (!this.startDate.equals(other.startDate))
-            return false;
-        if (this.totalPoints == null) {
-            if (other.totalPoints != null)
-                return false;
-        }
-        else if (!this.totalPoints.equals(other.totalPoints))
-            return false;
-        if (this.locationHierarchy == null) {
-            if (other.locationHierarchy != null)
-                return false;
-        }
-        else if (!this.locationHierarchy.equals(other.locationHierarchy))
-            return false;
-        if (this.loginid == null) {
-            if (other.loginid != null)
-                return false;
-        }
-        else if (!this.loginid.equals(other.loginid))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.closingPoints == null) ? 0 : this.closingPoints.hashCode());
-        result = prime * result + ((this.currentVolumn == null) ? 0 : this.currentVolumn.hashCode());
-        result = prime * result + ((this.endDate == null) ? 0 : this.endDate.hashCode());
-        result = prime * result + ((this.feature == null) ? 0 : this.feature.hashCode());
-        result = prime * result + ((this.openingPoints == null) ? 0 : this.openingPoints.hashCode());
-        result = prime * result + ((this.pointsBreakup == null) ? 0 : this.pointsBreakup.hashCode());
-        result = prime * result + ((this.programNumber == null) ? 0 : this.programNumber.hashCode());
-        result = prime * result + ((this.startDate == null) ? 0 : this.startDate.hashCode());
-        result = prime * result + ((this.totalPoints == null) ? 0 : this.totalPoints.hashCode());
-        result = prime * result + ((this.locationHierarchy == null) ? 0 : this.locationHierarchy.hashCode());
-        result = prime * result + ((this.loginid == null) ? 0 : this.loginid.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

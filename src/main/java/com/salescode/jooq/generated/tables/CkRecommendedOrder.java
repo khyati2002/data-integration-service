@@ -12,34 +12,15 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -166,7 +147,7 @@ public class CkRecommendedOrder extends TableImpl<Record> {
     /**
      * The column <code>ck_recommended_order.end_date</code>.
      */
-    public final TableField<Record, Date> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_recommended_order.in_beat</code>.
@@ -226,7 +207,7 @@ public class CkRecommendedOrder extends TableImpl<Record> {
     /**
      * The column <code>ck_recommended_order.start_date</code>.
      */
-    public final TableField<Record, Date> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_recommended_order.supportkpi</code>.
@@ -269,11 +250,11 @@ public class CkRecommendedOrder extends TableImpl<Record> {
     public final TableField<Record, String> BASKET_ID = createField(DSL.name("basket_id"), SQLDataType.VARCHAR(255), this, "");
 
     private CkRecommendedOrder(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkRecommendedOrder(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkRecommendedOrder(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -297,37 +278,8 @@ public class CkRecommendedOrder extends TableImpl<Record> {
         this(DSL.name("ck_recommended_order"), null);
     }
 
-    public <O extends Record> CkRecommendedOrder(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_RECOMMENDED_ORDER);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkRecommendedOrderPath extends CkRecommendedOrder implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkRecommendedOrderPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkRecommendedOrderPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkRecommendedOrderPath as(String alias) {
-            return new CkRecommendedOrderPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkRecommendedOrderPath as(Name alias) {
-            return new CkRecommendedOrderPath(alias, this);
-        }
-
-        @Override
-        public CkRecommendedOrderPath as(Table<?> alias) {
-            return new CkRecommendedOrderPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkRecommendedOrder(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_RECOMMENDED_ORDER);
     }
 
     @Override
@@ -350,15 +302,15 @@ public class CkRecommendedOrder extends TableImpl<Record> {
         return Arrays.asList(Keys.FK4011QRLFXJQVS9NUBLY33FDDB);
     }
 
-    private transient CkOutletDetailsPath _ckOutletDetails;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FK4011QRLFXJQVS9NUBLY33FDDB, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FK4011QRLFXJQVS9NUBLY33FDDB);
 
         return _ckOutletDetails;
     }
@@ -371,11 +323,6 @@ public class CkRecommendedOrder extends TableImpl<Record> {
     @Override
     public CkRecommendedOrder as(Name alias) {
         return new CkRecommendedOrder(alias, this);
-    }
-
-    @Override
-    public CkRecommendedOrder as(Table<?> alias) {
-        return new CkRecommendedOrder(alias.getQualifiedName(), this);
     }
 
     /**
@@ -392,97 +339,5 @@ public class CkRecommendedOrder extends TableImpl<Record> {
     @Override
     public CkRecommendedOrder rename(Name name) {
         return new CkRecommendedOrder(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkRecommendedOrder rename(Table<?> name) {
-        return new CkRecommendedOrder(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRecommendedOrder where(Condition condition) {
-        return new CkRecommendedOrder(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRecommendedOrder where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRecommendedOrder where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRecommendedOrder where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkRecommendedOrder where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkRecommendedOrder where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkRecommendedOrder where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkRecommendedOrder where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRecommendedOrder whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRecommendedOrder whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

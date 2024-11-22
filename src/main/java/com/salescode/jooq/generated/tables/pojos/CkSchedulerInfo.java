@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,25 +21,25 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private Boolean changed;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String cron;
-    private Date lastRunTime;
-    private String name;
-    private Date nextScheduledTime;
-    private String timeZone;
-    private String type;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        cron;
+    private LocalDateTime lastRunTime;
+    private String        name;
+    private LocalDateTime nextScheduledTime;
+    private String        timeZone;
+    private String        type;
 
     public CkSchedulerInfo() {}
 
@@ -68,25 +66,25 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     }
 
     public CkSchedulerInfo(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        Boolean changed,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String cron,
-        Date lastRunTime,
-        String name,
-        Date nextScheduledTime,
-        String timeZone,
-        String type
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        cron,
+        LocalDateTime lastRunTime,
+        String        name,
+        LocalDateTime nextScheduledTime,
+        String        timeZone,
+        String        type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -112,8 +110,6 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_scheduler_info.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -142,7 +138,6 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_scheduler_info.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -171,7 +166,6 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_scheduler_info.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -242,7 +236,6 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_scheduler_info.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -257,7 +250,6 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_scheduler_info.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -272,7 +264,6 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_scheduler_info.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -301,7 +292,6 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_scheduler_info.cron</code>.
      */
-    @Size(max = 255)
     public String getCron() {
         return this.cron;
     }
@@ -316,21 +306,20 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_scheduler_info.last_run_time</code>.
      */
-    public Date getLastRunTime() {
+    public LocalDateTime getLastRunTime() {
         return this.lastRunTime;
     }
 
     /**
      * Setter for <code>ck_scheduler_info.last_run_time</code>.
      */
-    public void setLastRunTime(Date lastRunTime) {
+    public void setLastRunTime(LocalDateTime lastRunTime) {
         this.lastRunTime = lastRunTime;
     }
 
     /**
      * Getter for <code>ck_scheduler_info.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -345,21 +334,20 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_scheduler_info.next_scheduled_time</code>.
      */
-    public Date getNextScheduledTime() {
+    public LocalDateTime getNextScheduledTime() {
         return this.nextScheduledTime;
     }
 
     /**
      * Setter for <code>ck_scheduler_info.next_scheduled_time</code>.
      */
-    public void setNextScheduledTime(Date nextScheduledTime) {
+    public void setNextScheduledTime(LocalDateTime nextScheduledTime) {
         this.nextScheduledTime = nextScheduledTime;
     }
 
     /**
      * Getter for <code>ck_scheduler_info.time_zone</code>.
      */
-    @Size(max = 255)
     public String getTimeZone() {
         return this.timeZone;
     }
@@ -374,7 +362,6 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_scheduler_info.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -384,158 +371,6 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
      */
     public void setType(String type) {
         this.type = type;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkSchedulerInfo other = (CkSchedulerInfo) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.cron == null) {
-            if (other.cron != null)
-                return false;
-        }
-        else if (!this.cron.equals(other.cron))
-            return false;
-        if (this.lastRunTime == null) {
-            if (other.lastRunTime != null)
-                return false;
-        }
-        else if (!this.lastRunTime.equals(other.lastRunTime))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.nextScheduledTime == null) {
-            if (other.nextScheduledTime != null)
-                return false;
-        }
-        else if (!this.nextScheduledTime.equals(other.nextScheduledTime))
-            return false;
-        if (this.timeZone == null) {
-            if (other.timeZone != null)
-                return false;
-        }
-        else if (!this.timeZone.equals(other.timeZone))
-            return false;
-        if (this.type == null) {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.cron == null) ? 0 : this.cron.hashCode());
-        result = prime * result + ((this.lastRunTime == null) ? 0 : this.lastRunTime.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.nextScheduledTime == null) ? 0 : this.nextScheduledTime.hashCode());
-        result = prime * result + ((this.timeZone == null) ? 0 : this.timeZone.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        return result;
     }
 
     @Override

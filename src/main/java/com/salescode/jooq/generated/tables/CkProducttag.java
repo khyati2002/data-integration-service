@@ -11,34 +11,15 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkProductdetails.CkProductdetailsPath;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.InverseForeignKey;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -130,12 +111,12 @@ public class CkProducttag extends TableImpl<Record> {
     /**
      * The column <code>ck_producttag.end_date</code>.
      */
-    public final TableField<Record, Date> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_producttag.start_date</code>.
      */
-    public final TableField<Record, Date> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_producttag.tag_code</code>.
@@ -178,11 +159,11 @@ public class CkProducttag extends TableImpl<Record> {
     public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkProducttag(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkProducttag(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkProducttag(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -206,37 +187,8 @@ public class CkProducttag extends TableImpl<Record> {
         this(DSL.name("ck_producttag"), null);
     }
 
-    public <O extends Record> CkProducttag(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_PRODUCTTAG);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkProducttagPath extends CkProducttag implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkProducttagPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkProducttagPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkProducttagPath as(String alias) {
-            return new CkProducttagPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkProducttagPath as(Name alias) {
-            return new CkProducttagPath(alias, this);
-        }
-
-        @Override
-        public CkProducttagPath as(Table<?> alias) {
-            return new CkProducttagPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkProducttag(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_PRODUCTTAG);
     }
 
     @Override
@@ -254,28 +206,27 @@ public class CkProducttag extends TableImpl<Record> {
         return Arrays.asList(Keys.FK9LIEOJPX0JH8UAE9FBHY5RF2V, Keys.FKCJV1SBU80GFRLOIW8LDXKICAP);
     }
 
-    private transient CkOutletDetailsPath _ckOutletDetails;
+    private transient CkOutletDetails _ckOutletDetails;
+    private transient CkProductdetails _ckProductdetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FK9LIEOJPX0JH8UAE9FBHY5RF2V, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FK9LIEOJPX0JH8UAE9FBHY5RF2V);
 
         return _ckOutletDetails;
     }
-
-    private transient CkProductdetailsPath _ckProductdetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_productdetails</code>
      * table.
      */
-    public CkProductdetailsPath ckProductdetails() {
+    public CkProductdetails ckProductdetails() {
         if (_ckProductdetails == null)
-            _ckProductdetails = new CkProductdetailsPath(this, Keys.FKCJV1SBU80GFRLOIW8LDXKICAP, null);
+            _ckProductdetails = new CkProductdetails(this, Keys.FKCJV1SBU80GFRLOIW8LDXKICAP);
 
         return _ckProductdetails;
     }
@@ -288,11 +239,6 @@ public class CkProducttag extends TableImpl<Record> {
     @Override
     public CkProducttag as(Name alias) {
         return new CkProducttag(alias, this);
-    }
-
-    @Override
-    public CkProducttag as(Table<?> alias) {
-        return new CkProducttag(alias.getQualifiedName(), this);
     }
 
     /**
@@ -309,97 +255,5 @@ public class CkProducttag extends TableImpl<Record> {
     @Override
     public CkProducttag rename(Name name) {
         return new CkProducttag(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkProducttag rename(Table<?> name) {
-        return new CkProducttag(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProducttag where(Condition condition) {
-        return new CkProducttag(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProducttag where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProducttag where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProducttag where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProducttag where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProducttag where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProducttag where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkProducttag where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProducttag whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkProducttag whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -41,8 +36,6 @@ public class CkLinkedbrand implements Serializable {
     /**
      * Getter for <code>ck_linkedbrand.program_number</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getProgramNumber() {
         return this.programNumber;
     }
@@ -57,7 +50,6 @@ public class CkLinkedbrand implements Serializable {
     /**
      * Getter for <code>ck_linkedbrand.linked_brand</code>.
      */
-    @Size(max = 255)
     public String getLinkedBrand() {
         return this.linkedBrand;
     }
@@ -67,39 +59,6 @@ public class CkLinkedbrand implements Serializable {
      */
     public void setLinkedBrand(String linkedBrand) {
         this.linkedBrand = linkedBrand;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkLinkedbrand other = (CkLinkedbrand) obj;
-        if (this.programNumber == null) {
-            if (other.programNumber != null)
-                return false;
-        }
-        else if (!this.programNumber.equals(other.programNumber))
-            return false;
-        if (this.linkedBrand == null) {
-            if (other.linkedBrand != null)
-                return false;
-        }
-        else if (!this.linkedBrand.equals(other.linkedBrand))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.programNumber == null) ? 0 : this.programNumber.hashCode());
-        result = prime * result + ((this.linkedBrand == null) ? 0 : this.linkedBrand.hashCode());
-        return result;
     }
 
     @Override

@@ -4,11 +4,6 @@
 package com.salescode.jooq.generated.tables.pojos;
 
 
-import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 
 
@@ -49,8 +44,6 @@ public class CkResourceAccessRole implements Serializable {
     /**
      * Getter for <code>ck_resource_access_role.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -65,7 +58,6 @@ public class CkResourceAccessRole implements Serializable {
     /**
      * Getter for <code>ck_resource_access_role.cdm_id</code>.
      */
-    @Size(max = 255)
     public String getCdmId() {
         return this.cdmId;
     }
@@ -80,7 +72,6 @@ public class CkResourceAccessRole implements Serializable {
     /**
      * Getter for <code>ck_resource_access_role.entity_name</code>.
      */
-    @Size(max = 255)
     public String getEntityName() {
         return this.entityName;
     }
@@ -95,7 +86,6 @@ public class CkResourceAccessRole implements Serializable {
     /**
      * Getter for <code>ck_resource_access_role.role_id</code>.
      */
-    @Size(max = 255)
     public String getRoleId() {
         return this.roleId;
     }
@@ -105,53 +95,6 @@ public class CkResourceAccessRole implements Serializable {
      */
     public void setRoleId(String roleId) {
         this.roleId = roleId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkResourceAccessRole other = (CkResourceAccessRole) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.cdmId == null) {
-            if (other.cdmId != null)
-                return false;
-        }
-        else if (!this.cdmId.equals(other.cdmId))
-            return false;
-        if (this.entityName == null) {
-            if (other.entityName != null)
-                return false;
-        }
-        else if (!this.entityName.equals(other.entityName))
-            return false;
-        if (this.roleId == null) {
-            if (other.roleId != null)
-                return false;
-        }
-        else if (!this.roleId.equals(other.roleId))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.cdmId == null) ? 0 : this.cdmId.hashCode());
-        result = prime * result + ((this.entityName == null) ? 0 : this.entityName.hashCode());
-        result = prime * result + ((this.roleId == null) ? 0 : this.roleId.hashCode());
-        return result;
     }
 
     @Override

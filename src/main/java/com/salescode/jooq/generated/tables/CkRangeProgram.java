@@ -12,41 +12,15 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import com.salescode.jooq.generated.tables.CkLocation.CkLocationPath;
-import com.salescode.jooq.generated.tables.CkOffers.CkOffersPath;
-import com.salescode.jooq.generated.tables.CkOutletDetails.CkOutletDetailsPath;
-import com.salescode.jooq.generated.tables.CkRangeProgramSupplierHierarchy.CkRangeProgramSupplierHierarchyPath;
-import com.salescode.jooq.generated.tables.CkSchemes.CkSchemesPath;
-import com.salescode.jooq.generated.tables.CkUser.CkUserPath;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.Path;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -168,7 +142,7 @@ public class CkRangeProgram extends TableImpl<Record> {
     /**
      * The column <code>ck_range_program.end_date</code>.
      */
-    public final TableField<Record, Date> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_range_program.end_qty_or_val</code>.
@@ -263,7 +237,7 @@ public class CkRangeProgram extends TableImpl<Record> {
     /**
      * The column <code>ck_range_program.start_date</code>.
      */
-    public final TableField<Record, Date> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, LocalDateTime> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_range_program.start_qty_or_val</code>.
@@ -476,11 +450,11 @@ public class CkRangeProgram extends TableImpl<Record> {
     public final TableField<Record, String> BEAT = createField(DSL.name("beat"), SQLDataType.VARCHAR(255), this, "");
 
     private CkRangeProgram(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkRangeProgram(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkRangeProgram(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -504,37 +478,8 @@ public class CkRangeProgram extends TableImpl<Record> {
         this(DSL.name("ck_range_program"), null);
     }
 
-    public <O extends Record> CkRangeProgram(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-        super(path, childPath, parentPath, CK_RANGE_PROGRAM);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class CkRangeProgramPath extends CkRangeProgram implements Path<Record> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> CkRangeProgramPath(Table<O> path, ForeignKey<O, Record> childPath, InverseForeignKey<O, Record> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private CkRangeProgramPath(Name alias, Table<Record> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public CkRangeProgramPath as(String alias) {
-            return new CkRangeProgramPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public CkRangeProgramPath as(Name alias) {
-            return new CkRangeProgramPath(alias, this);
-        }
-
-        @Override
-        public CkRangeProgramPath as(Table<?> alias) {
-            return new CkRangeProgramPath(alias.getQualifiedName(), this);
-        }
+    public <O extends Record> CkRangeProgram(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_RANGE_PROGRAM);
     }
 
     @Override
@@ -559,82 +504,42 @@ public class CkRangeProgram extends TableImpl<Record> {
 
     @Override
     public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKLB0GYRJ9GHP95216272LR9F1O, Keys.FKRSN1V09MQ6WWQ01IROG7BA5K3, Keys.FK9F56YF61F2QKXR644OYGYX5GG, Keys.FKS5AB2XUDJDHBAT8A2GARJLU3N);
+        return Arrays.asList(Keys.FKRSN1V09MQ6WWQ01IROG7BA5K3, Keys.FK9F56YF61F2QKXR644OYGYX5GG, Keys.FKS5AB2XUDJDHBAT8A2GARJLU3N);
     }
 
-    private transient CkSchemesPath _ckSchemes;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_schemes</code> table.
-     */
-    public CkSchemesPath ckSchemes() {
-        if (_ckSchemes == null)
-            _ckSchemes = new CkSchemesPath(this, Keys.FKLB0GYRJ9GHP95216272LR9F1O, null);
-
-        return _ckSchemes;
-    }
-
-    private transient CkLocationPath _ckLocation;
+    private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
      */
-    public CkLocationPath ckLocation() {
+    public CkLocation ckLocation() {
         if (_ckLocation == null)
-            _ckLocation = new CkLocationPath(this, Keys.FKRSN1V09MQ6WWQ01IROG7BA5K3, null);
+            _ckLocation = new CkLocation(this, Keys.FKRSN1V09MQ6WWQ01IROG7BA5K3);
 
         return _ckLocation;
     }
 
-    private transient CkUserPath _ckUser;
-
     /**
      * Get the implicit join path to the <code>ckroot.ck_user</code> table.
      */
-    public CkUserPath ckUser() {
+    public CkUser ckUser() {
         if (_ckUser == null)
-            _ckUser = new CkUserPath(this, Keys.FK9F56YF61F2QKXR644OYGYX5GG, null);
+            _ckUser = new CkUser(this, Keys.FK9F56YF61F2QKXR644OYGYX5GG);
 
         return _ckUser;
     }
-
-    private transient CkOutletDetailsPath _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
      * table.
      */
-    public CkOutletDetailsPath ckOutletDetails() {
+    public CkOutletDetails ckOutletDetails() {
         if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetailsPath(this, Keys.FKS5AB2XUDJDHBAT8A2GARJLU3N, null);
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FKS5AB2XUDJDHBAT8A2GARJLU3N);
 
         return _ckOutletDetails;
-    }
-
-    private transient CkRangeProgramSupplierHierarchyPath _ckRangeProgramSupplierHierarchy;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>ckroot.ck_range_program_supplier_hierarchy</code> table
-     */
-    public CkRangeProgramSupplierHierarchyPath ckRangeProgramSupplierHierarchy() {
-        if (_ckRangeProgramSupplierHierarchy == null)
-            _ckRangeProgramSupplierHierarchy = new CkRangeProgramSupplierHierarchyPath(this, null, Keys.FKNLVQH7XIN46NAV7TYR2M9VRPO.getInverseKey());
-
-        return _ckRangeProgramSupplierHierarchy;
-    }
-
-    private transient CkOffersPath _ckOffers;
-
-    /**
-     * Get the implicit to-many join path to the <code>ckroot.ck_offers</code>
-     * table
-     */
-    public CkOffersPath ckOffers() {
-        if (_ckOffers == null)
-            _ckOffers = new CkOffersPath(this, null, Keys.FKI52M8URIVV3VW9HMIETHTYJKW.getInverseKey());
-
-        return _ckOffers;
     }
 
     @Override
@@ -645,11 +550,6 @@ public class CkRangeProgram extends TableImpl<Record> {
     @Override
     public CkRangeProgram as(Name alias) {
         return new CkRangeProgram(alias, this);
-    }
-
-    @Override
-    public CkRangeProgram as(Table<?> alias) {
-        return new CkRangeProgram(alias.getQualifiedName(), this);
     }
 
     /**
@@ -666,97 +566,5 @@ public class CkRangeProgram extends TableImpl<Record> {
     @Override
     public CkRangeProgram rename(Name name) {
         return new CkRangeProgram(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkRangeProgram rename(Table<?> name) {
-        return new CkRangeProgram(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRangeProgram where(Condition condition) {
-        return new CkRangeProgram(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRangeProgram where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRangeProgram where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRangeProgram where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkRangeProgram where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkRangeProgram where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkRangeProgram where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkRangeProgram where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRangeProgram whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkRangeProgram whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

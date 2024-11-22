@@ -11,30 +11,14 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import org.jooq.Condition;
-import org.jooq.Field;
-import org.jooq.JSON;
-import org.jooq.Name;
-import org.jooq.PlainSQL;
-import org.jooq.QueryPart;
-import org.jooq.Record;
-import org.jooq.SQL;
-import org.jooq.Schema;
-import org.jooq.Select;
-import org.jooq.Stringly;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -234,11 +218,11 @@ public class CkKpiRegistory extends TableImpl<Record> {
     public final TableField<Record, String> OPERATION_TYPE = createField(DSL.name("operation_type"), SQLDataType.VARCHAR(255), this, "");
 
     private CkKpiRegistory(Name alias, Table<Record> aliased) {
-        this(alias, aliased, (Field<?>[]) null, null);
+        this(alias, aliased, null);
     }
 
-    private CkKpiRegistory(Name alias, Table<Record> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+    private CkKpiRegistory(Name alias, Table<Record> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -260,6 +244,10 @@ public class CkKpiRegistory extends TableImpl<Record> {
      */
     public CkKpiRegistory() {
         this(DSL.name("ck_kpi_registory"), null);
+    }
+
+    public <O extends Record> CkKpiRegistory(Table<O> child, ForeignKey<O, Record> key) {
+        super(child, key, CK_KPI_REGISTORY);
     }
 
     @Override
@@ -287,11 +275,6 @@ public class CkKpiRegistory extends TableImpl<Record> {
         return new CkKpiRegistory(alias, this);
     }
 
-    @Override
-    public CkKpiRegistory as(Table<?> alias) {
-        return new CkKpiRegistory(alias.getQualifiedName(), this);
-    }
-
     /**
      * Rename this table
      */
@@ -306,97 +289,5 @@ public class CkKpiRegistory extends TableImpl<Record> {
     @Override
     public CkKpiRegistory rename(Name name) {
         return new CkKpiRegistory(name, null);
-    }
-
-    /**
-     * Rename this table
-     */
-    @Override
-    public CkKpiRegistory rename(Table<?> name) {
-        return new CkKpiRegistory(name.getQualifiedName(), null);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkKpiRegistory where(Condition condition) {
-        return new CkKpiRegistory(getQualifiedName(), aliased() ? this : null, null, condition);
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkKpiRegistory where(Collection<? extends Condition> conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkKpiRegistory where(Condition... conditions) {
-        return where(DSL.and(conditions));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkKpiRegistory where(Field<Boolean> condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkKpiRegistory where(SQL condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkKpiRegistory where(@Stringly.SQL String condition) {
-        return where(DSL.condition(condition));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkKpiRegistory where(@Stringly.SQL String condition, Object... binds) {
-        return where(DSL.condition(condition, binds));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    @PlainSQL
-    public CkKpiRegistory where(@Stringly.SQL String condition, QueryPart... parts) {
-        return where(DSL.condition(condition, parts));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkKpiRegistory whereExists(Select<?> select) {
-        return where(DSL.exists(select));
-    }
-
-    /**
-     * Create an inline derived table from this table
-     */
-    @Override
-    public CkKpiRegistory whereNotExists(Select<?> select) {
-        return where(DSL.notExists(select));
     }
 }

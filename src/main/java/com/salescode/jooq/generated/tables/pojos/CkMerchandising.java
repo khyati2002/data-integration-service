@@ -8,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -23,38 +20,38 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String       id;
     private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String blobKey;
-    private String blobKeyA;
-    private String blobKeyB;
-    private String blobKeyC;
-    private String brand;
-    private String category;
-    private String colorCode;
-    private String creteria;
-    private String fileName;
-    private String fileNameA;
-    private String fileNameB;
-    private String filenameC;
-    private String position;
-    private String product;
-    private String sku;
-    private String style;
-    private String subCategory;
-    private String type;
-    private String outletcode;
-    private Byte changed;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private String       hash;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private String       source;
+    private Integer      version;
+    private String       blobKey;
+    private String       blobKeyA;
+    private String       blobKeyB;
+    private String       blobKeyC;
+    private String       brand;
+    private String       category;
+    private String       colorCode;
+    private String       creteria;
+    private String       fileName;
+    private String       fileNameA;
+    private String       fileNameB;
+    private String       filenameC;
+    private String       position;
+    private String       product;
+    private String       sku;
+    private String       style;
+    private String       subCategory;
+    private String       type;
+    private String       outletcode;
+    private Byte         changed;
 
     public CkMerchandising() {}
 
@@ -94,38 +91,38 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     }
 
     public CkMerchandising(
-        String id,
+        String       id,
         ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String blobKey,
-        String blobKeyA,
-        String blobKeyB,
-        String blobKeyC,
-        String brand,
-        String category,
-        String colorCode,
-        String creteria,
-        String fileName,
-        String fileNameA,
-        String fileNameB,
-        String filenameC,
-        String position,
-        String product,
-        String sku,
-        String style,
-        String subCategory,
-        String type,
-        String outletcode,
-        Byte changed
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        String       hash,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        String       source,
+        Integer      version,
+        String       blobKey,
+        String       blobKeyA,
+        String       blobKeyB,
+        String       blobKeyC,
+        String       brand,
+        String       category,
+        String       colorCode,
+        String       creteria,
+        String       fileName,
+        String       fileNameA,
+        String       fileNameB,
+        String       filenameC,
+        String       position,
+        String       product,
+        String       sku,
+        String       style,
+        String       subCategory,
+        String       type,
+        String       outletcode,
+        Byte         changed
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -164,8 +161,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -194,7 +189,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -209,7 +203,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -280,7 +273,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -295,7 +287,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -310,7 +301,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -339,7 +329,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.blob_key</code>.
      */
-    @Size(max = 255)
     public String getBlobKey() {
         return this.blobKey;
     }
@@ -354,7 +343,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.blob_key_a</code>.
      */
-    @Size(max = 255)
     public String getBlobKeyA() {
         return this.blobKeyA;
     }
@@ -369,7 +357,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.blob_key_b</code>.
      */
-    @Size(max = 255)
     public String getBlobKeyB() {
         return this.blobKeyB;
     }
@@ -384,7 +371,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.blob_key_c</code>.
      */
-    @Size(max = 255)
     public String getBlobKeyC() {
         return this.blobKeyC;
     }
@@ -399,7 +385,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.brand</code>.
      */
-    @Size(max = 255)
     public String getBrand() {
         return this.brand;
     }
@@ -414,7 +399,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.category</code>.
      */
-    @Size(max = 255)
     public String getCategory() {
         return this.category;
     }
@@ -429,7 +413,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.color_code</code>.
      */
-    @Size(max = 255)
     public String getColorCode() {
         return this.colorCode;
     }
@@ -444,7 +427,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.creteria</code>.
      */
-    @Size(max = 255)
     public String getCreteria() {
         return this.creteria;
     }
@@ -459,7 +441,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.file_name</code>.
      */
-    @Size(max = 255)
     public String getFileName() {
         return this.fileName;
     }
@@ -474,7 +455,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.file_name_a</code>.
      */
-    @Size(max = 255)
     public String getFileNameA() {
         return this.fileNameA;
     }
@@ -489,7 +469,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.file_name_b</code>.
      */
-    @Size(max = 255)
     public String getFileNameB() {
         return this.fileNameB;
     }
@@ -504,7 +483,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.filename_c</code>.
      */
-    @Size(max = 255)
     public String getFilenameC() {
         return this.filenameC;
     }
@@ -519,7 +497,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.position</code>.
      */
-    @Size(max = 255)
     public String getPosition() {
         return this.position;
     }
@@ -534,7 +511,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.product</code>.
      */
-    @Size(max = 255)
     public String getProduct() {
         return this.product;
     }
@@ -549,7 +525,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.sku</code>.
      */
-    @Size(max = 255)
     public String getSku() {
         return this.sku;
     }
@@ -564,7 +539,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.style</code>.
      */
-    @Size(max = 255)
     public String getStyle() {
         return this.style;
     }
@@ -579,7 +553,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.sub_category</code>.
      */
-    @Size(max = 255)
     public String getSubCategory() {
         return this.subCategory;
     }
@@ -594,7 +567,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.type</code>.
      */
-    @Size(max = 255)
     public String getType() {
         return this.type;
     }
@@ -609,7 +581,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_merchandising.outletcode</code>.
      */
-    @Size(max = 200)
     public String getOutletcode() {
         return this.outletcode;
     }
@@ -633,249 +604,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
      */
     public void setChanged(Byte changed) {
         this.changed = changed;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkMerchandising other = (CkMerchandising) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.blobKey == null) {
-            if (other.blobKey != null)
-                return false;
-        }
-        else if (!this.blobKey.equals(other.blobKey))
-            return false;
-        if (this.blobKeyA == null) {
-            if (other.blobKeyA != null)
-                return false;
-        }
-        else if (!this.blobKeyA.equals(other.blobKeyA))
-            return false;
-        if (this.blobKeyB == null) {
-            if (other.blobKeyB != null)
-                return false;
-        }
-        else if (!this.blobKeyB.equals(other.blobKeyB))
-            return false;
-        if (this.blobKeyC == null) {
-            if (other.blobKeyC != null)
-                return false;
-        }
-        else if (!this.blobKeyC.equals(other.blobKeyC))
-            return false;
-        if (this.brand == null) {
-            if (other.brand != null)
-                return false;
-        }
-        else if (!this.brand.equals(other.brand))
-            return false;
-        if (this.category == null) {
-            if (other.category != null)
-                return false;
-        }
-        else if (!this.category.equals(other.category))
-            return false;
-        if (this.colorCode == null) {
-            if (other.colorCode != null)
-                return false;
-        }
-        else if (!this.colorCode.equals(other.colorCode))
-            return false;
-        if (this.creteria == null) {
-            if (other.creteria != null)
-                return false;
-        }
-        else if (!this.creteria.equals(other.creteria))
-            return false;
-        if (this.fileName == null) {
-            if (other.fileName != null)
-                return false;
-        }
-        else if (!this.fileName.equals(other.fileName))
-            return false;
-        if (this.fileNameA == null) {
-            if (other.fileNameA != null)
-                return false;
-        }
-        else if (!this.fileNameA.equals(other.fileNameA))
-            return false;
-        if (this.fileNameB == null) {
-            if (other.fileNameB != null)
-                return false;
-        }
-        else if (!this.fileNameB.equals(other.fileNameB))
-            return false;
-        if (this.filenameC == null) {
-            if (other.filenameC != null)
-                return false;
-        }
-        else if (!this.filenameC.equals(other.filenameC))
-            return false;
-        if (this.position == null) {
-            if (other.position != null)
-                return false;
-        }
-        else if (!this.position.equals(other.position))
-            return false;
-        if (this.product == null) {
-            if (other.product != null)
-                return false;
-        }
-        else if (!this.product.equals(other.product))
-            return false;
-        if (this.sku == null) {
-            if (other.sku != null)
-                return false;
-        }
-        else if (!this.sku.equals(other.sku))
-            return false;
-        if (this.style == null) {
-            if (other.style != null)
-                return false;
-        }
-        else if (!this.style.equals(other.style))
-            return false;
-        if (this.subCategory == null) {
-            if (other.subCategory != null)
-                return false;
-        }
-        else if (!this.subCategory.equals(other.subCategory))
-            return false;
-        if (this.type == null) {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        if (this.outletcode == null) {
-            if (other.outletcode != null)
-                return false;
-        }
-        else if (!this.outletcode.equals(other.outletcode))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.blobKey == null) ? 0 : this.blobKey.hashCode());
-        result = prime * result + ((this.blobKeyA == null) ? 0 : this.blobKeyA.hashCode());
-        result = prime * result + ((this.blobKeyB == null) ? 0 : this.blobKeyB.hashCode());
-        result = prime * result + ((this.blobKeyC == null) ? 0 : this.blobKeyC.hashCode());
-        result = prime * result + ((this.brand == null) ? 0 : this.brand.hashCode());
-        result = prime * result + ((this.category == null) ? 0 : this.category.hashCode());
-        result = prime * result + ((this.colorCode == null) ? 0 : this.colorCode.hashCode());
-        result = prime * result + ((this.creteria == null) ? 0 : this.creteria.hashCode());
-        result = prime * result + ((this.fileName == null) ? 0 : this.fileName.hashCode());
-        result = prime * result + ((this.fileNameA == null) ? 0 : this.fileNameA.hashCode());
-        result = prime * result + ((this.fileNameB == null) ? 0 : this.fileNameB.hashCode());
-        result = prime * result + ((this.filenameC == null) ? 0 : this.filenameC.hashCode());
-        result = prime * result + ((this.position == null) ? 0 : this.position.hashCode());
-        result = prime * result + ((this.product == null) ? 0 : this.product.hashCode());
-        result = prime * result + ((this.sku == null) ? 0 : this.sku.hashCode());
-        result = prime * result + ((this.style == null) ? 0 : this.style.hashCode());
-        result = prime * result + ((this.subCategory == null) ? 0 : this.subCategory.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        result = prime * result + ((this.outletcode == null) ? 0 : this.outletcode.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        return result;
     }
 
     @Override

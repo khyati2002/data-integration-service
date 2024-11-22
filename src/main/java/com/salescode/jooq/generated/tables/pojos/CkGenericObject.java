@@ -7,14 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.jooq.JSON;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.jooq.JSON;
 
 
 /**
@@ -25,36 +22,36 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
-    private ActiveStatus activeStatus;
-    private String activeStatusReason;
-    private String createdBy;
-    private Date creationTime;
-    private JsonNode extendedAttributes;
-    private String hash;
-    private Date lastModifiedTime;
-    private String lob;
-    private String modifiedBy;
-    private String source;
-    private Integer version;
-    private String hierarchy;
-    private String key1;
-    private String key2;
-    private String key3;
-    private String key4;
-    private String key5;
-    private String loginId;
-    private String name;
-    private JSON payload;
-    private Long rangeKey;
-    private Long timestamp;
-    private String key6;
-    private Date date;
-    private Byte changed;
-    private String key10;
-    private String key7;
-    private String key8;
-    private String key9;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        hierarchy;
+    private String        key1;
+    private String        key2;
+    private String        key3;
+    private String        key4;
+    private String        key5;
+    private String        loginId;
+    private String        name;
+    private JSON          payload;
+    private Long          rangeKey;
+    private Long          timestamp;
+    private String        key6;
+    private LocalDateTime date;
+    private Byte          changed;
+    private String        key10;
+    private String        key7;
+    private String        key8;
+    private String        key9;
 
     public CkGenericObject() {}
 
@@ -92,36 +89,36 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     }
 
     public CkGenericObject(
-        String id,
-        ActiveStatus activeStatus,
-        String activeStatusReason,
-        String createdBy,
-        Date creationTime,
-        JsonNode extendedAttributes,
-        String hash,
-        Date lastModifiedTime,
-        String lob,
-        String modifiedBy,
-        String source,
-        Integer version,
-        String hierarchy,
-        String key1,
-        String key2,
-        String key3,
-        String key4,
-        String key5,
-        String loginId,
-        String name,
-        JSON payload,
-        Long rangeKey,
-        Long timestamp,
-        String key6,
-        Date date,
-        Byte changed,
-        String key10,
-        String key7,
-        String key8,
-        String key9
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        hierarchy,
+        String        key1,
+        String        key2,
+        String        key3,
+        String        key4,
+        String        key5,
+        String        loginId,
+        String        name,
+        JSON          payload,
+        Long          rangeKey,
+        Long          timestamp,
+        String        key6,
+        LocalDateTime date,
+        Byte          changed,
+        String        key10,
+        String        key7,
+        String        key8,
+        String        key9
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -158,8 +155,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.id</code>.
      */
-    @NotNull
-    @Size(max = 255)
     public String getId() {
         return this.id;
     }
@@ -188,7 +183,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.active_status_reason</code>.
      */
-    @Size(max = 255)
     public String getActiveStatusReason() {
         return this.activeStatusReason;
     }
@@ -203,7 +197,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.created_by</code>.
      */
-    @Size(max = 255)
     public String getCreatedBy() {
         return this.createdBy;
     }
@@ -274,7 +267,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.lob</code>.
      */
-    @Size(max = 255)
     public String getLob() {
         return this.lob;
     }
@@ -289,7 +281,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.modified_by</code>.
      */
-    @Size(max = 255)
     public String getModifiedBy() {
         return this.modifiedBy;
     }
@@ -304,7 +295,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.source</code>.
      */
-    @Size(max = 255)
     public String getSource() {
         return this.source;
     }
@@ -333,7 +323,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.hierarchy</code>.
      */
-    @Size(max = 255)
     public String getHierarchy() {
         return this.hierarchy;
     }
@@ -348,7 +337,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.key1</code>.
      */
-    @Size(max = 255)
     public String getKey1() {
         return this.key1;
     }
@@ -363,7 +351,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.key2</code>.
      */
-    @Size(max = 255)
     public String getKey2() {
         return this.key2;
     }
@@ -378,7 +365,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.key3</code>.
      */
-    @Size(max = 255)
     public String getKey3() {
         return this.key3;
     }
@@ -393,7 +379,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.key4</code>.
      */
-    @Size(max = 255)
     public String getKey4() {
         return this.key4;
     }
@@ -408,7 +393,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.key5</code>.
      */
-    @Size(max = 255)
     public String getKey5() {
         return this.key5;
     }
@@ -423,7 +407,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.login_id</code>.
      */
-    @Size(max = 255)
     public String getLoginId() {
         return this.loginId;
     }
@@ -438,7 +421,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.name</code>.
      */
-    @Size(max = 255)
     public String getName() {
         return this.name;
     }
@@ -467,7 +449,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.range_key</code>.
      */
-    @NotNull
     public Long getRangeKey() {
         return this.rangeKey;
     }
@@ -482,7 +463,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.timestamp</code>.
      */
-    @NotNull
     public Long getTimestamp() {
         return this.timestamp;
     }
@@ -497,7 +477,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.key6</code>.
      */
-    @Size(max = 255)
     public String getKey6() {
         return this.key6;
     }
@@ -512,14 +491,14 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.date</code>.
      */
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return this.date;
     }
 
     /**
      * Setter for <code>ck_generic_object.date</code>.
      */
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -540,7 +519,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.key10</code>.
      */
-    @Size(max = 255)
     public String getKey10() {
         return this.key10;
     }
@@ -555,7 +533,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.key7</code>.
      */
-    @Size(max = 255)
     public String getKey7() {
         return this.key7;
     }
@@ -570,7 +547,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.key8</code>.
      */
-    @Size(max = 255)
     public String getKey8() {
         return this.key8;
     }
@@ -585,7 +561,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_generic_object.key9</code>.
      */
-    @Size(max = 255)
     public String getKey9() {
         return this.key9;
     }
@@ -595,235 +570,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
      */
     public void setKey9(String key9) {
         this.key9 = key9;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final CkGenericObject other = (CkGenericObject) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!this.id.equals(other.id))
-            return false;
-        if (this.activeStatus == null) {
-            if (other.activeStatus != null)
-                return false;
-        }
-        else if (!this.activeStatus.equals(other.activeStatus))
-            return false;
-        if (this.activeStatusReason == null) {
-            if (other.activeStatusReason != null)
-                return false;
-        }
-        else if (!this.activeStatusReason.equals(other.activeStatusReason))
-            return false;
-        if (this.createdBy == null) {
-            if (other.createdBy != null)
-                return false;
-        }
-        else if (!this.createdBy.equals(other.createdBy))
-            return false;
-        if (this.creationTime == null) {
-            if (other.creationTime != null)
-                return false;
-        }
-        else if (!this.creationTime.equals(other.creationTime))
-            return false;
-        if (this.extendedAttributes == null) {
-            if (other.extendedAttributes != null)
-                return false;
-        }
-        else if (!this.extendedAttributes.equals(other.extendedAttributes))
-            return false;
-        if (this.hash == null) {
-            if (other.hash != null)
-                return false;
-        }
-        else if (!this.hash.equals(other.hash))
-            return false;
-        if (this.lastModifiedTime == null) {
-            if (other.lastModifiedTime != null)
-                return false;
-        }
-        else if (!this.lastModifiedTime.equals(other.lastModifiedTime))
-            return false;
-        if (this.lob == null) {
-            if (other.lob != null)
-                return false;
-        }
-        else if (!this.lob.equals(other.lob))
-            return false;
-        if (this.modifiedBy == null) {
-            if (other.modifiedBy != null)
-                return false;
-        }
-        else if (!this.modifiedBy.equals(other.modifiedBy))
-            return false;
-        if (this.source == null) {
-            if (other.source != null)
-                return false;
-        }
-        else if (!this.source.equals(other.source))
-            return false;
-        if (this.version == null) {
-            if (other.version != null)
-                return false;
-        }
-        else if (!this.version.equals(other.version))
-            return false;
-        if (this.hierarchy == null) {
-            if (other.hierarchy != null)
-                return false;
-        }
-        else if (!this.hierarchy.equals(other.hierarchy))
-            return false;
-        if (this.key1 == null) {
-            if (other.key1 != null)
-                return false;
-        }
-        else if (!this.key1.equals(other.key1))
-            return false;
-        if (this.key2 == null) {
-            if (other.key2 != null)
-                return false;
-        }
-        else if (!this.key2.equals(other.key2))
-            return false;
-        if (this.key3 == null) {
-            if (other.key3 != null)
-                return false;
-        }
-        else if (!this.key3.equals(other.key3))
-            return false;
-        if (this.key4 == null) {
-            if (other.key4 != null)
-                return false;
-        }
-        else if (!this.key4.equals(other.key4))
-            return false;
-        if (this.key5 == null) {
-            if (other.key5 != null)
-                return false;
-        }
-        else if (!this.key5.equals(other.key5))
-            return false;
-        if (this.loginId == null) {
-            if (other.loginId != null)
-                return false;
-        }
-        else if (!this.loginId.equals(other.loginId))
-            return false;
-        if (this.name == null) {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.payload == null) {
-            if (other.payload != null)
-                return false;
-        }
-        else if (!this.payload.equals(other.payload))
-            return false;
-        if (this.rangeKey == null) {
-            if (other.rangeKey != null)
-                return false;
-        }
-        else if (!this.rangeKey.equals(other.rangeKey))
-            return false;
-        if (this.timestamp == null) {
-            if (other.timestamp != null)
-                return false;
-        }
-        else if (!this.timestamp.equals(other.timestamp))
-            return false;
-        if (this.key6 == null) {
-            if (other.key6 != null)
-                return false;
-        }
-        else if (!this.key6.equals(other.key6))
-            return false;
-        if (this.date == null) {
-            if (other.date != null)
-                return false;
-        }
-        else if (!this.date.equals(other.date))
-            return false;
-        if (this.changed == null) {
-            if (other.changed != null)
-                return false;
-        }
-        else if (!this.changed.equals(other.changed))
-            return false;
-        if (this.key10 == null) {
-            if (other.key10 != null)
-                return false;
-        }
-        else if (!this.key10.equals(other.key10))
-            return false;
-        if (this.key7 == null) {
-            if (other.key7 != null)
-                return false;
-        }
-        else if (!this.key7.equals(other.key7))
-            return false;
-        if (this.key8 == null) {
-            if (other.key8 != null)
-                return false;
-        }
-        else if (!this.key8.equals(other.key8))
-            return false;
-        if (this.key9 == null) {
-            if (other.key9 != null)
-                return false;
-        }
-        else if (!this.key9.equals(other.key9))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.activeStatus == null) ? 0 : this.activeStatus.hashCode());
-        result = prime * result + ((this.activeStatusReason == null) ? 0 : this.activeStatusReason.hashCode());
-        result = prime * result + ((this.createdBy == null) ? 0 : this.createdBy.hashCode());
-        result = prime * result + ((this.creationTime == null) ? 0 : this.creationTime.hashCode());
-        result = prime * result + ((this.extendedAttributes == null) ? 0 : this.extendedAttributes.hashCode());
-        result = prime * result + ((this.hash == null) ? 0 : this.hash.hashCode());
-        result = prime * result + ((this.lastModifiedTime == null) ? 0 : this.lastModifiedTime.hashCode());
-        result = prime * result + ((this.lob == null) ? 0 : this.lob.hashCode());
-        result = prime * result + ((this.modifiedBy == null) ? 0 : this.modifiedBy.hashCode());
-        result = prime * result + ((this.source == null) ? 0 : this.source.hashCode());
-        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
-        result = prime * result + ((this.hierarchy == null) ? 0 : this.hierarchy.hashCode());
-        result = prime * result + ((this.key1 == null) ? 0 : this.key1.hashCode());
-        result = prime * result + ((this.key2 == null) ? 0 : this.key2.hashCode());
-        result = prime * result + ((this.key3 == null) ? 0 : this.key3.hashCode());
-        result = prime * result + ((this.key4 == null) ? 0 : this.key4.hashCode());
-        result = prime * result + ((this.key5 == null) ? 0 : this.key5.hashCode());
-        result = prime * result + ((this.loginId == null) ? 0 : this.loginId.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.payload == null) ? 0 : this.payload.hashCode());
-        result = prime * result + ((this.rangeKey == null) ? 0 : this.rangeKey.hashCode());
-        result = prime * result + ((this.timestamp == null) ? 0 : this.timestamp.hashCode());
-        result = prime * result + ((this.key6 == null) ? 0 : this.key6.hashCode());
-        result = prime * result + ((this.date == null) ? 0 : this.date.hashCode());
-        result = prime * result + ((this.changed == null) ? 0 : this.changed.hashCode());
-        result = prime * result + ((this.key10 == null) ? 0 : this.key10.hashCode());
-        result = prime * result + ((this.key7 == null) ? 0 : this.key7.hashCode());
-        result = prime * result + ((this.key8 == null) ? 0 : this.key8.hashCode());
-        result = prime * result + ((this.key9 == null) ? 0 : this.key9.hashCode());
-        return result;
     }
 
     @Override
