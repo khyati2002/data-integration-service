@@ -12,15 +12,25 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -122,7 +132,7 @@ public class CkUser extends TableImpl<Record> {
     /**
      * The column <code>ck_user.last_password_reset_date</code>.
      */
-    public final TableField<Record, LocalDateTime> LAST_PASSWORD_RESET_DATE = createField(DSL.name("last_password_reset_date"), SQLDataType.LOCALDATETIME(6), this, "");
+    public final TableField<Record, Date> LAST_PASSWORD_RESET_DATE = createField(DSL.name("last_password_reset_date"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
 
     /**
      * The column <code>ck_user.loginid</code>.

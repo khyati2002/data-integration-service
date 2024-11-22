@@ -267,6 +267,11 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
         this.parent = parent;
     }
 
+    public void setImmediateParent(String parent) {
+
+        setParent(parent);
+    }
+
     /**
      * Getter for <code>ck_hierarchy_metadata.location_hierarchy</code>.
      */

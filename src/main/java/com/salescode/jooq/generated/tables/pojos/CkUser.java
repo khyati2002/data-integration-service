@@ -7,11 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -22,48 +22,48 @@ public class CkUser extends CommonDataModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String        id;
-    private ActiveStatus  activeStatus;
-    private String        activeStatusReason;
-    private String        createdBy;
-    private Date          creationTime;
-    private JsonNode      extendedAttributes;
-    private Date          lastModifiedTime;
-    private String        lob;
-    private String        modifiedBy;
-    private Integer       version;
-    private String        address;
-    private String        contactType;
-    private String        countryCode;
-    private String        email;
-    private String        hierarchy;
-    private LocalDateTime lastPasswordResetDate;
-    private String        loginid;
-    private String        mobile;
-    private String        name;
-    private String        password;
-    private String        useraccountid;
-    private String        usercontext;
-    private String        webcontext;
-    private String        locationHierarchy;
-    private String        source;
-    private String        registeredNumber;
-    private String        facebookpsid;
-    private JSON          accessibleBy;
-    private String        hash;
-    private String        dialCode;
-    private String        ssoId;
-    private String        deviceId;
-    private Byte          verified;
-    private Date          doa;
-    private Date          dob;
-    private String        assignedHierarchy;
-    private Byte          changed;
-    private Boolean       blocked;
-    private String        normalizedHierarchy;
-    private String        alternateId;
-    private String        externalReferenceId;
-    private String        reportPassword;
+    private String       id;
+    private ActiveStatus activeStatus;
+    private String       activeStatusReason;
+    private String       createdBy;
+    private Date         creationTime;
+    private JsonNode     extendedAttributes;
+    private Date         lastModifiedTime;
+    private String       lob;
+    private String       modifiedBy;
+    private Integer      version;
+    private String       address;
+    private String       contactType;
+    private String       countryCode;
+    private String       email;
+    private String       hierarchy;
+    private Date         lastPasswordResetDate;
+    private String       loginid;
+    private String       mobile;
+    private String       name;
+    private String       password;
+    private String       useraccountid;
+    private String       usercontext;
+    private String       webcontext;
+    private String       locationHierarchy;
+    private String       source;
+    private String       registeredNumber;
+    private String       facebookpsid;
+    private JSON         accessibleBy;
+    private String       hash;
+    private String       dialCode;
+    private String       ssoId;
+    private String       deviceId;
+    private Byte         verified;
+    private Date         doa;
+    private Date         dob;
+    private String       assignedHierarchy;
+    private Byte         changed;
+    private Boolean      blocked;
+    private String       normalizedHierarchy;
+    private String       alternateId;
+    private String       externalReferenceId;
+    private String       reportPassword;
 
     public CkUser() {}
 
@@ -113,48 +113,48 @@ public class CkUser extends CommonDataModel implements Serializable {
     }
 
     public CkUser(
-        String        id,
-        ActiveStatus  activeStatus,
-        String        activeStatusReason,
-        String        createdBy,
-        Date          creationTime,
-        JsonNode      extendedAttributes,
-        Date          lastModifiedTime,
-        String        lob,
-        String        modifiedBy,
-        Integer       version,
-        String        address,
-        String        contactType,
-        String        countryCode,
-        String        email,
-        String        hierarchy,
-        LocalDateTime lastPasswordResetDate,
-        String        loginid,
-        String        mobile,
-        String        name,
-        String        password,
-        String        useraccountid,
-        String        usercontext,
-        String        webcontext,
-        String        locationHierarchy,
-        String        source,
-        String        registeredNumber,
-        String        facebookpsid,
-        JSON          accessibleBy,
-        String        hash,
-        String        dialCode,
-        String        ssoId,
-        String        deviceId,
-        Byte          verified,
-        Date          doa,
-        Date          dob,
-        String        assignedHierarchy,
-        Byte          changed,
-        Boolean       blocked,
-        String        normalizedHierarchy,
-        String        alternateId,
-        String        externalReferenceId,
-        String        reportPassword
+        String       id,
+        ActiveStatus activeStatus,
+        String       activeStatusReason,
+        String       createdBy,
+        Date         creationTime,
+        JsonNode     extendedAttributes,
+        Date         lastModifiedTime,
+        String       lob,
+        String       modifiedBy,
+        Integer      version,
+        String       address,
+        String       contactType,
+        String       countryCode,
+        String       email,
+        String       hierarchy,
+        Date         lastPasswordResetDate,
+        String       loginid,
+        String       mobile,
+        String       name,
+        String       password,
+        String       useraccountid,
+        String       usercontext,
+        String       webcontext,
+        String       locationHierarchy,
+        String       source,
+        String       registeredNumber,
+        String       facebookpsid,
+        JSON         accessibleBy,
+        String       hash,
+        String       dialCode,
+        String       ssoId,
+        String       deviceId,
+        Byte         verified,
+        Date         doa,
+        Date         dob,
+        String       assignedHierarchy,
+        Byte         changed,
+        Boolean      blocked,
+        String       normalizedHierarchy,
+        String       alternateId,
+        String       externalReferenceId,
+        String       reportPassword
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -413,14 +413,14 @@ public class CkUser extends CommonDataModel implements Serializable {
     /**
      * Getter for <code>ck_user.last_password_reset_date</code>.
      */
-    public LocalDateTime getLastPasswordResetDate() {
+    public Date getLastPasswordResetDate() {
         return this.lastPasswordResetDate;
     }
 
     /**
      * Setter for <code>ck_user.last_password_reset_date</code>.
      */
-    public void setLastPasswordResetDate(LocalDateTime lastPasswordResetDate) {
+    public void setLastPasswordResetDate(Date lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
 
