@@ -82,8 +82,8 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     public void createAssociatedData(CkOutletDetails outlet, CkOutletDetailsWrapper cdmObjectDetails) {
         if (cdmObjectDetails.getUserName() != null) {
             addAssociatedData(outlet,cdmObjectDetails);
-        } else if (getClientProperty("application.category")
-                .equals(ApplicationCategory.RETAIL.name())) {
+        } else if (ApplicationCategory.RETAIL.name()
+                .equals(getClientProperty("application.category"))) {
             createRetailUser(outlet,cdmObjectDetails);
         }
     }

@@ -177,11 +177,6 @@
             <version>2.2</version>
         </dependency>
         <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>3.0.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20231013</version>
@@ -244,12 +239,12 @@
 <!--                    </execution>-->
                 </executions>
                 <configuration>
-                    <jdbc>
-                        <driver>com.mysql.cj.jdbc.Driver</driver>
-                        <url>jdbc:mysql://localhost:3306/ckroot</url>
-                        <user>root</user>
-                        <password>toor1234</password>
-                    </jdbc>
+<!--                    <jdbc>-->
+<!--                        <driver>com.mysql.cj.jdbc.Driver</driver>-->
+<!--                        <url>jdbc:mysql://localhost:3306/ckroot</url>-->
+<!--                        <user>root</user>-->
+<!--                        <password>toor1234</password>-->
+<!--                    </jdbc>-->
                     <generator>
                         <!--                        <name>org.jooq.codegen.DefaultGenerator</name>-->
                         <database>
@@ -266,12 +261,12 @@
                                 <forcedType>
                                     <userType>java.util.Date</userType>
                                     <converter>com.salescode.jooq.DateConverter</converter>
-                                    <includeExpression>(.*Time)|doo|(.*Date)|doa|dob</includeExpression>
+                                    <includeExpression>(last_modified|creation|last_order|last_password_reset)_(date|time)|doo|doa|dob</includeExpression>
                                 </forcedType>
                                 <forcedType>
                                     <userType>com.fasterxml.jackson.databind.JsonNode</userType>
                                     <converter>com.salescode.jooq.JsonNodeConverter</converter>
-                                    <includeExpression>(.*ATTRIBUTES)|code|domain_values</includeExpression>
+                                    <includeExpression>(.*attributes)|domain_values</includeExpression>
                                 </forcedType>
                                 <forcedType>
                                     <userType>com.salescode.channelkart.converters.EnrichmentPhase</userType>
@@ -286,30 +281,8 @@
                             </forcedTypes>
                         </database>
                         <generate>
-                            <!--                            <defaultCatalog>false</defaultCatalog>-->
-                            <!--                            <defaultSchema>true</defaultSchema>-->
                             <pojos>true</pojos>
                             <records>false</records>
-                            <!--                            <generatedAnnotation>true</generatedAnnotation>-->
-                            <!--                            <generatedAnnotationType>JAVAX_ANNOTATION_PROCESSING_GENERATED</generatedAnnotationType>-->
-                            <!--                            <generatedAnnotationDate>true</generatedAnnotationDate>-->
-                            <!--                            <generatedAnnotationJooqVersion>true</generatedAnnotationJooqVersion>-->
-                            <!--                            <nullableAnnotation>true</nullableAnnotation>-->
-                            <!--                            <nullableAnnotationType>javax.annotation.Nullable</nullableAnnotationType>-->
-                            <!--                            <nonnullAnnotation>true</nonnullAnnotation>-->
-                            <!--                            <nonnullAnnotationType>javax.annotation.Nonnull</nonnullAnnotationType>-->
-
-                            <!--                            <jpaAnnotations>true</jpaAnnotations>-->
-                            <!--                            <jpaVersion>${project.parent.version}}</jpaVersion>-->
-                            <validationAnnotations>true</validationAnnotations>
-                            <springAnnotations>true</springAnnotations>
-                            <!--                            <springDao>true</springDao>-->
-
-                            <!--                            <constructorPropertiesAnnotation>true</constructorPropertiesAnnotation>-->
-                            <!--                            <constructorPropertiesAnnotationOnPojos>true</constructorPropertiesAnnotationOnPojos>-->
-                            <!--                            <constructorPropertiesAnnotationOnRecords>true</constructorPropertiesAnnotationOnRecords>-->
-
-                            <!--                            <fluentSetters>true</fluentSetters>-->
                         </generate>
                         <target>
                             <packageName>com.salescode.jooq.generated</packageName>
