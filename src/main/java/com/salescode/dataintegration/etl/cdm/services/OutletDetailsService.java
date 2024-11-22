@@ -11,18 +11,16 @@ import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
-import com.salescode.dataintegration.etl.OperationResponse;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.enums.ApplicationCategory;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
+import com.salescode.jooq.CkOutletDetailsWrapper;
 import com.salescode.jooq.generated.tables.pojos.CkLocation;
 import com.salescode.jooq.generated.tables.pojos.*;
 import org.apache.commons.lang.StringUtils;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +28,6 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.salescode.jooq.generated.tables.CkAuthRole.CK_AUTH_ROLE;
 import static com.salescode.jooq.generated.tables.CkLocation.CK_LOCATION;
 import static com.salescode.jooq.generated.tables.CkUserParent.CK_USER_PARENT;
 import static com.salescode.jooq.generated.tables.CkUserdesignation.CK_USERDESIGNATION;
@@ -82,7 +79,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 
 
 
-    public void createAssociatedData(CkOutletDetails outlet,CkOutletDetailsWrapper cdmObjectDetails) {
+    public void createAssociatedData(CkOutletDetails outlet, CkOutletDetailsWrapper cdmObjectDetails) {
         if (cdmObjectDetails.getUserName() != null) {
             addAssociatedData(outlet,cdmObjectDetails);
         } else if (getClientProperty("application.category")
@@ -453,7 +450,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
         CkUser out;
         CkUser outUser;
         String existingHash = user.getHash();
-        if (user.canHash() && StringUtils.isNotEmpty(existingHash) && existingHash.equals(user.hash())
+        if (user.canHash() && StringUtils.isNotEmpty(existingHash) && existingHash.equals(user.getHash())
                 && user.getChanges().isEmpty()) {
             return user;
         }
@@ -648,7 +645,7 @@ private void setHierarchy(CkOutletDetails tempoutlet,CkOutletDetailsWrapper cdmO
     String immediateParent = hierarchyMetaDataToStringConverter.convert(list);
     if (immediateParent != null && !immediateParent.isEmpty()) {
         String hierarchy = String.join(",",
-                list.stream().map(s -> s.hierarchy).collect(Collectors.toList()));
+                list.stream().map(s -> s.getHierarchy()).collect(Collectors.toList()));
         if (StringUtils.isNotEmpty(hierarchy)) {
             tempoutlet.setHierarchy(hierarchy);
             cdmOutletDetails.setHierarchy(hierarchy);

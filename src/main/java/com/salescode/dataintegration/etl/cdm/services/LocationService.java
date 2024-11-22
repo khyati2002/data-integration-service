@@ -342,7 +342,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 			return locationColumns.split(",");
 		} else {
 			List<Entry<String, JsonNode>> localdata = new ArrayList<>();
-			ArrayNode arraynode = convertToArrayNode(metadata.getDomainValues(dsl));
+			ArrayNode arraynode = convertToArrayNode(metadata.getDomainValues());
 			Iterator<JsonNode> iter = arraynode.elements();
 			while (iter.hasNext()) {
 				JsonNode node = iter.next();
@@ -362,8 +362,8 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 	//	return distributedCache.withCache(SecurityContextUtils.getLob(), CACHE_DOMAIN, "LocationType" + key, ldata -> {
 			CkMetadata metaData = metadataservice.fetchByValue(DOMAIN_NAME, "secondary_columns", true);
 			ArrayNode columnNode = JSONUtils.getObjectMapper().createArrayNode();
-			if (metaData != null && metaData.getDomainValues(dsl).get(0).has(key)) {
-				columnNode = (ArrayNode) metaData.getDomainValues(dsl).get(0).get(key);
+			if (metaData != null && metaData.getDomainValues().get(0).has(key)) {
+				columnNode = (ArrayNode) metaData.getDomainValues().get(0).get(key);
 			}
 			String[] columnArr = new String[columnNode.size()];
 			for (int i = 0; i < columnNode.size(); i++) {
