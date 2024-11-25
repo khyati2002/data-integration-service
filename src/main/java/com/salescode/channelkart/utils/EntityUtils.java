@@ -32,6 +32,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 public final class EntityUtils {
@@ -196,7 +197,7 @@ public final class EntityUtils {
         if (!dynamicPrimaryKeys.isEmpty()) {
             return findUniqueRecord(clazz, element, dynamicPrimaryKeys);
         } else {
-//            return findUniqueRecord(clazz, element);
+           //return findUniqueRecord(clazz, element);
             return null;
         }
     }
@@ -283,6 +284,39 @@ public final class EntityUtils {
         synchronized (lockObj) {
             String[] data = getNullPropertyNames(src);
             Set<String> fields = new HashSet<>(Arrays.asList(data));
+            BeanWrapper source = new BeanWrapperImpl(src);
+            BeanWrapper target = new BeanWrapperImpl(tgt);
+            java.beans.PropertyDescriptor[] pdsrc = source.getPropertyDescriptors();
+            for (java.beans.PropertyDescriptor pd : pdsrc) {
+                Object propertyValue= source.getPropertyValue(pd.getName());
+                if (propertyValue != null && JsonNode.class.isAssignableFrom(pd.getPropertyType()) && !fields.contains(pd.getName()) && jsonNodeClassList.contains(propertyValue.getClass())) {
+                    fields.add(pd.getName());
+                    if (target.getPropertyValue(pd.getName()) == null || isNullNode(target.getPropertyValue(pd.getName()))) {
+                        target.setPropertyValue(pd.getName(), source.getPropertyValue(pd.getName()));
+                    } else {
+                        JsonNode mergedJson = null;
+                        try {
+                            mergedJson = JSONUtils.mergeJsonNodes((JsonNode) source.getPropertyValue(pd.getName()), (JsonNode) target.getPropertyValue(pd.getName()));
+                        } catch (IOException e) {
+                            logger.error("stacktrace", e);
+                        }
+                        target.setPropertyValue(pd.getName(), mergedJson);
+                    }
+                }
+            }
+            tgt = target.getWrappedInstance();
+            org.springframework.beans.BeanUtils.copyProperties(src, tgt, fields.toArray(new String[0]));
+        }
+    }
+
+    public static void copyProperties(Object src, Object tgt, String... strings) {
+        synchronized (lockObj) {
+            String[] data = getNullPropertyNames(src);
+            Set<String> fields = new HashSet<>(Arrays.asList(data));
+            if(strings!=null) {
+                fields.addAll(
+                        Arrays.asList(strings).stream().filter(Objects::nonNull).collect(Collectors.toList()));
+            }
             BeanWrapper source = new BeanWrapperImpl(src);
             BeanWrapper target = new BeanWrapperImpl(tgt);
             java.beans.PropertyDescriptor[] pdsrc = source.getPropertyDescriptors();

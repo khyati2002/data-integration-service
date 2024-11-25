@@ -5,16 +5,14 @@
  */
 package com.salescode.dataintegration.etl.cdm.services;
 
-import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.jooq.generated.tables.pojos.CkChannelHierarchyMetadata;
 import com.salescode.jooq.generated.tables.pojos.CkDivision;
 import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
-import org.apache.commons.lang.StringUtils;
+import com.salescode.jooq.CkOutletDetails;
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -158,7 +156,7 @@ public List<CkHierarchyMetadata> getImmediateParent(CkOutletDetails outlet) {
 				//	throw new EmptyParentHierarchyException(parent.getImmediateParent());
 				}
 				List<String> hierarchyLoginId = Arrays.asList(temphierarchy.split(" > "));
-				String hierarchyuserlist= "'"+StringUtils.join(hierarchyLoginId,"','")+"'";
+				String hierarchyuserlist= "'"+ StringUtils.join(hierarchyLoginId,"','")+"'";
 //				List<Map<String,String>> data=  (List<Map<String,String>>) EntityUtils.get().findDataByQuery(Map.class,
 //						"select distinct u.loginid as loginid, d.designation as designation, u.name from ck_user u left join ck_userdesignation d on u.loginid=d.login_id where u.loginid in ("+hierarchyuserlist+") and d.designation is not null",true);
 				List<Map<String,String>> data = findData(hierarchyuserlist);

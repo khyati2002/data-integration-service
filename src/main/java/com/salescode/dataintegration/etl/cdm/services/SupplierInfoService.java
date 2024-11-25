@@ -13,14 +13,13 @@ package com.salescode.dataintegration.etl.cdm.services;
 //import com.applicate.services.channelkart.models.User;
 //import com.applicate.services.channelkart.security.SecurityContextUtils;
 import com.salescode.jooq.generated.tables.pojos.CkChannelHierarchyMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
+import com.salescode.jooq.CkOutletDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * The class SupplierInfoService.

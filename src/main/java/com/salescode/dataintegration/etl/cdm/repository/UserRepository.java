@@ -10,7 +10,7 @@ package com.salescode.dataintegration.etl.cdm.repository;
 
 import com.salescode.channelkart.models.enums.ActiveStatus;
 
-import com.salescode.jooq.generated.tables.pojos.CkUser;
+import com.salescode.jooq.CkUser;
 import com.salescode.jooq.generated.tables.pojos.CkUserMessengerInfo;
 import org.springframework.stereotype.Repository;
 

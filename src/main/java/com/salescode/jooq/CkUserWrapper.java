@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 
 import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkUser;
 
 import java.util.*;
 import java.util.stream.Collectors;
