@@ -1,12 +1,16 @@
 package com.salescode.dis.config;
+
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 
+import com.salescode.channelkart.utils.StringUtils;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.env.YamlPropertySourceLoader;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -20,14 +24,18 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 @Component
 public class S3YamlPropertyLoader implements EnvironmentPostProcessor {
 
+    public static final String LOB_PROPERTIES_PATH = "s3://dataplatform-flink/properties/{lob}/application.yaml";
+
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, org.springframework.boot.SpringApplication application) {
-        String s3Uri = environment.getProperty("config.s3.uri");
-        String region = environment.getProperty("config.s3.region");
-
-        if (s3Uri == null || region == null) {
-            throw new IllegalArgumentException("s3.uri and s3.region must be specified");
+        if ("local".equals(environment.getProperty("spring.profiles.active"))) {
+            return;
         }
+        String lob = environment.getProperty("app.lob");
+        if (lob == null) {
+            throw new IllegalArgumentException("app.lob is required");
+        }
+        String s3Uri = StringUtils.format(LOB_PROPERTIES_PATH, lob);
 
         S3Client s3Client = null;
         try {
@@ -35,10 +43,7 @@ public class S3YamlPropertyLoader implements EnvironmentPostProcessor {
             String bucketName = uri.getHost();
             String key = uri.getPath().substring(1); // Remove leading "/"
 
-            s3Client = S3Client.builder()
-                    .region(Region.of(region))
-                    .credentialsProvider(DefaultCredentialsProvider.create())
-                    .build();
+            s3Client = S3Client.builder().credentialsProvider(DefaultCredentialsProvider.create()).build();
 
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                     .bucket(bucketName)
@@ -51,10 +56,9 @@ public class S3YamlPropertyLoader implements EnvironmentPostProcessor {
 
             YamlPropertySourceLoader loader = new YamlPropertySourceLoader();
             List<org.springframework.core.env.PropertySource<?>> propertySourcesFromYaml = loader.load("s3YamlProperties", resource);
-
+            PropertySource<?> s3PropertySource = propertySourcesFromYaml.get(0);
             MutablePropertySources propertySources = environment.getPropertySources();
-            propertySources.addFirst(propertySourcesFromYaml.get(0));
-  
+            propertySources.addLast(s3PropertySource);
         } catch (Exception e) {
             throw new RuntimeException("Failed to load configuration from S3", e);
         } finally {

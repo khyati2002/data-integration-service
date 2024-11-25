@@ -1,17 +1,14 @@
-config:
-  s3:
-    uri: "s3://dataplatform-flink/properties/test-lob/application.yaml"
-    region: ap-south-1
-
 logging:
   system: none
 
 spring:
   application:
     name: disflink
+  profiles:
+    active: local
 
 app:
-  lob: sample
+  lob: test-lob
   kafka:
     bootstrap-servers: "164.52.202.184:9092"
     # bootstrap-servers: "localhost:9092"
