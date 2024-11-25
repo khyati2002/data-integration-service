@@ -9,8 +9,6 @@ import com.salescode.channelkart.converters.ActiveStatus;
 
 
 import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
-import com.salescode.jooq.generated.tables.pojos.CkUser;
 
 import java.math.BigDecimal;
 import java.util.Date;
