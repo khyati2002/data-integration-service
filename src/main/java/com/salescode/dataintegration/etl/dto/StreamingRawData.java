@@ -45,5 +45,6 @@ public class StreamingRawData implements Serializable {
         private boolean skipPersist;
         private boolean skipPreprocessing;
         private OperationType operationType = OperationType.insert;
+        private String preprocessValidationExcludeGroup;
     }
 }

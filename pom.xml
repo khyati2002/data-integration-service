@@ -31,6 +31,7 @@
         <flink.version>1.20.0</flink.version>
         <log4j2.version>2.19.0</log4j2.version>
         <jooq.version>3.16.23</jooq.version>
+        <com.bazaarvoice.jolt.version>0.1.1</com.bazaarvoice.jolt.version>
     </properties>
     <dependencies>
         <dependency>
@@ -190,6 +191,16 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bazaarvoice.jolt</groupId>
+            <artifactId>jolt-core</artifactId>
+            <version>${com.bazaarvoice.jolt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bazaarvoice.jolt</groupId>
+            <artifactId>json-utils</artifactId>
+            <version>${com.bazaarvoice.jolt.version}</version>
         </dependency>
     </dependencies>
 
