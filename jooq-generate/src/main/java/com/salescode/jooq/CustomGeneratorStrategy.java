@@ -1,13 +1,11 @@
 package com.salescode.jooq;
 
 import org.jooq.codegen.DefaultGeneratorStrategy;
-import org.jooq.meta.ColumnDefinition;
 import org.jooq.meta.Definition;
 import org.jooq.meta.mysql.MySQLTableDefinition;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CustomGeneratorStrategy extends DefaultGeneratorStrategy {
