@@ -7,7 +7,6 @@ import java.util.List;
 import com.salescode.channelkart.utils.StringUtils;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.env.YamlPropertySourceLoader;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
@@ -24,8 +23,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 @Component
 public class S3YamlPropertyLoader implements EnvironmentPostProcessor {
 
-    public static final String LOB_PROPERTIES_PATH = "s3://dataplatform-flink/properties/{lob}/application.yaml";
-
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, org.springframework.boot.SpringApplication application) {
         if ("local".equals(environment.getProperty("spring.profiles.active"))) {
@@ -35,20 +32,20 @@ public class S3YamlPropertyLoader implements EnvironmentPostProcessor {
         if (lob == null) {
             throw new IllegalArgumentException("app.lob is required");
         }
-        String s3Uri = StringUtils.format(LOB_PROPERTIES_PATH, lob);
-
+        String s3Uri = StringUtils.format(environment.getProperty("config.s3.uri"), lob);
+        String region = environment.getProperty("config.s3.region");
+        if (s3Uri == null || region == null) {
+            throw new IllegalArgumentException("s3.uri and s3.region must be specified");
+        }
         S3Client s3Client = null;
         try {
             URI uri = new URI(s3Uri);
             String bucketName = uri.getHost();
             String key = uri.getPath().substring(1); // Remove leading "/"
 
-            s3Client = S3Client.builder().credentialsProvider(DefaultCredentialsProvider.create()).build();
+            s3Client = S3Client.builder().credentialsProvider(DefaultCredentialsProvider.create()).region(Region.of(region)).build();
 
-            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .build();
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(key).build();
 
             ResponseBytes<?> objectBytes = s3Client.getObjectAsBytes(getObjectRequest);
             InputStream inputStream = objectBytes.asInputStream();
