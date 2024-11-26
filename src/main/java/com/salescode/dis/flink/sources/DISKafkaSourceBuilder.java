@@ -28,7 +28,7 @@ public class DISKafkaSourceBuilder {
             .setBootstrapServers(bootstrapServers)
             .setTopics(subscribedTopic)
             .setGroupId(consumerGroupId)
-            .setStartingOffsets(OffsetsInitializer.earliest())
+            .setStartingOffsets(OffsetsInitializer.latest())
             .setValueOnlyDeserializer(new JsonDeserializationSchema<ObjectNode>(ObjectNode.class))
             .build();
     }
