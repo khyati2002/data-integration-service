@@ -1,7 +1,5 @@
 package com.salescode.dataintegration.scanner;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -10,19 +8,12 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.salescode.channelkart.utils.StringUtils;
 import com.salescode.dataintegration.etl.interfaces.TypeAwareEtlStep;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.regions.Region;
 
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-
-import static com.salescode.jooq.generated.tables.Profile.*;
 
 @Slf4j
 @Service
@@ -55,7 +46,7 @@ public class ExternalRegistryScanner {
 
     public URL generatePresignedUrl(String path, long expiration) {
         String region = environment.getProperty("config.s3.region");
-        AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.valueOf(region)).build();
+        AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(region).build();
         AmazonS3URI s3URI = new AmazonS3URI(path);
         long expirationTime = System.currentTimeMillis() + expiration;
         GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(s3URI.getBucket(), s3URI.getKey())

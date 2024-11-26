@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.List;
 
 import com.salescode.channelkart.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -20,12 +21,14 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
+@Slf4j
 @Component
 public class S3YamlPropertyLoader implements EnvironmentPostProcessor {
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, org.springframework.boot.SpringApplication application) {
         if ("local".equals(environment.getProperty("spring.profiles.active"))) {
+            log.info("Using local environment");
             return;
         }
         String lob = environment.getProperty("app.lob");
