@@ -901,7 +901,7 @@ public class CkUser extends CommonDataModel implements Serializable {
     public static List<String> findParents(String hierarchy) {
         return Arrays.stream(hierarchy.split(","))
                 .map(String::trim)
-                .map(com.salescode.jooq.CkUser::getImmediateParentFromHierarchy)
+                .map(CkUser::getImmediateParentFromHierarchy)
                 .flatMap(Optional::stream)
                 .distinct()
                 .collect(Collectors.toList());

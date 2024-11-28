@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
+import com.salescode.jooq.generated.tables.pojos.CkUser;
 import org.jooq.DSLContext;
 import org.jooq.JSON;
 
@@ -126,12 +128,11 @@ public class CkOutletDetailsWrapper {
         this.tinNo = value.getTinNo();
         this.locationHierarchy = value.getLocationHierarchy();
         this.loginid = value.getLoginid();
-        this.accessibleby = value.getAccessibleby();
-        this.accessibleBy = value.getAccessibleBy();
+//        this.accessibleby = value.getAccessibleby();
+//        this.accessibleBy = value.getAccessibleBy();
         this.hash = value.getHash();
         this.coordinate = value.getCoordinate();
         this.doo = value.getDoo();
-        this.dtype = value.getDtype();
         this.hierarchy = value.getHierarchy();
         this.changed = value.getChanged();
         this.distributionChannel = value.getDistributionChannel();

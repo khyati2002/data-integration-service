@@ -12,6 +12,7 @@ import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.salescode.jooq.generated.tables.pojos.CkUser;
 import org.jooq.DSLContext;
 import org.jooq.JSON;
 
@@ -98,7 +99,7 @@ public class CkUserWrapper  {
         this.source = value.getSource();
         this.registeredNumber = value.getRegisteredNumber();
         this.facebookpsid = value.getFacebookpsid();
-        this.accessibleBy = value.getAccessibleBy();
+//        this.accessibleBy = value.getAccessibleBy();
         this.hash = value.getHash();
         this.dialCode = value.getDialCode();
         this.ssoId = value.getSsoId();
