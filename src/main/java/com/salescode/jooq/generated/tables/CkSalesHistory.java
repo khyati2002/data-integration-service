@@ -11,14 +11,22 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -56,6 +64,11 @@ public class CkSalesHistory extends TableImpl<Record> {
      * The column <code>ck_sales_history.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_sales_history.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_sales_history.created_by</code>.
@@ -103,6 +116,11 @@ public class CkSalesHistory extends TableImpl<Record> {
     public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
 
     /**
+     * The column <code>ck_sales_history.sale_id</code>.
+     */
+    public final TableField<Record, String> SALE_ID = createField(DSL.name("sale_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
      * The column <code>ck_sales_history.status</code>.
      */
     public final TableField<Record, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR(255), this, "");
@@ -111,16 +129,6 @@ public class CkSalesHistory extends TableImpl<Record> {
      * The column <code>ck_sales_history.transaction_details</code>.
      */
     public final TableField<Record, JSON> TRANSACTION_DETAILS = createField(DSL.name("transaction_details"), SQLDataType.JSON, this, "");
-
-    /**
-     * The column <code>ck_sales_history.sale_id</code>.
-     */
-    public final TableField<Record, String> SALE_ID = createField(DSL.name("sale_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_sales_history.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkSalesHistory(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -163,23 +171,6 @@ public class CkSalesHistory extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_SALES_HISTORY_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK91Y0M3HLUILMNYY1SOJIISID6);
-    }
-
-    private transient CkSales _ckSales;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_sales</code> table.
-     */
-    public CkSales ckSales() {
-        if (_ckSales == null)
-            _ckSales = new CkSales(this, Keys.FK91Y0M3HLUILMNYY1SOJIISID6);
-
-        return _ckSales;
     }
 
     @Override

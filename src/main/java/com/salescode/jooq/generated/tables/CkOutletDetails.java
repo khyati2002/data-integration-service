@@ -12,16 +12,27 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.Record;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Geometry;
+import org.jooq.Identity;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -91,19 +102,9 @@ public class CkOutletDetails extends TableImpl<Record> {
     public final TableField<Record, String> MODIFIED_BY = createField(DSL.name("modified_by"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_outlet_details.source</code>.
-     */
-    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_outlet_details.version</code>.
      */
     public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column <code>ck_outlet_details.account</code>.
-     */
-    public final TableField<Record, String> ACCOUNT = createField(DSL.name("account"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_outlet_details.address</code>.
@@ -146,9 +147,39 @@ public class CkOutletDetails extends TableImpl<Record> {
     public final TableField<Record, String> FREQUENCY = createField(DSL.name("frequency"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_outlet_details.gst_no</code>.
+     * The column <code>ck_outlet_details.mapped</code>.
      */
-    public final TableField<Record, String> GST_NO = createField(DSL.name("gst_no"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, Boolean> MAPPED = createField(DSL.name("mapped"), SQLDataType.BIT.nullable(false), this, "");
+
+    /**
+     * The column <code>ck_outlet_details.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200).nullable(false), this, "");
+
+    /**
+     * The column <code>ck_outlet_details.outlet_name</code>.
+     */
+    public final TableField<Record, String> OUTLET_NAME = createField(DSL.name("outlet_name"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_outlet_details.outlet_type</code>.
+     */
+    public final TableField<Record, String> OUTLET_TYPE = createField(DSL.name("outlet_type"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_outlet_details.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column <code>ck_outlet_details.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
+
+    /**
+     * The column <code>ck_outlet_details.source</code>.
+     */
+    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_outlet_details.last_order_date</code>.
@@ -166,9 +197,14 @@ public class CkOutletDetails extends TableImpl<Record> {
     public final TableField<Record, BigDecimal> LONGITUDE = createField(DSL.name("longitude"), SQLDataType.DECIMAL(11, 8), this, "");
 
     /**
-     * The column <code>ck_outlet_details.mapped</code>.
+     * The column <code>ck_outlet_details.account</code>.
      */
-    public final TableField<Record, Boolean> MAPPED = createField(DSL.name("mapped"), SQLDataType.BIT.nullable(false), this, "");
+    public final TableField<Record, String> ACCOUNT = createField(DSL.name("account"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_outlet_details.gst_no</code>.
+     */
+    public final TableField<Record, String> GST_NO = createField(DSL.name("gst_no"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_outlet_details.market_id</code>.
@@ -191,44 +227,9 @@ public class CkOutletDetails extends TableImpl<Record> {
     public final TableField<Record, String> OUTLET_CLASS = createField(DSL.name("outlet_class"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_outlet_details.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_outlet_details.outlet_name</code>.
-     */
-    public final TableField<Record, String> OUTLET_NAME = createField(DSL.name("outlet_name"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_outlet_details.outlet_type</code>.
-     */
-    public final TableField<Record, String> OUTLET_TYPE = createField(DSL.name("outlet_type"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_outlet_details.tin_no</code>.
      */
     public final TableField<Record, String> TIN_NO = createField(DSL.name("tin_no"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_outlet_details.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_outlet_details.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_outlet_details.accessibleBy</code>.
-     */
-    public final TableField<Record, JSON> ACCESSIBLEBY = createField(DSL.name("accessibleBy"), SQLDataType.JSON, this, "");
-
-    /**
-     * The column <code>ck_outlet_details.accessible_by</code>.
-     */
-    public final TableField<Record, JSON> ACCESSIBLE_BY = createField(DSL.name("accessible_by"), SQLDataType.JSON, this, "");
 
     /**
      * The column <code>ck_outlet_details.hash</code>.
@@ -236,15 +237,9 @@ public class CkOutletDetails extends TableImpl<Record> {
     public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
 
     /**
-     * @deprecated Unknown data type. If this is a qualified, user-defined type,
-     * it may have been excluded from code generation. If this is a built-in
-     * type, you can define an explicit {@link org.jooq.Binding} to specify how
-     * this type should be handled. Deprecation can be turned off using
-     * {@literal <deprecationOnUnknownTypes/>} in your code generator
-     * configuration.
+     * The column <code>ck_outlet_details.coordinate</code>.
      */
-    @Deprecated
-    public final TableField<Record, Object> COORDINATE = createField(DSL.name("coordinate"), org.jooq.impl.DefaultDataType.getDefaultDataType("\"ckroot\".\"ck_outlet_details_coordinate\""), this, "");
+    public final TableField<Record, Geometry> COORDINATE = createField(DSL.name("coordinate"), SQLDataType.GEOMETRY, this, "");
 
     /**
      * The column <code>ck_outlet_details.doo</code>.
@@ -252,14 +247,14 @@ public class CkOutletDetails extends TableImpl<Record> {
     public final TableField<Record, Date> DOO = createField(DSL.name("doo"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
 
     /**
-     * The column <code>ck_outlet_details.dtype</code>.
-     */
-    public final TableField<Record, String> DTYPE = createField(DSL.name("dtype"), SQLDataType.VARCHAR(31).nullable(false), this, "");
-
-    /**
      * The column <code>ck_outlet_details.hierarchy</code>.
      */
     public final TableField<Record, String> HIERARCHY = createField(DSL.name("hierarchy"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>ck_outlet_details.rowid</code>.
+     */
+    public final TableField<Record, Integer> ROWID = createField(DSL.name("rowid"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>ck_outlet_details.changed</code>.
@@ -292,14 +287,14 @@ public class CkOutletDetails extends TableImpl<Record> {
     public final TableField<Record, String> SUB_TERRITORY = createField(DSL.name("sub_territory"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_outlet_details.blob_key</code>.
-     */
-    public final TableField<Record, String> BLOB_KEY = createField(DSL.name("blob_key"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_outlet_details.email</code>.
      */
     public final TableField<Record, String> EMAIL = createField(DSL.name("email"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_outlet_details.blob_key</code>.
+     */
+    public final TableField<Record, String> BLOB_KEY = createField(DSL.name("blob_key"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_outlet_details.control_group</code>.
@@ -356,7 +351,12 @@ public class CkOutletDetails extends TableImpl<Record> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.CK_OUTLET_DETAILS_CK_OUTLET_DETAILS_IDX_1, Indexes.CK_OUTLET_DETAILS_CK_OUTLET_DETAILS_IDX_2, Indexes.CK_OUTLET_DETAILS_CK_OUTLET_DETAILS_IDX_3, Indexes.CK_OUTLET_DETAILS_IDX_CREATION_TIME);
+        return Arrays.asList(Indexes.CK_OUTLET_DETAILS_CK_OUTLET_DETAILS_IDX_1, Indexes.CK_OUTLET_DETAILS_CK_OUTLET_DETAILS_IDX_2, Indexes.CK_OUTLET_DETAILS_CK_OUTLET_DETAILS_IDX_3, Indexes.CK_OUTLET_DETAILS_CK_OUTLETDETAILS_IDX_ACTIVE_STATUS, Indexes.CK_OUTLET_DETAILS_IDX_CREATION_TIME, Indexes.CK_OUTLET_DETAILS_IDX_NORMALIZED_HIERARCHY);
+    }
+
+    @Override
+    public Identity<Record, Integer> getIdentity() {
+        return (Identity<Record, Integer>) super.getIdentity();
     }
 
     @Override
@@ -366,7 +366,7 @@ public class CkOutletDetails extends TableImpl<Record> {
 
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_OUTLET_DETAILS_UK_MLY519H4E7VB1OSP9V927V3XQ);
+        return Arrays.asList(Keys.KEY_CK_OUTLET_DETAILS_UK_MLY519H4E7VB1OSP9V927V3XQ, Keys.KEY_CK_OUTLET_DETAILS_ROWID);
     }
 
     @Override

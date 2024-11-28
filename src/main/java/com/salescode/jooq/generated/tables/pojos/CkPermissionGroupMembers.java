@@ -23,6 +23,7 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -36,7 +37,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
     private String       entity;
     private String       groupName;
     private String       value;
-    private Byte         changed;
 
     public CkPermissionGroupMembers() {}
 
@@ -44,6 +44,7 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -57,13 +58,13 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
         this.entity = value.entity;
         this.groupName = value.groupName;
         this.value = value.value;
-        this.changed = value.changed;
     }
 
     public CkPermissionGroupMembers(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -76,12 +77,12 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
         String       attribute,
         String       entity,
         String       groupName,
-        String       value,
-        Byte         changed
+        String       value
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -95,7 +96,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
         this.entity = entity;
         this.groupName = groupName;
         this.value = value;
-        this.changed = changed;
     }
 
     /**
@@ -138,6 +138,20 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_permission_group_members.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_permission_group_members.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -322,20 +336,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
         this.value = value;
     }
 
-    /**
-     * Getter for <code>ck_permission_group_members.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_permission_group_members.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPermissionGroupMembers (");
@@ -343,6 +343,7 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -356,7 +357,6 @@ public class CkPermissionGroupMembers extends CommonDataModel implements Seriali
         sb.append(", ").append(entity);
         sb.append(", ").append(groupName);
         sb.append(", ").append(value);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

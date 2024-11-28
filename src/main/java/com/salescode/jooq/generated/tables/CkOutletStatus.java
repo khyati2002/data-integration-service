@@ -12,15 +12,25 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -142,12 +152,12 @@ public class CkOutletStatus extends TableImpl<Record> {
     /**
      * The column <code>ck_outlet_status.total_billed</code>.
      */
-    public final TableField<Record, Long> TOTAL_BILLED = createField(DSL.name("total_billed"), SQLDataType.BIGINT, this, "");
+    public final TableField<Record, Long> TOTAL_BILLED = createField(DSL.name("total_billed"), SQLDataType.BIGINT.defaultValue(DSL.inline("0", SQLDataType.BIGINT)), this, "");
 
     /**
      * The column <code>ck_outlet_status.total_order</code>.
      */
-    public final TableField<Record, Long> TOTAL_ORDER = createField(DSL.name("total_order"), SQLDataType.BIGINT, this, "");
+    public final TableField<Record, Long> TOTAL_ORDER = createField(DSL.name("total_order"), SQLDataType.BIGINT.defaultValue(DSL.inline("0", SQLDataType.BIGINT)), this, "");
 
     /**
      * The column <code>ck_outlet_status.first_billed_date</code>.
@@ -165,6 +175,16 @@ public class CkOutletStatus extends TableImpl<Record> {
     public final TableField<Record, LocalDateTime> FIRST_ORDERED_DATE = createField(DSL.name("first_ordered_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
+     * The column <code>ck_outlet_status.order_number</code>.
+     */
+    public final TableField<Record, String> ORDER_NUMBER = createField(DSL.name("order_number"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_outlet_status.last_pjp_date</code>.
+     */
+    public final TableField<Record, LocalDateTime> LAST_PJP_DATE = createField(DSL.name("last_pjp_date"), SQLDataType.LOCALDATETIME(0), this, "");
+
+    /**
      * The column <code>ck_outlet_status.last_cross_sell_date</code>.
      */
     public final TableField<Record, LocalDateTime> LAST_CROSS_SELL_DATE = createField(DSL.name("last_cross_sell_date"), SQLDataType.LOCALDATETIME(0), this, "");
@@ -175,11 +195,6 @@ public class CkOutletStatus extends TableImpl<Record> {
     public final TableField<Record, LocalDateTime> LAST_CROSS_SELL_RECOMMENDED = createField(DSL.name("last_cross_sell_recommended"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
-     * The column <code>ck_outlet_status.last_pjp_date</code>.
-     */
-    public final TableField<Record, LocalDateTime> LAST_PJP_DATE = createField(DSL.name("last_pjp_date"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
      * The column <code>ck_outlet_status.last_up_sell_date</code>.
      */
     public final TableField<Record, LocalDateTime> LAST_UP_SELL_DATE = createField(DSL.name("last_up_sell_date"), SQLDataType.LOCALDATETIME(0), this, "");
@@ -188,11 +203,6 @@ public class CkOutletStatus extends TableImpl<Record> {
      * The column <code>ck_outlet_status.last_up_sell_recommended</code>.
      */
     public final TableField<Record, LocalDateTime> LAST_UP_SELL_RECOMMENDED = createField(DSL.name("last_up_sell_recommended"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
-     * The column <code>ck_outlet_status.order_number</code>.
-     */
-    public final TableField<Record, String> ORDER_NUMBER = createField(DSL.name("order_number"), SQLDataType.VARCHAR(255), this, "");
 
     private CkOutletStatus(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

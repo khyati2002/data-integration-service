@@ -23,6 +23,7 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -33,6 +34,7 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
     private String       source;
     private Integer      version;
     private String       agentType;
+    private String       category;
     private String       description;
     private String       externalRefId;
     private String       followUpIntent;
@@ -41,8 +43,6 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
     private String       intentText;
     private String       trainingText;
     private Boolean      webhootEnable;
-    private Byte         changed;
-    private String       category;
 
     public CkSellinaAiQuery() {}
 
@@ -50,6 +50,7 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -60,6 +61,7 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         this.source = value.source;
         this.version = value.version;
         this.agentType = value.agentType;
+        this.category = value.category;
         this.description = value.description;
         this.externalRefId = value.externalRefId;
         this.followUpIntent = value.followUpIntent;
@@ -68,14 +70,13 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         this.intentText = value.intentText;
         this.trainingText = value.trainingText;
         this.webhootEnable = value.webhootEnable;
-        this.changed = value.changed;
-        this.category = value.category;
     }
 
     public CkSellinaAiQuery(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -86,6 +87,7 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         String       source,
         Integer      version,
         String       agentType,
+        String       category,
         String       description,
         String       externalRefId,
         String       followUpIntent,
@@ -93,13 +95,12 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         String       intent,
         String       intentText,
         String       trainingText,
-        Boolean      webhootEnable,
-        Byte         changed,
-        String       category
+        Boolean      webhootEnable
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -110,6 +111,7 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         this.source = source;
         this.version = version;
         this.agentType = agentType;
+        this.category = category;
         this.description = description;
         this.externalRefId = externalRefId;
         this.followUpIntent = followUpIntent;
@@ -118,8 +120,6 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         this.intentText = intentText;
         this.trainingText = trainingText;
         this.webhootEnable = webhootEnable;
-        this.changed = changed;
-        this.category = category;
     }
 
     /**
@@ -162,6 +162,20 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_sellina_ai_query.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_sellina_ai_query.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -305,6 +319,20 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_sellina_ai_query.category</code>.
+     */
+    public String getCategory() {
+        return this.category;
+    }
+
+    /**
+     * Setter for <code>ck_sellina_ai_query.category</code>.
+     */
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    /**
      * Getter for <code>ck_sellina_ai_query.description</code>.
      */
     public String getDescription() {
@@ -416,34 +444,6 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         this.webhootEnable = webhootEnable;
     }
 
-    /**
-     * Getter for <code>ck_sellina_ai_query.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_sellina_ai_query.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_sellina_ai_query.category</code>.
-     */
-    public String getCategory() {
-        return this.category;
-    }
-
-    /**
-     * Setter for <code>ck_sellina_ai_query.category</code>.
-     */
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkSellinaAiQuery (");
@@ -451,6 +451,7 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -461,6 +462,7 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(agentType);
+        sb.append(", ").append(category);
         sb.append(", ").append(description);
         sb.append(", ").append(externalRefId);
         sb.append(", ").append(followUpIntent);
@@ -469,8 +471,6 @@ public class CkSellinaAiQuery extends CommonDataModel implements Serializable {
         sb.append(", ").append(intentText);
         sb.append(", ").append(trainingText);
         sb.append(", ").append(webhootEnable);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(category);
 
         sb.append(")");
         return sb.toString();

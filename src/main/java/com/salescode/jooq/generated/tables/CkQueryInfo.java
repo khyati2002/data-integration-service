@@ -11,14 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -58,6 +68,16 @@ public class CkQueryInfo extends TableImpl<Record> {
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_query_info.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
+
+    /**
+     * The column <code>ck_query_info.label</code>.
+     */
+    public final TableField<Record, String> LABEL = createField(DSL.name("label"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_query_info.created_by</code>.
      */
     public final TableField<Record, String> CREATED_BY = createField(DSL.name("created_by"), SQLDataType.VARCHAR(255), this, "");
@@ -65,7 +85,7 @@ public class CkQueryInfo extends TableImpl<Record> {
     /**
      * The column <code>ck_query_info.creation_time</code>.
      */
-    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
+    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
 
     /**
      * The column <code>ck_query_info.extended_attributes</code>.
@@ -73,9 +93,14 @@ public class CkQueryInfo extends TableImpl<Record> {
     public final TableField<Record, JsonNode> EXTENDED_ATTRIBUTES = createField(DSL.name("extended_attributes"), SQLDataType.JSON, this, "", new JsonNodeConverter());
 
     /**
+     * The column <code>ck_query_info.hash</code>.
+     */
+    public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
+
+    /**
      * The column <code>ck_query_info.last_modified_time</code>.
      */
-    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
+    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
 
     /**
      * The column <code>ck_query_info.lob</code>.
@@ -88,9 +113,14 @@ public class CkQueryInfo extends TableImpl<Record> {
     public final TableField<Record, String> MODIFIED_BY = createField(DSL.name("modified_by"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_query_info.source</code>.
+     */
+    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_query_info.version</code>.
      */
-    public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>ck_query_info.description</code>.
@@ -123,44 +153,24 @@ public class CkQueryInfo extends TableImpl<Record> {
     public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_query_info.owner</code>.
+     */
+    public final TableField<Record, String> OWNER = createField(DSL.name("owner"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_query_info.priority</code>.
      */
     public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
+     * The column <code>ck_query_info.profile_name</code>.
+     */
+    public final TableField<Record, String> PROFILE_NAME = createField(DSL.name("profile_name"), SQLDataType.VARCHAR(50).defaultValue(DSL.inline("read-only", SQLDataType.VARCHAR)), this, "");
+
+    /**
      * The column <code>ck_query_info.query</code>.
      */
     public final TableField<Record, String> QUERY = createField(DSL.name("query"), SQLDataType.CLOB.nullable(false), this, "");
-
-    /**
-     * The column <code>ck_query_info.severity</code>.
-     */
-    public final TableField<Record, Integer> SEVERITY = createField(DSL.name("severity"), SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column <code>ck_query_info.type</code>.
-     */
-    public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_query_info.source</code>.
-     */
-    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_query_info.template_name</code>.
-     */
-    public final TableField<Record, String> TEMPLATE_NAME = createField(DSL.name("template_name"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_query_info.accessible_by</code>.
-     */
-    public final TableField<Record, JSON> ACCESSIBLE_BY = createField(DSL.name("accessible_by"), SQLDataType.JSON, this, "");
-
-    /**
-     * The column <code>ck_query_info.hash</code>.
-     */
-    public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_query_info.query_config</code>.
@@ -170,32 +180,27 @@ public class CkQueryInfo extends TableImpl<Record> {
     /**
      * The column <code>ck_query_info.query_type</code>.
      */
-    public final TableField<Record, String> QUERY_TYPE = createField(DSL.name("query_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> QUERY_TYPE = createField(DSL.name("query_type"), SQLDataType.VARCHAR(50).defaultValue(DSL.inline("single", SQLDataType.VARCHAR)), this, "");
+
+    /**
+     * The column <code>ck_query_info.severity</code>.
+     */
+    public final TableField<Record, Integer> SEVERITY = createField(DSL.name("severity"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>ck_query_info.template_name</code>.
+     */
+    public final TableField<Record, String> TEMPLATE_NAME = createField(DSL.name("template_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_query_info.ttl</code>.
      */
-    public final TableField<Record, Integer> TTL = createField(DSL.name("ttl"), SQLDataType.INTEGER.nullable(false).defaultValue(DSL.inline("0", SQLDataType.INTEGER)), this, "");
+    public final TableField<Record, Integer> TTL = createField(DSL.name("ttl"), SQLDataType.INTEGER.defaultValue(DSL.inline("0", SQLDataType.INTEGER)), this, "");
 
     /**
-     * The column <code>ck_query_info.owner</code>.
+     * The column <code>ck_query_info.type</code>.
      */
-    public final TableField<Record, String> OWNER = createField(DSL.name("owner"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_query_info.profile_name</code>.
-     */
-    public final TableField<Record, String> PROFILE_NAME = createField(DSL.name("profile_name"), SQLDataType.VARCHAR(50).defaultValue(DSL.inline("single", SQLDataType.VARCHAR)), this, "");
-
-    /**
-     * The column <code>ck_query_info.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_query_info.label</code>.
-     */
-    public final TableField<Record, String> LABEL = createField(DSL.name("label"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_query_info.review_status</code>.

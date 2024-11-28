@@ -11,16 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -59,6 +67,11 @@ public class CkPostaggregateUserKpiDaily extends TableImpl<Record> {
      * <code>ck_postaggregate_user_kpi_daily.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_postaggregate_user_kpi_daily.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_postaggregate_user_kpi_daily.created_by</code>.
@@ -138,6 +151,17 @@ public class CkPostaggregateUserKpiDaily extends TableImpl<Record> {
     public final TableField<Record, JSON> IMAGES = createField(DSL.name("images"), SQLDataType.JSON, this, "");
 
     /**
+     * The column
+     * <code>ck_postaggregate_user_kpi_daily.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column <code>ck_postaggregate_user_kpi_daily.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
+
+    /**
      * The column <code>ck_postaggregate_user_kpi_daily.name</code>.
      */
     public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
@@ -182,22 +206,6 @@ public class CkPostaggregateUserKpiDaily extends TableImpl<Record> {
      */
     public final TableField<Record, BigDecimal> VALUE = createField(DSL.name("value"), SQLDataType.DECIMAL(10, 2).defaultValue(DSL.inline("0.00", SQLDataType.DECIMAL)), this, "");
 
-    /**
-     * The column
-     * <code>ck_postaggregate_user_kpi_daily.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_postaggregate_user_kpi_daily.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_postaggregate_user_kpi_daily.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
     private CkPostaggregateUserKpiDaily(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
     }
@@ -241,34 +249,6 @@ public class CkPostaggregateUserKpiDaily extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_POSTAGGREGATE_USER_KPI_DAILY_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKEVSF9QTODAAPFL1JAY6GYMFOV, Keys.FKI6HPVC5M222U4URJTU3Y01UR3);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKEVSF9QTODAAPFL1JAY6GYMFOV);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKI6HPVC5M222U4URJTU3Y01UR3);
-
-        return _ckUser;
     }
 
     @Override

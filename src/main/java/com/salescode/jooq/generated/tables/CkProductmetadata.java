@@ -12,16 +12,26 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -59,6 +69,11 @@ public class CkProductmetadata extends TableImpl<Record> {
      * The column <code>ck_productmetadata.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_productmetadata.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_productmetadata.created_by</code>.
@@ -123,7 +138,7 @@ public class CkProductmetadata extends TableImpl<Record> {
     /**
      * The column <code>ck_productmetadata.case_ptr</code>.
      */
-    public final TableField<Record, BigDecimal> CASE_PTR = createField(DSL.name("case_ptr"), SQLDataType.DECIMAL(10, 2).defaultValue(DSL.inline("0.00", SQLDataType.DECIMAL)), this, "");
+    public final TableField<Record, BigDecimal> CASE_PTR = createField(DSL.name("case_ptr"), SQLDataType.DECIMAL(15, 8).defaultValue(DSL.inline("0.00000000", SQLDataType.DECIMAL)), this, "");
 
     /**
      * The column <code>ck_productmetadata.channel</code>.
@@ -141,29 +156,39 @@ public class CkProductmetadata extends TableImpl<Record> {
     public final TableField<Record, String> LEVEL = createField(DSL.name("level"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_productmetadata.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_productmetadata.max_qty</code>.
      */
-    public final TableField<Record, Integer> MAX_QTY = createField(DSL.name("max_qty"), SQLDataType.INTEGER.defaultValue(DSL.inline("0", SQLDataType.INTEGER)), this, "");
+    public final TableField<Record, Integer> MAX_QTY = createField(DSL.name("max_qty"), SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>ck_productmetadata.min_qty</code>.
      */
-    public final TableField<Record, Integer> MIN_QTY = createField(DSL.name("min_qty"), SQLDataType.INTEGER.defaultValue(DSL.inline("0", SQLDataType.INTEGER)), this, "");
+    public final TableField<Record, Integer> MIN_QTY = createField(DSL.name("min_qty"), SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>ck_productmetadata.mrp</code>.
      */
-    public final TableField<Record, BigDecimal> MRP = createField(DSL.name("mrp"), SQLDataType.DECIMAL(10, 2).defaultValue(DSL.inline("0.00", SQLDataType.DECIMAL)), this, "");
+    public final TableField<Record, BigDecimal> MRP = createField(DSL.name("mrp"), SQLDataType.DECIMAL(15, 5).defaultValue(DSL.inline("0.00000", SQLDataType.DECIMAL)), this, "");
 
     /**
      * The column <code>ck_productmetadata.other_unit_ptr</code>.
      */
-    public final TableField<Record, BigDecimal> OTHER_UNIT_PTR = createField(DSL.name("other_unit_ptr"), SQLDataType.DECIMAL(10, 2).defaultValue(DSL.inline("0.00", SQLDataType.DECIMAL)), this, "");
+    public final TableField<Record, BigDecimal> OTHER_UNIT_PTR = createField(DSL.name("other_unit_ptr"), SQLDataType.DECIMAL(15, 5).defaultValue(DSL.inline("0.00000", SQLDataType.DECIMAL)), this, "");
+
+    /**
+     * The column <code>ck_productmetadata.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_productmetadata.pack_ptr</code>.
      */
-    public final TableField<Record, BigDecimal> PACK_PTR = createField(DSL.name("pack_ptr"), SQLDataType.DECIMAL(10, 2).defaultValue(DSL.inline("0.00", SQLDataType.DECIMAL)), this, "");
+    public final TableField<Record, BigDecimal> PACK_PTR = createField(DSL.name("pack_ptr"), SQLDataType.DECIMAL(15, 8).defaultValue(DSL.inline("0.00000000", SQLDataType.DECIMAL)), this, "");
 
     /**
      * The column <code>ck_productmetadata.price_list</code>.
@@ -174,6 +199,16 @@ public class CkProductmetadata extends TableImpl<Record> {
      * The column <code>ck_productmetadata.sku_code</code>.
      */
     public final TableField<Record, String> SKU_CODE = createField(DSL.name("sku_code"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_productmetadata.sub_channel</code>.
+     */
+    public final TableField<Record, String> SUB_CHANNEL = createField(DSL.name("sub_channel"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_productmetadata.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_productmetadata.tax</code>.
@@ -191,34 +226,9 @@ public class CkProductmetadata extends TableImpl<Record> {
     public final TableField<Record, String> WH_CODE = createField(DSL.name("wh_code"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_productmetadata.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_productmetadata.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
      * The column <code>ck_productmetadata.fk_productmetadata</code>.
      */
     public final TableField<Record, String> FK_PRODUCTMETADATA = createField(DSL.name("fk_productmetadata"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_productmetadata.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_productmetadata.sub_channel</code>.
-     */
-    public final TableField<Record, String> SUB_CHANNEL = createField(DSL.name("sub_channel"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_productmetadata.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_productmetadata.case_mrp</code>.
@@ -228,7 +238,7 @@ public class CkProductmetadata extends TableImpl<Record> {
     /**
      * The column <code>ck_productmetadata.other_unit_mrp</code>.
      */
-    public final TableField<Record, BigDecimal> OTHER_UNIT_MRP = createField(DSL.name("other_unit_mrp"), SQLDataType.DECIMAL(10, 2).defaultValue(DSL.inline("0.00", SQLDataType.DECIMAL)), this, "");
+    public final TableField<Record, BigDecimal> OTHER_UNIT_MRP = createField(DSL.name("other_unit_mrp"), SQLDataType.DECIMAL(15, 5).defaultValue(DSL.inline("0.00000", SQLDataType.DECIMAL)), this, "");
 
     /**
      * The column <code>ck_productmetadata.from_date</code>.
@@ -268,7 +278,7 @@ public class CkProductmetadata extends TableImpl<Record> {
     /**
      * The column <code>ck_productmetadata.priority</code>.
      */
-    public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER.defaultValue(DSL.inline("0", SQLDataType.INTEGER)), this, "");
 
     private CkProductmetadata(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -316,34 +326,6 @@ public class CkProductmetadata extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_PRODUCTMETADATA_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKTG5FATSS3QOMR37MWY767623I, Keys.FKO7VXJUL1K9BS3MDAG05B4TGQ9);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKTG5FATSS3QOMR37MWY767623I);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKO7VXJUL1K9BS3MDAG05B4TGQ9);
-
-        return _ckUser;
     }
 
     @Override

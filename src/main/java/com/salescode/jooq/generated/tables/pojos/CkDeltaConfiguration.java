@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,6 +25,7 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -34,11 +36,10 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
     private String       source;
     private Integer      version;
     private String       entityName;
+    private JSON         excludedColumns;
     private Boolean      isEnabled;
     private String       syncType;
     private String       url;
-    private Byte         changed;
-    private JSON         excludedColumns;
 
     public CkDeltaConfiguration() {}
 
@@ -46,6 +47,7 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -56,17 +58,17 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
         this.source = value.source;
         this.version = value.version;
         this.entityName = value.entityName;
+        this.excludedColumns = value.excludedColumns;
         this.isEnabled = value.isEnabled;
         this.syncType = value.syncType;
         this.url = value.url;
-        this.changed = value.changed;
-        this.excludedColumns = value.excludedColumns;
     }
 
     public CkDeltaConfiguration(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -77,15 +79,15 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
         String       source,
         Integer      version,
         String       entityName,
+        JSON         excludedColumns,
         Boolean      isEnabled,
         String       syncType,
-        String       url,
-        Byte         changed,
-        JSON         excludedColumns
+        String       url
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -96,11 +98,10 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
         this.source = source;
         this.version = version;
         this.entityName = entityName;
+        this.excludedColumns = excludedColumns;
         this.isEnabled = isEnabled;
         this.syncType = syncType;
         this.url = url;
-        this.changed = changed;
-        this.excludedColumns = excludedColumns;
     }
 
     /**
@@ -143,6 +144,20 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_delta_configuration.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_delta_configuration.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -286,6 +301,20 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
     }
 
     /**
+     * Getter for <code>ck_delta_configuration.excluded_columns</code>.
+     */
+    public JSON getExcludedColumns() {
+        return this.excludedColumns;
+    }
+
+    /**
+     * Setter for <code>ck_delta_configuration.excluded_columns</code>.
+     */
+    public void setExcludedColumns(JSON excludedColumns) {
+        this.excludedColumns = excludedColumns;
+    }
+
+    /**
      * Getter for <code>ck_delta_configuration.is_enabled</code>.
      */
     public Boolean getIsEnabled() {
@@ -327,34 +356,6 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
         this.url = url;
     }
 
-    /**
-     * Getter for <code>ck_delta_configuration.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_delta_configuration.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_delta_configuration.excluded_columns</code>.
-     */
-    public JSON getExcludedColumns() {
-        return this.excludedColumns;
-    }
-
-    /**
-     * Setter for <code>ck_delta_configuration.excluded_columns</code>.
-     */
-    public void setExcludedColumns(JSON excludedColumns) {
-        this.excludedColumns = excludedColumns;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkDeltaConfiguration (");
@@ -362,6 +363,7 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -372,11 +374,10 @@ public class CkDeltaConfiguration extends CommonDataModel implements Serializabl
         sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(entityName);
+        sb.append(", ").append(excludedColumns);
         sb.append(", ").append(isEnabled);
         sb.append(", ").append(syncType);
         sb.append(", ").append(url);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(excludedColumns);
 
         sb.append(")");
         return sb.toString();

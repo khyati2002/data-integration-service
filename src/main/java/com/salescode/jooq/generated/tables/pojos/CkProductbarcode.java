@@ -23,6 +23,7 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -34,10 +35,9 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
     private Integer      version;
     private String       barcode;
     private String       countryCode;
-    private String       packSizeUnit;
     private String       outletCode;
+    private String       packSizeUnit;
     private String       skuCode;
-    private Byte         changed;
     private String       supplier;
 
     public CkProductbarcode() {}
@@ -46,6 +46,7 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -57,10 +58,9 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
         this.version = value.version;
         this.barcode = value.barcode;
         this.countryCode = value.countryCode;
-        this.packSizeUnit = value.packSizeUnit;
         this.outletCode = value.outletCode;
+        this.packSizeUnit = value.packSizeUnit;
         this.skuCode = value.skuCode;
-        this.changed = value.changed;
         this.supplier = value.supplier;
     }
 
@@ -68,6 +68,7 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -79,15 +80,15 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
         Integer      version,
         String       barcode,
         String       countryCode,
-        String       packSizeUnit,
         String       outletCode,
+        String       packSizeUnit,
         String       skuCode,
-        Byte         changed,
         String       supplier
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -99,10 +100,9 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
         this.version = version;
         this.barcode = barcode;
         this.countryCode = countryCode;
-        this.packSizeUnit = packSizeUnit;
         this.outletCode = outletCode;
+        this.packSizeUnit = packSizeUnit;
         this.skuCode = skuCode;
-        this.changed = changed;
         this.supplier = supplier;
     }
 
@@ -146,6 +146,20 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_productbarcode.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_productbarcode.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -303,20 +317,6 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_productbarcode.pack_size_unit</code>.
-     */
-    public String getPackSizeUnit() {
-        return this.packSizeUnit;
-    }
-
-    /**
-     * Setter for <code>ck_productbarcode.pack_size_unit</code>.
-     */
-    public void setPackSizeUnit(String packSizeUnit) {
-        this.packSizeUnit = packSizeUnit;
-    }
-
-    /**
      * Getter for <code>ck_productbarcode.outlet_code</code>.
      */
     public String getOutletCode() {
@@ -331,6 +331,20 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_productbarcode.pack_size_unit</code>.
+     */
+    public String getPackSizeUnit() {
+        return this.packSizeUnit;
+    }
+
+    /**
+     * Setter for <code>ck_productbarcode.pack_size_unit</code>.
+     */
+    public void setPackSizeUnit(String packSizeUnit) {
+        this.packSizeUnit = packSizeUnit;
+    }
+
+    /**
      * Getter for <code>ck_productbarcode.sku_code</code>.
      */
     public String getSkuCode() {
@@ -342,20 +356,6 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
      */
     public void setSkuCode(String skuCode) {
         this.skuCode = skuCode;
-    }
-
-    /**
-     * Getter for <code>ck_productbarcode.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_productbarcode.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
     }
 
     /**
@@ -379,6 +379,7 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -390,10 +391,9 @@ public class CkProductbarcode extends CommonDataModel implements Serializable {
         sb.append(", ").append(version);
         sb.append(", ").append(barcode);
         sb.append(", ").append(countryCode);
-        sb.append(", ").append(packSizeUnit);
         sb.append(", ").append(outletCode);
+        sb.append(", ").append(packSizeUnit);
         sb.append(", ").append(skuCode);
-        sb.append(", ").append(changed);
         sb.append(", ").append(supplier);
 
         sb.append(")");

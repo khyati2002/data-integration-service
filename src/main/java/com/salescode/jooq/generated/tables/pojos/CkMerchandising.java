@@ -23,6 +23,7 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -44,14 +45,13 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     private String       fileNameA;
     private String       fileNameB;
     private String       filenameC;
+    private String       outletcode;
     private String       position;
     private String       product;
     private String       sku;
     private String       style;
     private String       subCategory;
     private String       type;
-    private String       outletcode;
-    private Byte         changed;
 
     public CkMerchandising() {}
 
@@ -59,6 +59,7 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -80,20 +81,20 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
         this.fileNameA = value.fileNameA;
         this.fileNameB = value.fileNameB;
         this.filenameC = value.filenameC;
+        this.outletcode = value.outletcode;
         this.position = value.position;
         this.product = value.product;
         this.sku = value.sku;
         this.style = value.style;
         this.subCategory = value.subCategory;
         this.type = value.type;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
     }
 
     public CkMerchandising(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -115,18 +116,18 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
         String       fileNameA,
         String       fileNameB,
         String       filenameC,
+        String       outletcode,
         String       position,
         String       product,
         String       sku,
         String       style,
         String       subCategory,
-        String       type,
-        String       outletcode,
-        Byte         changed
+        String       type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -148,14 +149,13 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
         this.fileNameA = fileNameA;
         this.fileNameB = fileNameB;
         this.filenameC = filenameC;
+        this.outletcode = outletcode;
         this.position = position;
         this.product = product;
         this.sku = sku;
         this.style = style;
         this.subCategory = subCategory;
         this.type = type;
-        this.outletcode = outletcode;
-        this.changed = changed;
     }
 
     /**
@@ -198,6 +198,20 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_merchandising.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_merchandising.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -495,6 +509,20 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_merchandising.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_merchandising.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
      * Getter for <code>ck_merchandising.position</code>.
      */
     public String getPosition() {
@@ -578,34 +606,6 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
         this.type = type;
     }
 
-    /**
-     * Getter for <code>ck_merchandising.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_merchandising.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_merchandising.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_merchandising.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkMerchandising (");
@@ -613,6 +613,7 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -634,14 +635,13 @@ public class CkMerchandising extends CommonDataModel implements Serializable {
         sb.append(", ").append(fileNameA);
         sb.append(", ").append(fileNameB);
         sb.append(", ").append(filenameC);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(position);
         sb.append(", ").append(product);
         sb.append(", ").append(sku);
         sb.append(", ").append(style);
         sb.append(", ").append(subCategory);
         sb.append(", ").append(type);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

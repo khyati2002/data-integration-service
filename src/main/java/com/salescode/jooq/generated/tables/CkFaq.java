@@ -11,14 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -65,7 +75,7 @@ public class CkFaq extends TableImpl<Record> {
     /**
      * The column <code>ck_faq.creation_time</code>.
      */
-    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
 
     /**
      * The column <code>ck_faq.extended_attributes</code>.
@@ -73,14 +83,9 @@ public class CkFaq extends TableImpl<Record> {
     public final TableField<Record, JsonNode> EXTENDED_ATTRIBUTES = createField(DSL.name("extended_attributes"), SQLDataType.JSON, this, "", new JsonNodeConverter());
 
     /**
-     * The column <code>ck_faq.hash</code>.
-     */
-    public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
-
-    /**
      * The column <code>ck_faq.last_modified_time</code>.
      */
-    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
 
     /**
      * The column <code>ck_faq.lob</code>.
@@ -100,7 +105,7 @@ public class CkFaq extends TableImpl<Record> {
     /**
      * The column <code>ck_faq.version</code>.
      */
-    public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
+    public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>ck_faq.answer</code>.
@@ -135,7 +140,7 @@ public class CkFaq extends TableImpl<Record> {
     /**
      * The column <code>ck_faq.trainingtext</code>.
      */
-    public final TableField<Record, String> TRAININGTEXT = createField(DSL.name("trainingtext"), SQLDataType.CLOB, this, "");
+    public final TableField<Record, String> TRAININGTEXT = createField(DSL.name("trainingtext"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_faq.type</code>.
@@ -146,6 +151,11 @@ public class CkFaq extends TableImpl<Record> {
      * The column <code>ck_faq.url</code>.
      */
     public final TableField<Record, String> URL = createField(DSL.name("url"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>ck_faq.hash</code>.
+     */
+    public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_faq.changed</code>.

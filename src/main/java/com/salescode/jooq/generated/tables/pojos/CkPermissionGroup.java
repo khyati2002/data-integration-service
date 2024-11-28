@@ -23,6 +23,7 @@ public class CkPermissionGroup extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -35,7 +36,6 @@ public class CkPermissionGroup extends CommonDataModel implements Serializable {
     private String       name;
     private String       operation;
     private String       featureName;
-    private Byte         changed;
 
     public CkPermissionGroup() {}
 
@@ -43,6 +43,7 @@ public class CkPermissionGroup extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -55,13 +56,13 @@ public class CkPermissionGroup extends CommonDataModel implements Serializable {
         this.name = value.name;
         this.operation = value.operation;
         this.featureName = value.featureName;
-        this.changed = value.changed;
     }
 
     public CkPermissionGroup(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -73,12 +74,12 @@ public class CkPermissionGroup extends CommonDataModel implements Serializable {
         Integer      version,
         String       name,
         String       operation,
-        String       featureName,
-        Byte         changed
+        String       featureName
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -91,7 +92,6 @@ public class CkPermissionGroup extends CommonDataModel implements Serializable {
         this.name = name;
         this.operation = operation;
         this.featureName = featureName;
-        this.changed = changed;
     }
 
     /**
@@ -134,6 +134,20 @@ public class CkPermissionGroup extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_permission_group.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_permission_group.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -304,20 +318,6 @@ public class CkPermissionGroup extends CommonDataModel implements Serializable {
         this.featureName = featureName;
     }
 
-    /**
-     * Getter for <code>ck_permission_group.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_permission_group.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPermissionGroup (");
@@ -325,6 +325,7 @@ public class CkPermissionGroup extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -337,7 +338,6 @@ public class CkPermissionGroup extends CommonDataModel implements Serializable {
         sb.append(", ").append(name);
         sb.append(", ").append(operation);
         sb.append(", ").append(featureName);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

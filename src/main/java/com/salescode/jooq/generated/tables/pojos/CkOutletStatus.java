@@ -45,12 +45,12 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     private LocalDateTime firstBilledDate;
     private LocalDateTime firstClickedDate;
     private LocalDateTime firstOrderedDate;
+    private String        orderNumber;
+    private LocalDateTime lastPjpDate;
     private LocalDateTime lastCrossSellDate;
     private LocalDateTime lastCrossSellRecommended;
-    private LocalDateTime lastPjpDate;
     private LocalDateTime lastUpSellDate;
     private LocalDateTime lastUpSellRecommended;
-    private String        orderNumber;
 
     public CkOutletStatus() {}
 
@@ -79,12 +79,12 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
         this.firstBilledDate = value.firstBilledDate;
         this.firstClickedDate = value.firstClickedDate;
         this.firstOrderedDate = value.firstOrderedDate;
+        this.orderNumber = value.orderNumber;
+        this.lastPjpDate = value.lastPjpDate;
         this.lastCrossSellDate = value.lastCrossSellDate;
         this.lastCrossSellRecommended = value.lastCrossSellRecommended;
-        this.lastPjpDate = value.lastPjpDate;
         this.lastUpSellDate = value.lastUpSellDate;
         this.lastUpSellRecommended = value.lastUpSellRecommended;
-        this.orderNumber = value.orderNumber;
     }
 
     public CkOutletStatus(
@@ -112,12 +112,12 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
         LocalDateTime firstBilledDate,
         LocalDateTime firstClickedDate,
         LocalDateTime firstOrderedDate,
+        String        orderNumber,
+        LocalDateTime lastPjpDate,
         LocalDateTime lastCrossSellDate,
         LocalDateTime lastCrossSellRecommended,
-        LocalDateTime lastPjpDate,
         LocalDateTime lastUpSellDate,
-        LocalDateTime lastUpSellRecommended,
-        String        orderNumber
+        LocalDateTime lastUpSellRecommended
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -143,12 +143,12 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
         this.firstBilledDate = firstBilledDate;
         this.firstClickedDate = firstClickedDate;
         this.firstOrderedDate = firstOrderedDate;
+        this.orderNumber = orderNumber;
+        this.lastPjpDate = lastPjpDate;
         this.lastCrossSellDate = lastCrossSellDate;
         this.lastCrossSellRecommended = lastCrossSellRecommended;
-        this.lastPjpDate = lastPjpDate;
         this.lastUpSellDate = lastUpSellDate;
         this.lastUpSellRecommended = lastUpSellRecommended;
-        this.orderNumber = orderNumber;
     }
 
     /**
@@ -488,6 +488,34 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_outlet_status.order_number</code>.
+     */
+    public String getOrderNumber() {
+        return this.orderNumber;
+    }
+
+    /**
+     * Setter for <code>ck_outlet_status.order_number</code>.
+     */
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    /**
+     * Getter for <code>ck_outlet_status.last_pjp_date</code>.
+     */
+    public LocalDateTime getLastPjpDate() {
+        return this.lastPjpDate;
+    }
+
+    /**
+     * Setter for <code>ck_outlet_status.last_pjp_date</code>.
+     */
+    public void setLastPjpDate(LocalDateTime lastPjpDate) {
+        this.lastPjpDate = lastPjpDate;
+    }
+
+    /**
      * Getter for <code>ck_outlet_status.last_cross_sell_date</code>.
      */
     public LocalDateTime getLastCrossSellDate() {
@@ -513,20 +541,6 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
      */
     public void setLastCrossSellRecommended(LocalDateTime lastCrossSellRecommended) {
         this.lastCrossSellRecommended = lastCrossSellRecommended;
-    }
-
-    /**
-     * Getter for <code>ck_outlet_status.last_pjp_date</code>.
-     */
-    public LocalDateTime getLastPjpDate() {
-        return this.lastPjpDate;
-    }
-
-    /**
-     * Setter for <code>ck_outlet_status.last_pjp_date</code>.
-     */
-    public void setLastPjpDate(LocalDateTime lastPjpDate) {
-        this.lastPjpDate = lastPjpDate;
     }
 
     /**
@@ -557,20 +571,6 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
         this.lastUpSellRecommended = lastUpSellRecommended;
     }
 
-    /**
-     * Getter for <code>ck_outlet_status.order_number</code>.
-     */
-    public String getOrderNumber() {
-        return this.orderNumber;
-    }
-
-    /**
-     * Setter for <code>ck_outlet_status.order_number</code>.
-     */
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkOutletStatus (");
@@ -599,12 +599,12 @@ public class CkOutletStatus extends CommonDataModel implements Serializable {
         sb.append(", ").append(firstBilledDate);
         sb.append(", ").append(firstClickedDate);
         sb.append(", ").append(firstOrderedDate);
+        sb.append(", ").append(orderNumber);
+        sb.append(", ").append(lastPjpDate);
         sb.append(", ").append(lastCrossSellDate);
         sb.append(", ").append(lastCrossSellRecommended);
-        sb.append(", ").append(lastPjpDate);
         sb.append(", ").append(lastUpSellDate);
         sb.append(", ").append(lastUpSellRecommended);
-        sb.append(", ").append(orderNumber);
 
         sb.append(")");
         return sb.toString();

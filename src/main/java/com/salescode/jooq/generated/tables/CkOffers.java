@@ -10,16 +10,28 @@ import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
+import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -57,6 +69,11 @@ public class CkOffers extends TableImpl<Record> {
      * The column <code>ck_offers.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_offers.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_offers.created_by</code>.
@@ -164,9 +181,19 @@ public class CkOffers extends TableImpl<Record> {
     public final TableField<Record, String> GROUP_TYPE = createField(DSL.name("group_type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_offers.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_offers.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_offers.loyalty_type</code>.
      */
-    public final TableField<Record, String> LOYALTY_TYPE = createField(DSL.name("loyalty_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> LOYALTY_TYPE = createField(DSL.name("loyalty_type"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_offers.other_unit</code>.
@@ -179,9 +206,14 @@ public class CkOffers extends TableImpl<Record> {
     public final TableField<Record, String> OUTLET_CATEGORY = createField(DSL.name("outlet_category"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_offers.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_offers.outlet_type</code>.
      */
-    public final TableField<Record, String> OUTLET_TYPE = createField(DSL.name("outlet_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> OUTLET_TYPE = createField(DSL.name("outlet_type"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_offers.priority</code>.
@@ -259,29 +291,44 @@ public class CkOffers extends TableImpl<Record> {
     public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_offers.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_offers.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_offers.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
      * The column <code>ck_offers.associated_program</code>.
      */
     public final TableField<Record, String> ASSOCIATED_PROGRAM = createField(DSL.name("associated_program"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_offers.changed</code>.
+     * The column <code>ck_offers.foc_package_name</code>.
      */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
+    public final TableField<Record, String> FOC_PACKAGE_NAME = createField(DSL.name("foc_package_name"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_offers.trade_package_name</code>.
+     */
+    public final TableField<Record, String> TRADE_PACKAGE_NAME = createField(DSL.name("trade_package_name"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_offers.item_class</code>.
+     */
+    public final TableField<Record, String> ITEM_CLASS = createField(DSL.name("item_class"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_offers.filter_key</code>.
+     */
+    public final TableField<Record, String> FILTER_KEY = createField(DSL.name("filter_key"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_offers.filter_value</code>.
+     */
+    public final TableField<Record, String> FILTER_VALUE = createField(DSL.name("filter_value"), SQLDataType.VARCHAR(45), this, "");
+
+    /**
+     * The column <code>ck_offers.piece_size</code>.
+     */
+    public final TableField<Record, String> PIECE_SIZE = createField(DSL.name("piece_size"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_offers.item_id</code>.
+     */
+    public final TableField<Record, String> ITEM_ID = createField(DSL.name("item_id"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_offers.account</code>.
@@ -292,21 +339,6 @@ public class CkOffers extends TableImpl<Record> {
      * The column <code>ck_offers.distribution_channel</code>.
      */
     public final TableField<Record, String> DISTRIBUTION_CHANNEL = createField(DSL.name("distribution_channel"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_offers.foc_package_name</code>.
-     */
-    public final TableField<Record, String> FOC_PACKAGE_NAME = createField(DSL.name("foc_package_name"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_offers.item_class</code>.
-     */
-    public final TableField<Record, String> ITEM_CLASS = createField(DSL.name("item_class"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_offers.item_id</code>.
-     */
-    public final TableField<Record, String> ITEM_ID = createField(DSL.name("item_id"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_offers.market_id</code>.
@@ -329,29 +361,9 @@ public class CkOffers extends TableImpl<Record> {
     public final TableField<Record, String> OUTLET_DIVISION = createField(DSL.name("outlet_division"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_offers.piece_size</code>.
-     */
-    public final TableField<Record, String> PIECE_SIZE = createField(DSL.name("piece_size"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_offers.sub_channel</code>.
      */
     public final TableField<Record, String> SUB_CHANNEL = createField(DSL.name("sub_channel"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_offers.trade_package_name</code>.
-     */
-    public final TableField<Record, String> TRADE_PACKAGE_NAME = createField(DSL.name("trade_package_name"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_offers.filter_key</code>.
-     */
-    public final TableField<Record, String> FILTER_KEY = createField(DSL.name("filter_key"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_offers.filter_value</code>.
-     */
-    public final TableField<Record, String> FILTER_VALUE = createField(DSL.name("filter_value"), SQLDataType.VARCHAR(255), this, "");
 
     private CkOffers(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -392,50 +404,21 @@ public class CkOffers extends TableImpl<Record> {
     }
 
     @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.CK_OFFERS_CK_OFFERS_HASH_IDX);
+    }
+
+    @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_OFFERS_PRIMARY;
     }
 
     @Override
     public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKAAAIPY2ECHDMT3LTYOK3OTHM5, Keys.FKC9LGR4Q8I9UJHCGRVBHT0G2G0, Keys.FKB2RRASEVGPYV7DR64V8BVUJCN, Keys.FKI52M8URIVV3VW9HMIETHTYJKW);
+        return Arrays.asList(Keys.FKI52M8URIVV3VW9HMIETHTYJKW);
     }
 
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
     private transient CkRangeProgram _ckRangeProgram;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKAAAIPY2ECHDMT3LTYOK3OTHM5);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKC9LGR4Q8I9UJHCGRVBHT0G2G0);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FKB2RRASEVGPYV7DR64V8BVUJCN);
-
-        return _ckOutletDetails;
-    }
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_range_program</code>

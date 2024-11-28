@@ -24,6 +24,7 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -41,14 +42,13 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
     private String        implementation;
     private String        name;
     private String        reportDefenition;
+    private String        reportDelimiter;
     private LocalDateTime toDate;
     private String        transformer;
     private String        type;
-    private String        reportDelimiter;
-    private Byte          changed;
-    private String        owner;
-    private String        reviewStatus;
     private String        reviewer;
+    private String        reviewStatus;
+    private String        owner;
     private String        designations;
 
     public CkReportInfo() {}
@@ -57,6 +57,7 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -74,14 +75,13 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
         this.implementation = value.implementation;
         this.name = value.name;
         this.reportDefenition = value.reportDefenition;
+        this.reportDelimiter = value.reportDelimiter;
         this.toDate = value.toDate;
         this.transformer = value.transformer;
         this.type = value.type;
-        this.reportDelimiter = value.reportDelimiter;
-        this.changed = value.changed;
-        this.owner = value.owner;
-        this.reviewStatus = value.reviewStatus;
         this.reviewer = value.reviewer;
+        this.reviewStatus = value.reviewStatus;
+        this.owner = value.owner;
         this.designations = value.designations;
     }
 
@@ -89,6 +89,7 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -106,19 +107,19 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
         String        implementation,
         String        name,
         String        reportDefenition,
+        String        reportDelimiter,
         LocalDateTime toDate,
         String        transformer,
         String        type,
-        String        reportDelimiter,
-        Byte          changed,
-        String        owner,
-        String        reviewStatus,
         String        reviewer,
+        String        reviewStatus,
+        String        owner,
         String        designations
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -136,14 +137,13 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
         this.implementation = implementation;
         this.name = name;
         this.reportDefenition = reportDefenition;
+        this.reportDelimiter = reportDelimiter;
         this.toDate = toDate;
         this.transformer = transformer;
         this.type = type;
-        this.reportDelimiter = reportDelimiter;
-        this.changed = changed;
-        this.owner = owner;
-        this.reviewStatus = reviewStatus;
         this.reviewer = reviewer;
+        this.reviewStatus = reviewStatus;
+        this.owner = owner;
         this.designations = designations;
     }
 
@@ -187,6 +187,20 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_report_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_report_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -428,6 +442,20 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_report_info.report_delimiter</code>.
+     */
+    public String getReportDelimiter() {
+        return this.reportDelimiter;
+    }
+
+    /**
+     * Setter for <code>ck_report_info.report_delimiter</code>.
+     */
+    public void setReportDelimiter(String reportDelimiter) {
+        this.reportDelimiter = reportDelimiter;
+    }
+
+    /**
      * Getter for <code>ck_report_info.to_date</code>.
      */
     public LocalDateTime getToDate() {
@@ -470,45 +498,17 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_report_info.report_delimiter</code>.
+     * Getter for <code>ck_report_info.reviewer</code>.
      */
-    public String getReportDelimiter() {
-        return this.reportDelimiter;
+    public String getReviewer() {
+        return this.reviewer;
     }
 
     /**
-     * Setter for <code>ck_report_info.report_delimiter</code>.
+     * Setter for <code>ck_report_info.reviewer</code>.
      */
-    public void setReportDelimiter(String reportDelimiter) {
-        this.reportDelimiter = reportDelimiter;
-    }
-
-    /**
-     * Getter for <code>ck_report_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_report_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_report_info.owner</code>.
-     */
-    public String getOwner() {
-        return this.owner;
-    }
-
-    /**
-     * Setter for <code>ck_report_info.owner</code>.
-     */
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setReviewer(String reviewer) {
+        this.reviewer = reviewer;
     }
 
     /**
@@ -526,17 +526,17 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_report_info.reviewer</code>.
+     * Getter for <code>ck_report_info.owner</code>.
      */
-    public String getReviewer() {
-        return this.reviewer;
+    public String getOwner() {
+        return this.owner;
     }
 
     /**
-     * Setter for <code>ck_report_info.reviewer</code>.
+     * Setter for <code>ck_report_info.owner</code>.
      */
-    public void setReviewer(String reviewer) {
-        this.reviewer = reviewer;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     /**
@@ -560,6 +560,7 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -577,14 +578,13 @@ public class CkReportInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(implementation);
         sb.append(", ").append(name);
         sb.append(", ").append(reportDefenition);
+        sb.append(", ").append(reportDelimiter);
         sb.append(", ").append(toDate);
         sb.append(", ").append(transformer);
         sb.append(", ").append(type);
-        sb.append(", ").append(reportDelimiter);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(owner);
-        sb.append(", ").append(reviewStatus);
         sb.append(", ").append(reviewer);
+        sb.append(", ").append(reviewStatus);
+        sb.append(", ").append(owner);
         sb.append(", ").append(designations);
 
         sb.append(")");

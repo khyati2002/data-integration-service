@@ -24,6 +24,7 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -36,13 +37,12 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
     private String        activityId;
     private String        activityParam;
     private String        userHierarchy;
+    private String        locationHierarchy;
+    private String        loginid;
     private String        remarks;
     private LocalDateTime reminderDateTime;
     private String        status;
     private String        type;
-    private String        locationHierarchy;
-    private String        loginid;
-    private Byte          changed;
 
     public CkActivityReminder() {}
 
@@ -50,6 +50,7 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -62,19 +63,19 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
         this.activityId = value.activityId;
         this.activityParam = value.activityParam;
         this.userHierarchy = value.userHierarchy;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
         this.remarks = value.remarks;
         this.reminderDateTime = value.reminderDateTime;
         this.status = value.status;
         this.type = value.type;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.changed = value.changed;
     }
 
     public CkActivityReminder(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -87,17 +88,17 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
         String        activityId,
         String        activityParam,
         String        userHierarchy,
+        String        locationHierarchy,
+        String        loginid,
         String        remarks,
         LocalDateTime reminderDateTime,
         String        status,
-        String        type,
-        String        locationHierarchy,
-        String        loginid,
-        Byte          changed
+        String        type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -110,13 +111,12 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
         this.activityId = activityId;
         this.activityParam = activityParam;
         this.userHierarchy = userHierarchy;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
         this.remarks = remarks;
         this.reminderDateTime = reminderDateTime;
         this.status = status;
         this.type = type;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.changed = changed;
     }
 
     /**
@@ -159,6 +159,20 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_activity_reminder.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_activity_reminder.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -330,6 +344,34 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
     }
 
     /**
+     * Getter for <code>ck_activity_reminder.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_activity_reminder.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for <code>ck_activity_reminder.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_activity_reminder.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_activity_reminder.remarks</code>.
      */
     public String getRemarks() {
@@ -385,48 +427,6 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
         this.type = type;
     }
 
-    /**
-     * Getter for <code>ck_activity_reminder.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_activity_reminder.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_activity_reminder.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_activity_reminder.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_activity_reminder.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_activity_reminder.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkActivityReminder (");
@@ -434,6 +434,7 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -446,13 +447,12 @@ public class CkActivityReminder extends CommonDataModel implements Serializable 
         sb.append(", ").append(activityId);
         sb.append(", ").append(activityParam);
         sb.append(", ").append(userHierarchy);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(remarks);
         sb.append(", ").append(reminderDateTime);
         sb.append(", ").append(status);
         sb.append(", ").append(type);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

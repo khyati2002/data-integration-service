@@ -23,6 +23,7 @@ public class CkSellinaQueryTemplateAssociation extends CommonDataModel implement
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -41,7 +42,6 @@ public class CkSellinaQueryTemplateAssociation extends CommonDataModel implement
     private JsonNode     templateAttributes;
     private String       transformer;
     private String       intent;
-    private Byte         changed;
 
     public CkSellinaQueryTemplateAssociation() {}
 
@@ -49,6 +49,7 @@ public class CkSellinaQueryTemplateAssociation extends CommonDataModel implement
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -67,13 +68,13 @@ public class CkSellinaQueryTemplateAssociation extends CommonDataModel implement
         this.templateAttributes = value.templateAttributes;
         this.transformer = value.transformer;
         this.intent = value.intent;
-        this.changed = value.changed;
     }
 
     public CkSellinaQueryTemplateAssociation(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -91,12 +92,12 @@ public class CkSellinaQueryTemplateAssociation extends CommonDataModel implement
         String       template,
         JsonNode     templateAttributes,
         String       transformer,
-        String       intent,
-        Byte         changed
+        String       intent
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -115,7 +116,6 @@ public class CkSellinaQueryTemplateAssociation extends CommonDataModel implement
         this.templateAttributes = templateAttributes;
         this.transformer = transformer;
         this.intent = intent;
-        this.changed = changed;
     }
 
     /**
@@ -162,6 +162,20 @@ public class CkSellinaQueryTemplateAssociation extends CommonDataModel implement
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_sellina_query_template_association.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_sellina_query_template_association.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -434,20 +448,6 @@ public class CkSellinaQueryTemplateAssociation extends CommonDataModel implement
         this.intent = intent;
     }
 
-    /**
-     * Getter for <code>ck_sellina_query_template_association.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_sellina_query_template_association.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkSellinaQueryTemplateAssociation (");
@@ -455,6 +455,7 @@ public class CkSellinaQueryTemplateAssociation extends CommonDataModel implement
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -473,7 +474,6 @@ public class CkSellinaQueryTemplateAssociation extends CommonDataModel implement
         sb.append(", ").append(templateAttributes);
         sb.append(", ").append(transformer);
         sb.append(", ").append(intent);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

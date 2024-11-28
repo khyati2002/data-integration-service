@@ -11,15 +11,22 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -57,6 +64,11 @@ public class CkScore extends TableImpl<Record> {
      * The column <code>ck_score.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_score.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_score.created_by</code>.
@@ -124,6 +136,16 @@ public class CkScore extends TableImpl<Record> {
     public final TableField<Record, String> LINK_REFERENCE = createField(DSL.name("link_reference"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
+     * The column <code>ck_score.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_score.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_score.program_number</code>.
      */
     public final TableField<Record, String> PROGRAM_NUMBER = createField(DSL.name("program_number"), SQLDataType.VARCHAR(255), this, "");
@@ -137,21 +159,6 @@ public class CkScore extends TableImpl<Record> {
      * The column <code>ck_score.total_points</code>.
      */
     public final TableField<Record, Double> TOTAL_POINTS = createField(DSL.name("total_points"), SQLDataType.DOUBLE.nullable(false), this, "");
-
-    /**
-     * The column <code>ck_score.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_score.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_score.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkScore(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -194,35 +201,6 @@ public class CkScore extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_SCORE_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK1HGAB9OXJAGEB2PAHO1I2I8CW, Keys.FKKDVIJ9IH6U0G5HPDYE9R5UICW);
-    }
-
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FK1HGAB9OXJAGEB2PAHO1I2I8CW);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FKKDVIJ9IH6U0G5HPDYE9R5UICW);
-
-        return _ckOutletDetails;
     }
 
     @Override

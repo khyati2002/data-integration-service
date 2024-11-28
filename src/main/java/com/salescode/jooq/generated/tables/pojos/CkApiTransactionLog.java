@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**

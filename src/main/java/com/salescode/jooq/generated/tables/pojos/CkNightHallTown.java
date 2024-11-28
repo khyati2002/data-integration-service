@@ -23,6 +23,7 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -33,14 +34,13 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
     private String       source;
     private Integer      version;
     private String       designation;
+    private String       hierarchy;
     private String       location;
     private String       locationType;
+    private String       reason;
     private String       status;
     private String       townCode;
     private String       townName;
-    private String       hierarchy;
-    private String       reason;
-    private Byte         changed;
 
     public CkNightHallTown() {}
 
@@ -48,6 +48,7 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -58,20 +59,20 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
         this.source = value.source;
         this.version = value.version;
         this.designation = value.designation;
+        this.hierarchy = value.hierarchy;
         this.location = value.location;
         this.locationType = value.locationType;
+        this.reason = value.reason;
         this.status = value.status;
         this.townCode = value.townCode;
         this.townName = value.townName;
-        this.hierarchy = value.hierarchy;
-        this.reason = value.reason;
-        this.changed = value.changed;
     }
 
     public CkNightHallTown(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -82,18 +83,18 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
         String       source,
         Integer      version,
         String       designation,
+        String       hierarchy,
         String       location,
         String       locationType,
+        String       reason,
         String       status,
         String       townCode,
-        String       townName,
-        String       hierarchy,
-        String       reason,
-        Byte         changed
+        String       townName
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -104,14 +105,13 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
         this.source = source;
         this.version = version;
         this.designation = designation;
+        this.hierarchy = hierarchy;
         this.location = location;
         this.locationType = locationType;
+        this.reason = reason;
         this.status = status;
         this.townCode = townCode;
         this.townName = townName;
-        this.hierarchy = hierarchy;
-        this.reason = reason;
-        this.changed = changed;
     }
 
     /**
@@ -154,6 +154,20 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_night_hall_town.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_night_hall_town.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -297,6 +311,20 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_night_hall_town.hierarchy</code>.
+     */
+    public String getHierarchy() {
+        return this.hierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_night_hall_town.hierarchy</code>.
+     */
+    public void setHierarchy(String hierarchy) {
+        this.hierarchy = hierarchy;
+    }
+
+    /**
      * Getter for <code>ck_night_hall_town.location</code>.
      */
     public String getLocation() {
@@ -322,6 +350,20 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
      */
     public void setLocationType(String locationType) {
         this.locationType = locationType;
+    }
+
+    /**
+     * Getter for <code>ck_night_hall_town.reason</code>.
+     */
+    public String getReason() {
+        return this.reason;
+    }
+
+    /**
+     * Setter for <code>ck_night_hall_town.reason</code>.
+     */
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     /**
@@ -366,48 +408,6 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
         this.townName = townName;
     }
 
-    /**
-     * Getter for <code>ck_night_hall_town.hierarchy</code>.
-     */
-    public String getHierarchy() {
-        return this.hierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_night_hall_town.hierarchy</code>.
-     */
-    public void setHierarchy(String hierarchy) {
-        this.hierarchy = hierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_night_hall_town.reason</code>.
-     */
-    public String getReason() {
-        return this.reason;
-    }
-
-    /**
-     * Setter for <code>ck_night_hall_town.reason</code>.
-     */
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    /**
-     * Getter for <code>ck_night_hall_town.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_night_hall_town.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkNightHallTown (");
@@ -415,6 +415,7 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -425,14 +426,13 @@ public class CkNightHallTown extends CommonDataModel implements Serializable {
         sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(designation);
+        sb.append(", ").append(hierarchy);
         sb.append(", ").append(location);
         sb.append(", ").append(locationType);
+        sb.append(", ").append(reason);
         sb.append(", ").append(status);
         sb.append(", ").append(townCode);
         sb.append(", ").append(townName);
-        sb.append(", ").append(hierarchy);
-        sb.append(", ").append(reason);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

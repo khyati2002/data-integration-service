@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -38,6 +40,7 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     private LocalDateTime endDate;
     private JSON          groupBy;
     private String        groupType;
+    private String        loginid;
     private String        name;
     private LocalDateTime startDate;
     private Double        target;
@@ -46,8 +49,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     private String        unit;
     private String        category;
     private String        channel;
-    private String        loginid;
-    private Byte          changed;
 
     public CkUserTarget() {}
 
@@ -55,6 +56,7 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -68,6 +70,7 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         this.endDate = value.endDate;
         this.groupBy = value.groupBy;
         this.groupType = value.groupType;
+        this.loginid = value.loginid;
         this.name = value.name;
         this.startDate = value.startDate;
         this.target = value.target;
@@ -76,14 +79,13 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         this.unit = value.unit;
         this.category = value.category;
         this.channel = value.channel;
-        this.loginid = value.loginid;
-        this.changed = value.changed;
     }
 
     public CkUserTarget(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -97,6 +99,7 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         LocalDateTime endDate,
         JSON          groupBy,
         String        groupType,
+        String        loginid,
         String        name,
         LocalDateTime startDate,
         Double        target,
@@ -104,13 +107,12 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         String        targetType,
         String        unit,
         String        category,
-        String        channel,
-        String        loginid,
-        Byte          changed
+        String        channel
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -124,6 +126,7 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         this.endDate = endDate;
         this.groupBy = groupBy;
         this.groupType = groupType;
+        this.loginid = loginid;
         this.name = name;
         this.startDate = startDate;
         this.target = target;
@@ -132,8 +135,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         this.unit = unit;
         this.category = category;
         this.channel = channel;
-        this.loginid = loginid;
-        this.changed = changed;
     }
 
     /**
@@ -176,6 +177,20 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_user_target.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_user_target.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -361,6 +376,20 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_user_target.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_user_target.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_user_target.name</code>.
      */
     public String getName() {
@@ -472,34 +501,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         this.channel = channel;
     }
 
-    /**
-     * Getter for <code>ck_user_target.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_user_target.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_user_target.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_user_target.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkUserTarget (");
@@ -507,6 +508,7 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -520,6 +522,7 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         sb.append(", ").append(endDate);
         sb.append(", ").append(groupBy);
         sb.append(", ").append(groupType);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(name);
         sb.append(", ").append(startDate);
         sb.append(", ").append(target);
@@ -528,8 +531,6 @@ public class CkUserTarget extends CommonDataModel implements Serializable {
         sb.append(", ").append(unit);
         sb.append(", ").append(category);
         sb.append(", ").append(channel);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

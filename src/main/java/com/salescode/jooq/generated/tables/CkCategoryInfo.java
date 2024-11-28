@@ -12,14 +12,24 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -111,22 +121,17 @@ public class CkCategoryInfo extends TableImpl<Record> {
     /**
      * The column <code>ck_category_info.category_code</code>.
      */
-    public final TableField<Record, String> CATEGORY_CODE = createField(DSL.name("category_code"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<Record, String> CATEGORY_CODE = createField(DSL.name("category_code"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_category_info.category_value</code>.
      */
-    public final TableField<Record, String> CATEGORY_VALUE = createField(DSL.name("category_value"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<Record, String> CATEGORY_VALUE = createField(DSL.name("category_value"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_category_info.feature</code>.
+     * The column <code>ck_category_info.entity_name</code>.
      */
-    public final TableField<Record, String> FEATURE = createField(DSL.name("feature"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_category_info.name</code>.
-     */
-    public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> ENTITY_NAME = createField(DSL.name("entity_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_category_info.new_description</code>.
@@ -137,6 +142,16 @@ public class CkCategoryInfo extends TableImpl<Record> {
      * The column <code>ck_category_info.old_description</code>.
      */
     public final TableField<Record, String> OLD_DESCRIPTION = createField(DSL.name("old_description"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_category_info.feature</code>.
+     */
+    public final TableField<Record, String> FEATURE = createField(DSL.name("feature"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_category_info.name</code>.
+     */
+    public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
 
     private CkCategoryInfo(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

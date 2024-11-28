@@ -35,11 +35,11 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     private String        source;
     private Integer       version;
     private String        cron;
-    private LocalDateTime lastRunTime;
     private String        name;
     private LocalDateTime nextScheduledTime;
     private String        timeZone;
     private String        type;
+    private LocalDateTime lastRunTime;
 
     public CkSchedulerInfo() {}
 
@@ -58,11 +58,11 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
         this.source = value.source;
         this.version = value.version;
         this.cron = value.cron;
-        this.lastRunTime = value.lastRunTime;
         this.name = value.name;
         this.nextScheduledTime = value.nextScheduledTime;
         this.timeZone = value.timeZone;
         this.type = value.type;
+        this.lastRunTime = value.lastRunTime;
     }
 
     public CkSchedulerInfo(
@@ -80,11 +80,11 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
         String        source,
         Integer       version,
         String        cron,
-        LocalDateTime lastRunTime,
         String        name,
         LocalDateTime nextScheduledTime,
         String        timeZone,
-        String        type
+        String        type,
+        LocalDateTime lastRunTime
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -100,11 +100,11 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
         this.source = source;
         this.version = version;
         this.cron = cron;
-        this.lastRunTime = lastRunTime;
         this.name = name;
         this.nextScheduledTime = nextScheduledTime;
         this.timeZone = timeZone;
         this.type = type;
+        this.lastRunTime = lastRunTime;
     }
 
     /**
@@ -304,20 +304,6 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_scheduler_info.last_run_time</code>.
-     */
-    public LocalDateTime getLastRunTime() {
-        return this.lastRunTime;
-    }
-
-    /**
-     * Setter for <code>ck_scheduler_info.last_run_time</code>.
-     */
-    public void setLastRunTime(LocalDateTime lastRunTime) {
-        this.lastRunTime = lastRunTime;
-    }
-
-    /**
      * Getter for <code>ck_scheduler_info.name</code>.
      */
     public String getName() {
@@ -373,6 +359,20 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
         this.type = type;
     }
 
+    /**
+     * Getter for <code>ck_scheduler_info.last_run_time</code>.
+     */
+    public LocalDateTime getLastRunTime() {
+        return this.lastRunTime;
+    }
+
+    /**
+     * Setter for <code>ck_scheduler_info.last_run_time</code>.
+     */
+    public void setLastRunTime(LocalDateTime lastRunTime) {
+        this.lastRunTime = lastRunTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkSchedulerInfo (");
@@ -391,11 +391,11 @@ public class CkSchedulerInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(cron);
-        sb.append(", ").append(lastRunTime);
         sb.append(", ").append(name);
         sb.append(", ").append(nextScheduledTime);
         sb.append(", ").append(timeZone);
         sb.append(", ").append(type);
+        sb.append(", ").append(lastRunTime);
 
         sb.append(")");
         return sb.toString();

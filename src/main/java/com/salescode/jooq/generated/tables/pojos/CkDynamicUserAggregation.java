@@ -24,6 +24,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -38,6 +39,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
     private Integer       activeOutlets;
     private LocalDateTime endDate;
     private Integer       inactiveOutlets;
+    private String        locationHierarchy;
     private Integer       mtdpjpcount;
     private Double        mtdSalesValue;
     private Double        mtdSalesVolume;
@@ -49,9 +51,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
     private LocalDateTime timeSinceLastOrder;
     private Integer       todaypjpcount;
     private Integer       totalOrders;
-    private String        locationHierarchy;
     private String        loginid;
-    private Byte          changed;
 
     public CkDynamicUserAggregation() {}
 
@@ -59,6 +59,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -73,6 +74,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         this.activeOutlets = value.activeOutlets;
         this.endDate = value.endDate;
         this.inactiveOutlets = value.inactiveOutlets;
+        this.locationHierarchy = value.locationHierarchy;
         this.mtdpjpcount = value.mtdpjpcount;
         this.mtdSalesValue = value.mtdSalesValue;
         this.mtdSalesVolume = value.mtdSalesVolume;
@@ -84,15 +86,14 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         this.timeSinceLastOrder = value.timeSinceLastOrder;
         this.todaypjpcount = value.todaypjpcount;
         this.totalOrders = value.totalOrders;
-        this.locationHierarchy = value.locationHierarchy;
         this.loginid = value.loginid;
-        this.changed = value.changed;
     }
 
     public CkDynamicUserAggregation(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -107,6 +108,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         Integer       activeOutlets,
         LocalDateTime endDate,
         Integer       inactiveOutlets,
+        String        locationHierarchy,
         Integer       mtdpjpcount,
         Double        mtdSalesValue,
         Double        mtdSalesVolume,
@@ -118,13 +120,12 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         LocalDateTime timeSinceLastOrder,
         Integer       todaypjpcount,
         Integer       totalOrders,
-        String        locationHierarchy,
-        String        loginid,
-        Byte          changed
+        String        loginid
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -139,6 +140,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         this.activeOutlets = activeOutlets;
         this.endDate = endDate;
         this.inactiveOutlets = inactiveOutlets;
+        this.locationHierarchy = locationHierarchy;
         this.mtdpjpcount = mtdpjpcount;
         this.mtdSalesValue = mtdSalesValue;
         this.mtdSalesVolume = mtdSalesVolume;
@@ -150,9 +152,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         this.timeSinceLastOrder = timeSinceLastOrder;
         this.todaypjpcount = todaypjpcount;
         this.totalOrders = totalOrders;
-        this.locationHierarchy = locationHierarchy;
         this.loginid = loginid;
-        this.changed = changed;
     }
 
     /**
@@ -195,6 +195,20 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_dynamic_user_aggregation.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_dynamic_user_aggregation.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -394,6 +408,20 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
     }
 
     /**
+     * Getter for <code>ck_dynamic_user_aggregation.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_dynamic_user_aggregation.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
      * Getter for <code>ck_dynamic_user_aggregation.mtdpjpcount</code>.
      */
     public Integer getMtdpjpcount() {
@@ -550,20 +578,6 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
     }
 
     /**
-     * Getter for <code>ck_dynamic_user_aggregation.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_dynamic_user_aggregation.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
      * Getter for <code>ck_dynamic_user_aggregation.loginid</code>.
      */
     public String getLoginid() {
@@ -577,20 +591,6 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         this.loginid = loginid;
     }
 
-    /**
-     * Getter for <code>ck_dynamic_user_aggregation.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_dynamic_user_aggregation.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkDynamicUserAggregation (");
@@ -598,6 +598,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -612,6 +613,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         sb.append(", ").append(activeOutlets);
         sb.append(", ").append(endDate);
         sb.append(", ").append(inactiveOutlets);
+        sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(mtdpjpcount);
         sb.append(", ").append(mtdSalesValue);
         sb.append(", ").append(mtdSalesVolume);
@@ -623,9 +625,7 @@ public class CkDynamicUserAggregation extends CommonDataModel implements Seriali
         sb.append(", ").append(timeSinceLastOrder);
         sb.append(", ").append(todaypjpcount);
         sb.append(", ").append(totalOrders);
-        sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

@@ -4,13 +4,294 @@
 package com.salescode.jooq.generated;
 
 
-import com.salescode.jooq.generated.tables.*;
-import org.jooq.Catalog;
-import org.jooq.Table;
-import org.jooq.impl.SchemaImpl;
+import com.salescode.jooq.generated.tables.CkAccountInfo;
+import com.salescode.jooq.generated.tables.CkActivityReminder;
+import com.salescode.jooq.generated.tables.CkAggregationInfo;
+import com.salescode.jooq.generated.tables.CkAnalytics;
+import com.salescode.jooq.generated.tables.CkApiTransactionLog;
+import com.salescode.jooq.generated.tables.CkAppNotification;
+import com.salescode.jooq.generated.tables.CkAppNotificationInfo;
+import com.salescode.jooq.generated.tables.CkApprovalInfo;
+import com.salescode.jooq.generated.tables.CkApprovalMetaData;
+import com.salescode.jooq.generated.tables.CkAsset;
+import com.salescode.jooq.generated.tables.CkAssetManagementActivity;
+import com.salescode.jooq.generated.tables.CkAttendance;
+import com.salescode.jooq.generated.tables.CkAuthResource;
+import com.salescode.jooq.generated.tables.CkAuthRole;
+import com.salescode.jooq.generated.tables.CkAuthRoleResources;
+import com.salescode.jooq.generated.tables.CkBanner;
+import com.salescode.jooq.generated.tables.CkBannerBannerElements;
+import com.salescode.jooq.generated.tables.CkBannerDistribution;
+import com.salescode.jooq.generated.tables.CkBannerDistributionSupplier;
+import com.salescode.jooq.generated.tables.CkBannerElement;
+import com.salescode.jooq.generated.tables.CkBannerTemplate;
+import com.salescode.jooq.generated.tables.CkBannerTemplateElement;
+import com.salescode.jooq.generated.tables.CkBannerTemplateTemplateElements;
+import com.salescode.jooq.generated.tables.CkBatchWiseStock;
+import com.salescode.jooq.generated.tables.CkCalendarMapping;
+import com.salescode.jooq.generated.tables.CkCampaignTask;
+import com.salescode.jooq.generated.tables.CkCampaignTaskResult;
+import com.salescode.jooq.generated.tables.CkCartDetails;
+import com.salescode.jooq.generated.tables.CkCategoryInfo;
+import com.salescode.jooq.generated.tables.CkChannelHierarchyMetadata;
+import com.salescode.jooq.generated.tables.CkCloudTrails;
+import com.salescode.jooq.generated.tables.CkCompetitionActivity;
+import com.salescode.jooq.generated.tables.CkCompetitor;
+import com.salescode.jooq.generated.tables.CkConsentInfo;
+import com.salescode.jooq.generated.tables.CkConsolidatedStock;
+import com.salescode.jooq.generated.tables.CkCreditStatus;
+import com.salescode.jooq.generated.tables.CkCustomerAccount;
+import com.salescode.jooq.generated.tables.CkDatePredictions;
+import com.salescode.jooq.generated.tables.CkDeliveryInfo;
+import com.salescode.jooq.generated.tables.CkDeliveryInfoSales;
+import com.salescode.jooq.generated.tables.CkDeliveryPjp;
+import com.salescode.jooq.generated.tables.CkDeltaConfiguration;
+import com.salescode.jooq.generated.tables.CkDeltaInfo;
+import com.salescode.jooq.generated.tables.CkDeviceInfo;
+import com.salescode.jooq.generated.tables.CkDiscount;
+import com.salescode.jooq.generated.tables.CkDivision;
+import com.salescode.jooq.generated.tables.CkDivisionRoles;
+import com.salescode.jooq.generated.tables.CkDynamicOutletAggregation;
+import com.salescode.jooq.generated.tables.CkDynamicUserAggregation;
+import com.salescode.jooq.generated.tables.CkEnrichmentInfo;
+import com.salescode.jooq.generated.tables.CkEntityApproval;
+import com.salescode.jooq.generated.tables.CkEntityApprovalHistory;
+import com.salescode.jooq.generated.tables.CkEntityFieldsUniqueId;
+import com.salescode.jooq.generated.tables.CkEntityUpdateInfo;
+import com.salescode.jooq.generated.tables.CkEventListenerInfo;
+import com.salescode.jooq.generated.tables.CkExpense;
+import com.salescode.jooq.generated.tables.CkExtendedAttributes;
+import com.salescode.jooq.generated.tables.CkFaceupsActivity;
+import com.salescode.jooq.generated.tables.CkFaq;
+import com.salescode.jooq.generated.tables.CkFavoriteSku;
+import com.salescode.jooq.generated.tables.CkFeatureEndpoints;
+import com.salescode.jooq.generated.tables.CkFeatureMetadata;
+import com.salescode.jooq.generated.tables.CkFeatures;
+import com.salescode.jooq.generated.tables.CkFocusproductActivity;
+import com.salescode.jooq.generated.tables.CkFunctionInfo;
+import com.salescode.jooq.generated.tables.CkGenericAggregation;
+import com.salescode.jooq.generated.tables.CkGenericObject;
+import com.salescode.jooq.generated.tables.CkGenericSchema;
+import com.salescode.jooq.generated.tables.CkGrnInfo;
+import com.salescode.jooq.generated.tables.CkHierarchyMetadata;
+import com.salescode.jooq.generated.tables.CkHolidaycalendar;
+import com.salescode.jooq.generated.tables.CkImpactReport;
+import com.salescode.jooq.generated.tables.CkIntegrationHistory;
+import com.salescode.jooq.generated.tables.CkInvoiceCollection;
+import com.salescode.jooq.generated.tables.CkItemwiseRackdetail;
+import com.salescode.jooq.generated.tables.CkJenkinsConfiguration;
+import com.salescode.jooq.generated.tables.CkKpiData;
+import com.salescode.jooq.generated.tables.CkKpiInfo;
+import com.salescode.jooq.generated.tables.CkKpiRegistory;
+import com.salescode.jooq.generated.tables.CkLinkProgram;
+import com.salescode.jooq.generated.tables.CkLinkedbrand;
+import com.salescode.jooq.generated.tables.CkLinkedcategory;
+import com.salescode.jooq.generated.tables.CkLinkeditemclass;
+import com.salescode.jooq.generated.tables.CkLinkedproduct;
+import com.salescode.jooq.generated.tables.CkLinkedsku;
+import com.salescode.jooq.generated.tables.CkLinkedsubcategory;
+import com.salescode.jooq.generated.tables.CkLocation;
+import com.salescode.jooq.generated.tables.CkMediaMetadata;
+import com.salescode.jooq.generated.tables.CkMeetingmaster;
+import com.salescode.jooq.generated.tables.CkMerchandising;
+import com.salescode.jooq.generated.tables.CkMetadata;
+import com.salescode.jooq.generated.tables.CkMonthlyskuCompliance;
+import com.salescode.jooq.generated.tables.CkNightHallTown;
+import com.salescode.jooq.generated.tables.CkNotificationHistory;
+import com.salescode.jooq.generated.tables.CkNotificationRule;
+import com.salescode.jooq.generated.tables.CkOffers;
+import com.salescode.jooq.generated.tables.CkOffersSupplierHierarchy;
+import com.salescode.jooq.generated.tables.CkOndcRecommendation;
+import com.salescode.jooq.generated.tables.CkOrderDetails;
+import com.salescode.jooq.generated.tables.CkOrderHistory;
+import com.salescode.jooq.generated.tables.CkOrderRecohistory;
+import com.salescode.jooq.generated.tables.CkOrders;
+import com.salescode.jooq.generated.tables.CkOutletActivity;
+import com.salescode.jooq.generated.tables.CkOutletDetails;
+import com.salescode.jooq.generated.tables.CkOutletDetailsChannelHierarchy;
+import com.salescode.jooq.generated.tables.CkOutletDetailsHierarchymetadata;
+import com.salescode.jooq.generated.tables.CkOutletDetailsImmediateParent;
+import com.salescode.jooq.generated.tables.CkOutletLevelRecommendation;
+import com.salescode.jooq.generated.tables.CkOutletLocation;
+import com.salescode.jooq.generated.tables.CkOutletMapping;
+import com.salescode.jooq.generated.tables.CkOutletMappingBeatFrequency;
+import com.salescode.jooq.generated.tables.CkOutletPricingAdjustment;
+import com.salescode.jooq.generated.tables.CkOutletProductInfo;
+import com.salescode.jooq.generated.tables.CkOutletRegistrations;
+import com.salescode.jooq.generated.tables.CkOutletSkuMetadata;
+import com.salescode.jooq.generated.tables.CkOutletStatus;
+import com.salescode.jooq.generated.tables.CkOutletTarget;
+import com.salescode.jooq.generated.tables.CkOutletwisePlanograminformation;
+import com.salescode.jooq.generated.tables.CkOutletwiseSkulist;
+import com.salescode.jooq.generated.tables.CkPaymentCollection;
+import com.salescode.jooq.generated.tables.CkPaymentSubscription;
+import com.salescode.jooq.generated.tables.CkPaymentTransactionHistory;
+import com.salescode.jooq.generated.tables.CkPermissionGroup;
+import com.salescode.jooq.generated.tables.CkPermissionGroupMembers;
+import com.salescode.jooq.generated.tables.CkPermissionInfo;
+import com.salescode.jooq.generated.tables.CkPermissionResources;
+import com.salescode.jooq.generated.tables.CkPjpVisitPlan;
+import com.salescode.jooq.generated.tables.CkPlanVisitAggregation;
+import com.salescode.jooq.generated.tables.CkPlanogramRecommendation;
+import com.salescode.jooq.generated.tables.CkPostaggregateGlobalConstantActivity;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletActivityDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletActivityMonthly;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletActivityYearly;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletConstantActivity;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletEventActivityDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletEventActivityMonthly;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletEventActivityYearly;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletKpiDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletKpiMonthly;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletKpiYearly;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletOrderActivityDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletOrderActivityMonthly;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletOrderActivityYearly;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletProductRecommendedActivityDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletProductRecommendedActivityMonthly;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletProductRecommendedActivityYearly;
+import com.salescode.jooq.generated.tables.CkPostaggregateOutletRecommendedActivityDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserActivityDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserActivityMonthly;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserActivityYearly;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserConstantActivityDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserConstantActivityMonthly;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserConstantActivityYearly;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserEventActivityDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserEventActivityMonthly;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserEventActivityYearly;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserKpiDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserKpiMonthly;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserKpiYearly;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserOrderActivityDaily;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserOrderActivityMonthly;
+import com.salescode.jooq.generated.tables.CkPostaggregateUserOrderActivityYearly;
+import com.salescode.jooq.generated.tables.CkProductActivity;
+import com.salescode.jooq.generated.tables.CkProductTarget;
+import com.salescode.jooq.generated.tables.CkProductbarcode;
+import com.salescode.jooq.generated.tables.CkProductdetails;
+import com.salescode.jooq.generated.tables.CkProductmetadata;
+import com.salescode.jooq.generated.tables.CkProducttag;
+import com.salescode.jooq.generated.tables.CkPromoActivity;
+import com.salescode.jooq.generated.tables.CkPromoTransactionTracking;
+import com.salescode.jooq.generated.tables.CkQueryInfo;
+import com.salescode.jooq.generated.tables.CkRackdetailStandard;
+import com.salescode.jooq.generated.tables.CkRangeProgram;
+import com.salescode.jooq.generated.tables.CkRangeProgramMaxTerm;
+import com.salescode.jooq.generated.tables.CkRangeProgramSupplierHierarchy;
+import com.salescode.jooq.generated.tables.CkRatemaster;
+import com.salescode.jooq.generated.tables.CkRctreport;
+import com.salescode.jooq.generated.tables.CkRealTimeStockNotify;
+import com.salescode.jooq.generated.tables.CkRecohistory;
+import com.salescode.jooq.generated.tables.CkRecommendedOrder;
+import com.salescode.jooq.generated.tables.CkRedeemActivity;
+import com.salescode.jooq.generated.tables.CkReportInfo;
+import com.salescode.jooq.generated.tables.CkRerouteUser;
+import com.salescode.jooq.generated.tables.CkResourceAccessRole;
+import com.salescode.jooq.generated.tables.CkReturnProduct;
+import com.salescode.jooq.generated.tables.CkRoutemaster;
+import com.salescode.jooq.generated.tables.CkSales;
+import com.salescode.jooq.generated.tables.CkSalesDetails;
+import com.salescode.jooq.generated.tables.CkSalesHistory;
+import com.salescode.jooq.generated.tables.CkSalesLost;
+import com.salescode.jooq.generated.tables.CkSchedulerInfo;
+import com.salescode.jooq.generated.tables.CkSchemeBalance;
+import com.salescode.jooq.generated.tables.CkSchemeCalculation;
+import com.salescode.jooq.generated.tables.CkSchemeCustomGroup;
+import com.salescode.jooq.generated.tables.CkSchemeDailyOrders;
+import com.salescode.jooq.generated.tables.CkSchemeDefination;
+import com.salescode.jooq.generated.tables.CkSchemeFreeproductinfo;
+import com.salescode.jooq.generated.tables.CkSchemeLocationBifurcations;
+import com.salescode.jooq.generated.tables.CkSchemeMustBuyGroup;
+import com.salescode.jooq.generated.tables.CkSchemeOutletBifurcations;
+import com.salescode.jooq.generated.tables.CkSchemeProductBifurcations;
+import com.salescode.jooq.generated.tables.CkSchemeRecurrence;
+import com.salescode.jooq.generated.tables.CkSchemeSupplierMetadata;
+import com.salescode.jooq.generated.tables.CkSchemes;
+import com.salescode.jooq.generated.tables.CkSchemesmetadata;
+import com.salescode.jooq.generated.tables.CkScore;
+import com.salescode.jooq.generated.tables.CkScoreDetails;
+import com.salescode.jooq.generated.tables.CkScoreProgram;
+import com.salescode.jooq.generated.tables.CkScoreProgramSupplierHierarchy;
+import com.salescode.jooq.generated.tables.CkSecondaryProduct;
+import com.salescode.jooq.generated.tables.CkSellinaAiQuery;
+import com.salescode.jooq.generated.tables.CkSellinaAiQueryDefaultResponse;
+import com.salescode.jooq.generated.tables.CkSellinaAiQueryEntity;
+import com.salescode.jooq.generated.tables.CkSellinaAiQuerySuggestions;
+import com.salescode.jooq.generated.tables.CkSellinaAiQueryTrainingText;
+import com.salescode.jooq.generated.tables.CkSellinaEntities;
+import com.salescode.jooq.generated.tables.CkSellinaQueryTemplateAssociation;
+import com.salescode.jooq.generated.tables.CkSellinaSuggestions;
+import com.salescode.jooq.generated.tables.CkSellinaSynonym;
+import com.salescode.jooq.generated.tables.CkSequenceInfo;
+import com.salescode.jooq.generated.tables.CkSequences;
+import com.salescode.jooq.generated.tables.CkSkillLeaderboard;
+import com.salescode.jooq.generated.tables.CkSkucodeStatus;
+import com.salescode.jooq.generated.tables.CkSmartTriggerInfo;
+import com.salescode.jooq.generated.tables.CkStaticOutletAggregation;
+import com.salescode.jooq.generated.tables.CkStaticUserAggregation;
+import com.salescode.jooq.generated.tables.CkStock;
+import com.salescode.jooq.generated.tables.CkStockHierarchy;
+import com.salescode.jooq.generated.tables.CkStockHistory;
+import com.salescode.jooq.generated.tables.CkStockHistoryHierarchy;
+import com.salescode.jooq.generated.tables.CkStorein;
+import com.salescode.jooq.generated.tables.CkSubscription;
+import com.salescode.jooq.generated.tables.CkSubscriptionResource;
+import com.salescode.jooq.generated.tables.CkSupplierMetadata;
+import com.salescode.jooq.generated.tables.CkSupport;
+import com.salescode.jooq.generated.tables.CkSupportMaster;
+import com.salescode.jooq.generated.tables.CkSupportTracking;
+import com.salescode.jooq.generated.tables.CkTargetResults;
+import com.salescode.jooq.generated.tables.CkTargets;
+import com.salescode.jooq.generated.tables.CkTask;
+import com.salescode.jooq.generated.tables.CkTaskhelperInfo;
+import com.salescode.jooq.generated.tables.CkTax;
+import com.salescode.jooq.generated.tables.CkTaxCalculation;
+import com.salescode.jooq.generated.tables.CkTempAggr;
+import com.salescode.jooq.generated.tables.CkTempMasterMapping;
+import com.salescode.jooq.generated.tables.CkTempPjp;
+import com.salescode.jooq.generated.tables.CkToken;
+import com.salescode.jooq.generated.tables.CkTransformerInfo;
+import com.salescode.jooq.generated.tables.CkTranslationInfo;
+import com.salescode.jooq.generated.tables.CkTriggerDispatcherInfo;
+import com.salescode.jooq.generated.tables.CkUser;
+import com.salescode.jooq.generated.tables.CkUserAccount;
+import com.salescode.jooq.generated.tables.CkUserActivity;
+import com.salescode.jooq.generated.tables.CkUserEvent;
+import com.salescode.jooq.generated.tables.CkUserEventResponse;
+import com.salescode.jooq.generated.tables.CkUserImmediateParent;
+import com.salescode.jooq.generated.tables.CkUserMessengerInfo;
+import com.salescode.jooq.generated.tables.CkUserMetadata;
+import com.salescode.jooq.generated.tables.CkUserOtp;
+import com.salescode.jooq.generated.tables.CkUserParent;
+import com.salescode.jooq.generated.tables.CkUserRoles;
+import com.salescode.jooq.generated.tables.CkUserStatus;
+import com.salescode.jooq.generated.tables.CkUserSubscriptionActivity;
+import com.salescode.jooq.generated.tables.CkUserSubscriptions;
+import com.salescode.jooq.generated.tables.CkUserTarget;
+import com.salescode.jooq.generated.tables.CkUserTaskInfo;
+import com.salescode.jooq.generated.tables.CkUserdesignation;
+import com.salescode.jooq.generated.tables.CkValidationRule;
+import com.salescode.jooq.generated.tables.CkVisibilityScore;
+import com.salescode.jooq.generated.tables.CkWareHouse;
+import com.salescode.jooq.generated.tables.CkWareHouseChannelHierarchy;
+import com.salescode.jooq.generated.tables.CsUserUsageActivityDaily;
+import com.salescode.jooq.generated.tables.Profile;
+import com.salescode.jooq.generated.tables.RwIncentiveInfo;
+import com.salescode.jooq.generated.tables.RwPotentialPoints;
+import com.salescode.jooq.generated.tables.RwPrecisionCall;
+import com.salescode.jooq.generated.tables.RwRuleInfo;
+import com.salescode.jooq.generated.tables.RwScoreCard;
+import com.salescode.jooq.generated.tables.RwScoreMetadata;
+import com.salescode.jooq.generated.tables.RwTask;
+import com.salescode.jooq.generated.tables.SchemeMustBuyGroup;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.jooq.Catalog;
+import org.jooq.Table;
+import org.jooq.impl.SchemaImpl;
 
 
 /**
@@ -52,6 +333,11 @@ public class DefaultSchema extends SchemaImpl {
     public final CkApiTransactionLog CK_API_TRANSACTION_LOG = CkApiTransactionLog.CK_API_TRANSACTION_LOG;
 
     /**
+     * The table <code>ck_app_notification</code>.
+     */
+    public final CkAppNotification CK_APP_NOTIFICATION = CkAppNotification.CK_APP_NOTIFICATION;
+
+    /**
      * The table <code>ck_app_notification_info</code>.
      */
     public final CkAppNotificationInfo CK_APP_NOTIFICATION_INFO = CkAppNotificationInfo.CK_APP_NOTIFICATION_INFO;
@@ -65,6 +351,16 @@ public class DefaultSchema extends SchemaImpl {
      * The table <code>ck_approval_meta_data</code>.
      */
     public final CkApprovalMetaData CK_APPROVAL_META_DATA = CkApprovalMetaData.CK_APPROVAL_META_DATA;
+
+    /**
+     * The table <code>ck_asset</code>.
+     */
+    public final CkAsset CK_ASSET = CkAsset.CK_ASSET;
+
+    /**
+     * The table <code>ck_asset_management_activity</code>.
+     */
+    public final CkAssetManagementActivity CK_ASSET_MANAGEMENT_ACTIVITY = CkAssetManagementActivity.CK_ASSET_MANAGEMENT_ACTIVITY;
 
     /**
      * The table <code>ck_attendance</code>.
@@ -127,9 +423,24 @@ public class DefaultSchema extends SchemaImpl {
     public final CkBannerTemplateTemplateElements CK_BANNER_TEMPLATE_TEMPLATE_ELEMENTS = CkBannerTemplateTemplateElements.CK_BANNER_TEMPLATE_TEMPLATE_ELEMENTS;
 
     /**
+     * The table <code>ck_batch_wise_stock</code>.
+     */
+    public final CkBatchWiseStock CK_BATCH_WISE_STOCK = CkBatchWiseStock.CK_BATCH_WISE_STOCK;
+
+    /**
      * The table <code>ck_calendar_mapping</code>.
      */
     public final CkCalendarMapping CK_CALENDAR_MAPPING = CkCalendarMapping.CK_CALENDAR_MAPPING;
+
+    /**
+     * The table <code>ck_campaign_task</code>.
+     */
+    public final CkCampaignTask CK_CAMPAIGN_TASK = CkCampaignTask.CK_CAMPAIGN_TASK;
+
+    /**
+     * The table <code>ck_campaign_task_result</code>.
+     */
+    public final CkCampaignTaskResult CK_CAMPAIGN_TASK_RESULT = CkCampaignTaskResult.CK_CAMPAIGN_TASK_RESULT;
 
     /**
      * The table <code>ck_cart_details</code>.
@@ -167,6 +478,11 @@ public class DefaultSchema extends SchemaImpl {
     public final CkConsentInfo CK_CONSENT_INFO = CkConsentInfo.CK_CONSENT_INFO;
 
     /**
+     * The table <code>ck_consolidated_stock</code>.
+     */
+    public final CkConsolidatedStock CK_CONSOLIDATED_STOCK = CkConsolidatedStock.CK_CONSOLIDATED_STOCK;
+
+    /**
      * The table <code>ck_credit_status</code>.
      */
     public final CkCreditStatus CK_CREDIT_STATUS = CkCreditStatus.CK_CREDIT_STATUS;
@@ -175,6 +491,26 @@ public class DefaultSchema extends SchemaImpl {
      * The table <code>ck_customer_account</code>.
      */
     public final CkCustomerAccount CK_CUSTOMER_ACCOUNT = CkCustomerAccount.CK_CUSTOMER_ACCOUNT;
+
+    /**
+     * The table <code>ck_date_predictions</code>.
+     */
+    public final CkDatePredictions CK_DATE_PREDICTIONS = CkDatePredictions.CK_DATE_PREDICTIONS;
+
+    /**
+     * The table <code>ck_delivery_info</code>.
+     */
+    public final CkDeliveryInfo CK_DELIVERY_INFO = CkDeliveryInfo.CK_DELIVERY_INFO;
+
+    /**
+     * The table <code>ck_delivery_info_sales</code>.
+     */
+    public final CkDeliveryInfoSales CK_DELIVERY_INFO_SALES = CkDeliveryInfoSales.CK_DELIVERY_INFO_SALES;
+
+    /**
+     * The table <code>ck_delivery_pjp</code>.
+     */
+    public final CkDeliveryPjp CK_DELIVERY_PJP = CkDeliveryPjp.CK_DELIVERY_PJP;
 
     /**
      * The table <code>ck_delta_configuration</code>.
@@ -237,6 +573,11 @@ public class DefaultSchema extends SchemaImpl {
     public final CkEntityFieldsUniqueId CK_ENTITY_FIELDS_UNIQUE_ID = CkEntityFieldsUniqueId.CK_ENTITY_FIELDS_UNIQUE_ID;
 
     /**
+     * The table <code>ck_entity_update_info</code>.
+     */
+    public final CkEntityUpdateInfo CK_ENTITY_UPDATE_INFO = CkEntityUpdateInfo.CK_ENTITY_UPDATE_INFO;
+
+    /**
      * The table <code>ck_event_listener_info</code>.
      */
     public final CkEventListenerInfo CK_EVENT_LISTENER_INFO = CkEventListenerInfo.CK_EVENT_LISTENER_INFO;
@@ -250,6 +591,11 @@ public class DefaultSchema extends SchemaImpl {
      * The table <code>ck_extended_attributes</code>.
      */
     public final CkExtendedAttributes CK_EXTENDED_ATTRIBUTES = CkExtendedAttributes.CK_EXTENDED_ATTRIBUTES;
+
+    /**
+     * The table <code>ck_faceups_activity</code>.
+     */
+    public final CkFaceupsActivity CK_FACEUPS_ACTIVITY = CkFaceupsActivity.CK_FACEUPS_ACTIVITY;
 
     /**
      * The table <code>ck_faq</code>.
@@ -272,14 +618,24 @@ public class DefaultSchema extends SchemaImpl {
     public final CkFeatureMetadata CK_FEATURE_METADATA = CkFeatureMetadata.CK_FEATURE_METADATA;
 
     /**
-     * The table <code>ck_file_status</code>.
+     * The table <code>ck_features</code>.
      */
-    public final CkFileStatus CK_FILE_STATUS = CkFileStatus.CK_FILE_STATUS;
+    public final CkFeatures CK_FEATURES = CkFeatures.CK_FEATURES;
+
+    /**
+     * The table <code>ck_focusproduct_activity</code>.
+     */
+    public final CkFocusproductActivity CK_FOCUSPRODUCT_ACTIVITY = CkFocusproductActivity.CK_FOCUSPRODUCT_ACTIVITY;
 
     /**
      * The table <code>ck_function_info</code>.
      */
     public final CkFunctionInfo CK_FUNCTION_INFO = CkFunctionInfo.CK_FUNCTION_INFO;
+
+    /**
+     * The table <code>ck_generic_aggregation</code>.
+     */
+    public final CkGenericAggregation CK_GENERIC_AGGREGATION = CkGenericAggregation.CK_GENERIC_AGGREGATION;
 
     /**
      * The table <code>ck_generic_object</code>.
@@ -387,11 +743,6 @@ public class DefaultSchema extends SchemaImpl {
     public final CkLocation CK_LOCATION = CkLocation.CK_LOCATION;
 
     /**
-     * The table <code>ck_loyalty_score</code>.
-     */
-    public final CkLoyaltyScore CK_LOYALTY_SCORE = CkLoyaltyScore.CK_LOYALTY_SCORE;
-
-    /**
      * The table <code>ck_media_metadata</code>.
      */
     public final CkMediaMetadata CK_MEDIA_METADATA = CkMediaMetadata.CK_MEDIA_METADATA;
@@ -477,9 +828,19 @@ public class DefaultSchema extends SchemaImpl {
     public final CkOutletDetails CK_OUTLET_DETAILS = CkOutletDetails.CK_OUTLET_DETAILS;
 
     /**
+     * The table <code>ck_outlet_details_channel_hierarchy</code>.
+     */
+    public final CkOutletDetailsChannelHierarchy CK_OUTLET_DETAILS_CHANNEL_HIERARCHY = CkOutletDetailsChannelHierarchy.CK_OUTLET_DETAILS_CHANNEL_HIERARCHY;
+
+    /**
      * The table <code>ck_outlet_details_hierarchymetadata</code>.
      */
     public final CkOutletDetailsHierarchymetadata CK_OUTLET_DETAILS_HIERARCHYMETADATA = CkOutletDetailsHierarchymetadata.CK_OUTLET_DETAILS_HIERARCHYMETADATA;
+
+    /**
+     * The table <code>ck_outlet_details_immediate_parent</code>.
+     */
+    public final CkOutletDetailsImmediateParent CK_OUTLET_DETAILS_IMMEDIATE_PARENT = CkOutletDetailsImmediateParent.CK_OUTLET_DETAILS_IMMEDIATE_PARENT;
 
     /**
      * The table <code>ck_outlet_level_recommendation</code>.
@@ -510,6 +871,11 @@ public class DefaultSchema extends SchemaImpl {
      * The table <code>ck_outlet_product_info</code>.
      */
     public final CkOutletProductInfo CK_OUTLET_PRODUCT_INFO = CkOutletProductInfo.CK_OUTLET_PRODUCT_INFO;
+
+    /**
+     * The table <code>ck_outlet_registrations</code>.
+     */
+    public final CkOutletRegistrations CK_OUTLET_REGISTRATIONS = CkOutletRegistrations.CK_OUTLET_REGISTRATIONS;
 
     /**
      * The table <code>ck_outlet_sku_metadata</code>.
@@ -681,12 +1047,6 @@ public class DefaultSchema extends SchemaImpl {
     public final CkPostaggregateOutletRecommendedActivityDaily CK_POSTAGGREGATE_OUTLET_RECOMMENDED_ACTIVITY_DAILY = CkPostaggregateOutletRecommendedActivityDaily.CK_POSTAGGREGATE_OUTLET_RECOMMENDED_ACTIVITY_DAILY;
 
     /**
-     * The table
-     * <code>ck_postaggregate_outlet_recommended_activity_monthly</code>.
-     */
-    public final CkPostaggregateOutletRecommendedActivityMonthly CK_POSTAGGREGATE_OUTLET_RECOMMENDED_ACTIVITY_MONTHLY = CkPostaggregateOutletRecommendedActivityMonthly.CK_POSTAGGREGATE_OUTLET_RECOMMENDED_ACTIVITY_MONTHLY;
-
-    /**
      * The table <code>ck_postaggregate_user_activity_daily</code>.
      */
     public final CkPostaggregateUserActivityDaily CK_POSTAGGREGATE_USER_ACTIVITY_DAILY = CkPostaggregateUserActivityDaily.CK_POSTAGGREGATE_USER_ACTIVITY_DAILY;
@@ -790,6 +1150,16 @@ public class DefaultSchema extends SchemaImpl {
      * The table <code>ck_producttag</code>.
      */
     public final CkProducttag CK_PRODUCTTAG = CkProducttag.CK_PRODUCTTAG;
+
+    /**
+     * The table <code>ck_promo_activity</code>.
+     */
+    public final CkPromoActivity CK_PROMO_ACTIVITY = CkPromoActivity.CK_PROMO_ACTIVITY;
+
+    /**
+     * The table <code>ck_promo_transaction_tracking</code>.
+     */
+    public final CkPromoTransactionTracking CK_PROMO_TRANSACTION_TRACKING = CkPromoTransactionTracking.CK_PROMO_TRANSACTION_TRACKING;
 
     /**
      * The table <code>ck_query_info</code>.
@@ -897,6 +1267,76 @@ public class DefaultSchema extends SchemaImpl {
     public final CkSchedulerInfo CK_SCHEDULER_INFO = CkSchedulerInfo.CK_SCHEDULER_INFO;
 
     /**
+     * The table <code>ck_scheme_balance</code>.
+     */
+    public final CkSchemeBalance CK_SCHEME_BALANCE = CkSchemeBalance.CK_SCHEME_BALANCE;
+
+    /**
+     * The table <code>ck_scheme_calculation</code>.
+     */
+    public final CkSchemeCalculation CK_SCHEME_CALCULATION = CkSchemeCalculation.CK_SCHEME_CALCULATION;
+
+    /**
+     * The table <code>ck_scheme_custom_group</code>.
+     */
+    public final CkSchemeCustomGroup CK_SCHEME_CUSTOM_GROUP = CkSchemeCustomGroup.CK_SCHEME_CUSTOM_GROUP;
+
+    /**
+     * The table <code>ck_scheme_daily_orders</code>.
+     */
+    public final CkSchemeDailyOrders CK_SCHEME_DAILY_ORDERS = CkSchemeDailyOrders.CK_SCHEME_DAILY_ORDERS;
+
+    /**
+     * The table <code>ck_scheme_defination</code>.
+     */
+    public final CkSchemeDefination CK_SCHEME_DEFINATION = CkSchemeDefination.CK_SCHEME_DEFINATION;
+
+    /**
+     * The table <code>ck_scheme_freeproductinfo</code>.
+     */
+    public final CkSchemeFreeproductinfo CK_SCHEME_FREEPRODUCTINFO = CkSchemeFreeproductinfo.CK_SCHEME_FREEPRODUCTINFO;
+
+    /**
+     * The table <code>ck_scheme_location_bifurcations</code>.
+     */
+    public final CkSchemeLocationBifurcations CK_SCHEME_LOCATION_BIFURCATIONS = CkSchemeLocationBifurcations.CK_SCHEME_LOCATION_BIFURCATIONS;
+
+    /**
+     * The table <code>ck_scheme_must_buy_group</code>.
+     */
+    public final CkSchemeMustBuyGroup CK_SCHEME_MUST_BUY_GROUP = CkSchemeMustBuyGroup.CK_SCHEME_MUST_BUY_GROUP;
+
+    /**
+     * The table <code>ck_scheme_outlet_bifurcations</code>.
+     */
+    public final CkSchemeOutletBifurcations CK_SCHEME_OUTLET_BIFURCATIONS = CkSchemeOutletBifurcations.CK_SCHEME_OUTLET_BIFURCATIONS;
+
+    /**
+     * The table <code>ck_scheme_product_bifurcations</code>.
+     */
+    public final CkSchemeProductBifurcations CK_SCHEME_PRODUCT_BIFURCATIONS = CkSchemeProductBifurcations.CK_SCHEME_PRODUCT_BIFURCATIONS;
+
+    /**
+     * The table <code>ck_scheme_recurrence</code>.
+     */
+    public final CkSchemeRecurrence CK_SCHEME_RECURRENCE = CkSchemeRecurrence.CK_SCHEME_RECURRENCE;
+
+    /**
+     * The table <code>ck_scheme_supplier_metadata</code>.
+     */
+    public final CkSchemeSupplierMetadata CK_SCHEME_SUPPLIER_METADATA = CkSchemeSupplierMetadata.CK_SCHEME_SUPPLIER_METADATA;
+
+    /**
+     * The table <code>ck_schemes</code>.
+     */
+    public final CkSchemes CK_SCHEMES = CkSchemes.CK_SCHEMES;
+
+    /**
+     * The table <code>ck_schemesmetadata</code>.
+     */
+    public final CkSchemesmetadata CK_SCHEMESMETADATA = CkSchemesmetadata.CK_SCHEMESMETADATA;
+
+    /**
      * The table <code>ck_score</code>.
      */
     public final CkScore CK_SCORE = CkScore.CK_SCORE;
@@ -992,11 +1432,6 @@ public class DefaultSchema extends SchemaImpl {
     public final CkSmartTriggerInfo CK_SMART_TRIGGER_INFO = CkSmartTriggerInfo.CK_SMART_TRIGGER_INFO;
 
     /**
-     * The table <code>ck_smart_trigger_info_dispatchers</code>.
-     */
-    public final CkSmartTriggerInfoDispatchers CK_SMART_TRIGGER_INFO_DISPATCHERS = CkSmartTriggerInfoDispatchers.CK_SMART_TRIGGER_INFO_DISPATCHERS;
-
-    /**
      * The table <code>ck_static_outlet_aggregation</code>.
      */
     public final CkStaticOutletAggregation CK_STATIC_OUTLET_AGGREGATION = CkStaticOutletAggregation.CK_STATIC_OUTLET_AGGREGATION;
@@ -1062,11 +1497,6 @@ public class DefaultSchema extends SchemaImpl {
     public final CkSupportTracking CK_SUPPORT_TRACKING = CkSupportTracking.CK_SUPPORT_TRACKING;
 
     /**
-     * The table <code>ck_targer_groupby</code>.
-     */
-    public final CkTargerGroupby CK_TARGER_GROUPBY = CkTargerGroupby.CK_TARGER_GROUPBY;
-
-    /**
      * The table <code>ck_target_results</code>.
      */
     public final CkTargetResults CK_TARGET_RESULTS = CkTargetResults.CK_TARGET_RESULTS;
@@ -1080,6 +1510,11 @@ public class DefaultSchema extends SchemaImpl {
      * The table <code>ck_task</code>.
      */
     public final CkTask CK_TASK = CkTask.CK_TASK;
+
+    /**
+     * The table <code>ck_taskhelper_info</code>.
+     */
+    public final CkTaskhelperInfo CK_TASKHELPER_INFO = CkTaskhelperInfo.CK_TASKHELPER_INFO;
 
     /**
      * The table <code>ck_tax</code>.
@@ -1232,9 +1667,54 @@ public class DefaultSchema extends SchemaImpl {
     public final CkWareHouseChannelHierarchy CK_WARE_HOUSE_CHANNEL_HIERARCHY = CkWareHouseChannelHierarchy.CK_WARE_HOUSE_CHANNEL_HIERARCHY;
 
     /**
+     * The table <code>cs_user_usage_activity_daily</code>.
+     */
+    public final CsUserUsageActivityDaily CS_USER_USAGE_ACTIVITY_DAILY = CsUserUsageActivityDaily.CS_USER_USAGE_ACTIVITY_DAILY;
+
+    /**
      * The table <code>profile</code>.
      */
     public final Profile PROFILE = Profile.PROFILE;
+
+    /**
+     * The table <code>rw_incentive_info</code>.
+     */
+    public final RwIncentiveInfo RW_INCENTIVE_INFO = RwIncentiveInfo.RW_INCENTIVE_INFO;
+
+    /**
+     * The table <code>rw_potential_points</code>.
+     */
+    public final RwPotentialPoints RW_POTENTIAL_POINTS = RwPotentialPoints.RW_POTENTIAL_POINTS;
+
+    /**
+     * The table <code>rw_precision_call</code>.
+     */
+    public final RwPrecisionCall RW_PRECISION_CALL = RwPrecisionCall.RW_PRECISION_CALL;
+
+    /**
+     * The table <code>rw_rule_info</code>.
+     */
+    public final RwRuleInfo RW_RULE_INFO = RwRuleInfo.RW_RULE_INFO;
+
+    /**
+     * The table <code>rw_score_card</code>.
+     */
+    public final RwScoreCard RW_SCORE_CARD = RwScoreCard.RW_SCORE_CARD;
+
+    /**
+     * The table <code>rw_score_metadata</code>.
+     */
+    public final RwScoreMetadata RW_SCORE_METADATA = RwScoreMetadata.RW_SCORE_METADATA;
+
+    /**
+     * The table <code>rw_task</code>.
+     */
+    public final RwTask RW_TASK = RwTask.RW_TASK;
+
+    /**
+     * The table <code>scheme_must_buy_group</code>.
+     */
+    public final SchemeMustBuyGroup SCHEME_MUST_BUY_GROUP = SchemeMustBuyGroup.SCHEME_MUST_BUY_GROUP;
 
     /**
      * No further instances allowed
@@ -1257,9 +1737,12 @@ public class DefaultSchema extends SchemaImpl {
             CkAggregationInfo.CK_AGGREGATION_INFO,
             CkAnalytics.CK_ANALYTICS,
             CkApiTransactionLog.CK_API_TRANSACTION_LOG,
+            CkAppNotification.CK_APP_NOTIFICATION,
             CkAppNotificationInfo.CK_APP_NOTIFICATION_INFO,
             CkApprovalInfo.CK_APPROVAL_INFO,
             CkApprovalMetaData.CK_APPROVAL_META_DATA,
+            CkAsset.CK_ASSET,
+            CkAssetManagementActivity.CK_ASSET_MANAGEMENT_ACTIVITY,
             CkAttendance.CK_ATTENDANCE,
             CkAuthResource.CK_AUTH_RESOURCE,
             CkAuthRole.CK_AUTH_ROLE,
@@ -1272,7 +1755,10 @@ public class DefaultSchema extends SchemaImpl {
             CkBannerTemplate.CK_BANNER_TEMPLATE,
             CkBannerTemplateElement.CK_BANNER_TEMPLATE_ELEMENT,
             CkBannerTemplateTemplateElements.CK_BANNER_TEMPLATE_TEMPLATE_ELEMENTS,
+            CkBatchWiseStock.CK_BATCH_WISE_STOCK,
             CkCalendarMapping.CK_CALENDAR_MAPPING,
+            CkCampaignTask.CK_CAMPAIGN_TASK,
+            CkCampaignTaskResult.CK_CAMPAIGN_TASK_RESULT,
             CkCartDetails.CK_CART_DETAILS,
             CkCategoryInfo.CK_CATEGORY_INFO,
             CkChannelHierarchyMetadata.CK_CHANNEL_HIERARCHY_METADATA,
@@ -1280,8 +1766,13 @@ public class DefaultSchema extends SchemaImpl {
             CkCompetitionActivity.CK_COMPETITION_ACTIVITY,
             CkCompetitor.CK_COMPETITOR,
             CkConsentInfo.CK_CONSENT_INFO,
+            CkConsolidatedStock.CK_CONSOLIDATED_STOCK,
             CkCreditStatus.CK_CREDIT_STATUS,
             CkCustomerAccount.CK_CUSTOMER_ACCOUNT,
+            CkDatePredictions.CK_DATE_PREDICTIONS,
+            CkDeliveryInfo.CK_DELIVERY_INFO,
+            CkDeliveryInfoSales.CK_DELIVERY_INFO_SALES,
+            CkDeliveryPjp.CK_DELIVERY_PJP,
             CkDeltaConfiguration.CK_DELTA_CONFIGURATION,
             CkDeltaInfo.CK_DELTA_INFO,
             CkDeviceInfo.CK_DEVICE_INFO,
@@ -1294,15 +1785,19 @@ public class DefaultSchema extends SchemaImpl {
             CkEntityApproval.CK_ENTITY_APPROVAL,
             CkEntityApprovalHistory.CK_ENTITY_APPROVAL_HISTORY,
             CkEntityFieldsUniqueId.CK_ENTITY_FIELDS_UNIQUE_ID,
+            CkEntityUpdateInfo.CK_ENTITY_UPDATE_INFO,
             CkEventListenerInfo.CK_EVENT_LISTENER_INFO,
             CkExpense.CK_EXPENSE,
             CkExtendedAttributes.CK_EXTENDED_ATTRIBUTES,
+            CkFaceupsActivity.CK_FACEUPS_ACTIVITY,
             CkFaq.CK_FAQ,
             CkFavoriteSku.CK_FAVORITE_SKU,
             CkFeatureEndpoints.CK_FEATURE_ENDPOINTS,
             CkFeatureMetadata.CK_FEATURE_METADATA,
-            CkFileStatus.CK_FILE_STATUS,
+            CkFeatures.CK_FEATURES,
+            CkFocusproductActivity.CK_FOCUSPRODUCT_ACTIVITY,
             CkFunctionInfo.CK_FUNCTION_INFO,
+            CkGenericAggregation.CK_GENERIC_AGGREGATION,
             CkGenericObject.CK_GENERIC_OBJECT,
             CkGenericSchema.CK_GENERIC_SCHEMA,
             CkGrnInfo.CK_GRN_INFO,
@@ -1324,7 +1819,6 @@ public class DefaultSchema extends SchemaImpl {
             CkLinkedsku.CK_LINKEDSKU,
             CkLinkedsubcategory.CK_LINKEDSUBCATEGORY,
             CkLocation.CK_LOCATION,
-            CkLoyaltyScore.CK_LOYALTY_SCORE,
             CkMediaMetadata.CK_MEDIA_METADATA,
             CkMeetingmaster.CK_MEETINGMASTER,
             CkMerchandising.CK_MERCHANDISING,
@@ -1342,13 +1836,16 @@ public class DefaultSchema extends SchemaImpl {
             CkOrders.CK_ORDERS,
             CkOutletActivity.CK_OUTLET_ACTIVITY,
             CkOutletDetails.CK_OUTLET_DETAILS,
+            CkOutletDetailsChannelHierarchy.CK_OUTLET_DETAILS_CHANNEL_HIERARCHY,
             CkOutletDetailsHierarchymetadata.CK_OUTLET_DETAILS_HIERARCHYMETADATA,
+            CkOutletDetailsImmediateParent.CK_OUTLET_DETAILS_IMMEDIATE_PARENT,
             CkOutletLevelRecommendation.CK_OUTLET_LEVEL_RECOMMENDATION,
             CkOutletLocation.CK_OUTLET_LOCATION,
             CkOutletMapping.CK_OUTLET_MAPPING,
             CkOutletMappingBeatFrequency.CK_OUTLET_MAPPING_BEAT_FREQUENCY,
             CkOutletPricingAdjustment.CK_OUTLET_PRICING_ADJUSTMENT,
             CkOutletProductInfo.CK_OUTLET_PRODUCT_INFO,
+            CkOutletRegistrations.CK_OUTLET_REGISTRATIONS,
             CkOutletSkuMetadata.CK_OUTLET_SKU_METADATA,
             CkOutletStatus.CK_OUTLET_STATUS,
             CkOutletTarget.CK_OUTLET_TARGET,
@@ -1382,7 +1879,6 @@ public class DefaultSchema extends SchemaImpl {
             CkPostaggregateOutletProductRecommendedActivityMonthly.CK_POSTAGGREGATE_OUTLET_PRODUCT_RECOMMENDED_ACTIVITY_MONTHLY,
             CkPostaggregateOutletProductRecommendedActivityYearly.CK_POSTAGGREGATE_OUTLET_PRODUCT_RECOMMENDED_ACTIVITY_YEARLY,
             CkPostaggregateOutletRecommendedActivityDaily.CK_POSTAGGREGATE_OUTLET_RECOMMENDED_ACTIVITY_DAILY,
-            CkPostaggregateOutletRecommendedActivityMonthly.CK_POSTAGGREGATE_OUTLET_RECOMMENDED_ACTIVITY_MONTHLY,
             CkPostaggregateUserActivityDaily.CK_POSTAGGREGATE_USER_ACTIVITY_DAILY,
             CkPostaggregateUserActivityMonthly.CK_POSTAGGREGATE_USER_ACTIVITY_MONTHLY,
             CkPostaggregateUserActivityYearly.CK_POSTAGGREGATE_USER_ACTIVITY_YEARLY,
@@ -1404,6 +1900,8 @@ public class DefaultSchema extends SchemaImpl {
             CkProductdetails.CK_PRODUCTDETAILS,
             CkProductmetadata.CK_PRODUCTMETADATA,
             CkProducttag.CK_PRODUCTTAG,
+            CkPromoActivity.CK_PROMO_ACTIVITY,
+            CkPromoTransactionTracking.CK_PROMO_TRANSACTION_TRACKING,
             CkQueryInfo.CK_QUERY_INFO,
             CkRackdetailStandard.CK_RACKDETAIL_STANDARD,
             CkRangeProgram.CK_RANGE_PROGRAM,
@@ -1425,6 +1923,20 @@ public class DefaultSchema extends SchemaImpl {
             CkSalesHistory.CK_SALES_HISTORY,
             CkSalesLost.CK_SALES_LOST,
             CkSchedulerInfo.CK_SCHEDULER_INFO,
+            CkSchemeBalance.CK_SCHEME_BALANCE,
+            CkSchemeCalculation.CK_SCHEME_CALCULATION,
+            CkSchemeCustomGroup.CK_SCHEME_CUSTOM_GROUP,
+            CkSchemeDailyOrders.CK_SCHEME_DAILY_ORDERS,
+            CkSchemeDefination.CK_SCHEME_DEFINATION,
+            CkSchemeFreeproductinfo.CK_SCHEME_FREEPRODUCTINFO,
+            CkSchemeLocationBifurcations.CK_SCHEME_LOCATION_BIFURCATIONS,
+            CkSchemeMustBuyGroup.CK_SCHEME_MUST_BUY_GROUP,
+            CkSchemeOutletBifurcations.CK_SCHEME_OUTLET_BIFURCATIONS,
+            CkSchemeProductBifurcations.CK_SCHEME_PRODUCT_BIFURCATIONS,
+            CkSchemeRecurrence.CK_SCHEME_RECURRENCE,
+            CkSchemeSupplierMetadata.CK_SCHEME_SUPPLIER_METADATA,
+            CkSchemes.CK_SCHEMES,
+            CkSchemesmetadata.CK_SCHEMESMETADATA,
             CkScore.CK_SCORE,
             CkScoreDetails.CK_SCORE_DETAILS,
             CkScoreProgram.CK_SCORE_PROGRAM,
@@ -1444,7 +1956,6 @@ public class DefaultSchema extends SchemaImpl {
             CkSkillLeaderboard.CK_SKILL_LEADERBOARD,
             CkSkucodeStatus.CK_SKUCODE_STATUS,
             CkSmartTriggerInfo.CK_SMART_TRIGGER_INFO,
-            CkSmartTriggerInfoDispatchers.CK_SMART_TRIGGER_INFO_DISPATCHERS,
             CkStaticOutletAggregation.CK_STATIC_OUTLET_AGGREGATION,
             CkStaticUserAggregation.CK_STATIC_USER_AGGREGATION,
             CkStock.CK_STOCK,
@@ -1458,10 +1969,10 @@ public class DefaultSchema extends SchemaImpl {
             CkSupport.CK_SUPPORT,
             CkSupportMaster.CK_SUPPORT_MASTER,
             CkSupportTracking.CK_SUPPORT_TRACKING,
-            CkTargerGroupby.CK_TARGER_GROUPBY,
             CkTargetResults.CK_TARGET_RESULTS,
             CkTargets.CK_TARGETS,
             CkTask.CK_TASK,
+            CkTaskhelperInfo.CK_TASKHELPER_INFO,
             CkTax.CK_TAX,
             CkTaxCalculation.CK_TAX_CALCULATION,
             CkTempAggr.CK_TEMP_AGGR,
@@ -1492,7 +2003,16 @@ public class DefaultSchema extends SchemaImpl {
             CkVisibilityScore.CK_VISIBILITY_SCORE,
             CkWareHouse.CK_WARE_HOUSE,
             CkWareHouseChannelHierarchy.CK_WARE_HOUSE_CHANNEL_HIERARCHY,
-            Profile.PROFILE
+            CsUserUsageActivityDaily.CS_USER_USAGE_ACTIVITY_DAILY,
+            Profile.PROFILE,
+            RwIncentiveInfo.RW_INCENTIVE_INFO,
+            RwPotentialPoints.RW_POTENTIAL_POINTS,
+            RwPrecisionCall.RW_PRECISION_CALL,
+            RwRuleInfo.RW_RULE_INFO,
+            RwScoreCard.RW_SCORE_CARD,
+            RwScoreMetadata.RW_SCORE_METADATA,
+            RwTask.RW_TASK,
+            SchemeMustBuyGroup.SCHEME_MUST_BUY_GROUP
         );
     }
 }

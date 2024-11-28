@@ -15,22 +15,26 @@ public class CkWareHouseChannelHierarchy implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String wareHouseId;
-    private String channelHierarchyId;
+    private String  wareHouseId;
+    private String  channelHierarchyId;
+    private Integer rowid;
 
     public CkWareHouseChannelHierarchy() {}
 
     public CkWareHouseChannelHierarchy(CkWareHouseChannelHierarchy value) {
         this.wareHouseId = value.wareHouseId;
         this.channelHierarchyId = value.channelHierarchyId;
+        this.rowid = value.rowid;
     }
 
     public CkWareHouseChannelHierarchy(
-        String wareHouseId,
-        String channelHierarchyId
+        String  wareHouseId,
+        String  channelHierarchyId,
+        Integer rowid
     ) {
         this.wareHouseId = wareHouseId;
         this.channelHierarchyId = channelHierarchyId;
+        this.rowid = rowid;
     }
 
     /**
@@ -63,12 +67,27 @@ public class CkWareHouseChannelHierarchy implements Serializable {
         this.channelHierarchyId = channelHierarchyId;
     }
 
+    /**
+     * Getter for <code>ck_ware_house_channel_hierarchy.rowid</code>.
+     */
+    public Integer getRowid() {
+        return this.rowid;
+    }
+
+    /**
+     * Setter for <code>ck_ware_house_channel_hierarchy.rowid</code>.
+     */
+    public void setRowid(Integer rowid) {
+        this.rowid = rowid;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkWareHouseChannelHierarchy (");
 
         sb.append(wareHouseId);
         sb.append(", ").append(channelHierarchyId);
+        sb.append(", ").append(rowid);
 
         sb.append(")");
         return sb.toString();

@@ -23,6 +23,7 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -37,7 +38,6 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
     private String       translationKey;
     private String       translationLanguage;
     private String       translationValue;
-    private Byte         changed;
     private String       translationName;
 
     public CkTranslationInfo() {}
@@ -46,6 +46,7 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -60,7 +61,6 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
         this.translationKey = value.translationKey;
         this.translationLanguage = value.translationLanguage;
         this.translationValue = value.translationValue;
-        this.changed = value.changed;
         this.translationName = value.translationName;
     }
 
@@ -68,6 +68,7 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -82,12 +83,12 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
         String       translationKey,
         String       translationLanguage,
         String       translationValue,
-        Byte         changed,
         String       translationName
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -102,7 +103,6 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
         this.translationKey = translationKey;
         this.translationLanguage = translationLanguage;
         this.translationValue = translationValue;
-        this.changed = changed;
         this.translationName = translationName;
     }
 
@@ -146,6 +146,20 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_translation_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_translation_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -345,20 +359,6 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_translation_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_translation_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
      * Getter for <code>ck_translation_info.translation_name</code>.
      */
     public String getTranslationName() {
@@ -379,6 +379,7 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -393,7 +394,6 @@ public class CkTranslationInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(translationKey);
         sb.append(", ").append(translationLanguage);
         sb.append(", ").append(translationValue);
-        sb.append(", ").append(changed);
         sb.append(", ").append(translationName);
 
         sb.append(")");

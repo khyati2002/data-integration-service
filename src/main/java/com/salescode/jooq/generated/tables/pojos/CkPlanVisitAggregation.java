@@ -39,12 +39,11 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     private String        cadenceType;
     private Long          extraVisits;
     private Long          lastmodified;
-    private String        loginId;
+    private String        loginid;
     private Long          missedVisits;
     private LocalDateTime plannedDate;
     private Long          plannedVisits;
     private Long          rowid;
-    private String        loginid;
     private Long          totalProductiveCalls;
 
     public CkPlanVisitAggregation() {}
@@ -68,12 +67,11 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
         this.cadenceType = value.cadenceType;
         this.extraVisits = value.extraVisits;
         this.lastmodified = value.lastmodified;
-        this.loginId = value.loginId;
+        this.loginid = value.loginid;
         this.missedVisits = value.missedVisits;
         this.plannedDate = value.plannedDate;
         this.plannedVisits = value.plannedVisits;
         this.rowid = value.rowid;
-        this.loginid = value.loginid;
         this.totalProductiveCalls = value.totalProductiveCalls;
     }
 
@@ -96,12 +94,11 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
         String        cadenceType,
         Long          extraVisits,
         Long          lastmodified,
-        String        loginId,
+        String        loginid,
         Long          missedVisits,
         LocalDateTime plannedDate,
         Long          plannedVisits,
         Long          rowid,
-        String        loginid,
         Long          totalProductiveCalls
     ) {
         this.id = id;
@@ -122,12 +119,11 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
         this.cadenceType = cadenceType;
         this.extraVisits = extraVisits;
         this.lastmodified = lastmodified;
-        this.loginId = loginId;
+        this.loginid = loginid;
         this.missedVisits = missedVisits;
         this.plannedDate = plannedDate;
         this.plannedVisits = plannedVisits;
         this.rowid = rowid;
-        this.loginid = loginid;
         this.totalProductiveCalls = totalProductiveCalls;
     }
 
@@ -384,17 +380,17 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     }
 
     /**
-     * Getter for <code>ck_plan_visit_aggregation.login_id</code>.
+     * Getter for <code>ck_plan_visit_aggregation.loginid</code>.
      */
-    public String getLoginId() {
-        return this.loginId;
+    public String getLoginid() {
+        return this.loginid;
     }
 
     /**
-     * Setter for <code>ck_plan_visit_aggregation.login_id</code>.
+     * Setter for <code>ck_plan_visit_aggregation.loginid</code>.
      */
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
     }
 
     /**
@@ -454,20 +450,6 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
     }
 
     /**
-     * Getter for <code>ck_plan_visit_aggregation.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_plan_visit_aggregation.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
      * Getter for <code>ck_plan_visit_aggregation.total_productive_calls</code>.
      */
     public Long getTotalProductiveCalls() {
@@ -503,12 +485,11 @@ public class CkPlanVisitAggregation extends CommonDataModel implements Serializa
         sb.append(", ").append(cadenceType);
         sb.append(", ").append(extraVisits);
         sb.append(", ").append(lastmodified);
-        sb.append(", ").append(loginId);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(missedVisits);
         sb.append(", ").append(plannedDate);
         sb.append(", ").append(plannedVisits);
         sb.append(", ").append(rowid);
-        sb.append(", ").append(loginid);
         sb.append(", ").append(totalProductiveCalls);
 
         sb.append(")");

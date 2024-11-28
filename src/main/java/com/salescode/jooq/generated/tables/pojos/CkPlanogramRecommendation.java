@@ -35,7 +35,7 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     private String        source;
     private Integer       version;
     private Double        centreQty;
-    private Integer       clusterId;
+    private String        clusterId;
     private LocalDateTime enddate;
     private String        itemId;
     private String        outletcode;
@@ -82,7 +82,7 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
         String        source,
         Integer       version,
         Double        centreQty,
-        Integer       clusterId,
+        String        clusterId,
         LocalDateTime enddate,
         String        itemId,
         String        outletcode,
@@ -310,14 +310,14 @@ public class CkPlanogramRecommendation extends CommonDataModel implements Serial
     /**
      * Getter for <code>ck_planogram_recommendation.cluster_id</code>.
      */
-    public Integer getClusterId() {
+    public String getClusterId() {
         return this.clusterId;
     }
 
     /**
      * Setter for <code>ck_planogram_recommendation.cluster_id</code>.
      */
-    public void setClusterId(Integer clusterId) {
+    public void setClusterId(String clusterId) {
         this.clusterId = clusterId;
     }
 

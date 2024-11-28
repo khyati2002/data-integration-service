@@ -12,15 +12,25 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -115,11 +125,6 @@ public class CkSchedulerInfo extends TableImpl<Record> {
     public final TableField<Record, String> CRON = createField(DSL.name("cron"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_scheduler_info.last_run_time</code>.
-     */
-    public final TableField<Record, LocalDateTime> LAST_RUN_TIME = createField(DSL.name("last_run_time"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
      * The column <code>ck_scheduler_info.name</code>.
      */
     public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
@@ -138,6 +143,11 @@ public class CkSchedulerInfo extends TableImpl<Record> {
      * The column <code>ck_scheduler_info.type</code>.
      */
     public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_scheduler_info.last_run_time</code>.
+     */
+    public final TableField<Record, LocalDateTime> LAST_RUN_TIME = createField(DSL.name("last_run_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     private CkSchedulerInfo(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

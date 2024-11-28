@@ -11,14 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Identity;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -148,11 +158,6 @@ public class CkWareHouse extends TableImpl<Record> {
     public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
 
     /**
-     * The column <code>ck_ware_house.accessible_by</code>.
-     */
-    public final TableField<Record, JSON> ACCESSIBLE_BY = createField(DSL.name("accessible_by"), SQLDataType.JSON, this, "");
-
-    /**
      * The column <code>ck_ware_house.hash</code>.
      */
     public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
@@ -161,6 +166,11 @@ public class CkWareHouse extends TableImpl<Record> {
      * The column <code>ck_ware_house.address</code>.
      */
     public final TableField<Record, String> ADDRESS = createField(DSL.name("address"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_ware_house.rowid</code>.
+     */
+    public final TableField<Record, Integer> ROWID = createField(DSL.name("rowid"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>ck_ware_house.changed</code>.
@@ -206,8 +216,18 @@ public class CkWareHouse extends TableImpl<Record> {
     }
 
     @Override
+    public Identity<Record, Integer> getIdentity() {
+        return (Identity<Record, Integer>) super.getIdentity();
+    }
+
+    @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_WARE_HOUSE_PRIMARY;
+    }
+
+    @Override
+    public List<UniqueKey<Record>> getUniqueKeys() {
+        return Arrays.asList(Keys.KEY_CK_WARE_HOUSE_ROWID);
     }
 
     @Override

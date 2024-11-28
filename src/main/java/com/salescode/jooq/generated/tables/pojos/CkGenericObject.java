@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -34,24 +36,23 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     private String        modifiedBy;
     private String        source;
     private Integer       version;
+    private LocalDateTime date;
     private String        hierarchy;
     private String        key1;
     private String        key2;
     private String        key3;
     private String        key4;
     private String        key5;
+    private String        key6;
     private String        loginId;
     private String        name;
     private JSON          payload;
     private Long          rangeKey;
     private Long          timestamp;
-    private String        key6;
-    private LocalDateTime date;
-    private Byte          changed;
-    private String        key10;
     private String        key7;
     private String        key8;
     private String        key9;
+    private String        key10;
 
     public CkGenericObject() {}
 
@@ -59,6 +60,7 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -68,30 +70,30 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
         this.modifiedBy = value.modifiedBy;
         this.source = value.source;
         this.version = value.version;
+        this.date = value.date;
         this.hierarchy = value.hierarchy;
         this.key1 = value.key1;
         this.key2 = value.key2;
         this.key3 = value.key3;
         this.key4 = value.key4;
         this.key5 = value.key5;
+        this.key6 = value.key6;
         this.loginId = value.loginId;
         this.name = value.name;
         this.payload = value.payload;
         this.rangeKey = value.rangeKey;
         this.timestamp = value.timestamp;
-        this.key6 = value.key6;
-        this.date = value.date;
-        this.changed = value.changed;
-        this.key10 = value.key10;
         this.key7 = value.key7;
         this.key8 = value.key8;
         this.key9 = value.key9;
+        this.key10 = value.key10;
     }
 
     public CkGenericObject(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -101,28 +103,28 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
         String        modifiedBy,
         String        source,
         Integer       version,
+        LocalDateTime date,
         String        hierarchy,
         String        key1,
         String        key2,
         String        key3,
         String        key4,
         String        key5,
+        String        key6,
         String        loginId,
         String        name,
         JSON          payload,
         Long          rangeKey,
         Long          timestamp,
-        String        key6,
-        LocalDateTime date,
-        Byte          changed,
-        String        key10,
         String        key7,
         String        key8,
-        String        key9
+        String        key9,
+        String        key10
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -132,24 +134,23 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
         this.modifiedBy = modifiedBy;
         this.source = source;
         this.version = version;
+        this.date = date;
         this.hierarchy = hierarchy;
         this.key1 = key1;
         this.key2 = key2;
         this.key3 = key3;
         this.key4 = key4;
         this.key5 = key5;
+        this.key6 = key6;
         this.loginId = loginId;
         this.name = name;
         this.payload = payload;
         this.rangeKey = rangeKey;
         this.timestamp = timestamp;
-        this.key6 = key6;
-        this.date = date;
-        this.changed = changed;
-        this.key10 = key10;
         this.key7 = key7;
         this.key8 = key8;
         this.key9 = key9;
+        this.key10 = key10;
     }
 
     /**
@@ -192,6 +193,20 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_generic_object.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_generic_object.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -321,6 +336,20 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_generic_object.date</code>.
+     */
+    public LocalDateTime getDate() {
+        return this.date;
+    }
+
+    /**
+     * Setter for <code>ck_generic_object.date</code>.
+     */
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    /**
      * Getter for <code>ck_generic_object.hierarchy</code>.
      */
     public String getHierarchy() {
@@ -405,6 +434,20 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_generic_object.key6</code>.
+     */
+    public String getKey6() {
+        return this.key6;
+    }
+
+    /**
+     * Setter for <code>ck_generic_object.key6</code>.
+     */
+    public void setKey6(String key6) {
+        this.key6 = key6;
+    }
+
+    /**
      * Getter for <code>ck_generic_object.login_id</code>.
      */
     public String getLoginId() {
@@ -475,62 +518,6 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_generic_object.key6</code>.
-     */
-    public String getKey6() {
-        return this.key6;
-    }
-
-    /**
-     * Setter for <code>ck_generic_object.key6</code>.
-     */
-    public void setKey6(String key6) {
-        this.key6 = key6;
-    }
-
-    /**
-     * Getter for <code>ck_generic_object.date</code>.
-     */
-    public LocalDateTime getDate() {
-        return this.date;
-    }
-
-    /**
-     * Setter for <code>ck_generic_object.date</code>.
-     */
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    /**
-     * Getter for <code>ck_generic_object.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_generic_object.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_generic_object.key10</code>.
-     */
-    public String getKey10() {
-        return this.key10;
-    }
-
-    /**
-     * Setter for <code>ck_generic_object.key10</code>.
-     */
-    public void setKey10(String key10) {
-        this.key10 = key10;
-    }
-
-    /**
      * Getter for <code>ck_generic_object.key7</code>.
      */
     public String getKey7() {
@@ -572,6 +559,20 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
         this.key9 = key9;
     }
 
+    /**
+     * Getter for <code>ck_generic_object.key10</code>.
+     */
+    public String getKey10() {
+        return this.key10;
+    }
+
+    /**
+     * Setter for <code>ck_generic_object.key10</code>.
+     */
+    public void setKey10(String key10) {
+        this.key10 = key10;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkGenericObject (");
@@ -579,6 +580,7 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -588,24 +590,23 @@ public class CkGenericObject extends CommonDataModel implements Serializable {
         sb.append(", ").append(modifiedBy);
         sb.append(", ").append(source);
         sb.append(", ").append(version);
+        sb.append(", ").append(date);
         sb.append(", ").append(hierarchy);
         sb.append(", ").append(key1);
         sb.append(", ").append(key2);
         sb.append(", ").append(key3);
         sb.append(", ").append(key4);
         sb.append(", ").append(key5);
+        sb.append(", ").append(key6);
         sb.append(", ").append(loginId);
         sb.append(", ").append(name);
         sb.append(", ").append(payload);
         sb.append(", ").append(rangeKey);
         sb.append(", ").append(timestamp);
-        sb.append(", ").append(key6);
-        sb.append(", ").append(date);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(key10);
         sb.append(", ").append(key7);
         sb.append(", ").append(key8);
         sb.append(", ").append(key9);
+        sb.append(", ").append(key10);
 
         sb.append(")");
         return sb.toString();

@@ -11,15 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.Record;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -59,6 +68,11 @@ public class CkSmartTriggerInfo extends TableImpl<Record> {
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_smart_trigger_info.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
+
+    /**
      * The column <code>ck_smart_trigger_info.created_by</code>.
      */
     public final TableField<Record, String> CREATED_BY = createField(DSL.name("created_by"), SQLDataType.VARCHAR(255), this, "");
@@ -66,7 +80,7 @@ public class CkSmartTriggerInfo extends TableImpl<Record> {
     /**
      * The column <code>ck_smart_trigger_info.creation_time</code>.
      */
-    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
+    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
 
     /**
      * The column <code>ck_smart_trigger_info.extended_attributes</code>.
@@ -74,9 +88,14 @@ public class CkSmartTriggerInfo extends TableImpl<Record> {
     public final TableField<Record, JsonNode> EXTENDED_ATTRIBUTES = createField(DSL.name("extended_attributes"), SQLDataType.JSON, this, "", new JsonNodeConverter());
 
     /**
+     * The column <code>ck_smart_trigger_info.hash</code>.
+     */
+    public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
+
+    /**
      * The column <code>ck_smart_trigger_info.last_modified_time</code>.
      */
-    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
+    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
 
     /**
      * The column <code>ck_smart_trigger_info.lob</code>.
@@ -89,9 +108,14 @@ public class CkSmartTriggerInfo extends TableImpl<Record> {
     public final TableField<Record, String> MODIFIED_BY = createField(DSL.name("modified_by"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_smart_trigger_info.source</code>.
+     */
+    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_smart_trigger_info.version</code>.
      */
-    public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>ck_smart_trigger_info.configuration</code>.
@@ -102,6 +126,11 @@ public class CkSmartTriggerInfo extends TableImpl<Record> {
      * The column <code>ck_smart_trigger_info.description</code>.
      */
     public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_smart_trigger_info.dispatchers</code>.
+     */
+    public final TableField<Record, JSON> DISPATCHERS = createField(DSL.name("dispatchers"), SQLDataType.JSON, this, "");
 
     /**
      * The column <code>ck_smart_trigger_info.document_link</code>.
@@ -134,6 +163,11 @@ public class CkSmartTriggerInfo extends TableImpl<Record> {
     public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
+     * The column <code>ck_smart_trigger_info.query_info</code>.
+     */
+    public final TableField<Record, String> QUERY_INFO = createField(DSL.name("query_info"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_smart_trigger_info.severity</code>.
      */
     public final TableField<Record, Integer> SEVERITY = createField(DSL.name("severity"), SQLDataType.INTEGER.nullable(false), this, "");
@@ -142,41 +176,6 @@ public class CkSmartTriggerInfo extends TableImpl<Record> {
      * The column <code>ck_smart_trigger_info.type</code>.
      */
     public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_smart_trigger_info.query_info_id</code>.
-     */
-    public final TableField<Record, String> QUERY_INFO_ID = createField(DSL.name("query_info_id"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_smart_trigger_info.source</code>.
-     */
-    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_smart_trigger_info.dispatchers</code>.
-     */
-    public final TableField<Record, JSON> DISPATCHERS = createField(DSL.name("dispatchers"), SQLDataType.JSON, this, "");
-
-    /**
-     * The column <code>ck_smart_trigger_info.query_info</code>.
-     */
-    public final TableField<Record, String> QUERY_INFO = createField(DSL.name("query_info"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_smart_trigger_info.accessible_by</code>.
-     */
-    public final TableField<Record, JSON> ACCESSIBLE_BY = createField(DSL.name("accessible_by"), SQLDataType.JSON, this, "");
-
-    /**
-     * The column <code>ck_smart_trigger_info.hash</code>.
-     */
-    public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
-
-    /**
-     * The column <code>ck_smart_trigger_info.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkSmartTriggerInfo(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -224,24 +223,6 @@ public class CkSmartTriggerInfo extends TableImpl<Record> {
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
         return Arrays.asList(Keys.KEY_CK_SMART_TRIGGER_INFO_UK_1HSH1XB8N0TJJYQ7RBC64K2A6);
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKBJFTOE17SL72C573UIKLVN9TI);
-    }
-
-    private transient CkQueryInfo _ckQueryInfo;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_query_info</code>
-     * table.
-     */
-    public CkQueryInfo ckQueryInfo() {
-        if (_ckQueryInfo == null)
-            _ckQueryInfo = new CkQueryInfo(this, Keys.FKBJFTOE17SL72C573UIKLVN9TI);
-
-        return _ckQueryInfo;
     }
 
     @Override

@@ -33,11 +33,11 @@ public class CkTempPjp extends CommonDataModel implements Serializable {
     private String       modifiedBy;
     private String       source;
     private Integer      version;
-    private String       beat;
     private String       loginid;
     private String       outletcode;
     private String       sequenceDay;
     private String       sequenceWeek;
+    private String       beat;
 
     public CkTempPjp() {}
 
@@ -55,11 +55,11 @@ public class CkTempPjp extends CommonDataModel implements Serializable {
         this.modifiedBy = value.modifiedBy;
         this.source = value.source;
         this.version = value.version;
-        this.beat = value.beat;
         this.loginid = value.loginid;
         this.outletcode = value.outletcode;
         this.sequenceDay = value.sequenceDay;
         this.sequenceWeek = value.sequenceWeek;
+        this.beat = value.beat;
     }
 
     public CkTempPjp(
@@ -76,11 +76,11 @@ public class CkTempPjp extends CommonDataModel implements Serializable {
         String       modifiedBy,
         String       source,
         Integer      version,
-        String       beat,
         String       loginid,
         String       outletcode,
         String       sequenceDay,
-        String       sequenceWeek
+        String       sequenceWeek,
+        String       beat
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -95,11 +95,11 @@ public class CkTempPjp extends CommonDataModel implements Serializable {
         this.modifiedBy = modifiedBy;
         this.source = source;
         this.version = version;
-        this.beat = beat;
         this.loginid = loginid;
         this.outletcode = outletcode;
         this.sequenceDay = sequenceDay;
         this.sequenceWeek = sequenceWeek;
+        this.beat = beat;
     }
 
     /**
@@ -285,20 +285,6 @@ public class CkTempPjp extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_temp_pjp.beat</code>.
-     */
-    public String getBeat() {
-        return this.beat;
-    }
-
-    /**
-     * Setter for <code>ck_temp_pjp.beat</code>.
-     */
-    public void setBeat(String beat) {
-        this.beat = beat;
-    }
-
-    /**
      * Getter for <code>ck_temp_pjp.loginid</code>.
      */
     public String getLoginid() {
@@ -354,6 +340,20 @@ public class CkTempPjp extends CommonDataModel implements Serializable {
         this.sequenceWeek = sequenceWeek;
     }
 
+    /**
+     * Getter for <code>ck_temp_pjp.beat</code>.
+     */
+    public String getBeat() {
+        return this.beat;
+    }
+
+    /**
+     * Setter for <code>ck_temp_pjp.beat</code>.
+     */
+    public void setBeat(String beat) {
+        this.beat = beat;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkTempPjp (");
@@ -371,11 +371,11 @@ public class CkTempPjp extends CommonDataModel implements Serializable {
         sb.append(", ").append(modifiedBy);
         sb.append(", ").append(source);
         sb.append(", ").append(version);
-        sb.append(", ").append(beat);
         sb.append(", ").append(loginid);
         sb.append(", ").append(outletcode);
         sb.append(", ").append(sequenceDay);
         sb.append(", ").append(sequenceWeek);
+        sb.append(", ").append(beat);
 
         sb.append(")");
         return sb.toString();

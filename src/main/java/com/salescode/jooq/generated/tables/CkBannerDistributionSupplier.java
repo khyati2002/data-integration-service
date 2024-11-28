@@ -5,14 +5,23 @@ package com.salescode.jooq.generated.tables;
 
 
 import com.salescode.jooq.generated.DefaultSchema;
-import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
+import com.salescode.jooq.generated.Indexes;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -87,33 +96,8 @@ public class CkBannerDistributionSupplier extends TableImpl<Record> {
     }
 
     @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKQ98R2SEKKD6KG49JG4K2SIS8B, Keys.FK2FLHANPXFWSIL9STEKNDNBHTR);
-    }
-
-    private transient CkBannerDistribution _ckBannerDistribution;
-    private transient CkHierarchyMetadata _ckHierarchyMetadata;
-
-    /**
-     * Get the implicit join path to the
-     * <code>ckroot.ck_banner_distribution</code> table.
-     */
-    public CkBannerDistribution ckBannerDistribution() {
-        if (_ckBannerDistribution == null)
-            _ckBannerDistribution = new CkBannerDistribution(this, Keys.FKQ98R2SEKKD6KG49JG4K2SIS8B);
-
-        return _ckBannerDistribution;
-    }
-
-    /**
-     * Get the implicit join path to the
-     * <code>ckroot.ck_hierarchy_metadata</code> table.
-     */
-    public CkHierarchyMetadata ckHierarchyMetadata() {
-        if (_ckHierarchyMetadata == null)
-            _ckHierarchyMetadata = new CkHierarchyMetadata(this, Keys.FK2FLHANPXFWSIL9STEKNDNBHTR);
-
-        return _ckHierarchyMetadata;
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.CK_BANNER_DISTRIBUTION_SUPPLIER_FK2FLHANPXFWSIL9STEKNDNBHTR, Indexes.CK_BANNER_DISTRIBUTION_SUPPLIER_FKQ98R2SEKKD6KG49JG4K2SIS8B);
     }
 
     @Override

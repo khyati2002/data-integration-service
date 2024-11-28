@@ -12,14 +12,25 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -119,29 +130,14 @@ public class CkKpiInfo extends TableImpl<Record> {
     public final TableField<Record, Integer> BATCH_SIZE = createField(DSL.name("batch_size"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>ck_kpi_info.configuration</code>.
-     */
-    public final TableField<Record, JSON> CONFIGURATION = createField(DSL.name("configuration"), SQLDataType.JSON, this, "");
-
-    /**
      * The column <code>ck_kpi_info.cron</code>.
      */
     public final TableField<Record, String> CRON = createField(DSL.name("cron"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_kpi_info.description</code>.
-     */
-    public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_kpi_info.execution_mode</code>.
      */
     public final TableField<Record, String> EXECUTION_MODE = createField(DSL.name("execution_mode"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_kpi_info.extractor_type</code>.
-     */
-    public final TableField<Record, String> EXTRACTOR_TYPE = createField(DSL.name("extractor_type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_kpi_info.implementation</code>.
@@ -156,7 +152,7 @@ public class CkKpiInfo extends TableImpl<Record> {
     /**
      * The column <code>ck_kpi_info.status_evaluator</code>.
      */
-    public final TableField<Record, String> STATUS_EVALUATOR = createField(DSL.name("status_evaluator"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> STATUS_EVALUATOR = createField(DSL.name("status_evaluator"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_kpi_info.target</code>.
@@ -172,6 +168,21 @@ public class CkKpiInfo extends TableImpl<Record> {
      * The column <code>ck_kpi_info.time_zone</code>.
      */
     public final TableField<Record, String> TIME_ZONE = createField(DSL.name("time_zone"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_kpi_info.configuration</code>.
+     */
+    public final TableField<Record, JSON> CONFIGURATION = createField(DSL.name("configuration"), SQLDataType.JSON, this, "");
+
+    /**
+     * The column <code>ck_kpi_info.description</code>.
+     */
+    public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_kpi_info.extractor_type</code>.
+     */
+    public final TableField<Record, String> EXTRACTOR_TYPE = createField(DSL.name("extractor_type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_kpi_info.owner</code>.

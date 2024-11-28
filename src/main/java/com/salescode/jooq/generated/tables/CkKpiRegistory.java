@@ -11,14 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -108,9 +118,9 @@ public class CkKpiRegistory extends TableImpl<Record> {
     public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>ck_kpi_registory.agg_table</code>.
+     * The column <code>ck_kpi_registory.target_table</code>.
      */
-    public final TableField<Record, String> AGG_TABLE = createField(DSL.name("agg_table"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> TARGET_TABLE = createField(DSL.name("target_table"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_kpi_registory.aggregate_field</code>.
@@ -118,9 +128,9 @@ public class CkKpiRegistory extends TableImpl<Record> {
     public final TableField<Record, String> AGGREGATE_FIELD = createField(DSL.name("aggregate_field"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_kpi_registory.aggregate_type</code>.
+     * The column <code>ck_kpi_registory.aggregation_name</code>.
      */
-    public final TableField<Record, String> AGGREGATE_TYPE = createField(DSL.name("aggregate_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> AGGREGATION_NAME = createField(DSL.name("aggregation_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_kpi_registory.cadence_date_field</code>.
@@ -198,11 +208,6 @@ public class CkKpiRegistory extends TableImpl<Record> {
     public final TableField<Record, String> TERTIARY_GROUP_NAME = createField(DSL.name("tertiary_group_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_kpi_registory.aggregation_name</code>.
-     */
-    public final TableField<Record, String> AGGREGATION_NAME = createField(DSL.name("aggregation_name"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_kpi_registory.category</code>.
      */
     public final TableField<Record, String> CATEGORY = createField(DSL.name("category"), SQLDataType.VARCHAR(255), this, "");
@@ -216,6 +221,16 @@ public class CkKpiRegistory extends TableImpl<Record> {
      * The column <code>ck_kpi_registory.operation_type</code>.
      */
     public final TableField<Record, String> OPERATION_TYPE = createField(DSL.name("operation_type"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_kpi_registory.agg_table</code>.
+     */
+    public final TableField<Record, String> AGG_TABLE = createField(DSL.name("agg_table"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_kpi_registory.aggregate_type</code>.
+     */
+    public final TableField<Record, String> AGGREGATE_TYPE = createField(DSL.name("aggregate_type"), SQLDataType.VARCHAR(255), this, "");
 
     private CkKpiRegistory(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

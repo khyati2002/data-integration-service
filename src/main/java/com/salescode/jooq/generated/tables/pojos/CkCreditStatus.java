@@ -24,6 +24,7 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -43,20 +44,19 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
     private String        creditStatus;
     private LocalDateTime date;
     private String        hierarchy;
+    private String        locationHierarchy;
+    private String        loginid;
+    private String        outletcode;
     private String        overDraftAccountCreationStatus;
     private LocalDateTime overDraftCreationDate;
     private LocalDateTime submissionTime;
     private Integer       totalDueDays;
-    private String        locationHierarchy;
-    private String        loginid;
-    private String        outletcode;
-    private Byte          changed;
-    private String        description;
-    private String        odAccountNumber;
-    private String        paymentProvideType;
-    private String        referenceNumber;
     private String        status;
+    private String        referenceNumber;
+    private String        description;
+    private String        paymentProvideType;
     private String        supplier;
+    private String        odAccountNumber;
 
     public CkCreditStatus() {}
 
@@ -64,6 +64,7 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -83,26 +84,26 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
         this.creditStatus = value.creditStatus;
         this.date = value.date;
         this.hierarchy = value.hierarchy;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
+        this.outletcode = value.outletcode;
         this.overDraftAccountCreationStatus = value.overDraftAccountCreationStatus;
         this.overDraftCreationDate = value.overDraftCreationDate;
         this.submissionTime = value.submissionTime;
         this.totalDueDays = value.totalDueDays;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
-        this.description = value.description;
-        this.odAccountNumber = value.odAccountNumber;
-        this.paymentProvideType = value.paymentProvideType;
-        this.referenceNumber = value.referenceNumber;
         this.status = value.status;
+        this.referenceNumber = value.referenceNumber;
+        this.description = value.description;
+        this.paymentProvideType = value.paymentProvideType;
         this.supplier = value.supplier;
+        this.odAccountNumber = value.odAccountNumber;
     }
 
     public CkCreditStatus(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -122,24 +123,24 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
         String        creditStatus,
         LocalDateTime date,
         String        hierarchy,
+        String        locationHierarchy,
+        String        loginid,
+        String        outletcode,
         String        overDraftAccountCreationStatus,
         LocalDateTime overDraftCreationDate,
         LocalDateTime submissionTime,
         Integer       totalDueDays,
-        String        locationHierarchy,
-        String        loginid,
-        String        outletcode,
-        Byte          changed,
-        String        description,
-        String        odAccountNumber,
-        String        paymentProvideType,
-        String        referenceNumber,
         String        status,
-        String        supplier
+        String        referenceNumber,
+        String        description,
+        String        paymentProvideType,
+        String        supplier,
+        String        odAccountNumber
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -159,20 +160,19 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
         this.creditStatus = creditStatus;
         this.date = date;
         this.hierarchy = hierarchy;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
+        this.outletcode = outletcode;
         this.overDraftAccountCreationStatus = overDraftAccountCreationStatus;
         this.overDraftCreationDate = overDraftCreationDate;
         this.submissionTime = submissionTime;
         this.totalDueDays = totalDueDays;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.outletcode = outletcode;
-        this.changed = changed;
-        this.description = description;
-        this.odAccountNumber = odAccountNumber;
-        this.paymentProvideType = paymentProvideType;
-        this.referenceNumber = referenceNumber;
         this.status = status;
+        this.referenceNumber = referenceNumber;
+        this.description = description;
+        this.paymentProvideType = paymentProvideType;
         this.supplier = supplier;
+        this.odAccountNumber = odAccountNumber;
     }
 
     /**
@@ -215,6 +215,20 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_credit_status.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_credit_status.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -484,6 +498,48 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_credit_status.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_credit_status.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for <code>ck_credit_status.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_credit_status.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
+     * Getter for <code>ck_credit_status.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_credit_status.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
      * Getter for
      * <code>ck_credit_status.over_draft_account_creation_status</code>.
      */
@@ -542,101 +598,17 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_credit_status.location_hierarchy</code>.
+     * Getter for <code>ck_credit_status.status</code>.
      */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
+    public String getStatus() {
+        return this.status;
     }
 
     /**
-     * Setter for <code>ck_credit_status.location_hierarchy</code>.
+     * Setter for <code>ck_credit_status.status</code>.
      */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_credit_status.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_credit_status.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_credit_status.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_credit_status.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_credit_status.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_credit_status.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_credit_status.description</code>.
-     */
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * Setter for <code>ck_credit_status.description</code>.
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Getter for <code>ck_credit_status.od_account_number</code>.
-     */
-    public String getOdAccountNumber() {
-        return this.odAccountNumber;
-    }
-
-    /**
-     * Setter for <code>ck_credit_status.od_account_number</code>.
-     */
-    public void setOdAccountNumber(String odAccountNumber) {
-        this.odAccountNumber = odAccountNumber;
-    }
-
-    /**
-     * Getter for <code>ck_credit_status.payment_provide_type</code>.
-     */
-    public String getPaymentProvideType() {
-        return this.paymentProvideType;
-    }
-
-    /**
-     * Setter for <code>ck_credit_status.payment_provide_type</code>.
-     */
-    public void setPaymentProvideType(String paymentProvideType) {
-        this.paymentProvideType = paymentProvideType;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     /**
@@ -654,17 +626,31 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_credit_status.status</code>.
+     * Getter for <code>ck_credit_status.description</code>.
      */
-    public String getStatus() {
-        return this.status;
+    public String getDescription() {
+        return this.description;
     }
 
     /**
-     * Setter for <code>ck_credit_status.status</code>.
+     * Setter for <code>ck_credit_status.description</code>.
      */
-    public void setStatus(String status) {
-        this.status = status;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Getter for <code>ck_credit_status.payment_provide_type</code>.
+     */
+    public String getPaymentProvideType() {
+        return this.paymentProvideType;
+    }
+
+    /**
+     * Setter for <code>ck_credit_status.payment_provide_type</code>.
+     */
+    public void setPaymentProvideType(String paymentProvideType) {
+        this.paymentProvideType = paymentProvideType;
     }
 
     /**
@@ -681,6 +667,20 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
         this.supplier = supplier;
     }
 
+    /**
+     * Getter for <code>ck_credit_status.od_account_number</code>.
+     */
+    public String getOdAccountNumber() {
+        return this.odAccountNumber;
+    }
+
+    /**
+     * Setter for <code>ck_credit_status.od_account_number</code>.
+     */
+    public void setOdAccountNumber(String odAccountNumber) {
+        this.odAccountNumber = odAccountNumber;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkCreditStatus (");
@@ -688,6 +688,7 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -707,20 +708,19 @@ public class CkCreditStatus extends CommonDataModel implements Serializable {
         sb.append(", ").append(creditStatus);
         sb.append(", ").append(date);
         sb.append(", ").append(hierarchy);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(overDraftAccountCreationStatus);
         sb.append(", ").append(overDraftCreationDate);
         sb.append(", ").append(submissionTime);
         sb.append(", ").append(totalDueDays);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(description);
-        sb.append(", ").append(odAccountNumber);
-        sb.append(", ").append(paymentProvideType);
-        sb.append(", ").append(referenceNumber);
         sb.append(", ").append(status);
+        sb.append(", ").append(referenceNumber);
+        sb.append(", ").append(description);
+        sb.append(", ").append(paymentProvideType);
         sb.append(", ").append(supplier);
+        sb.append(", ").append(odAccountNumber);
 
         sb.append(")");
         return sb.toString();

@@ -11,15 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -57,6 +66,11 @@ public class CkExpense extends TableImpl<Record> {
      * The column <code>ck_expense.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_expense.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_expense.created_by</code>.
@@ -134,6 +148,11 @@ public class CkExpense extends TableImpl<Record> {
     public final TableField<Record, Double> INTERNET_CHARGE = createField(DSL.name("internet_charge"), SQLDataType.FLOAT.nullable(false), this, "");
 
     /**
+     * The column <code>ck_expense.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_expense.nh_value</code>.
      */
     public final TableField<Record, Double> NH_VALUE = createField(DSL.name("nh_value"), SQLDataType.FLOAT.nullable(false), this, "");
@@ -167,16 +186,6 @@ public class CkExpense extends TableImpl<Record> {
      * The column <code>ck_expense.visit_date</code>.
      */
     public final TableField<Record, LocalDateTime> VISIT_DATE = createField(DSL.name("visit_date"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
-     * The column <code>ck_expense.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_expense.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     /**
      * The column <code>ck_expense.area</code>.
@@ -399,23 +408,6 @@ public class CkExpense extends TableImpl<Record> {
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
         return Arrays.asList(Keys.KEY_CK_EXPENSE_UK_EXPENSE);
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK6952WO7JEV838QSL7XDVVLAQO);
-    }
-
-    private transient CkUser _ckUser;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FK6952WO7JEV838QSL7XDVVLAQO);
-
-        return _ckUser;
     }
 
     @Override

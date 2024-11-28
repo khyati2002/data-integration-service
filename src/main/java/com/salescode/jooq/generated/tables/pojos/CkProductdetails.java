@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -75,6 +77,7 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
     private String       orderSuggestion;
     private String       otherProduct;
     private BigDecimal   otherUnitMrp;
+    private String       otherUnitName;
     private BigDecimal   otherUnitToPieceQuantity;
     private String       pieceSize;
     private String       pieceSizeDesc;
@@ -96,14 +99,12 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
     private JSON         translation;
     private String       unitOfMeasurement;
     private String       uom;
-    private Byte         changed;
-    private String       otherUnitName;
     private Integer      recPriority;
-    private String       link;
     private BigDecimal   pieceToVolume;
+    private String       link;
     private String       display;
-    private String       groupId;
     private String       mCode;
+    private String       groupId;
     private String       eb2bCode;
 
     public CkProductdetails() {}
@@ -112,6 +113,7 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -162,6 +164,7 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         this.orderSuggestion = value.orderSuggestion;
         this.otherProduct = value.otherProduct;
         this.otherUnitMrp = value.otherUnitMrp;
+        this.otherUnitName = value.otherUnitName;
         this.otherUnitToPieceQuantity = value.otherUnitToPieceQuantity;
         this.pieceSize = value.pieceSize;
         this.pieceSizeDesc = value.pieceSizeDesc;
@@ -183,14 +186,12 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         this.translation = value.translation;
         this.unitOfMeasurement = value.unitOfMeasurement;
         this.uom = value.uom;
-        this.changed = value.changed;
-        this.otherUnitName = value.otherUnitName;
         this.recPriority = value.recPriority;
-        this.link = value.link;
         this.pieceToVolume = value.pieceToVolume;
+        this.link = value.link;
         this.display = value.display;
-        this.groupId = value.groupId;
         this.mCode = value.mCode;
+        this.groupId = value.groupId;
         this.eb2bCode = value.eb2bCode;
     }
 
@@ -198,6 +199,7 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -248,6 +250,7 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         String       orderSuggestion,
         String       otherProduct,
         BigDecimal   otherUnitMrp,
+        String       otherUnitName,
         BigDecimal   otherUnitToPieceQuantity,
         String       pieceSize,
         String       pieceSizeDesc,
@@ -269,19 +272,18 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         JSON         translation,
         String       unitOfMeasurement,
         String       uom,
-        Byte         changed,
-        String       otherUnitName,
         Integer      recPriority,
-        String       link,
         BigDecimal   pieceToVolume,
+        String       link,
         String       display,
-        String       groupId,
         String       mCode,
+        String       groupId,
         String       eb2bCode
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -332,6 +334,7 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         this.orderSuggestion = orderSuggestion;
         this.otherProduct = otherProduct;
         this.otherUnitMrp = otherUnitMrp;
+        this.otherUnitName = otherUnitName;
         this.otherUnitToPieceQuantity = otherUnitToPieceQuantity;
         this.pieceSize = pieceSize;
         this.pieceSizeDesc = pieceSizeDesc;
@@ -353,14 +356,12 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         this.translation = translation;
         this.unitOfMeasurement = unitOfMeasurement;
         this.uom = uom;
-        this.changed = changed;
-        this.otherUnitName = otherUnitName;
         this.recPriority = recPriority;
-        this.link = link;
         this.pieceToVolume = pieceToVolume;
+        this.link = link;
         this.display = display;
-        this.groupId = groupId;
         this.mCode = mCode;
+        this.groupId = groupId;
         this.eb2bCode = eb2bCode;
     }
 
@@ -404,6 +405,20 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_productdetails.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_productdetails.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -1107,6 +1122,20 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_productdetails.other_unit_name</code>.
+     */
+    public String getOtherUnitName() {
+        return this.otherUnitName;
+    }
+
+    /**
+     * Setter for <code>ck_productdetails.other_unit_name</code>.
+     */
+    public void setOtherUnitName(String otherUnitName) {
+        this.otherUnitName = otherUnitName;
+    }
+
+    /**
      * Getter for <code>ck_productdetails.other_unit_to_piece_quantity</code>.
      */
     public BigDecimal getOtherUnitToPieceQuantity() {
@@ -1401,34 +1430,6 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_productdetails.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_productdetails.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_productdetails.other_unit_name</code>.
-     */
-    public String getOtherUnitName() {
-        return this.otherUnitName;
-    }
-
-    /**
-     * Setter for <code>ck_productdetails.other_unit_name</code>.
-     */
-    public void setOtherUnitName(String otherUnitName) {
-        this.otherUnitName = otherUnitName;
-    }
-
-    /**
      * Getter for <code>ck_productdetails.rec_priority</code>.
      */
     public Integer getRecPriority() {
@@ -1440,20 +1441,6 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
      */
     public void setRecPriority(Integer recPriority) {
         this.recPriority = recPriority;
-    }
-
-    /**
-     * Getter for <code>ck_productdetails.link</code>.
-     */
-    public String getLink() {
-        return this.link;
-    }
-
-    /**
-     * Setter for <code>ck_productdetails.link</code>.
-     */
-    public void setLink(String link) {
-        this.link = link;
     }
 
     /**
@@ -1471,6 +1458,20 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_productdetails.link</code>.
+     */
+    public String getLink() {
+        return this.link;
+    }
+
+    /**
+     * Setter for <code>ck_productdetails.link</code>.
+     */
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    /**
      * Getter for <code>ck_productdetails.display</code>.
      */
     public String getDisplay() {
@@ -1485,20 +1486,6 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_productdetails.group_id</code>.
-     */
-    public String getGroupId() {
-        return this.groupId;
-    }
-
-    /**
-     * Setter for <code>ck_productdetails.group_id</code>.
-     */
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    /**
      * Getter for <code>ck_productdetails.m_code</code>.
      */
     public String getMCode() {
@@ -1510,6 +1497,20 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
      */
     public void setMCode(String mCode) {
         this.mCode = mCode;
+    }
+
+    /**
+     * Getter for <code>ck_productdetails.group_id</code>.
+     */
+    public String getGroupId() {
+        return this.groupId;
+    }
+
+    /**
+     * Setter for <code>ck_productdetails.group_id</code>.
+     */
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     /**
@@ -1533,6 +1534,7 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -1583,6 +1585,7 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         sb.append(", ").append(orderSuggestion);
         sb.append(", ").append(otherProduct);
         sb.append(", ").append(otherUnitMrp);
+        sb.append(", ").append(otherUnitName);
         sb.append(", ").append(otherUnitToPieceQuantity);
         sb.append(", ").append(pieceSize);
         sb.append(", ").append(pieceSizeDesc);
@@ -1604,14 +1607,12 @@ public class CkProductdetails extends CommonDataModel implements Serializable {
         sb.append(", ").append(translation);
         sb.append(", ").append(unitOfMeasurement);
         sb.append(", ").append(uom);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(otherUnitName);
         sb.append(", ").append(recPriority);
-        sb.append(", ").append(link);
         sb.append(", ").append(pieceToVolume);
+        sb.append(", ").append(link);
         sb.append(", ").append(display);
-        sb.append(", ").append(groupId);
         sb.append(", ").append(mCode);
+        sb.append(", ").append(groupId);
         sb.append(", ").append(eb2bCode);
 
         sb.append(")");

@@ -25,6 +25,7 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -41,22 +42,21 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     private String        channel;
     private BigDecimal    gst;
     private String        level;
+    private String        locationHierarchy;
     private Integer       maxQty;
     private Integer       minQty;
     private BigDecimal    mrp;
     private BigDecimal    otherUnitPtr;
+    private String        outletcode;
     private BigDecimal    packPtr;
     private String        priceList;
     private String        skuCode;
+    private String        subChannel;
+    private String        loginid;
     private String        tax;
     private BigDecimal    taxAmount;
     private String        whCode;
-    private String        locationHierarchy;
-    private String        loginid;
     private String        fkProductmetadata;
-    private Byte          changed;
-    private String        subChannel;
-    private String        outletcode;
     private BigDecimal    caseMrp;
     private BigDecimal    otherUnitMrp;
     private LocalDateTime fromDate;
@@ -74,6 +74,7 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -90,22 +91,21 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         this.channel = value.channel;
         this.gst = value.gst;
         this.level = value.level;
+        this.locationHierarchy = value.locationHierarchy;
         this.maxQty = value.maxQty;
         this.minQty = value.minQty;
         this.mrp = value.mrp;
         this.otherUnitPtr = value.otherUnitPtr;
+        this.outletcode = value.outletcode;
         this.packPtr = value.packPtr;
         this.priceList = value.priceList;
         this.skuCode = value.skuCode;
+        this.subChannel = value.subChannel;
+        this.loginid = value.loginid;
         this.tax = value.tax;
         this.taxAmount = value.taxAmount;
         this.whCode = value.whCode;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
         this.fkProductmetadata = value.fkProductmetadata;
-        this.changed = value.changed;
-        this.subChannel = value.subChannel;
-        this.outletcode = value.outletcode;
         this.caseMrp = value.caseMrp;
         this.otherUnitMrp = value.otherUnitMrp;
         this.fromDate = value.fromDate;
@@ -122,6 +122,7 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -138,22 +139,21 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         String        channel,
         BigDecimal    gst,
         String        level,
+        String        locationHierarchy,
         Integer       maxQty,
         Integer       minQty,
         BigDecimal    mrp,
         BigDecimal    otherUnitPtr,
+        String        outletcode,
         BigDecimal    packPtr,
         String        priceList,
         String        skuCode,
+        String        subChannel,
+        String        loginid,
         String        tax,
         BigDecimal    taxAmount,
         String        whCode,
-        String        locationHierarchy,
-        String        loginid,
         String        fkProductmetadata,
-        Byte          changed,
-        String        subChannel,
-        String        outletcode,
         BigDecimal    caseMrp,
         BigDecimal    otherUnitMrp,
         LocalDateTime fromDate,
@@ -168,6 +168,7 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -184,22 +185,21 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         this.channel = channel;
         this.gst = gst;
         this.level = level;
+        this.locationHierarchy = locationHierarchy;
         this.maxQty = maxQty;
         this.minQty = minQty;
         this.mrp = mrp;
         this.otherUnitPtr = otherUnitPtr;
+        this.outletcode = outletcode;
         this.packPtr = packPtr;
         this.priceList = priceList;
         this.skuCode = skuCode;
+        this.subChannel = subChannel;
+        this.loginid = loginid;
         this.tax = tax;
         this.taxAmount = taxAmount;
         this.whCode = whCode;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
         this.fkProductmetadata = fkProductmetadata;
-        this.changed = changed;
-        this.subChannel = subChannel;
-        this.outletcode = outletcode;
         this.caseMrp = caseMrp;
         this.otherUnitMrp = otherUnitMrp;
         this.fromDate = fromDate;
@@ -252,6 +252,20 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_productmetadata.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_productmetadata.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -479,6 +493,20 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_productmetadata.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_productmetadata.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
      * Getter for <code>ck_productmetadata.max_qty</code>.
      */
     public Integer getMaxQty() {
@@ -535,6 +563,20 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_productmetadata.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_productmetadata.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
      * Getter for <code>ck_productmetadata.pack_ptr</code>.
      */
     public BigDecimal getPackPtr() {
@@ -574,6 +616,34 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
      */
     public void setSkuCode(String skuCode) {
         this.skuCode = skuCode;
+    }
+
+    /**
+     * Getter for <code>ck_productmetadata.sub_channel</code>.
+     */
+    public String getSubChannel() {
+        return this.subChannel;
+    }
+
+    /**
+     * Setter for <code>ck_productmetadata.sub_channel</code>.
+     */
+    public void setSubChannel(String subChannel) {
+        this.subChannel = subChannel;
+    }
+
+    /**
+     * Getter for <code>ck_productmetadata.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_productmetadata.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
     }
 
     /**
@@ -619,34 +689,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_productmetadata.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_productmetadata.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_productmetadata.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_productmetadata.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
      * Getter for <code>ck_productmetadata.fk_productmetadata</code>.
      */
     public String getFkProductmetadata() {
@@ -658,48 +700,6 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
      */
     public void setFkProductmetadata(String fkProductmetadata) {
         this.fkProductmetadata = fkProductmetadata;
-    }
-
-    /**
-     * Getter for <code>ck_productmetadata.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_productmetadata.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_productmetadata.sub_channel</code>.
-     */
-    public String getSubChannel() {
-        return this.subChannel;
-    }
-
-    /**
-     * Setter for <code>ck_productmetadata.sub_channel</code>.
-     */
-    public void setSubChannel(String subChannel) {
-        this.subChannel = subChannel;
-    }
-
-    /**
-     * Getter for <code>ck_productmetadata.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_productmetadata.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
     }
 
     /**
@@ -849,6 +849,7 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -865,22 +866,21 @@ public class CkProductmetadata extends CommonDataModel implements Serializable {
         sb.append(", ").append(channel);
         sb.append(", ").append(gst);
         sb.append(", ").append(level);
+        sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(maxQty);
         sb.append(", ").append(minQty);
         sb.append(", ").append(mrp);
         sb.append(", ").append(otherUnitPtr);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(packPtr);
         sb.append(", ").append(priceList);
         sb.append(", ").append(skuCode);
+        sb.append(", ").append(subChannel);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(tax);
         sb.append(", ").append(taxAmount);
         sb.append(", ").append(whCode);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
         sb.append(", ").append(fkProductmetadata);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(subChannel);
-        sb.append(", ").append(outletcode);
         sb.append(", ").append(caseMrp);
         sb.append(", ").append(otherUnitMrp);
         sb.append(", ").append(fromDate);

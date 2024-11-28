@@ -24,6 +24,7 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -56,7 +57,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     private String        totalInternalMem;
     private String        wifi;
     private String        writesd;
-    private Byte          changed;
     private String        usercontext;
 
     public CkDeviceInfo() {}
@@ -65,6 +65,7 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -97,7 +98,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
         this.totalInternalMem = value.totalInternalMem;
         this.wifi = value.wifi;
         this.writesd = value.writesd;
-        this.changed = value.changed;
         this.usercontext = value.usercontext;
     }
 
@@ -105,6 +105,7 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -137,12 +138,12 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
         String        totalInternalMem,
         String        wifi,
         String        writesd,
-        Byte          changed,
         String        usercontext
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -175,7 +176,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
         this.totalInternalMem = totalInternalMem;
         this.wifi = wifi;
         this.writesd = writesd;
-        this.changed = changed;
         this.usercontext = usercontext;
     }
 
@@ -219,6 +219,20 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_device_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_device_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -670,20 +684,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_device_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_device_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
      * Getter for <code>ck_device_info.usercontext</code>.
      */
     public String getUsercontext() {
@@ -704,6 +704,7 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -736,7 +737,6 @@ public class CkDeviceInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(totalInternalMem);
         sb.append(", ").append(wifi);
         sb.append(", ").append(writesd);
-        sb.append(", ").append(changed);
         sb.append(", ").append(usercontext);
 
         sb.append(")");

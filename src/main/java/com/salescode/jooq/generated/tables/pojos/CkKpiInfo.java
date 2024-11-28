@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -36,17 +37,17 @@ public class CkKpiInfo extends CommonDataModel implements Serializable {
     private Integer      version;
     private JSON         aggregationNames;
     private Integer      batchSize;
-    private JSON         configuration;
     private String       cron;
-    private String       description;
     private String       executionMode;
-    private String       extractorType;
     private String       implementation;
     private String       name;
     private String       statusEvaluator;
     private String       target;
     private String       targetFilter;
     private String       timeZone;
+    private JSON         configuration;
+    private String       description;
+    private String       extractorType;
     private String       owner;
 
     public CkKpiInfo() {}
@@ -67,17 +68,17 @@ public class CkKpiInfo extends CommonDataModel implements Serializable {
         this.version = value.version;
         this.aggregationNames = value.aggregationNames;
         this.batchSize = value.batchSize;
-        this.configuration = value.configuration;
         this.cron = value.cron;
-        this.description = value.description;
         this.executionMode = value.executionMode;
-        this.extractorType = value.extractorType;
         this.implementation = value.implementation;
         this.name = value.name;
         this.statusEvaluator = value.statusEvaluator;
         this.target = value.target;
         this.targetFilter = value.targetFilter;
         this.timeZone = value.timeZone;
+        this.configuration = value.configuration;
+        this.description = value.description;
+        this.extractorType = value.extractorType;
         this.owner = value.owner;
     }
 
@@ -97,17 +98,17 @@ public class CkKpiInfo extends CommonDataModel implements Serializable {
         Integer      version,
         JSON         aggregationNames,
         Integer      batchSize,
-        JSON         configuration,
         String       cron,
-        String       description,
         String       executionMode,
-        String       extractorType,
         String       implementation,
         String       name,
         String       statusEvaluator,
         String       target,
         String       targetFilter,
         String       timeZone,
+        JSON         configuration,
+        String       description,
+        String       extractorType,
         String       owner
     ) {
         this.id = id;
@@ -125,17 +126,17 @@ public class CkKpiInfo extends CommonDataModel implements Serializable {
         this.version = version;
         this.aggregationNames = aggregationNames;
         this.batchSize = batchSize;
-        this.configuration = configuration;
         this.cron = cron;
-        this.description = description;
         this.executionMode = executionMode;
-        this.extractorType = extractorType;
         this.implementation = implementation;
         this.name = name;
         this.statusEvaluator = statusEvaluator;
         this.target = target;
         this.targetFilter = targetFilter;
         this.timeZone = timeZone;
+        this.configuration = configuration;
+        this.description = description;
+        this.extractorType = extractorType;
         this.owner = owner;
     }
 
@@ -350,20 +351,6 @@ public class CkKpiInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_kpi_info.configuration</code>.
-     */
-    public JSON getConfiguration() {
-        return this.configuration;
-    }
-
-    /**
-     * Setter for <code>ck_kpi_info.configuration</code>.
-     */
-    public void setConfiguration(JSON configuration) {
-        this.configuration = configuration;
-    }
-
-    /**
      * Getter for <code>ck_kpi_info.cron</code>.
      */
     public String getCron() {
@@ -378,20 +365,6 @@ public class CkKpiInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_kpi_info.description</code>.
-     */
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * Setter for <code>ck_kpi_info.description</code>.
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
      * Getter for <code>ck_kpi_info.execution_mode</code>.
      */
     public String getExecutionMode() {
@@ -403,20 +376,6 @@ public class CkKpiInfo extends CommonDataModel implements Serializable {
      */
     public void setExecutionMode(String executionMode) {
         this.executionMode = executionMode;
-    }
-
-    /**
-     * Getter for <code>ck_kpi_info.extractor_type</code>.
-     */
-    public String getExtractorType() {
-        return this.extractorType;
-    }
-
-    /**
-     * Setter for <code>ck_kpi_info.extractor_type</code>.
-     */
-    public void setExtractorType(String extractorType) {
-        this.extractorType = extractorType;
     }
 
     /**
@@ -504,6 +463,48 @@ public class CkKpiInfo extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_kpi_info.configuration</code>.
+     */
+    public JSON getConfiguration() {
+        return this.configuration;
+    }
+
+    /**
+     * Setter for <code>ck_kpi_info.configuration</code>.
+     */
+    public void setConfiguration(JSON configuration) {
+        this.configuration = configuration;
+    }
+
+    /**
+     * Getter for <code>ck_kpi_info.description</code>.
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Setter for <code>ck_kpi_info.description</code>.
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Getter for <code>ck_kpi_info.extractor_type</code>.
+     */
+    public String getExtractorType() {
+        return this.extractorType;
+    }
+
+    /**
+     * Setter for <code>ck_kpi_info.extractor_type</code>.
+     */
+    public void setExtractorType(String extractorType) {
+        this.extractorType = extractorType;
+    }
+
+    /**
      * Getter for <code>ck_kpi_info.owner</code>.
      */
     public String getOwner() {
@@ -536,17 +537,17 @@ public class CkKpiInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(version);
         sb.append(", ").append(aggregationNames);
         sb.append(", ").append(batchSize);
-        sb.append(", ").append(configuration);
         sb.append(", ").append(cron);
-        sb.append(", ").append(description);
         sb.append(", ").append(executionMode);
-        sb.append(", ").append(extractorType);
         sb.append(", ").append(implementation);
         sb.append(", ").append(name);
         sb.append(", ").append(statusEvaluator);
         sb.append(", ").append(target);
         sb.append(", ").append(targetFilter);
         sb.append(", ").append(timeZone);
+        sb.append(", ").append(configuration);
+        sb.append(", ").append(description);
+        sb.append(", ").append(extractorType);
         sb.append(", ").append(owner);
 
         sb.append(")");

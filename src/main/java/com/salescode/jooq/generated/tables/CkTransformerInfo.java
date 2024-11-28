@@ -11,12 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Date;
 
 
 /**
@@ -54,6 +66,11 @@ public class CkTransformerInfo extends TableImpl<Record> {
      * The column <code>ck_transformer_info.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_transformer_info.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_transformer_info.created_by</code>.
@@ -131,6 +148,11 @@ public class CkTransformerInfo extends TableImpl<Record> {
     public final TableField<Record, String> LANGUAGE = createField(DSL.name("language"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
+     * The column <code>ck_transformer_info.name</code>.
+     */
+    public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
      * The column <code>ck_transformer_info.priority</code>.
      */
     public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER.nullable(false), this, "");
@@ -146,14 +168,9 @@ public class CkTransformerInfo extends TableImpl<Record> {
     public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_transformer_info.changed</code>.
+     * The column <code>ck_transformer_info.json_schema</code>.
      */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_transformer_info.name</code>.
-     */
-    public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<Record, JSON> JSON_SCHEMA = createField(DSL.name("json_schema"), SQLDataType.JSON, this, "");
 
     private CkTransformerInfo(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -196,6 +213,11 @@ public class CkTransformerInfo extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_TRANSFORMER_INFO_PRIMARY;
+    }
+
+    @Override
+    public List<UniqueKey<Record>> getUniqueKeys() {
+        return Arrays.asList(Keys.KEY_CK_TRANSFORMER_INFO_UK_TRANSFORMER_INFO);
     }
 
     @Override

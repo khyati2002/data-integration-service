@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -38,14 +40,13 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
     private String        category;
     private String        deliveryStatus;
     private LocalDateTime endTime;
+    private String        groupKey;
     private String        recipient;
     private JSON          response;
+    private String        sourceName;
     private String        status;
     private String        subCategory;
     private String        type;
-    private Byte          changed;
-    private String        groupKey;
-    private String        sourceName;
 
     public CkNotificationHistory() {}
 
@@ -53,6 +54,7 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -66,20 +68,20 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
         this.category = value.category;
         this.deliveryStatus = value.deliveryStatus;
         this.endTime = value.endTime;
+        this.groupKey = value.groupKey;
         this.recipient = value.recipient;
         this.response = value.response;
+        this.sourceName = value.sourceName;
         this.status = value.status;
         this.subCategory = value.subCategory;
         this.type = value.type;
-        this.changed = value.changed;
-        this.groupKey = value.groupKey;
-        this.sourceName = value.sourceName;
     }
 
     public CkNotificationHistory(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -93,18 +95,18 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
         String        category,
         String        deliveryStatus,
         LocalDateTime endTime,
+        String        groupKey,
         String        recipient,
         JSON          response,
+        String        sourceName,
         String        status,
         String        subCategory,
-        String        type,
-        Byte          changed,
-        String        groupKey,
-        String        sourceName
+        String        type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -118,14 +120,13 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
         this.category = category;
         this.deliveryStatus = deliveryStatus;
         this.endTime = endTime;
+        this.groupKey = groupKey;
         this.recipient = recipient;
         this.response = response;
+        this.sourceName = sourceName;
         this.status = status;
         this.subCategory = subCategory;
         this.type = type;
-        this.changed = changed;
-        this.groupKey = groupKey;
-        this.sourceName = sourceName;
     }
 
     /**
@@ -168,6 +169,20 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_notification_history.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_notification_history.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -353,6 +368,20 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
     }
 
     /**
+     * Getter for <code>ck_notification_history.group_key</code>.
+     */
+    public String getGroupKey() {
+        return this.groupKey;
+    }
+
+    /**
+     * Setter for <code>ck_notification_history.group_key</code>.
+     */
+    public void setGroupKey(String groupKey) {
+        this.groupKey = groupKey;
+    }
+
+    /**
      * Getter for <code>ck_notification_history.recipient</code>.
      */
     public String getRecipient() {
@@ -378,6 +407,20 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
      */
     public void setResponse(JSON response) {
         this.response = response;
+    }
+
+    /**
+     * Getter for <code>ck_notification_history.source_name</code>.
+     */
+    public String getSourceName() {
+        return this.sourceName;
+    }
+
+    /**
+     * Setter for <code>ck_notification_history.source_name</code>.
+     */
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
     }
 
     /**
@@ -422,48 +465,6 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
         this.type = type;
     }
 
-    /**
-     * Getter for <code>ck_notification_history.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_notification_history.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_notification_history.group_key</code>.
-     */
-    public String getGroupKey() {
-        return this.groupKey;
-    }
-
-    /**
-     * Setter for <code>ck_notification_history.group_key</code>.
-     */
-    public void setGroupKey(String groupKey) {
-        this.groupKey = groupKey;
-    }
-
-    /**
-     * Getter for <code>ck_notification_history.source_name</code>.
-     */
-    public String getSourceName() {
-        return this.sourceName;
-    }
-
-    /**
-     * Setter for <code>ck_notification_history.source_name</code>.
-     */
-    public void setSourceName(String sourceName) {
-        this.sourceName = sourceName;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkNotificationHistory (");
@@ -471,6 +472,7 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -484,14 +486,13 @@ public class CkNotificationHistory extends CommonDataModel implements Serializab
         sb.append(", ").append(category);
         sb.append(", ").append(deliveryStatus);
         sb.append(", ").append(endTime);
+        sb.append(", ").append(groupKey);
         sb.append(", ").append(recipient);
         sb.append(", ").append(response);
+        sb.append(", ").append(sourceName);
         sb.append(", ").append(status);
         sb.append(", ").append(subCategory);
         sb.append(", ").append(type);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(groupKey);
-        sb.append(", ").append(sourceName);
 
         sb.append(")");
         return sb.toString();

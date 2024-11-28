@@ -23,6 +23,7 @@ public class CkSupport extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -42,7 +43,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
     private String       supportClass;
     private String       supportCriteria;
     private String       supportId;
-    private Byte         changed;
 
     public CkSupport() {}
 
@@ -50,6 +50,7 @@ public class CkSupport extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -69,13 +70,13 @@ public class CkSupport extends CommonDataModel implements Serializable {
         this.supportClass = value.supportClass;
         this.supportCriteria = value.supportCriteria;
         this.supportId = value.supportId;
-        this.changed = value.changed;
     }
 
     public CkSupport(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -94,12 +95,12 @@ public class CkSupport extends CommonDataModel implements Serializable {
         String       status,
         String       supportClass,
         String       supportCriteria,
-        String       supportId,
-        Byte         changed
+        String       supportId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -119,7 +120,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
         this.supportClass = supportClass;
         this.supportCriteria = supportCriteria;
         this.supportId = supportId;
-        this.changed = changed;
     }
 
     /**
@@ -162,6 +162,20 @@ public class CkSupport extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_support.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_support.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -430,20 +444,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
         this.supportId = supportId;
     }
 
-    /**
-     * Getter for <code>ck_support.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_support.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkSupport (");
@@ -451,6 +451,7 @@ public class CkSupport extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -470,7 +471,6 @@ public class CkSupport extends CommonDataModel implements Serializable {
         sb.append(", ").append(supportClass);
         sb.append(", ").append(supportCriteria);
         sb.append(", ").append(supportId);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

@@ -33,8 +33,6 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
     private String       modifiedBy;
     private String       source;
     private Integer      version;
-    private String       blobKey;
-    private String       blobKeya;
     private Integer      facing;
     private String       itemId;
     private Integer      maxfacing;
@@ -45,6 +43,9 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
     private String       rackName;
     private Integer      shelfcount;
     private Integer      year;
+    private String       blobKey;
+    private String       blobKeyA;
+    private String       blobKeya;
     private Integer      primarySequence;
     private Integer      secondarySequence;
 
@@ -64,8 +65,6 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
         this.modifiedBy = value.modifiedBy;
         this.source = value.source;
         this.version = value.version;
-        this.blobKey = value.blobKey;
-        this.blobKeya = value.blobKeya;
         this.facing = value.facing;
         this.itemId = value.itemId;
         this.maxfacing = value.maxfacing;
@@ -76,6 +75,9 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
         this.rackName = value.rackName;
         this.shelfcount = value.shelfcount;
         this.year = value.year;
+        this.blobKey = value.blobKey;
+        this.blobKeyA = value.blobKeyA;
+        this.blobKeya = value.blobKeya;
         this.primarySequence = value.primarySequence;
         this.secondarySequence = value.secondarySequence;
     }
@@ -94,8 +96,6 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
         String       modifiedBy,
         String       source,
         Integer      version,
-        String       blobKey,
-        String       blobKeya,
         Integer      facing,
         String       itemId,
         Integer      maxfacing,
@@ -106,6 +106,9 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
         String       rackName,
         Integer      shelfcount,
         Integer      year,
+        String       blobKey,
+        String       blobKeyA,
+        String       blobKeya,
         Integer      primarySequence,
         Integer      secondarySequence
     ) {
@@ -122,8 +125,6 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
         this.modifiedBy = modifiedBy;
         this.source = source;
         this.version = version;
-        this.blobKey = blobKey;
-        this.blobKeya = blobKeya;
         this.facing = facing;
         this.itemId = itemId;
         this.maxfacing = maxfacing;
@@ -134,6 +135,9 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
         this.rackName = rackName;
         this.shelfcount = shelfcount;
         this.year = year;
+        this.blobKey = blobKey;
+        this.blobKeyA = blobKeyA;
+        this.blobKeya = blobKeya;
         this.primarySequence = primarySequence;
         this.secondarySequence = secondarySequence;
     }
@@ -327,34 +331,6 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
     }
 
     /**
-     * Getter for <code>ck_outletwise_planograminformation.blob_key</code>.
-     */
-    public String getBlobKey() {
-        return this.blobKey;
-    }
-
-    /**
-     * Setter for <code>ck_outletwise_planograminformation.blob_key</code>.
-     */
-    public void setBlobKey(String blobKey) {
-        this.blobKey = blobKey;
-    }
-
-    /**
-     * Getter for <code>ck_outletwise_planograminformation.blob_keya</code>.
-     */
-    public String getBlobKeya() {
-        return this.blobKeya;
-    }
-
-    /**
-     * Setter for <code>ck_outletwise_planograminformation.blob_keya</code>.
-     */
-    public void setBlobKeya(String blobKeya) {
-        this.blobKeya = blobKeya;
-    }
-
-    /**
      * Getter for <code>ck_outletwise_planograminformation.facing</code>.
      */
     public Integer getFacing() {
@@ -495,6 +471,48 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
     }
 
     /**
+     * Getter for <code>ck_outletwise_planograminformation.blob_key</code>.
+     */
+    public String getBlobKey() {
+        return this.blobKey;
+    }
+
+    /**
+     * Setter for <code>ck_outletwise_planograminformation.blob_key</code>.
+     */
+    public void setBlobKey(String blobKey) {
+        this.blobKey = blobKey;
+    }
+
+    /**
+     * Getter for <code>ck_outletwise_planograminformation.blob_key_a</code>.
+     */
+    public String getBlobKeyA() {
+        return this.blobKeyA;
+    }
+
+    /**
+     * Setter for <code>ck_outletwise_planograminformation.blob_key_a</code>.
+     */
+    public void setBlobKeyA(String blobKeyA) {
+        this.blobKeyA = blobKeyA;
+    }
+
+    /**
+     * Getter for <code>ck_outletwise_planograminformation.blob_keya</code>.
+     */
+    public String getBlobKeya() {
+        return this.blobKeya;
+    }
+
+    /**
+     * Setter for <code>ck_outletwise_planograminformation.blob_keya</code>.
+     */
+    public void setBlobKeya(String blobKeya) {
+        this.blobKeya = blobKeya;
+    }
+
+    /**
      * Getter for
      * <code>ck_outletwise_planograminformation.primary_sequence</code>.
      */
@@ -543,8 +561,6 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
         sb.append(", ").append(modifiedBy);
         sb.append(", ").append(source);
         sb.append(", ").append(version);
-        sb.append(", ").append(blobKey);
-        sb.append(", ").append(blobKeya);
         sb.append(", ").append(facing);
         sb.append(", ").append(itemId);
         sb.append(", ").append(maxfacing);
@@ -555,6 +571,9 @@ public class CkOutletwisePlanograminformation extends CommonDataModel implements
         sb.append(", ").append(rackName);
         sb.append(", ").append(shelfcount);
         sb.append(", ").append(year);
+        sb.append(", ").append(blobKey);
+        sb.append(", ").append(blobKeyA);
+        sb.append(", ").append(blobKeya);
         sb.append(", ").append(primarySequence);
         sb.append(", ").append(secondarySequence);
 

@@ -11,15 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -57,6 +66,11 @@ public class CkStockHistory extends TableImpl<Record> {
      * The column <code>ck_stock_history.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_stock_history.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_stock_history.created_by</code>.
@@ -139,6 +153,11 @@ public class CkStockHistory extends TableImpl<Record> {
     public final TableField<Record, String> OPERATION_TYPE = createField(DSL.name("operation_type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_stock_history.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
+
+    /**
      * The column <code>ck_stock_history.previous_case_qty</code>.
      */
     public final TableField<Record, Double> PREVIOUS_CASE_QTY = createField(DSL.name("previous_case_qty"), SQLDataType.DOUBLE.nullable(false), this, "");
@@ -187,16 +206,6 @@ public class CkStockHistory extends TableImpl<Record> {
      * The column <code>ck_stock_history.location_hierarchy</code>.
      */
     public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_stock_history.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_stock_history.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     /**
      * The column <code>ck_stock_history.type</code>.
@@ -248,11 +257,10 @@ public class CkStockHistory extends TableImpl<Record> {
 
     @Override
     public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKAGKC39RFGGU9ITCDEQ04FCOE7, Keys.FKK34MPGJSQMXS8J88JXSEBR5Q1);
+        return Arrays.asList(Keys.FKAGKC39RFGGU9ITCDEQ04FCOE7);
     }
 
     private transient CkLocation _ckLocation;
-    private transient CkOutletDetails _ckOutletDetails;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
@@ -262,17 +270,6 @@ public class CkStockHistory extends TableImpl<Record> {
             _ckLocation = new CkLocation(this, Keys.FKAGKC39RFGGU9ITCDEQ04FCOE7);
 
         return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FKK34MPGJSQMXS8J88JXSEBR5Q1);
-
-        return _ckOutletDetails;
     }
 
     @Override

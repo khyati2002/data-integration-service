@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -38,6 +40,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
     private LocalDateTime endDate;
     private JSON          groupBy;
     private String        groupType;
+    private String        loginid;
     private String        name;
     private LocalDateTime startDate;
     private Double        target;
@@ -48,6 +51,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
     private String        brand;
     private String        category;
     private String        channel;
+    private String        outletcode;
     private String        outletName;
     private String        outletType;
     private String        product;
@@ -55,9 +59,6 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
     private String        skuName;
     private String        subCategory;
     private String        targetLevel;
-    private String        loginid;
-    private String        outletcode;
-    private Byte          changed;
 
     public CkProductTarget() {}
 
@@ -65,6 +66,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -78,6 +80,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         this.endDate = value.endDate;
         this.groupBy = value.groupBy;
         this.groupType = value.groupType;
+        this.loginid = value.loginid;
         this.name = value.name;
         this.startDate = value.startDate;
         this.target = value.target;
@@ -88,6 +91,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         this.brand = value.brand;
         this.category = value.category;
         this.channel = value.channel;
+        this.outletcode = value.outletcode;
         this.outletName = value.outletName;
         this.outletType = value.outletType;
         this.product = value.product;
@@ -95,15 +99,13 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         this.skuName = value.skuName;
         this.subCategory = value.subCategory;
         this.targetLevel = value.targetLevel;
-        this.loginid = value.loginid;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
     }
 
     public CkProductTarget(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -117,6 +119,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         LocalDateTime endDate,
         JSON          groupBy,
         String        groupType,
+        String        loginid,
         String        name,
         LocalDateTime startDate,
         Double        target,
@@ -127,20 +130,19 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         String        brand,
         String        category,
         String        channel,
+        String        outletcode,
         String        outletName,
         String        outletType,
         String        product,
         String        skucode,
         String        skuName,
         String        subCategory,
-        String        targetLevel,
-        String        loginid,
-        String        outletcode,
-        Byte          changed
+        String        targetLevel
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -154,6 +156,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         this.endDate = endDate;
         this.groupBy = groupBy;
         this.groupType = groupType;
+        this.loginid = loginid;
         this.name = name;
         this.startDate = startDate;
         this.target = target;
@@ -164,6 +167,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         this.brand = brand;
         this.category = category;
         this.channel = channel;
+        this.outletcode = outletcode;
         this.outletName = outletName;
         this.outletType = outletType;
         this.product = product;
@@ -171,9 +175,6 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         this.skuName = skuName;
         this.subCategory = subCategory;
         this.targetLevel = targetLevel;
-        this.loginid = loginid;
-        this.outletcode = outletcode;
-        this.changed = changed;
     }
 
     /**
@@ -216,6 +217,20 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_product_target.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_product_target.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -401,6 +416,20 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_product_target.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_product_target.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_product_target.name</code>.
      */
     public String getName() {
@@ -541,6 +570,20 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_product_target.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_product_target.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
      * Getter for <code>ck_product_target.outlet_name</code>.
      */
     public String getOutletName() {
@@ -638,48 +681,6 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         this.targetLevel = targetLevel;
     }
 
-    /**
-     * Getter for <code>ck_product_target.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_product_target.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_product_target.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_product_target.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_product_target.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_product_target.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkProductTarget (");
@@ -687,6 +688,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -700,6 +702,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         sb.append(", ").append(endDate);
         sb.append(", ").append(groupBy);
         sb.append(", ").append(groupType);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(name);
         sb.append(", ").append(startDate);
         sb.append(", ").append(target);
@@ -710,6 +713,7 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         sb.append(", ").append(brand);
         sb.append(", ").append(category);
         sb.append(", ").append(channel);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(outletName);
         sb.append(", ").append(outletType);
         sb.append(", ").append(product);
@@ -717,9 +721,6 @@ public class CkProductTarget extends CommonDataModel implements Serializable {
         sb.append(", ").append(skuName);
         sb.append(", ").append(subCategory);
         sb.append(", ").append(targetLevel);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

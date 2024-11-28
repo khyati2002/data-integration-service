@@ -11,15 +11,25 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -109,11 +119,6 @@ public class CkUserSubscriptions extends TableImpl<Record> {
     public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>ck_user_subscriptions.lobs</code>.
-     */
-    public final TableField<Record, JSON> LOBS = createField(DSL.name("lobs"), SQLDataType.JSON.nullable(false), this, "");
-
-    /**
      * The column <code>ck_user_subscriptions.loginid</code>.
      */
     public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50).nullable(false), this, "");
@@ -129,14 +134,9 @@ public class CkUserSubscriptions extends TableImpl<Record> {
     public final TableField<Record, String> TARGET_LOGIN_ID = createField(DSL.name("target_login_id"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_user_subscriptions.activation_date</code>.
+     * The column <code>ck_user_subscriptions.lobs</code>.
      */
-    public final TableField<Record, LocalDateTime> ACTIVATION_DATE = createField(DSL.name("activation_date"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
-     * The column <code>ck_user_subscriptions.mobile_number</code>.
-     */
-    public final TableField<Record, String> MOBILE_NUMBER = createField(DSL.name("mobile_number"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, JSON> LOBS = createField(DSL.name("lobs"), SQLDataType.JSON.nullable(false), this, "");
 
     /**
      * The column <code>ck_user_subscriptions.principal_login_id</code>.
@@ -149,14 +149,24 @@ public class CkUserSubscriptions extends TableImpl<Record> {
     public final TableField<Record, String> PRINCIPAL_OUTLET_CODE = createField(DSL.name("principal_outlet_code"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_user_subscriptions.target_outlet_code</code>.
+     */
+    public final TableField<Record, String> TARGET_OUTLET_CODE = createField(DSL.name("target_outlet_code"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_user_subscriptions.mobile_number</code>.
+     */
+    public final TableField<Record, String> MOBILE_NUMBER = createField(DSL.name("mobile_number"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_user_subscriptions.registration_date</code>.
      */
     public final TableField<Record, LocalDateTime> REGISTRATION_DATE = createField(DSL.name("registration_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
-     * The column <code>ck_user_subscriptions.target_outlet_code</code>.
+     * The column <code>ck_user_subscriptions.activation_date</code>.
      */
-    public final TableField<Record, String> TARGET_OUTLET_CODE = createField(DSL.name("target_outlet_code"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, LocalDateTime> ACTIVATION_DATE = createField(DSL.name("activation_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     private CkUserSubscriptions(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -203,7 +213,7 @@ public class CkUserSubscriptions extends TableImpl<Record> {
 
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_USER_SUBSCRIPTIONS_UK_BFRNHTCP1YBOCA7VC12VOXTW);
+        return Arrays.asList(Keys.KEY_CK_USER_SUBSCRIPTIONS_LOGIN_ID_TARGET_LOB_UNIQUE_IDX);
     }
 
     @Override

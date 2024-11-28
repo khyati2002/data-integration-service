@@ -6,23 +6,29 @@ package com.salescode.jooq.generated.tables;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
-import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
-import com.salescode.jooq.EnrichmentPhaseConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.Record;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -61,6 +67,11 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
      * <code>ck_payment_transaction_history.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_payment_transaction_history.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_payment_transaction_history.created_by</code>.
@@ -115,24 +126,34 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     public final TableField<Record, String> AMOUNT = createField(DSL.name("amount"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_payment_transaction_history.gateway</code>.
+     * The column <code>ck_payment_transaction_history.invoice_date</code>.
      */
-    public final TableField<Record, String> GATEWAY = createField(DSL.name("gateway"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, LocalDateTime> INVOICE_DATE = createField(DSL.name("invoice_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
-     * The column <code>ck_payment_transaction_history.payment_date</code>.
+     * The column <code>ck_payment_transaction_history.invoice_number</code>.
      */
-    public final TableField<Record, LocalDateTime> PAYMENT_DATE = createField(DSL.name("payment_date"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<Record, String> INVOICE_NUMBER = createField(DSL.name("invoice_number"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_payment_transaction_history.paymentid</code>.
+     * The column <code>ck_payment_transaction_history.loginid</code>.
      */
-    public final TableField<Record, String> PAYMENTID = createField(DSL.name("paymentid"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_payment_transaction_history.reference_number</code>.
+     * The column <code>ck_payment_transaction_history.order_number</code>.
      */
-    public final TableField<Record, String> REFERENCE_NUMBER = createField(DSL.name("reference_number"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> ORDER_NUMBER = createField(DSL.name("order_number"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_payment_transaction_history.ordered_date</code>.
+     */
+    public final TableField<Record, LocalDateTime> ORDERED_DATE = createField(DSL.name("ordered_date"), SQLDataType.LOCALDATETIME(0), this, "");
+
+    /**
+     * The column <code>ck_payment_transaction_history.pay_by_date</code>.
+     */
+    public final TableField<Record, LocalDateTime> PAY_BY_DATE = createField(DSL.name("pay_by_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_payment_transaction_history.remarks</code>.
@@ -140,9 +161,9 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     public final TableField<Record, String> REMARKS = createField(DSL.name("remarks"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_payment_transaction_history.service_name</code>.
+     * The column <code>ck_payment_transaction_history.service_provider</code>.
      */
-    public final TableField<Record, String> SERVICE_NAME = createField(DSL.name("service_name"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> SERVICE_PROVIDER = createField(DSL.name("service_provider"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_payment_transaction_history.status</code>.
@@ -150,15 +171,10 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     public final TableField<Record, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_payment_transaction_history.status_response</code>.
-     */
-    public final TableField<Record, String> STATUS_RESPONSE = createField(DSL.name("status_response"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column
-     * <code>ck_payment_transaction_history.transaction_attributes</code>.
+     * <code>ck_payment_transaction_history.status_description</code>.
      */
-    public final TableField<Record, JsonNode> TRANSACTION_ATTRIBUTES = createField(DSL.name("transaction_attributes"), SQLDataType.JSON, this, "", new JsonNodeConverter());
+    public final TableField<Record, String> STATUS_DESCRIPTION = createField(DSL.name("status_description"), SQLDataType.CLOB, this, "");
 
     /**
      * The column
@@ -173,61 +189,10 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     public final TableField<Record, JsonNode> TRANSACTION_RESPONSE_ATTRIBUTES = createField(DSL.name("transaction_response_attributes"), SQLDataType.JSON, this, "", new JsonNodeConverter());
 
     /**
-     * The column <code>ck_payment_transaction_history.invoice_date</code>.
-     */
-    public final TableField<Record, LocalDateTime> INVOICE_DATE = createField(DSL.name("invoice_date"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
-     * The column <code>ck_payment_transaction_history.invoice_number</code>.
-     */
-    public final TableField<Record, String> INVOICE_NUMBER = createField(DSL.name("invoice_number"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_payment_transaction_history.pay_by_date</code>.
-     */
-    public final TableField<Record, LocalDateTime> PAY_BY_DATE = createField(DSL.name("pay_by_date"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
-     * The column <code>ck_payment_transaction_history.service_provider</code>.
-     */
-    public final TableField<Record, String> SERVICE_PROVIDER = createField(DSL.name("service_provider"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column
-     * <code>ck_payment_transaction_history.status_description</code>.
-     */
-    public final TableField<Record, String> STATUS_DESCRIPTION = createField(DSL.name("status_description"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column
      * <code>ck_payment_transaction_history.transaction_response_reference_number</code>.
      */
     public final TableField<Record, String> TRANSACTION_RESPONSE_REFERENCE_NUMBER = createField(DSL.name("transaction_response_reference_number"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_payment_transaction_history.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_payment_transaction_history.phase</code>.
-     */
-    public final TableField<Record, EnrichmentPhase> PHASE = createField(DSL.name("phase"), SQLDataType.VARCHAR(255), this, "", new EnrichmentPhaseConverter());
-
-    /**
-     * The column <code>ck_payment_transaction_history.order_number</code>.
-     */
-    public final TableField<Record, String> ORDER_NUMBER = createField(DSL.name("order_number"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_payment_transaction_history.ordered_date</code>.
-     */
-    public final TableField<Record, LocalDateTime> ORDERED_DATE = createField(DSL.name("ordered_date"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
-     * The column <code>ck_payment_transaction_history.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPaymentTransactionHistory(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -277,23 +242,6 @@ public class CkPaymentTransactionHistory extends TableImpl<Record> {
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
         return Arrays.asList(Keys.KEY_CK_PAYMENT_TRANSACTION_HISTORY_UK_B32GOHL6R1PX98M1VWPY59X1A);
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKAYU361DI35OXCL09BKO3A7AY0);
-    }
-
-    private transient CkUser _ckUser;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKAYU361DI35OXCL09BKO3A7AY0);
-
-        return _ckUser;
     }
 
     @Override

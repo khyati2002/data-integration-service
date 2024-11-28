@@ -11,14 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -65,7 +75,7 @@ public class CkAuthResource extends TableImpl<Record> {
     /**
      * The column <code>ck_auth_resource.creation_time</code>.
      */
-    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
 
     /**
      * The column <code>ck_auth_resource.extended_attributes</code>.
@@ -75,17 +85,17 @@ public class CkAuthResource extends TableImpl<Record> {
     /**
      * The column <code>ck_auth_resource.last_modified_time</code>.
      */
-    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
+
+    /**
+     * The column <code>ck_auth_resource.lob</code>.
+     */
+    public final TableField<Record, String> LOB = createField(DSL.name("lob"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_auth_resource.modified_by</code>.
      */
     public final TableField<Record, String> MODIFIED_BY = createField(DSL.name("modified_by"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_auth_resource.source</code>.
-     */
-    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_auth_resource.version</code>.
@@ -105,7 +115,12 @@ public class CkAuthResource extends TableImpl<Record> {
     /**
      * The column <code>ck_auth_resource.operation</code>.
      */
-    public final TableField<Record, String> OPERATION = createField(DSL.name("operation"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<Record, String> OPERATION = createField(DSL.name("operation"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_auth_resource.permission</code>.
+     */
+    public final TableField<Record, String> PERMISSION = createField(DSL.name("permission"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_auth_resource.patterns</code>.
@@ -113,14 +128,14 @@ public class CkAuthResource extends TableImpl<Record> {
     public final TableField<Record, JSON> PATTERNS = createField(DSL.name("patterns"), SQLDataType.JSON, this, "");
 
     /**
+     * The column <code>ck_auth_resource.source</code>.
+     */
+    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_auth_resource.hash</code>.
      */
     public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
-
-    /**
-     * The column <code>ck_auth_resource.lob</code>.
-     */
-    public final TableField<Record, String> LOB = createField(DSL.name("lob"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_auth_resource.changed</code>.

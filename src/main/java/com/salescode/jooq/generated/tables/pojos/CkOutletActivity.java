@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -40,6 +42,8 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
     private String        gpsLongitude;
     private String        hierarchy;
     private JSON          images;
+    private String        locationHierarchy;
+    private String        loginid;
     private String        name;
     private String        referenceNumber;
     private LocalDateTime startTime;
@@ -49,11 +53,8 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
     private String        activity;
     private String        channel;
     private String        outletCategory;
-    private String        outletName;
-    private String        locationHierarchy;
-    private String        loginid;
     private String        outletcode;
-    private Byte          changed;
+    private String        outletName;
 
     public CkOutletActivity() {}
 
@@ -61,6 +62,7 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -76,6 +78,8 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
         this.gpsLongitude = value.gpsLongitude;
         this.hierarchy = value.hierarchy;
         this.images = value.images;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
         this.name = value.name;
         this.referenceNumber = value.referenceNumber;
         this.startTime = value.startTime;
@@ -85,17 +89,15 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
         this.activity = value.activity;
         this.channel = value.channel;
         this.outletCategory = value.outletCategory;
-        this.outletName = value.outletName;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
         this.outletcode = value.outletcode;
-        this.changed = value.changed;
+        this.outletName = value.outletName;
     }
 
     public CkOutletActivity(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -111,6 +113,8 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
         String        gpsLongitude,
         String        hierarchy,
         JSON          images,
+        String        locationHierarchy,
+        String        loginid,
         String        name,
         String        referenceNumber,
         LocalDateTime startTime,
@@ -120,15 +124,13 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
         String        activity,
         String        channel,
         String        outletCategory,
-        String        outletName,
-        String        locationHierarchy,
-        String        loginid,
         String        outletcode,
-        Byte          changed
+        String        outletName
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -144,6 +146,8 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
         this.gpsLongitude = gpsLongitude;
         this.hierarchy = hierarchy;
         this.images = images;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
         this.name = name;
         this.referenceNumber = referenceNumber;
         this.startTime = startTime;
@@ -153,11 +157,8 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
         this.activity = activity;
         this.channel = channel;
         this.outletCategory = outletCategory;
-        this.outletName = outletName;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
         this.outletcode = outletcode;
-        this.changed = changed;
+        this.outletName = outletName;
     }
 
     /**
@@ -200,6 +201,20 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_outlet_activity.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_outlet_activity.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -413,6 +428,34 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_outlet_activity.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_outlet_activity.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for <code>ck_outlet_activity.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_outlet_activity.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_outlet_activity.name</code>.
      */
     public String getName() {
@@ -539,48 +582,6 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_outlet_activity.outlet_name</code>.
-     */
-    public String getOutletName() {
-        return this.outletName;
-    }
-
-    /**
-     * Setter for <code>ck_outlet_activity.outlet_name</code>.
-     */
-    public void setOutletName(String outletName) {
-        this.outletName = outletName;
-    }
-
-    /**
-     * Getter for <code>ck_outlet_activity.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_outlet_activity.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_outlet_activity.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_outlet_activity.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
      * Getter for <code>ck_outlet_activity.outletcode</code>.
      */
     public String getOutletcode() {
@@ -595,17 +596,17 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_outlet_activity.changed</code>.
+     * Getter for <code>ck_outlet_activity.outlet_name</code>.
      */
-    public Byte getChanged() {
-        return this.changed;
+    public String getOutletName() {
+        return this.outletName;
     }
 
     /**
-     * Setter for <code>ck_outlet_activity.changed</code>.
+     * Setter for <code>ck_outlet_activity.outlet_name</code>.
      */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
+    public void setOutletName(String outletName) {
+        this.outletName = outletName;
     }
 
     @Override
@@ -615,6 +616,7 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -630,6 +632,8 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
         sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(hierarchy);
         sb.append(", ").append(images);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(name);
         sb.append(", ").append(referenceNumber);
         sb.append(", ").append(startTime);
@@ -639,11 +643,8 @@ public class CkOutletActivity extends CommonDataModel implements Serializable {
         sb.append(", ").append(activity);
         sb.append(", ").append(channel);
         sb.append(", ").append(outletCategory);
-        sb.append(", ").append(outletName);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
         sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
+        sb.append(", ").append(outletName);
 
         sb.append(")");
         return sb.toString();

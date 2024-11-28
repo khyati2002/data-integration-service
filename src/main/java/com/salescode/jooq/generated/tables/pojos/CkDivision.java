@@ -23,6 +23,7 @@ public class CkDivision extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -36,9 +37,8 @@ public class CkDivision extends CommonDataModel implements Serializable {
     private String       displayName;
     private String       divisionName;
     private Integer      level;
-    private String       roleAccessType;
-    private Byte         changed;
     private String       parent;
+    private String       roleAccessType;
 
     public CkDivision() {}
 
@@ -46,6 +46,7 @@ public class CkDivision extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -59,15 +60,15 @@ public class CkDivision extends CommonDataModel implements Serializable {
         this.displayName = value.displayName;
         this.divisionName = value.divisionName;
         this.level = value.level;
-        this.roleAccessType = value.roleAccessType;
-        this.changed = value.changed;
         this.parent = value.parent;
+        this.roleAccessType = value.roleAccessType;
     }
 
     public CkDivision(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -81,13 +82,13 @@ public class CkDivision extends CommonDataModel implements Serializable {
         String       displayName,
         String       divisionName,
         Integer      level,
-        String       roleAccessType,
-        Byte         changed,
-        String       parent
+        String       parent,
+        String       roleAccessType
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -101,9 +102,8 @@ public class CkDivision extends CommonDataModel implements Serializable {
         this.displayName = displayName;
         this.divisionName = divisionName;
         this.level = level;
-        this.roleAccessType = roleAccessType;
-        this.changed = changed;
         this.parent = parent;
+        this.roleAccessType = roleAccessType;
     }
 
     /**
@@ -146,6 +146,20 @@ public class CkDivision extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_division.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_division.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -331,34 +345,6 @@ public class CkDivision extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_division.role_access_type</code>.
-     */
-    public String getRoleAccessType() {
-        return this.roleAccessType;
-    }
-
-    /**
-     * Setter for <code>ck_division.role_access_type</code>.
-     */
-    public void setRoleAccessType(String roleAccessType) {
-        this.roleAccessType = roleAccessType;
-    }
-
-    /**
-     * Getter for <code>ck_division.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_division.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
      * Getter for <code>ck_division.parent</code>.
      */
     public String getParent() {
@@ -372,6 +358,20 @@ public class CkDivision extends CommonDataModel implements Serializable {
         this.parent = parent;
     }
 
+    /**
+     * Getter for <code>ck_division.role_access_type</code>.
+     */
+    public String getRoleAccessType() {
+        return this.roleAccessType;
+    }
+
+    /**
+     * Setter for <code>ck_division.role_access_type</code>.
+     */
+    public void setRoleAccessType(String roleAccessType) {
+        this.roleAccessType = roleAccessType;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkDivision (");
@@ -379,6 +379,7 @@ public class CkDivision extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -392,9 +393,8 @@ public class CkDivision extends CommonDataModel implements Serializable {
         sb.append(", ").append(displayName);
         sb.append(", ").append(divisionName);
         sb.append(", ").append(level);
-        sb.append(", ").append(roleAccessType);
-        sb.append(", ").append(changed);
         sb.append(", ").append(parent);
+        sb.append(", ").append(roleAccessType);
 
         sb.append(")");
         return sb.toString();

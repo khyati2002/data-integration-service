@@ -24,6 +24,7 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -38,17 +39,16 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     private String        beatName;
     private String        deviatedBeatCode;
     private String        deviatedBeatName;
+    private String        deviatedoutletcode;
     private String        deviationApproverId;
     private String        deviationApproverName;
+    private String        loginid;
+    private String        outletcode;
     private LocalDateTime pjpDate;
     private String        pjpId;
     private String        pjpStatus;
     private String        status;
     private String        statusRemarks;
-    private String        deviatedoutletcode;
-    private String        loginid;
-    private String        outletcode;
-    private Byte          changed;
 
     public CkPjpVisitPlan() {}
 
@@ -56,6 +56,7 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -70,23 +71,23 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
         this.beatName = value.beatName;
         this.deviatedBeatCode = value.deviatedBeatCode;
         this.deviatedBeatName = value.deviatedBeatName;
+        this.deviatedoutletcode = value.deviatedoutletcode;
         this.deviationApproverId = value.deviationApproverId;
         this.deviationApproverName = value.deviationApproverName;
+        this.loginid = value.loginid;
+        this.outletcode = value.outletcode;
         this.pjpDate = value.pjpDate;
         this.pjpId = value.pjpId;
         this.pjpStatus = value.pjpStatus;
         this.status = value.status;
         this.statusRemarks = value.statusRemarks;
-        this.deviatedoutletcode = value.deviatedoutletcode;
-        this.loginid = value.loginid;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
     }
 
     public CkPjpVisitPlan(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -101,21 +102,21 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
         String        beatName,
         String        deviatedBeatCode,
         String        deviatedBeatName,
+        String        deviatedoutletcode,
         String        deviationApproverId,
         String        deviationApproverName,
+        String        loginid,
+        String        outletcode,
         LocalDateTime pjpDate,
         String        pjpId,
         String        pjpStatus,
         String        status,
-        String        statusRemarks,
-        String        deviatedoutletcode,
-        String        loginid,
-        String        outletcode,
-        Byte          changed
+        String        statusRemarks
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -130,17 +131,16 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
         this.beatName = beatName;
         this.deviatedBeatCode = deviatedBeatCode;
         this.deviatedBeatName = deviatedBeatName;
+        this.deviatedoutletcode = deviatedoutletcode;
         this.deviationApproverId = deviationApproverId;
         this.deviationApproverName = deviationApproverName;
+        this.loginid = loginid;
+        this.outletcode = outletcode;
         this.pjpDate = pjpDate;
         this.pjpId = pjpId;
         this.pjpStatus = pjpStatus;
         this.status = status;
         this.statusRemarks = statusRemarks;
-        this.deviatedoutletcode = deviatedoutletcode;
-        this.loginid = loginid;
-        this.outletcode = outletcode;
-        this.changed = changed;
     }
 
     /**
@@ -183,6 +183,20 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_pjp_visit_plan.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_pjp_visit_plan.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -382,6 +396,20 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_pjp_visit_plan.deviatedoutletcode</code>.
+     */
+    public String getDeviatedoutletcode() {
+        return this.deviatedoutletcode;
+    }
+
+    /**
+     * Setter for <code>ck_pjp_visit_plan.deviatedoutletcode</code>.
+     */
+    public void setDeviatedoutletcode(String deviatedoutletcode) {
+        this.deviatedoutletcode = deviatedoutletcode;
+    }
+
+    /**
      * Getter for <code>ck_pjp_visit_plan.deviation_approver_id</code>.
      */
     public String getDeviationApproverId() {
@@ -407,6 +435,34 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
      */
     public void setDeviationApproverName(String deviationApproverName) {
         this.deviationApproverName = deviationApproverName;
+    }
+
+    /**
+     * Getter for <code>ck_pjp_visit_plan.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_pjp_visit_plan.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
+     * Getter for <code>ck_pjp_visit_plan.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_pjp_visit_plan.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
     }
 
     /**
@@ -479,62 +535,6 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
         this.statusRemarks = statusRemarks;
     }
 
-    /**
-     * Getter for <code>ck_pjp_visit_plan.deviatedoutletcode</code>.
-     */
-    public String getDeviatedoutletcode() {
-        return this.deviatedoutletcode;
-    }
-
-    /**
-     * Setter for <code>ck_pjp_visit_plan.deviatedoutletcode</code>.
-     */
-    public void setDeviatedoutletcode(String deviatedoutletcode) {
-        this.deviatedoutletcode = deviatedoutletcode;
-    }
-
-    /**
-     * Getter for <code>ck_pjp_visit_plan.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_pjp_visit_plan.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_pjp_visit_plan.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_pjp_visit_plan.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_pjp_visit_plan.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_pjp_visit_plan.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPjpVisitPlan (");
@@ -542,6 +542,7 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -556,17 +557,16 @@ public class CkPjpVisitPlan extends CommonDataModel implements Serializable {
         sb.append(", ").append(beatName);
         sb.append(", ").append(deviatedBeatCode);
         sb.append(", ").append(deviatedBeatName);
+        sb.append(", ").append(deviatedoutletcode);
         sb.append(", ").append(deviationApproverId);
         sb.append(", ").append(deviationApproverName);
+        sb.append(", ").append(loginid);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(pjpDate);
         sb.append(", ").append(pjpId);
         sb.append(", ").append(pjpStatus);
         sb.append(", ").append(status);
         sb.append(", ").append(statusRemarks);
-        sb.append(", ").append(deviatedoutletcode);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

@@ -23,6 +23,7 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -36,7 +37,6 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
     private String       loginid;
     private String       outletcode;
     private String       sourceip;
-    private Byte         changed;
     private String       feature;
 
     public CkConsentInfo() {}
@@ -45,6 +45,7 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -58,7 +59,6 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
         this.loginid = value.loginid;
         this.outletcode = value.outletcode;
         this.sourceip = value.sourceip;
-        this.changed = value.changed;
         this.feature = value.feature;
     }
 
@@ -66,6 +66,7 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -79,12 +80,12 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
         String       loginid,
         String       outletcode,
         String       sourceip,
-        Byte         changed,
         String       feature
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -98,7 +99,6 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
         this.loginid = loginid;
         this.outletcode = outletcode;
         this.sourceip = sourceip;
-        this.changed = changed;
         this.feature = feature;
     }
 
@@ -142,6 +142,20 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_consent_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_consent_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -327,20 +341,6 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_consent_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_consent_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
      * Getter for <code>ck_consent_info.feature</code>.
      */
     public String getFeature() {
@@ -361,6 +361,7 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -374,7 +375,6 @@ public class CkConsentInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(loginid);
         sb.append(", ").append(outletcode);
         sb.append(", ").append(sourceip);
-        sb.append(", ").append(changed);
         sb.append(", ").append(feature);
 
         sb.append(")");

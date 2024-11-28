@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,6 +25,7 @@ public class CkTempAggr extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -38,7 +40,6 @@ public class CkTempAggr extends CommonDataModel implements Serializable {
     private String       groupValue;
     private String       targetServiceInfo;
     private String       transformerId;
-    private Byte         changed;
 
     public CkTempAggr() {}
 
@@ -46,6 +47,7 @@ public class CkTempAggr extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -60,13 +62,13 @@ public class CkTempAggr extends CommonDataModel implements Serializable {
         this.groupValue = value.groupValue;
         this.targetServiceInfo = value.targetServiceInfo;
         this.transformerId = value.transformerId;
-        this.changed = value.changed;
     }
 
     public CkTempAggr(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -80,12 +82,12 @@ public class CkTempAggr extends CommonDataModel implements Serializable {
         String       entityName,
         String       groupValue,
         String       targetServiceInfo,
-        String       transformerId,
-        Byte         changed
+        String       transformerId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -100,7 +102,6 @@ public class CkTempAggr extends CommonDataModel implements Serializable {
         this.groupValue = groupValue;
         this.targetServiceInfo = targetServiceInfo;
         this.transformerId = transformerId;
-        this.changed = changed;
     }
 
     /**
@@ -143,6 +144,20 @@ public class CkTempAggr extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_temp_aggr.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_temp_aggr.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -341,20 +356,6 @@ public class CkTempAggr extends CommonDataModel implements Serializable {
         this.transformerId = transformerId;
     }
 
-    /**
-     * Getter for <code>ck_temp_aggr.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_temp_aggr.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkTempAggr (");
@@ -362,6 +363,7 @@ public class CkTempAggr extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -376,7 +378,6 @@ public class CkTempAggr extends CommonDataModel implements Serializable {
         sb.append(", ").append(groupValue);
         sb.append(", ").append(targetServiceInfo);
         sb.append(", ").append(transformerId);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

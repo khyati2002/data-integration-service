@@ -24,6 +24,7 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -36,9 +37,8 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
     private LocalDateTime dateOfRegistration;
     private LocalDateTime firstTimeLogin;
     private LocalDateTime lastAppUsed;
-    private String        loginid;
-    private Byte          changed;
     private LocalDateTime lastTimeLogin;
+    private String        loginid;
 
     public CkUserStatus() {}
 
@@ -46,6 +46,7 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -58,15 +59,15 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
         this.dateOfRegistration = value.dateOfRegistration;
         this.firstTimeLogin = value.firstTimeLogin;
         this.lastAppUsed = value.lastAppUsed;
-        this.loginid = value.loginid;
-        this.changed = value.changed;
         this.lastTimeLogin = value.lastTimeLogin;
+        this.loginid = value.loginid;
     }
 
     public CkUserStatus(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -79,13 +80,13 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
         LocalDateTime dateOfRegistration,
         LocalDateTime firstTimeLogin,
         LocalDateTime lastAppUsed,
-        String        loginid,
-        Byte          changed,
-        LocalDateTime lastTimeLogin
+        LocalDateTime lastTimeLogin,
+        String        loginid
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -98,9 +99,8 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
         this.dateOfRegistration = dateOfRegistration;
         this.firstTimeLogin = firstTimeLogin;
         this.lastAppUsed = lastAppUsed;
-        this.loginid = loginid;
-        this.changed = changed;
         this.lastTimeLogin = lastTimeLogin;
+        this.loginid = loginid;
     }
 
     /**
@@ -143,6 +143,20 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_user_status.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_user_status.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -314,34 +328,6 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_user_status.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_user_status.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_user_status.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_user_status.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
      * Getter for <code>ck_user_status.last_time_login</code>.
      */
     public LocalDateTime getLastTimeLogin() {
@@ -355,6 +341,20 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
         this.lastTimeLogin = lastTimeLogin;
     }
 
+    /**
+     * Getter for <code>ck_user_status.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_user_status.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkUserStatus (");
@@ -362,6 +362,7 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -374,9 +375,8 @@ public class CkUserStatus extends CommonDataModel implements Serializable {
         sb.append(", ").append(dateOfRegistration);
         sb.append(", ").append(firstTimeLogin);
         sb.append(", ").append(lastAppUsed);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
         sb.append(", ").append(lastTimeLogin);
+        sb.append(", ").append(loginid);
 
         sb.append(")");
         return sb.toString();

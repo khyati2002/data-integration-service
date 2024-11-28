@@ -7,7 +7,6 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -56,11 +55,11 @@ public class CkLocation extends CommonDataModel implements Serializable {
     private String       zoneCode;
     private String       source;
     private String       town;
-    private JSON         accessibleBy;
     private String       hash;
     private String       district;
     private String       districtCode;
     private String       townCode;
+    private Integer      rowid;
     private Byte         changed;
     private String       salescodeId;
 
@@ -102,11 +101,11 @@ public class CkLocation extends CommonDataModel implements Serializable {
         this.zoneCode = value.zoneCode;
         this.source = value.source;
         this.town = value.town;
-        this.accessibleBy = value.accessibleBy;
         this.hash = value.hash;
         this.district = value.district;
         this.districtCode = value.districtCode;
         this.townCode = value.townCode;
+        this.rowid = value.rowid;
         this.changed = value.changed;
         this.salescodeId = value.salescodeId;
     }
@@ -147,11 +146,11 @@ public class CkLocation extends CommonDataModel implements Serializable {
         String       zoneCode,
         String       source,
         String       town,
-        JSON         accessibleBy,
         String       hash,
         String       district,
         String       districtCode,
         String       townCode,
+        Integer      rowid,
         Byte         changed,
         String       salescodeId
     ) {
@@ -190,11 +189,11 @@ public class CkLocation extends CommonDataModel implements Serializable {
         this.zoneCode = zoneCode;
         this.source = source;
         this.town = town;
-        this.accessibleBy = accessibleBy;
         this.hash = hash;
         this.district = district;
         this.districtCode = districtCode;
         this.townCode = townCode;
+        this.rowid = rowid;
         this.changed = changed;
         this.salescodeId = salescodeId;
     }
@@ -690,20 +689,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_location.accessible_by</code>.
-     */
-    public JSON getAccessibleBy() {
-        return this.accessibleBy;
-    }
-
-    /**
-     * Setter for <code>ck_location.accessible_by</code>.
-     */
-    public void setAccessibleBy(JSON accessibleBy) {
-        this.accessibleBy = accessibleBy;
-    }
-
-    /**
      * Getter for <code>ck_location.hash</code>.
      */
     public String getHash() {
@@ -757,6 +742,20 @@ public class CkLocation extends CommonDataModel implements Serializable {
      */
     public void setTownCode(String townCode) {
         this.townCode = townCode;
+    }
+
+    /**
+     * Getter for <code>ck_location.rowid</code>.
+     */
+    public Integer getRowid() {
+        return this.rowid;
+    }
+
+    /**
+     * Setter for <code>ck_location.rowid</code>.
+     */
+    public void setRowid(Integer rowid) {
+        this.rowid = rowid;
     }
 
     /**
@@ -826,11 +825,11 @@ public class CkLocation extends CommonDataModel implements Serializable {
         sb.append(", ").append(zoneCode);
         sb.append(", ").append(source);
         sb.append(", ").append(town);
-        sb.append(", ").append(accessibleBy);
         sb.append(", ").append(hash);
         sb.append(", ").append(district);
         sb.append(", ").append(districtCode);
         sb.append(", ").append(townCode);
+        sb.append(", ").append(rowid);
         sb.append(", ").append(changed);
         sb.append(", ").append(salescodeId);
 

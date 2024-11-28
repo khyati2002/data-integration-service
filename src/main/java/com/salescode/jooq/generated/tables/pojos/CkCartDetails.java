@@ -23,6 +23,7 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -33,19 +34,18 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
     private String       source;
     private Integer      version;
     private Double       amount;
+    private String       articleCode;
     private String       batchCode;
     private Double       caseQuantity;
     private String       userHierarchy;
     private Boolean      locked;
+    private String       loginid;
     private Double       otherUnitQuantity;
+    private String       outletcode;
     private Double       pieceQuantity;
     private String       remarks;
     private String       skuCode;
-    private String       loginid;
-    private String       outletcode;
-    private String       articleCode;
     private String       type;
-    private Byte         changed;
 
     public CkCartDetails() {}
 
@@ -53,6 +53,7 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -63,25 +64,25 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
         this.source = value.source;
         this.version = value.version;
         this.amount = value.amount;
+        this.articleCode = value.articleCode;
         this.batchCode = value.batchCode;
         this.caseQuantity = value.caseQuantity;
         this.userHierarchy = value.userHierarchy;
         this.locked = value.locked;
+        this.loginid = value.loginid;
         this.otherUnitQuantity = value.otherUnitQuantity;
+        this.outletcode = value.outletcode;
         this.pieceQuantity = value.pieceQuantity;
         this.remarks = value.remarks;
         this.skuCode = value.skuCode;
-        this.loginid = value.loginid;
-        this.outletcode = value.outletcode;
-        this.articleCode = value.articleCode;
         this.type = value.type;
-        this.changed = value.changed;
     }
 
     public CkCartDetails(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -92,23 +93,23 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
         String       source,
         Integer      version,
         Double       amount,
+        String       articleCode,
         String       batchCode,
         Double       caseQuantity,
         String       userHierarchy,
         Boolean      locked,
+        String       loginid,
         Double       otherUnitQuantity,
+        String       outletcode,
         Double       pieceQuantity,
         String       remarks,
         String       skuCode,
-        String       loginid,
-        String       outletcode,
-        String       articleCode,
-        String       type,
-        Byte         changed
+        String       type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -119,19 +120,18 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
         this.source = source;
         this.version = version;
         this.amount = amount;
+        this.articleCode = articleCode;
         this.batchCode = batchCode;
         this.caseQuantity = caseQuantity;
         this.userHierarchy = userHierarchy;
         this.locked = locked;
+        this.loginid = loginid;
         this.otherUnitQuantity = otherUnitQuantity;
+        this.outletcode = outletcode;
         this.pieceQuantity = pieceQuantity;
         this.remarks = remarks;
         this.skuCode = skuCode;
-        this.loginid = loginid;
-        this.outletcode = outletcode;
-        this.articleCode = articleCode;
         this.type = type;
-        this.changed = changed;
     }
 
     /**
@@ -174,6 +174,20 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_cart_details.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_cart_details.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -317,6 +331,20 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_cart_details.article_code</code>.
+     */
+    public String getArticleCode() {
+        return this.articleCode;
+    }
+
+    /**
+     * Setter for <code>ck_cart_details.article_code</code>.
+     */
+    public void setArticleCode(String articleCode) {
+        this.articleCode = articleCode;
+    }
+
+    /**
      * Getter for <code>ck_cart_details.batch_code</code>.
      */
     public String getBatchCode() {
@@ -373,6 +401,20 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_cart_details.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_cart_details.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_cart_details.other_unit_quantity</code>.
      */
     public Double getOtherUnitQuantity() {
@@ -384,6 +426,20 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
      */
     public void setOtherUnitQuantity(Double otherUnitQuantity) {
         this.otherUnitQuantity = otherUnitQuantity;
+    }
+
+    /**
+     * Getter for <code>ck_cart_details.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_cart_details.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
     }
 
     /**
@@ -429,48 +485,6 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_cart_details.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_cart_details.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_cart_details.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_cart_details.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_cart_details.article_code</code>.
-     */
-    public String getArticleCode() {
-        return this.articleCode;
-    }
-
-    /**
-     * Setter for <code>ck_cart_details.article_code</code>.
-     */
-    public void setArticleCode(String articleCode) {
-        this.articleCode = articleCode;
-    }
-
-    /**
      * Getter for <code>ck_cart_details.type</code>.
      */
     public String getType() {
@@ -484,20 +498,6 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
         this.type = type;
     }
 
-    /**
-     * Getter for <code>ck_cart_details.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_cart_details.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkCartDetails (");
@@ -505,6 +505,7 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -515,19 +516,18 @@ public class CkCartDetails extends CommonDataModel implements Serializable {
         sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(amount);
+        sb.append(", ").append(articleCode);
         sb.append(", ").append(batchCode);
         sb.append(", ").append(caseQuantity);
         sb.append(", ").append(userHierarchy);
         sb.append(", ").append(locked);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(otherUnitQuantity);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(pieceQuantity);
         sb.append(", ").append(remarks);
         sb.append(", ").append(skuCode);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(articleCode);
         sb.append(", ").append(type);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

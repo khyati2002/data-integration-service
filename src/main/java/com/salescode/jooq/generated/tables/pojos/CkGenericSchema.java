@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,6 +25,7 @@ public class CkGenericSchema extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -35,7 +37,6 @@ public class CkGenericSchema extends CommonDataModel implements Serializable {
     private Integer      version;
     private String       name;
     private JSON         spec;
-    private Byte         changed;
 
     public CkGenericSchema() {}
 
@@ -43,6 +44,7 @@ public class CkGenericSchema extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -54,13 +56,13 @@ public class CkGenericSchema extends CommonDataModel implements Serializable {
         this.version = value.version;
         this.name = value.name;
         this.spec = value.spec;
-        this.changed = value.changed;
     }
 
     public CkGenericSchema(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -71,12 +73,12 @@ public class CkGenericSchema extends CommonDataModel implements Serializable {
         String       source,
         Integer      version,
         String       name,
-        JSON         spec,
-        Byte         changed
+        JSON         spec
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -88,7 +90,6 @@ public class CkGenericSchema extends CommonDataModel implements Serializable {
         this.version = version;
         this.name = name;
         this.spec = spec;
-        this.changed = changed;
     }
 
     /**
@@ -131,6 +132,20 @@ public class CkGenericSchema extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_generic_schema.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_generic_schema.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -287,20 +302,6 @@ public class CkGenericSchema extends CommonDataModel implements Serializable {
         this.spec = spec;
     }
 
-    /**
-     * Getter for <code>ck_generic_schema.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_generic_schema.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkGenericSchema (");
@@ -308,6 +309,7 @@ public class CkGenericSchema extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -319,7 +321,6 @@ public class CkGenericSchema extends CommonDataModel implements Serializable {
         sb.append(", ").append(version);
         sb.append(", ").append(name);
         sb.append(", ").append(spec);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

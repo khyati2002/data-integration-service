@@ -12,15 +12,26 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Identity;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -67,7 +78,7 @@ public class CkStock extends TableImpl<Record> {
     /**
      * The column <code>ck_stock.creation_time</code>.
      */
-    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, Date> CREATION_TIME = createField(DSL.name("creation_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
 
     /**
      * The column <code>ck_stock.extended_attributes</code>.
@@ -75,14 +86,9 @@ public class CkStock extends TableImpl<Record> {
     public final TableField<Record, JsonNode> EXTENDED_ATTRIBUTES = createField(DSL.name("extended_attributes"), SQLDataType.JSON, this, "", new JsonNodeConverter());
 
     /**
-     * The column <code>ck_stock.hash</code>.
-     */
-    public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
-
-    /**
      * The column <code>ck_stock.last_modified_time</code>.
      */
-    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(0), this, "", new DateConverter());
+    public final TableField<Record, Date> LAST_MODIFIED_TIME = createField(DSL.name("last_modified_time"), SQLDataType.LOCALDATETIME(6), this, "", new DateConverter());
 
     /**
      * The column <code>ck_stock.lob</code>.
@@ -95,19 +101,14 @@ public class CkStock extends TableImpl<Record> {
     public final TableField<Record, String> MODIFIED_BY = createField(DSL.name("modified_by"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_stock.source</code>.
-     */
-    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_stock.version</code>.
      */
-    public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
+    public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>ck_stock.batch_code</code>.
+     * The column <code>ck_stock.area</code>.
      */
-    public final TableField<Record, String> BATCH_CODE = createField(DSL.name("batch_code"), SQLDataType.VARCHAR(200), this, "");
+    public final TableField<Record, String> AREA = createField(DSL.name("area"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_stock.batch_id</code>.
@@ -135,9 +136,19 @@ public class CkStock extends TableImpl<Record> {
     public final TableField<Record, String> CHANNEL = createField(DSL.name("channel"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_stock.city</code>.
+     */
+    public final TableField<Record, String> CITY = createField(DSL.name("city"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_stock.comp_key</code>.
      */
     public final TableField<Record, String> COMP_KEY = createField(DSL.name("comp_key"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_stock.country</code>.
+     */
+    public final TableField<Record, String> COUNTRY = createField(DSL.name("country"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_stock.design</code>.
@@ -170,6 +181,11 @@ public class CkStock extends TableImpl<Record> {
     public final TableField<Record, Double> QTY = createField(DSL.name("qty"), SQLDataType.FLOAT, this, "");
 
     /**
+     * The column <code>ck_stock.region</code>.
+     */
+    public final TableField<Record, String> REGION = createField(DSL.name("region"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_stock.sku_code</code>.
      */
     public final TableField<Record, String> SKU_CODE = createField(DSL.name("sku_code"), SQLDataType.VARCHAR(255), this, "");
@@ -180,19 +196,19 @@ public class CkStock extends TableImpl<Record> {
     public final TableField<Record, String> SKU_DESC = createField(DSL.name("sku_desc"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_stock.state</code>.
+     */
+    public final TableField<Record, String> STATE = createField(DSL.name("state"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_stock.stock_received</code>.
      */
-    public final TableField<Record, LocalDateTime> STOCK_RECEIVED = createField(DSL.name("stock_received"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<Record, LocalDateTime> STOCK_RECEIVED = createField(DSL.name("stock_received"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
      * The column <code>ck_stock.sub_cat</code>.
      */
     public final TableField<Record, String> SUB_CAT = createField(DSL.name("sub_cat"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_stock.supplier</code>.
-     */
-    public final TableField<Record, String> SUPPLIER = createField(DSL.name("supplier"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_stock.trade_type</code>.
@@ -202,7 +218,7 @@ public class CkStock extends TableImpl<Record> {
     /**
      * The column <code>ck_stock.transfer_date</code>.
      */
-    public final TableField<Record, LocalDateTime> TRANSFER_DATE = createField(DSL.name("transfer_date"), SQLDataType.LOCALDATETIME(0), this, "");
+    public final TableField<Record, LocalDateTime> TRANSFER_DATE = createField(DSL.name("transfer_date"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
      * The column <code>ck_stock.type</code>.
@@ -215,9 +231,39 @@ public class CkStock extends TableImpl<Record> {
     public final TableField<Record, String> WAREHOUSE_CODE = createField(DSL.name("warehouse_code"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_stock.zone</code>.
+     */
+    public final TableField<Record, String> ZONE = createField(DSL.name("zone"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_stock.hierarchy</code>.
+     */
+    public final TableField<Record, String> HIERARCHY = createField(DSL.name("hierarchy"), SQLDataType.VARCHAR(500), this, "");
+
+    /**
      * The column <code>ck_stock.location_hierarchy</code>.
      */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column <code>ck_stock.supplier</code>.
+     */
+    public final TableField<Record, String> SUPPLIER = createField(DSL.name("supplier"), SQLDataType.VARCHAR(50), this, "");
+
+    /**
+     * The column <code>ck_stock.fk_stock</code>.
+     */
+    public final TableField<Record, String> FK_STOCK = createField(DSL.name("fk_stock"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_stock.source</code>.
+     */
+    public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_stock.batch_code</code>.
+     */
+    public final TableField<Record, String> BATCH_CODE = createField(DSL.name("batch_code"), SQLDataType.VARCHAR(200), this, "");
 
     /**
      * The column <code>ck_stock.outletcode</code>.
@@ -225,9 +271,14 @@ public class CkStock extends TableImpl<Record> {
     public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
 
     /**
-     * The column <code>ck_stock.fk_stock</code>.
+     * The column <code>ck_stock.hash</code>.
      */
-    public final TableField<Record, String> FK_STOCK = createField(DSL.name("fk_stock"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>ck_stock.rowid</code>.
+     */
+    public final TableField<Record, Integer> ROWID = createField(DSL.name("rowid"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>ck_stock.changed</code>.
@@ -279,7 +330,12 @@ public class CkStock extends TableImpl<Record> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.CK_STOCK_IDX_CK_STOCK_FK_STOCK, Indexes.CK_STOCK_STOCK_IDX);
+        return Arrays.asList(Indexes.CK_STOCK_BATCH_SKU_IDX, Indexes.CK_STOCK_HASH_IDX, Indexes.CK_STOCK_IDX_CK_STOCK_FK_STOCK, Indexes.CK_STOCK_STOCK_IDX);
+    }
+
+    @Override
+    public Identity<Record, Integer> getIdentity() {
+        return (Identity<Record, Integer>) super.getIdentity();
     }
 
     @Override
@@ -288,12 +344,30 @@ public class CkStock extends TableImpl<Record> {
     }
 
     @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKNIRF9R01OCRIDG8PRGJIAPC07, Keys.FKJPV9GEYR0FCLT05EBXTIWK0PA);
+    public List<UniqueKey<Record>> getUniqueKeys() {
+        return Arrays.asList(Keys.KEY_CK_STOCK_UK_COMPOSITE_STOCK, Keys.KEY_CK_STOCK_UK_OHGY9WFPGD5DSLU3WBKJTAIHM, Keys.KEY_CK_STOCK_ROWID);
     }
 
+    @Override
+    public List<ForeignKey<Record, ?>> getReferences() {
+        return Arrays.asList(Keys.FKMAV1AQ66NW64CH6UYLVBIHIAX, Keys.FKNIRF9R01OCRIDG8PRGJIAPC07, Keys.FKLJDIN2GSD3QERGU0F5K3PEMTI, Keys.FKJPV9GEYR0FCLT05EBXTIWK0PA);
+    }
+
+    private transient CkHierarchyMetadata _ckHierarchyMetadata;
     private transient CkLocation _ckLocation;
+    private transient CkUser _ckUser;
     private transient CkOutletDetails _ckOutletDetails;
+
+    /**
+     * Get the implicit join path to the
+     * <code>ckroot.ck_hierarchy_metadata</code> table.
+     */
+    public CkHierarchyMetadata ckHierarchyMetadata() {
+        if (_ckHierarchyMetadata == null)
+            _ckHierarchyMetadata = new CkHierarchyMetadata(this, Keys.FKMAV1AQ66NW64CH6UYLVBIHIAX);
+
+        return _ckHierarchyMetadata;
+    }
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_location</code> table.
@@ -303,6 +377,16 @@ public class CkStock extends TableImpl<Record> {
             _ckLocation = new CkLocation(this, Keys.FKNIRF9R01OCRIDG8PRGJIAPC07);
 
         return _ckLocation;
+    }
+
+    /**
+     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
+     */
+    public CkUser ckUser() {
+        if (_ckUser == null)
+            _ckUser = new CkUser(this, Keys.FKLJDIN2GSD3QERGU0F5K3PEMTI);
+
+        return _ckUser;
     }
 
     /**

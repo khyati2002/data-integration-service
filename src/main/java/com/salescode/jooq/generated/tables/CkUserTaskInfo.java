@@ -11,15 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -129,11 +138,6 @@ public class CkUserTaskInfo extends TableImpl<Record> {
     public final TableField<Record, String> HIERARCHY = createField(DSL.name("hierarchy"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_user_task_info.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_user_task_info.priority</code>.
      */
     public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER, this, "");
@@ -167,6 +171,11 @@ public class CkUserTaskInfo extends TableImpl<Record> {
      * The column <code>ck_user_task_info.task_name</code>.
      */
     public final TableField<Record, String> TASK_NAME = createField(DSL.name("task_name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
+     * The column <code>ck_user_task_info.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
 
     private CkUserTaskInfo(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

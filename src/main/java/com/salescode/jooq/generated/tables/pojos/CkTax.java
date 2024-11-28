@@ -23,6 +23,7 @@ public class CkTax extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -37,7 +38,8 @@ public class CkTax extends CommonDataModel implements Serializable {
     private String       state;
     private Double       taxRate;
     private String       taxType;
-    private Byte         changed;
+    private Integer      priority;
+    private String       taxGroup;
 
     public CkTax() {}
 
@@ -45,6 +47,7 @@ public class CkTax extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -59,13 +62,15 @@ public class CkTax extends CommonDataModel implements Serializable {
         this.state = value.state;
         this.taxRate = value.taxRate;
         this.taxType = value.taxType;
-        this.changed = value.changed;
+        this.priority = value.priority;
+        this.taxGroup = value.taxGroup;
     }
 
     public CkTax(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -80,11 +85,13 @@ public class CkTax extends CommonDataModel implements Serializable {
         String       state,
         Double       taxRate,
         String       taxType,
-        Byte         changed
+        Integer      priority,
+        String       taxGroup
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -99,7 +106,8 @@ public class CkTax extends CommonDataModel implements Serializable {
         this.state = state;
         this.taxRate = taxRate;
         this.taxType = taxType;
-        this.changed = changed;
+        this.priority = priority;
+        this.taxGroup = taxGroup;
     }
 
     /**
@@ -142,6 +150,20 @@ public class CkTax extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_tax.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_tax.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -341,17 +363,31 @@ public class CkTax extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_tax.changed</code>.
+     * Getter for <code>ck_tax.priority</code>.
      */
-    public Byte getChanged() {
-        return this.changed;
+    public Integer getPriority() {
+        return this.priority;
     }
 
     /**
-     * Setter for <code>ck_tax.changed</code>.
+     * Setter for <code>ck_tax.priority</code>.
      */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    /**
+     * Getter for <code>ck_tax.tax_group</code>.
+     */
+    public String getTaxGroup() {
+        return this.taxGroup;
+    }
+
+    /**
+     * Setter for <code>ck_tax.tax_group</code>.
+     */
+    public void setTaxGroup(String taxGroup) {
+        this.taxGroup = taxGroup;
     }
 
     @Override
@@ -361,6 +397,7 @@ public class CkTax extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -375,7 +412,8 @@ public class CkTax extends CommonDataModel implements Serializable {
         sb.append(", ").append(state);
         sb.append(", ").append(taxRate);
         sb.append(", ").append(taxType);
-        sb.append(", ").append(changed);
+        sb.append(", ").append(priority);
+        sb.append(", ").append(taxGroup);
 
         sb.append(")");
         return sb.toString();

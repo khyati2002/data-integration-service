@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -40,6 +42,8 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
     private String        gpsLongitude;
     private String        hierarchy;
     private JSON          images;
+    private String        locationHierarchy;
+    private String        loginid;
     private String        name;
     private String        referenceNumber;
     private LocalDateTime startTime;
@@ -49,17 +53,14 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
     private String        brand;
     private LocalDateTime date;
     private Double        growth;
+    private String        invoiceNumber;
+    private String        outletcode;
     private String        recommendationType;
     private Double        recommendedVolume;
     private Double        relevance;
     private String        relevanceLevel;
     private String        skuCode;
     private String        status;
-    private String        locationHierarchy;
-    private String        loginid;
-    private String        outletcode;
-    private String        invoiceNumber;
-    private Byte          changed;
 
     public CkPostaggregateOutletProductRecommendedActivityDaily() {}
 
@@ -67,6 +68,7 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -82,6 +84,8 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         this.gpsLongitude = value.gpsLongitude;
         this.hierarchy = value.hierarchy;
         this.images = value.images;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
         this.name = value.name;
         this.referenceNumber = value.referenceNumber;
         this.startTime = value.startTime;
@@ -91,23 +95,21 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         this.brand = value.brand;
         this.date = value.date;
         this.growth = value.growth;
+        this.invoiceNumber = value.invoiceNumber;
+        this.outletcode = value.outletcode;
         this.recommendationType = value.recommendationType;
         this.recommendedVolume = value.recommendedVolume;
         this.relevance = value.relevance;
         this.relevanceLevel = value.relevanceLevel;
         this.skuCode = value.skuCode;
         this.status = value.status;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.outletcode = value.outletcode;
-        this.invoiceNumber = value.invoiceNumber;
-        this.changed = value.changed;
     }
 
     public CkPostaggregateOutletProductRecommendedActivityDaily(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -123,6 +125,8 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         String        gpsLongitude,
         String        hierarchy,
         JSON          images,
+        String        locationHierarchy,
+        String        loginid,
         String        name,
         String        referenceNumber,
         LocalDateTime startTime,
@@ -132,21 +136,19 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         String        brand,
         LocalDateTime date,
         Double        growth,
+        String        invoiceNumber,
+        String        outletcode,
         String        recommendationType,
         Double        recommendedVolume,
         Double        relevance,
         String        relevanceLevel,
         String        skuCode,
-        String        status,
-        String        locationHierarchy,
-        String        loginid,
-        String        outletcode,
-        String        invoiceNumber,
-        Byte          changed
+        String        status
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -162,6 +164,8 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         this.gpsLongitude = gpsLongitude;
         this.hierarchy = hierarchy;
         this.images = images;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
         this.name = name;
         this.referenceNumber = referenceNumber;
         this.startTime = startTime;
@@ -171,17 +175,14 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         this.brand = brand;
         this.date = date;
         this.growth = growth;
+        this.invoiceNumber = invoiceNumber;
+        this.outletcode = outletcode;
         this.recommendationType = recommendationType;
         this.recommendedVolume = recommendedVolume;
         this.relevance = relevance;
         this.relevanceLevel = relevanceLevel;
         this.skuCode = skuCode;
         this.status = status;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.outletcode = outletcode;
-        this.invoiceNumber = invoiceNumber;
-        this.changed = changed;
     }
 
     /**
@@ -230,6 +231,22 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -474,6 +491,38 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
 
     /**
      * Getter for
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
+     * Getter for
      * <code>ck_postaggregate_outlet_product_recommended_activity_daily.name</code>.
      */
     public String getName() {
@@ -618,6 +667,38 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
 
     /**
      * Getter for
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.invoice_number</code>.
+     */
+    public String getInvoiceNumber() {
+        return this.invoiceNumber;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.invoice_number</code>.
+     */
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
+    /**
+     * Getter for
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
+     * Getter for
      * <code>ck_postaggregate_outlet_product_recommended_activity_daily.recommendation_type</code>.
      */
     public String getRecommendationType() {
@@ -712,86 +793,6 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         this.status = status;
     }
 
-    /**
-     * Getter for
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.invoice_number</code>.
-     */
-    public String getInvoiceNumber() {
-        return this.invoiceNumber;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.invoice_number</code>.
-     */
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPostaggregateOutletProductRecommendedActivityDaily (");
@@ -799,6 +800,7 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -814,6 +816,8 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(hierarchy);
         sb.append(", ").append(images);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(name);
         sb.append(", ").append(referenceNumber);
         sb.append(", ").append(startTime);
@@ -823,17 +827,14 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends Common
         sb.append(", ").append(brand);
         sb.append(", ").append(date);
         sb.append(", ").append(growth);
+        sb.append(", ").append(invoiceNumber);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(recommendationType);
         sb.append(", ").append(recommendedVolume);
         sb.append(", ").append(relevance);
         sb.append(", ").append(relevanceLevel);
         sb.append(", ").append(skuCode);
         sb.append(", ").append(status);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(invoiceNumber);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

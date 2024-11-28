@@ -12,15 +12,25 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -58,6 +68,11 @@ public class CkRecommendedOrder extends TableImpl<Record> {
      * The column <code>ck_recommended_order.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_recommended_order.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_recommended_order.created_by</code>.
@@ -170,6 +185,11 @@ public class CkRecommendedOrder extends TableImpl<Record> {
     public final TableField<Record, Double> OTHER_QUANTITY = createField(DSL.name("other_quantity"), SQLDataType.DOUBLE.nullable(false), this, "");
 
     /**
+     * The column <code>ck_recommended_order.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_recommended_order.outlet_prob</code>.
      */
     public final TableField<Record, Double> OUTLET_PROB = createField(DSL.name("outlet_prob"), SQLDataType.DOUBLE.nullable(false), this, "");
@@ -235,16 +255,6 @@ public class CkRecommendedOrder extends TableImpl<Record> {
     public final TableField<Record, Double> TOTAL_QUANTITY = createField(DSL.name("total_quantity"), SQLDataType.FLOAT.nullable(false), this, "");
 
     /**
-     * The column <code>ck_recommended_order.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_recommended_order.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
      * The column <code>ck_recommended_order.basket_id</code>.
      */
     public final TableField<Record, String> BASKET_ID = createField(DSL.name("basket_id"), SQLDataType.VARCHAR(255), this, "");
@@ -289,30 +299,12 @@ public class CkRecommendedOrder extends TableImpl<Record> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.CK_RECOMMENDED_ORDER_LAST_MODIFIED_TIME_IDX);
+        return Arrays.asList(Indexes.CK_RECOMMENDED_ORDER_CK_RECOMMENDED_ORDER_CHANNEL_INDEX, Indexes.CK_RECOMMENDED_ORDER_CK_RECOMMENDED_ORDER_END_DATE_INDEX, Indexes.CK_RECOMMENDED_ORDER_CK_RECOMMENDED_ORDER_OUTLET_INDEX, Indexes.CK_RECOMMENDED_ORDER_CK_RECOMMENDED_ORDER_START_DATE_INDEX, Indexes.CK_RECOMMENDED_ORDER_LAST_MODIFIED_TIME_IDX);
     }
 
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_RECOMMENDED_ORDER_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK4011QRLFXJQVS9NUBLY33FDDB);
-    }
-
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK4011QRLFXJQVS9NUBLY33FDDB);
-
-        return _ckOutletDetails;
     }
 
     @Override

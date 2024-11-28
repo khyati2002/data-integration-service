@@ -12,15 +12,26 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -62,6 +73,12 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends TableI
      * <code>ck_postaggregate_outlet_product_recommended_activity_daily.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column
@@ -155,6 +172,18 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends TableI
 
     /**
      * The column
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
+
+    /**
+     * The column
      * <code>ck_postaggregate_outlet_product_recommended_activity_daily.name</code>.
      */
     public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
@@ -209,6 +238,18 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends TableI
 
     /**
      * The column
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.invoice_number</code>.
+     */
+    public final TableField<Record, String> INVOICE_NUMBER = createField(DSL.name("invoice_number"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
+     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
      * <code>ck_postaggregate_outlet_product_recommended_activity_daily.recommendation_type</code>.
      */
     public final TableField<Record, String> RECOMMENDATION_TYPE = createField(DSL.name("recommendation_type"), SQLDataType.VARCHAR(255), this, "");
@@ -242,36 +283,6 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends TableI
      * <code>ck_postaggregate_outlet_product_recommended_activity_daily.status</code>.
      */
     public final TableField<Record, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.invoice_number</code>.
-     */
-    public final TableField<Record, String> INVOICE_NUMBER = createField(DSL.name("invoice_number"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_product_recommended_activity_daily.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPostaggregateOutletProductRecommendedActivityDaily(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -325,46 +336,6 @@ public class CkPostaggregateOutletProductRecommendedActivityDaily extends TableI
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_POSTAGGREGATE_OUTLET_PRODUCT_RECOMMENDED_ACTIVITY_DAILY_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK45T7Y0WWJMKLXV06RRJ9CXOYU, Keys.FK6PVFEMA62Y5IRYOQFHGGSTUCQ, Keys.FK6ABRE0TSK1S678BG8Q4FMWGYA);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FK45T7Y0WWJMKLXV06RRJ9CXOYU);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FK6PVFEMA62Y5IRYOQFHGGSTUCQ);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK6ABRE0TSK1S678BG8Q4FMWGYA);
-
-        return _ckOutletDetails;
     }
 
     @Override

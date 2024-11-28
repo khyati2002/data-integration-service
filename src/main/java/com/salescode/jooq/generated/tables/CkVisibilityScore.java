@@ -11,15 +11,22 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -57,6 +64,11 @@ public class CkVisibilityScore extends TableImpl<Record> {
      * The column <code>ck_visibility_score.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_visibility_score.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_visibility_score.created_by</code>.
@@ -114,6 +126,21 @@ public class CkVisibilityScore extends TableImpl<Record> {
     public final TableField<Record, String> HIERARCHY = createField(DSL.name("hierarchy"), SQLDataType.CLOB, this, "");
 
     /**
+     * The column <code>ck_visibility_score.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_visibility_score.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_visibility_score.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_visibility_score.start_date</code>.
      */
     public final TableField<Record, LocalDateTime> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "");
@@ -127,26 +154,6 @@ public class CkVisibilityScore extends TableImpl<Record> {
      * The column <code>ck_visibility_score.visibility_id</code>.
      */
     public final TableField<Record, String> VISIBILITY_ID = createField(DSL.name("visibility_id"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_visibility_score.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_visibility_score.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_visibility_score.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_visibility_score.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkVisibilityScore(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -189,46 +196,6 @@ public class CkVisibilityScore extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_VISIBILITY_SCORE_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKEPEJ358E64A32E569B9NAKY96, Keys.FKILDAXB9456L789N7MVN20J8H5, Keys.FK8HNMB3RQ0U7AOJN385S0GY4ES);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKEPEJ358E64A32E569B9NAKY96);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKILDAXB9456L789N7MVN20J8H5);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK8HNMB3RQ0U7AOJN385S0GY4ES);
-
-        return _ckOutletDetails;
     }
 
     @Override

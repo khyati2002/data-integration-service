@@ -12,14 +12,25 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Identity;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -114,14 +125,14 @@ public class CkHierarchyMetadata extends TableImpl<Record> {
     public final TableField<Record, String> SOURCE = createField(DSL.name("source"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_hierarchy_metadata.accessible_by</code>.
-     */
-    public final TableField<Record, JSON> ACCESSIBLE_BY = createField(DSL.name("accessible_by"), SQLDataType.JSON, this, "");
-
-    /**
      * The column <code>ck_hierarchy_metadata.hash</code>.
      */
     public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>ck_hierarchy_metadata.rowid</code>.
+     */
+    public final TableField<Record, Integer> ROWID = createField(DSL.name("rowid"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>ck_hierarchy_metadata.changed</code>.
@@ -172,13 +183,18 @@ public class CkHierarchyMetadata extends TableImpl<Record> {
     }
 
     @Override
+    public Identity<Record, Integer> getIdentity() {
+        return (Identity<Record, Integer>) super.getIdentity();
+    }
+
+    @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_HIERARCHY_METADATA_PRIMARY;
     }
 
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_HIERARCHY_METADATA_UK_5LPW74NKMPKYSJ31VICHMJI7K, Keys.KEY_CK_HIERARCHY_METADATA_UK_HIERARCHY_METADATA);
+        return Arrays.asList(Keys.KEY_CK_HIERARCHY_METADATA_UK_5LPW74NKMPKYSJ31VICHMJI7K, Keys.KEY_CK_HIERARCHY_METADATA_UK_HIERARCHY_METADATA, Keys.KEY_CK_HIERARCHY_METADATA_ROWID);
     }
 
     @Override

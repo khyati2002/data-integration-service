@@ -24,6 +24,7 @@ public class CkToken extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -38,7 +39,6 @@ public class CkToken extends CommonDataModel implements Serializable {
     private LocalDateTime startDate;
     private String        token;
     private String        loginid;
-    private Byte          changed;
 
     public CkToken() {}
 
@@ -46,6 +46,7 @@ public class CkToken extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -60,13 +61,13 @@ public class CkToken extends CommonDataModel implements Serializable {
         this.startDate = value.startDate;
         this.token = value.token;
         this.loginid = value.loginid;
-        this.changed = value.changed;
     }
 
     public CkToken(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -80,12 +81,12 @@ public class CkToken extends CommonDataModel implements Serializable {
         String        jwtToken,
         LocalDateTime startDate,
         String        token,
-        String        loginid,
-        Byte          changed
+        String        loginid
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -100,7 +101,6 @@ public class CkToken extends CommonDataModel implements Serializable {
         this.startDate = startDate;
         this.token = token;
         this.loginid = loginid;
-        this.changed = changed;
     }
 
     /**
@@ -143,6 +143,20 @@ public class CkToken extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_token.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_token.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -341,20 +355,6 @@ public class CkToken extends CommonDataModel implements Serializable {
         this.loginid = loginid;
     }
 
-    /**
-     * Getter for <code>ck_token.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_token.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkToken (");
@@ -362,6 +362,7 @@ public class CkToken extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -376,7 +377,6 @@ public class CkToken extends CommonDataModel implements Serializable {
         sb.append(", ").append(startDate);
         sb.append(", ").append(token);
         sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

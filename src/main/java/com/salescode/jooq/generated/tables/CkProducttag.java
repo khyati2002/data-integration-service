@@ -11,15 +11,22 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -57,6 +64,11 @@ public class CkProducttag extends TableImpl<Record> {
      * The column <code>ck_producttag.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_producttag.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_producttag.created_by</code>.
@@ -114,6 +126,26 @@ public class CkProducttag extends TableImpl<Record> {
     public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
+     * The column <code>ck_producttag.outlet_code</code>.
+     */
+    public final TableField<Record, String> OUTLET_CODE = createField(DSL.name("outlet_code"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_producttag.product_type</code>.
+     */
+    public final TableField<Record, String> PRODUCT_TYPE = createField(DSL.name("product_type"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_producttag.product_value</code>.
+     */
+    public final TableField<Record, String> PRODUCT_VALUE = createField(DSL.name("product_value"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_producttag.sku_code</code>.
+     */
+    public final TableField<Record, String> SKU_CODE = createField(DSL.name("sku_code"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_producttag.start_date</code>.
      */
     public final TableField<Record, LocalDateTime> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATETIME(0), this, "");
@@ -129,34 +161,9 @@ public class CkProducttag extends TableImpl<Record> {
     public final TableField<Record, String> TAG_DESCRIPTION = createField(DSL.name("tag_description"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_producttag.outlet_code</code>.
-     */
-    public final TableField<Record, String> OUTLET_CODE = createField(DSL.name("outlet_code"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_producttag.sku_code</code>.
-     */
-    public final TableField<Record, String> SKU_CODE = createField(DSL.name("sku_code"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_producttag.product_type</code>.
-     */
-    public final TableField<Record, String> PRODUCT_TYPE = createField(DSL.name("product_type"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_producttag.product_value</code>.
-     */
-    public final TableField<Record, String> PRODUCT_VALUE = createField(DSL.name("product_value"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_producttag.tag_group</code>.
      */
     public final TableField<Record, String> TAG_GROUP = createField(DSL.name("tag_group"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_producttag.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkProducttag(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -199,36 +206,6 @@ public class CkProducttag extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_PRODUCTTAG_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK9LIEOJPX0JH8UAE9FBHY5RF2V, Keys.FKCJV1SBU80GFRLOIW8LDXKICAP);
-    }
-
-    private transient CkOutletDetails _ckOutletDetails;
-    private transient CkProductdetails _ckProductdetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK9LIEOJPX0JH8UAE9FBHY5RF2V);
-
-        return _ckOutletDetails;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_productdetails</code>
-     * table.
-     */
-    public CkProductdetails ckProductdetails() {
-        if (_ckProductdetails == null)
-            _ckProductdetails = new CkProductdetails(this, Keys.FKCJV1SBU80GFRLOIW8LDXKICAP);
-
-        return _ckProductdetails;
     }
 
     @Override

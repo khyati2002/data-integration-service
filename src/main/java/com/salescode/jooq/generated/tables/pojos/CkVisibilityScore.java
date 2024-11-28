@@ -24,6 +24,7 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -35,13 +36,12 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
     private Integer       version;
     private LocalDateTime endDate;
     private String        hierarchy;
-    private LocalDateTime startDate;
-    private String        type;
-    private String        visibilityId;
     private String        locationHierarchy;
     private String        loginid;
     private String        outletcode;
-    private Byte          changed;
+    private LocalDateTime startDate;
+    private String        type;
+    private String        visibilityId;
 
     public CkVisibilityScore() {}
 
@@ -49,6 +49,7 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -60,19 +61,19 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
         this.version = value.version;
         this.endDate = value.endDate;
         this.hierarchy = value.hierarchy;
-        this.startDate = value.startDate;
-        this.type = value.type;
-        this.visibilityId = value.visibilityId;
         this.locationHierarchy = value.locationHierarchy;
         this.loginid = value.loginid;
         this.outletcode = value.outletcode;
-        this.changed = value.changed;
+        this.startDate = value.startDate;
+        this.type = value.type;
+        this.visibilityId = value.visibilityId;
     }
 
     public CkVisibilityScore(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -84,17 +85,17 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
         Integer       version,
         LocalDateTime endDate,
         String        hierarchy,
-        LocalDateTime startDate,
-        String        type,
-        String        visibilityId,
         String        locationHierarchy,
         String        loginid,
         String        outletcode,
-        Byte          changed
+        LocalDateTime startDate,
+        String        type,
+        String        visibilityId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -106,13 +107,12 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
         this.version = version;
         this.endDate = endDate;
         this.hierarchy = hierarchy;
-        this.startDate = startDate;
-        this.type = type;
-        this.visibilityId = visibilityId;
         this.locationHierarchy = locationHierarchy;
         this.loginid = loginid;
         this.outletcode = outletcode;
-        this.changed = changed;
+        this.startDate = startDate;
+        this.type = type;
+        this.visibilityId = visibilityId;
     }
 
     /**
@@ -155,6 +155,20 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_visibility_score.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_visibility_score.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -312,48 +326,6 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_visibility_score.start_date</code>.
-     */
-    public LocalDateTime getStartDate() {
-        return this.startDate;
-    }
-
-    /**
-     * Setter for <code>ck_visibility_score.start_date</code>.
-     */
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    /**
-     * Getter for <code>ck_visibility_score.type</code>.
-     */
-    public String getType() {
-        return this.type;
-    }
-
-    /**
-     * Setter for <code>ck_visibility_score.type</code>.
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    /**
-     * Getter for <code>ck_visibility_score.visibility_id</code>.
-     */
-    public String getVisibilityId() {
-        return this.visibilityId;
-    }
-
-    /**
-     * Setter for <code>ck_visibility_score.visibility_id</code>.
-     */
-    public void setVisibilityId(String visibilityId) {
-        this.visibilityId = visibilityId;
-    }
-
-    /**
      * Getter for <code>ck_visibility_score.location_hierarchy</code>.
      */
     public String getLocationHierarchy() {
@@ -396,17 +368,45 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_visibility_score.changed</code>.
+     * Getter for <code>ck_visibility_score.start_date</code>.
      */
-    public Byte getChanged() {
-        return this.changed;
+    public LocalDateTime getStartDate() {
+        return this.startDate;
     }
 
     /**
-     * Setter for <code>ck_visibility_score.changed</code>.
+     * Setter for <code>ck_visibility_score.start_date</code>.
      */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    /**
+     * Getter for <code>ck_visibility_score.type</code>.
+     */
+    public String getType() {
+        return this.type;
+    }
+
+    /**
+     * Setter for <code>ck_visibility_score.type</code>.
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * Getter for <code>ck_visibility_score.visibility_id</code>.
+     */
+    public String getVisibilityId() {
+        return this.visibilityId;
+    }
+
+    /**
+     * Setter for <code>ck_visibility_score.visibility_id</code>.
+     */
+    public void setVisibilityId(String visibilityId) {
+        this.visibilityId = visibilityId;
     }
 
     @Override
@@ -416,6 +416,7 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -427,13 +428,12 @@ public class CkVisibilityScore extends CommonDataModel implements Serializable {
         sb.append(", ").append(version);
         sb.append(", ").append(endDate);
         sb.append(", ").append(hierarchy);
-        sb.append(", ").append(startDate);
-        sb.append(", ").append(type);
-        sb.append(", ").append(visibilityId);
         sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(loginid);
         sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
+        sb.append(", ").append(startDate);
+        sb.append(", ").append(type);
+        sb.append(", ").append(visibilityId);
 
         sb.append(")");
         return sb.toString();

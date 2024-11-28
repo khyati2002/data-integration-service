@@ -24,6 +24,7 @@ public class CkExpense extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -39,6 +40,7 @@ public class CkExpense extends CommonDataModel implements Serializable {
     private Double        da;
     private String        designation;
     private Double        internetCharge;
+    private String        loginid;
     private Double        nhValue;
     private String        pjpPlan;
     private String        status;
@@ -46,8 +48,6 @@ public class CkExpense extends CommonDataModel implements Serializable {
     private Double        ta1;
     private Double        ta2;
     private LocalDateTime visitDate;
-    private String        loginid;
-    private Byte          changed;
     private String        area;
     private String        attendanceType;
     private String        beat;
@@ -90,6 +90,7 @@ public class CkExpense extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -105,6 +106,7 @@ public class CkExpense extends CommonDataModel implements Serializable {
         this.da = value.da;
         this.designation = value.designation;
         this.internetCharge = value.internetCharge;
+        this.loginid = value.loginid;
         this.nhValue = value.nhValue;
         this.pjpPlan = value.pjpPlan;
         this.status = value.status;
@@ -112,8 +114,6 @@ public class CkExpense extends CommonDataModel implements Serializable {
         this.ta1 = value.ta1;
         this.ta2 = value.ta2;
         this.visitDate = value.visitDate;
-        this.loginid = value.loginid;
-        this.changed = value.changed;
         this.area = value.area;
         this.attendanceType = value.attendanceType;
         this.beat = value.beat;
@@ -155,6 +155,7 @@ public class CkExpense extends CommonDataModel implements Serializable {
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -170,6 +171,7 @@ public class CkExpense extends CommonDataModel implements Serializable {
         Double        da,
         String        designation,
         Double        internetCharge,
+        String        loginid,
         Double        nhValue,
         String        pjpPlan,
         String        status,
@@ -177,8 +179,6 @@ public class CkExpense extends CommonDataModel implements Serializable {
         Double        ta1,
         Double        ta2,
         LocalDateTime visitDate,
-        String        loginid,
-        Byte          changed,
         String        area,
         String        attendanceType,
         String        beat,
@@ -218,6 +218,7 @@ public class CkExpense extends CommonDataModel implements Serializable {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -233,6 +234,7 @@ public class CkExpense extends CommonDataModel implements Serializable {
         this.da = da;
         this.designation = designation;
         this.internetCharge = internetCharge;
+        this.loginid = loginid;
         this.nhValue = nhValue;
         this.pjpPlan = pjpPlan;
         this.status = status;
@@ -240,8 +242,6 @@ public class CkExpense extends CommonDataModel implements Serializable {
         this.ta1 = ta1;
         this.ta2 = ta2;
         this.visitDate = visitDate;
-        this.loginid = loginid;
-        this.changed = changed;
         this.area = area;
         this.attendanceType = attendanceType;
         this.beat = beat;
@@ -319,6 +319,20 @@ public class CkExpense extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_expense.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_expense.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -532,6 +546,20 @@ public class CkExpense extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_expense.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_expense.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_expense.nh_value</code>.
      */
     public Double getNhValue() {
@@ -627,34 +655,6 @@ public class CkExpense extends CommonDataModel implements Serializable {
      */
     public void setVisitDate(LocalDateTime visitDate) {
         this.visitDate = visitDate;
-    }
-
-    /**
-     * Getter for <code>ck_expense.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_expense.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_expense.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_expense.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
     }
 
     /**
@@ -1154,6 +1154,7 @@ public class CkExpense extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -1169,6 +1170,7 @@ public class CkExpense extends CommonDataModel implements Serializable {
         sb.append(", ").append(da);
         sb.append(", ").append(designation);
         sb.append(", ").append(internetCharge);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(nhValue);
         sb.append(", ").append(pjpPlan);
         sb.append(", ").append(status);
@@ -1176,8 +1178,6 @@ public class CkExpense extends CommonDataModel implements Serializable {
         sb.append(", ").append(ta1);
         sb.append(", ").append(ta2);
         sb.append(", ").append(visitDate);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
         sb.append(", ").append(area);
         sb.append(", ").append(attendanceType);
         sb.append(", ").append(beat);

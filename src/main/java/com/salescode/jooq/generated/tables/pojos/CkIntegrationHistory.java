@@ -22,6 +22,7 @@ public class CkIntegrationHistory implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -39,11 +40,10 @@ public class CkIntegrationHistory implements Serializable {
     private String       messageHash;
     private String       messageKey;
     private String       requestId;
-    private Long         timestamp;
     private String       status;
-    private Byte         changed;
+    private Long         timestamp;
     private String       description;
-    private String       offset;
+    private Double       offset;
 
     public CkIntegrationHistory() {}
 
@@ -51,6 +51,7 @@ public class CkIntegrationHistory implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -68,9 +69,8 @@ public class CkIntegrationHistory implements Serializable {
         this.messageHash = value.messageHash;
         this.messageKey = value.messageKey;
         this.requestId = value.requestId;
-        this.timestamp = value.timestamp;
         this.status = value.status;
-        this.changed = value.changed;
+        this.timestamp = value.timestamp;
         this.description = value.description;
         this.offset = value.offset;
     }
@@ -79,6 +79,7 @@ public class CkIntegrationHistory implements Serializable {
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -96,15 +97,15 @@ public class CkIntegrationHistory implements Serializable {
         String       messageHash,
         String       messageKey,
         String       requestId,
-        Long         timestamp,
         String       status,
-        Byte         changed,
+        Long         timestamp,
         String       description,
-        String       offset
+        Double       offset
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -122,9 +123,8 @@ public class CkIntegrationHistory implements Serializable {
         this.messageHash = messageHash;
         this.messageKey = messageKey;
         this.requestId = requestId;
-        this.timestamp = timestamp;
         this.status = status;
-        this.changed = changed;
+        this.timestamp = timestamp;
         this.description = description;
         this.offset = offset;
     }
@@ -169,6 +169,20 @@ public class CkIntegrationHistory implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_integration_history.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_integration_history.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -410,20 +424,6 @@ public class CkIntegrationHistory implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_integration_history.timestamp</code>.
-     */
-    public Long getTimestamp() {
-        return this.timestamp;
-    }
-
-    /**
-     * Setter for <code>ck_integration_history.timestamp</code>.
-     */
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    /**
      * Getter for <code>ck_integration_history.status</code>.
      */
     public String getStatus() {
@@ -438,17 +438,17 @@ public class CkIntegrationHistory implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_integration_history.changed</code>.
+     * Getter for <code>ck_integration_history.timestamp</code>.
      */
-    public Byte getChanged() {
-        return this.changed;
+    public Long getTimestamp() {
+        return this.timestamp;
     }
 
     /**
-     * Setter for <code>ck_integration_history.changed</code>.
+     * Setter for <code>ck_integration_history.timestamp</code>.
      */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 
     /**
@@ -468,14 +468,14 @@ public class CkIntegrationHistory implements Serializable {
     /**
      * Getter for <code>ck_integration_history.offset</code>.
      */
-    public String getOffset() {
+    public Double getOffset() {
         return this.offset;
     }
 
     /**
      * Setter for <code>ck_integration_history.offset</code>.
      */
-    public void setOffset(String offset) {
+    public void setOffset(Double offset) {
         this.offset = offset;
     }
 
@@ -486,6 +486,7 @@ public class CkIntegrationHistory implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -503,9 +504,8 @@ public class CkIntegrationHistory implements Serializable {
         sb.append(", ").append(messageHash);
         sb.append(", ").append(messageKey);
         sb.append(", ").append(requestId);
-        sb.append(", ").append(timestamp);
         sb.append(", ").append(status);
-        sb.append(", ").append(changed);
+        sb.append(", ").append(timestamp);
         sb.append(", ").append(description);
         sb.append(", ").append(offset);
 

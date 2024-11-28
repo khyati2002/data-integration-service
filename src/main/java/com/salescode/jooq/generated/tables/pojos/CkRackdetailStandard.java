@@ -36,8 +36,8 @@ public class CkRackdetailStandard extends CommonDataModel implements Serializabl
     private String       channel;
     private Integer      facing;
     private String       itemId;
-    private Integer      priority;
     private String       rackName;
+    private Integer      priority;
     private String       battle;
     private String       planoGramType;
     private Integer      primarySequence;
@@ -62,8 +62,8 @@ public class CkRackdetailStandard extends CommonDataModel implements Serializabl
         this.channel = value.channel;
         this.facing = value.facing;
         this.itemId = value.itemId;
-        this.priority = value.priority;
         this.rackName = value.rackName;
+        this.priority = value.priority;
         this.battle = value.battle;
         this.planoGramType = value.planoGramType;
         this.primarySequence = value.primarySequence;
@@ -87,8 +87,8 @@ public class CkRackdetailStandard extends CommonDataModel implements Serializabl
         String       channel,
         Integer      facing,
         String       itemId,
-        Integer      priority,
         String       rackName,
+        Integer      priority,
         String       battle,
         String       planoGramType,
         Integer      primarySequence,
@@ -110,8 +110,8 @@ public class CkRackdetailStandard extends CommonDataModel implements Serializabl
         this.channel = channel;
         this.facing = facing;
         this.itemId = itemId;
-        this.priority = priority;
         this.rackName = rackName;
+        this.priority = priority;
         this.battle = battle;
         this.planoGramType = planoGramType;
         this.primarySequence = primarySequence;
@@ -343,20 +343,6 @@ public class CkRackdetailStandard extends CommonDataModel implements Serializabl
     }
 
     /**
-     * Getter for <code>ck_rackdetail_standard.priority</code>.
-     */
-    public Integer getPriority() {
-        return this.priority;
-    }
-
-    /**
-     * Setter for <code>ck_rackdetail_standard.priority</code>.
-     */
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
-    /**
      * Getter for <code>ck_rackdetail_standard.rack_name</code>.
      */
     public String getRackName() {
@@ -368,6 +354,20 @@ public class CkRackdetailStandard extends CommonDataModel implements Serializabl
      */
     public void setRackName(String rackName) {
         this.rackName = rackName;
+    }
+
+    /**
+     * Getter for <code>ck_rackdetail_standard.priority</code>.
+     */
+    public Integer getPriority() {
+        return this.priority;
+    }
+
+    /**
+     * Setter for <code>ck_rackdetail_standard.priority</code>.
+     */
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     /**
@@ -446,8 +446,8 @@ public class CkRackdetailStandard extends CommonDataModel implements Serializabl
         sb.append(", ").append(channel);
         sb.append(", ").append(facing);
         sb.append(", ").append(itemId);
-        sb.append(", ").append(priority);
         sb.append(", ").append(rackName);
+        sb.append(", ").append(priority);
         sb.append(", ").append(battle);
         sb.append(", ").append(planoGramType);
         sb.append(", ").append(primarySequence);

@@ -12,14 +12,24 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -119,14 +129,29 @@ public class CkAccountInfo extends TableImpl<Record> {
     public final TableField<Record, String> ACCOUNT_NUMBER = createField(DSL.name("account_number"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_account_info.acc_payload</code>.
+     * The column <code>ck_account_info.address_line1</code>.
      */
-    public final TableField<Record, String> ACC_PAYLOAD = createField(DSL.name("acc_payload"), SQLDataType.CLOB, this, "");
+    public final TableField<Record, String> ADDRESS_LINE1 = createField(DSL.name("address_line1"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_account_info.address_line2</code>.
+     */
+    public final TableField<Record, String> ADDRESS_LINE2 = createField(DSL.name("address_line2"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_account_info.auth_person_name</code>.
      */
     public final TableField<Record, String> AUTH_PERSON_NAME = createField(DSL.name("auth_person_name"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_account_info.check_leafurl</code>.
+     */
+    public final TableField<Record, String> CHECK_LEAFURL = createField(DSL.name("check_leafurl"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_account_info.constitution</code>.
+     */
+    public final TableField<Record, String> CONSTITUTION = createField(DSL.name("constitution"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_account_info.contact_name</code>.
@@ -139,9 +164,29 @@ public class CkAccountInfo extends TableImpl<Record> {
     public final TableField<Record, String> EMAIL = createField(DSL.name("email"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_account_info.gstin</code>.
+     */
+    public final TableField<Record, String> GSTIN = createField(DSL.name("gstin"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_account_info.ifsc</code>.
+     */
+    public final TableField<Record, String> IFSC = createField(DSL.name("ifsc"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_account_info.login_id</code>.
      */
     public final TableField<Record, String> LOGIN_ID = createField(DSL.name("login_id"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_account_info.pan</code>.
+     */
+    public final TableField<Record, String> PAN = createField(DSL.name("pan"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_account_info.acc_payload</code>.
+     */
+    public final TableField<Record, String> ACC_PAYLOAD = createField(DSL.name("acc_payload"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_account_info.mobile</code>.

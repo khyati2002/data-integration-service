@@ -7,7 +7,6 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -35,8 +34,8 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
     private String       parent;
     private String       locationHierarchy;
     private String       source;
-    private JSON         accessibleBy;
     private String       hash;
+    private Integer      rowid;
     private Byte         changed;
 
     public CkHierarchyMetadata() {}
@@ -56,8 +55,8 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
         this.parent = value.parent;
         this.locationHierarchy = value.locationHierarchy;
         this.source = value.source;
-        this.accessibleBy = value.accessibleBy;
         this.hash = value.hash;
+        this.rowid = value.rowid;
         this.changed = value.changed;
     }
 
@@ -76,8 +75,8 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
         String       parent,
         String       locationHierarchy,
         String       source,
-        JSON         accessibleBy,
         String       hash,
+        Integer      rowid,
         Byte         changed
     ) {
         this.id = id;
@@ -94,8 +93,8 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
         this.parent = parent;
         this.locationHierarchy = locationHierarchy;
         this.source = source;
-        this.accessibleBy = accessibleBy;
         this.hash = hash;
+        this.rowid = rowid;
         this.changed = changed;
     }
 
@@ -267,11 +266,6 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
         this.parent = parent;
     }
 
-    public void setImmediateParent(String parent) {
-
-        setParent(parent);
-    }
-
     /**
      * Getter for <code>ck_hierarchy_metadata.location_hierarchy</code>.
      */
@@ -301,20 +295,6 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
     }
 
     /**
-     * Getter for <code>ck_hierarchy_metadata.accessible_by</code>.
-     */
-    public JSON getAccessibleBy() {
-        return this.accessibleBy;
-    }
-
-    /**
-     * Setter for <code>ck_hierarchy_metadata.accessible_by</code>.
-     */
-    public void setAccessibleBy(JSON accessibleBy) {
-        this.accessibleBy = accessibleBy;
-    }
-
-    /**
      * Getter for <code>ck_hierarchy_metadata.hash</code>.
      */
     public String getHash() {
@@ -326,6 +306,20 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
      */
     public void setHash(String hash) {
         this.hash = hash;
+    }
+
+    /**
+     * Getter for <code>ck_hierarchy_metadata.rowid</code>.
+     */
+    public Integer getRowid() {
+        return this.rowid;
+    }
+
+    /**
+     * Setter for <code>ck_hierarchy_metadata.rowid</code>.
+     */
+    public void setRowid(Integer rowid) {
+        this.rowid = rowid;
     }
 
     /**
@@ -360,8 +354,8 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
         sb.append(", ").append(parent);
         sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(source);
-        sb.append(", ").append(accessibleBy);
         sb.append(", ").append(hash);
+        sb.append(", ").append(rowid);
         sb.append(", ").append(changed);
 
         sb.append(")");

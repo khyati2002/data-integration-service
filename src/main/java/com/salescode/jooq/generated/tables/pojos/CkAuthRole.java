@@ -26,13 +26,13 @@ public class CkAuthRole extends CommonDataModel implements Serializable {
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
-    private String       hash;
     private Date         lastModifiedTime;
     private String       lob;
     private String       modifiedBy;
-    private String       source;
     private Integer      version;
     private String       name;
+    private String       source;
+    private String       hash;
     private Byte         changed;
 
     public CkAuthRole() {}
@@ -44,13 +44,13 @@ public class CkAuthRole extends CommonDataModel implements Serializable {
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
-        this.hash = value.hash;
         this.lastModifiedTime = value.lastModifiedTime;
         this.lob = value.lob;
         this.modifiedBy = value.modifiedBy;
-        this.source = value.source;
         this.version = value.version;
         this.name = value.name;
+        this.source = value.source;
+        this.hash = value.hash;
         this.changed = value.changed;
     }
 
@@ -61,13 +61,13 @@ public class CkAuthRole extends CommonDataModel implements Serializable {
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
-        String       hash,
         Date         lastModifiedTime,
         String       lob,
         String       modifiedBy,
-        String       source,
         Integer      version,
         String       name,
+        String       source,
+        String       hash,
         Byte         changed
     ) {
         this.id = id;
@@ -76,13 +76,13 @@ public class CkAuthRole extends CommonDataModel implements Serializable {
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
-        this.hash = hash;
         this.lastModifiedTime = lastModifiedTime;
         this.lob = lob;
         this.modifiedBy = modifiedBy;
-        this.source = source;
         this.version = version;
         this.name = name;
+        this.source = source;
+        this.hash = hash;
         this.changed = changed;
     }
 
@@ -171,20 +171,6 @@ public class CkAuthRole extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_auth_role.hash</code>.
-     */
-    public String getHash() {
-        return this.hash;
-    }
-
-    /**
-     * Setter for <code>ck_auth_role.hash</code>.
-     */
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    /**
      * Getter for <code>ck_auth_role.last_modified_time</code>.
      */
     public Date getLastModifiedTime() {
@@ -227,20 +213,6 @@ public class CkAuthRole extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_auth_role.source</code>.
-     */
-    public String getSource() {
-        return this.source;
-    }
-
-    /**
-     * Setter for <code>ck_auth_role.source</code>.
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    /**
      * Getter for <code>ck_auth_role.version</code>.
      */
     public Integer getVersion() {
@@ -269,6 +241,34 @@ public class CkAuthRole extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_auth_role.source</code>.
+     */
+    public String getSource() {
+        return this.source;
+    }
+
+    /**
+     * Setter for <code>ck_auth_role.source</code>.
+     */
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    /**
+     * Getter for <code>ck_auth_role.hash</code>.
+     */
+    public String getHash() {
+        return this.hash;
+    }
+
+    /**
+     * Setter for <code>ck_auth_role.hash</code>.
+     */
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    /**
      * Getter for <code>ck_auth_role.changed</code>.
      */
     public Byte getChanged() {
@@ -292,13 +292,13 @@ public class CkAuthRole extends CommonDataModel implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
-        sb.append(", ").append(hash);
         sb.append(", ").append(lastModifiedTime);
         sb.append(", ").append(lob);
         sb.append(", ").append(modifiedBy);
-        sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(name);
+        sb.append(", ").append(source);
+        sb.append(", ").append(hash);
         sb.append(", ").append(changed);
 
         sb.append(")");

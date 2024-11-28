@@ -24,6 +24,7 @@ public class CkScore extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -37,12 +38,11 @@ public class CkScore extends CommonDataModel implements Serializable {
     private LocalDateTime endDate;
     private String        feature;
     private String        linkReference;
+    private String        loginid;
+    private String        outletcode;
     private String        programNumber;
     private LocalDateTime startDate;
     private Double        totalPoints;
-    private String        loginid;
-    private String        outletcode;
-    private Byte          changed;
 
     public CkScore() {}
 
@@ -50,6 +50,7 @@ public class CkScore extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -63,18 +64,18 @@ public class CkScore extends CommonDataModel implements Serializable {
         this.endDate = value.endDate;
         this.feature = value.feature;
         this.linkReference = value.linkReference;
+        this.loginid = value.loginid;
+        this.outletcode = value.outletcode;
         this.programNumber = value.programNumber;
         this.startDate = value.startDate;
         this.totalPoints = value.totalPoints;
-        this.loginid = value.loginid;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
     }
 
     public CkScore(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -88,16 +89,16 @@ public class CkScore extends CommonDataModel implements Serializable {
         LocalDateTime endDate,
         String        feature,
         String        linkReference,
-        String        programNumber,
-        LocalDateTime startDate,
-        Double        totalPoints,
         String        loginid,
         String        outletcode,
-        Byte          changed
+        String        programNumber,
+        LocalDateTime startDate,
+        Double        totalPoints
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -111,12 +112,11 @@ public class CkScore extends CommonDataModel implements Serializable {
         this.endDate = endDate;
         this.feature = feature;
         this.linkReference = linkReference;
+        this.loginid = loginid;
+        this.outletcode = outletcode;
         this.programNumber = programNumber;
         this.startDate = startDate;
         this.totalPoints = totalPoints;
-        this.loginid = loginid;
-        this.outletcode = outletcode;
-        this.changed = changed;
     }
 
     /**
@@ -159,6 +159,20 @@ public class CkScore extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_score.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_score.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -344,6 +358,34 @@ public class CkScore extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_score.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_score.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
+     * Getter for <code>ck_score.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_score.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
      * Getter for <code>ck_score.program_number</code>.
      */
     public String getProgramNumber() {
@@ -385,48 +427,6 @@ public class CkScore extends CommonDataModel implements Serializable {
         this.totalPoints = totalPoints;
     }
 
-    /**
-     * Getter for <code>ck_score.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_score.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_score.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_score.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_score.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_score.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkScore (");
@@ -434,6 +434,7 @@ public class CkScore extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -447,12 +448,11 @@ public class CkScore extends CommonDataModel implements Serializable {
         sb.append(", ").append(endDate);
         sb.append(", ").append(feature);
         sb.append(", ").append(linkReference);
+        sb.append(", ").append(loginid);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(programNumber);
         sb.append(", ").append(startDate);
         sb.append(", ").append(totalPoints);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

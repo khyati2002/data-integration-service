@@ -37,6 +37,8 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
     private String       loginId;
     private String       rejectionReason;
     private String       invoiceNumber;
+    private String       grnNumber;
+    private String       orderNumber;
 
     public CkGrnInfo() {}
 
@@ -58,6 +60,8 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
         this.loginId = value.loginId;
         this.rejectionReason = value.rejectionReason;
         this.invoiceNumber = value.invoiceNumber;
+        this.grnNumber = value.grnNumber;
+        this.orderNumber = value.orderNumber;
     }
 
     public CkGrnInfo(
@@ -77,7 +81,9 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
         String       grnStatus,
         String       loginId,
         String       rejectionReason,
-        String       invoiceNumber
+        String       invoiceNumber,
+        String       grnNumber,
+        String       orderNumber
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -96,6 +102,8 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
         this.loginId = loginId;
         this.rejectionReason = rejectionReason;
         this.invoiceNumber = invoiceNumber;
+        this.grnNumber = grnNumber;
+        this.orderNumber = orderNumber;
     }
 
     /**
@@ -336,6 +344,34 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
         this.invoiceNumber = invoiceNumber;
     }
 
+    /**
+     * Getter for <code>ck_grn_info.grn_number</code>.
+     */
+    public String getGrnNumber() {
+        return this.grnNumber;
+    }
+
+    /**
+     * Setter for <code>ck_grn_info.grn_number</code>.
+     */
+    public void setGrnNumber(String grnNumber) {
+        this.grnNumber = grnNumber;
+    }
+
+    /**
+     * Getter for <code>ck_grn_info.order_number</code>.
+     */
+    public String getOrderNumber() {
+        return this.orderNumber;
+    }
+
+    /**
+     * Setter for <code>ck_grn_info.order_number</code>.
+     */
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkGrnInfo (");
@@ -357,6 +393,8 @@ public class CkGrnInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(loginId);
         sb.append(", ").append(rejectionReason);
         sb.append(", ").append(invoiceNumber);
+        sb.append(", ").append(grnNumber);
+        sb.append(", ").append(orderNumber);
 
         sb.append(")");
         return sb.toString();

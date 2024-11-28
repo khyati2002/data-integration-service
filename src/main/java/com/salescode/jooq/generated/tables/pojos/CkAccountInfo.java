@@ -35,11 +35,18 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     private Integer      version;
     private String       accountId;
     private String       accountNumber;
-    private String       accPayload;
+    private String       addressLine1;
+    private String       addressLine2;
     private String       authPersonName;
+    private String       checkLeafurl;
+    private String       constitution;
     private String       contactName;
     private String       email;
+    private String       gstin;
+    private String       ifsc;
     private String       loginId;
+    private String       pan;
+    private String       accPayload;
     private String       mobile;
 
     public CkAccountInfo() {}
@@ -60,11 +67,18 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
         this.version = value.version;
         this.accountId = value.accountId;
         this.accountNumber = value.accountNumber;
-        this.accPayload = value.accPayload;
+        this.addressLine1 = value.addressLine1;
+        this.addressLine2 = value.addressLine2;
         this.authPersonName = value.authPersonName;
+        this.checkLeafurl = value.checkLeafurl;
+        this.constitution = value.constitution;
         this.contactName = value.contactName;
         this.email = value.email;
+        this.gstin = value.gstin;
+        this.ifsc = value.ifsc;
         this.loginId = value.loginId;
+        this.pan = value.pan;
+        this.accPayload = value.accPayload;
         this.mobile = value.mobile;
     }
 
@@ -84,11 +98,18 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
         Integer      version,
         String       accountId,
         String       accountNumber,
-        String       accPayload,
+        String       addressLine1,
+        String       addressLine2,
         String       authPersonName,
+        String       checkLeafurl,
+        String       constitution,
         String       contactName,
         String       email,
+        String       gstin,
+        String       ifsc,
         String       loginId,
+        String       pan,
+        String       accPayload,
         String       mobile
     ) {
         this.id = id;
@@ -106,11 +127,18 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
         this.version = version;
         this.accountId = accountId;
         this.accountNumber = accountNumber;
-        this.accPayload = accPayload;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
         this.authPersonName = authPersonName;
+        this.checkLeafurl = checkLeafurl;
+        this.constitution = constitution;
         this.contactName = contactName;
         this.email = email;
+        this.gstin = gstin;
+        this.ifsc = ifsc;
         this.loginId = loginId;
+        this.pan = pan;
+        this.accPayload = accPayload;
         this.mobile = mobile;
     }
 
@@ -325,17 +353,31 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_account_info.acc_payload</code>.
+     * Getter for <code>ck_account_info.address_line1</code>.
      */
-    public String getAccPayload() {
-        return this.accPayload;
+    public String getAddressLine1() {
+        return this.addressLine1;
     }
 
     /**
-     * Setter for <code>ck_account_info.acc_payload</code>.
+     * Setter for <code>ck_account_info.address_line1</code>.
      */
-    public void setAccPayload(String accPayload) {
-        this.accPayload = accPayload;
+    public void setAddressLine1(String addressLine1) {
+        this.addressLine1 = addressLine1;
+    }
+
+    /**
+     * Getter for <code>ck_account_info.address_line2</code>.
+     */
+    public String getAddressLine2() {
+        return this.addressLine2;
+    }
+
+    /**
+     * Setter for <code>ck_account_info.address_line2</code>.
+     */
+    public void setAddressLine2(String addressLine2) {
+        this.addressLine2 = addressLine2;
     }
 
     /**
@@ -350,6 +392,34 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
      */
     public void setAuthPersonName(String authPersonName) {
         this.authPersonName = authPersonName;
+    }
+
+    /**
+     * Getter for <code>ck_account_info.check_leafurl</code>.
+     */
+    public String getCheckLeafurl() {
+        return this.checkLeafurl;
+    }
+
+    /**
+     * Setter for <code>ck_account_info.check_leafurl</code>.
+     */
+    public void setCheckLeafurl(String checkLeafurl) {
+        this.checkLeafurl = checkLeafurl;
+    }
+
+    /**
+     * Getter for <code>ck_account_info.constitution</code>.
+     */
+    public String getConstitution() {
+        return this.constitution;
+    }
+
+    /**
+     * Setter for <code>ck_account_info.constitution</code>.
+     */
+    public void setConstitution(String constitution) {
+        this.constitution = constitution;
     }
 
     /**
@@ -381,6 +451,34 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_account_info.gstin</code>.
+     */
+    public String getGstin() {
+        return this.gstin;
+    }
+
+    /**
+     * Setter for <code>ck_account_info.gstin</code>.
+     */
+    public void setGstin(String gstin) {
+        this.gstin = gstin;
+    }
+
+    /**
+     * Getter for <code>ck_account_info.ifsc</code>.
+     */
+    public String getIfsc() {
+        return this.ifsc;
+    }
+
+    /**
+     * Setter for <code>ck_account_info.ifsc</code>.
+     */
+    public void setIfsc(String ifsc) {
+        this.ifsc = ifsc;
+    }
+
+    /**
      * Getter for <code>ck_account_info.login_id</code>.
      */
     public String getLoginId() {
@@ -392,6 +490,34 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
      */
     public void setLoginId(String loginId) {
         this.loginId = loginId;
+    }
+
+    /**
+     * Getter for <code>ck_account_info.pan</code>.
+     */
+    public String getPan() {
+        return this.pan;
+    }
+
+    /**
+     * Setter for <code>ck_account_info.pan</code>.
+     */
+    public void setPan(String pan) {
+        this.pan = pan;
+    }
+
+    /**
+     * Getter for <code>ck_account_info.acc_payload</code>.
+     */
+    public String getAccPayload() {
+        return this.accPayload;
+    }
+
+    /**
+     * Setter for <code>ck_account_info.acc_payload</code>.
+     */
+    public void setAccPayload(String accPayload) {
+        this.accPayload = accPayload;
     }
 
     /**
@@ -427,11 +553,18 @@ public class CkAccountInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(version);
         sb.append(", ").append(accountId);
         sb.append(", ").append(accountNumber);
-        sb.append(", ").append(accPayload);
+        sb.append(", ").append(addressLine1);
+        sb.append(", ").append(addressLine2);
         sb.append(", ").append(authPersonName);
+        sb.append(", ").append(checkLeafurl);
+        sb.append(", ").append(constitution);
         sb.append(", ").append(contactName);
         sb.append(", ").append(email);
+        sb.append(", ").append(gstin);
+        sb.append(", ").append(ifsc);
         sb.append(", ").append(loginId);
+        sb.append(", ").append(pan);
+        sb.append(", ").append(accPayload);
         sb.append(", ").append(mobile);
 
         sb.append(")");

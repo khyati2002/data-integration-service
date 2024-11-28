@@ -11,13 +11,21 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
 import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Date;
 
 
 /**
@@ -122,14 +130,14 @@ public class CkRackdetailStandard extends TableImpl<Record> {
     public final TableField<Record, String> ITEM_ID = createField(DSL.name("item_id"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_rackdetail_standard.priority</code>.
-     */
-    public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
      * The column <code>ck_rackdetail_standard.rack_name</code>.
      */
     public final TableField<Record, String> RACK_NAME = createField(DSL.name("rack_name"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_rackdetail_standard.priority</code>.
+     */
+    public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>ck_rackdetail_standard.battle</code>.

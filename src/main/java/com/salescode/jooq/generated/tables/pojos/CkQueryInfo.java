@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,12 +25,16 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
+    private String       label;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
+    private String       hash;
     private Date         lastModifiedTime;
     private String       lob;
     private String       modifiedBy;
+    private String       source;
     private Integer      version;
     private String       description;
     private String       documentLink;
@@ -37,21 +42,16 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     private String       implementation;
     private String       language;
     private String       name;
+    private String       owner;
     private Integer      priority;
+    private String       profileName;
     private String       query;
-    private Integer      severity;
-    private String       type;
-    private String       source;
-    private String       templateName;
-    private JSON         accessibleBy;
-    private String       hash;
     private JSON         queryConfig;
     private String       queryType;
+    private Integer      severity;
+    private String       templateName;
     private Integer      ttl;
-    private String       owner;
-    private String       profileName;
-    private Byte         changed;
-    private String       label;
+    private String       type;
     private String       reviewStatus;
     private String       reviewer;
 
@@ -61,12 +61,16 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
+        this.label = value.label;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
+        this.hash = value.hash;
         this.lastModifiedTime = value.lastModifiedTime;
         this.lob = value.lob;
         this.modifiedBy = value.modifiedBy;
+        this.source = value.source;
         this.version = value.version;
         this.description = value.description;
         this.documentLink = value.documentLink;
@@ -74,21 +78,16 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
         this.implementation = value.implementation;
         this.language = value.language;
         this.name = value.name;
+        this.owner = value.owner;
         this.priority = value.priority;
+        this.profileName = value.profileName;
         this.query = value.query;
-        this.severity = value.severity;
-        this.type = value.type;
-        this.source = value.source;
-        this.templateName = value.templateName;
-        this.accessibleBy = value.accessibleBy;
-        this.hash = value.hash;
         this.queryConfig = value.queryConfig;
         this.queryType = value.queryType;
+        this.severity = value.severity;
+        this.templateName = value.templateName;
         this.ttl = value.ttl;
-        this.owner = value.owner;
-        this.profileName = value.profileName;
-        this.changed = value.changed;
-        this.label = value.label;
+        this.type = value.type;
         this.reviewStatus = value.reviewStatus;
         this.reviewer = value.reviewer;
     }
@@ -97,12 +96,16 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
+        String       label,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
+        String       hash,
         Date         lastModifiedTime,
         String       lob,
         String       modifiedBy,
+        String       source,
         Integer      version,
         String       description,
         String       documentLink,
@@ -110,33 +113,32 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
         String       implementation,
         String       language,
         String       name,
+        String       owner,
         Integer      priority,
+        String       profileName,
         String       query,
-        Integer      severity,
-        String       type,
-        String       source,
-        String       templateName,
-        JSON         accessibleBy,
-        String       hash,
         JSON         queryConfig,
         String       queryType,
+        Integer      severity,
+        String       templateName,
         Integer      ttl,
-        String       owner,
-        String       profileName,
-        Byte         changed,
-        String       label,
+        String       type,
         String       reviewStatus,
         String       reviewer
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
+        this.label = label;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
+        this.hash = hash;
         this.lastModifiedTime = lastModifiedTime;
         this.lob = lob;
         this.modifiedBy = modifiedBy;
+        this.source = source;
         this.version = version;
         this.description = description;
         this.documentLink = documentLink;
@@ -144,21 +146,16 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
         this.implementation = implementation;
         this.language = language;
         this.name = name;
+        this.owner = owner;
         this.priority = priority;
+        this.profileName = profileName;
         this.query = query;
-        this.severity = severity;
-        this.type = type;
-        this.source = source;
-        this.templateName = templateName;
-        this.accessibleBy = accessibleBy;
-        this.hash = hash;
         this.queryConfig = queryConfig;
         this.queryType = queryType;
+        this.severity = severity;
+        this.templateName = templateName;
         this.ttl = ttl;
-        this.owner = owner;
-        this.profileName = profileName;
-        this.changed = changed;
-        this.label = label;
+        this.type = type;
         this.reviewStatus = reviewStatus;
         this.reviewer = reviewer;
     }
@@ -206,6 +203,34 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_query_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_query_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
+    }
+
+    /**
+     * Getter for <code>ck_query_info.label</code>.
+     */
+    public String getLabel() {
+        return this.label;
+    }
+
+    /**
+     * Setter for <code>ck_query_info.label</code>.
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    /**
      * Getter for <code>ck_query_info.created_by</code>.
      */
     public String getCreatedBy() {
@@ -248,6 +273,20 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_query_info.hash</code>.
+     */
+    public String getHash() {
+        return this.hash;
+    }
+
+    /**
+     * Setter for <code>ck_query_info.hash</code>.
+     */
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    /**
      * Getter for <code>ck_query_info.last_modified_time</code>.
      */
     public Date getLastModifiedTime() {
@@ -287,6 +326,20 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
      */
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
+    }
+
+    /**
+     * Getter for <code>ck_query_info.source</code>.
+     */
+    public String getSource() {
+        return this.source;
+    }
+
+    /**
+     * Setter for <code>ck_query_info.source</code>.
+     */
+    public void setSource(String source) {
+        this.source = source;
     }
 
     /**
@@ -388,6 +441,20 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_query_info.owner</code>.
+     */
+    public String getOwner() {
+        return this.owner;
+    }
+
+    /**
+     * Setter for <code>ck_query_info.owner</code>.
+     */
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    /**
      * Getter for <code>ck_query_info.priority</code>.
      */
     public Integer getPriority() {
@@ -402,6 +469,20 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_query_info.profile_name</code>.
+     */
+    public String getProfileName() {
+        return this.profileName;
+    }
+
+    /**
+     * Setter for <code>ck_query_info.profile_name</code>.
+     */
+    public void setProfileName(String profileName) {
+        this.profileName = profileName;
+    }
+
+    /**
      * Getter for <code>ck_query_info.query</code>.
      */
     public String getQuery() {
@@ -413,90 +494,6 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
      */
     public void setQuery(String query) {
         this.query = query;
-    }
-
-    /**
-     * Getter for <code>ck_query_info.severity</code>.
-     */
-    public Integer getSeverity() {
-        return this.severity;
-    }
-
-    /**
-     * Setter for <code>ck_query_info.severity</code>.
-     */
-    public void setSeverity(Integer severity) {
-        this.severity = severity;
-    }
-
-    /**
-     * Getter for <code>ck_query_info.type</code>.
-     */
-    public String getType() {
-        return this.type;
-    }
-
-    /**
-     * Setter for <code>ck_query_info.type</code>.
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    /**
-     * Getter for <code>ck_query_info.source</code>.
-     */
-    public String getSource() {
-        return this.source;
-    }
-
-    /**
-     * Setter for <code>ck_query_info.source</code>.
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    /**
-     * Getter for <code>ck_query_info.template_name</code>.
-     */
-    public String getTemplateName() {
-        return this.templateName;
-    }
-
-    /**
-     * Setter for <code>ck_query_info.template_name</code>.
-     */
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-
-    /**
-     * Getter for <code>ck_query_info.accessible_by</code>.
-     */
-    public JSON getAccessibleBy() {
-        return this.accessibleBy;
-    }
-
-    /**
-     * Setter for <code>ck_query_info.accessible_by</code>.
-     */
-    public void setAccessibleBy(JSON accessibleBy) {
-        this.accessibleBy = accessibleBy;
-    }
-
-    /**
-     * Getter for <code>ck_query_info.hash</code>.
-     */
-    public String getHash() {
-        return this.hash;
-    }
-
-    /**
-     * Setter for <code>ck_query_info.hash</code>.
-     */
-    public void setHash(String hash) {
-        this.hash = hash;
     }
 
     /**
@@ -528,6 +525,34 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_query_info.severity</code>.
+     */
+    public Integer getSeverity() {
+        return this.severity;
+    }
+
+    /**
+     * Setter for <code>ck_query_info.severity</code>.
+     */
+    public void setSeverity(Integer severity) {
+        this.severity = severity;
+    }
+
+    /**
+     * Getter for <code>ck_query_info.template_name</code>.
+     */
+    public String getTemplateName() {
+        return this.templateName;
+    }
+
+    /**
+     * Setter for <code>ck_query_info.template_name</code>.
+     */
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    /**
      * Getter for <code>ck_query_info.ttl</code>.
      */
     public Integer getTtl() {
@@ -542,59 +567,17 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_query_info.owner</code>.
+     * Getter for <code>ck_query_info.type</code>.
      */
-    public String getOwner() {
-        return this.owner;
+    public String getType() {
+        return this.type;
     }
 
     /**
-     * Setter for <code>ck_query_info.owner</code>.
+     * Setter for <code>ck_query_info.type</code>.
      */
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    /**
-     * Getter for <code>ck_query_info.profile_name</code>.
-     */
-    public String getProfileName() {
-        return this.profileName;
-    }
-
-    /**
-     * Setter for <code>ck_query_info.profile_name</code>.
-     */
-    public void setProfileName(String profileName) {
-        this.profileName = profileName;
-    }
-
-    /**
-     * Getter for <code>ck_query_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_query_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_query_info.label</code>.
-     */
-    public String getLabel() {
-        return this.label;
-    }
-
-    /**
-     * Setter for <code>ck_query_info.label</code>.
-     */
-    public void setLabel(String label) {
-        this.label = label;
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
@@ -632,12 +615,16 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
+        sb.append(", ").append(label);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
+        sb.append(", ").append(hash);
         sb.append(", ").append(lastModifiedTime);
         sb.append(", ").append(lob);
         sb.append(", ").append(modifiedBy);
+        sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(description);
         sb.append(", ").append(documentLink);
@@ -645,21 +632,16 @@ public class CkQueryInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(implementation);
         sb.append(", ").append(language);
         sb.append(", ").append(name);
+        sb.append(", ").append(owner);
         sb.append(", ").append(priority);
+        sb.append(", ").append(profileName);
         sb.append(", ").append(query);
-        sb.append(", ").append(severity);
-        sb.append(", ").append(type);
-        sb.append(", ").append(source);
-        sb.append(", ").append(templateName);
-        sb.append(", ").append(accessibleBy);
-        sb.append(", ").append(hash);
         sb.append(", ").append(queryConfig);
         sb.append(", ").append(queryType);
+        sb.append(", ").append(severity);
+        sb.append(", ").append(templateName);
         sb.append(", ").append(ttl);
-        sb.append(", ").append(owner);
-        sb.append(", ").append(profileName);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(label);
+        sb.append(", ").append(type);
         sb.append(", ").append(reviewStatus);
         sb.append(", ").append(reviewer);
 

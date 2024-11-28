@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -35,17 +37,23 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
     private String        source;
     private Integer       version;
     private LocalDateTime systemTime;
+    private String        gpsLatitude;
+    private String        gpsLongitude;
     private Double        billAmount;
     private String        userHierarchy;
     private Double        initialAmount;
+    private String        locationHierarchy;
     private Double        mrp;
     private String        name;
     private Double        netAmount;
     private String        orderNumber;
+    private LocalDateTime payByDate;
     private String        programNumber;
     private String        remarks;
     private String        size;
     private String        status;
+    private String        supplierid;
+    private String        hierarchy;
     private String        type;
     private String        batchCode;
     private Double        caseQuantity;
@@ -61,16 +69,13 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
     private JSON          productInfo;
     private String        quantityUnit;
     private String        skucode;
-    private String        locationHierarchy;
-    private String        supplierid;
-    private String        hierarchy;
-    private LocalDateTime payByDate;
-    private Byte          changed;
-    private String        gpsLatitude;
-    private String        gpsLongitude;
     private Double        initialNormalizedQuantity;
     private Double        normalizedVolume;
     private LocalDateTime orderedDate;
+    private Double        casePrice;
+    private Double        otherUnitPrice;
+    private JSON          discountInfo;
+    private String        batchId;
 
     public CkSalesDetails() {}
 
@@ -78,6 +83,7 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -88,17 +94,23 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         this.source = value.source;
         this.version = value.version;
         this.systemTime = value.systemTime;
+        this.gpsLatitude = value.gpsLatitude;
+        this.gpsLongitude = value.gpsLongitude;
         this.billAmount = value.billAmount;
         this.userHierarchy = value.userHierarchy;
         this.initialAmount = value.initialAmount;
+        this.locationHierarchy = value.locationHierarchy;
         this.mrp = value.mrp;
         this.name = value.name;
         this.netAmount = value.netAmount;
         this.orderNumber = value.orderNumber;
+        this.payByDate = value.payByDate;
         this.programNumber = value.programNumber;
         this.remarks = value.remarks;
         this.size = value.size;
         this.status = value.status;
+        this.supplierid = value.supplierid;
+        this.hierarchy = value.hierarchy;
         this.type = value.type;
         this.batchCode = value.batchCode;
         this.caseQuantity = value.caseQuantity;
@@ -114,22 +126,20 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         this.productInfo = value.productInfo;
         this.quantityUnit = value.quantityUnit;
         this.skucode = value.skucode;
-        this.locationHierarchy = value.locationHierarchy;
-        this.supplierid = value.supplierid;
-        this.hierarchy = value.hierarchy;
-        this.payByDate = value.payByDate;
-        this.changed = value.changed;
-        this.gpsLatitude = value.gpsLatitude;
-        this.gpsLongitude = value.gpsLongitude;
         this.initialNormalizedQuantity = value.initialNormalizedQuantity;
         this.normalizedVolume = value.normalizedVolume;
         this.orderedDate = value.orderedDate;
+        this.casePrice = value.casePrice;
+        this.otherUnitPrice = value.otherUnitPrice;
+        this.discountInfo = value.discountInfo;
+        this.batchId = value.batchId;
     }
 
     public CkSalesDetails(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -140,17 +150,23 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         String        source,
         Integer       version,
         LocalDateTime systemTime,
+        String        gpsLatitude,
+        String        gpsLongitude,
         Double        billAmount,
         String        userHierarchy,
         Double        initialAmount,
+        String        locationHierarchy,
         Double        mrp,
         String        name,
         Double        netAmount,
         String        orderNumber,
+        LocalDateTime payByDate,
         String        programNumber,
         String        remarks,
         String        size,
         String        status,
+        String        supplierid,
+        String        hierarchy,
         String        type,
         String        batchCode,
         Double        caseQuantity,
@@ -166,20 +182,18 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         JSON          productInfo,
         String        quantityUnit,
         String        skucode,
-        String        locationHierarchy,
-        String        supplierid,
-        String        hierarchy,
-        LocalDateTime payByDate,
-        Byte          changed,
-        String        gpsLatitude,
-        String        gpsLongitude,
         Double        initialNormalizedQuantity,
         Double        normalizedVolume,
-        LocalDateTime orderedDate
+        LocalDateTime orderedDate,
+        Double        casePrice,
+        Double        otherUnitPrice,
+        JSON          discountInfo,
+        String        batchId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -190,17 +204,23 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         this.source = source;
         this.version = version;
         this.systemTime = systemTime;
+        this.gpsLatitude = gpsLatitude;
+        this.gpsLongitude = gpsLongitude;
         this.billAmount = billAmount;
         this.userHierarchy = userHierarchy;
         this.initialAmount = initialAmount;
+        this.locationHierarchy = locationHierarchy;
         this.mrp = mrp;
         this.name = name;
         this.netAmount = netAmount;
         this.orderNumber = orderNumber;
+        this.payByDate = payByDate;
         this.programNumber = programNumber;
         this.remarks = remarks;
         this.size = size;
         this.status = status;
+        this.supplierid = supplierid;
+        this.hierarchy = hierarchy;
         this.type = type;
         this.batchCode = batchCode;
         this.caseQuantity = caseQuantity;
@@ -216,16 +236,13 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         this.productInfo = productInfo;
         this.quantityUnit = quantityUnit;
         this.skucode = skucode;
-        this.locationHierarchy = locationHierarchy;
-        this.supplierid = supplierid;
-        this.hierarchy = hierarchy;
-        this.payByDate = payByDate;
-        this.changed = changed;
-        this.gpsLatitude = gpsLatitude;
-        this.gpsLongitude = gpsLongitude;
         this.initialNormalizedQuantity = initialNormalizedQuantity;
         this.normalizedVolume = normalizedVolume;
         this.orderedDate = orderedDate;
+        this.casePrice = casePrice;
+        this.otherUnitPrice = otherUnitPrice;
+        this.discountInfo = discountInfo;
+        this.batchId = batchId;
     }
 
     /**
@@ -268,6 +285,20 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_sales_details.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -411,6 +442,34 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_sales_details.gps_latitude</code>.
+     */
+    public String getGpsLatitude() {
+        return this.gpsLatitude;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.gps_latitude</code>.
+     */
+    public void setGpsLatitude(String gpsLatitude) {
+        this.gpsLatitude = gpsLatitude;
+    }
+
+    /**
+     * Getter for <code>ck_sales_details.gps_longitude</code>.
+     */
+    public String getGpsLongitude() {
+        return this.gpsLongitude;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.gps_longitude</code>.
+     */
+    public void setGpsLongitude(String gpsLongitude) {
+        this.gpsLongitude = gpsLongitude;
+    }
+
+    /**
      * Getter for <code>ck_sales_details.bill_amount</code>.
      */
     public Double getBillAmount() {
@@ -450,6 +509,20 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
      */
     public void setInitialAmount(Double initialAmount) {
         this.initialAmount = initialAmount;
+    }
+
+    /**
+     * Getter for <code>ck_sales_details.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
     }
 
     /**
@@ -509,6 +582,20 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_sales_details.pay_by_date</code>.
+     */
+    public LocalDateTime getPayByDate() {
+        return this.payByDate;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.pay_by_date</code>.
+     */
+    public void setPayByDate(LocalDateTime payByDate) {
+        this.payByDate = payByDate;
+    }
+
+    /**
      * Getter for <code>ck_sales_details.program_number</code>.
      */
     public String getProgramNumber() {
@@ -562,6 +649,34 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    /**
+     * Getter for <code>ck_sales_details.supplierid</code>.
+     */
+    public String getSupplierid() {
+        return this.supplierid;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.supplierid</code>.
+     */
+    public void setSupplierid(String supplierid) {
+        this.supplierid = supplierid;
+    }
+
+    /**
+     * Getter for <code>ck_sales_details.hierarchy</code>.
+     */
+    public String getHierarchy() {
+        return this.hierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.hierarchy</code>.
+     */
+    public void setHierarchy(String hierarchy) {
+        this.hierarchy = hierarchy;
     }
 
     /**
@@ -775,104 +890,6 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_sales_details.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_sales_details.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_sales_details.supplierid</code>.
-     */
-    public String getSupplierid() {
-        return this.supplierid;
-    }
-
-    /**
-     * Setter for <code>ck_sales_details.supplierid</code>.
-     */
-    public void setSupplierid(String supplierid) {
-        this.supplierid = supplierid;
-    }
-
-    /**
-     * Getter for <code>ck_sales_details.hierarchy</code>.
-     */
-    public String getHierarchy() {
-        return this.hierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_sales_details.hierarchy</code>.
-     */
-    public void setHierarchy(String hierarchy) {
-        this.hierarchy = hierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_sales_details.pay_by_date</code>.
-     */
-    public LocalDateTime getPayByDate() {
-        return this.payByDate;
-    }
-
-    /**
-     * Setter for <code>ck_sales_details.pay_by_date</code>.
-     */
-    public void setPayByDate(LocalDateTime payByDate) {
-        this.payByDate = payByDate;
-    }
-
-    /**
-     * Getter for <code>ck_sales_details.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_sales_details.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_sales_details.gps_latitude</code>.
-     */
-    public String getGpsLatitude() {
-        return this.gpsLatitude;
-    }
-
-    /**
-     * Setter for <code>ck_sales_details.gps_latitude</code>.
-     */
-    public void setGpsLatitude(String gpsLatitude) {
-        this.gpsLatitude = gpsLatitude;
-    }
-
-    /**
-     * Getter for <code>ck_sales_details.gps_longitude</code>.
-     */
-    public String getGpsLongitude() {
-        return this.gpsLongitude;
-    }
-
-    /**
-     * Setter for <code>ck_sales_details.gps_longitude</code>.
-     */
-    public void setGpsLongitude(String gpsLongitude) {
-        this.gpsLongitude = gpsLongitude;
-    }
-
-    /**
      * Getter for <code>ck_sales_details.initial_normalized_quantity</code>.
      */
     public Double getInitialNormalizedQuantity() {
@@ -914,6 +931,62 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         this.orderedDate = orderedDate;
     }
 
+    /**
+     * Getter for <code>ck_sales_details.case_price</code>.
+     */
+    public Double getCasePrice() {
+        return this.casePrice;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.case_price</code>.
+     */
+    public void setCasePrice(Double casePrice) {
+        this.casePrice = casePrice;
+    }
+
+    /**
+     * Getter for <code>ck_sales_details.other_unit_price</code>.
+     */
+    public Double getOtherUnitPrice() {
+        return this.otherUnitPrice;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.other_unit_price</code>.
+     */
+    public void setOtherUnitPrice(Double otherUnitPrice) {
+        this.otherUnitPrice = otherUnitPrice;
+    }
+
+    /**
+     * Getter for <code>ck_sales_details.discount_info</code>.
+     */
+    public JSON getDiscountInfo() {
+        return this.discountInfo;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.discount_info</code>.
+     */
+    public void setDiscountInfo(JSON discountInfo) {
+        this.discountInfo = discountInfo;
+    }
+
+    /**
+     * Getter for <code>ck_sales_details.batch_id</code>.
+     */
+    public String getBatchId() {
+        return this.batchId;
+    }
+
+    /**
+     * Setter for <code>ck_sales_details.batch_id</code>.
+     */
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkSalesDetails (");
@@ -921,6 +994,7 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -931,17 +1005,23 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(systemTime);
+        sb.append(", ").append(gpsLatitude);
+        sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(billAmount);
         sb.append(", ").append(userHierarchy);
         sb.append(", ").append(initialAmount);
+        sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(mrp);
         sb.append(", ").append(name);
         sb.append(", ").append(netAmount);
         sb.append(", ").append(orderNumber);
+        sb.append(", ").append(payByDate);
         sb.append(", ").append(programNumber);
         sb.append(", ").append(remarks);
         sb.append(", ").append(size);
         sb.append(", ").append(status);
+        sb.append(", ").append(supplierid);
+        sb.append(", ").append(hierarchy);
         sb.append(", ").append(type);
         sb.append(", ").append(batchCode);
         sb.append(", ").append(caseQuantity);
@@ -957,16 +1037,13 @@ public class CkSalesDetails extends CommonDataModel implements Serializable {
         sb.append(", ").append(productInfo);
         sb.append(", ").append(quantityUnit);
         sb.append(", ").append(skucode);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(supplierid);
-        sb.append(", ").append(hierarchy);
-        sb.append(", ").append(payByDate);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(gpsLatitude);
-        sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(initialNormalizedQuantity);
         sb.append(", ").append(normalizedVolume);
         sb.append(", ").append(orderedDate);
+        sb.append(", ").append(casePrice);
+        sb.append(", ").append(otherUnitPrice);
+        sb.append(", ").append(discountInfo);
+        sb.append(", ").append(batchId);
 
         sb.append(")");
         return sb.toString();

@@ -11,14 +11,23 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -127,6 +136,16 @@ public class CkGrnInfo extends TableImpl<Record> {
      */
     public final TableField<Record, String> INVOICE_NUMBER = createField(DSL.name("invoice_number"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
+    /**
+     * The column <code>ck_grn_info.grn_number</code>.
+     */
+    public final TableField<Record, String> GRN_NUMBER = createField(DSL.name("grn_number"), SQLDataType.VARCHAR(200).nullable(false), this, "");
+
+    /**
+     * The column <code>ck_grn_info.order_number</code>.
+     */
+    public final TableField<Record, String> ORDER_NUMBER = createField(DSL.name("order_number"), SQLDataType.VARCHAR(50).nullable(false), this, "");
+
     private CkGrnInfo(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
     }
@@ -172,7 +191,7 @@ public class CkGrnInfo extends TableImpl<Record> {
 
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_GRN_INFO_UK_OJAFSW3W4GUHDSOQGVEB73V23, Keys.KEY_CK_GRN_INFO_UKOJAFSW3W4GUHDSOQGVEB73V23);
+        return Arrays.asList(Keys.KEY_CK_GRN_INFO_UK_OJAFSW3W4GUHDSOQGVEB73V23, Keys.KEY_CK_GRN_INFO_UKOJAFSW3W4GUHDSOQGVEB73V23, Keys.KEY_CK_GRN_INFO_GRN_NUMBER, Keys.KEY_CK_GRN_INFO_UK_KK0A72JWMLLQD9YYETJ0DLF1C);
     }
 
     @Override

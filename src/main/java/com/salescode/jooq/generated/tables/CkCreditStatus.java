@@ -11,15 +11,22 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -57,6 +64,11 @@ public class CkCreditStatus extends TableImpl<Record> {
      * The column <code>ck_credit_status.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_credit_status.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_credit_status.created_by</code>.
@@ -154,6 +166,21 @@ public class CkCreditStatus extends TableImpl<Record> {
     public final TableField<Record, String> HIERARCHY = createField(DSL.name("hierarchy"), SQLDataType.CLOB, this, "");
 
     /**
+     * The column <code>ck_credit_status.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_credit_status.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_credit_status.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
      * The column
      * <code>ck_credit_status.over_draft_account_creation_status</code>.
      */
@@ -175,39 +202,9 @@ public class CkCreditStatus extends TableImpl<Record> {
     public final TableField<Record, Integer> TOTAL_DUE_DAYS = createField(DSL.name("total_due_days"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>ck_credit_status.location_hierarchy</code>.
+     * The column <code>ck_credit_status.status</code>.
      */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_credit_status.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_credit_status.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_credit_status.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_credit_status.description</code>.
-     */
-    public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_credit_status.od_account_number</code>.
-     */
-    public final TableField<Record, String> OD_ACCOUNT_NUMBER = createField(DSL.name("od_account_number"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_credit_status.payment_provide_type</code>.
-     */
-    public final TableField<Record, String> PAYMENT_PROVIDE_TYPE = createField(DSL.name("payment_provide_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_credit_status.reference_number</code>.
@@ -215,14 +212,24 @@ public class CkCreditStatus extends TableImpl<Record> {
     public final TableField<Record, String> REFERENCE_NUMBER = createField(DSL.name("reference_number"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_credit_status.status</code>.
+     * The column <code>ck_credit_status.description</code>.
      */
-    public final TableField<Record, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_credit_status.payment_provide_type</code>.
+     */
+    public final TableField<Record, String> PAYMENT_PROVIDE_TYPE = createField(DSL.name("payment_provide_type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_credit_status.supplier</code>.
      */
     public final TableField<Record, String> SUPPLIER = createField(DSL.name("supplier"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_credit_status.od_account_number</code>.
+     */
+    public final TableField<Record, String> OD_ACCOUNT_NUMBER = createField(DSL.name("od_account_number"), SQLDataType.VARCHAR(255), this, "");
 
     private CkCreditStatus(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -265,51 +272,6 @@ public class CkCreditStatus extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_CREDIT_STATUS_PRIMARY;
-    }
-
-    @Override
-    public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_CREDIT_STATUS_UK_8F20X7VV1GPLR0F9BWLBSXRXW);
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK2YOT33KCT3LFUI22ID375L6I3, Keys.FK6OR9480UBIGHW3NMHVVL7O1LT, Keys.FKQ0SWJDLYDMPG4KO8O2NP51CYA);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FK2YOT33KCT3LFUI22ID375L6I3);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FK6OR9480UBIGHW3NMHVVL7O1LT);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FKQ0SWJDLYDMPG4KO8O2NP51CYA);
-
-        return _ckOutletDetails;
     }
 
     @Override

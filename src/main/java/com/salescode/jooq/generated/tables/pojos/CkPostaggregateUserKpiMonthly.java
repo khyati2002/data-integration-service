@@ -7,12 +7,13 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -26,6 +27,7 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -41,6 +43,8 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
     private String        gpsLongitude;
     private String        hierarchy;
     private JSON          images;
+    private String        locationHierarchy;
+    private String        loginid;
     private String        name;
     private String        referenceNumber;
     private LocalDateTime startTime;
@@ -51,9 +55,6 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
     private Integer       month;
     private BigDecimal    value;
     private Integer       year;
-    private String        locationHierarchy;
-    private String        loginid;
-    private Byte          changed;
 
     public CkPostaggregateUserKpiMonthly() {}
 
@@ -61,6 +62,7 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -76,6 +78,8 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         this.gpsLongitude = value.gpsLongitude;
         this.hierarchy = value.hierarchy;
         this.images = value.images;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
         this.name = value.name;
         this.referenceNumber = value.referenceNumber;
         this.startTime = value.startTime;
@@ -86,15 +90,13 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         this.month = value.month;
         this.value = value.value;
         this.year = value.year;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.changed = value.changed;
     }
 
     public CkPostaggregateUserKpiMonthly(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -110,6 +112,8 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         String        gpsLongitude,
         String        hierarchy,
         JSON          images,
+        String        locationHierarchy,
+        String        loginid,
         String        name,
         String        referenceNumber,
         LocalDateTime startTime,
@@ -119,14 +123,12 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         String        kpidescription,
         Integer       month,
         BigDecimal    value,
-        Integer       year,
-        String        locationHierarchy,
-        String        loginid,
-        Byte          changed
+        Integer       year
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -142,6 +144,8 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         this.gpsLongitude = gpsLongitude;
         this.hierarchy = hierarchy;
         this.images = images;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
         this.name = name;
         this.referenceNumber = referenceNumber;
         this.startTime = startTime;
@@ -152,9 +156,6 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         this.month = month;
         this.value = value;
         this.year = year;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.changed = changed;
     }
 
     /**
@@ -199,6 +200,20 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_postaggregate_user_kpi_monthly.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_postaggregate_user_kpi_monthly.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -416,6 +431,36 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
     }
 
     /**
+     * Getter for
+     * <code>ck_postaggregate_user_kpi_monthly.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_kpi_monthly.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for <code>ck_postaggregate_user_kpi_monthly.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_postaggregate_user_kpi_monthly.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_postaggregate_user_kpi_monthly.name</code>.
      */
     public String getName() {
@@ -559,50 +604,6 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         this.year = year;
     }
 
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_kpi_monthly.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_kpi_monthly.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_postaggregate_user_kpi_monthly.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_postaggregate_user_kpi_monthly.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_postaggregate_user_kpi_monthly.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_postaggregate_user_kpi_monthly.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPostaggregateUserKpiMonthly (");
@@ -610,6 +611,7 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -625,6 +627,8 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(hierarchy);
         sb.append(", ").append(images);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(name);
         sb.append(", ").append(referenceNumber);
         sb.append(", ").append(startTime);
@@ -635,9 +639,6 @@ public class CkPostaggregateUserKpiMonthly extends CommonDataModel implements Se
         sb.append(", ").append(month);
         sb.append(", ").append(value);
         sb.append(", ").append(year);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

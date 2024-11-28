@@ -24,6 +24,7 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -46,6 +47,7 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     private String        itemType;
     private String        loginid;
     private Double        otherQuantity;
+    private String        outletcode;
     private Double        outletProb;
     private Double        pieceQuantity;
     private Double        priority;
@@ -59,8 +61,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     private Double        totalInitialAmt;
     private Double        totalMrp;
     private Double        totalQuantity;
-    private String        outletcode;
-    private Byte          changed;
     private String        basketId;
 
     public CkRecommendedOrder() {}
@@ -69,6 +69,7 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -91,6 +92,7 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         this.itemType = value.itemType;
         this.loginid = value.loginid;
         this.otherQuantity = value.otherQuantity;
+        this.outletcode = value.outletcode;
         this.outletProb = value.outletProb;
         this.pieceQuantity = value.pieceQuantity;
         this.priority = value.priority;
@@ -104,8 +106,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         this.totalInitialAmt = value.totalInitialAmt;
         this.totalMrp = value.totalMrp;
         this.totalQuantity = value.totalQuantity;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
         this.basketId = value.basketId;
     }
 
@@ -113,6 +113,7 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -135,6 +136,7 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         String        itemType,
         String        loginid,
         Double        otherQuantity,
+        String        outletcode,
         Double        outletProb,
         Double        pieceQuantity,
         Double        priority,
@@ -148,13 +150,12 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         Double        totalInitialAmt,
         Double        totalMrp,
         Double        totalQuantity,
-        String        outletcode,
-        Byte          changed,
         String        basketId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -177,6 +178,7 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         this.itemType = itemType;
         this.loginid = loginid;
         this.otherQuantity = otherQuantity;
+        this.outletcode = outletcode;
         this.outletProb = outletProb;
         this.pieceQuantity = pieceQuantity;
         this.priority = priority;
@@ -190,8 +192,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         this.totalInitialAmt = totalInitialAmt;
         this.totalMrp = totalMrp;
         this.totalQuantity = totalQuantity;
-        this.outletcode = outletcode;
-        this.changed = changed;
         this.basketId = basketId;
     }
 
@@ -235,6 +235,20 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_recommended_order.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_recommended_order.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -546,6 +560,20 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     }
 
     /**
+     * Getter for <code>ck_recommended_order.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_recommended_order.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
      * Getter for <code>ck_recommended_order.outlet_prob</code>.
      */
     public Double getOutletProb() {
@@ -728,34 +756,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
     }
 
     /**
-     * Getter for <code>ck_recommended_order.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_recommended_order.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_recommended_order.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_recommended_order.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
      * Getter for <code>ck_recommended_order.basket_id</code>.
      */
     public String getBasketId() {
@@ -776,6 +776,7 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -798,6 +799,7 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         sb.append(", ").append(itemType);
         sb.append(", ").append(loginid);
         sb.append(", ").append(otherQuantity);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(outletProb);
         sb.append(", ").append(pieceQuantity);
         sb.append(", ").append(priority);
@@ -811,8 +813,6 @@ public class CkRecommendedOrder extends CommonDataModel implements Serializable 
         sb.append(", ").append(totalInitialAmt);
         sb.append(", ").append(totalMrp);
         sb.append(", ").append(totalQuantity);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
         sb.append(", ").append(basketId);
 
         sb.append(")");

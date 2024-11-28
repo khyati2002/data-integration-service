@@ -7,12 +7,13 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -26,6 +27,7 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -41,6 +43,8 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
     private String        gpsLongitude;
     private String        hierarchy;
     private JSON          images;
+    private String        locationHierarchy;
+    private String        loginid;
     private String        name;
     private String        referenceNumber;
     private LocalDateTime startTime;
@@ -50,9 +54,6 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
     private String        kpi;
     private String        kpidescription;
     private BigDecimal    value;
-    private String        locationHierarchy;
-    private String        loginid;
-    private Byte          changed;
 
     public CkPostaggregateUserKpiDaily() {}
 
@@ -60,6 +61,7 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -75,6 +77,8 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         this.gpsLongitude = value.gpsLongitude;
         this.hierarchy = value.hierarchy;
         this.images = value.images;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
         this.name = value.name;
         this.referenceNumber = value.referenceNumber;
         this.startTime = value.startTime;
@@ -84,15 +88,13 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         this.kpi = value.kpi;
         this.kpidescription = value.kpidescription;
         this.value = value.value;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.changed = value.changed;
     }
 
     public CkPostaggregateUserKpiDaily(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -108,6 +110,8 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         String        gpsLongitude,
         String        hierarchy,
         JSON          images,
+        String        locationHierarchy,
+        String        loginid,
         String        name,
         String        referenceNumber,
         LocalDateTime startTime,
@@ -116,14 +120,12 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         LocalDateTime date,
         String        kpi,
         String        kpidescription,
-        BigDecimal    value,
-        String        locationHierarchy,
-        String        loginid,
-        Byte          changed
+        BigDecimal    value
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -139,6 +141,8 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         this.gpsLongitude = gpsLongitude;
         this.hierarchy = hierarchy;
         this.images = images;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
         this.name = name;
         this.referenceNumber = referenceNumber;
         this.startTime = startTime;
@@ -148,9 +152,6 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         this.kpi = kpi;
         this.kpidescription = kpidescription;
         this.value = value;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.changed = changed;
     }
 
     /**
@@ -195,6 +196,20 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_postaggregate_user_kpi_daily.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_postaggregate_user_kpi_daily.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -412,6 +427,36 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
     }
 
     /**
+     * Getter for
+     * <code>ck_postaggregate_user_kpi_daily.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_kpi_daily.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for <code>ck_postaggregate_user_kpi_daily.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_postaggregate_user_kpi_daily.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_postaggregate_user_kpi_daily.name</code>.
      */
     public String getName() {
@@ -537,50 +582,6 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         this.value = value;
     }
 
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_kpi_daily.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_kpi_daily.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_postaggregate_user_kpi_daily.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_postaggregate_user_kpi_daily.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_postaggregate_user_kpi_daily.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_postaggregate_user_kpi_daily.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPostaggregateUserKpiDaily (");
@@ -588,6 +589,7 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -603,6 +605,8 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(hierarchy);
         sb.append(", ").append(images);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(name);
         sb.append(", ").append(referenceNumber);
         sb.append(", ").append(startTime);
@@ -612,9 +616,6 @@ public class CkPostaggregateUserKpiDaily extends CommonDataModel implements Seri
         sb.append(", ").append(kpi);
         sb.append(", ").append(kpidescription);
         sb.append(", ").append(value);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

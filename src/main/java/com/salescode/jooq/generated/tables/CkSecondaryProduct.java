@@ -12,15 +12,26 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -58,6 +69,11 @@ public class CkSecondaryProduct extends TableImpl<Record> {
      * The column <code>ck_secondary_product.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_secondary_product.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_secondary_product.created_by</code>.
@@ -157,7 +173,7 @@ public class CkSecondaryProduct extends TableImpl<Record> {
     /**
      * The column <code>ck_secondary_product.description</code>.
      */
-    public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(900), this, "");
 
     /**
      * The column <code>ck_secondary_product.end_time</code>.
@@ -168,6 +184,21 @@ public class CkSecondaryProduct extends TableImpl<Record> {
      * The column <code>ck_secondary_product.feature</code>.
      */
     public final TableField<Record, String> FEATURE = createField(DSL.name("feature"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_secondary_product.item_name</code>.
+     */
+    public final TableField<Record, String> ITEM_NAME = createField(DSL.name("item_name"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_secondary_product.item_type</code>.
+     */
+    public final TableField<Record, String> ITEM_TYPE = createField(DSL.name("item_type"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_secondary_product.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_secondary_product.market_sku</code>.
@@ -188,6 +219,11 @@ public class CkSecondaryProduct extends TableImpl<Record> {
      * The column <code>ck_secondary_product.outlet_class</code>.
      */
     public final TableField<Record, String> OUTLET_CLASS = createField(DSL.name("outlet_class"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_secondary_product.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_secondary_product.outlet_type</code>.
@@ -233,31 +269,6 @@ public class CkSecondaryProduct extends TableImpl<Record> {
      * The column <code>ck_secondary_product.sub_category_code</code>.
      */
     public final TableField<Record, String> SUB_CATEGORY_CODE = createField(DSL.name("sub_category_code"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_secondary_product.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_secondary_product.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_secondary_product.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_secondary_product.item_type</code>.
-     */
-    public final TableField<Record, String> ITEM_TYPE = createField(DSL.name("item_type"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_secondary_product.item_name</code>.
-     */
-    public final TableField<Record, String> ITEM_NAME = createField(DSL.name("item_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_secondary_product.filter_key</code>.
@@ -325,35 +336,6 @@ public class CkSecondaryProduct extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_SECONDARY_PRODUCT_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKB1GNKOT4K51EK2JGBV7R4U72L, Keys.FK65LQN3YF06DSU7PGIA82QBI6K);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKB1GNKOT4K51EK2JGBV7R4U72L);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK65LQN3YF06DSU7PGIA82QBI6K);
-
-        return _ckOutletDetails;
     }
 
     @Override

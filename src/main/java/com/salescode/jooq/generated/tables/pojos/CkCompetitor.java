@@ -23,6 +23,7 @@ public class CkCompetitor extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -38,7 +39,6 @@ public class CkCompetitor extends CommonDataModel implements Serializable {
     private String       competitorBrand;
     private String       product;
     private String       subCat;
-    private Byte         changed;
 
     public CkCompetitor() {}
 
@@ -46,6 +46,7 @@ public class CkCompetitor extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -61,13 +62,13 @@ public class CkCompetitor extends CommonDataModel implements Serializable {
         this.competitorBrand = value.competitorBrand;
         this.product = value.product;
         this.subCat = value.subCat;
-        this.changed = value.changed;
     }
 
     public CkCompetitor(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -82,12 +83,12 @@ public class CkCompetitor extends CommonDataModel implements Serializable {
         String       cat,
         String       competitorBrand,
         String       product,
-        String       subCat,
-        Byte         changed
+        String       subCat
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -103,7 +104,6 @@ public class CkCompetitor extends CommonDataModel implements Serializable {
         this.competitorBrand = competitorBrand;
         this.product = product;
         this.subCat = subCat;
-        this.changed = changed;
     }
 
     /**
@@ -146,6 +146,20 @@ public class CkCompetitor extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_competitor.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_competitor.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -358,20 +372,6 @@ public class CkCompetitor extends CommonDataModel implements Serializable {
         this.subCat = subCat;
     }
 
-    /**
-     * Getter for <code>ck_competitor.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_competitor.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkCompetitor (");
@@ -379,6 +379,7 @@ public class CkCompetitor extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -394,7 +395,6 @@ public class CkCompetitor extends CommonDataModel implements Serializable {
         sb.append(", ").append(competitorBrand);
         sb.append(", ").append(product);
         sb.append(", ").append(subCat);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

@@ -12,14 +12,24 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -57,6 +67,11 @@ public class CkIntegrationHistory extends TableImpl<Record> {
      * The column <code>ck_integration_history.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_integration_history.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_integration_history.created_by</code>.
@@ -144,29 +159,24 @@ public class CkIntegrationHistory extends TableImpl<Record> {
     public final TableField<Record, String> REQUEST_ID = createField(DSL.name("request_id"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_integration_history.timestamp</code>.
-     */
-    public final TableField<Record, Long> TIMESTAMP = createField(DSL.name("timestamp"), SQLDataType.BIGINT.nullable(false), this, "");
-
-    /**
      * The column <code>ck_integration_history.status</code>.
      */
     public final TableField<Record, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_integration_history.changed</code>.
+     * The column <code>ck_integration_history.timestamp</code>.
      */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
+    public final TableField<Record, Long> TIMESTAMP = createField(DSL.name("timestamp"), SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * The column <code>ck_integration_history.description</code>.
      */
-    public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_integration_history.offset</code>.
      */
-    public final TableField<Record, String> OFFSET = createField(DSL.name("offset"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, Double> OFFSET = createField(DSL.name("offset"), SQLDataType.DOUBLE, this, "");
 
     private CkIntegrationHistory(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,6 +25,7 @@ public class CkUserEventResponse extends CommonDataModel implements Serializable
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -40,7 +42,6 @@ public class CkUserEventResponse extends CommonDataModel implements Serializable
     private String       outletcode;
     private String       qid;
     private String       userEventId;
-    private Byte         changed;
 
     public CkUserEventResponse() {}
 
@@ -48,6 +49,7 @@ public class CkUserEventResponse extends CommonDataModel implements Serializable
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -64,13 +66,13 @@ public class CkUserEventResponse extends CommonDataModel implements Serializable
         this.outletcode = value.outletcode;
         this.qid = value.qid;
         this.userEventId = value.userEventId;
-        this.changed = value.changed;
     }
 
     public CkUserEventResponse(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -86,12 +88,12 @@ public class CkUserEventResponse extends CommonDataModel implements Serializable
         String       loginId,
         String       outletcode,
         String       qid,
-        String       userEventId,
-        Byte         changed
+        String       userEventId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -108,7 +110,6 @@ public class CkUserEventResponse extends CommonDataModel implements Serializable
         this.outletcode = outletcode;
         this.qid = qid;
         this.userEventId = userEventId;
-        this.changed = changed;
     }
 
     /**
@@ -151,6 +152,20 @@ public class CkUserEventResponse extends CommonDataModel implements Serializable
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_user_event_response.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_user_event_response.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -377,20 +392,6 @@ public class CkUserEventResponse extends CommonDataModel implements Serializable
         this.userEventId = userEventId;
     }
 
-    /**
-     * Getter for <code>ck_user_event_response.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_user_event_response.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkUserEventResponse (");
@@ -398,6 +399,7 @@ public class CkUserEventResponse extends CommonDataModel implements Serializable
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -414,7 +416,6 @@ public class CkUserEventResponse extends CommonDataModel implements Serializable
         sb.append(", ").append(outletcode);
         sb.append(", ").append(qid);
         sb.append(", ").append(userEventId);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

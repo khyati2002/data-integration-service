@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -39,6 +41,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
     private LocalDateTime endDate;
     private Double        lmtdSalesValue;
     private Double        lmtdSalesVolume;
+    private String        locationHierarchy;
     private Double        lymtdSaleValue;
     private Double        lymtdSalesVolume;
     private Integer       mtdBilledOutlets;
@@ -65,6 +68,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
     private Double        targetVolume;
     private LocalDateTime timeSinceLastOrder;
     private Integer       todaypjpcount;
+    private String        loginid;
     private JSON          ytdBottomnbrands;
     private JSON          ytdBottomncategories;
     private JSON          ytdBottomnoutlets;
@@ -78,9 +82,6 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
     private JSON          ytdTopnbrands;
     private JSON          ytdTopncategories;
     private JSON          ytdTopnoutlets;
-    private String        locationHierarchy;
-    private String        loginid;
-    private Byte          changed;
 
     public CkStaticUserAggregation() {}
 
@@ -88,6 +89,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -102,6 +104,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         this.endDate = value.endDate;
         this.lmtdSalesValue = value.lmtdSalesValue;
         this.lmtdSalesVolume = value.lmtdSalesVolume;
+        this.locationHierarchy = value.locationHierarchy;
         this.lymtdSaleValue = value.lymtdSaleValue;
         this.lymtdSalesVolume = value.lymtdSalesVolume;
         this.mtdBilledOutlets = value.mtdBilledOutlets;
@@ -128,6 +131,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         this.targetVolume = value.targetVolume;
         this.timeSinceLastOrder = value.timeSinceLastOrder;
         this.todaypjpcount = value.todaypjpcount;
+        this.loginid = value.loginid;
         this.ytdBottomnbrands = value.ytdBottomnbrands;
         this.ytdBottomncategories = value.ytdBottomncategories;
         this.ytdBottomnoutlets = value.ytdBottomnoutlets;
@@ -141,15 +145,13 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         this.ytdTopnbrands = value.ytdTopnbrands;
         this.ytdTopncategories = value.ytdTopncategories;
         this.ytdTopnoutlets = value.ytdTopnoutlets;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.changed = value.changed;
     }
 
     public CkStaticUserAggregation(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -164,6 +166,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         LocalDateTime endDate,
         Double        lmtdSalesValue,
         Double        lmtdSalesVolume,
+        String        locationHierarchy,
         Double        lymtdSaleValue,
         Double        lymtdSalesVolume,
         Integer       mtdBilledOutlets,
@@ -190,6 +193,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         Double        targetVolume,
         LocalDateTime timeSinceLastOrder,
         Integer       todaypjpcount,
+        String        loginid,
         JSON          ytdBottomnbrands,
         JSON          ytdBottomncategories,
         JSON          ytdBottomnoutlets,
@@ -202,14 +206,12 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         JSON          ytdTargetAchievedTrend,
         JSON          ytdTopnbrands,
         JSON          ytdTopncategories,
-        JSON          ytdTopnoutlets,
-        String        locationHierarchy,
-        String        loginid,
-        Byte          changed
+        JSON          ytdTopnoutlets
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -224,6 +226,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         this.endDate = endDate;
         this.lmtdSalesValue = lmtdSalesValue;
         this.lmtdSalesVolume = lmtdSalesVolume;
+        this.locationHierarchy = locationHierarchy;
         this.lymtdSaleValue = lymtdSaleValue;
         this.lymtdSalesVolume = lymtdSalesVolume;
         this.mtdBilledOutlets = mtdBilledOutlets;
@@ -250,6 +253,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         this.targetVolume = targetVolume;
         this.timeSinceLastOrder = timeSinceLastOrder;
         this.todaypjpcount = todaypjpcount;
+        this.loginid = loginid;
         this.ytdBottomnbrands = ytdBottomnbrands;
         this.ytdBottomncategories = ytdBottomncategories;
         this.ytdBottomnoutlets = ytdBottomnoutlets;
@@ -263,9 +267,6 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         this.ytdTopnbrands = ytdTopnbrands;
         this.ytdTopncategories = ytdTopncategories;
         this.ytdTopnoutlets = ytdTopnoutlets;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.changed = changed;
     }
 
     /**
@@ -308,6 +309,20 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_static_user_aggregation.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_static_user_aggregation.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -504,6 +519,20 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
      */
     public void setLmtdSalesVolume(Double lmtdSalesVolume) {
         this.lmtdSalesVolume = lmtdSalesVolume;
+    }
+
+    /**
+     * Getter for <code>ck_static_user_aggregation.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_static_user_aggregation.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
     }
 
     /**
@@ -875,6 +904,20 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
     }
 
     /**
+     * Getter for <code>ck_static_user_aggregation.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_static_user_aggregation.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_static_user_aggregation.ytd_bottomnbrands</code>.
      */
     public JSON getYtdBottomnbrands() {
@@ -1060,48 +1103,6 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         this.ytdTopnoutlets = ytdTopnoutlets;
     }
 
-    /**
-     * Getter for <code>ck_static_user_aggregation.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_static_user_aggregation.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_static_user_aggregation.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_static_user_aggregation.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_static_user_aggregation.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_static_user_aggregation.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkStaticUserAggregation (");
@@ -1109,6 +1110,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -1123,6 +1125,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         sb.append(", ").append(endDate);
         sb.append(", ").append(lmtdSalesValue);
         sb.append(", ").append(lmtdSalesVolume);
+        sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(lymtdSaleValue);
         sb.append(", ").append(lymtdSalesVolume);
         sb.append(", ").append(mtdBilledOutlets);
@@ -1149,6 +1152,7 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         sb.append(", ").append(targetVolume);
         sb.append(", ").append(timeSinceLastOrder);
         sb.append(", ").append(todaypjpcount);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(ytdBottomnbrands);
         sb.append(", ").append(ytdBottomncategories);
         sb.append(", ").append(ytdBottomnoutlets);
@@ -1162,9 +1166,6 @@ public class CkStaticUserAggregation extends CommonDataModel implements Serializ
         sb.append(", ").append(ytdTopnbrands);
         sb.append(", ").append(ytdTopncategories);
         sb.append(", ").append(ytdTopnoutlets);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

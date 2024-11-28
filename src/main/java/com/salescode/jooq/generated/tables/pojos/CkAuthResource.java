@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -28,15 +29,16 @@ public class CkAuthResource extends CommonDataModel implements Serializable {
     private Date         creationTime;
     private JsonNode     extendedAttributes;
     private Date         lastModifiedTime;
+    private String       lob;
     private String       modifiedBy;
-    private String       source;
     private Integer      version;
     private String       description;
     private String       name;
     private String       operation;
+    private String       permission;
     private JSON         patterns;
+    private String       source;
     private String       hash;
-    private String       lob;
     private Byte         changed;
 
     public CkAuthResource() {}
@@ -49,15 +51,16 @@ public class CkAuthResource extends CommonDataModel implements Serializable {
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
         this.lastModifiedTime = value.lastModifiedTime;
+        this.lob = value.lob;
         this.modifiedBy = value.modifiedBy;
-        this.source = value.source;
         this.version = value.version;
         this.description = value.description;
         this.name = value.name;
         this.operation = value.operation;
+        this.permission = value.permission;
         this.patterns = value.patterns;
+        this.source = value.source;
         this.hash = value.hash;
-        this.lob = value.lob;
         this.changed = value.changed;
     }
 
@@ -69,15 +72,16 @@ public class CkAuthResource extends CommonDataModel implements Serializable {
         Date         creationTime,
         JsonNode     extendedAttributes,
         Date         lastModifiedTime,
+        String       lob,
         String       modifiedBy,
-        String       source,
         Integer      version,
         String       description,
         String       name,
         String       operation,
+        String       permission,
         JSON         patterns,
+        String       source,
         String       hash,
-        String       lob,
         Byte         changed
     ) {
         this.id = id;
@@ -87,15 +91,16 @@ public class CkAuthResource extends CommonDataModel implements Serializable {
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
         this.lastModifiedTime = lastModifiedTime;
+        this.lob = lob;
         this.modifiedBy = modifiedBy;
-        this.source = source;
         this.version = version;
         this.description = description;
         this.name = name;
         this.operation = operation;
+        this.permission = permission;
         this.patterns = patterns;
+        this.source = source;
         this.hash = hash;
-        this.lob = lob;
         this.changed = changed;
     }
 
@@ -198,6 +203,20 @@ public class CkAuthResource extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_auth_resource.lob</code>.
+     */
+    public String getLob() {
+        return this.lob;
+    }
+
+    /**
+     * Setter for <code>ck_auth_resource.lob</code>.
+     */
+    public void setLob(String lob) {
+        this.lob = lob;
+    }
+
+    /**
      * Getter for <code>ck_auth_resource.modified_by</code>.
      */
     public String getModifiedBy() {
@@ -209,20 +228,6 @@ public class CkAuthResource extends CommonDataModel implements Serializable {
      */
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
-    }
-
-    /**
-     * Getter for <code>ck_auth_resource.source</code>.
-     */
-    public String getSource() {
-        return this.source;
-    }
-
-    /**
-     * Setter for <code>ck_auth_resource.source</code>.
-     */
-    public void setSource(String source) {
-        this.source = source;
     }
 
     /**
@@ -282,6 +287,20 @@ public class CkAuthResource extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_auth_resource.permission</code>.
+     */
+    public String getPermission() {
+        return this.permission;
+    }
+
+    /**
+     * Setter for <code>ck_auth_resource.permission</code>.
+     */
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    /**
      * Getter for <code>ck_auth_resource.patterns</code>.
      */
     public JSON getPatterns() {
@@ -296,6 +315,20 @@ public class CkAuthResource extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_auth_resource.source</code>.
+     */
+    public String getSource() {
+        return this.source;
+    }
+
+    /**
+     * Setter for <code>ck_auth_resource.source</code>.
+     */
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    /**
      * Getter for <code>ck_auth_resource.hash</code>.
      */
     public String getHash() {
@@ -307,20 +340,6 @@ public class CkAuthResource extends CommonDataModel implements Serializable {
      */
     public void setHash(String hash) {
         this.hash = hash;
-    }
-
-    /**
-     * Getter for <code>ck_auth_resource.lob</code>.
-     */
-    public String getLob() {
-        return this.lob;
-    }
-
-    /**
-     * Setter for <code>ck_auth_resource.lob</code>.
-     */
-    public void setLob(String lob) {
-        this.lob = lob;
     }
 
     /**
@@ -348,15 +367,16 @@ public class CkAuthResource extends CommonDataModel implements Serializable {
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
         sb.append(", ").append(lastModifiedTime);
+        sb.append(", ").append(lob);
         sb.append(", ").append(modifiedBy);
-        sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(description);
         sb.append(", ").append(name);
         sb.append(", ").append(operation);
+        sb.append(", ").append(permission);
         sb.append(", ").append(patterns);
+        sb.append(", ").append(source);
         sb.append(", ").append(hash);
-        sb.append(", ").append(lob);
         sb.append(", ").append(changed);
 
         sb.append(")");

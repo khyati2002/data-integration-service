@@ -10,14 +10,28 @@ import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
+import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 
 
 /**
@@ -55,6 +69,11 @@ public class CkNotificationHistory extends TableImpl<Record> {
      * The column <code>ck_notification_history.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_notification_history.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_notification_history.created_by</code>.
@@ -109,7 +128,7 @@ public class CkNotificationHistory extends TableImpl<Record> {
     /**
      * The column <code>ck_notification_history.category</code>.
      */
-    public final TableField<Record, String> CATEGORY = createField(DSL.name("category"), SQLDataType.VARCHAR(100), this, "");
+    public final TableField<Record, String> CATEGORY = createField(DSL.name("category"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_notification_history.delivery_status</code>.
@@ -122,6 +141,11 @@ public class CkNotificationHistory extends TableImpl<Record> {
     public final TableField<Record, LocalDateTime> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
+     * The column <code>ck_notification_history.group_key</code>.
+     */
+    public final TableField<Record, String> GROUP_KEY = createField(DSL.name("group_key"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_notification_history.recipient</code>.
      */
     public final TableField<Record, String> RECIPIENT = createField(DSL.name("recipient"), SQLDataType.VARCHAR(255), this, "");
@@ -130,6 +154,11 @@ public class CkNotificationHistory extends TableImpl<Record> {
      * The column <code>ck_notification_history.response</code>.
      */
     public final TableField<Record, JSON> RESPONSE = createField(DSL.name("response"), SQLDataType.JSON, this, "");
+
+    /**
+     * The column <code>ck_notification_history.source_name</code>.
+     */
+    public final TableField<Record, String> SOURCE_NAME = createField(DSL.name("source_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_notification_history.status</code>.
@@ -145,21 +174,6 @@ public class CkNotificationHistory extends TableImpl<Record> {
      * The column <code>ck_notification_history.type</code>.
      */
     public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_notification_history.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_notification_history.group_key</code>.
-     */
-    public final TableField<Record, String> GROUP_KEY = createField(DSL.name("group_key"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_notification_history.source_name</code>.
-     */
-    public final TableField<Record, String> SOURCE_NAME = createField(DSL.name("source_name"), SQLDataType.VARCHAR(255), this, "");
 
     private CkNotificationHistory(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -197,6 +211,11 @@ public class CkNotificationHistory extends TableImpl<Record> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.CK_NOTIFICATION_HISTORY_CK_NOTIFICATION_HISTORY_REC_END_TIME, Indexes.CK_NOTIFICATION_HISTORY_CK_NOTIFICATION_HISTORY_REC_END_TIME_TYPE);
     }
 
     @Override

@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkOrders extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -35,42 +37,41 @@ public class CkOrders extends CommonDataModel implements Serializable {
     private String        source;
     private Integer       version;
     private LocalDateTime systemTime;
+    private String        gpsLatitude;
+    private String        gpsLongitude;
     private Double        billAmount;
     private String        channel;
     private JSON          discountInfo;
-    private String        gpsLatitude;
-    private String        gpsLongitude;
     private String        userHierarchy;
     private Integer       lineCount;
+    private String        locationHierarchy;
     private String        loginid;
     private Double        netAmount;
     private Double        normalizedQuantity;
     private String        orderNumber;
+    private String        outletcode;
     private String        referenceNumber;
     private String        remarks;
     private String        shipId;
+    private String        supplierid;
+    private String        hierarchy;
     private Double        totalAmount;
     private Double        totalInitialAmt;
     private Double        totalInitialQuantity;
     private Double        totalMrp;
     private Double        totalQuantity;
     private String        type;
-    private LocalDateTime deliveryDate;
-    private String        status;
-    private String        locationHierarchy;
-    private String        outletcode;
-    private String        supplierid;
-    private String        hierarchy;
-    private String        statusReason;
-    private Byte          changed;
-    private String        groupId;
     private String        beat;
     private String        beatName;
+    private LocalDateTime deliveryDate;
+    private String        groupId;
+    private String        status;
+    private String        statusReason;
     private Double        initialNormalizedQuantity;
     private Double        normalizedVolume;
     private String        processingStatus;
-    private LocalDateTime salesDate;
     private Double        salesValue;
+    private LocalDateTime salesDate;
 
     public CkOrders() {}
 
@@ -78,6 +79,7 @@ public class CkOrders extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -88,48 +90,48 @@ public class CkOrders extends CommonDataModel implements Serializable {
         this.source = value.source;
         this.version = value.version;
         this.systemTime = value.systemTime;
+        this.gpsLatitude = value.gpsLatitude;
+        this.gpsLongitude = value.gpsLongitude;
         this.billAmount = value.billAmount;
         this.channel = value.channel;
         this.discountInfo = value.discountInfo;
-        this.gpsLatitude = value.gpsLatitude;
-        this.gpsLongitude = value.gpsLongitude;
         this.userHierarchy = value.userHierarchy;
         this.lineCount = value.lineCount;
+        this.locationHierarchy = value.locationHierarchy;
         this.loginid = value.loginid;
         this.netAmount = value.netAmount;
         this.normalizedQuantity = value.normalizedQuantity;
         this.orderNumber = value.orderNumber;
+        this.outletcode = value.outletcode;
         this.referenceNumber = value.referenceNumber;
         this.remarks = value.remarks;
         this.shipId = value.shipId;
+        this.supplierid = value.supplierid;
+        this.hierarchy = value.hierarchy;
         this.totalAmount = value.totalAmount;
         this.totalInitialAmt = value.totalInitialAmt;
         this.totalInitialQuantity = value.totalInitialQuantity;
         this.totalMrp = value.totalMrp;
         this.totalQuantity = value.totalQuantity;
         this.type = value.type;
-        this.deliveryDate = value.deliveryDate;
-        this.status = value.status;
-        this.locationHierarchy = value.locationHierarchy;
-        this.outletcode = value.outletcode;
-        this.supplierid = value.supplierid;
-        this.hierarchy = value.hierarchy;
-        this.statusReason = value.statusReason;
-        this.changed = value.changed;
-        this.groupId = value.groupId;
         this.beat = value.beat;
         this.beatName = value.beatName;
+        this.deliveryDate = value.deliveryDate;
+        this.groupId = value.groupId;
+        this.status = value.status;
+        this.statusReason = value.statusReason;
         this.initialNormalizedQuantity = value.initialNormalizedQuantity;
         this.normalizedVolume = value.normalizedVolume;
         this.processingStatus = value.processingStatus;
-        this.salesDate = value.salesDate;
         this.salesValue = value.salesValue;
+        this.salesDate = value.salesDate;
     }
 
     public CkOrders(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -140,46 +142,46 @@ public class CkOrders extends CommonDataModel implements Serializable {
         String        source,
         Integer       version,
         LocalDateTime systemTime,
+        String        gpsLatitude,
+        String        gpsLongitude,
         Double        billAmount,
         String        channel,
         JSON          discountInfo,
-        String        gpsLatitude,
-        String        gpsLongitude,
         String        userHierarchy,
         Integer       lineCount,
+        String        locationHierarchy,
         String        loginid,
         Double        netAmount,
         Double        normalizedQuantity,
         String        orderNumber,
+        String        outletcode,
         String        referenceNumber,
         String        remarks,
         String        shipId,
+        String        supplierid,
+        String        hierarchy,
         Double        totalAmount,
         Double        totalInitialAmt,
         Double        totalInitialQuantity,
         Double        totalMrp,
         Double        totalQuantity,
         String        type,
-        LocalDateTime deliveryDate,
-        String        status,
-        String        locationHierarchy,
-        String        outletcode,
-        String        supplierid,
-        String        hierarchy,
-        String        statusReason,
-        Byte          changed,
-        String        groupId,
         String        beat,
         String        beatName,
+        LocalDateTime deliveryDate,
+        String        groupId,
+        String        status,
+        String        statusReason,
         Double        initialNormalizedQuantity,
         Double        normalizedVolume,
         String        processingStatus,
-        LocalDateTime salesDate,
-        Double        salesValue
+        Double        salesValue,
+        LocalDateTime salesDate
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -190,42 +192,41 @@ public class CkOrders extends CommonDataModel implements Serializable {
         this.source = source;
         this.version = version;
         this.systemTime = systemTime;
+        this.gpsLatitude = gpsLatitude;
+        this.gpsLongitude = gpsLongitude;
         this.billAmount = billAmount;
         this.channel = channel;
         this.discountInfo = discountInfo;
-        this.gpsLatitude = gpsLatitude;
-        this.gpsLongitude = gpsLongitude;
         this.userHierarchy = userHierarchy;
         this.lineCount = lineCount;
+        this.locationHierarchy = locationHierarchy;
         this.loginid = loginid;
         this.netAmount = netAmount;
         this.normalizedQuantity = normalizedQuantity;
         this.orderNumber = orderNumber;
+        this.outletcode = outletcode;
         this.referenceNumber = referenceNumber;
         this.remarks = remarks;
         this.shipId = shipId;
+        this.supplierid = supplierid;
+        this.hierarchy = hierarchy;
         this.totalAmount = totalAmount;
         this.totalInitialAmt = totalInitialAmt;
         this.totalInitialQuantity = totalInitialQuantity;
         this.totalMrp = totalMrp;
         this.totalQuantity = totalQuantity;
         this.type = type;
-        this.deliveryDate = deliveryDate;
-        this.status = status;
-        this.locationHierarchy = locationHierarchy;
-        this.outletcode = outletcode;
-        this.supplierid = supplierid;
-        this.hierarchy = hierarchy;
-        this.statusReason = statusReason;
-        this.changed = changed;
-        this.groupId = groupId;
         this.beat = beat;
         this.beatName = beatName;
+        this.deliveryDate = deliveryDate;
+        this.groupId = groupId;
+        this.status = status;
+        this.statusReason = statusReason;
         this.initialNormalizedQuantity = initialNormalizedQuantity;
         this.normalizedVolume = normalizedVolume;
         this.processingStatus = processingStatus;
-        this.salesDate = salesDate;
         this.salesValue = salesValue;
+        this.salesDate = salesDate;
     }
 
     /**
@@ -268,6 +269,20 @@ public class CkOrders extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_orders.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_orders.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -411,6 +426,34 @@ public class CkOrders extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_orders.gps_latitude</code>.
+     */
+    public String getGpsLatitude() {
+        return this.gpsLatitude;
+    }
+
+    /**
+     * Setter for <code>ck_orders.gps_latitude</code>.
+     */
+    public void setGpsLatitude(String gpsLatitude) {
+        this.gpsLatitude = gpsLatitude;
+    }
+
+    /**
+     * Getter for <code>ck_orders.gps_longitude</code>.
+     */
+    public String getGpsLongitude() {
+        return this.gpsLongitude;
+    }
+
+    /**
+     * Setter for <code>ck_orders.gps_longitude</code>.
+     */
+    public void setGpsLongitude(String gpsLongitude) {
+        this.gpsLongitude = gpsLongitude;
+    }
+
+    /**
      * Getter for <code>ck_orders.bill_amount</code>.
      */
     public Double getBillAmount() {
@@ -453,34 +496,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_orders.gps_latitude</code>.
-     */
-    public String getGpsLatitude() {
-        return this.gpsLatitude;
-    }
-
-    /**
-     * Setter for <code>ck_orders.gps_latitude</code>.
-     */
-    public void setGpsLatitude(String gpsLatitude) {
-        this.gpsLatitude = gpsLatitude;
-    }
-
-    /**
-     * Getter for <code>ck_orders.gps_longitude</code>.
-     */
-    public String getGpsLongitude() {
-        return this.gpsLongitude;
-    }
-
-    /**
-     * Setter for <code>ck_orders.gps_longitude</code>.
-     */
-    public void setGpsLongitude(String gpsLongitude) {
-        this.gpsLongitude = gpsLongitude;
-    }
-
-    /**
      * Getter for <code>ck_orders.user_hierarchy</code>.
      */
     public String getUserHierarchy() {
@@ -506,6 +521,20 @@ public class CkOrders extends CommonDataModel implements Serializable {
      */
     public void setLineCount(Integer lineCount) {
         this.lineCount = lineCount;
+    }
+
+    /**
+     * Getter for <code>ck_orders.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_orders.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
     }
 
     /**
@@ -565,6 +594,20 @@ public class CkOrders extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_orders.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_orders.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
      * Getter for <code>ck_orders.reference_number</code>.
      */
     public String getReferenceNumber() {
@@ -604,6 +647,34 @@ public class CkOrders extends CommonDataModel implements Serializable {
      */
     public void setShipId(String shipId) {
         this.shipId = shipId;
+    }
+
+    /**
+     * Getter for <code>ck_orders.supplierid</code>.
+     */
+    public String getSupplierid() {
+        return this.supplierid;
+    }
+
+    /**
+     * Setter for <code>ck_orders.supplierid</code>.
+     */
+    public void setSupplierid(String supplierid) {
+        this.supplierid = supplierid;
+    }
+
+    /**
+     * Getter for <code>ck_orders.hierarchy</code>.
+     */
+    public String getHierarchy() {
+        return this.hierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_orders.hierarchy</code>.
+     */
+    public void setHierarchy(String hierarchy) {
+        this.hierarchy = hierarchy;
     }
 
     /**
@@ -691,132 +762,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_orders.delivery_date</code>.
-     */
-    public LocalDateTime getDeliveryDate() {
-        return this.deliveryDate;
-    }
-
-    /**
-     * Setter for <code>ck_orders.delivery_date</code>.
-     */
-    public void setDeliveryDate(LocalDateTime deliveryDate) {
-        this.deliveryDate = deliveryDate;
-    }
-
-    /**
-     * Getter for <code>ck_orders.status</code>.
-     */
-    public String getStatus() {
-        return this.status;
-    }
-
-    /**
-     * Setter for <code>ck_orders.status</code>.
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    /**
-     * Getter for <code>ck_orders.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_orders.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_orders.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_orders.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_orders.supplierid</code>.
-     */
-    public String getSupplierid() {
-        return this.supplierid;
-    }
-
-    /**
-     * Setter for <code>ck_orders.supplierid</code>.
-     */
-    public void setSupplierid(String supplierid) {
-        this.supplierid = supplierid;
-    }
-
-    /**
-     * Getter for <code>ck_orders.hierarchy</code>.
-     */
-    public String getHierarchy() {
-        return this.hierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_orders.hierarchy</code>.
-     */
-    public void setHierarchy(String hierarchy) {
-        this.hierarchy = hierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_orders.status_reason</code>.
-     */
-    public String getStatusReason() {
-        return this.statusReason;
-    }
-
-    /**
-     * Setter for <code>ck_orders.status_reason</code>.
-     */
-    public void setStatusReason(String statusReason) {
-        this.statusReason = statusReason;
-    }
-
-    /**
-     * Getter for <code>ck_orders.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_orders.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_orders.group_id</code>.
-     */
-    public String getGroupId() {
-        return this.groupId;
-    }
-
-    /**
-     * Setter for <code>ck_orders.group_id</code>.
-     */
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    /**
      * Getter for <code>ck_orders.beat</code>.
      */
     public String getBeat() {
@@ -842,6 +787,62 @@ public class CkOrders extends CommonDataModel implements Serializable {
      */
     public void setBeatName(String beatName) {
         this.beatName = beatName;
+    }
+
+    /**
+     * Getter for <code>ck_orders.delivery_date</code>.
+     */
+    public LocalDateTime getDeliveryDate() {
+        return this.deliveryDate;
+    }
+
+    /**
+     * Setter for <code>ck_orders.delivery_date</code>.
+     */
+    public void setDeliveryDate(LocalDateTime deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    /**
+     * Getter for <code>ck_orders.group_id</code>.
+     */
+    public String getGroupId() {
+        return this.groupId;
+    }
+
+    /**
+     * Setter for <code>ck_orders.group_id</code>.
+     */
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    /**
+     * Getter for <code>ck_orders.status</code>.
+     */
+    public String getStatus() {
+        return this.status;
+    }
+
+    /**
+     * Setter for <code>ck_orders.status</code>.
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    /**
+     * Getter for <code>ck_orders.status_reason</code>.
+     */
+    public String getStatusReason() {
+        return this.statusReason;
+    }
+
+    /**
+     * Setter for <code>ck_orders.status_reason</code>.
+     */
+    public void setStatusReason(String statusReason) {
+        this.statusReason = statusReason;
     }
 
     /**
@@ -887,20 +888,6 @@ public class CkOrders extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_orders.sales_date</code>.
-     */
-    public LocalDateTime getSalesDate() {
-        return this.salesDate;
-    }
-
-    /**
-     * Setter for <code>ck_orders.sales_date</code>.
-     */
-    public void setSalesDate(LocalDateTime salesDate) {
-        this.salesDate = salesDate;
-    }
-
-    /**
      * Getter for <code>ck_orders.sales_value</code>.
      */
     public Double getSalesValue() {
@@ -914,6 +901,20 @@ public class CkOrders extends CommonDataModel implements Serializable {
         this.salesValue = salesValue;
     }
 
+    /**
+     * Getter for <code>ck_orders.sales_date</code>.
+     */
+    public LocalDateTime getSalesDate() {
+        return this.salesDate;
+    }
+
+    /**
+     * Setter for <code>ck_orders.sales_date</code>.
+     */
+    public void setSalesDate(LocalDateTime salesDate) {
+        this.salesDate = salesDate;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkOrders (");
@@ -921,6 +922,7 @@ public class CkOrders extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -931,42 +933,41 @@ public class CkOrders extends CommonDataModel implements Serializable {
         sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(systemTime);
+        sb.append(", ").append(gpsLatitude);
+        sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(billAmount);
         sb.append(", ").append(channel);
         sb.append(", ").append(discountInfo);
-        sb.append(", ").append(gpsLatitude);
-        sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(userHierarchy);
         sb.append(", ").append(lineCount);
+        sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(loginid);
         sb.append(", ").append(netAmount);
         sb.append(", ").append(normalizedQuantity);
         sb.append(", ").append(orderNumber);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(referenceNumber);
         sb.append(", ").append(remarks);
         sb.append(", ").append(shipId);
+        sb.append(", ").append(supplierid);
+        sb.append(", ").append(hierarchy);
         sb.append(", ").append(totalAmount);
         sb.append(", ").append(totalInitialAmt);
         sb.append(", ").append(totalInitialQuantity);
         sb.append(", ").append(totalMrp);
         sb.append(", ").append(totalQuantity);
         sb.append(", ").append(type);
-        sb.append(", ").append(deliveryDate);
-        sb.append(", ").append(status);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(supplierid);
-        sb.append(", ").append(hierarchy);
-        sb.append(", ").append(statusReason);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(groupId);
         sb.append(", ").append(beat);
         sb.append(", ").append(beatName);
+        sb.append(", ").append(deliveryDate);
+        sb.append(", ").append(groupId);
+        sb.append(", ").append(status);
+        sb.append(", ").append(statusReason);
         sb.append(", ").append(initialNormalizedQuantity);
         sb.append(", ").append(normalizedVolume);
         sb.append(", ").append(processingStatus);
-        sb.append(", ").append(salesDate);
         sb.append(", ").append(salesValue);
+        sb.append(", ").append(salesDate);
 
         sb.append(")");
         return sb.toString();

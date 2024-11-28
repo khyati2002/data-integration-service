@@ -11,15 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -57,6 +66,11 @@ public class CkBannerDistribution extends TableImpl<Record> {
      * The column <code>ck_banner_distribution.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_banner_distribution.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_banner_distribution.created_by</code>.
@@ -106,12 +120,12 @@ public class CkBannerDistribution extends TableImpl<Record> {
     /**
      * The column <code>ck_banner_distribution.account</code>.
      */
-    public final TableField<Record, String> ACCOUNT = createField(DSL.name("account"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> ACCOUNT = createField(DSL.name("account"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_banner_distribution.channel</code>.
      */
-    public final TableField<Record, String> CHANNEL = createField(DSL.name("channel"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> CHANNEL = createField(DSL.name("channel"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_banner_distribution.end_date</code>.
@@ -119,19 +133,29 @@ public class CkBannerDistribution extends TableImpl<Record> {
     public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
+     * The column <code>ck_banner_distribution.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column <code>ck_banner_distribution.loyalty_type</code>.
+     */
+    public final TableField<Record, String> LOYALTY_TYPE = createField(DSL.name("loyalty_type"), SQLDataType.CLOB, this, "");
+
+    /**
      * The column <code>ck_banner_distribution.outlet_category</code>.
      */
-    public final TableField<Record, String> OUTLET_CATEGORY = createField(DSL.name("outlet_category"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> OUTLET_CATEGORY = createField(DSL.name("outlet_category"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_banner_distribution.outlet_class</code>.
      */
-    public final TableField<Record, String> OUTLET_CLASS = createField(DSL.name("outlet_class"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> OUTLET_CLASS = createField(DSL.name("outlet_class"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_banner_distribution.outlet_type</code>.
      */
-    public final TableField<Record, String> OUTLET_TYPE = createField(DSL.name("outlet_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> OUTLET_TYPE = createField(DSL.name("outlet_type"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_banner_distribution.start_date</code>.
@@ -144,24 +168,14 @@ public class CkBannerDistribution extends TableImpl<Record> {
     public final TableField<Record, String> BANNER_BANNER_NAME = createField(DSL.name("banner_banner_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_banner_distribution.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_banner_distribution.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_banner_distribution.loyalty_type</code>.
-     */
-    public final TableField<Record, String> LOYALTY_TYPE = createField(DSL.name("loyalty_type"), SQLDataType.CLOB, this, "");
-
-    /**
      * The column <code>ck_banner_distribution.outlet_code</code>.
      */
     public final TableField<Record, String> OUTLET_CODE = createField(DSL.name("outlet_code"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_banner_distribution.loc_salescodeid</code>.
+     */
+    public final TableField<Record, String> LOC_SALESCODEID = createField(DSL.name("loc_salescodeid"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_banner_distribution.sub_territory</code>.
@@ -172,11 +186,6 @@ public class CkBannerDistribution extends TableImpl<Record> {
      * The column <code>ck_banner_distribution.supplier</code>.
      */
     public final TableField<Record, String> SUPPLIER = createField(DSL.name("supplier"), SQLDataType.CLOB, this, "");
-
-    /**
-     * The column <code>ck_banner_distribution.loc_salescodeid</code>.
-     */
-    public final TableField<Record, String> LOC_SALESCODEID = createField(DSL.name("loc_salescodeid"), SQLDataType.VARCHAR(255), this, "");
 
     private CkBannerDistribution(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -223,11 +232,10 @@ public class CkBannerDistribution extends TableImpl<Record> {
 
     @Override
     public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKGMLCDX2TVA8Q3S00OWKECHO8, Keys.FKLQ9UHSR6FKSVECBM8PU7WD256);
+        return Arrays.asList(Keys.FKGMLCDX2TVA8Q3S00OWKECHO8);
     }
 
     private transient CkBanner _ckBanner;
-    private transient CkLocation _ckLocation;
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_banner</code> table.
@@ -237,16 +245,6 @@ public class CkBannerDistribution extends TableImpl<Record> {
             _ckBanner = new CkBanner(this, Keys.FKGMLCDX2TVA8Q3S00OWKECHO8);
 
         return _ckBanner;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKLQ9UHSR6FKSVECBM8PU7WD256);
-
-        return _ckLocation;
     }
 
     @Override

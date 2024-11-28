@@ -23,6 +23,7 @@ public class CkRangeProgramMaxTerm extends CommonDataModel implements Serializab
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -35,7 +36,6 @@ public class CkRangeProgramMaxTerm extends CommonDataModel implements Serializab
     private String       constantKey;
     private String       loginid;
     private Double       maxCount;
-    private Byte         changed;
 
     public CkRangeProgramMaxTerm() {}
 
@@ -43,6 +43,7 @@ public class CkRangeProgramMaxTerm extends CommonDataModel implements Serializab
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -55,13 +56,13 @@ public class CkRangeProgramMaxTerm extends CommonDataModel implements Serializab
         this.constantKey = value.constantKey;
         this.loginid = value.loginid;
         this.maxCount = value.maxCount;
-        this.changed = value.changed;
     }
 
     public CkRangeProgramMaxTerm(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -73,12 +74,12 @@ public class CkRangeProgramMaxTerm extends CommonDataModel implements Serializab
         Integer      version,
         String       constantKey,
         String       loginid,
-        Double       maxCount,
-        Byte         changed
+        Double       maxCount
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -91,7 +92,6 @@ public class CkRangeProgramMaxTerm extends CommonDataModel implements Serializab
         this.constantKey = constantKey;
         this.loginid = loginid;
         this.maxCount = maxCount;
-        this.changed = changed;
     }
 
     /**
@@ -134,6 +134,20 @@ public class CkRangeProgramMaxTerm extends CommonDataModel implements Serializab
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_range_program_max_term.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_range_program_max_term.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -304,20 +318,6 @@ public class CkRangeProgramMaxTerm extends CommonDataModel implements Serializab
         this.maxCount = maxCount;
     }
 
-    /**
-     * Getter for <code>ck_range_program_max_term.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_range_program_max_term.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkRangeProgramMaxTerm (");
@@ -325,6 +325,7 @@ public class CkRangeProgramMaxTerm extends CommonDataModel implements Serializab
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -337,7 +338,6 @@ public class CkRangeProgramMaxTerm extends CommonDataModel implements Serializab
         sb.append(", ").append(constantKey);
         sb.append(", ").append(loginid);
         sb.append(", ").append(maxCount);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

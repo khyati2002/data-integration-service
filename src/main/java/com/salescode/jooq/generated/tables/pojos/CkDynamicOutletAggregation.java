@@ -24,6 +24,7 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -36,9 +37,11 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
     private Double        achievedValue;
     private Double        achievedVolume;
     private LocalDateTime endDate;
+    private String        locationHierarchy;
     private Double        mtdSalesValue;
     private Double        mtdSalesVolume;
     private Integer       numOfClicks;
+    private String        outletcode;
     private LocalDateTime startDate;
     private Double        targetValue;
     private Double        targetVolume;
@@ -46,10 +49,7 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
     private Integer       todayClicks;
     private Integer       todayOrders;
     private Integer       totalOrders;
-    private String        locationHierarchy;
-    private String        outletcode;
     private String        loginid;
-    private Byte          changed;
 
     public CkDynamicOutletAggregation() {}
 
@@ -57,6 +57,7 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -69,9 +70,11 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         this.achievedValue = value.achievedValue;
         this.achievedVolume = value.achievedVolume;
         this.endDate = value.endDate;
+        this.locationHierarchy = value.locationHierarchy;
         this.mtdSalesValue = value.mtdSalesValue;
         this.mtdSalesVolume = value.mtdSalesVolume;
         this.numOfClicks = value.numOfClicks;
+        this.outletcode = value.outletcode;
         this.startDate = value.startDate;
         this.targetValue = value.targetValue;
         this.targetVolume = value.targetVolume;
@@ -79,16 +82,14 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         this.todayClicks = value.todayClicks;
         this.todayOrders = value.todayOrders;
         this.totalOrders = value.totalOrders;
-        this.locationHierarchy = value.locationHierarchy;
-        this.outletcode = value.outletcode;
         this.loginid = value.loginid;
-        this.changed = value.changed;
     }
 
     public CkDynamicOutletAggregation(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -101,9 +102,11 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         Double        achievedValue,
         Double        achievedVolume,
         LocalDateTime endDate,
+        String        locationHierarchy,
         Double        mtdSalesValue,
         Double        mtdSalesVolume,
         Integer       numOfClicks,
+        String        outletcode,
         LocalDateTime startDate,
         Double        targetValue,
         Double        targetVolume,
@@ -111,14 +114,12 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         Integer       todayClicks,
         Integer       todayOrders,
         Integer       totalOrders,
-        String        locationHierarchy,
-        String        outletcode,
-        String        loginid,
-        Byte          changed
+        String        loginid
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -131,9 +132,11 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         this.achievedValue = achievedValue;
         this.achievedVolume = achievedVolume;
         this.endDate = endDate;
+        this.locationHierarchy = locationHierarchy;
         this.mtdSalesValue = mtdSalesValue;
         this.mtdSalesVolume = mtdSalesVolume;
         this.numOfClicks = numOfClicks;
+        this.outletcode = outletcode;
         this.startDate = startDate;
         this.targetValue = targetValue;
         this.targetVolume = targetVolume;
@@ -141,10 +144,7 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         this.todayClicks = todayClicks;
         this.todayOrders = todayOrders;
         this.totalOrders = totalOrders;
-        this.locationHierarchy = locationHierarchy;
-        this.outletcode = outletcode;
         this.loginid = loginid;
-        this.changed = changed;
     }
 
     /**
@@ -189,6 +189,20 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_dynamic_outlet_aggregation.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_dynamic_outlet_aggregation.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -362,6 +376,20 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
     }
 
     /**
+     * Getter for <code>ck_dynamic_outlet_aggregation.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_dynamic_outlet_aggregation.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
      * Getter for <code>ck_dynamic_outlet_aggregation.mtd_sales_value</code>.
      */
     public Double getMtdSalesValue() {
@@ -401,6 +429,20 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
      */
     public void setNumOfClicks(Integer numOfClicks) {
         this.numOfClicks = numOfClicks;
+    }
+
+    /**
+     * Getter for <code>ck_dynamic_outlet_aggregation.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_dynamic_outlet_aggregation.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
     }
 
     /**
@@ -504,34 +546,6 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
     }
 
     /**
-     * Getter for <code>ck_dynamic_outlet_aggregation.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_dynamic_outlet_aggregation.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_dynamic_outlet_aggregation.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_dynamic_outlet_aggregation.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
      * Getter for <code>ck_dynamic_outlet_aggregation.loginid</code>.
      */
     public String getLoginid() {
@@ -545,20 +559,6 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         this.loginid = loginid;
     }
 
-    /**
-     * Getter for <code>ck_dynamic_outlet_aggregation.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_dynamic_outlet_aggregation.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkDynamicOutletAggregation (");
@@ -566,6 +566,7 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -578,9 +579,11 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         sb.append(", ").append(achievedValue);
         sb.append(", ").append(achievedVolume);
         sb.append(", ").append(endDate);
+        sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(mtdSalesValue);
         sb.append(", ").append(mtdSalesVolume);
         sb.append(", ").append(numOfClicks);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(startDate);
         sb.append(", ").append(targetValue);
         sb.append(", ").append(targetVolume);
@@ -588,10 +591,7 @@ public class CkDynamicOutletAggregation extends CommonDataModel implements Seria
         sb.append(", ").append(todayClicks);
         sb.append(", ").append(todayOrders);
         sb.append(", ").append(totalOrders);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(outletcode);
         sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

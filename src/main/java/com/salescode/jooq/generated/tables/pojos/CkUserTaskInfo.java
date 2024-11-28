@@ -38,7 +38,6 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
     private String        assignedTo;
     private LocalDateTime endDate;
     private String        hierarchy;
-    private String        outletcode;
     private Integer       priority;
     private String        remarks;
     private LocalDateTime startDate;
@@ -46,6 +45,7 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
     private String        taskDescription;
     private String        taskId;
     private String        taskName;
+    private String        outletcode;
 
     public CkUserTaskInfo() {}
 
@@ -67,7 +67,6 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
         this.assignedTo = value.assignedTo;
         this.endDate = value.endDate;
         this.hierarchy = value.hierarchy;
-        this.outletcode = value.outletcode;
         this.priority = value.priority;
         this.remarks = value.remarks;
         this.startDate = value.startDate;
@@ -75,6 +74,7 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
         this.taskDescription = value.taskDescription;
         this.taskId = value.taskId;
         this.taskName = value.taskName;
+        this.outletcode = value.outletcode;
     }
 
     public CkUserTaskInfo(
@@ -95,14 +95,14 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
         String        assignedTo,
         LocalDateTime endDate,
         String        hierarchy,
-        String        outletcode,
         Integer       priority,
         String        remarks,
         LocalDateTime startDate,
         String        status,
         String        taskDescription,
         String        taskId,
-        String        taskName
+        String        taskName,
+        String        outletcode
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -121,7 +121,6 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
         this.assignedTo = assignedTo;
         this.endDate = endDate;
         this.hierarchy = hierarchy;
-        this.outletcode = outletcode;
         this.priority = priority;
         this.remarks = remarks;
         this.startDate = startDate;
@@ -129,6 +128,7 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
         this.taskDescription = taskDescription;
         this.taskId = taskId;
         this.taskName = taskName;
+        this.outletcode = outletcode;
     }
 
     /**
@@ -370,20 +370,6 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_user_task_info.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_user_task_info.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
      * Getter for <code>ck_user_task_info.priority</code>.
      */
     public Integer getPriority() {
@@ -481,6 +467,20 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
         this.taskName = taskName;
     }
 
+    /**
+     * Getter for <code>ck_user_task_info.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_user_task_info.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkUserTaskInfo (");
@@ -502,7 +502,6 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(assignedTo);
         sb.append(", ").append(endDate);
         sb.append(", ").append(hierarchy);
-        sb.append(", ").append(outletcode);
         sb.append(", ").append(priority);
         sb.append(", ").append(remarks);
         sb.append(", ").append(startDate);
@@ -510,6 +509,7 @@ public class CkUserTaskInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(taskDescription);
         sb.append(", ").append(taskId);
         sb.append(", ").append(taskName);
+        sb.append(", ").append(outletcode);
 
         sb.append(")");
         return sb.toString();

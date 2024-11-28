@@ -19,8 +19,8 @@ import java.util.List;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.Index;
-import org.jooq.JSON;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Schema;
@@ -127,7 +127,7 @@ public class CkUser extends TableImpl<Record> {
     /**
      * The column <code>ck_user.hierarchy</code>.
      */
-    public final TableField<Record, String> HIERARCHY = createField(DSL.name("hierarchy"), SQLDataType.CLOB, this, "");
+    public final TableField<Record, String> HIERARCHY = createField(DSL.name("hierarchy"), SQLDataType.VARCHAR(500), this, "");
 
     /**
      * The column <code>ck_user.last_password_reset_date</code>.
@@ -190,11 +190,6 @@ public class CkUser extends TableImpl<Record> {
     public final TableField<Record, String> FACEBOOKPSID = createField(DSL.name("facebookpsid"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_user.accessible_by</code>.
-     */
-    public final TableField<Record, JSON> ACCESSIBLE_BY = createField(DSL.name("accessible_by"), SQLDataType.JSON, this, "");
-
-    /**
      * The column <code>ck_user.hash</code>.
      */
     public final TableField<Record, String> HASH = createField(DSL.name("hash"), SQLDataType.CLOB, this, "");
@@ -233,6 +228,11 @@ public class CkUser extends TableImpl<Record> {
      * The column <code>ck_user.assigned_hierarchy</code>.
      */
     public final TableField<Record, String> ASSIGNED_HIERARCHY = createField(DSL.name("assigned_hierarchy"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>ck_user.rowid</code>.
+     */
+    public final TableField<Record, Integer> ROWID = createField(DSL.name("rowid"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>ck_user.changed</code>.
@@ -304,7 +304,12 @@ public class CkUser extends TableImpl<Record> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.CK_USER_CK_USER_IDX_1, Indexes.CK_USER_CK_USER_IDX_2, Indexes.CK_USER_IDX_HIERARCHY_FULLINDEX, Indexes.CK_USER_USERCONTEXT_IDX);
+        return Arrays.asList(Indexes.CK_USER_CK_USER_IDX_1, Indexes.CK_USER_CK_USER_IDX_2, Indexes.CK_USER_IDX_HIERARCHY_FULLINDEX, Indexes.CK_USER_IDX_NORMALIZED_HIERARCHY);
+    }
+
+    @Override
+    public Identity<Record, Integer> getIdentity() {
+        return (Identity<Record, Integer>) super.getIdentity();
     }
 
     @Override
@@ -314,7 +319,7 @@ public class CkUser extends TableImpl<Record> {
 
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_USER_UK_2F6QWRY9T0AXMNHVAN6XHUG8G, Keys.KEY_CK_USER_UK_EITQD1YHCGA0L4XRAA6MAGNV2, Keys.KEY_CK_USER_UK_NQB2805SL8W8990HA7495C9TG);
+        return Arrays.asList(Keys.KEY_CK_USER_UK_QM4RFU9KAW2MCM43L8248WLUF, Keys.KEY_CK_USER_UK_2F6QWRY9T0AXMNHVAN6XHUG8G, Keys.KEY_CK_USER_UK_EITQD1YHCGA0L4XRAA6MAGNV2, Keys.KEY_CK_USER_ROWID, Keys.KEY_CK_USER_UK_NQB2805SL8W8990HA7495C9TG);
     }
 
     @Override

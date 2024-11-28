@@ -24,6 +24,7 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     private String          id;
     private ActiveStatus    activeStatus;
     private String          activeStatusReason;
+    private Boolean         changed;
     private String          createdBy;
     private Date            creationTime;
     private JsonNode        extendedAttributes;
@@ -43,7 +44,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
     private Integer         priority;
     private Integer         severity;
     private String          type;
-    private Byte            changed;
 
     public CkEnrichmentInfo() {}
 
@@ -51,6 +51,7 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -70,13 +71,13 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
         this.priority = value.priority;
         this.severity = value.severity;
         this.type = value.type;
-        this.changed = value.changed;
     }
 
     public CkEnrichmentInfo(
         String          id,
         ActiveStatus    activeStatus,
         String          activeStatusReason,
+        Boolean         changed,
         String          createdBy,
         Date            creationTime,
         JsonNode        extendedAttributes,
@@ -95,12 +96,12 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
         EnrichmentPhase phase,
         Integer         priority,
         Integer         severity,
-        String          type,
-        Byte            changed
+        String          type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -120,7 +121,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
         this.priority = priority;
         this.severity = severity;
         this.type = type;
-        this.changed = changed;
     }
 
     /**
@@ -163,6 +163,20 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_enrichment_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_enrichment_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -431,20 +445,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
         this.type = type;
     }
 
-    /**
-     * Getter for <code>ck_enrichment_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_enrichment_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkEnrichmentInfo (");
@@ -452,6 +452,7 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -471,7 +472,6 @@ public class CkEnrichmentInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(priority);
         sb.append(", ").append(severity);
         sb.append(", ").append(type);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

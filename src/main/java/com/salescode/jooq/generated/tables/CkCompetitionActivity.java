@@ -11,15 +11,23 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -57,6 +65,11 @@ public class CkCompetitionActivity extends TableImpl<Record> {
      * The column <code>ck_competition_activity.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_competition_activity.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_competition_activity.created_by</code>.
@@ -134,6 +147,16 @@ public class CkCompetitionActivity extends TableImpl<Record> {
     public final TableField<Record, JSON> IMAGES = createField(DSL.name("images"), SQLDataType.JSON, this, "");
 
     /**
+     * The column <code>ck_competition_activity.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column <code>ck_competition_activity.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
+
+    /**
      * The column <code>ck_competition_activity.name</code>.
      */
     public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
@@ -179,6 +202,11 @@ public class CkCompetitionActivity extends TableImpl<Record> {
     public final TableField<Record, String> COMPANY_NAME = createField(DSL.name("company_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_competition_activity.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_competition_activity.outlet_name</code>.
      */
     public final TableField<Record, String> OUTLET_NAME = createField(DSL.name("outlet_name"), SQLDataType.VARCHAR(255), this, "");
@@ -197,26 +225,6 @@ public class CkCompetitionActivity extends TableImpl<Record> {
      * The column <code>ck_competition_activity.sub_cat</code>.
      */
     public final TableField<Record, String> SUB_CAT = createField(DSL.name("sub_cat"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_competition_activity.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_competition_activity.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_competition_activity.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_competition_activity.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkCompetitionActivity(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -259,46 +267,6 @@ public class CkCompetitionActivity extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_COMPETITION_ACTIVITY_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKN6VG8LHILN5ULOF7GB43WTHJ8, Keys.FKRK5THH1S8OXHU1DYG4B3KV4XQ, Keys.FK8M0C2DYMO04INS681ORCTE0GW);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKN6VG8LHILN5ULOF7GB43WTHJ8);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKRK5THH1S8OXHU1DYG4B3KV4XQ);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK8M0C2DYMO04INS681ORCTE0GW);
-
-        return _ckOutletDetails;
     }
 
     @Override

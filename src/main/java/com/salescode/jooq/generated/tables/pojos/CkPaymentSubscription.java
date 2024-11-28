@@ -34,12 +34,12 @@ public class CkPaymentSubscription extends CommonDataModel implements Serializab
     private String       source;
     private Integer      version;
     private String       accountId;
-    private String       isEnabled;
-    private String       paymentEnabled;
     private String       paymentProvideType;
     private Integer      status;
-    private String       supplier;
     private String       userId;
+    private String       isEnabled;
+    private String       paymentEnabled;
+    private String       supplier;
     private String       paymentType;
 
     public CkPaymentSubscription() {}
@@ -59,12 +59,12 @@ public class CkPaymentSubscription extends CommonDataModel implements Serializab
         this.source = value.source;
         this.version = value.version;
         this.accountId = value.accountId;
-        this.isEnabled = value.isEnabled;
-        this.paymentEnabled = value.paymentEnabled;
         this.paymentProvideType = value.paymentProvideType;
         this.status = value.status;
-        this.supplier = value.supplier;
         this.userId = value.userId;
+        this.isEnabled = value.isEnabled;
+        this.paymentEnabled = value.paymentEnabled;
+        this.supplier = value.supplier;
         this.paymentType = value.paymentType;
     }
 
@@ -83,12 +83,12 @@ public class CkPaymentSubscription extends CommonDataModel implements Serializab
         String       source,
         Integer      version,
         String       accountId,
-        String       isEnabled,
-        String       paymentEnabled,
         String       paymentProvideType,
         Integer      status,
-        String       supplier,
         String       userId,
+        String       isEnabled,
+        String       paymentEnabled,
+        String       supplier,
         String       paymentType
     ) {
         this.id = id;
@@ -105,12 +105,12 @@ public class CkPaymentSubscription extends CommonDataModel implements Serializab
         this.source = source;
         this.version = version;
         this.accountId = accountId;
-        this.isEnabled = isEnabled;
-        this.paymentEnabled = paymentEnabled;
         this.paymentProvideType = paymentProvideType;
         this.status = status;
-        this.supplier = supplier;
         this.userId = userId;
+        this.isEnabled = isEnabled;
+        this.paymentEnabled = paymentEnabled;
+        this.supplier = supplier;
         this.paymentType = paymentType;
     }
 
@@ -311,34 +311,6 @@ public class CkPaymentSubscription extends CommonDataModel implements Serializab
     }
 
     /**
-     * Getter for <code>ck_payment_subscription.is_enabled</code>.
-     */
-    public String getIsEnabled() {
-        return this.isEnabled;
-    }
-
-    /**
-     * Setter for <code>ck_payment_subscription.is_enabled</code>.
-     */
-    public void setIsEnabled(String isEnabled) {
-        this.isEnabled = isEnabled;
-    }
-
-    /**
-     * Getter for <code>ck_payment_subscription.payment_enabled</code>.
-     */
-    public String getPaymentEnabled() {
-        return this.paymentEnabled;
-    }
-
-    /**
-     * Setter for <code>ck_payment_subscription.payment_enabled</code>.
-     */
-    public void setPaymentEnabled(String paymentEnabled) {
-        this.paymentEnabled = paymentEnabled;
-    }
-
-    /**
      * Getter for <code>ck_payment_subscription.payment_provide_type</code>.
      */
     public String getPaymentProvideType() {
@@ -367,20 +339,6 @@ public class CkPaymentSubscription extends CommonDataModel implements Serializab
     }
 
     /**
-     * Getter for <code>ck_payment_subscription.supplier</code>.
-     */
-    public String getSupplier() {
-        return this.supplier;
-    }
-
-    /**
-     * Setter for <code>ck_payment_subscription.supplier</code>.
-     */
-    public void setSupplier(String supplier) {
-        this.supplier = supplier;
-    }
-
-    /**
      * Getter for <code>ck_payment_subscription.user_id</code>.
      */
     public String getUserId() {
@@ -392,6 +350,48 @@ public class CkPaymentSubscription extends CommonDataModel implements Serializab
      */
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    /**
+     * Getter for <code>ck_payment_subscription.is_enabled</code>.
+     */
+    public String getIsEnabled() {
+        return this.isEnabled;
+    }
+
+    /**
+     * Setter for <code>ck_payment_subscription.is_enabled</code>.
+     */
+    public void setIsEnabled(String isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    /**
+     * Getter for <code>ck_payment_subscription.payment_enabled</code>.
+     */
+    public String getPaymentEnabled() {
+        return this.paymentEnabled;
+    }
+
+    /**
+     * Setter for <code>ck_payment_subscription.payment_enabled</code>.
+     */
+    public void setPaymentEnabled(String paymentEnabled) {
+        this.paymentEnabled = paymentEnabled;
+    }
+
+    /**
+     * Getter for <code>ck_payment_subscription.supplier</code>.
+     */
+    public String getSupplier() {
+        return this.supplier;
+    }
+
+    /**
+     * Setter for <code>ck_payment_subscription.supplier</code>.
+     */
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 
     /**
@@ -426,12 +426,12 @@ public class CkPaymentSubscription extends CommonDataModel implements Serializab
         sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(accountId);
-        sb.append(", ").append(isEnabled);
-        sb.append(", ").append(paymentEnabled);
         sb.append(", ").append(paymentProvideType);
         sb.append(", ").append(status);
-        sb.append(", ").append(supplier);
         sb.append(", ").append(userId);
+        sb.append(", ").append(isEnabled);
+        sb.append(", ").append(paymentEnabled);
+        sb.append(", ").append(supplier);
         sb.append(", ").append(paymentType);
 
         sb.append(")");

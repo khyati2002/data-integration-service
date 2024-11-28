@@ -23,6 +23,7 @@ public class Profile extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -37,8 +38,6 @@ public class Profile extends CommonDataModel implements Serializable {
     private String       name;
     private String       payload;
     private String       type;
-    private String       locationHierarchy;
-    private Byte         changed;
 
     public Profile() {}
 
@@ -46,6 +45,7 @@ public class Profile extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -60,14 +60,13 @@ public class Profile extends CommonDataModel implements Serializable {
         this.name = value.name;
         this.payload = value.payload;
         this.type = value.type;
-        this.locationHierarchy = value.locationHierarchy;
-        this.changed = value.changed;
     }
 
     public Profile(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -81,13 +80,12 @@ public class Profile extends CommonDataModel implements Serializable {
         String       implementation,
         String       name,
         String       payload,
-        String       type,
-        String       locationHierarchy,
-        Byte         changed
+        String       type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -102,8 +100,6 @@ public class Profile extends CommonDataModel implements Serializable {
         this.name = name;
         this.payload = payload;
         this.type = type;
-        this.locationHierarchy = locationHierarchy;
-        this.changed = changed;
     }
 
     /**
@@ -146,6 +142,20 @@ public class Profile extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>profile.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>profile.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -344,34 +354,6 @@ public class Profile extends CommonDataModel implements Serializable {
         this.type = type;
     }
 
-    /**
-     * Getter for <code>profile.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>profile.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>profile.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>profile.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Profile (");
@@ -379,6 +361,7 @@ public class Profile extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -393,8 +376,6 @@ public class Profile extends CommonDataModel implements Serializable {
         sb.append(", ").append(name);
         sb.append(", ").append(payload);
         sb.append(", ").append(type);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

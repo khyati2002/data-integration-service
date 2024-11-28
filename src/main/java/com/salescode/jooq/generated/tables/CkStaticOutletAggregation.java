@@ -11,15 +11,23 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -58,6 +66,11 @@ public class CkStaticOutletAggregation extends TableImpl<Record> {
      * <code>ck_static_outlet_aggregation.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_static_outlet_aggregation.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_static_outlet_aggregation.created_by</code>.
@@ -130,6 +143,11 @@ public class CkStaticOutletAggregation extends TableImpl<Record> {
     public final TableField<Record, Double> LMTD_SALES_VOLUME = createField(DSL.name("lmtd_sales_volume"), SQLDataType.DOUBLE.nullable(false), this, "");
 
     /**
+     * The column <code>ck_static_outlet_aggregation.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_static_outlet_aggregation.lymtd_sale_value</code>.
      */
     public final TableField<Record, Double> LYMTD_SALE_VALUE = createField(DSL.name("lymtd_sale_value"), SQLDataType.DOUBLE.nullable(false), this, "");
@@ -194,6 +212,11 @@ public class CkStaticOutletAggregation extends TableImpl<Record> {
     public final TableField<Record, JSON> MTD_TOPNCATEGORIES = createField(DSL.name("mtd_topncategories"), SQLDataType.JSON, this, "");
 
     /**
+     * The column <code>ck_static_outlet_aggregation.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_static_outlet_aggregation.pytd_sales_value</code>.
      */
     public final TableField<Record, Double> PYTD_SALES_VALUE = createField(DSL.name("pytd_sales_value"), SQLDataType.DOUBLE.nullable(false), this, "");
@@ -223,6 +246,11 @@ public class CkStaticOutletAggregation extends TableImpl<Record> {
      * <code>ck_static_outlet_aggregation.time_since_last_order</code>.
      */
     public final TableField<Record, LocalDateTime> TIME_SINCE_LAST_ORDER = createField(DSL.name("time_since_last_order"), SQLDataType.LOCALDATETIME(0), this, "");
+
+    /**
+     * The column <code>ck_static_outlet_aggregation.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_static_outlet_aggregation.ytd_bottomnbrands</code>.
@@ -278,26 +306,6 @@ public class CkStaticOutletAggregation extends TableImpl<Record> {
      */
     public final TableField<Record, JSON> YTD_TOPNCATEGORIES = createField(DSL.name("ytd_topncategories"), SQLDataType.JSON, this, "");
 
-    /**
-     * The column <code>ck_static_outlet_aggregation.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_static_outlet_aggregation.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_static_outlet_aggregation.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_static_outlet_aggregation.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
     private CkStaticOutletAggregation(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
     }
@@ -341,46 +349,6 @@ public class CkStaticOutletAggregation extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_STATIC_OUTLET_AGGREGATION_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK6COASR2J0MQFBY7XPLD9QYDY2, Keys.FKIXM593R5M3AW8FO2GU09AI1WH, Keys.FKMI0W931DMYCJB4Q7QXY6AU7D2);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkOutletDetails _ckOutletDetails;
-    private transient CkUser _ckUser;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FK6COASR2J0MQFBY7XPLD9QYDY2);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FKIXM593R5M3AW8FO2GU09AI1WH);
-
-        return _ckOutletDetails;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKMI0W931DMYCJB4Q7QXY6AU7D2);
-
-        return _ckUser;
     }
 
     @Override

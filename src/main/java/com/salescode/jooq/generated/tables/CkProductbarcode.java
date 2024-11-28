@@ -11,14 +11,21 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -56,6 +63,11 @@ public class CkProductbarcode extends TableImpl<Record> {
      * The column <code>ck_productbarcode.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_productbarcode.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_productbarcode.created_by</code>.
@@ -113,24 +125,19 @@ public class CkProductbarcode extends TableImpl<Record> {
     public final TableField<Record, String> COUNTRY_CODE = createField(DSL.name("country_code"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_productbarcode.outlet_code</code>.
+     */
+    public final TableField<Record, String> OUTLET_CODE = createField(DSL.name("outlet_code"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_productbarcode.pack_size_unit</code>.
      */
     public final TableField<Record, String> PACK_SIZE_UNIT = createField(DSL.name("pack_size_unit"), SQLDataType.VARCHAR(200), this, "");
 
     /**
-     * The column <code>ck_productbarcode.outlet_code</code>.
-     */
-    public final TableField<Record, String> OUTLET_CODE = createField(DSL.name("outlet_code"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
      * The column <code>ck_productbarcode.sku_code</code>.
      */
     public final TableField<Record, String> SKU_CODE = createField(DSL.name("sku_code"), SQLDataType.VARCHAR(255).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_productbarcode.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     /**
      * The column <code>ck_productbarcode.supplier</code>.
@@ -178,36 +185,6 @@ public class CkProductbarcode extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_PRODUCTBARCODE_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKSY6PLHDXA9XPXGRVUCCCWWDP6, Keys.FK97W025M0EL7GOY08WJDOG74H1);
-    }
-
-    private transient CkOutletDetails _ckOutletDetails;
-    private transient CkProductdetails _ckProductdetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FKSY6PLHDXA9XPXGRVUCCCWWDP6);
-
-        return _ckOutletDetails;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_productdetails</code>
-     * table.
-     */
-    public CkProductdetails ckProductdetails() {
-        if (_ckProductdetails == null)
-            _ckProductdetails = new CkProductdetails(this, Keys.FK97W025M0EL7GOY08WJDOG74H1);
-
-        return _ckProductdetails;
     }
 
     @Override

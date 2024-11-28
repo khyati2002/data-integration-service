@@ -11,14 +11,23 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -56,6 +65,11 @@ public class CkTargetResults extends TableImpl<Record> {
      * The column <code>ck_target_results.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_target_results.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_target_results.created_by</code>.
@@ -115,27 +129,22 @@ public class CkTargetResults extends TableImpl<Record> {
     /**
      * The column <code>ck_target_results.location_hierarchy</code>.
      */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_target_results.loginid</code>.
      */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_target_results.outletcode</code>.
      */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_target_results.target_id</code>.
      */
     public final TableField<Record, String> TARGET_ID = createField(DSL.name("target_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_target_results.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkTargetResults(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -182,44 +191,10 @@ public class CkTargetResults extends TableImpl<Record> {
 
     @Override
     public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK4A5C9W03SI6MKSOVPSA36SH0H, Keys.FKNJMU0WVJJSAXLPGQG6KW0556G, Keys.FK5ASM71M6PGPUYIUJ85KAAQYS0, Keys.FKNUOABAUKTSP5SL5O3I7DJRF4P);
+        return Arrays.asList(Keys.FKNUOABAUKTSP5SL5O3I7DJRF4P);
     }
 
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
     private transient CkTargets _ckTargets;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FK4A5C9W03SI6MKSOVPSA36SH0H);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKNJMU0WVJJSAXLPGQG6KW0556G);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK5ASM71M6PGPUYIUJ85KAAQYS0);
-
-        return _ckOutletDetails;
-    }
 
     /**
      * Get the implicit join path to the <code>ckroot.ck_targets</code> table.

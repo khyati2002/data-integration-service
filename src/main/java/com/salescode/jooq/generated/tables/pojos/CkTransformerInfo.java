@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,6 +25,7 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -39,11 +41,11 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     private Boolean      enabled;
     private String       implementation;
     private String       language;
+    private String       name;
     private Integer      priority;
     private Integer      severity;
     private String       type;
-    private Byte         changed;
-    private String       name;
+    private JSON         jsonSchema;
 
     public CkTransformerInfo() {}
 
@@ -51,6 +53,7 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -66,17 +69,18 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         this.enabled = value.enabled;
         this.implementation = value.implementation;
         this.language = value.language;
+        this.name = value.name;
         this.priority = value.priority;
         this.severity = value.severity;
         this.type = value.type;
-        this.changed = value.changed;
-        this.name = value.name;
+        this.jsonSchema = value.jsonSchema;
     }
 
     public CkTransformerInfo(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -92,15 +96,16 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         Boolean      enabled,
         String       implementation,
         String       language,
+        String       name,
         Integer      priority,
         Integer      severity,
         String       type,
-        Byte         changed,
-        String       name
+        JSON         jsonSchema
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -116,11 +121,11 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         this.enabled = enabled;
         this.implementation = implementation;
         this.language = language;
+        this.name = name;
         this.priority = priority;
         this.severity = severity;
         this.type = type;
-        this.changed = changed;
-        this.name = name;
+        this.jsonSchema = jsonSchema;
     }
 
     /**
@@ -163,6 +168,20 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_transformer_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_transformer_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -376,6 +395,20 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_transformer_info.name</code>.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Setter for <code>ck_transformer_info.name</code>.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
      * Getter for <code>ck_transformer_info.priority</code>.
      */
     public Integer getPriority() {
@@ -418,31 +451,17 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_transformer_info.changed</code>.
+     * Getter for <code>ck_transformer_info.json_schema</code>.
      */
-    public Byte getChanged() {
-        return this.changed;
+    public JSON getJsonSchema() {
+        return this.jsonSchema;
     }
 
     /**
-     * Setter for <code>ck_transformer_info.changed</code>.
+     * Setter for <code>ck_transformer_info.json_schema</code>.
      */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_transformer_info.name</code>.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Setter for <code>ck_transformer_info.name</code>.
-     */
-    public void setName(String name) {
-        this.name = name;
+    public void setJsonSchema(JSON jsonSchema) {
+        this.jsonSchema = jsonSchema;
     }
 
     @Override
@@ -452,6 +471,7 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -467,11 +487,11 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(enabled);
         sb.append(", ").append(implementation);
         sb.append(", ").append(language);
+        sb.append(", ").append(name);
         sb.append(", ").append(priority);
         sb.append(", ").append(severity);
         sb.append(", ").append(type);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(name);
+        sb.append(", ").append(jsonSchema);
 
         sb.append(")");
         return sb.toString();

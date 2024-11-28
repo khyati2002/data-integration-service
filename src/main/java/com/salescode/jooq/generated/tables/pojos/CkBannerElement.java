@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,6 +25,7 @@ public class CkBannerElement extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -43,7 +45,6 @@ public class CkBannerElement extends CommonDataModel implements Serializable {
     private String       mediaName;
     private String       mediaUrl;
     private String       bannerId;
-    private Byte         changed;
 
     public CkBannerElement() {}
 
@@ -51,6 +52,7 @@ public class CkBannerElement extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -70,13 +72,13 @@ public class CkBannerElement extends CommonDataModel implements Serializable {
         this.mediaName = value.mediaName;
         this.mediaUrl = value.mediaUrl;
         this.bannerId = value.bannerId;
-        this.changed = value.changed;
     }
 
     public CkBannerElement(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -95,12 +97,12 @@ public class CkBannerElement extends CommonDataModel implements Serializable {
         String       fileName,
         String       mediaName,
         String       mediaUrl,
-        String       bannerId,
-        Byte         changed
+        String       bannerId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -120,7 +122,6 @@ public class CkBannerElement extends CommonDataModel implements Serializable {
         this.mediaName = mediaName;
         this.mediaUrl = mediaUrl;
         this.bannerId = bannerId;
-        this.changed = changed;
     }
 
     /**
@@ -163,6 +164,20 @@ public class CkBannerElement extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_banner_element.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_banner_element.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -431,20 +446,6 @@ public class CkBannerElement extends CommonDataModel implements Serializable {
         this.bannerId = bannerId;
     }
 
-    /**
-     * Getter for <code>ck_banner_element.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_banner_element.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkBannerElement (");
@@ -452,6 +453,7 @@ public class CkBannerElement extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -471,7 +473,6 @@ public class CkBannerElement extends CommonDataModel implements Serializable {
         sb.append(", ").append(mediaName);
         sb.append(", ").append(mediaUrl);
         sb.append(", ").append(bannerId);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

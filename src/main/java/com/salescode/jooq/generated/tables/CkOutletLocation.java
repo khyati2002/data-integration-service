@@ -11,12 +11,23 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Date;
 
 
 /**
@@ -186,6 +197,35 @@ public class CkOutletLocation extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_OUTLET_LOCATION_PRIMARY;
+    }
+
+    @Override
+    public List<ForeignKey<Record, ?>> getReferences() {
+        return Arrays.asList(Keys.FK1V7NLW3K6SQF8KTDRTVP6OUTUHBG, Keys.FK8L5XMR78GLIGISDV8KR44RXBHYQSFGGJ);
+    }
+
+    private transient CkUser _ckUser;
+    private transient CkOutletDetails _ckOutletDetails;
+
+    /**
+     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
+     */
+    public CkUser ckUser() {
+        if (_ckUser == null)
+            _ckUser = new CkUser(this, Keys.FK1V7NLW3K6SQF8KTDRTVP6OUTUHBG);
+
+        return _ckUser;
+    }
+
+    /**
+     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
+     * table.
+     */
+    public CkOutletDetails ckOutletDetails() {
+        if (_ckOutletDetails == null)
+            _ckOutletDetails = new CkOutletDetails(this, Keys.FK8L5XMR78GLIGISDV8KR44RXBHYQSFGGJ);
+
+        return _ckOutletDetails;
     }
 
     @Override

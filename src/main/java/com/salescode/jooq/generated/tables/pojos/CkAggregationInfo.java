@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -39,11 +40,13 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     private String        aggregationName;
     private String        cadenceDateField;
     private JSON          cadenceTypes;
-    private String        category;
-    private String        dataType;
+    private JSON          configuration;
+    private String        cronExpression;
     private String        description;
+    private String        implementation;
     private String        kpiName;
-    private String        operationType;
+    private String        level;
+    private LocalDateTime nextScheduledTime;
     private String        pointerField;
     private String        primaryGroupBy;
     private String        primaryGroupName;
@@ -56,11 +59,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     private String        targetTable;
     private String        tertiaryGroupBy;
     private String        tertiaryGroupName;
-    private String        level;
-    private String        cronExpression;
-    private String        implementation;
-    private LocalDateTime nextScheduledTime;
-    private JSON          configuration;
 
     public CkAggregationInfo() {}
 
@@ -82,11 +80,13 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
         this.aggregationName = value.aggregationName;
         this.cadenceDateField = value.cadenceDateField;
         this.cadenceTypes = value.cadenceTypes;
-        this.category = value.category;
-        this.dataType = value.dataType;
+        this.configuration = value.configuration;
+        this.cronExpression = value.cronExpression;
         this.description = value.description;
+        this.implementation = value.implementation;
         this.kpiName = value.kpiName;
-        this.operationType = value.operationType;
+        this.level = value.level;
+        this.nextScheduledTime = value.nextScheduledTime;
         this.pointerField = value.pointerField;
         this.primaryGroupBy = value.primaryGroupBy;
         this.primaryGroupName = value.primaryGroupName;
@@ -99,11 +99,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
         this.targetTable = value.targetTable;
         this.tertiaryGroupBy = value.tertiaryGroupBy;
         this.tertiaryGroupName = value.tertiaryGroupName;
-        this.level = value.level;
-        this.cronExpression = value.cronExpression;
-        this.implementation = value.implementation;
-        this.nextScheduledTime = value.nextScheduledTime;
-        this.configuration = value.configuration;
     }
 
     public CkAggregationInfo(
@@ -124,11 +119,13 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
         String        aggregationName,
         String        cadenceDateField,
         JSON          cadenceTypes,
-        String        category,
-        String        dataType,
+        JSON          configuration,
+        String        cronExpression,
         String        description,
+        String        implementation,
         String        kpiName,
-        String        operationType,
+        String        level,
+        LocalDateTime nextScheduledTime,
         String        pointerField,
         String        primaryGroupBy,
         String        primaryGroupName,
@@ -140,12 +137,7 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
         String        secondaryGroupName,
         String        targetTable,
         String        tertiaryGroupBy,
-        String        tertiaryGroupName,
-        String        level,
-        String        cronExpression,
-        String        implementation,
-        LocalDateTime nextScheduledTime,
-        JSON          configuration
+        String        tertiaryGroupName
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -164,11 +156,13 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
         this.aggregationName = aggregationName;
         this.cadenceDateField = cadenceDateField;
         this.cadenceTypes = cadenceTypes;
-        this.category = category;
-        this.dataType = dataType;
+        this.configuration = configuration;
+        this.cronExpression = cronExpression;
         this.description = description;
+        this.implementation = implementation;
         this.kpiName = kpiName;
-        this.operationType = operationType;
+        this.level = level;
+        this.nextScheduledTime = nextScheduledTime;
         this.pointerField = pointerField;
         this.primaryGroupBy = primaryGroupBy;
         this.primaryGroupName = primaryGroupName;
@@ -181,11 +175,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
         this.targetTable = targetTable;
         this.tertiaryGroupBy = tertiaryGroupBy;
         this.tertiaryGroupName = tertiaryGroupName;
-        this.level = level;
-        this.cronExpression = cronExpression;
-        this.implementation = implementation;
-        this.nextScheduledTime = nextScheduledTime;
-        this.configuration = configuration;
     }
 
     /**
@@ -427,31 +416,31 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_aggregation_info.category</code>.
+     * Getter for <code>ck_aggregation_info.configuration</code>.
      */
-    public String getCategory() {
-        return this.category;
+    public JSON getConfiguration() {
+        return this.configuration;
     }
 
     /**
-     * Setter for <code>ck_aggregation_info.category</code>.
+     * Setter for <code>ck_aggregation_info.configuration</code>.
      */
-    public void setCategory(String category) {
-        this.category = category;
+    public void setConfiguration(JSON configuration) {
+        this.configuration = configuration;
     }
 
     /**
-     * Getter for <code>ck_aggregation_info.data_type</code>.
+     * Getter for <code>ck_aggregation_info.cron_expression</code>.
      */
-    public String getDataType() {
-        return this.dataType;
+    public String getCronExpression() {
+        return this.cronExpression;
     }
 
     /**
-     * Setter for <code>ck_aggregation_info.data_type</code>.
+     * Setter for <code>ck_aggregation_info.cron_expression</code>.
      */
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
+    public void setCronExpression(String cronExpression) {
+        this.cronExpression = cronExpression;
     }
 
     /**
@@ -469,6 +458,20 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_aggregation_info.implementation</code>.
+     */
+    public String getImplementation() {
+        return this.implementation;
+    }
+
+    /**
+     * Setter for <code>ck_aggregation_info.implementation</code>.
+     */
+    public void setImplementation(String implementation) {
+        this.implementation = implementation;
+    }
+
+    /**
      * Getter for <code>ck_aggregation_info.kpi_name</code>.
      */
     public String getKpiName() {
@@ -483,17 +486,31 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_aggregation_info.operation_type</code>.
+     * Getter for <code>ck_aggregation_info.level</code>.
      */
-    public String getOperationType() {
-        return this.operationType;
+    public String getLevel() {
+        return this.level;
     }
 
     /**
-     * Setter for <code>ck_aggregation_info.operation_type</code>.
+     * Setter for <code>ck_aggregation_info.level</code>.
      */
-    public void setOperationType(String operationType) {
-        this.operationType = operationType;
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    /**
+     * Getter for <code>ck_aggregation_info.next_scheduled_time</code>.
+     */
+    public LocalDateTime getNextScheduledTime() {
+        return this.nextScheduledTime;
+    }
+
+    /**
+     * Setter for <code>ck_aggregation_info.next_scheduled_time</code>.
+     */
+    public void setNextScheduledTime(LocalDateTime nextScheduledTime) {
+        this.nextScheduledTime = nextScheduledTime;
     }
 
     /**
@@ -664,76 +681,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
         this.tertiaryGroupName = tertiaryGroupName;
     }
 
-    /**
-     * Getter for <code>ck_aggregation_info.level</code>.
-     */
-    public String getLevel() {
-        return this.level;
-    }
-
-    /**
-     * Setter for <code>ck_aggregation_info.level</code>.
-     */
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-    /**
-     * Getter for <code>ck_aggregation_info.cron_expression</code>.
-     */
-    public String getCronExpression() {
-        return this.cronExpression;
-    }
-
-    /**
-     * Setter for <code>ck_aggregation_info.cron_expression</code>.
-     */
-    public void setCronExpression(String cronExpression) {
-        this.cronExpression = cronExpression;
-    }
-
-    /**
-     * Getter for <code>ck_aggregation_info.implementation</code>.
-     */
-    public String getImplementation() {
-        return this.implementation;
-    }
-
-    /**
-     * Setter for <code>ck_aggregation_info.implementation</code>.
-     */
-    public void setImplementation(String implementation) {
-        this.implementation = implementation;
-    }
-
-    /**
-     * Getter for <code>ck_aggregation_info.next_scheduled_time</code>.
-     */
-    public LocalDateTime getNextScheduledTime() {
-        return this.nextScheduledTime;
-    }
-
-    /**
-     * Setter for <code>ck_aggregation_info.next_scheduled_time</code>.
-     */
-    public void setNextScheduledTime(LocalDateTime nextScheduledTime) {
-        this.nextScheduledTime = nextScheduledTime;
-    }
-
-    /**
-     * Getter for <code>ck_aggregation_info.configuration</code>.
-     */
-    public JSON getConfiguration() {
-        return this.configuration;
-    }
-
-    /**
-     * Setter for <code>ck_aggregation_info.configuration</code>.
-     */
-    public void setConfiguration(JSON configuration) {
-        this.configuration = configuration;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkAggregationInfo (");
@@ -755,11 +702,13 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(aggregationName);
         sb.append(", ").append(cadenceDateField);
         sb.append(", ").append(cadenceTypes);
-        sb.append(", ").append(category);
-        sb.append(", ").append(dataType);
+        sb.append(", ").append(configuration);
+        sb.append(", ").append(cronExpression);
         sb.append(", ").append(description);
+        sb.append(", ").append(implementation);
         sb.append(", ").append(kpiName);
-        sb.append(", ").append(operationType);
+        sb.append(", ").append(level);
+        sb.append(", ").append(nextScheduledTime);
         sb.append(", ").append(pointerField);
         sb.append(", ").append(primaryGroupBy);
         sb.append(", ").append(primaryGroupName);
@@ -772,11 +721,6 @@ public class CkAggregationInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(targetTable);
         sb.append(", ").append(tertiaryGroupBy);
         sb.append(", ").append(tertiaryGroupName);
-        sb.append(", ").append(level);
-        sb.append(", ").append(cronExpression);
-        sb.append(", ").append(implementation);
-        sb.append(", ").append(nextScheduledTime);
-        sb.append(", ").append(configuration);
 
         sb.append(")");
         return sb.toString();

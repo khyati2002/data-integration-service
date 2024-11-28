@@ -35,10 +35,11 @@ public class CkCategoryInfo extends CommonDataModel implements Serializable {
     private Integer      version;
     private String       categoryCode;
     private String       categoryValue;
-    private String       feature;
-    private String       name;
+    private String       entityName;
     private String       newDescription;
     private String       oldDescription;
+    private String       feature;
+    private String       name;
 
     public CkCategoryInfo() {}
 
@@ -58,10 +59,11 @@ public class CkCategoryInfo extends CommonDataModel implements Serializable {
         this.version = value.version;
         this.categoryCode = value.categoryCode;
         this.categoryValue = value.categoryValue;
-        this.feature = value.feature;
-        this.name = value.name;
+        this.entityName = value.entityName;
         this.newDescription = value.newDescription;
         this.oldDescription = value.oldDescription;
+        this.feature = value.feature;
+        this.name = value.name;
     }
 
     public CkCategoryInfo(
@@ -80,10 +82,11 @@ public class CkCategoryInfo extends CommonDataModel implements Serializable {
         Integer      version,
         String       categoryCode,
         String       categoryValue,
-        String       feature,
-        String       name,
+        String       entityName,
         String       newDescription,
-        String       oldDescription
+        String       oldDescription,
+        String       feature,
+        String       name
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -100,10 +103,11 @@ public class CkCategoryInfo extends CommonDataModel implements Serializable {
         this.version = version;
         this.categoryCode = categoryCode;
         this.categoryValue = categoryValue;
-        this.feature = feature;
-        this.name = name;
+        this.entityName = entityName;
         this.newDescription = newDescription;
         this.oldDescription = oldDescription;
+        this.feature = feature;
+        this.name = name;
     }
 
     /**
@@ -317,31 +321,17 @@ public class CkCategoryInfo extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_category_info.feature</code>.
+     * Getter for <code>ck_category_info.entity_name</code>.
      */
-    public String getFeature() {
-        return this.feature;
+    public String getEntityName() {
+        return this.entityName;
     }
 
     /**
-     * Setter for <code>ck_category_info.feature</code>.
+     * Setter for <code>ck_category_info.entity_name</code>.
      */
-    public void setFeature(String feature) {
-        this.feature = feature;
-    }
-
-    /**
-     * Getter for <code>ck_category_info.name</code>.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Setter for <code>ck_category_info.name</code>.
-     */
-    public void setName(String name) {
-        this.name = name;
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 
     /**
@@ -372,6 +362,34 @@ public class CkCategoryInfo extends CommonDataModel implements Serializable {
         this.oldDescription = oldDescription;
     }
 
+    /**
+     * Getter for <code>ck_category_info.feature</code>.
+     */
+    public String getFeature() {
+        return this.feature;
+    }
+
+    /**
+     * Setter for <code>ck_category_info.feature</code>.
+     */
+    public void setFeature(String feature) {
+        this.feature = feature;
+    }
+
+    /**
+     * Getter for <code>ck_category_info.name</code>.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Setter for <code>ck_category_info.name</code>.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkCategoryInfo (");
@@ -391,10 +409,11 @@ public class CkCategoryInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(version);
         sb.append(", ").append(categoryCode);
         sb.append(", ").append(categoryValue);
-        sb.append(", ").append(feature);
-        sb.append(", ").append(name);
+        sb.append(", ").append(entityName);
         sb.append(", ").append(newDescription);
         sb.append(", ").append(oldDescription);
+        sb.append(", ").append(feature);
+        sb.append(", ").append(name);
 
         sb.append(")");
         return sb.toString();

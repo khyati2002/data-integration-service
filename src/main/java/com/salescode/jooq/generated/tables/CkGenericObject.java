@@ -12,15 +12,26 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -58,6 +69,11 @@ public class CkGenericObject extends TableImpl<Record> {
      * The column <code>ck_generic_object.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_generic_object.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_generic_object.created_by</code>.
@@ -105,6 +121,11 @@ public class CkGenericObject extends TableImpl<Record> {
     public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
 
     /**
+     * The column <code>ck_generic_object.date</code>.
+     */
+    public final TableField<Record, LocalDateTime> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0), this, "");
+
+    /**
      * The column <code>ck_generic_object.hierarchy</code>.
      */
     public final TableField<Record, String> HIERARCHY = createField(DSL.name("hierarchy"), SQLDataType.VARCHAR(255), this, "");
@@ -135,6 +156,11 @@ public class CkGenericObject extends TableImpl<Record> {
     public final TableField<Record, String> KEY5 = createField(DSL.name("key5"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_generic_object.key6</code>.
+     */
+    public final TableField<Record, String> KEY6 = createField(DSL.name("key6"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_generic_object.login_id</code>.
      */
     public final TableField<Record, String> LOGIN_ID = createField(DSL.name("login_id"), SQLDataType.VARCHAR(255), this, "");
@@ -160,26 +186,6 @@ public class CkGenericObject extends TableImpl<Record> {
     public final TableField<Record, Long> TIMESTAMP = createField(DSL.name("timestamp"), SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>ck_generic_object.key6</code>.
-     */
-    public final TableField<Record, String> KEY6 = createField(DSL.name("key6"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_generic_object.date</code>.
-     */
-    public final TableField<Record, LocalDateTime> DATE = createField(DSL.name("date"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
-     * The column <code>ck_generic_object.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_generic_object.key10</code>.
-     */
-    public final TableField<Record, String> KEY10 = createField(DSL.name("key10"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_generic_object.key7</code>.
      */
     public final TableField<Record, String> KEY7 = createField(DSL.name("key7"), SQLDataType.VARCHAR(255), this, "");
@@ -193,6 +199,11 @@ public class CkGenericObject extends TableImpl<Record> {
      * The column <code>ck_generic_object.key9</code>.
      */
     public final TableField<Record, String> KEY9 = createField(DSL.name("key9"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_generic_object.key10</code>.
+     */
+    public final TableField<Record, String> KEY10 = createField(DSL.name("key10"), SQLDataType.VARCHAR(255), this, "");
 
     private CkGenericObject(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

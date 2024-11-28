@@ -11,15 +11,23 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -60,6 +68,11 @@ public class CkPostaggregateOutletActivityMonthly extends TableImpl<Record> {
      * <code>ck_postaggregate_outlet_activity_monthly.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_postaggregate_outlet_activity_monthly.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column
@@ -147,6 +160,17 @@ public class CkPostaggregateOutletActivityMonthly extends TableImpl<Record> {
     public final TableField<Record, JSON> IMAGES = createField(DSL.name("images"), SQLDataType.JSON, this, "");
 
     /**
+     * The column
+     * <code>ck_postaggregate_outlet_activity_monthly.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column <code>ck_postaggregate_outlet_activity_monthly.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
+
+    /**
      * The column <code>ck_postaggregate_outlet_activity_monthly.name</code>.
      */
     public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
@@ -188,6 +212,12 @@ public class CkPostaggregateOutletActivityMonthly extends TableImpl<Record> {
 
     /**
      * The column
+     * <code>ck_postaggregate_outlet_activity_monthly.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
      * <code>ck_postaggregate_outlet_activity_monthly.outlet_visited</code>.
      */
     public final TableField<Record, Integer> OUTLET_VISITED = createField(DSL.name("outlet_visited"), SQLDataType.INTEGER.nullable(false), this, "");
@@ -208,28 +238,6 @@ public class CkPostaggregateOutletActivityMonthly extends TableImpl<Record> {
      * The column <code>ck_postaggregate_outlet_activity_monthly.year</code>.
      */
     public final TableField<Record, Integer> YEAR = createField(DSL.name("year"), SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_activity_monthly.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_postaggregate_outlet_activity_monthly.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_activity_monthly.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_postaggregate_outlet_activity_monthly.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPostaggregateOutletActivityMonthly(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -275,46 +283,6 @@ public class CkPostaggregateOutletActivityMonthly extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_POSTAGGREGATE_OUTLET_ACTIVITY_MONTHLY_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK8GXGQP4ES22T5YR59D83O13B6, Keys.FKFKGUKFQEHRD4YV3NXE0E9PKE1, Keys.FKIJPVNYJYR40RJLYQC4FMLG002);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FK8GXGQP4ES22T5YR59D83O13B6);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKFKGUKFQEHRD4YV3NXE0E9PKE1);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FKIJPVNYJYR40RJLYQC4FMLG002);
-
-        return _ckOutletDetails;
     }
 
     @Override

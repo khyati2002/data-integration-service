@@ -11,15 +11,22 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -57,6 +64,11 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
      * The column <code>ck_pjp_visit_plan.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_pjp_visit_plan.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_pjp_visit_plan.created_by</code>.
@@ -129,6 +141,11 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
     public final TableField<Record, String> DEVIATED_BEAT_NAME = createField(DSL.name("deviated_beat_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_pjp_visit_plan.deviatedoutletcode</code>.
+     */
+    public final TableField<Record, String> DEVIATEDOUTLETCODE = createField(DSL.name("deviatedoutletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_pjp_visit_plan.deviation_approver_id</code>.
      */
     public final TableField<Record, String> DEVIATION_APPROVER_ID = createField(DSL.name("deviation_approver_id"), SQLDataType.VARCHAR(255), this, "");
@@ -137,6 +154,16 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
      * The column <code>ck_pjp_visit_plan.deviation_approver_name</code>.
      */
     public final TableField<Record, String> DEVIATION_APPROVER_NAME = createField(DSL.name("deviation_approver_name"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_pjp_visit_plan.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_pjp_visit_plan.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_pjp_visit_plan.pjp_date</code>.
@@ -162,26 +189,6 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
      * The column <code>ck_pjp_visit_plan.status_remarks</code>.
      */
     public final TableField<Record, String> STATUS_REMARKS = createField(DSL.name("status_remarks"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_pjp_visit_plan.deviatedoutletcode</code>.
-     */
-    public final TableField<Record, String> DEVIATEDOUTLETCODE = createField(DSL.name("deviatedoutletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_pjp_visit_plan.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_pjp_visit_plan.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_pjp_visit_plan.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPjpVisitPlan(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -224,47 +231,6 @@ public class CkPjpVisitPlan extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_PJP_VISIT_PLAN_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKAVFJ3T2O2DG5XDXJL7EWQE5D5, Keys.FKK6WK9TBVSY16C7IF2J7ACTI7R, Keys.FKGOJCK09WRWHCA1F608FO440OG);
-    }
-
-    private transient CkOutletDetails _fkavfj3t2o2dg5xdxjl7ewqe5d5;
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _fkgojck09wrwhca1f608fo440og;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table, via the <code>FKavfj3t2o2dg5xdxjl7ewqe5d5</code> key.
-     */
-    public CkOutletDetails fkavfj3t2o2dg5xdxjl7ewqe5d5() {
-        if (_fkavfj3t2o2dg5xdxjl7ewqe5d5 == null)
-            _fkavfj3t2o2dg5xdxjl7ewqe5d5 = new CkOutletDetails(this, Keys.FKAVFJ3T2O2DG5XDXJL7EWQE5D5);
-
-        return _fkavfj3t2o2dg5xdxjl7ewqe5d5;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKK6WK9TBVSY16C7IF2J7ACTI7R);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table, via the <code>FKgojck09wrwhca1f608fo440og</code> key.
-     */
-    public CkOutletDetails fkgojck09wrwhca1f608fo440og() {
-        if (_fkgojck09wrwhca1f608fo440og == null)
-            _fkgojck09wrwhca1f608fo440og = new CkOutletDetails(this, Keys.FKGOJCK09WRWHCA1F608FO440OG);
-
-        return _fkgojck09wrwhca1f608fo440og;
     }
 
     @Override

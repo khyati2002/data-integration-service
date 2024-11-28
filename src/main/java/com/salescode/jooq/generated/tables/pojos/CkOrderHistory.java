@@ -23,6 +23,7 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -32,9 +33,8 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
     private String       modifiedBy;
     private String       source;
     private Integer      version;
-    private String       status;
     private String       orderId;
-    private Byte         changed;
+    private String       status;
 
     public CkOrderHistory() {}
 
@@ -42,6 +42,7 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -51,15 +52,15 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
         this.modifiedBy = value.modifiedBy;
         this.source = value.source;
         this.version = value.version;
-        this.status = value.status;
         this.orderId = value.orderId;
-        this.changed = value.changed;
+        this.status = value.status;
     }
 
     public CkOrderHistory(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -69,13 +70,13 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
         String       modifiedBy,
         String       source,
         Integer      version,
-        String       status,
         String       orderId,
-        Byte         changed
+        String       status
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -85,9 +86,8 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
         this.modifiedBy = modifiedBy;
         this.source = source;
         this.version = version;
-        this.status = status;
         this.orderId = orderId;
-        this.changed = changed;
+        this.status = status;
     }
 
     /**
@@ -130,6 +130,20 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_order_history.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_order_history.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -259,20 +273,6 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_order_history.status</code>.
-     */
-    public String getStatus() {
-        return this.status;
-    }
-
-    /**
-     * Setter for <code>ck_order_history.status</code>.
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    /**
      * Getter for <code>ck_order_history.order_id</code>.
      */
     public String getOrderId() {
@@ -287,17 +287,17 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_order_history.changed</code>.
+     * Getter for <code>ck_order_history.status</code>.
      */
-    public Byte getChanged() {
-        return this.changed;
+    public String getStatus() {
+        return this.status;
     }
 
     /**
-     * Setter for <code>ck_order_history.changed</code>.
+     * Setter for <code>ck_order_history.status</code>.
      */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -307,6 +307,7 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -316,9 +317,8 @@ public class CkOrderHistory extends CommonDataModel implements Serializable {
         sb.append(", ").append(modifiedBy);
         sb.append(", ").append(source);
         sb.append(", ").append(version);
-        sb.append(", ").append(status);
         sb.append(", ").append(orderId);
-        sb.append(", ").append(changed);
+        sb.append(", ").append(status);
 
         sb.append(")");
         return sb.toString();

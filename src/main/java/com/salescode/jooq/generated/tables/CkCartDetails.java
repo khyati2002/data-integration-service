@@ -11,14 +11,21 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -56,6 +63,11 @@ public class CkCartDetails extends TableImpl<Record> {
      * The column <code>ck_cart_details.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_cart_details.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_cart_details.created_by</code>.
@@ -108,6 +120,11 @@ public class CkCartDetails extends TableImpl<Record> {
     public final TableField<Record, Double> AMOUNT = createField(DSL.name("amount"), SQLDataType.DOUBLE, this, "");
 
     /**
+     * The column <code>ck_cart_details.article_code</code>.
+     */
+    public final TableField<Record, String> ARTICLE_CODE = createField(DSL.name("article_code"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_cart_details.batch_code</code>.
      */
     public final TableField<Record, String> BATCH_CODE = createField(DSL.name("batch_code"), SQLDataType.VARCHAR(255), this, "");
@@ -128,9 +145,19 @@ public class CkCartDetails extends TableImpl<Record> {
     public final TableField<Record, Boolean> LOCKED = createField(DSL.name("locked"), SQLDataType.BIT, this, "");
 
     /**
+     * The column <code>ck_cart_details.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
      * The column <code>ck_cart_details.other_unit_quantity</code>.
      */
     public final TableField<Record, Double> OTHER_UNIT_QUANTITY = createField(DSL.name("other_unit_quantity"), SQLDataType.FLOAT, this, "");
+
+    /**
+     * The column <code>ck_cart_details.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>ck_cart_details.piece_quantity</code>.
@@ -148,29 +175,9 @@ public class CkCartDetails extends TableImpl<Record> {
     public final TableField<Record, String> SKU_CODE = createField(DSL.name("sku_code"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_cart_details.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_cart_details.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_cart_details.article_code</code>.
-     */
-    public final TableField<Record, String> ARTICLE_CODE = createField(DSL.name("article_code"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_cart_details.type</code>.
      */
     public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_cart_details.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkCartDetails(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -213,35 +220,6 @@ public class CkCartDetails extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_CART_DETAILS_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKJMRF92WQ8D9O80OGH974CWEQO, Keys.FKEJF3MD0M0Y7XACT6MAFW8KIPN);
-    }
-
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKJMRF92WQ8D9O80OGH974CWEQO);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FKEJF3MD0M0Y7XACT6MAFW8KIPN);
-
-        return _ckOutletDetails;
     }
 
     @Override

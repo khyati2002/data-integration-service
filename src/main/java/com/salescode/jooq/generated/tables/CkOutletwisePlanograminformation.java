@@ -11,12 +11,21 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Date;
 
 
 /**
@@ -109,16 +118,6 @@ public class CkOutletwisePlanograminformation extends TableImpl<Record> {
     public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>ck_outletwise_planograminformation.blob_key</code>.
-     */
-    public final TableField<Record, String> BLOB_KEY = createField(DSL.name("blob_key"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_outletwise_planograminformation.blob_keya</code>.
-     */
-    public final TableField<Record, String> BLOB_KEYA = createField(DSL.name("blob_keya"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_outletwise_planograminformation.facing</code>.
      */
     public final TableField<Record, Integer> FACING = createField(DSL.name("facing"), SQLDataType.INTEGER.nullable(false), this, "");
@@ -167,6 +166,21 @@ public class CkOutletwisePlanograminformation extends TableImpl<Record> {
      * The column <code>ck_outletwise_planograminformation.year</code>.
      */
     public final TableField<Record, Integer> YEAR = createField(DSL.name("year"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>ck_outletwise_planograminformation.blob_key</code>.
+     */
+    public final TableField<Record, String> BLOB_KEY = createField(DSL.name("blob_key"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_outletwise_planograminformation.blob_key_a</code>.
+     */
+    public final TableField<Record, String> BLOB_KEY_A = createField(DSL.name("blob_key_a"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_outletwise_planograminformation.blob_keya</code>.
+     */
+    public final TableField<Record, String> BLOB_KEYA = createField(DSL.name("blob_keya"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column

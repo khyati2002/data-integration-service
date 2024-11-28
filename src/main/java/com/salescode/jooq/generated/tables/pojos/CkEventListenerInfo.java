@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,6 +25,7 @@ public class CkEventListenerInfo extends CommonDataModel implements Serializable
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -38,7 +40,6 @@ public class CkEventListenerInfo extends CommonDataModel implements Serializable
     private Boolean      enabled;
     private String       implementation;
     private String       topic;
-    private Byte         changed;
 
     public CkEventListenerInfo() {}
 
@@ -46,6 +47,7 @@ public class CkEventListenerInfo extends CommonDataModel implements Serializable
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -60,13 +62,13 @@ public class CkEventListenerInfo extends CommonDataModel implements Serializable
         this.enabled = value.enabled;
         this.implementation = value.implementation;
         this.topic = value.topic;
-        this.changed = value.changed;
     }
 
     public CkEventListenerInfo(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -80,12 +82,12 @@ public class CkEventListenerInfo extends CommonDataModel implements Serializable
         String       description,
         Boolean      enabled,
         String       implementation,
-        String       topic,
-        Byte         changed
+        String       topic
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -100,7 +102,6 @@ public class CkEventListenerInfo extends CommonDataModel implements Serializable
         this.enabled = enabled;
         this.implementation = implementation;
         this.topic = topic;
-        this.changed = changed;
     }
 
     /**
@@ -143,6 +144,20 @@ public class CkEventListenerInfo extends CommonDataModel implements Serializable
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_event_listener_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_event_listener_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -341,20 +356,6 @@ public class CkEventListenerInfo extends CommonDataModel implements Serializable
         this.topic = topic;
     }
 
-    /**
-     * Getter for <code>ck_event_listener_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_event_listener_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkEventListenerInfo (");
@@ -362,6 +363,7 @@ public class CkEventListenerInfo extends CommonDataModel implements Serializable
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -376,7 +378,6 @@ public class CkEventListenerInfo extends CommonDataModel implements Serializable
         sb.append(", ").append(enabled);
         sb.append(", ").append(implementation);
         sb.append(", ").append(topic);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

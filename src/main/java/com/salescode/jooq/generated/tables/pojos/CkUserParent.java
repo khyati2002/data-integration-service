@@ -23,6 +23,7 @@ public class CkUserParent extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -34,7 +35,6 @@ public class CkUserParent extends CommonDataModel implements Serializable {
     private Integer      version;
     private String       parent;
     private String       userloginid;
-    private Byte         changed;
 
     public CkUserParent() {}
 
@@ -42,6 +42,7 @@ public class CkUserParent extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -53,13 +54,13 @@ public class CkUserParent extends CommonDataModel implements Serializable {
         this.version = value.version;
         this.parent = value.parent;
         this.userloginid = value.userloginid;
-        this.changed = value.changed;
     }
 
     public CkUserParent(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -70,12 +71,12 @@ public class CkUserParent extends CommonDataModel implements Serializable {
         String       source,
         Integer      version,
         String       parent,
-        String       userloginid,
-        Byte         changed
+        String       userloginid
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -87,7 +88,6 @@ public class CkUserParent extends CommonDataModel implements Serializable {
         this.version = version;
         this.parent = parent;
         this.userloginid = userloginid;
-        this.changed = changed;
     }
 
     /**
@@ -130,6 +130,20 @@ public class CkUserParent extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_user_parent.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_user_parent.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -286,20 +300,6 @@ public class CkUserParent extends CommonDataModel implements Serializable {
         this.userloginid = userloginid;
     }
 
-    /**
-     * Getter for <code>ck_user_parent.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_user_parent.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkUserParent (");
@@ -307,6 +307,7 @@ public class CkUserParent extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -318,7 +319,6 @@ public class CkUserParent extends CommonDataModel implements Serializable {
         sb.append(", ").append(version);
         sb.append(", ").append(parent);
         sb.append(", ").append(userloginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

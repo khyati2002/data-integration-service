@@ -27,37 +27,45 @@ public class CkStock extends CommonDataModel implements Serializable {
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
-    private String        hash;
     private Date          lastModifiedTime;
     private String        lob;
     private String        modifiedBy;
-    private String        source;
     private Integer       version;
-    private String        batchCode;
+    private String        area;
     private String        batchId;
     private Double        batchPrice;
     private String        brand;
     private String        cat;
     private String        channel;
+    private String        city;
     private String        compKey;
+    private String        country;
     private String        design;
     private Double        initialQty;
     private Double        initialStock;
     private Integer       minQty;
     private Double        price;
     private Double        qty;
+    private String        region;
     private String        skuCode;
     private String        skuDesc;
+    private String        state;
     private LocalDateTime stockReceived;
     private String        subCat;
-    private String        supplier;
     private String        tradeType;
     private LocalDateTime transferDate;
     private String        type;
     private String        warehouseCode;
+    private String        zone;
+    private String        hierarchy;
     private String        locationHierarchy;
-    private String        outletcode;
+    private String        supplier;
     private String        fkStock;
+    private String        source;
+    private String        batchCode;
+    private String        outletcode;
+    private String        hash;
+    private Integer       rowid;
     private Byte          changed;
     private Double        stockValue;
 
@@ -70,37 +78,45 @@ public class CkStock extends CommonDataModel implements Serializable {
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
-        this.hash = value.hash;
         this.lastModifiedTime = value.lastModifiedTime;
         this.lob = value.lob;
         this.modifiedBy = value.modifiedBy;
-        this.source = value.source;
         this.version = value.version;
-        this.batchCode = value.batchCode;
+        this.area = value.area;
         this.batchId = value.batchId;
         this.batchPrice = value.batchPrice;
         this.brand = value.brand;
         this.cat = value.cat;
         this.channel = value.channel;
+        this.city = value.city;
         this.compKey = value.compKey;
+        this.country = value.country;
         this.design = value.design;
         this.initialQty = value.initialQty;
         this.initialStock = value.initialStock;
         this.minQty = value.minQty;
         this.price = value.price;
         this.qty = value.qty;
+        this.region = value.region;
         this.skuCode = value.skuCode;
         this.skuDesc = value.skuDesc;
+        this.state = value.state;
         this.stockReceived = value.stockReceived;
         this.subCat = value.subCat;
-        this.supplier = value.supplier;
         this.tradeType = value.tradeType;
         this.transferDate = value.transferDate;
         this.type = value.type;
         this.warehouseCode = value.warehouseCode;
+        this.zone = value.zone;
+        this.hierarchy = value.hierarchy;
         this.locationHierarchy = value.locationHierarchy;
-        this.outletcode = value.outletcode;
+        this.supplier = value.supplier;
         this.fkStock = value.fkStock;
+        this.source = value.source;
+        this.batchCode = value.batchCode;
+        this.outletcode = value.outletcode;
+        this.hash = value.hash;
+        this.rowid = value.rowid;
         this.changed = value.changed;
         this.stockValue = value.stockValue;
     }
@@ -112,37 +128,45 @@ public class CkStock extends CommonDataModel implements Serializable {
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
-        String        hash,
         Date          lastModifiedTime,
         String        lob,
         String        modifiedBy,
-        String        source,
         Integer       version,
-        String        batchCode,
+        String        area,
         String        batchId,
         Double        batchPrice,
         String        brand,
         String        cat,
         String        channel,
+        String        city,
         String        compKey,
+        String        country,
         String        design,
         Double        initialQty,
         Double        initialStock,
         Integer       minQty,
         Double        price,
         Double        qty,
+        String        region,
         String        skuCode,
         String        skuDesc,
+        String        state,
         LocalDateTime stockReceived,
         String        subCat,
-        String        supplier,
         String        tradeType,
         LocalDateTime transferDate,
         String        type,
         String        warehouseCode,
+        String        zone,
+        String        hierarchy,
         String        locationHierarchy,
-        String        outletcode,
+        String        supplier,
         String        fkStock,
+        String        source,
+        String        batchCode,
+        String        outletcode,
+        String        hash,
+        Integer       rowid,
         Byte          changed,
         Double        stockValue
     ) {
@@ -152,37 +176,45 @@ public class CkStock extends CommonDataModel implements Serializable {
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
-        this.hash = hash;
         this.lastModifiedTime = lastModifiedTime;
         this.lob = lob;
         this.modifiedBy = modifiedBy;
-        this.source = source;
         this.version = version;
-        this.batchCode = batchCode;
+        this.area = area;
         this.batchId = batchId;
         this.batchPrice = batchPrice;
         this.brand = brand;
         this.cat = cat;
         this.channel = channel;
+        this.city = city;
         this.compKey = compKey;
+        this.country = country;
         this.design = design;
         this.initialQty = initialQty;
         this.initialStock = initialStock;
         this.minQty = minQty;
         this.price = price;
         this.qty = qty;
+        this.region = region;
         this.skuCode = skuCode;
         this.skuDesc = skuDesc;
+        this.state = state;
         this.stockReceived = stockReceived;
         this.subCat = subCat;
-        this.supplier = supplier;
         this.tradeType = tradeType;
         this.transferDate = transferDate;
         this.type = type;
         this.warehouseCode = warehouseCode;
+        this.zone = zone;
+        this.hierarchy = hierarchy;
         this.locationHierarchy = locationHierarchy;
-        this.outletcode = outletcode;
+        this.supplier = supplier;
         this.fkStock = fkStock;
+        this.source = source;
+        this.batchCode = batchCode;
+        this.outletcode = outletcode;
+        this.hash = hash;
+        this.rowid = rowid;
         this.changed = changed;
         this.stockValue = stockValue;
     }
@@ -272,20 +304,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_stock.hash</code>.
-     */
-    public String getHash() {
-        return this.hash;
-    }
-
-    /**
-     * Setter for <code>ck_stock.hash</code>.
-     */
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    /**
      * Getter for <code>ck_stock.last_modified_time</code>.
      */
     public Date getLastModifiedTime() {
@@ -328,20 +346,6 @@ public class CkStock extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_stock.source</code>.
-     */
-    public String getSource() {
-        return this.source;
-    }
-
-    /**
-     * Setter for <code>ck_stock.source</code>.
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    /**
      * Getter for <code>ck_stock.version</code>.
      */
     public Integer getVersion() {
@@ -356,17 +360,17 @@ public class CkStock extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_stock.batch_code</code>.
+     * Getter for <code>ck_stock.area</code>.
      */
-    public String getBatchCode() {
-        return this.batchCode;
+    public String getArea() {
+        return this.area;
     }
 
     /**
-     * Setter for <code>ck_stock.batch_code</code>.
+     * Setter for <code>ck_stock.area</code>.
      */
-    public void setBatchCode(String batchCode) {
-        this.batchCode = batchCode;
+    public void setArea(String area) {
+        this.area = area;
     }
 
     /**
@@ -440,6 +444,20 @@ public class CkStock extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_stock.city</code>.
+     */
+    public String getCity() {
+        return this.city;
+    }
+
+    /**
+     * Setter for <code>ck_stock.city</code>.
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
      * Getter for <code>ck_stock.comp_key</code>.
      */
     public String getCompKey() {
@@ -451,6 +469,20 @@ public class CkStock extends CommonDataModel implements Serializable {
      */
     public void setCompKey(String compKey) {
         this.compKey = compKey;
+    }
+
+    /**
+     * Getter for <code>ck_stock.country</code>.
+     */
+    public String getCountry() {
+        return this.country;
+    }
+
+    /**
+     * Setter for <code>ck_stock.country</code>.
+     */
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     /**
@@ -538,6 +570,20 @@ public class CkStock extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_stock.region</code>.
+     */
+    public String getRegion() {
+        return this.region;
+    }
+
+    /**
+     * Setter for <code>ck_stock.region</code>.
+     */
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    /**
      * Getter for <code>ck_stock.sku_code</code>.
      */
     public String getSkuCode() {
@@ -566,6 +612,20 @@ public class CkStock extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_stock.state</code>.
+     */
+    public String getState() {
+        return this.state;
+    }
+
+    /**
+     * Setter for <code>ck_stock.state</code>.
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    /**
      * Getter for <code>ck_stock.stock_received</code>.
      */
     public LocalDateTime getStockReceived() {
@@ -591,20 +651,6 @@ public class CkStock extends CommonDataModel implements Serializable {
      */
     public void setSubCat(String subCat) {
         this.subCat = subCat;
-    }
-
-    /**
-     * Getter for <code>ck_stock.supplier</code>.
-     */
-    public String getSupplier() {
-        return this.supplier;
-    }
-
-    /**
-     * Setter for <code>ck_stock.supplier</code>.
-     */
-    public void setSupplier(String supplier) {
-        this.supplier = supplier;
     }
 
     /**
@@ -664,6 +710,34 @@ public class CkStock extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_stock.zone</code>.
+     */
+    public String getZone() {
+        return this.zone;
+    }
+
+    /**
+     * Setter for <code>ck_stock.zone</code>.
+     */
+    public void setZone(String zone) {
+        this.zone = zone;
+    }
+
+    /**
+     * Getter for <code>ck_stock.hierarchy</code>.
+     */
+    public String getHierarchy() {
+        return this.hierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_stock.hierarchy</code>.
+     */
+    public void setHierarchy(String hierarchy) {
+        this.hierarchy = hierarchy;
+    }
+
+    /**
      * Getter for <code>ck_stock.location_hierarchy</code>.
      */
     public String getLocationHierarchy() {
@@ -675,6 +749,62 @@ public class CkStock extends CommonDataModel implements Serializable {
      */
     public void setLocationHierarchy(String locationHierarchy) {
         this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for <code>ck_stock.supplier</code>.
+     */
+    public String getSupplier() {
+        return this.supplier;
+    }
+
+    /**
+     * Setter for <code>ck_stock.supplier</code>.
+     */
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
+    /**
+     * Getter for <code>ck_stock.fk_stock</code>.
+     */
+    public String getFkStock() {
+        return this.fkStock;
+    }
+
+    /**
+     * Setter for <code>ck_stock.fk_stock</code>.
+     */
+    public void setFkStock(String fkStock) {
+        this.fkStock = fkStock;
+    }
+
+    /**
+     * Getter for <code>ck_stock.source</code>.
+     */
+    public String getSource() {
+        return this.source;
+    }
+
+    /**
+     * Setter for <code>ck_stock.source</code>.
+     */
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    /**
+     * Getter for <code>ck_stock.batch_code</code>.
+     */
+    public String getBatchCode() {
+        return this.batchCode;
+    }
+
+    /**
+     * Setter for <code>ck_stock.batch_code</code>.
+     */
+    public void setBatchCode(String batchCode) {
+        this.batchCode = batchCode;
     }
 
     /**
@@ -692,17 +822,31 @@ public class CkStock extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_stock.fk_stock</code>.
+     * Getter for <code>ck_stock.hash</code>.
      */
-    public String getFkStock() {
-        return this.fkStock;
+    public String getHash() {
+        return this.hash;
     }
 
     /**
-     * Setter for <code>ck_stock.fk_stock</code>.
+     * Setter for <code>ck_stock.hash</code>.
      */
-    public void setFkStock(String fkStock) {
-        this.fkStock = fkStock;
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    /**
+     * Getter for <code>ck_stock.rowid</code>.
+     */
+    public Integer getRowid() {
+        return this.rowid;
+    }
+
+    /**
+     * Setter for <code>ck_stock.rowid</code>.
+     */
+    public void setRowid(Integer rowid) {
+        this.rowid = rowid;
     }
 
     /**
@@ -743,37 +887,45 @@ public class CkStock extends CommonDataModel implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
-        sb.append(", ").append(hash);
         sb.append(", ").append(lastModifiedTime);
         sb.append(", ").append(lob);
         sb.append(", ").append(modifiedBy);
-        sb.append(", ").append(source);
         sb.append(", ").append(version);
-        sb.append(", ").append(batchCode);
+        sb.append(", ").append(area);
         sb.append(", ").append(batchId);
         sb.append(", ").append(batchPrice);
         sb.append(", ").append(brand);
         sb.append(", ").append(cat);
         sb.append(", ").append(channel);
+        sb.append(", ").append(city);
         sb.append(", ").append(compKey);
+        sb.append(", ").append(country);
         sb.append(", ").append(design);
         sb.append(", ").append(initialQty);
         sb.append(", ").append(initialStock);
         sb.append(", ").append(minQty);
         sb.append(", ").append(price);
         sb.append(", ").append(qty);
+        sb.append(", ").append(region);
         sb.append(", ").append(skuCode);
         sb.append(", ").append(skuDesc);
+        sb.append(", ").append(state);
         sb.append(", ").append(stockReceived);
         sb.append(", ").append(subCat);
-        sb.append(", ").append(supplier);
         sb.append(", ").append(tradeType);
         sb.append(", ").append(transferDate);
         sb.append(", ").append(type);
         sb.append(", ").append(warehouseCode);
+        sb.append(", ").append(zone);
+        sb.append(", ").append(hierarchy);
         sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(outletcode);
+        sb.append(", ").append(supplier);
         sb.append(", ").append(fkStock);
+        sb.append(", ").append(source);
+        sb.append(", ").append(batchCode);
+        sb.append(", ").append(outletcode);
+        sb.append(", ").append(hash);
+        sb.append(", ").append(rowid);
         sb.append(", ").append(changed);
         sb.append(", ").append(stockValue);
 

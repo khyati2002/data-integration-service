@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -46,9 +48,12 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
     private LocalDateTime endRange;
     private JSON          groupBy;
     private String        groupType;
+    private String        locationHierarchy;
+    private String        loginid;
     private String        loyaltyType;
     private String        otherUnit;
     private String        outletCategory;
+    private String        outletcode;
     private String        outletType;
     private Integer       priority;
     private String        product;
@@ -82,26 +87,21 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
     private String        repeatDiscount;
     private Double        startAmount;
     private String        type;
-    private String        locationHierarchy;
-    private String        loginid;
-    private String        outletcode;
-    private Byte          changed;
     private String        groupId;
     private String        mskuCode;
-    private String        associatedProgram;
+    private String        focPackageName;
+    private String        tradePackageName;
+    private String        itemClass;
+    private String        pieceSize;
+    private String        discountItemuom;
+    private String        itemId;
     private String        account;
     private String        distributionChannel;
-    private String        focPackageName;
-    private String        itemClass;
-    private String        itemId;
     private String        marketId;
     private String        marketName;
     private String        outletClass;
     private String        outletDivision;
-    private String        pieceSize;
     private String        subChannel;
-    private String        tradePackageName;
-    private String        discountItemuom;
     private String        beat;
 
     public CkRangeProgram() {}
@@ -110,6 +110,7 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -131,9 +132,12 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         this.endRange = value.endRange;
         this.groupBy = value.groupBy;
         this.groupType = value.groupType;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
         this.loyaltyType = value.loyaltyType;
         this.otherUnit = value.otherUnit;
         this.outletCategory = value.outletCategory;
+        this.outletcode = value.outletcode;
         this.outletType = value.outletType;
         this.priority = value.priority;
         this.product = value.product;
@@ -167,26 +171,21 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         this.repeatDiscount = value.repeatDiscount;
         this.startAmount = value.startAmount;
         this.type = value.type;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
         this.groupId = value.groupId;
         this.mskuCode = value.mskuCode;
-        this.associatedProgram = value.associatedProgram;
+        this.focPackageName = value.focPackageName;
+        this.tradePackageName = value.tradePackageName;
+        this.itemClass = value.itemClass;
+        this.pieceSize = value.pieceSize;
+        this.discountItemuom = value.discountItemuom;
+        this.itemId = value.itemId;
         this.account = value.account;
         this.distributionChannel = value.distributionChannel;
-        this.focPackageName = value.focPackageName;
-        this.itemClass = value.itemClass;
-        this.itemId = value.itemId;
         this.marketId = value.marketId;
         this.marketName = value.marketName;
         this.outletClass = value.outletClass;
         this.outletDivision = value.outletDivision;
-        this.pieceSize = value.pieceSize;
         this.subChannel = value.subChannel;
-        this.tradePackageName = value.tradePackageName;
-        this.discountItemuom = value.discountItemuom;
         this.beat = value.beat;
     }
 
@@ -194,6 +193,7 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -215,9 +215,12 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         LocalDateTime endRange,
         JSON          groupBy,
         String        groupType,
+        String        locationHierarchy,
+        String        loginid,
         String        loyaltyType,
         String        otherUnit,
         String        outletCategory,
+        String        outletcode,
         String        outletType,
         Integer       priority,
         String        product,
@@ -251,31 +254,27 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         String        repeatDiscount,
         Double        startAmount,
         String        type,
-        String        locationHierarchy,
-        String        loginid,
-        String        outletcode,
-        Byte          changed,
         String        groupId,
         String        mskuCode,
-        String        associatedProgram,
+        String        focPackageName,
+        String        tradePackageName,
+        String        itemClass,
+        String        pieceSize,
+        String        discountItemuom,
+        String        itemId,
         String        account,
         String        distributionChannel,
-        String        focPackageName,
-        String        itemClass,
-        String        itemId,
         String        marketId,
         String        marketName,
         String        outletClass,
         String        outletDivision,
-        String        pieceSize,
         String        subChannel,
-        String        tradePackageName,
-        String        discountItemuom,
         String        beat
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -297,9 +296,12 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         this.endRange = endRange;
         this.groupBy = groupBy;
         this.groupType = groupType;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
         this.loyaltyType = loyaltyType;
         this.otherUnit = otherUnit;
         this.outletCategory = outletCategory;
+        this.outletcode = outletcode;
         this.outletType = outletType;
         this.priority = priority;
         this.product = product;
@@ -333,26 +335,21 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         this.repeatDiscount = repeatDiscount;
         this.startAmount = startAmount;
         this.type = type;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.outletcode = outletcode;
-        this.changed = changed;
         this.groupId = groupId;
         this.mskuCode = mskuCode;
-        this.associatedProgram = associatedProgram;
+        this.focPackageName = focPackageName;
+        this.tradePackageName = tradePackageName;
+        this.itemClass = itemClass;
+        this.pieceSize = pieceSize;
+        this.discountItemuom = discountItemuom;
+        this.itemId = itemId;
         this.account = account;
         this.distributionChannel = distributionChannel;
-        this.focPackageName = focPackageName;
-        this.itemClass = itemClass;
-        this.itemId = itemId;
         this.marketId = marketId;
         this.marketName = marketName;
         this.outletClass = outletClass;
         this.outletDivision = outletDivision;
-        this.pieceSize = pieceSize;
         this.subChannel = subChannel;
-        this.tradePackageName = tradePackageName;
-        this.discountItemuom = discountItemuom;
         this.beat = beat;
     }
 
@@ -396,6 +393,20 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_range_program.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_range_program.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -693,6 +704,34 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_range_program.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_range_program.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for <code>ck_range_program.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_range_program.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_range_program.loyalty_type</code>.
      */
     public String getLoyaltyType() {
@@ -732,6 +771,20 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
      */
     public void setOutletCategory(String outletCategory) {
         this.outletCategory = outletCategory;
+    }
+
+    /**
+     * Getter for <code>ck_range_program.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_range_program.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
     }
 
     /**
@@ -1197,62 +1250,6 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_range_program.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_range_program.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_range_program.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_range_program.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_range_program.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_range_program.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_range_program.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_range_program.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
      * Getter for <code>ck_range_program.group_id</code>.
      */
     public String getGroupId() {
@@ -1281,17 +1278,87 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_range_program.associated_program</code>.
+     * Getter for <code>ck_range_program.foc_package_name</code>.
      */
-    public String getAssociatedProgram() {
-        return this.associatedProgram;
+    public String getFocPackageName() {
+        return this.focPackageName;
     }
 
     /**
-     * Setter for <code>ck_range_program.associated_program</code>.
+     * Setter for <code>ck_range_program.foc_package_name</code>.
      */
-    public void setAssociatedProgram(String associatedProgram) {
-        this.associatedProgram = associatedProgram;
+    public void setFocPackageName(String focPackageName) {
+        this.focPackageName = focPackageName;
+    }
+
+    /**
+     * Getter for <code>ck_range_program.trade_package_name</code>.
+     */
+    public String getTradePackageName() {
+        return this.tradePackageName;
+    }
+
+    /**
+     * Setter for <code>ck_range_program.trade_package_name</code>.
+     */
+    public void setTradePackageName(String tradePackageName) {
+        this.tradePackageName = tradePackageName;
+    }
+
+    /**
+     * Getter for <code>ck_range_program.item_class</code>.
+     */
+    public String getItemClass() {
+        return this.itemClass;
+    }
+
+    /**
+     * Setter for <code>ck_range_program.item_class</code>.
+     */
+    public void setItemClass(String itemClass) {
+        this.itemClass = itemClass;
+    }
+
+    /**
+     * Getter for <code>ck_range_program.piece_size</code>.
+     */
+    public String getPieceSize() {
+        return this.pieceSize;
+    }
+
+    /**
+     * Setter for <code>ck_range_program.piece_size</code>.
+     */
+    public void setPieceSize(String pieceSize) {
+        this.pieceSize = pieceSize;
+    }
+
+    /**
+     * Getter for <code>ck_range_program.discount_itemuom</code>.
+     */
+    public String getDiscountItemuom() {
+        return this.discountItemuom;
+    }
+
+    /**
+     * Setter for <code>ck_range_program.discount_itemuom</code>.
+     */
+    public void setDiscountItemuom(String discountItemuom) {
+        this.discountItemuom = discountItemuom;
+    }
+
+    /**
+     * Getter for <code>ck_range_program.item_id</code>.
+     */
+    public String getItemId() {
+        return this.itemId;
+    }
+
+    /**
+     * Setter for <code>ck_range_program.item_id</code>.
+     */
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     /**
@@ -1320,48 +1387,6 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
      */
     public void setDistributionChannel(String distributionChannel) {
         this.distributionChannel = distributionChannel;
-    }
-
-    /**
-     * Getter for <code>ck_range_program.foc_package_name</code>.
-     */
-    public String getFocPackageName() {
-        return this.focPackageName;
-    }
-
-    /**
-     * Setter for <code>ck_range_program.foc_package_name</code>.
-     */
-    public void setFocPackageName(String focPackageName) {
-        this.focPackageName = focPackageName;
-    }
-
-    /**
-     * Getter for <code>ck_range_program.item_class</code>.
-     */
-    public String getItemClass() {
-        return this.itemClass;
-    }
-
-    /**
-     * Setter for <code>ck_range_program.item_class</code>.
-     */
-    public void setItemClass(String itemClass) {
-        this.itemClass = itemClass;
-    }
-
-    /**
-     * Getter for <code>ck_range_program.item_id</code>.
-     */
-    public String getItemId() {
-        return this.itemId;
-    }
-
-    /**
-     * Setter for <code>ck_range_program.item_id</code>.
-     */
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
     }
 
     /**
@@ -1421,20 +1446,6 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_range_program.piece_size</code>.
-     */
-    public String getPieceSize() {
-        return this.pieceSize;
-    }
-
-    /**
-     * Setter for <code>ck_range_program.piece_size</code>.
-     */
-    public void setPieceSize(String pieceSize) {
-        this.pieceSize = pieceSize;
-    }
-
-    /**
      * Getter for <code>ck_range_program.sub_channel</code>.
      */
     public String getSubChannel() {
@@ -1446,34 +1457,6 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
      */
     public void setSubChannel(String subChannel) {
         this.subChannel = subChannel;
-    }
-
-    /**
-     * Getter for <code>ck_range_program.trade_package_name</code>.
-     */
-    public String getTradePackageName() {
-        return this.tradePackageName;
-    }
-
-    /**
-     * Setter for <code>ck_range_program.trade_package_name</code>.
-     */
-    public void setTradePackageName(String tradePackageName) {
-        this.tradePackageName = tradePackageName;
-    }
-
-    /**
-     * Getter for <code>ck_range_program.discount_itemuom</code>.
-     */
-    public String getDiscountItemuom() {
-        return this.discountItemuom;
-    }
-
-    /**
-     * Setter for <code>ck_range_program.discount_itemuom</code>.
-     */
-    public void setDiscountItemuom(String discountItemuom) {
-        this.discountItemuom = discountItemuom;
     }
 
     /**
@@ -1497,6 +1480,7 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -1518,9 +1502,12 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         sb.append(", ").append(endRange);
         sb.append(", ").append(groupBy);
         sb.append(", ").append(groupType);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(loyaltyType);
         sb.append(", ").append(otherUnit);
         sb.append(", ").append(outletCategory);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(outletType);
         sb.append(", ").append(priority);
         sb.append(", ").append(product);
@@ -1554,26 +1541,21 @@ public class CkRangeProgram extends CommonDataModel implements Serializable {
         sb.append(", ").append(repeatDiscount);
         sb.append(", ").append(startAmount);
         sb.append(", ").append(type);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
         sb.append(", ").append(groupId);
         sb.append(", ").append(mskuCode);
-        sb.append(", ").append(associatedProgram);
+        sb.append(", ").append(focPackageName);
+        sb.append(", ").append(tradePackageName);
+        sb.append(", ").append(itemClass);
+        sb.append(", ").append(pieceSize);
+        sb.append(", ").append(discountItemuom);
+        sb.append(", ").append(itemId);
         sb.append(", ").append(account);
         sb.append(", ").append(distributionChannel);
-        sb.append(", ").append(focPackageName);
-        sb.append(", ").append(itemClass);
-        sb.append(", ").append(itemId);
         sb.append(", ").append(marketId);
         sb.append(", ").append(marketName);
         sb.append(", ").append(outletClass);
         sb.append(", ").append(outletDivision);
-        sb.append(", ").append(pieceSize);
         sb.append(", ").append(subChannel);
-        sb.append(", ").append(tradePackageName);
-        sb.append(", ").append(discountItemuom);
         sb.append(", ").append(beat);
 
         sb.append(")");

@@ -11,14 +11,23 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -56,6 +65,11 @@ public class CkDivision extends TableImpl<Record> {
      * The column <code>ck_division.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_division.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_division.created_by</code>.
@@ -123,19 +137,14 @@ public class CkDivision extends TableImpl<Record> {
     public final TableField<Record, Integer> LEVEL = createField(DSL.name("level"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
+     * The column <code>ck_division.parent</code>.
+     */
+    public final TableField<Record, String> PARENT = createField(DSL.name("parent"), SQLDataType.VARCHAR(50).defaultValue(DSL.inline("none", SQLDataType.VARCHAR)), this, "");
+
+    /**
      * The column <code>ck_division.role_access_type</code>.
      */
     public final TableField<Record, String> ROLE_ACCESS_TYPE = createField(DSL.name("role_access_type"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_division.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_division.parent</code>.
-     */
-    public final TableField<Record, String> PARENT = createField(DSL.name("parent"), SQLDataType.VARCHAR(50), this, "");
 
     private CkDivision(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

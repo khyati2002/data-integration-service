@@ -11,15 +11,22 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -58,6 +65,11 @@ public class CkDynamicOutletAggregation extends TableImpl<Record> {
      * <code>ck_dynamic_outlet_aggregation.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_dynamic_outlet_aggregation.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_dynamic_outlet_aggregation.created_by</code>.
@@ -121,6 +133,11 @@ public class CkDynamicOutletAggregation extends TableImpl<Record> {
     public final TableField<Record, LocalDateTime> END_DATE = createField(DSL.name("end_date"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
+     * The column <code>ck_dynamic_outlet_aggregation.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_dynamic_outlet_aggregation.mtd_sales_value</code>.
      */
     public final TableField<Record, Double> MTD_SALES_VALUE = createField(DSL.name("mtd_sales_value"), SQLDataType.DOUBLE.nullable(false), this, "");
@@ -134,6 +151,11 @@ public class CkDynamicOutletAggregation extends TableImpl<Record> {
      * The column <code>ck_dynamic_outlet_aggregation.num_of_clicks</code>.
      */
     public final TableField<Record, Integer> NUM_OF_CLICKS = createField(DSL.name("num_of_clicks"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>ck_dynamic_outlet_aggregation.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_dynamic_outlet_aggregation.start_date</code>.
@@ -172,24 +194,9 @@ public class CkDynamicOutletAggregation extends TableImpl<Record> {
     public final TableField<Record, Integer> TOTAL_ORDERS = createField(DSL.name("total_orders"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>ck_dynamic_outlet_aggregation.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_dynamic_outlet_aggregation.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
      * The column <code>ck_dynamic_outlet_aggregation.loginid</code>.
      */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_dynamic_outlet_aggregation.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
 
     private CkDynamicOutletAggregation(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -234,46 +241,6 @@ public class CkDynamicOutletAggregation extends TableImpl<Record> {
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_DYNAMIC_OUTLET_AGGREGATION_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKRAO93663PR17KIIRNJQF65BCE, Keys.FK1HL9NKPPDBHE7MI8U96A8189B, Keys.FKRH2Y881EX91KWUSTUAPF898NH);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkOutletDetails _ckOutletDetails;
-    private transient CkUser _ckUser;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKRAO93663PR17KIIRNJQF65BCE);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK1HL9NKPPDBHE7MI8U96A8189B);
-
-        return _ckOutletDetails;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKRH2Y881EX91KWUSTUAPF898NH);
-
-        return _ckUser;
     }
 
     @Override

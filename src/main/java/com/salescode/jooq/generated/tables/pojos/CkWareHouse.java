@@ -7,7 +7,6 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -42,9 +41,9 @@ public class CkWareHouse extends CommonDataModel implements Serializable {
     private Integer      warehousePriority;
     private String       locationHierarchy;
     private String       loginid;
-    private JSON         accessibleBy;
     private String       hash;
     private String       address;
+    private Integer      rowid;
     private Byte         changed;
 
     public CkWareHouse() {}
@@ -71,9 +70,9 @@ public class CkWareHouse extends CommonDataModel implements Serializable {
         this.warehousePriority = value.warehousePriority;
         this.locationHierarchy = value.locationHierarchy;
         this.loginid = value.loginid;
-        this.accessibleBy = value.accessibleBy;
         this.hash = value.hash;
         this.address = value.address;
+        this.rowid = value.rowid;
         this.changed = value.changed;
     }
 
@@ -99,9 +98,9 @@ public class CkWareHouse extends CommonDataModel implements Serializable {
         Integer      warehousePriority,
         String       locationHierarchy,
         String       loginid,
-        JSON         accessibleBy,
         String       hash,
         String       address,
+        Integer      rowid,
         Byte         changed
     ) {
         this.id = id;
@@ -125,9 +124,9 @@ public class CkWareHouse extends CommonDataModel implements Serializable {
         this.warehousePriority = warehousePriority;
         this.locationHierarchy = locationHierarchy;
         this.loginid = loginid;
-        this.accessibleBy = accessibleBy;
         this.hash = hash;
         this.address = address;
+        this.rowid = rowid;
         this.changed = changed;
     }
 
@@ -426,20 +425,6 @@ public class CkWareHouse extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_ware_house.accessible_by</code>.
-     */
-    public JSON getAccessibleBy() {
-        return this.accessibleBy;
-    }
-
-    /**
-     * Setter for <code>ck_ware_house.accessible_by</code>.
-     */
-    public void setAccessibleBy(JSON accessibleBy) {
-        this.accessibleBy = accessibleBy;
-    }
-
-    /**
      * Getter for <code>ck_ware_house.hash</code>.
      */
     public String getHash() {
@@ -465,6 +450,20 @@ public class CkWareHouse extends CommonDataModel implements Serializable {
      */
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    /**
+     * Getter for <code>ck_ware_house.rowid</code>.
+     */
+    public Integer getRowid() {
+        return this.rowid;
+    }
+
+    /**
+     * Setter for <code>ck_ware_house.rowid</code>.
+     */
+    public void setRowid(Integer rowid) {
+        this.rowid = rowid;
     }
 
     /**
@@ -506,9 +505,9 @@ public class CkWareHouse extends CommonDataModel implements Serializable {
         sb.append(", ").append(warehousePriority);
         sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(loginid);
-        sb.append(", ").append(accessibleBy);
         sb.append(", ").append(hash);
         sb.append(", ").append(address);
+        sb.append(", ").append(rowid);
         sb.append(", ").append(changed);
 
         sb.append(")");

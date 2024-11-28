@@ -24,6 +24,7 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -35,15 +36,14 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     private Integer       version;
     private String        countryCode;
     private LocalDateTime endDate;
+    private String        outletCode;
+    private String        productType;
+    private String        productValue;
+    private String        skuCode;
     private LocalDateTime startDate;
     private String        tagCode;
     private String        tagDescription;
-    private String        outletCode;
-    private String        skuCode;
-    private String        productType;
-    private String        productValue;
     private String        tagGroup;
-    private Byte          changed;
 
     public CkProducttag() {}
 
@@ -51,6 +51,7 @@ public class CkProducttag extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -62,21 +63,21 @@ public class CkProducttag extends CommonDataModel implements Serializable {
         this.version = value.version;
         this.countryCode = value.countryCode;
         this.endDate = value.endDate;
+        this.outletCode = value.outletCode;
+        this.productType = value.productType;
+        this.productValue = value.productValue;
+        this.skuCode = value.skuCode;
         this.startDate = value.startDate;
         this.tagCode = value.tagCode;
         this.tagDescription = value.tagDescription;
-        this.outletCode = value.outletCode;
-        this.skuCode = value.skuCode;
-        this.productType = value.productType;
-        this.productValue = value.productValue;
         this.tagGroup = value.tagGroup;
-        this.changed = value.changed;
     }
 
     public CkProducttag(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -88,19 +89,19 @@ public class CkProducttag extends CommonDataModel implements Serializable {
         Integer       version,
         String        countryCode,
         LocalDateTime endDate,
+        String        outletCode,
+        String        productType,
+        String        productValue,
+        String        skuCode,
         LocalDateTime startDate,
         String        tagCode,
         String        tagDescription,
-        String        outletCode,
-        String        skuCode,
-        String        productType,
-        String        productValue,
-        String        tagGroup,
-        Byte          changed
+        String        tagGroup
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -112,15 +113,14 @@ public class CkProducttag extends CommonDataModel implements Serializable {
         this.version = version;
         this.countryCode = countryCode;
         this.endDate = endDate;
+        this.outletCode = outletCode;
+        this.productType = productType;
+        this.productValue = productValue;
+        this.skuCode = skuCode;
         this.startDate = startDate;
         this.tagCode = tagCode;
         this.tagDescription = tagDescription;
-        this.outletCode = outletCode;
-        this.skuCode = skuCode;
-        this.productType = productType;
-        this.productValue = productValue;
         this.tagGroup = tagGroup;
-        this.changed = changed;
     }
 
     /**
@@ -163,6 +163,20 @@ public class CkProducttag extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_producttag.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_producttag.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -320,6 +334,62 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_producttag.outlet_code</code>.
+     */
+    public String getOutletCode() {
+        return this.outletCode;
+    }
+
+    /**
+     * Setter for <code>ck_producttag.outlet_code</code>.
+     */
+    public void setOutletCode(String outletCode) {
+        this.outletCode = outletCode;
+    }
+
+    /**
+     * Getter for <code>ck_producttag.product_type</code>.
+     */
+    public String getProductType() {
+        return this.productType;
+    }
+
+    /**
+     * Setter for <code>ck_producttag.product_type</code>.
+     */
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+
+    /**
+     * Getter for <code>ck_producttag.product_value</code>.
+     */
+    public String getProductValue() {
+        return this.productValue;
+    }
+
+    /**
+     * Setter for <code>ck_producttag.product_value</code>.
+     */
+    public void setProductValue(String productValue) {
+        this.productValue = productValue;
+    }
+
+    /**
+     * Getter for <code>ck_producttag.sku_code</code>.
+     */
+    public String getSkuCode() {
+        return this.skuCode;
+    }
+
+    /**
+     * Setter for <code>ck_producttag.sku_code</code>.
+     */
+    public void setSkuCode(String skuCode) {
+        this.skuCode = skuCode;
+    }
+
+    /**
      * Getter for <code>ck_producttag.start_date</code>.
      */
     public LocalDateTime getStartDate() {
@@ -362,62 +432,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_producttag.outlet_code</code>.
-     */
-    public String getOutletCode() {
-        return this.outletCode;
-    }
-
-    /**
-     * Setter for <code>ck_producttag.outlet_code</code>.
-     */
-    public void setOutletCode(String outletCode) {
-        this.outletCode = outletCode;
-    }
-
-    /**
-     * Getter for <code>ck_producttag.sku_code</code>.
-     */
-    public String getSkuCode() {
-        return this.skuCode;
-    }
-
-    /**
-     * Setter for <code>ck_producttag.sku_code</code>.
-     */
-    public void setSkuCode(String skuCode) {
-        this.skuCode = skuCode;
-    }
-
-    /**
-     * Getter for <code>ck_producttag.product_type</code>.
-     */
-    public String getProductType() {
-        return this.productType;
-    }
-
-    /**
-     * Setter for <code>ck_producttag.product_type</code>.
-     */
-    public void setProductType(String productType) {
-        this.productType = productType;
-    }
-
-    /**
-     * Getter for <code>ck_producttag.product_value</code>.
-     */
-    public String getProductValue() {
-        return this.productValue;
-    }
-
-    /**
-     * Setter for <code>ck_producttag.product_value</code>.
-     */
-    public void setProductValue(String productValue) {
-        this.productValue = productValue;
-    }
-
-    /**
      * Getter for <code>ck_producttag.tag_group</code>.
      */
     public String getTagGroup() {
@@ -431,20 +445,6 @@ public class CkProducttag extends CommonDataModel implements Serializable {
         this.tagGroup = tagGroup;
     }
 
-    /**
-     * Getter for <code>ck_producttag.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_producttag.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkProducttag (");
@@ -452,6 +452,7 @@ public class CkProducttag extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -463,15 +464,14 @@ public class CkProducttag extends CommonDataModel implements Serializable {
         sb.append(", ").append(version);
         sb.append(", ").append(countryCode);
         sb.append(", ").append(endDate);
+        sb.append(", ").append(outletCode);
+        sb.append(", ").append(productType);
+        sb.append(", ").append(productValue);
+        sb.append(", ").append(skuCode);
         sb.append(", ").append(startDate);
         sb.append(", ").append(tagCode);
         sb.append(", ").append(tagDescription);
-        sb.append(", ").append(outletCode);
-        sb.append(", ").append(skuCode);
-        sb.append(", ").append(productType);
-        sb.append(", ").append(productValue);
         sb.append(", ").append(tagGroup);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

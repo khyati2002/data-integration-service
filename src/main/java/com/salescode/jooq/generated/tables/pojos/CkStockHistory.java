@@ -24,6 +24,7 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -40,6 +41,7 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     private Double        currentPcQty;
     private Double        currentQty;
     private String        operationType;
+    private String        outletcode;
     private Double        previousCaseQty;
     private Double        previousOtherUnitQty;
     private Double        previousPcQty;
@@ -50,8 +52,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     private LocalDateTime transferDate;
     private String        warehouseCode;
     private String        locationHierarchy;
-    private String        outletcode;
-    private Byte          changed;
     private String        type;
 
     public CkStockHistory() {}
@@ -60,6 +60,7 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -76,6 +77,7 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         this.currentPcQty = value.currentPcQty;
         this.currentQty = value.currentQty;
         this.operationType = value.operationType;
+        this.outletcode = value.outletcode;
         this.previousCaseQty = value.previousCaseQty;
         this.previousOtherUnitQty = value.previousOtherUnitQty;
         this.previousPcQty = value.previousPcQty;
@@ -86,8 +88,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         this.transferDate = value.transferDate;
         this.warehouseCode = value.warehouseCode;
         this.locationHierarchy = value.locationHierarchy;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
         this.type = value.type;
     }
 
@@ -95,6 +95,7 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -111,6 +112,7 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         Double        currentPcQty,
         Double        currentQty,
         String        operationType,
+        String        outletcode,
         Double        previousCaseQty,
         Double        previousOtherUnitQty,
         Double        previousPcQty,
@@ -121,13 +123,12 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         LocalDateTime transferDate,
         String        warehouseCode,
         String        locationHierarchy,
-        String        outletcode,
-        Byte          changed,
         String        type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -144,6 +145,7 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         this.currentPcQty = currentPcQty;
         this.currentQty = currentQty;
         this.operationType = operationType;
+        this.outletcode = outletcode;
         this.previousCaseQty = previousCaseQty;
         this.previousOtherUnitQty = previousOtherUnitQty;
         this.previousPcQty = previousPcQty;
@@ -154,8 +156,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         this.transferDate = transferDate;
         this.warehouseCode = warehouseCode;
         this.locationHierarchy = locationHierarchy;
-        this.outletcode = outletcode;
-        this.changed = changed;
         this.type = type;
     }
 
@@ -199,6 +199,20 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_stock_history.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_stock_history.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -426,6 +440,20 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_stock_history.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_stock_history.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
      * Getter for <code>ck_stock_history.previous_case_qty</code>.
      */
     public Double getPreviousCaseQty() {
@@ -566,34 +594,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_stock_history.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_stock_history.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_stock_history.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_stock_history.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
      * Getter for <code>ck_stock_history.type</code>.
      */
     public String getType() {
@@ -614,6 +614,7 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -630,6 +631,7 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         sb.append(", ").append(currentPcQty);
         sb.append(", ").append(currentQty);
         sb.append(", ").append(operationType);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(previousCaseQty);
         sb.append(", ").append(previousOtherUnitQty);
         sb.append(", ").append(previousPcQty);
@@ -640,8 +642,6 @@ public class CkStockHistory extends CommonDataModel implements Serializable {
         sb.append(", ").append(transferDate);
         sb.append(", ").append(warehouseCode);
         sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
         sb.append(", ").append(type);
 
         sb.append(")");

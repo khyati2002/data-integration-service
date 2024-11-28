@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -47,10 +49,14 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     private String        description;
     private LocalDateTime endTime;
     private String        feature;
+    private String        itemName;
+    private String        itemType;
+    private String        locationHierarchy;
     private String        marketSku;
     private String        marketSkuCode;
     private String        outletCategory;
     private String        outletClass;
+    private String        outletcode;
     private String        outletType;
     private String        product;
     private String        productCode;
@@ -60,11 +66,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     private LocalDateTime startTime;
     private String        subCategory;
     private String        subCategoryCode;
-    private String        locationHierarchy;
-    private String        outletcode;
-    private Byte          changed;
-    private String        itemType;
-    private String        itemName;
     private String        filterKey;
     private String        filterValue;
     private String        loginid;
@@ -76,6 +77,7 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -98,10 +100,14 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         this.description = value.description;
         this.endTime = value.endTime;
         this.feature = value.feature;
+        this.itemName = value.itemName;
+        this.itemType = value.itemType;
+        this.locationHierarchy = value.locationHierarchy;
         this.marketSku = value.marketSku;
         this.marketSkuCode = value.marketSkuCode;
         this.outletCategory = value.outletCategory;
         this.outletClass = value.outletClass;
+        this.outletcode = value.outletcode;
         this.outletType = value.outletType;
         this.product = value.product;
         this.productCode = value.productCode;
@@ -111,11 +117,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         this.startTime = value.startTime;
         this.subCategory = value.subCategory;
         this.subCategoryCode = value.subCategoryCode;
-        this.locationHierarchy = value.locationHierarchy;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
-        this.itemType = value.itemType;
-        this.itemName = value.itemName;
         this.filterKey = value.filterKey;
         this.filterValue = value.filterValue;
         this.loginid = value.loginid;
@@ -126,6 +127,7 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -148,10 +150,14 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         String        description,
         LocalDateTime endTime,
         String        feature,
+        String        itemName,
+        String        itemType,
+        String        locationHierarchy,
         String        marketSku,
         String        marketSkuCode,
         String        outletCategory,
         String        outletClass,
+        String        outletcode,
         String        outletType,
         String        product,
         String        productCode,
@@ -161,11 +167,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         LocalDateTime startTime,
         String        subCategory,
         String        subCategoryCode,
-        String        locationHierarchy,
-        String        outletcode,
-        Byte          changed,
-        String        itemType,
-        String        itemName,
         String        filterKey,
         String        filterValue,
         String        loginid,
@@ -174,6 +175,7 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -196,10 +198,14 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         this.description = description;
         this.endTime = endTime;
         this.feature = feature;
+        this.itemName = itemName;
+        this.itemType = itemType;
+        this.locationHierarchy = locationHierarchy;
         this.marketSku = marketSku;
         this.marketSkuCode = marketSkuCode;
         this.outletCategory = outletCategory;
         this.outletClass = outletClass;
+        this.outletcode = outletcode;
         this.outletType = outletType;
         this.product = product;
         this.productCode = productCode;
@@ -209,11 +215,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         this.startTime = startTime;
         this.subCategory = subCategory;
         this.subCategoryCode = subCategoryCode;
-        this.locationHierarchy = locationHierarchy;
-        this.outletcode = outletcode;
-        this.changed = changed;
-        this.itemType = itemType;
-        this.itemName = itemName;
         this.filterKey = filterKey;
         this.filterValue = filterValue;
         this.loginid = loginid;
@@ -260,6 +261,20 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_secondary_product.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_secondary_product.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -571,6 +586,48 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     }
 
     /**
+     * Getter for <code>ck_secondary_product.item_name</code>.
+     */
+    public String getItemName() {
+        return this.itemName;
+    }
+
+    /**
+     * Setter for <code>ck_secondary_product.item_name</code>.
+     */
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    /**
+     * Getter for <code>ck_secondary_product.item_type</code>.
+     */
+    public String getItemType() {
+        return this.itemType;
+    }
+
+    /**
+     * Setter for <code>ck_secondary_product.item_type</code>.
+     */
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+    /**
+     * Getter for <code>ck_secondary_product.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_secondary_product.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
      * Getter for <code>ck_secondary_product.market_sku</code>.
      */
     public String getMarketSku() {
@@ -624,6 +681,20 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
      */
     public void setOutletClass(String outletClass) {
         this.outletClass = outletClass;
+    }
+
+    /**
+     * Getter for <code>ck_secondary_product.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_secondary_product.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
     }
 
     /**
@@ -753,76 +824,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
     }
 
     /**
-     * Getter for <code>ck_secondary_product.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_secondary_product.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_secondary_product.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_secondary_product.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_secondary_product.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_secondary_product.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_secondary_product.item_type</code>.
-     */
-    public String getItemType() {
-        return this.itemType;
-    }
-
-    /**
-     * Setter for <code>ck_secondary_product.item_type</code>.
-     */
-    public void setItemType(String itemType) {
-        this.itemType = itemType;
-    }
-
-    /**
-     * Getter for <code>ck_secondary_product.item_name</code>.
-     */
-    public String getItemName() {
-        return this.itemName;
-    }
-
-    /**
-     * Setter for <code>ck_secondary_product.item_name</code>.
-     */
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    /**
      * Getter for <code>ck_secondary_product.filter_key</code>.
      */
     public String getFilterKey() {
@@ -885,6 +886,7 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -907,10 +909,14 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         sb.append(", ").append(description);
         sb.append(", ").append(endTime);
         sb.append(", ").append(feature);
+        sb.append(", ").append(itemName);
+        sb.append(", ").append(itemType);
+        sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(marketSku);
         sb.append(", ").append(marketSkuCode);
         sb.append(", ").append(outletCategory);
         sb.append(", ").append(outletClass);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(outletType);
         sb.append(", ").append(product);
         sb.append(", ").append(productCode);
@@ -920,11 +926,6 @@ public class CkSecondaryProduct extends CommonDataModel implements Serializable 
         sb.append(", ").append(startTime);
         sb.append(", ").append(subCategory);
         sb.append(", ").append(subCategoryCode);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(itemType);
-        sb.append(", ").append(itemName);
         sb.append(", ").append(filterKey);
         sb.append(", ").append(filterValue);
         sb.append(", ").append(loginid);

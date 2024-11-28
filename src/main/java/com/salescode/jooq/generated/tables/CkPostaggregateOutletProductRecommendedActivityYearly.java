@@ -12,16 +12,26 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.Record;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -63,6 +73,12 @@ public class CkPostaggregateOutletProductRecommendedActivityYearly extends Table
      * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
+     * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column
@@ -156,6 +172,18 @@ public class CkPostaggregateOutletProductRecommendedActivityYearly extends Table
 
     /**
      * The column
+     * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column
+     * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
+
+    /**
+     * The column
      * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.name</code>.
      */
     public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
@@ -204,6 +232,12 @@ public class CkPostaggregateOutletProductRecommendedActivityYearly extends Table
 
     /**
      * The column
+     * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
      * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.recommendation_type</code>.
      */
     public final TableField<Record, String> RECOMMENDATION_TYPE = createField(DSL.name("recommendation_type"), SQLDataType.VARCHAR(255), this, "");
@@ -243,30 +277,6 @@ public class CkPostaggregateOutletProductRecommendedActivityYearly extends Table
      * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.year</code>.
      */
     public final TableField<Record, Integer> YEAR = createField(DSL.name("year"), SQLDataType.INTEGER, this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_outlet_product_recommended_activity_yearly.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkPostaggregateOutletProductRecommendedActivityYearly(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -320,46 +330,6 @@ public class CkPostaggregateOutletProductRecommendedActivityYearly extends Table
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_POSTAGGREGATE_OUTLET_PRODUCT_RECOMMENDED_ACTIVITY_YEARLY_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FK3KMK6FDSKGMV2SKHG8CD85J3M, Keys.FKIXM95MWBE3FHLXUNQUSW0WCX6, Keys.FK720E9OC245XLPMVIM9HQHIRP5);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FK3KMK6FDSKGMV2SKHG8CD85J3M);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKIXM95MWBE3FHLXUNQUSW0WCX6);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK720E9OC245XLPMVIM9HQHIRP5);
-
-        return _ckOutletDetails;
     }
 
     @Override

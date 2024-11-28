@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -34,9 +35,9 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     private String       modifiedBy;
     private String       source;
     private Integer      version;
-    private String       aggTable;
+    private String       targetTable;
     private String       aggregateField;
-    private String       aggregateType;
+    private String       aggregationName;
     private String       cadenceDateField;
     private JSON         cadenceTypes;
     private String       description;
@@ -52,10 +53,11 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     private String       secondaryGroupName;
     private String       tertiaryGroupBy;
     private String       tertiaryGroupName;
-    private String       aggregationName;
     private String       category;
     private String       dataType;
     private String       operationType;
+    private String       aggTable;
+    private String       aggregateType;
 
     public CkKpiRegistory() {}
 
@@ -73,9 +75,9 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
         this.modifiedBy = value.modifiedBy;
         this.source = value.source;
         this.version = value.version;
-        this.aggTable = value.aggTable;
+        this.targetTable = value.targetTable;
         this.aggregateField = value.aggregateField;
-        this.aggregateType = value.aggregateType;
+        this.aggregationName = value.aggregationName;
         this.cadenceDateField = value.cadenceDateField;
         this.cadenceTypes = value.cadenceTypes;
         this.description = value.description;
@@ -91,10 +93,11 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
         this.secondaryGroupName = value.secondaryGroupName;
         this.tertiaryGroupBy = value.tertiaryGroupBy;
         this.tertiaryGroupName = value.tertiaryGroupName;
-        this.aggregationName = value.aggregationName;
         this.category = value.category;
         this.dataType = value.dataType;
         this.operationType = value.operationType;
+        this.aggTable = value.aggTable;
+        this.aggregateType = value.aggregateType;
     }
 
     public CkKpiRegistory(
@@ -111,9 +114,9 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
         String       modifiedBy,
         String       source,
         Integer      version,
-        String       aggTable,
+        String       targetTable,
         String       aggregateField,
-        String       aggregateType,
+        String       aggregationName,
         String       cadenceDateField,
         JSON         cadenceTypes,
         String       description,
@@ -129,10 +132,11 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
         String       secondaryGroupName,
         String       tertiaryGroupBy,
         String       tertiaryGroupName,
-        String       aggregationName,
         String       category,
         String       dataType,
-        String       operationType
+        String       operationType,
+        String       aggTable,
+        String       aggregateType
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -147,9 +151,9 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
         this.modifiedBy = modifiedBy;
         this.source = source;
         this.version = version;
-        this.aggTable = aggTable;
+        this.targetTable = targetTable;
         this.aggregateField = aggregateField;
-        this.aggregateType = aggregateType;
+        this.aggregationName = aggregationName;
         this.cadenceDateField = cadenceDateField;
         this.cadenceTypes = cadenceTypes;
         this.description = description;
@@ -165,10 +169,11 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
         this.secondaryGroupName = secondaryGroupName;
         this.tertiaryGroupBy = tertiaryGroupBy;
         this.tertiaryGroupName = tertiaryGroupName;
-        this.aggregationName = aggregationName;
         this.category = category;
         this.dataType = dataType;
         this.operationType = operationType;
+        this.aggTable = aggTable;
+        this.aggregateType = aggregateType;
     }
 
     /**
@@ -354,17 +359,17 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_kpi_registory.agg_table</code>.
+     * Getter for <code>ck_kpi_registory.target_table</code>.
      */
-    public String getAggTable() {
-        return this.aggTable;
+    public String getTargetTable() {
+        return this.targetTable;
     }
 
     /**
-     * Setter for <code>ck_kpi_registory.agg_table</code>.
+     * Setter for <code>ck_kpi_registory.target_table</code>.
      */
-    public void setAggTable(String aggTable) {
-        this.aggTable = aggTable;
+    public void setTargetTable(String targetTable) {
+        this.targetTable = targetTable;
     }
 
     /**
@@ -382,17 +387,17 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_kpi_registory.aggregate_type</code>.
+     * Getter for <code>ck_kpi_registory.aggregation_name</code>.
      */
-    public String getAggregateType() {
-        return this.aggregateType;
+    public String getAggregationName() {
+        return this.aggregationName;
     }
 
     /**
-     * Setter for <code>ck_kpi_registory.aggregate_type</code>.
+     * Setter for <code>ck_kpi_registory.aggregation_name</code>.
      */
-    public void setAggregateType(String aggregateType) {
-        this.aggregateType = aggregateType;
+    public void setAggregationName(String aggregationName) {
+        this.aggregationName = aggregationName;
     }
 
     /**
@@ -606,20 +611,6 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_kpi_registory.aggregation_name</code>.
-     */
-    public String getAggregationName() {
-        return this.aggregationName;
-    }
-
-    /**
-     * Setter for <code>ck_kpi_registory.aggregation_name</code>.
-     */
-    public void setAggregationName(String aggregationName) {
-        this.aggregationName = aggregationName;
-    }
-
-    /**
      * Getter for <code>ck_kpi_registory.category</code>.
      */
     public String getCategory() {
@@ -661,6 +652,34 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
         this.operationType = operationType;
     }
 
+    /**
+     * Getter for <code>ck_kpi_registory.agg_table</code>.
+     */
+    public String getAggTable() {
+        return this.aggTable;
+    }
+
+    /**
+     * Setter for <code>ck_kpi_registory.agg_table</code>.
+     */
+    public void setAggTable(String aggTable) {
+        this.aggTable = aggTable;
+    }
+
+    /**
+     * Getter for <code>ck_kpi_registory.aggregate_type</code>.
+     */
+    public String getAggregateType() {
+        return this.aggregateType;
+    }
+
+    /**
+     * Setter for <code>ck_kpi_registory.aggregate_type</code>.
+     */
+    public void setAggregateType(String aggregateType) {
+        this.aggregateType = aggregateType;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkKpiRegistory (");
@@ -678,9 +697,9 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
         sb.append(", ").append(modifiedBy);
         sb.append(", ").append(source);
         sb.append(", ").append(version);
-        sb.append(", ").append(aggTable);
+        sb.append(", ").append(targetTable);
         sb.append(", ").append(aggregateField);
-        sb.append(", ").append(aggregateType);
+        sb.append(", ").append(aggregationName);
         sb.append(", ").append(cadenceDateField);
         sb.append(", ").append(cadenceTypes);
         sb.append(", ").append(description);
@@ -696,10 +715,11 @@ public class CkKpiRegistory extends CommonDataModel implements Serializable {
         sb.append(", ").append(secondaryGroupName);
         sb.append(", ").append(tertiaryGroupBy);
         sb.append(", ").append(tertiaryGroupName);
-        sb.append(", ").append(aggregationName);
         sb.append(", ").append(category);
         sb.append(", ").append(dataType);
         sb.append(", ").append(operationType);
+        sb.append(", ").append(aggTable);
+        sb.append(", ").append(aggregateType);
 
         sb.append(")");
         return sb.toString();

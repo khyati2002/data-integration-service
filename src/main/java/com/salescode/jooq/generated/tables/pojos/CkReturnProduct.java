@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -55,7 +56,6 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
     private String        product;
     private String        productCode;
     private String        productDescription;
-    private String        qty;
     private String        redemptionStatus;
     private String        referenceNo;
     private JSON          returnReason;
@@ -65,6 +65,7 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
     private String        skuDescription;
     private String        skuName;
     private LocalDateTime startTime;
+    private String        qty;
 
     public CkReturnProduct() {}
 
@@ -102,7 +103,6 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
         this.product = value.product;
         this.productCode = value.productCode;
         this.productDescription = value.productDescription;
-        this.qty = value.qty;
         this.redemptionStatus = value.redemptionStatus;
         this.referenceNo = value.referenceNo;
         this.returnReason = value.returnReason;
@@ -112,6 +112,7 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
         this.skuDescription = value.skuDescription;
         this.skuName = value.skuName;
         this.startTime = value.startTime;
+        this.qty = value.qty;
     }
 
     public CkReturnProduct(
@@ -148,7 +149,6 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
         String        product,
         String        productCode,
         String        productDescription,
-        String        qty,
         String        redemptionStatus,
         String        referenceNo,
         JSON          returnReason,
@@ -157,7 +157,8 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
         String        skuCode,
         String        skuDescription,
         String        skuName,
-        LocalDateTime startTime
+        LocalDateTime startTime,
+        String        qty
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -192,7 +193,6 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
         this.product = product;
         this.productCode = productCode;
         this.productDescription = productDescription;
-        this.qty = qty;
         this.redemptionStatus = redemptionStatus;
         this.referenceNo = referenceNo;
         this.returnReason = returnReason;
@@ -202,6 +202,7 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
         this.skuDescription = skuDescription;
         this.skuName = skuName;
         this.startTime = startTime;
+        this.qty = qty;
     }
 
     /**
@@ -667,20 +668,6 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_return_product.qty</code>.
-     */
-    public String getQty() {
-        return this.qty;
-    }
-
-    /**
-     * Setter for <code>ck_return_product.qty</code>.
-     */
-    public void setQty(String qty) {
-        this.qty = qty;
-    }
-
-    /**
      * Getter for <code>ck_return_product.redemption_status</code>.
      */
     public String getRedemptionStatus() {
@@ -806,6 +793,20 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
         this.startTime = startTime;
     }
 
+    /**
+     * Getter for <code>ck_return_product.qty</code>.
+     */
+    public String getQty() {
+        return this.qty;
+    }
+
+    /**
+     * Setter for <code>ck_return_product.qty</code>.
+     */
+    public void setQty(String qty) {
+        this.qty = qty;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkReturnProduct (");
@@ -843,7 +844,6 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
         sb.append(", ").append(product);
         sb.append(", ").append(productCode);
         sb.append(", ").append(productDescription);
-        sb.append(", ").append(qty);
         sb.append(", ").append(redemptionStatus);
         sb.append(", ").append(referenceNo);
         sb.append(", ").append(returnReason);
@@ -853,6 +853,7 @@ public class CkReturnProduct extends CommonDataModel implements Serializable {
         sb.append(", ").append(skuDescription);
         sb.append(", ").append(skuName);
         sb.append(", ").append(startTime);
+        sb.append(", ").append(qty);
 
         sb.append(")");
         return sb.toString();

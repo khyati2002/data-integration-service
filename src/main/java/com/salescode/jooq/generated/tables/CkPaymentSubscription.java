@@ -12,14 +12,24 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -114,16 +124,6 @@ public class CkPaymentSubscription extends TableImpl<Record> {
     public final TableField<Record, String> ACCOUNT_ID = createField(DSL.name("account_id"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_payment_subscription.is_enabled</code>.
-     */
-    public final TableField<Record, String> IS_ENABLED = createField(DSL.name("is_enabled"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_payment_subscription.payment_enabled</code>.
-     */
-    public final TableField<Record, String> PAYMENT_ENABLED = createField(DSL.name("payment_enabled"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_payment_subscription.payment_provide_type</code>.
      */
     public final TableField<Record, String> PAYMENT_PROVIDE_TYPE = createField(DSL.name("payment_provide_type"), SQLDataType.VARCHAR(255), this, "");
@@ -134,14 +134,24 @@ public class CkPaymentSubscription extends TableImpl<Record> {
     public final TableField<Record, Integer> STATUS = createField(DSL.name("status"), SQLDataType.INTEGER, this, "");
 
     /**
-     * The column <code>ck_payment_subscription.supplier</code>.
-     */
-    public final TableField<Record, String> SUPPLIER = createField(DSL.name("supplier"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_payment_subscription.user_id</code>.
      */
     public final TableField<Record, String> USER_ID = createField(DSL.name("user_id"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_payment_subscription.is_enabled</code>.
+     */
+    public final TableField<Record, String> IS_ENABLED = createField(DSL.name("is_enabled"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_payment_subscription.payment_enabled</code>.
+     */
+    public final TableField<Record, String> PAYMENT_ENABLED = createField(DSL.name("payment_enabled"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_payment_subscription.supplier</code>.
+     */
+    public final TableField<Record, String> SUPPLIER = createField(DSL.name("supplier"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_payment_subscription.payment_type</code>.
@@ -188,7 +198,7 @@ public class CkPaymentSubscription extends TableImpl<Record> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.CK_PAYMENT_SUBSCRIPTION_CK_PAYMENT_SUBSCRIPTION_IDX_1, Indexes.CK_PAYMENT_SUBSCRIPTION_CK_PAYMENT_SUBSCRIPTION_IDX_2);
+        return Arrays.asList(Indexes.CK_PAYMENT_SUBSCRIPTION_CK_PAYMENT_SUBSCRIPTION_IDX_1, Indexes.CK_PAYMENT_SUBSCRIPTION_CK_PAYMENT_SUBSCRIPTION_IDX_2, Indexes.CK_PAYMENT_SUBSCRIPTION_INDEX_PAYMENT_TYPE);
     }
 
     @Override

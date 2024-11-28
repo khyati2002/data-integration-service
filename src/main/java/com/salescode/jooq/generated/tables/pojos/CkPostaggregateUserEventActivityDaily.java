@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -40,6 +42,8 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
     private String        gpsLongitude;
     private String        hierarchy;
     private JSON          images;
+    private String        locationHierarchy;
+    private String        loginid;
     private String        name;
     private String        referenceNumber;
     private LocalDateTime startTime;
@@ -52,9 +56,6 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
     private Integer       outletTotalClicked;
     private Integer       outletTotalIncart;
     private Integer       outletTotalShared;
-    private String        locationHierarchy;
-    private String        loginid;
-    private Byte          changed;
 
     public CkPostaggregateUserEventActivityDaily() {}
 
@@ -62,6 +63,7 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -77,6 +79,8 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         this.gpsLongitude = value.gpsLongitude;
         this.hierarchy = value.hierarchy;
         this.images = value.images;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
         this.name = value.name;
         this.referenceNumber = value.referenceNumber;
         this.startTime = value.startTime;
@@ -89,15 +93,13 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         this.outletTotalClicked = value.outletTotalClicked;
         this.outletTotalIncart = value.outletTotalIncart;
         this.outletTotalShared = value.outletTotalShared;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.changed = value.changed;
     }
 
     public CkPostaggregateUserEventActivityDaily(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -113,6 +115,8 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         String        gpsLongitude,
         String        hierarchy,
         JSON          images,
+        String        locationHierarchy,
+        String        loginid,
         String        name,
         String        referenceNumber,
         LocalDateTime startTime,
@@ -124,14 +128,12 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         Integer       outletShared,
         Integer       outletTotalClicked,
         Integer       outletTotalIncart,
-        Integer       outletTotalShared,
-        String        locationHierarchy,
-        String        loginid,
-        Byte          changed
+        Integer       outletTotalShared
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -147,6 +149,8 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         this.gpsLongitude = gpsLongitude;
         this.hierarchy = hierarchy;
         this.images = images;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
         this.name = name;
         this.referenceNumber = referenceNumber;
         this.startTime = startTime;
@@ -159,9 +163,6 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         this.outletTotalClicked = outletTotalClicked;
         this.outletTotalIncart = outletTotalIncart;
         this.outletTotalShared = outletTotalShared;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.changed = changed;
     }
 
     /**
@@ -208,6 +209,22 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for
+     * <code>ck_postaggregate_user_event_activity_daily.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_event_activity_daily.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -447,6 +464,38 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
     }
 
     /**
+     * Getter for
+     * <code>ck_postaggregate_user_event_activity_daily.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_event_activity_daily.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for
+     * <code>ck_postaggregate_user_event_activity_daily.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_event_activity_daily.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
      * Getter for <code>ck_postaggregate_user_event_activity_daily.name</code>.
      */
     public String getName() {
@@ -634,54 +683,6 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         this.outletTotalShared = outletTotalShared;
     }
 
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_event_activity_daily.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_event_activity_daily.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_event_activity_daily.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_event_activity_daily.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_event_activity_daily.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_event_activity_daily.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPostaggregateUserEventActivityDaily (");
@@ -689,6 +690,7 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -704,6 +706,8 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(hierarchy);
         sb.append(", ").append(images);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(name);
         sb.append(", ").append(referenceNumber);
         sb.append(", ").append(startTime);
@@ -716,9 +720,6 @@ public class CkPostaggregateUserEventActivityDaily extends CommonDataModel imple
         sb.append(", ").append(outletTotalClicked);
         sb.append(", ").append(outletTotalIncart);
         sb.append(", ").append(outletTotalShared);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

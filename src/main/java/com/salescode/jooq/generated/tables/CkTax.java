@@ -11,12 +11,21 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Date;
 
 
 /**
@@ -54,6 +63,11 @@ public class CkTax extends TableImpl<Record> {
      * The column <code>ck_tax.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_tax.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_tax.created_by</code>.
@@ -126,9 +140,14 @@ public class CkTax extends TableImpl<Record> {
     public final TableField<Record, String> TAX_TYPE = createField(DSL.name("tax_type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_tax.changed</code>.
+     * The column <code>ck_tax.priority</code>.
      */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
+    public final TableField<Record, Integer> PRIORITY = createField(DSL.name("priority"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>ck_tax.tax_group</code>.
+     */
+    public final TableField<Record, String> TAX_GROUP = createField(DSL.name("tax_group"), SQLDataType.VARCHAR(255), this, "");
 
     private CkTax(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

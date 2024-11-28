@@ -10,16 +10,28 @@ import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
+import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -57,6 +69,11 @@ public class CkOrders extends TableImpl<Record> {
      * The column <code>ck_orders.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_orders.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_orders.created_by</code>.
@@ -109,6 +126,16 @@ public class CkOrders extends TableImpl<Record> {
     public final TableField<Record, LocalDateTime> SYSTEM_TIME = createField(DSL.name("system_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
+     * The column <code>ck_orders.gps_latitude</code>.
+     */
+    public final TableField<Record, String> GPS_LATITUDE = createField(DSL.name("gps_latitude"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_orders.gps_longitude</code>.
+     */
+    public final TableField<Record, String> GPS_LONGITUDE = createField(DSL.name("gps_longitude"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_orders.bill_amount</code>.
      */
     public final TableField<Record, Double> BILL_AMOUNT = createField(DSL.name("bill_amount"), SQLDataType.DOUBLE.nullable(false), this, "");
@@ -124,16 +151,6 @@ public class CkOrders extends TableImpl<Record> {
     public final TableField<Record, JSON> DISCOUNT_INFO = createField(DSL.name("discount_info"), SQLDataType.JSON, this, "");
 
     /**
-     * The column <code>ck_orders.gps_latitude</code>.
-     */
-    public final TableField<Record, String> GPS_LATITUDE = createField(DSL.name("gps_latitude"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_orders.gps_longitude</code>.
-     */
-    public final TableField<Record, String> GPS_LONGITUDE = createField(DSL.name("gps_longitude"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_orders.user_hierarchy</code>.
      */
     public final TableField<Record, String> USER_HIERARCHY = createField(DSL.name("user_hierarchy"), SQLDataType.CLOB, this, "");
@@ -142,6 +159,11 @@ public class CkOrders extends TableImpl<Record> {
      * The column <code>ck_orders.line_count</code>.
      */
     public final TableField<Record, Integer> LINE_COUNT = createField(DSL.name("line_count"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>ck_orders.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>ck_orders.loginid</code>.
@@ -164,6 +186,11 @@ public class CkOrders extends TableImpl<Record> {
     public final TableField<Record, String> ORDER_NUMBER = createField(DSL.name("order_number"), SQLDataType.VARCHAR(200).nullable(false), this, "");
 
     /**
+     * The column <code>ck_orders.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
      * The column <code>ck_orders.reference_number</code>.
      */
     public final TableField<Record, String> REFERENCE_NUMBER = createField(DSL.name("reference_number"), SQLDataType.VARCHAR(255), this, "");
@@ -177,6 +204,16 @@ public class CkOrders extends TableImpl<Record> {
      * The column <code>ck_orders.ship_id</code>.
      */
     public final TableField<Record, String> SHIP_ID = createField(DSL.name("ship_id"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_orders.supplierid</code>.
+     */
+    public final TableField<Record, String> SUPPLIERID = createField(DSL.name("supplierid"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
+     * The column <code>ck_orders.hierarchy</code>.
+     */
+    public final TableField<Record, String> HIERARCHY = createField(DSL.name("hierarchy"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>ck_orders.total_amount</code>.
@@ -209,51 +246,6 @@ public class CkOrders extends TableImpl<Record> {
     public final TableField<Record, String> TYPE = createField(DSL.name("type"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_orders.delivery_date</code>.
-     */
-    public final TableField<Record, LocalDateTime> DELIVERY_DATE = createField(DSL.name("delivery_date"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
-     * The column <code>ck_orders.status</code>.
-     */
-    public final TableField<Record, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR(32).defaultValue(DSL.inline("PENDING", SQLDataType.VARCHAR)), this, "");
-
-    /**
-     * The column <code>ck_orders.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_orders.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_orders.supplierid</code>.
-     */
-    public final TableField<Record, String> SUPPLIERID = createField(DSL.name("supplierid"), SQLDataType.VARCHAR(50).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_orders.hierarchy</code>.
-     */
-    public final TableField<Record, String> HIERARCHY = createField(DSL.name("hierarchy"), SQLDataType.VARCHAR(750).nullable(false), this, "");
-
-    /**
-     * The column <code>ck_orders.status_reason</code>.
-     */
-    public final TableField<Record, String> STATUS_REASON = createField(DSL.name("status_reason"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_orders.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_orders.group_id</code>.
-     */
-    public final TableField<Record, String> GROUP_ID = createField(DSL.name("group_id"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_orders.beat</code>.
      */
     public final TableField<Record, String> BEAT = createField(DSL.name("beat"), SQLDataType.VARCHAR(255), this, "");
@@ -264,9 +256,29 @@ public class CkOrders extends TableImpl<Record> {
     public final TableField<Record, String> BEAT_NAME = createField(DSL.name("beat_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
+     * The column <code>ck_orders.delivery_date</code>.
+     */
+    public final TableField<Record, LocalDateTime> DELIVERY_DATE = createField(DSL.name("delivery_date"), SQLDataType.LOCALDATETIME(0), this, "");
+
+    /**
+     * The column <code>ck_orders.group_id</code>.
+     */
+    public final TableField<Record, String> GROUP_ID = createField(DSL.name("group_id"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_orders.status</code>.
+     */
+    public final TableField<Record, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR(32).defaultValue(DSL.inline("PENDING", SQLDataType.VARCHAR)), this, "");
+
+    /**
+     * The column <code>ck_orders.status_reason</code>.
+     */
+    public final TableField<Record, String> STATUS_REASON = createField(DSL.name("status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_orders.initial_normalized_quantity</code>.
      */
-    public final TableField<Record, Double> INITIAL_NORMALIZED_QUANTITY = createField(DSL.name("initial_normalized_quantity"), SQLDataType.FLOAT.nullable(false), this, "");
+    public final TableField<Record, Double> INITIAL_NORMALIZED_QUANTITY = createField(DSL.name("initial_normalized_quantity"), SQLDataType.FLOAT, this, "");
 
     /**
      * The column <code>ck_orders.normalized_volume</code>.
@@ -276,17 +288,17 @@ public class CkOrders extends TableImpl<Record> {
     /**
      * The column <code>ck_orders.processing_status</code>.
      */
-    public final TableField<Record, String> PROCESSING_STATUS = createField(DSL.name("processing_status"), SQLDataType.VARCHAR(32).defaultValue(DSL.inline("0", SQLDataType.VARCHAR)), this, "");
+    public final TableField<Record, String> PROCESSING_STATUS = createField(DSL.name("processing_status"), SQLDataType.VARCHAR(32).defaultValue(DSL.inline("PENDING", SQLDataType.VARCHAR)), this, "");
+
+    /**
+     * The column <code>ck_orders.sales_value</code>.
+     */
+    public final TableField<Record, Double> SALES_VALUE = createField(DSL.name("sales_value"), SQLDataType.DOUBLE.nullable(false).defaultValue(DSL.inline("0", SQLDataType.DOUBLE)), this, "");
 
     /**
      * The column <code>ck_orders.sales_date</code>.
      */
     public final TableField<Record, LocalDateTime> SALES_DATE = createField(DSL.name("sales_date"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
-     * The column <code>ck_orders.sales_value</code>.
-     */
-    public final TableField<Record, Double> SALES_VALUE = createField(DSL.name("sales_value"), SQLDataType.DOUBLE.nullable(false), this, "");
 
     private CkOrders(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -327,6 +339,11 @@ public class CkOrders extends TableImpl<Record> {
     }
 
     @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.CK_ORDERS_USER_HIERARCHY);
+    }
+
+    @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_ORDERS_PRIMARY;
     }
@@ -334,58 +351,6 @@ public class CkOrders extends TableImpl<Record> {
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
         return Arrays.asList(Keys.KEY_CK_ORDERS_UK_59KL862B7JBLIH2XJV9HDPDM8);
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKIRARD2GMRQCFO33SRDORMXFJY, Keys.FK1SAENV67BKMDRC5GCQFSI4MTJ, Keys.FKOFW7R8H47RJXSE8JBWOERK9U2, Keys.FK94MT6W9T2QLRLPVL7J0X4WVN8);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkOutletDetails _ckOutletDetails;
-    private transient CkUser _ckUser;
-    private transient CkHierarchyMetadata _ckHierarchyMetadata;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKIRARD2GMRQCFO33SRDORMXFJY);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK1SAENV67BKMDRC5GCQFSI4MTJ);
-
-        return _ckOutletDetails;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKOFW7R8H47RJXSE8JBWOERK9U2);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the
-     * <code>ckroot.ck_hierarchy_metadata</code> table.
-     */
-    public CkHierarchyMetadata ckHierarchyMetadata() {
-        if (_ckHierarchyMetadata == null)
-            _ckHierarchyMetadata = new CkHierarchyMetadata(this, Keys.FK94MT6W9T2QLRLPVL7J0X4WVN8);
-
-        return _ckHierarchyMetadata;
     }
 
     @Override

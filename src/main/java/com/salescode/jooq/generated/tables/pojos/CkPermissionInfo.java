@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,6 +25,7 @@ public class CkPermissionInfo extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -38,7 +40,6 @@ public class CkPermissionInfo extends CommonDataModel implements Serializable {
     private String       name;
     private JSON         permissionGroups;
     private Integer      permissionType;
-    private Byte         changed;
 
     public CkPermissionInfo() {}
 
@@ -46,6 +47,7 @@ public class CkPermissionInfo extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -60,13 +62,13 @@ public class CkPermissionInfo extends CommonDataModel implements Serializable {
         this.name = value.name;
         this.permissionGroups = value.permissionGroups;
         this.permissionType = value.permissionType;
-        this.changed = value.changed;
     }
 
     public CkPermissionInfo(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -80,12 +82,12 @@ public class CkPermissionInfo extends CommonDataModel implements Serializable {
         String       accessControlValue,
         String       name,
         JSON         permissionGroups,
-        Integer      permissionType,
-        Byte         changed
+        Integer      permissionType
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -100,7 +102,6 @@ public class CkPermissionInfo extends CommonDataModel implements Serializable {
         this.name = name;
         this.permissionGroups = permissionGroups;
         this.permissionType = permissionType;
-        this.changed = changed;
     }
 
     /**
@@ -143,6 +144,20 @@ public class CkPermissionInfo extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_permission_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_permission_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -341,20 +356,6 @@ public class CkPermissionInfo extends CommonDataModel implements Serializable {
         this.permissionType = permissionType;
     }
 
-    /**
-     * Getter for <code>ck_permission_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_permission_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPermissionInfo (");
@@ -362,6 +363,7 @@ public class CkPermissionInfo extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -376,7 +378,6 @@ public class CkPermissionInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(name);
         sb.append(", ").append(permissionGroups);
         sb.append(", ").append(permissionType);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

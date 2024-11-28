@@ -15,22 +15,26 @@ public class CkStockHierarchy implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String stockId;
-    private String hierarchyId;
+    private String  stockId;
+    private String  hierarchyId;
+    private Integer rowid;
 
     public CkStockHierarchy() {}
 
     public CkStockHierarchy(CkStockHierarchy value) {
         this.stockId = value.stockId;
         this.hierarchyId = value.hierarchyId;
+        this.rowid = value.rowid;
     }
 
     public CkStockHierarchy(
-        String stockId,
-        String hierarchyId
+        String  stockId,
+        String  hierarchyId,
+        Integer rowid
     ) {
         this.stockId = stockId;
         this.hierarchyId = hierarchyId;
+        this.rowid = rowid;
     }
 
     /**
@@ -61,12 +65,27 @@ public class CkStockHierarchy implements Serializable {
         this.hierarchyId = hierarchyId;
     }
 
+    /**
+     * Getter for <code>ck_stock_hierarchy.rowid</code>.
+     */
+    public Integer getRowid() {
+        return this.rowid;
+    }
+
+    /**
+     * Setter for <code>ck_stock_hierarchy.rowid</code>.
+     */
+    public void setRowid(Integer rowid) {
+        this.rowid = rowid;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkStockHierarchy (");
 
         sb.append(stockId);
         sb.append(", ").append(hierarchyId);
+        sb.append(", ").append(rowid);
 
         sb.append(")");
         return sb.toString();

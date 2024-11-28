@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,12 +25,15 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
+    private String       hash;
     private Date         lastModifiedTime;
     private String       lob;
     private String       modifiedBy;
+    private String       source;
     private Integer      version;
     private JSON         configuration;
     private String       description;
@@ -40,13 +44,8 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
     private String       name;
     private Integer      priority;
     private Integer      severity;
-    private byte[]       transformerInfo;
-    private String       type;
-    private String       source;
     private String       transformer;
-    private JSON         accessibleBy;
-    private String       hash;
-    private Byte         changed;
+    private String       type;
 
     public CkTriggerDispatcherInfo() {}
 
@@ -54,12 +53,15 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
+        this.hash = value.hash;
         this.lastModifiedTime = value.lastModifiedTime;
         this.lob = value.lob;
         this.modifiedBy = value.modifiedBy;
+        this.source = value.source;
         this.version = value.version;
         this.configuration = value.configuration;
         this.description = value.description;
@@ -70,25 +72,23 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
         this.name = value.name;
         this.priority = value.priority;
         this.severity = value.severity;
-        this.transformerInfo = value.transformerInfo;
-        this.type = value.type;
-        this.source = value.source;
         this.transformer = value.transformer;
-        this.accessibleBy = value.accessibleBy;
-        this.hash = value.hash;
-        this.changed = value.changed;
+        this.type = value.type;
     }
 
     public CkTriggerDispatcherInfo(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
+        String       hash,
         Date         lastModifiedTime,
         String       lob,
         String       modifiedBy,
+        String       source,
         Integer      version,
         JSON         configuration,
         String       description,
@@ -99,23 +99,21 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
         String       name,
         Integer      priority,
         Integer      severity,
-        byte[]       transformerInfo,
-        String       type,
-        String       source,
         String       transformer,
-        JSON         accessibleBy,
-        String       hash,
-        Byte         changed
+        String       type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
+        this.hash = hash;
         this.lastModifiedTime = lastModifiedTime;
         this.lob = lob;
         this.modifiedBy = modifiedBy;
+        this.source = source;
         this.version = version;
         this.configuration = configuration;
         this.description = description;
@@ -126,13 +124,8 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
         this.name = name;
         this.priority = priority;
         this.severity = severity;
-        this.transformerInfo = transformerInfo;
-        this.type = type;
-        this.source = source;
         this.transformer = transformer;
-        this.accessibleBy = accessibleBy;
-        this.hash = hash;
-        this.changed = changed;
+        this.type = type;
     }
 
     /**
@@ -178,6 +171,20 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
     }
 
     /**
+     * Getter for <code>ck_trigger_dispatcher_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_trigger_dispatcher_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
+    }
+
+    /**
      * Getter for <code>ck_trigger_dispatcher_info.created_by</code>.
      */
     public String getCreatedBy() {
@@ -220,6 +227,20 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
     }
 
     /**
+     * Getter for <code>ck_trigger_dispatcher_info.hash</code>.
+     */
+    public String getHash() {
+        return this.hash;
+    }
+
+    /**
+     * Setter for <code>ck_trigger_dispatcher_info.hash</code>.
+     */
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    /**
      * Getter for <code>ck_trigger_dispatcher_info.last_modified_time</code>.
      */
     public Date getLastModifiedTime() {
@@ -259,6 +280,20 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
      */
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
+    }
+
+    /**
+     * Getter for <code>ck_trigger_dispatcher_info.source</code>.
+     */
+    public String getSource() {
+        return this.source;
+    }
+
+    /**
+     * Setter for <code>ck_trigger_dispatcher_info.source</code>.
+     */
+    public void setSource(String source) {
+        this.source = source;
     }
 
     /**
@@ -402,17 +437,17 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
     }
 
     /**
-     * Getter for <code>ck_trigger_dispatcher_info.transformer_info</code>.
+     * Getter for <code>ck_trigger_dispatcher_info.transformer</code>.
      */
-    public byte[] getTransformerInfo() {
-        return this.transformerInfo;
+    public String getTransformer() {
+        return this.transformer;
     }
 
     /**
-     * Setter for <code>ck_trigger_dispatcher_info.transformer_info</code>.
+     * Setter for <code>ck_trigger_dispatcher_info.transformer</code>.
      */
-    public void setTransformerInfo(byte[] transformerInfo) {
-        this.transformerInfo = transformerInfo;
+    public void setTransformer(String transformer) {
+        this.transformer = transformer;
     }
 
     /**
@@ -429,76 +464,6 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
         this.type = type;
     }
 
-    /**
-     * Getter for <code>ck_trigger_dispatcher_info.source</code>.
-     */
-    public String getSource() {
-        return this.source;
-    }
-
-    /**
-     * Setter for <code>ck_trigger_dispatcher_info.source</code>.
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    /**
-     * Getter for <code>ck_trigger_dispatcher_info.transformer</code>.
-     */
-    public String getTransformer() {
-        return this.transformer;
-    }
-
-    /**
-     * Setter for <code>ck_trigger_dispatcher_info.transformer</code>.
-     */
-    public void setTransformer(String transformer) {
-        this.transformer = transformer;
-    }
-
-    /**
-     * Getter for <code>ck_trigger_dispatcher_info.accessible_by</code>.
-     */
-    public JSON getAccessibleBy() {
-        return this.accessibleBy;
-    }
-
-    /**
-     * Setter for <code>ck_trigger_dispatcher_info.accessible_by</code>.
-     */
-    public void setAccessibleBy(JSON accessibleBy) {
-        this.accessibleBy = accessibleBy;
-    }
-
-    /**
-     * Getter for <code>ck_trigger_dispatcher_info.hash</code>.
-     */
-    public String getHash() {
-        return this.hash;
-    }
-
-    /**
-     * Setter for <code>ck_trigger_dispatcher_info.hash</code>.
-     */
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    /**
-     * Getter for <code>ck_trigger_dispatcher_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_trigger_dispatcher_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkTriggerDispatcherInfo (");
@@ -506,12 +471,15 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
+        sb.append(", ").append(hash);
         sb.append(", ").append(lastModifiedTime);
         sb.append(", ").append(lob);
         sb.append(", ").append(modifiedBy);
+        sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(configuration);
         sb.append(", ").append(description);
@@ -522,13 +490,8 @@ public class CkTriggerDispatcherInfo extends CommonDataModel implements Serializ
         sb.append(", ").append(name);
         sb.append(", ").append(priority);
         sb.append(", ").append(severity);
-        sb.append(", ").append("[binary...]");
-        sb.append(", ").append(type);
-        sb.append(", ").append(source);
         sb.append(", ").append(transformer);
-        sb.append(", ").append(accessibleBy);
-        sb.append(", ").append(hash);
-        sb.append(", ").append(changed);
+        sb.append(", ").append(type);
 
         sb.append(")");
         return sb.toString();

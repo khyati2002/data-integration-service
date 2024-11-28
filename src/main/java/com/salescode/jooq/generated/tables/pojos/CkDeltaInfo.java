@@ -23,6 +23,7 @@ public class CkDeltaInfo extends CommonDataModel implements Serializable {
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
@@ -35,7 +36,6 @@ public class CkDeltaInfo extends CommonDataModel implements Serializable {
     private String       entityId;
     private String       entityName;
     private String       operation;
-    private Byte         changed;
 
     public CkDeltaInfo() {}
 
@@ -43,6 +43,7 @@ public class CkDeltaInfo extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -55,13 +56,13 @@ public class CkDeltaInfo extends CommonDataModel implements Serializable {
         this.entityId = value.entityId;
         this.entityName = value.entityName;
         this.operation = value.operation;
-        this.changed = value.changed;
     }
 
     public CkDeltaInfo(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
@@ -73,12 +74,12 @@ public class CkDeltaInfo extends CommonDataModel implements Serializable {
         Integer      version,
         String       entityId,
         String       entityName,
-        String       operation,
-        Byte         changed
+        String       operation
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -91,7 +92,6 @@ public class CkDeltaInfo extends CommonDataModel implements Serializable {
         this.entityId = entityId;
         this.entityName = entityName;
         this.operation = operation;
-        this.changed = changed;
     }
 
     /**
@@ -134,6 +134,20 @@ public class CkDeltaInfo extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_delta_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_delta_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -304,20 +318,6 @@ public class CkDeltaInfo extends CommonDataModel implements Serializable {
         this.operation = operation;
     }
 
-    /**
-     * Getter for <code>ck_delta_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_delta_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkDeltaInfo (");
@@ -325,6 +325,7 @@ public class CkDeltaInfo extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -337,7 +338,6 @@ public class CkDeltaInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(entityId);
         sb.append(", ").append(entityName);
         sb.append(", ").append(operation);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

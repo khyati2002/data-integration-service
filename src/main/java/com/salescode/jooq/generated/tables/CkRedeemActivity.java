@@ -11,15 +11,24 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -57,6 +66,11 @@ public class CkRedeemActivity extends TableImpl<Record> {
      * The column <code>ck_redeem_activity.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_redeem_activity.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_redeem_activity.created_by</code>.
@@ -104,9 +118,24 @@ public class CkRedeemActivity extends TableImpl<Record> {
     public final TableField<Record, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER, this, "");
 
     /**
+     * The column <code>ck_redeem_activity.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_redeem_activity.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_redeem_activity.outletcode</code>.
+     */
+    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_redeem_activity.redeem_points</code>.
      */
-    public final TableField<Record, Long> REDEEM_POINTS = createField(DSL.name("redeem_points"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<Record, Double> REDEEM_POINTS = createField(DSL.name("redeem_points"), SQLDataType.DOUBLE, this, "");
 
     /**
      * The column <code>ck_redeem_activity.redemption_end_cycle</code>.
@@ -137,26 +166,6 @@ public class CkRedeemActivity extends TableImpl<Record> {
      * The column <code>ck_redeem_activity.status_remarks</code>.
      */
     public final TableField<Record, String> STATUS_REMARKS = createField(DSL.name("status_remarks"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_redeem_activity.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column <code>ck_redeem_activity.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column <code>ck_redeem_activity.outletcode</code>.
-     */
-    public final TableField<Record, String> OUTLETCODE = createField(DSL.name("outletcode"), SQLDataType.VARCHAR(200), this, "");
-
-    /**
-     * The column <code>ck_redeem_activity.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
 
     private CkRedeemActivity(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -204,46 +213,6 @@ public class CkRedeemActivity extends TableImpl<Record> {
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
         return Arrays.asList(Keys.KEY_CK_REDEEM_ACTIVITY_UK_3KDDMP68VUHUJV28NWTEOFW1D);
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKSDP0M6H7CHMYR3VC3UTJCJG5D, Keys.FK7477MBNN7UY8J3GVAJBUEGJRC, Keys.FK53SY0A2GGHD6ECT2W32XTQTAL);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-    private transient CkOutletDetails _ckOutletDetails;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKSDP0M6H7CHMYR3VC3UTJCJG5D);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FK7477MBNN7UY8J3GVAJBUEGJRC);
-
-        return _ckUser;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_outlet_details</code>
-     * table.
-     */
-    public CkOutletDetails ckOutletDetails() {
-        if (_ckOutletDetails == null)
-            _ckOutletDetails = new CkOutletDetails(this, Keys.FK53SY0A2GGHD6ECT2W32XTQTAL);
-
-        return _ckOutletDetails;
     }
 
     @Override

@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -35,6 +37,8 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     private String        source;
     private Integer       version;
     private LocalDateTime systemTime;
+    private String        gpsLatitude;
+    private String        gpsLongitude;
     private String        batchCode;
     private Double        billAmount;
     private Double        caseQuantity;
@@ -46,6 +50,7 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     private Double        initialOtherUnitQuantity;
     private Double        initialPieceQuantity;
     private Double        initialQuantity;
+    private String        locationHierarchy;
     private Double        mrp;
     private String        name;
     private Double        netAmount;
@@ -58,16 +63,12 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     private String        size;
     private String        skucode;
     private String        status;
+    private String        statusReason;
+    private String        hierarchy;
     private String        type;
     private String        unitOfMeasurement;
-    private Double        price;
-    private String        locationHierarchy;
-    private String        hierarchy;
     private String        orderId;
-    private String        statusReason;
-    private Byte          changed;
-    private String        gpsLatitude;
-    private String        gpsLongitude;
+    private Double        price;
     private Double        initialNormalizedQuantity;
     private Integer       lineCount;
     private Double        normalizedVolume;
@@ -82,6 +83,7 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -92,6 +94,8 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         this.source = value.source;
         this.version = value.version;
         this.systemTime = value.systemTime;
+        this.gpsLatitude = value.gpsLatitude;
+        this.gpsLongitude = value.gpsLongitude;
         this.batchCode = value.batchCode;
         this.billAmount = value.billAmount;
         this.caseQuantity = value.caseQuantity;
@@ -103,6 +107,7 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         this.initialOtherUnitQuantity = value.initialOtherUnitQuantity;
         this.initialPieceQuantity = value.initialPieceQuantity;
         this.initialQuantity = value.initialQuantity;
+        this.locationHierarchy = value.locationHierarchy;
         this.mrp = value.mrp;
         this.name = value.name;
         this.netAmount = value.netAmount;
@@ -115,16 +120,12 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         this.size = value.size;
         this.skucode = value.skucode;
         this.status = value.status;
+        this.statusReason = value.statusReason;
+        this.hierarchy = value.hierarchy;
         this.type = value.type;
         this.unitOfMeasurement = value.unitOfMeasurement;
-        this.price = value.price;
-        this.locationHierarchy = value.locationHierarchy;
-        this.hierarchy = value.hierarchy;
         this.orderId = value.orderId;
-        this.statusReason = value.statusReason;
-        this.changed = value.changed;
-        this.gpsLatitude = value.gpsLatitude;
-        this.gpsLongitude = value.gpsLongitude;
+        this.price = value.price;
         this.initialNormalizedQuantity = value.initialNormalizedQuantity;
         this.lineCount = value.lineCount;
         this.normalizedVolume = value.normalizedVolume;
@@ -138,6 +139,7 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -148,6 +150,8 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         String        source,
         Integer       version,
         LocalDateTime systemTime,
+        String        gpsLatitude,
+        String        gpsLongitude,
         String        batchCode,
         Double        billAmount,
         Double        caseQuantity,
@@ -159,6 +163,7 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         Double        initialOtherUnitQuantity,
         Double        initialPieceQuantity,
         Double        initialQuantity,
+        String        locationHierarchy,
         Double        mrp,
         String        name,
         Double        netAmount,
@@ -171,16 +176,12 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         String        size,
         String        skucode,
         String        status,
+        String        statusReason,
+        String        hierarchy,
         String        type,
         String        unitOfMeasurement,
-        Double        price,
-        String        locationHierarchy,
-        String        hierarchy,
         String        orderId,
-        String        statusReason,
-        Byte          changed,
-        String        gpsLatitude,
-        String        gpsLongitude,
+        Double        price,
         Double        initialNormalizedQuantity,
         Integer       lineCount,
         Double        normalizedVolume,
@@ -192,6 +193,7 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -202,6 +204,8 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         this.source = source;
         this.version = version;
         this.systemTime = systemTime;
+        this.gpsLatitude = gpsLatitude;
+        this.gpsLongitude = gpsLongitude;
         this.batchCode = batchCode;
         this.billAmount = billAmount;
         this.caseQuantity = caseQuantity;
@@ -213,6 +217,7 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         this.initialOtherUnitQuantity = initialOtherUnitQuantity;
         this.initialPieceQuantity = initialPieceQuantity;
         this.initialQuantity = initialQuantity;
+        this.locationHierarchy = locationHierarchy;
         this.mrp = mrp;
         this.name = name;
         this.netAmount = netAmount;
@@ -225,16 +230,12 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         this.size = size;
         this.skucode = skucode;
         this.status = status;
+        this.statusReason = statusReason;
+        this.hierarchy = hierarchy;
         this.type = type;
         this.unitOfMeasurement = unitOfMeasurement;
-        this.price = price;
-        this.locationHierarchy = locationHierarchy;
-        this.hierarchy = hierarchy;
         this.orderId = orderId;
-        this.statusReason = statusReason;
-        this.changed = changed;
-        this.gpsLatitude = gpsLatitude;
-        this.gpsLongitude = gpsLongitude;
+        this.price = price;
         this.initialNormalizedQuantity = initialNormalizedQuantity;
         this.lineCount = lineCount;
         this.normalizedVolume = normalizedVolume;
@@ -284,6 +285,20 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_order_details.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_order_details.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -424,6 +439,34 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
      */
     public void setSystemTime(LocalDateTime systemTime) {
         this.systemTime = systemTime;
+    }
+
+    /**
+     * Getter for <code>ck_order_details.gps_latitude</code>.
+     */
+    public String getGpsLatitude() {
+        return this.gpsLatitude;
+    }
+
+    /**
+     * Setter for <code>ck_order_details.gps_latitude</code>.
+     */
+    public void setGpsLatitude(String gpsLatitude) {
+        this.gpsLatitude = gpsLatitude;
+    }
+
+    /**
+     * Getter for <code>ck_order_details.gps_longitude</code>.
+     */
+    public String getGpsLongitude() {
+        return this.gpsLongitude;
+    }
+
+    /**
+     * Setter for <code>ck_order_details.gps_longitude</code>.
+     */
+    public void setGpsLongitude(String gpsLongitude) {
+        this.gpsLongitude = gpsLongitude;
     }
 
     /**
@@ -578,6 +621,20 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
      */
     public void setInitialQuantity(Double initialQuantity) {
         this.initialQuantity = initialQuantity;
+    }
+
+    /**
+     * Getter for <code>ck_order_details.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_order_details.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
     }
 
     /**
@@ -749,6 +806,34 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_order_details.status_reason</code>.
+     */
+    public String getStatusReason() {
+        return this.statusReason;
+    }
+
+    /**
+     * Setter for <code>ck_order_details.status_reason</code>.
+     */
+    public void setStatusReason(String statusReason) {
+        this.statusReason = statusReason;
+    }
+
+    /**
+     * Getter for <code>ck_order_details.hierarchy</code>.
+     */
+    public String getHierarchy() {
+        return this.hierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_order_details.hierarchy</code>.
+     */
+    public void setHierarchy(String hierarchy) {
+        this.hierarchy = hierarchy;
+    }
+
+    /**
      * Getter for <code>ck_order_details.type</code>.
      */
     public String getType() {
@@ -777,48 +862,6 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_order_details.price</code>.
-     */
-    public Double getPrice() {
-        return this.price;
-    }
-
-    /**
-     * Setter for <code>ck_order_details.price</code>.
-     */
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    /**
-     * Getter for <code>ck_order_details.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_order_details.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_order_details.hierarchy</code>.
-     */
-    public String getHierarchy() {
-        return this.hierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_order_details.hierarchy</code>.
-     */
-    public void setHierarchy(String hierarchy) {
-        this.hierarchy = hierarchy;
-    }
-
-    /**
      * Getter for <code>ck_order_details.order_id</code>.
      */
     public String getOrderId() {
@@ -833,59 +876,17 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_order_details.status_reason</code>.
+     * Getter for <code>ck_order_details.price</code>.
      */
-    public String getStatusReason() {
-        return this.statusReason;
+    public Double getPrice() {
+        return this.price;
     }
 
     /**
-     * Setter for <code>ck_order_details.status_reason</code>.
+     * Setter for <code>ck_order_details.price</code>.
      */
-    public void setStatusReason(String statusReason) {
-        this.statusReason = statusReason;
-    }
-
-    /**
-     * Getter for <code>ck_order_details.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_order_details.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_order_details.gps_latitude</code>.
-     */
-    public String getGpsLatitude() {
-        return this.gpsLatitude;
-    }
-
-    /**
-     * Setter for <code>ck_order_details.gps_latitude</code>.
-     */
-    public void setGpsLatitude(String gpsLatitude) {
-        this.gpsLatitude = gpsLatitude;
-    }
-
-    /**
-     * Getter for <code>ck_order_details.gps_longitude</code>.
-     */
-    public String getGpsLongitude() {
-        return this.gpsLongitude;
-    }
-
-    /**
-     * Setter for <code>ck_order_details.gps_longitude</code>.
-     */
-    public void setGpsLongitude(String gpsLongitude) {
-        this.gpsLongitude = gpsLongitude;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     /**
@@ -993,6 +994,7 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -1003,6 +1005,8 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(systemTime);
+        sb.append(", ").append(gpsLatitude);
+        sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(batchCode);
         sb.append(", ").append(billAmount);
         sb.append(", ").append(caseQuantity);
@@ -1014,6 +1018,7 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         sb.append(", ").append(initialOtherUnitQuantity);
         sb.append(", ").append(initialPieceQuantity);
         sb.append(", ").append(initialQuantity);
+        sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(mrp);
         sb.append(", ").append(name);
         sb.append(", ").append(netAmount);
@@ -1026,16 +1031,12 @@ public class CkOrderDetails extends CommonDataModel implements Serializable {
         sb.append(", ").append(size);
         sb.append(", ").append(skucode);
         sb.append(", ").append(status);
+        sb.append(", ").append(statusReason);
+        sb.append(", ").append(hierarchy);
         sb.append(", ").append(type);
         sb.append(", ").append(unitOfMeasurement);
-        sb.append(", ").append(price);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(hierarchy);
         sb.append(", ").append(orderId);
-        sb.append(", ").append(statusReason);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(gpsLatitude);
-        sb.append(", ").append(gpsLongitude);
+        sb.append(", ").append(price);
         sb.append(", ").append(initialNormalizedQuantity);
         sb.append(", ").append(lineCount);
         sb.append(", ").append(normalizedVolume);

@@ -6,13 +6,23 @@ package com.salescode.jooq.generated.tables;
 
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Identity;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -45,6 +55,11 @@ public class CkStockHierarchy extends TableImpl<Record> {
      * The column <code>ck_stock_hierarchy.hierarchy_id</code>.
      */
     public final TableField<Record, String> HIERARCHY_ID = createField(DSL.name("hierarchy_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
+     * The column <code>ck_stock_hierarchy.rowid</code>.
+     */
+    public final TableField<Record, Integer> ROWID = createField(DSL.name("rowid"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     private CkStockHierarchy(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -82,6 +97,16 @@ public class CkStockHierarchy extends TableImpl<Record> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
+    }
+
+    @Override
+    public Identity<Record, Integer> getIdentity() {
+        return (Identity<Record, Integer>) super.getIdentity();
+    }
+
+    @Override
+    public List<UniqueKey<Record>> getUniqueKeys() {
+        return Arrays.asList(Keys.KEY_CK_STOCK_HIERARCHY_ROWID);
     }
 
     @Override

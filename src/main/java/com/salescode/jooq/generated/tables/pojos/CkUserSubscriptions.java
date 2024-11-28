@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -35,16 +36,16 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     private String        modifiedBy;
     private String        source;
     private Integer       version;
-    private JSON          lobs;
     private String        loginid;
     private String        targetLob;
     private String        targetLoginId;
-    private LocalDateTime activationDate;
-    private String        mobileNumber;
+    private JSON          lobs;
     private String        principalLoginId;
     private String        principalOutletCode;
-    private LocalDateTime registrationDate;
     private String        targetOutletCode;
+    private String        mobileNumber;
+    private LocalDateTime registrationDate;
+    private LocalDateTime activationDate;
 
     public CkUserSubscriptions() {}
 
@@ -62,16 +63,16 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
         this.modifiedBy = value.modifiedBy;
         this.source = value.source;
         this.version = value.version;
-        this.lobs = value.lobs;
         this.loginid = value.loginid;
         this.targetLob = value.targetLob;
         this.targetLoginId = value.targetLoginId;
-        this.activationDate = value.activationDate;
-        this.mobileNumber = value.mobileNumber;
+        this.lobs = value.lobs;
         this.principalLoginId = value.principalLoginId;
         this.principalOutletCode = value.principalOutletCode;
-        this.registrationDate = value.registrationDate;
         this.targetOutletCode = value.targetOutletCode;
+        this.mobileNumber = value.mobileNumber;
+        this.registrationDate = value.registrationDate;
+        this.activationDate = value.activationDate;
     }
 
     public CkUserSubscriptions(
@@ -88,16 +89,16 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
         String        modifiedBy,
         String        source,
         Integer       version,
-        JSON          lobs,
         String        loginid,
         String        targetLob,
         String        targetLoginId,
-        LocalDateTime activationDate,
-        String        mobileNumber,
+        JSON          lobs,
         String        principalLoginId,
         String        principalOutletCode,
+        String        targetOutletCode,
+        String        mobileNumber,
         LocalDateTime registrationDate,
-        String        targetOutletCode
+        LocalDateTime activationDate
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -112,16 +113,16 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
         this.modifiedBy = modifiedBy;
         this.source = source;
         this.version = version;
-        this.lobs = lobs;
         this.loginid = loginid;
         this.targetLob = targetLob;
         this.targetLoginId = targetLoginId;
-        this.activationDate = activationDate;
-        this.mobileNumber = mobileNumber;
+        this.lobs = lobs;
         this.principalLoginId = principalLoginId;
         this.principalOutletCode = principalOutletCode;
-        this.registrationDate = registrationDate;
         this.targetOutletCode = targetOutletCode;
+        this.mobileNumber = mobileNumber;
+        this.registrationDate = registrationDate;
+        this.activationDate = activationDate;
     }
 
     /**
@@ -307,20 +308,6 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     }
 
     /**
-     * Getter for <code>ck_user_subscriptions.lobs</code>.
-     */
-    public JSON getLobs() {
-        return this.lobs;
-    }
-
-    /**
-     * Setter for <code>ck_user_subscriptions.lobs</code>.
-     */
-    public void setLobs(JSON lobs) {
-        this.lobs = lobs;
-    }
-
-    /**
      * Getter for <code>ck_user_subscriptions.loginid</code>.
      */
     public String getLoginid() {
@@ -363,31 +350,17 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     }
 
     /**
-     * Getter for <code>ck_user_subscriptions.activation_date</code>.
+     * Getter for <code>ck_user_subscriptions.lobs</code>.
      */
-    public LocalDateTime getActivationDate() {
-        return this.activationDate;
+    public JSON getLobs() {
+        return this.lobs;
     }
 
     /**
-     * Setter for <code>ck_user_subscriptions.activation_date</code>.
+     * Setter for <code>ck_user_subscriptions.lobs</code>.
      */
-    public void setActivationDate(LocalDateTime activationDate) {
-        this.activationDate = activationDate;
-    }
-
-    /**
-     * Getter for <code>ck_user_subscriptions.mobile_number</code>.
-     */
-    public String getMobileNumber() {
-        return this.mobileNumber;
-    }
-
-    /**
-     * Setter for <code>ck_user_subscriptions.mobile_number</code>.
-     */
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
+    public void setLobs(JSON lobs) {
+        this.lobs = lobs;
     }
 
     /**
@@ -419,6 +392,34 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     }
 
     /**
+     * Getter for <code>ck_user_subscriptions.target_outlet_code</code>.
+     */
+    public String getTargetOutletCode() {
+        return this.targetOutletCode;
+    }
+
+    /**
+     * Setter for <code>ck_user_subscriptions.target_outlet_code</code>.
+     */
+    public void setTargetOutletCode(String targetOutletCode) {
+        this.targetOutletCode = targetOutletCode;
+    }
+
+    /**
+     * Getter for <code>ck_user_subscriptions.mobile_number</code>.
+     */
+    public String getMobileNumber() {
+        return this.mobileNumber;
+    }
+
+    /**
+     * Setter for <code>ck_user_subscriptions.mobile_number</code>.
+     */
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    /**
      * Getter for <code>ck_user_subscriptions.registration_date</code>.
      */
     public LocalDateTime getRegistrationDate() {
@@ -433,17 +434,17 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
     }
 
     /**
-     * Getter for <code>ck_user_subscriptions.target_outlet_code</code>.
+     * Getter for <code>ck_user_subscriptions.activation_date</code>.
      */
-    public String getTargetOutletCode() {
-        return this.targetOutletCode;
+    public LocalDateTime getActivationDate() {
+        return this.activationDate;
     }
 
     /**
-     * Setter for <code>ck_user_subscriptions.target_outlet_code</code>.
+     * Setter for <code>ck_user_subscriptions.activation_date</code>.
      */
-    public void setTargetOutletCode(String targetOutletCode) {
-        this.targetOutletCode = targetOutletCode;
+    public void setActivationDate(LocalDateTime activationDate) {
+        this.activationDate = activationDate;
     }
 
     @Override
@@ -463,16 +464,16 @@ public class CkUserSubscriptions extends CommonDataModel implements Serializable
         sb.append(", ").append(modifiedBy);
         sb.append(", ").append(source);
         sb.append(", ").append(version);
-        sb.append(", ").append(lobs);
         sb.append(", ").append(loginid);
         sb.append(", ").append(targetLob);
         sb.append(", ").append(targetLoginId);
-        sb.append(", ").append(activationDate);
-        sb.append(", ").append(mobileNumber);
+        sb.append(", ").append(lobs);
         sb.append(", ").append(principalLoginId);
         sb.append(", ").append(principalOutletCode);
-        sb.append(", ").append(registrationDate);
         sb.append(", ").append(targetOutletCode);
+        sb.append(", ").append(mobileNumber);
+        sb.append(", ").append(registrationDate);
+        sb.append(", ").append(activationDate);
 
         sb.append(")");
         return sb.toString();

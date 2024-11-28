@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -24,30 +25,28 @@ public class CkSmartTriggerInfo extends CommonDataModel implements Serializable 
     private String       id;
     private ActiveStatus activeStatus;
     private String       activeStatusReason;
+    private Boolean      changed;
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
+    private String       hash;
     private Date         lastModifiedTime;
     private String       lob;
     private String       modifiedBy;
+    private String       source;
     private Integer      version;
     private JSON         configuration;
     private String       description;
+    private JSON         dispatchers;
     private String       documentLink;
     private Boolean      enabled;
     private String       implementation;
     private String       language;
     private String       name;
     private Integer      priority;
+    private String       queryInfo;
     private Integer      severity;
     private String       type;
-    private String       queryInfoId;
-    private String       source;
-    private JSON         dispatchers;
-    private String       queryInfo;
-    private JSON         accessibleBy;
-    private String       hash;
-    private Byte         changed;
 
     public CkSmartTriggerInfo() {}
 
@@ -55,88 +54,82 @@ public class CkSmartTriggerInfo extends CommonDataModel implements Serializable 
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
+        this.hash = value.hash;
         this.lastModifiedTime = value.lastModifiedTime;
         this.lob = value.lob;
         this.modifiedBy = value.modifiedBy;
+        this.source = value.source;
         this.version = value.version;
         this.configuration = value.configuration;
         this.description = value.description;
+        this.dispatchers = value.dispatchers;
         this.documentLink = value.documentLink;
         this.enabled = value.enabled;
         this.implementation = value.implementation;
         this.language = value.language;
         this.name = value.name;
         this.priority = value.priority;
+        this.queryInfo = value.queryInfo;
         this.severity = value.severity;
         this.type = value.type;
-        this.queryInfoId = value.queryInfoId;
-        this.source = value.source;
-        this.dispatchers = value.dispatchers;
-        this.queryInfo = value.queryInfo;
-        this.accessibleBy = value.accessibleBy;
-        this.hash = value.hash;
-        this.changed = value.changed;
     }
 
     public CkSmartTriggerInfo(
         String       id,
         ActiveStatus activeStatus,
         String       activeStatusReason,
+        Boolean      changed,
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
+        String       hash,
         Date         lastModifiedTime,
         String       lob,
         String       modifiedBy,
+        String       source,
         Integer      version,
         JSON         configuration,
         String       description,
+        JSON         dispatchers,
         String       documentLink,
         Boolean      enabled,
         String       implementation,
         String       language,
         String       name,
         Integer      priority,
-        Integer      severity,
-        String       type,
-        String       queryInfoId,
-        String       source,
-        JSON         dispatchers,
         String       queryInfo,
-        JSON         accessibleBy,
-        String       hash,
-        Byte         changed
+        Integer      severity,
+        String       type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
+        this.hash = hash;
         this.lastModifiedTime = lastModifiedTime;
         this.lob = lob;
         this.modifiedBy = modifiedBy;
+        this.source = source;
         this.version = version;
         this.configuration = configuration;
         this.description = description;
+        this.dispatchers = dispatchers;
         this.documentLink = documentLink;
         this.enabled = enabled;
         this.implementation = implementation;
         this.language = language;
         this.name = name;
         this.priority = priority;
+        this.queryInfo = queryInfo;
         this.severity = severity;
         this.type = type;
-        this.queryInfoId = queryInfoId;
-        this.source = source;
-        this.dispatchers = dispatchers;
-        this.queryInfo = queryInfo;
-        this.accessibleBy = accessibleBy;
-        this.hash = hash;
-        this.changed = changed;
     }
 
     /**
@@ -182,6 +175,20 @@ public class CkSmartTriggerInfo extends CommonDataModel implements Serializable 
     }
 
     /**
+     * Getter for <code>ck_smart_trigger_info.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_smart_trigger_info.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
+    }
+
+    /**
      * Getter for <code>ck_smart_trigger_info.created_by</code>.
      */
     public String getCreatedBy() {
@@ -221,6 +228,20 @@ public class CkSmartTriggerInfo extends CommonDataModel implements Serializable 
      */
     public void setExtendedAttributes(JsonNode extendedAttributes) {
         this.extendedAttributes = extendedAttributes;
+    }
+
+    /**
+     * Getter for <code>ck_smart_trigger_info.hash</code>.
+     */
+    public String getHash() {
+        return this.hash;
+    }
+
+    /**
+     * Setter for <code>ck_smart_trigger_info.hash</code>.
+     */
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     /**
@@ -266,6 +287,20 @@ public class CkSmartTriggerInfo extends CommonDataModel implements Serializable 
     }
 
     /**
+     * Getter for <code>ck_smart_trigger_info.source</code>.
+     */
+    public String getSource() {
+        return this.source;
+    }
+
+    /**
+     * Setter for <code>ck_smart_trigger_info.source</code>.
+     */
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    /**
      * Getter for <code>ck_smart_trigger_info.version</code>.
      */
     public Integer getVersion() {
@@ -305,6 +340,20 @@ public class CkSmartTriggerInfo extends CommonDataModel implements Serializable 
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Getter for <code>ck_smart_trigger_info.dispatchers</code>.
+     */
+    public JSON getDispatchers() {
+        return this.dispatchers;
+    }
+
+    /**
+     * Setter for <code>ck_smart_trigger_info.dispatchers</code>.
+     */
+    public void setDispatchers(JSON dispatchers) {
+        this.dispatchers = dispatchers;
     }
 
     /**
@@ -392,6 +441,20 @@ public class CkSmartTriggerInfo extends CommonDataModel implements Serializable 
     }
 
     /**
+     * Getter for <code>ck_smart_trigger_info.query_info</code>.
+     */
+    public String getQueryInfo() {
+        return this.queryInfo;
+    }
+
+    /**
+     * Setter for <code>ck_smart_trigger_info.query_info</code>.
+     */
+    public void setQueryInfo(String queryInfo) {
+        this.queryInfo = queryInfo;
+    }
+
+    /**
      * Getter for <code>ck_smart_trigger_info.severity</code>.
      */
     public Integer getSeverity() {
@@ -419,104 +482,6 @@ public class CkSmartTriggerInfo extends CommonDataModel implements Serializable 
         this.type = type;
     }
 
-    /**
-     * Getter for <code>ck_smart_trigger_info.query_info_id</code>.
-     */
-    public String getQueryInfoId() {
-        return this.queryInfoId;
-    }
-
-    /**
-     * Setter for <code>ck_smart_trigger_info.query_info_id</code>.
-     */
-    public void setQueryInfoId(String queryInfoId) {
-        this.queryInfoId = queryInfoId;
-    }
-
-    /**
-     * Getter for <code>ck_smart_trigger_info.source</code>.
-     */
-    public String getSource() {
-        return this.source;
-    }
-
-    /**
-     * Setter for <code>ck_smart_trigger_info.source</code>.
-     */
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    /**
-     * Getter for <code>ck_smart_trigger_info.dispatchers</code>.
-     */
-    public JSON getDispatchers() {
-        return this.dispatchers;
-    }
-
-    /**
-     * Setter for <code>ck_smart_trigger_info.dispatchers</code>.
-     */
-    public void setDispatchers(JSON dispatchers) {
-        this.dispatchers = dispatchers;
-    }
-
-    /**
-     * Getter for <code>ck_smart_trigger_info.query_info</code>.
-     */
-    public String getQueryInfo() {
-        return this.queryInfo;
-    }
-
-    /**
-     * Setter for <code>ck_smart_trigger_info.query_info</code>.
-     */
-    public void setQueryInfo(String queryInfo) {
-        this.queryInfo = queryInfo;
-    }
-
-    /**
-     * Getter for <code>ck_smart_trigger_info.accessible_by</code>.
-     */
-    public JSON getAccessibleBy() {
-        return this.accessibleBy;
-    }
-
-    /**
-     * Setter for <code>ck_smart_trigger_info.accessible_by</code>.
-     */
-    public void setAccessibleBy(JSON accessibleBy) {
-        this.accessibleBy = accessibleBy;
-    }
-
-    /**
-     * Getter for <code>ck_smart_trigger_info.hash</code>.
-     */
-    public String getHash() {
-        return this.hash;
-    }
-
-    /**
-     * Setter for <code>ck_smart_trigger_info.hash</code>.
-     */
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    /**
-     * Getter for <code>ck_smart_trigger_info.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_smart_trigger_info.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkSmartTriggerInfo (");
@@ -524,30 +489,28 @@ public class CkSmartTriggerInfo extends CommonDataModel implements Serializable 
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
+        sb.append(", ").append(hash);
         sb.append(", ").append(lastModifiedTime);
         sb.append(", ").append(lob);
         sb.append(", ").append(modifiedBy);
+        sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(configuration);
         sb.append(", ").append(description);
+        sb.append(", ").append(dispatchers);
         sb.append(", ").append(documentLink);
         sb.append(", ").append(enabled);
         sb.append(", ").append(implementation);
         sb.append(", ").append(language);
         sb.append(", ").append(name);
         sb.append(", ").append(priority);
+        sb.append(", ").append(queryInfo);
         sb.append(", ").append(severity);
         sb.append(", ").append(type);
-        sb.append(", ").append(queryInfoId);
-        sb.append(", ").append(source);
-        sb.append(", ").append(dispatchers);
-        sb.append(", ").append(queryInfo);
-        sb.append(", ").append(accessibleBy);
-        sb.append(", ").append(hash);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

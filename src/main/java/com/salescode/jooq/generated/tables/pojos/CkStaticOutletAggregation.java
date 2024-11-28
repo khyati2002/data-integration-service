@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -39,6 +41,7 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     private LocalDateTime endDate;
     private Double        lmtdSalesValue;
     private Double        lmtdSalesVolume;
+    private String        locationHierarchy;
     private Double        lymtdSaleValue;
     private Double        lymtdSalesVolume;
     private JSON          mtdBottomnbrands;
@@ -51,12 +54,14 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     private JSON          mtdTargetAchievedTrend;
     private JSON          mtdTopnbrands;
     private JSON          mtdTopncategories;
+    private String        outletcode;
     private Double        pytdSalesValue;
     private Double        pytdSalesVolume;
     private LocalDateTime startDate;
     private Double        targetValue;
     private Double        targetVolume;
     private LocalDateTime timeSinceLastOrder;
+    private String        loginid;
     private JSON          ytdBottomnbrands;
     private JSON          ytdBottomncategories;
     private JSON          ytdGrowthTrend;
@@ -67,10 +72,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     private JSON          ytdTargetAchievedTrend;
     private JSON          ytdTopnbrands;
     private JSON          ytdTopncategories;
-    private String        locationHierarchy;
-    private String        outletcode;
-    private String        loginid;
-    private Byte          changed;
 
     public CkStaticOutletAggregation() {}
 
@@ -78,6 +79,7 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -92,6 +94,7 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         this.endDate = value.endDate;
         this.lmtdSalesValue = value.lmtdSalesValue;
         this.lmtdSalesVolume = value.lmtdSalesVolume;
+        this.locationHierarchy = value.locationHierarchy;
         this.lymtdSaleValue = value.lymtdSaleValue;
         this.lymtdSalesVolume = value.lymtdSalesVolume;
         this.mtdBottomnbrands = value.mtdBottomnbrands;
@@ -104,12 +107,14 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         this.mtdTargetAchievedTrend = value.mtdTargetAchievedTrend;
         this.mtdTopnbrands = value.mtdTopnbrands;
         this.mtdTopncategories = value.mtdTopncategories;
+        this.outletcode = value.outletcode;
         this.pytdSalesValue = value.pytdSalesValue;
         this.pytdSalesVolume = value.pytdSalesVolume;
         this.startDate = value.startDate;
         this.targetValue = value.targetValue;
         this.targetVolume = value.targetVolume;
         this.timeSinceLastOrder = value.timeSinceLastOrder;
+        this.loginid = value.loginid;
         this.ytdBottomnbrands = value.ytdBottomnbrands;
         this.ytdBottomncategories = value.ytdBottomncategories;
         this.ytdGrowthTrend = value.ytdGrowthTrend;
@@ -120,16 +125,13 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         this.ytdTargetAchievedTrend = value.ytdTargetAchievedTrend;
         this.ytdTopnbrands = value.ytdTopnbrands;
         this.ytdTopncategories = value.ytdTopncategories;
-        this.locationHierarchy = value.locationHierarchy;
-        this.outletcode = value.outletcode;
-        this.loginid = value.loginid;
-        this.changed = value.changed;
     }
 
     public CkStaticOutletAggregation(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -144,6 +146,7 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         LocalDateTime endDate,
         Double        lmtdSalesValue,
         Double        lmtdSalesVolume,
+        String        locationHierarchy,
         Double        lymtdSaleValue,
         Double        lymtdSalesVolume,
         JSON          mtdBottomnbrands,
@@ -156,12 +159,14 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         JSON          mtdTargetAchievedTrend,
         JSON          mtdTopnbrands,
         JSON          mtdTopncategories,
+        String        outletcode,
         Double        pytdSalesValue,
         Double        pytdSalesVolume,
         LocalDateTime startDate,
         Double        targetValue,
         Double        targetVolume,
         LocalDateTime timeSinceLastOrder,
+        String        loginid,
         JSON          ytdBottomnbrands,
         JSON          ytdBottomncategories,
         JSON          ytdGrowthTrend,
@@ -171,15 +176,12 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         JSON          ytdSalesVolumeTrend,
         JSON          ytdTargetAchievedTrend,
         JSON          ytdTopnbrands,
-        JSON          ytdTopncategories,
-        String        locationHierarchy,
-        String        outletcode,
-        String        loginid,
-        Byte          changed
+        JSON          ytdTopncategories
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -194,6 +196,7 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         this.endDate = endDate;
         this.lmtdSalesValue = lmtdSalesValue;
         this.lmtdSalesVolume = lmtdSalesVolume;
+        this.locationHierarchy = locationHierarchy;
         this.lymtdSaleValue = lymtdSaleValue;
         this.lymtdSalesVolume = lymtdSalesVolume;
         this.mtdBottomnbrands = mtdBottomnbrands;
@@ -206,12 +209,14 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         this.mtdTargetAchievedTrend = mtdTargetAchievedTrend;
         this.mtdTopnbrands = mtdTopnbrands;
         this.mtdTopncategories = mtdTopncategories;
+        this.outletcode = outletcode;
         this.pytdSalesValue = pytdSalesValue;
         this.pytdSalesVolume = pytdSalesVolume;
         this.startDate = startDate;
         this.targetValue = targetValue;
         this.targetVolume = targetVolume;
         this.timeSinceLastOrder = timeSinceLastOrder;
+        this.loginid = loginid;
         this.ytdBottomnbrands = ytdBottomnbrands;
         this.ytdBottomncategories = ytdBottomncategories;
         this.ytdGrowthTrend = ytdGrowthTrend;
@@ -222,10 +227,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         this.ytdTargetAchievedTrend = ytdTargetAchievedTrend;
         this.ytdTopnbrands = ytdTopnbrands;
         this.ytdTopncategories = ytdTopncategories;
-        this.locationHierarchy = locationHierarchy;
-        this.outletcode = outletcode;
-        this.loginid = loginid;
-        this.changed = changed;
     }
 
     /**
@@ -270,6 +271,20 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_static_outlet_aggregation.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_static_outlet_aggregation.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -469,6 +484,20 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     }
 
     /**
+     * Getter for <code>ck_static_outlet_aggregation.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_static_outlet_aggregation.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
      * Getter for <code>ck_static_outlet_aggregation.lymtd_sale_value</code>.
      */
     public Double getLymtdSaleValue() {
@@ -645,6 +674,20 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
     }
 
     /**
+     * Getter for <code>ck_static_outlet_aggregation.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_static_outlet_aggregation.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
      * Getter for <code>ck_static_outlet_aggregation.pytd_sales_value</code>.
      */
     public Double getPytdSalesValue() {
@@ -728,6 +771,20 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
      */
     public void setTimeSinceLastOrder(LocalDateTime timeSinceLastOrder) {
         this.timeSinceLastOrder = timeSinceLastOrder;
+    }
+
+    /**
+     * Getter for <code>ck_static_outlet_aggregation.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_static_outlet_aggregation.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
     }
 
     /**
@@ -878,62 +935,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         this.ytdTopncategories = ytdTopncategories;
     }
 
-    /**
-     * Getter for <code>ck_static_outlet_aggregation.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_static_outlet_aggregation.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_static_outlet_aggregation.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_static_outlet_aggregation.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_static_outlet_aggregation.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_static_outlet_aggregation.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_static_outlet_aggregation.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_static_outlet_aggregation.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkStaticOutletAggregation (");
@@ -941,6 +942,7 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -955,6 +957,7 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         sb.append(", ").append(endDate);
         sb.append(", ").append(lmtdSalesValue);
         sb.append(", ").append(lmtdSalesVolume);
+        sb.append(", ").append(locationHierarchy);
         sb.append(", ").append(lymtdSaleValue);
         sb.append(", ").append(lymtdSalesVolume);
         sb.append(", ").append(mtdBottomnbrands);
@@ -967,12 +970,14 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         sb.append(", ").append(mtdTargetAchievedTrend);
         sb.append(", ").append(mtdTopnbrands);
         sb.append(", ").append(mtdTopncategories);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(pytdSalesValue);
         sb.append(", ").append(pytdSalesVolume);
         sb.append(", ").append(startDate);
         sb.append(", ").append(targetValue);
         sb.append(", ").append(targetVolume);
         sb.append(", ").append(timeSinceLastOrder);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(ytdBottomnbrands);
         sb.append(", ").append(ytdBottomncategories);
         sb.append(", ").append(ytdGrowthTrend);
@@ -983,10 +988,6 @@ public class CkStaticOutletAggregation extends CommonDataModel implements Serial
         sb.append(", ").append(ytdTargetAchievedTrend);
         sb.append(", ").append(ytdTopnbrands);
         sb.append(", ").append(ytdTopncategories);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

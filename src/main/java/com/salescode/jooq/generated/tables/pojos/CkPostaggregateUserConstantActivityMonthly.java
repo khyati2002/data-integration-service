@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -40,22 +42,21 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
     private String        gpsLongitude;
     private String        hierarchy;
     private JSON          images;
+    private String        locationHierarchy;
+    private String        loginid;
     private String        name;
     private String        referenceNumber;
     private LocalDateTime startTime;
     private LocalDateTime submissionTime;
     private String        targetKey;
+    private String        feature;
+    private Integer       hitsCount;
     private Integer       month;
     private Integer       outletPjp;
     private Long          outletTotal;
+    private Integer       uniqueHitsCount;
     private Integer       uniqueOutletPjp;
     private Integer       year;
-    private String        locationHierarchy;
-    private String        loginid;
-    private Byte          changed;
-    private String        feature;
-    private Integer       hitsCount;
-    private Integer       uniqueHitsCount;
 
     public CkPostaggregateUserConstantActivityMonthly() {}
 
@@ -63,6 +64,7 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -78,28 +80,28 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
         this.gpsLongitude = value.gpsLongitude;
         this.hierarchy = value.hierarchy;
         this.images = value.images;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
         this.name = value.name;
         this.referenceNumber = value.referenceNumber;
         this.startTime = value.startTime;
         this.submissionTime = value.submissionTime;
         this.targetKey = value.targetKey;
+        this.feature = value.feature;
+        this.hitsCount = value.hitsCount;
         this.month = value.month;
         this.outletPjp = value.outletPjp;
         this.outletTotal = value.outletTotal;
+        this.uniqueHitsCount = value.uniqueHitsCount;
         this.uniqueOutletPjp = value.uniqueOutletPjp;
         this.year = value.year;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.changed = value.changed;
-        this.feature = value.feature;
-        this.hitsCount = value.hitsCount;
-        this.uniqueHitsCount = value.uniqueHitsCount;
     }
 
     public CkPostaggregateUserConstantActivityMonthly(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -115,26 +117,26 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
         String        gpsLongitude,
         String        hierarchy,
         JSON          images,
+        String        locationHierarchy,
+        String        loginid,
         String        name,
         String        referenceNumber,
         LocalDateTime startTime,
         LocalDateTime submissionTime,
         String        targetKey,
+        String        feature,
+        Integer       hitsCount,
         Integer       month,
         Integer       outletPjp,
         Long          outletTotal,
+        Integer       uniqueHitsCount,
         Integer       uniqueOutletPjp,
-        Integer       year,
-        String        locationHierarchy,
-        String        loginid,
-        Byte          changed,
-        String        feature,
-        Integer       hitsCount,
-        Integer       uniqueHitsCount
+        Integer       year
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -150,22 +152,21 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
         this.gpsLongitude = gpsLongitude;
         this.hierarchy = hierarchy;
         this.images = images;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
         this.name = name;
         this.referenceNumber = referenceNumber;
         this.startTime = startTime;
         this.submissionTime = submissionTime;
         this.targetKey = targetKey;
+        this.feature = feature;
+        this.hitsCount = hitsCount;
         this.month = month;
         this.outletPjp = outletPjp;
         this.outletTotal = outletTotal;
+        this.uniqueHitsCount = uniqueHitsCount;
         this.uniqueOutletPjp = uniqueOutletPjp;
         this.year = year;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.changed = changed;
-        this.feature = feature;
-        this.hitsCount = hitsCount;
-        this.uniqueHitsCount = uniqueHitsCount;
     }
 
     /**
@@ -214,6 +215,22 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -458,6 +475,38 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
 
     /**
      * Getter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
+     * Getter for
      * <code>ck_postaggregate_user_constant_activity_monthly.name</code>.
      */
     public String getName() {
@@ -538,6 +587,38 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
 
     /**
      * Getter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.feature</code>.
+     */
+    public String getFeature() {
+        return this.feature;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.feature</code>.
+     */
+    public void setFeature(String feature) {
+        this.feature = feature;
+    }
+
+    /**
+     * Getter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.hits_count</code>.
+     */
+    public Integer getHitsCount() {
+        return this.hitsCount;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.hits_count</code>.
+     */
+    public void setHitsCount(Integer hitsCount) {
+        this.hitsCount = hitsCount;
+    }
+
+    /**
+     * Getter for
      * <code>ck_postaggregate_user_constant_activity_monthly.month</code>.
      */
     public Integer getMonth() {
@@ -586,6 +667,22 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
 
     /**
      * Getter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.unique_hits_count</code>.
+     */
+    public Integer getUniqueHitsCount() {
+        return this.uniqueHitsCount;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_user_constant_activity_monthly.unique_hits_count</code>.
+     */
+    public void setUniqueHitsCount(Integer uniqueHitsCount) {
+        this.uniqueHitsCount = uniqueHitsCount;
+    }
+
+    /**
+     * Getter for
      * <code>ck_postaggregate_user_constant_activity_monthly.unique_outlet_pjp</code>.
      */
     public Integer getUniqueOutletPjp() {
@@ -616,102 +713,6 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
         this.year = year;
     }
 
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.feature</code>.
-     */
-    public String getFeature() {
-        return this.feature;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.feature</code>.
-     */
-    public void setFeature(String feature) {
-        this.feature = feature;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.hits_count</code>.
-     */
-    public Integer getHitsCount() {
-        return this.hitsCount;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.hits_count</code>.
-     */
-    public void setHitsCount(Integer hitsCount) {
-        this.hitsCount = hitsCount;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.unique_hits_count</code>.
-     */
-    public Integer getUniqueHitsCount() {
-        return this.uniqueHitsCount;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_user_constant_activity_monthly.unique_hits_count</code>.
-     */
-    public void setUniqueHitsCount(Integer uniqueHitsCount) {
-        this.uniqueHitsCount = uniqueHitsCount;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPostaggregateUserConstantActivityMonthly (");
@@ -719,6 +720,7 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -734,22 +736,21 @@ public class CkPostaggregateUserConstantActivityMonthly extends CommonDataModel 
         sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(hierarchy);
         sb.append(", ").append(images);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(name);
         sb.append(", ").append(referenceNumber);
         sb.append(", ").append(startTime);
         sb.append(", ").append(submissionTime);
         sb.append(", ").append(targetKey);
+        sb.append(", ").append(feature);
+        sb.append(", ").append(hitsCount);
         sb.append(", ").append(month);
         sb.append(", ").append(outletPjp);
         sb.append(", ").append(outletTotal);
+        sb.append(", ").append(uniqueHitsCount);
         sb.append(", ").append(uniqueOutletPjp);
         sb.append(", ").append(year);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(feature);
-        sb.append(", ").append(hitsCount);
-        sb.append(", ").append(uniqueHitsCount);
 
         sb.append(")");
         return sb.toString();

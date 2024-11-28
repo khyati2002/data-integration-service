@@ -6,7 +6,6 @@ package com.salescode.jooq.generated.tables.pojos;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
-import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.channelkart.models.CommonDataModel;
 
 import java.io.Serializable;
@@ -22,41 +21,33 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
 
     private static final long serialVersionUID = 1L;
 
-    private String          id;
-    private ActiveStatus    activeStatus;
-    private String          activeStatusReason;
-    private String          createdBy;
-    private Date            creationTime;
-    private JsonNode        extendedAttributes;
-    private String          hash;
-    private Date            lastModifiedTime;
-    private String          lob;
-    private String          modifiedBy;
-    private String          source;
-    private Integer         version;
-    private String          amount;
-    private String          gateway;
-    private LocalDateTime   paymentDate;
-    private String          paymentid;
-    private String          referenceNumber;
-    private String          remarks;
-    private String          serviceName;
-    private String          status;
-    private String          statusResponse;
-    private JsonNode        transactionAttributes;
-    private String          transactionReferenceNumber;
-    private JsonNode        transactionResponseAttributes;
-    private LocalDateTime   invoiceDate;
-    private String          invoiceNumber;
-    private LocalDateTime   payByDate;
-    private String          serviceProvider;
-    private String          statusDescription;
-    private String          transactionResponseReferenceNumber;
-    private String          loginid;
-    private EnrichmentPhase phase;
-    private String          orderNumber;
-    private LocalDateTime   orderedDate;
-    private Byte            changed;
+    private String        id;
+    private ActiveStatus  activeStatus;
+    private String        activeStatusReason;
+    private Boolean       changed;
+    private String        createdBy;
+    private Date          creationTime;
+    private JsonNode      extendedAttributes;
+    private String        hash;
+    private Date          lastModifiedTime;
+    private String        lob;
+    private String        modifiedBy;
+    private String        source;
+    private Integer       version;
+    private String        amount;
+    private LocalDateTime invoiceDate;
+    private String        invoiceNumber;
+    private String        loginid;
+    private String        orderNumber;
+    private LocalDateTime orderedDate;
+    private LocalDateTime payByDate;
+    private String        remarks;
+    private String        serviceProvider;
+    private String        status;
+    private String        statusDescription;
+    private String        transactionReferenceNumber;
+    private JsonNode      transactionResponseAttributes;
+    private String        transactionResponseReferenceNumber;
 
     public CkPaymentTransactionHistory() {}
 
@@ -64,6 +55,7 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -74,70 +66,54 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
         this.source = value.source;
         this.version = value.version;
         this.amount = value.amount;
-        this.gateway = value.gateway;
-        this.paymentDate = value.paymentDate;
-        this.paymentid = value.paymentid;
-        this.referenceNumber = value.referenceNumber;
-        this.remarks = value.remarks;
-        this.serviceName = value.serviceName;
-        this.status = value.status;
-        this.statusResponse = value.statusResponse;
-        this.transactionAttributes = value.transactionAttributes;
-        this.transactionReferenceNumber = value.transactionReferenceNumber;
-        this.transactionResponseAttributes = value.transactionResponseAttributes;
         this.invoiceDate = value.invoiceDate;
         this.invoiceNumber = value.invoiceNumber;
-        this.payByDate = value.payByDate;
-        this.serviceProvider = value.serviceProvider;
-        this.statusDescription = value.statusDescription;
-        this.transactionResponseReferenceNumber = value.transactionResponseReferenceNumber;
         this.loginid = value.loginid;
-        this.phase = value.phase;
         this.orderNumber = value.orderNumber;
         this.orderedDate = value.orderedDate;
-        this.changed = value.changed;
+        this.payByDate = value.payByDate;
+        this.remarks = value.remarks;
+        this.serviceProvider = value.serviceProvider;
+        this.status = value.status;
+        this.statusDescription = value.statusDescription;
+        this.transactionReferenceNumber = value.transactionReferenceNumber;
+        this.transactionResponseAttributes = value.transactionResponseAttributes;
+        this.transactionResponseReferenceNumber = value.transactionResponseReferenceNumber;
     }
 
     public CkPaymentTransactionHistory(
-        String          id,
-        ActiveStatus    activeStatus,
-        String          activeStatusReason,
-        String          createdBy,
-        Date            creationTime,
-        JsonNode        extendedAttributes,
-        String          hash,
-        Date            lastModifiedTime,
-        String          lob,
-        String          modifiedBy,
-        String          source,
-        Integer         version,
-        String          amount,
-        String          gateway,
-        LocalDateTime   paymentDate,
-        String          paymentid,
-        String          referenceNumber,
-        String          remarks,
-        String          serviceName,
-        String          status,
-        String          statusResponse,
-        JsonNode        transactionAttributes,
-        String          transactionReferenceNumber,
-        JsonNode        transactionResponseAttributes,
-        LocalDateTime   invoiceDate,
-        String          invoiceNumber,
-        LocalDateTime   payByDate,
-        String          serviceProvider,
-        String          statusDescription,
-        String          transactionResponseReferenceNumber,
-        String          loginid,
-        EnrichmentPhase phase,
-        String          orderNumber,
-        LocalDateTime   orderedDate,
-        Byte            changed
+        String        id,
+        ActiveStatus  activeStatus,
+        String        activeStatusReason,
+        Boolean       changed,
+        String        createdBy,
+        Date          creationTime,
+        JsonNode      extendedAttributes,
+        String        hash,
+        Date          lastModifiedTime,
+        String        lob,
+        String        modifiedBy,
+        String        source,
+        Integer       version,
+        String        amount,
+        LocalDateTime invoiceDate,
+        String        invoiceNumber,
+        String        loginid,
+        String        orderNumber,
+        LocalDateTime orderedDate,
+        LocalDateTime payByDate,
+        String        remarks,
+        String        serviceProvider,
+        String        status,
+        String        statusDescription,
+        String        transactionReferenceNumber,
+        JsonNode      transactionResponseAttributes,
+        String        transactionResponseReferenceNumber
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -148,28 +124,19 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
         this.source = source;
         this.version = version;
         this.amount = amount;
-        this.gateway = gateway;
-        this.paymentDate = paymentDate;
-        this.paymentid = paymentid;
-        this.referenceNumber = referenceNumber;
-        this.remarks = remarks;
-        this.serviceName = serviceName;
-        this.status = status;
-        this.statusResponse = statusResponse;
-        this.transactionAttributes = transactionAttributes;
-        this.transactionReferenceNumber = transactionReferenceNumber;
-        this.transactionResponseAttributes = transactionResponseAttributes;
         this.invoiceDate = invoiceDate;
         this.invoiceNumber = invoiceNumber;
-        this.payByDate = payByDate;
-        this.serviceProvider = serviceProvider;
-        this.statusDescription = statusDescription;
-        this.transactionResponseReferenceNumber = transactionResponseReferenceNumber;
         this.loginid = loginid;
-        this.phase = phase;
         this.orderNumber = orderNumber;
         this.orderedDate = orderedDate;
-        this.changed = changed;
+        this.payByDate = payByDate;
+        this.remarks = remarks;
+        this.serviceProvider = serviceProvider;
+        this.status = status;
+        this.statusDescription = statusDescription;
+        this.transactionReferenceNumber = transactionReferenceNumber;
+        this.transactionResponseAttributes = transactionResponseAttributes;
+        this.transactionResponseReferenceNumber = transactionResponseReferenceNumber;
     }
 
     /**
@@ -214,6 +181,20 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_payment_transaction_history.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_payment_transaction_history.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -361,59 +342,87 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     }
 
     /**
-     * Getter for <code>ck_payment_transaction_history.gateway</code>.
+     * Getter for <code>ck_payment_transaction_history.invoice_date</code>.
      */
-    public String getGateway() {
-        return this.gateway;
+    public LocalDateTime getInvoiceDate() {
+        return this.invoiceDate;
     }
 
     /**
-     * Setter for <code>ck_payment_transaction_history.gateway</code>.
+     * Setter for <code>ck_payment_transaction_history.invoice_date</code>.
      */
-    public void setGateway(String gateway) {
-        this.gateway = gateway;
+    public void setInvoiceDate(LocalDateTime invoiceDate) {
+        this.invoiceDate = invoiceDate;
     }
 
     /**
-     * Getter for <code>ck_payment_transaction_history.payment_date</code>.
+     * Getter for <code>ck_payment_transaction_history.invoice_number</code>.
      */
-    public LocalDateTime getPaymentDate() {
-        return this.paymentDate;
+    public String getInvoiceNumber() {
+        return this.invoiceNumber;
     }
 
     /**
-     * Setter for <code>ck_payment_transaction_history.payment_date</code>.
+     * Setter for <code>ck_payment_transaction_history.invoice_number</code>.
      */
-    public void setPaymentDate(LocalDateTime paymentDate) {
-        this.paymentDate = paymentDate;
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
     /**
-     * Getter for <code>ck_payment_transaction_history.paymentid</code>.
+     * Getter for <code>ck_payment_transaction_history.loginid</code>.
      */
-    public String getPaymentid() {
-        return this.paymentid;
+    public String getLoginid() {
+        return this.loginid;
     }
 
     /**
-     * Setter for <code>ck_payment_transaction_history.paymentid</code>.
+     * Setter for <code>ck_payment_transaction_history.loginid</code>.
      */
-    public void setPaymentid(String paymentid) {
-        this.paymentid = paymentid;
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
     }
 
     /**
-     * Getter for <code>ck_payment_transaction_history.reference_number</code>.
+     * Getter for <code>ck_payment_transaction_history.order_number</code>.
      */
-    public String getReferenceNumber() {
-        return this.referenceNumber;
+    public String getOrderNumber() {
+        return this.orderNumber;
     }
 
     /**
-     * Setter for <code>ck_payment_transaction_history.reference_number</code>.
+     * Setter for <code>ck_payment_transaction_history.order_number</code>.
      */
-    public void setReferenceNumber(String referenceNumber) {
-        this.referenceNumber = referenceNumber;
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    /**
+     * Getter for <code>ck_payment_transaction_history.ordered_date</code>.
+     */
+    public LocalDateTime getOrderedDate() {
+        return this.orderedDate;
+    }
+
+    /**
+     * Setter for <code>ck_payment_transaction_history.ordered_date</code>.
+     */
+    public void setOrderedDate(LocalDateTime orderedDate) {
+        this.orderedDate = orderedDate;
+    }
+
+    /**
+     * Getter for <code>ck_payment_transaction_history.pay_by_date</code>.
+     */
+    public LocalDateTime getPayByDate() {
+        return this.payByDate;
+    }
+
+    /**
+     * Setter for <code>ck_payment_transaction_history.pay_by_date</code>.
+     */
+    public void setPayByDate(LocalDateTime payByDate) {
+        this.payByDate = payByDate;
     }
 
     /**
@@ -431,17 +440,17 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     }
 
     /**
-     * Getter for <code>ck_payment_transaction_history.service_name</code>.
+     * Getter for <code>ck_payment_transaction_history.service_provider</code>.
      */
-    public String getServiceName() {
-        return this.serviceName;
+    public String getServiceProvider() {
+        return this.serviceProvider;
     }
 
     /**
-     * Setter for <code>ck_payment_transaction_history.service_name</code>.
+     * Setter for <code>ck_payment_transaction_history.service_provider</code>.
      */
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
+    public void setServiceProvider(String serviceProvider) {
+        this.serviceProvider = serviceProvider;
     }
 
     /**
@@ -459,33 +468,19 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     }
 
     /**
-     * Getter for <code>ck_payment_transaction_history.status_response</code>.
-     */
-    public String getStatusResponse() {
-        return this.statusResponse;
-    }
-
-    /**
-     * Setter for <code>ck_payment_transaction_history.status_response</code>.
-     */
-    public void setStatusResponse(String statusResponse) {
-        this.statusResponse = statusResponse;
-    }
-
-    /**
      * Getter for
-     * <code>ck_payment_transaction_history.transaction_attributes</code>.
+     * <code>ck_payment_transaction_history.status_description</code>.
      */
-    public JsonNode getTransactionAttributes() {
-        return this.transactionAttributes;
+    public String getStatusDescription() {
+        return this.statusDescription;
     }
 
     /**
      * Setter for
-     * <code>ck_payment_transaction_history.transaction_attributes</code>.
+     * <code>ck_payment_transaction_history.status_description</code>.
      */
-    public void setTransactionAttributes(JsonNode transactionAttributes) {
-        this.transactionAttributes = transactionAttributes;
+    public void setStatusDescription(String statusDescription) {
+        this.statusDescription = statusDescription;
     }
 
     /**
@@ -521,78 +516,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
     }
 
     /**
-     * Getter for <code>ck_payment_transaction_history.invoice_date</code>.
-     */
-    public LocalDateTime getInvoiceDate() {
-        return this.invoiceDate;
-    }
-
-    /**
-     * Setter for <code>ck_payment_transaction_history.invoice_date</code>.
-     */
-    public void setInvoiceDate(LocalDateTime invoiceDate) {
-        this.invoiceDate = invoiceDate;
-    }
-
-    /**
-     * Getter for <code>ck_payment_transaction_history.invoice_number</code>.
-     */
-    public String getInvoiceNumber() {
-        return this.invoiceNumber;
-    }
-
-    /**
-     * Setter for <code>ck_payment_transaction_history.invoice_number</code>.
-     */
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
-
-    /**
-     * Getter for <code>ck_payment_transaction_history.pay_by_date</code>.
-     */
-    public LocalDateTime getPayByDate() {
-        return this.payByDate;
-    }
-
-    /**
-     * Setter for <code>ck_payment_transaction_history.pay_by_date</code>.
-     */
-    public void setPayByDate(LocalDateTime payByDate) {
-        this.payByDate = payByDate;
-    }
-
-    /**
-     * Getter for <code>ck_payment_transaction_history.service_provider</code>.
-     */
-    public String getServiceProvider() {
-        return this.serviceProvider;
-    }
-
-    /**
-     * Setter for <code>ck_payment_transaction_history.service_provider</code>.
-     */
-    public void setServiceProvider(String serviceProvider) {
-        this.serviceProvider = serviceProvider;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_payment_transaction_history.status_description</code>.
-     */
-    public String getStatusDescription() {
-        return this.statusDescription;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_payment_transaction_history.status_description</code>.
-     */
-    public void setStatusDescription(String statusDescription) {
-        this.statusDescription = statusDescription;
-    }
-
-    /**
      * Getter for
      * <code>ck_payment_transaction_history.transaction_response_reference_number</code>.
      */
@@ -608,76 +531,6 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
         this.transactionResponseReferenceNumber = transactionResponseReferenceNumber;
     }
 
-    /**
-     * Getter for <code>ck_payment_transaction_history.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_payment_transaction_history.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_payment_transaction_history.phase</code>.
-     */
-    public EnrichmentPhase getPhase() {
-        return this.phase;
-    }
-
-    /**
-     * Setter for <code>ck_payment_transaction_history.phase</code>.
-     */
-    public void setPhase(EnrichmentPhase phase) {
-        this.phase = phase;
-    }
-
-    /**
-     * Getter for <code>ck_payment_transaction_history.order_number</code>.
-     */
-    public String getOrderNumber() {
-        return this.orderNumber;
-    }
-
-    /**
-     * Setter for <code>ck_payment_transaction_history.order_number</code>.
-     */
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    /**
-     * Getter for <code>ck_payment_transaction_history.ordered_date</code>.
-     */
-    public LocalDateTime getOrderedDate() {
-        return this.orderedDate;
-    }
-
-    /**
-     * Setter for <code>ck_payment_transaction_history.ordered_date</code>.
-     */
-    public void setOrderedDate(LocalDateTime orderedDate) {
-        this.orderedDate = orderedDate;
-    }
-
-    /**
-     * Getter for <code>ck_payment_transaction_history.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_payment_transaction_history.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPaymentTransactionHistory (");
@@ -685,6 +538,7 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -695,28 +549,19 @@ public class CkPaymentTransactionHistory extends CommonDataModel implements Seri
         sb.append(", ").append(source);
         sb.append(", ").append(version);
         sb.append(", ").append(amount);
-        sb.append(", ").append(gateway);
-        sb.append(", ").append(paymentDate);
-        sb.append(", ").append(paymentid);
-        sb.append(", ").append(referenceNumber);
-        sb.append(", ").append(remarks);
-        sb.append(", ").append(serviceName);
-        sb.append(", ").append(status);
-        sb.append(", ").append(statusResponse);
-        sb.append(", ").append(transactionAttributes);
-        sb.append(", ").append(transactionReferenceNumber);
-        sb.append(", ").append(transactionResponseAttributes);
         sb.append(", ").append(invoiceDate);
         sb.append(", ").append(invoiceNumber);
-        sb.append(", ").append(payByDate);
-        sb.append(", ").append(serviceProvider);
-        sb.append(", ").append(statusDescription);
-        sb.append(", ").append(transactionResponseReferenceNumber);
         sb.append(", ").append(loginid);
-        sb.append(", ").append(phase);
         sb.append(", ").append(orderNumber);
         sb.append(", ").append(orderedDate);
-        sb.append(", ").append(changed);
+        sb.append(", ").append(payByDate);
+        sb.append(", ").append(remarks);
+        sb.append(", ").append(serviceProvider);
+        sb.append(", ").append(status);
+        sb.append(", ").append(statusDescription);
+        sb.append(", ").append(transactionReferenceNumber);
+        sb.append(", ").append(transactionResponseAttributes);
+        sb.append(", ").append(transactionResponseReferenceNumber);
 
         sb.append(")");
         return sb.toString();

@@ -11,15 +11,23 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -60,6 +68,12 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
      * <code>ck_postaggregate_user_constant_activity_daily.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
+     * <code>ck_postaggregate_user_constant_activity_daily.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column
@@ -153,6 +167,18 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
 
     /**
      * The column
+     * <code>ck_postaggregate_user_constant_activity_daily.location_hierarchy</code>.
+     */
+    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(200), this, "");
+
+    /**
+     * The column
+     * <code>ck_postaggregate_user_constant_activity_daily.loginid</code>.
+     */
+    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
+
+    /**
+     * The column
      * <code>ck_postaggregate_user_constant_activity_daily.name</code>.
      */
     public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
@@ -189,6 +215,12 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
 
     /**
      * The column
+     * <code>ck_postaggregate_user_constant_activity_daily.feature</code>.
+     */
+    public final TableField<Record, String> FEATURE = createField(DSL.name("feature"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column
      * <code>ck_postaggregate_user_constant_activity_daily.first_login_time</code>.
      */
     public final TableField<Record, LocalDateTime> FIRST_LOGIN_TIME = createField(DSL.name("first_login_time"), SQLDataType.LOCALDATETIME(0), this, "");
@@ -198,6 +230,12 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
      * <code>ck_postaggregate_user_constant_activity_daily.first_register_time</code>.
      */
     public final TableField<Record, LocalDateTime> FIRST_REGISTER_TIME = createField(DSL.name("first_register_time"), SQLDataType.LOCALDATETIME(0), this, "");
+
+    /**
+     * The column
+     * <code>ck_postaggregate_user_constant_activity_daily.hits_count</code>.
+     */
+    public final TableField<Record, Integer> HITS_COUNT = createField(DSL.name("hits_count"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column
@@ -225,45 +263,15 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
 
     /**
      * The column
-     * <code>ck_postaggregate_user_constant_activity_daily.unique_outlet_pjp</code>.
-     */
-    public final TableField<Record, Integer> UNIQUE_OUTLET_PJP = createField(DSL.name("unique_outlet_pjp"), SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_user_constant_activity_daily.location_hierarchy</code>.
-     */
-    public final TableField<Record, String> LOCATION_HIERARCHY = createField(DSL.name("location_hierarchy"), SQLDataType.VARCHAR(500), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_user_constant_activity_daily.loginid</code>.
-     */
-    public final TableField<Record, String> LOGINID = createField(DSL.name("loginid"), SQLDataType.VARCHAR(50), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_user_constant_activity_daily.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_user_constant_activity_daily.feature</code>.
-     */
-    public final TableField<Record, String> FEATURE = createField(DSL.name("feature"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column
-     * <code>ck_postaggregate_user_constant_activity_daily.hits_count</code>.
-     */
-    public final TableField<Record, Integer> HITS_COUNT = createField(DSL.name("hits_count"), SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column
      * <code>ck_postaggregate_user_constant_activity_daily.unique_hits_count</code>.
      */
     public final TableField<Record, Integer> UNIQUE_HITS_COUNT = createField(DSL.name("unique_hits_count"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column
+     * <code>ck_postaggregate_user_constant_activity_daily.unique_outlet_pjp</code>.
+     */
+    public final TableField<Record, Integer> UNIQUE_OUTLET_PJP = createField(DSL.name("unique_outlet_pjp"), SQLDataType.INTEGER.nullable(false), this, "");
 
     private CkPostaggregateUserConstantActivityDaily(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -311,34 +319,6 @@ public class CkPostaggregateUserConstantActivityDaily extends TableImpl<Record> 
     @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_POSTAGGREGATE_USER_CONSTANT_ACTIVITY_DAILY_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<Record, ?>> getReferences() {
-        return Arrays.asList(Keys.FKQ4S39NTJ6OHC4JMJPW4T3YLV6, Keys.FKBAL55G315JCL1PFPXI1FHTCPS);
-    }
-
-    private transient CkLocation _ckLocation;
-    private transient CkUser _ckUser;
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_location</code> table.
-     */
-    public CkLocation ckLocation() {
-        if (_ckLocation == null)
-            _ckLocation = new CkLocation(this, Keys.FKQ4S39NTJ6OHC4JMJPW4T3YLV6);
-
-        return _ckLocation;
-    }
-
-    /**
-     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
-     */
-    public CkUser ckUser() {
-        if (_ckUser == null)
-            _ckUser = new CkUser(this, Keys.FKBAL55G315JCL1PFPXI1FHTCPS);
-
-        return _ckUser;
     }
 
     @Override

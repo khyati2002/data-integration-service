@@ -11,15 +11,25 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -129,14 +139,14 @@ public class CkAggregationInfo extends TableImpl<Record> {
     public final TableField<Record, JSON> CADENCE_TYPES = createField(DSL.name("cadence_types"), SQLDataType.JSON, this, "");
 
     /**
-     * The column <code>ck_aggregation_info.category</code>.
+     * The column <code>ck_aggregation_info.configuration</code>.
      */
-    public final TableField<Record, String> CATEGORY = createField(DSL.name("category"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, JSON> CONFIGURATION = createField(DSL.name("configuration"), SQLDataType.JSON, this, "");
 
     /**
-     * The column <code>ck_aggregation_info.data_type</code>.
+     * The column <code>ck_aggregation_info.cron_expression</code>.
      */
-    public final TableField<Record, String> DATA_TYPE = createField(DSL.name("data_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> CRON_EXPRESSION = createField(DSL.name("cron_expression"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_aggregation_info.description</code>.
@@ -144,14 +154,24 @@ public class CkAggregationInfo extends TableImpl<Record> {
     public final TableField<Record, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.CLOB, this, "");
 
     /**
+     * The column <code>ck_aggregation_info.implementation</code>.
+     */
+    public final TableField<Record, String> IMPLEMENTATION = createField(DSL.name("implementation"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_aggregation_info.kpi_name</code>.
      */
     public final TableField<Record, String> KPI_NAME = createField(DSL.name("kpi_name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_aggregation_info.operation_type</code>.
+     * The column <code>ck_aggregation_info.level</code>.
      */
-    public final TableField<Record, String> OPERATION_TYPE = createField(DSL.name("operation_type"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> LEVEL = createField(DSL.name("level"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_aggregation_info.next_scheduled_time</code>.
+     */
+    public final TableField<Record, LocalDateTime> NEXT_SCHEDULED_TIME = createField(DSL.name("next_scheduled_time"), SQLDataType.LOCALDATETIME(0), this, "");
 
     /**
      * The column <code>ck_aggregation_info.pointer_field</code>.
@@ -212,31 +232,6 @@ public class CkAggregationInfo extends TableImpl<Record> {
      * The column <code>ck_aggregation_info.tertiary_group_name</code>.
      */
     public final TableField<Record, String> TERTIARY_GROUP_NAME = createField(DSL.name("tertiary_group_name"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_aggregation_info.level</code>.
-     */
-    public final TableField<Record, String> LEVEL = createField(DSL.name("level"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_aggregation_info.cron_expression</code>.
-     */
-    public final TableField<Record, String> CRON_EXPRESSION = createField(DSL.name("cron_expression"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_aggregation_info.implementation</code>.
-     */
-    public final TableField<Record, String> IMPLEMENTATION = createField(DSL.name("implementation"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_aggregation_info.next_scheduled_time</code>.
-     */
-    public final TableField<Record, LocalDateTime> NEXT_SCHEDULED_TIME = createField(DSL.name("next_scheduled_time"), SQLDataType.LOCALDATETIME(0), this, "");
-
-    /**
-     * The column <code>ck_aggregation_info.configuration</code>.
-     */
-    public final TableField<Record, JSON> CONFIGURATION = createField(DSL.name("configuration"), SQLDataType.JSON, this, "");
 
     private CkAggregationInfo(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

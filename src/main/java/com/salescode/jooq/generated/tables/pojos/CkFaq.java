@@ -7,10 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -27,7 +28,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
     private String       createdBy;
     private Date         creationTime;
     private JsonNode     extendedAttributes;
-    private String       hash;
     private Date         lastModifiedTime;
     private String       lob;
     private String       modifiedBy;
@@ -42,6 +42,7 @@ public class CkFaq extends CommonDataModel implements Serializable {
     private String       trainingtext;
     private String       type;
     private String       url;
+    private String       hash;
     private Byte         changed;
 
     public CkFaq() {}
@@ -53,7 +54,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
-        this.hash = value.hash;
         this.lastModifiedTime = value.lastModifiedTime;
         this.lob = value.lob;
         this.modifiedBy = value.modifiedBy;
@@ -68,6 +68,7 @@ public class CkFaq extends CommonDataModel implements Serializable {
         this.trainingtext = value.trainingtext;
         this.type = value.type;
         this.url = value.url;
+        this.hash = value.hash;
         this.changed = value.changed;
     }
 
@@ -78,7 +79,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
         String       createdBy,
         Date         creationTime,
         JsonNode     extendedAttributes,
-        String       hash,
         Date         lastModifiedTime,
         String       lob,
         String       modifiedBy,
@@ -93,6 +93,7 @@ public class CkFaq extends CommonDataModel implements Serializable {
         String       trainingtext,
         String       type,
         String       url,
+        String       hash,
         Byte         changed
     ) {
         this.id = id;
@@ -101,7 +102,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
-        this.hash = hash;
         this.lastModifiedTime = lastModifiedTime;
         this.lob = lob;
         this.modifiedBy = modifiedBy;
@@ -116,6 +116,7 @@ public class CkFaq extends CommonDataModel implements Serializable {
         this.trainingtext = trainingtext;
         this.type = type;
         this.url = url;
+        this.hash = hash;
         this.changed = changed;
     }
 
@@ -201,20 +202,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
      */
     public void setExtendedAttributes(JsonNode extendedAttributes) {
         this.extendedAttributes = extendedAttributes;
-    }
-
-    /**
-     * Getter for <code>ck_faq.hash</code>.
-     */
-    public String getHash() {
-        return this.hash;
-    }
-
-    /**
-     * Setter for <code>ck_faq.hash</code>.
-     */
-    public void setHash(String hash) {
-        this.hash = hash;
     }
 
     /**
@@ -414,6 +401,20 @@ public class CkFaq extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_faq.hash</code>.
+     */
+    public String getHash() {
+        return this.hash;
+    }
+
+    /**
+     * Setter for <code>ck_faq.hash</code>.
+     */
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    /**
      * Getter for <code>ck_faq.changed</code>.
      */
     public Byte getChanged() {
@@ -437,7 +438,6 @@ public class CkFaq extends CommonDataModel implements Serializable {
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
-        sb.append(", ").append(hash);
         sb.append(", ").append(lastModifiedTime);
         sb.append(", ").append(lob);
         sb.append(", ").append(modifiedBy);
@@ -452,6 +452,7 @@ public class CkFaq extends CommonDataModel implements Serializable {
         sb.append(", ").append(trainingtext);
         sb.append(", ").append(type);
         sb.append(", ").append(url);
+        sb.append(", ").append(hash);
         sb.append(", ").append(changed);
 
         sb.append(")");

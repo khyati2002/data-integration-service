@@ -10,13 +10,26 @@ import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
+import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Date;
 
 
 /**
@@ -164,8 +177,30 @@ public class CkUserMetadata extends TableImpl<Record> {
     }
 
     @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.CK_USER_METADATA_IDX_COMP1, Indexes.CK_USER_METADATA_IDX_COMP2, Indexes.CK_USER_METADATA_IDX_LOGINID, Indexes.CK_USER_METADATA_IDX_TYPE, Indexes.CK_USER_METADATA_IDX_VALUE);
+    }
+
+    @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_USER_METADATA_PRIMARY;
+    }
+
+    @Override
+    public List<ForeignKey<Record, ?>> getReferences() {
+        return Arrays.asList(Keys.FKQ7XEF5EO029J87MPT5TQ1UIMD);
+    }
+
+    private transient CkUser _ckUser;
+
+    /**
+     * Get the implicit join path to the <code>ckroot.ck_user</code> table.
+     */
+    public CkUser ckUser() {
+        if (_ckUser == null)
+            _ckUser = new CkUser(this, Keys.FKQ7XEF5EO029J87MPT5TQ1UIMD);
+
+        return _ckUser;
     }
 
     @Override

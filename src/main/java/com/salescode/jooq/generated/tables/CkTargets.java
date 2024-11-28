@@ -10,16 +10,28 @@ import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
+import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -57,6 +69,11 @@ public class CkTargets extends TableImpl<Record> {
      * The column <code>ck_targets.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_targets.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_targets.created_by</code>.
@@ -139,6 +156,16 @@ public class CkTargets extends TableImpl<Record> {
     public final TableField<Record, Double> TARGET = createField(DSL.name("target"), SQLDataType.FLOAT.nullable(false), this, "");
 
     /**
+     * The column <code>ck_targets.targetcondition</code>.
+     */
+    public final TableField<Record, Double> TARGETCONDITION = createField(DSL.name("targetcondition"), SQLDataType.FLOAT, this, "");
+
+    /**
+     * The column <code>ck_targets.targetconditionunit</code>.
+     */
+    public final TableField<Record, String> TARGETCONDITIONUNIT = createField(DSL.name("targetconditionunit"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_targets.target_id</code>.
      */
     public final TableField<Record, String> TARGET_ID = createField(DSL.name("target_id"), SQLDataType.VARCHAR(255), this, "");
@@ -174,29 +201,14 @@ public class CkTargets extends TableImpl<Record> {
     public final TableField<Record, JSON> USER_VALUE = createField(DSL.name("user_value"), SQLDataType.JSON, this, "");
 
     /**
-     * The column <code>ck_targets.changed</code>.
+     * The column <code>ck_targets.user_value_str</code>.
      */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_targets.targetcondition</code>.
-     */
-    public final TableField<Record, Double> TARGETCONDITION = createField(DSL.name("targetcondition"), SQLDataType.FLOAT, this, "");
-
-    /**
-     * The column <code>ck_targets.targetconditionunit</code>.
-     */
-    public final TableField<Record, String> TARGETCONDITIONUNIT = createField(DSL.name("targetconditionunit"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> USER_VALUE_STR = createField(DSL.name("user_value_str"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_targets.outlet_value_str</code>.
      */
     public final TableField<Record, String> OUTLET_VALUE_STR = createField(DSL.name("outlet_value_str"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
-     * The column <code>ck_targets.user_value_str</code>.
-     */
-    public final TableField<Record, String> USER_VALUE_STR = createField(DSL.name("user_value_str"), SQLDataType.VARCHAR(255), this, "");
 
     private CkTargets(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
@@ -234,6 +246,11 @@ public class CkTargets extends TableImpl<Record> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.CK_TARGETS_USER_VALUE_STR);
     }
 
     @Override

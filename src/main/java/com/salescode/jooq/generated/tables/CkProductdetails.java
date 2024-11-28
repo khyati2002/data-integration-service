@@ -12,15 +12,26 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -58,6 +69,11 @@ public class CkProductdetails extends TableImpl<Record> {
      * The column <code>ck_productdetails.active_status_reason</code>.
      */
     public final TableField<Record, String> ACTIVE_STATUS_REASON = createField(DSL.name("active_status_reason"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>ck_productdetails.changed</code>.
+     */
+    public final TableField<Record, Boolean> CHANGED = createField(DSL.name("changed"), SQLDataType.BIT.defaultValue(DSL.inline("b'1'", SQLDataType.BIT)), this, "");
 
     /**
      * The column <code>ck_productdetails.created_by</code>.
@@ -310,6 +326,11 @@ public class CkProductdetails extends TableImpl<Record> {
     public final TableField<Record, BigDecimal> OTHER_UNIT_MRP = createField(DSL.name("other_unit_mrp"), SQLDataType.DECIMAL(10, 2).defaultValue(DSL.inline("0.00", SQLDataType.DECIMAL)), this, "");
 
     /**
+     * The column <code>ck_productdetails.other_unit_name</code>.
+     */
+    public final TableField<Record, String> OTHER_UNIT_NAME = createField(DSL.name("other_unit_name"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * The column <code>ck_productdetails.other_unit_to_piece_quantity</code>.
      */
     public final TableField<Record, BigDecimal> OTHER_UNIT_TO_PIECE_QUANTITY = createField(DSL.name("other_unit_to_piece_quantity"), SQLDataType.DECIMAL(10, 2).defaultValue(DSL.inline("0.00", SQLDataType.DECIMAL)), this, "");
@@ -415,24 +436,9 @@ public class CkProductdetails extends TableImpl<Record> {
     public final TableField<Record, String> UOM = createField(DSL.name("uom"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_productdetails.changed</code>.
-     */
-    public final TableField<Record, Byte> CHANGED = createField(DSL.name("changed"), SQLDataType.TINYINT.defaultValue(DSL.inline("1", SQLDataType.TINYINT)), this, "");
-
-    /**
-     * The column <code>ck_productdetails.other_unit_name</code>.
-     */
-    public final TableField<Record, String> OTHER_UNIT_NAME = createField(DSL.name("other_unit_name"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_productdetails.rec_priority</code>.
      */
     public final TableField<Record, Integer> REC_PRIORITY = createField(DSL.name("rec_priority"), SQLDataType.INTEGER, this, "");
-
-    /**
-     * The column <code>ck_productdetails.link</code>.
-     */
-    public final TableField<Record, String> LINK = createField(DSL.name("link"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_productdetails.piece_to_volume</code>.
@@ -440,19 +446,24 @@ public class CkProductdetails extends TableImpl<Record> {
     public final TableField<Record, BigDecimal> PIECE_TO_VOLUME = createField(DSL.name("piece_to_volume"), SQLDataType.DECIMAL(10, 2).defaultValue(DSL.inline("0.00", SQLDataType.DECIMAL)), this, "");
 
     /**
-     * The column <code>ck_productdetails.display</code>.
+     * The column <code>ck_productdetails.link</code>.
      */
-    public final TableField<Record, String> DISPLAY = createField(DSL.name("display"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<Record, String> LINK = createField(DSL.name("link"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_productdetails.group_id</code>.
+     * The column <code>ck_productdetails.display</code>.
      */
-    public final TableField<Record, String> GROUP_ID = createField(DSL.name("group_id"), SQLDataType.CLOB, this, "");
+    public final TableField<Record, String> DISPLAY = createField(DSL.name("display"), SQLDataType.VARCHAR(255).defaultValue(DSL.inline("true", SQLDataType.VARCHAR)), this, "");
 
     /**
      * The column <code>ck_productdetails.m_code</code>.
      */
     public final TableField<Record, String> M_CODE = createField(DSL.name("m_code"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>ck_productdetails.group_id</code>.
+     */
+    public final TableField<Record, String> GROUP_ID = createField(DSL.name("group_id"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>ck_productdetails.eb2b_code</code>.
@@ -509,7 +520,7 @@ public class CkProductdetails extends TableImpl<Record> {
 
     @Override
     public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_PRODUCTDETAILS_UK_HO08NYWT0OOOHKHWLIVDVMCX5, Keys.KEY_CK_PRODUCTDETAILS_UK_F6H61U9T9GPY7LT2KTDIY1RY6);
+        return Arrays.asList(Keys.KEY_CK_PRODUCTDETAILS_UK_HO08NYWT0OOOHKHWLIVDVMCX5);
     }
 
     @Override

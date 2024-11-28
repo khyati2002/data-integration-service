@@ -11,13 +11,23 @@ import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 
 /**
@@ -207,11 +217,6 @@ public class CkReturnProduct extends TableImpl<Record> {
     public final TableField<Record, String> PRODUCT_DESCRIPTION = createField(DSL.name("product_description"), SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>ck_return_product.qty</code>.
-     */
-    public final TableField<Record, String> QTY = createField(DSL.name("qty"), SQLDataType.VARCHAR(255), this, "");
-
-    /**
      * The column <code>ck_return_product.redemption_status</code>.
      */
     public final TableField<Record, String> REDEMPTION_STATUS = createField(DSL.name("redemption_status"), SQLDataType.VARCHAR(255), this, "");
@@ -255,6 +260,11 @@ public class CkReturnProduct extends TableImpl<Record> {
      * The column <code>ck_return_product.start_time</code>.
      */
     public final TableField<Record, LocalDateTime> START_TIME = createField(DSL.name("start_time"), SQLDataType.LOCALDATETIME(0), this, "");
+
+    /**
+     * The column <code>ck_return_product.qty</code>.
+     */
+    public final TableField<Record, String> QTY = createField(DSL.name("qty"), SQLDataType.VARCHAR(255), this, "");
 
     private CkReturnProduct(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);

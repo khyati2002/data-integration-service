@@ -24,6 +24,7 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -33,17 +34,16 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
     private String        modifiedBy;
     private String        source;
     private Integer       version;
-    private Long          redeemPoints;
+    private String        locationHierarchy;
+    private String        loginid;
+    private String        outletcode;
+    private Double        redeemPoints;
     private LocalDateTime redemptionEndCycle;
     private String        redeemId;
     private LocalDateTime redemptionStartCycle;
     private String        redemptionType;
     private String        status;
     private String        statusRemarks;
-    private String        locationHierarchy;
-    private String        loginid;
-    private String        outletcode;
-    private Byte          changed;
 
     public CkRedeemActivity() {}
 
@@ -51,6 +51,7 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -60,6 +61,9 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
         this.modifiedBy = value.modifiedBy;
         this.source = value.source;
         this.version = value.version;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
+        this.outletcode = value.outletcode;
         this.redeemPoints = value.redeemPoints;
         this.redemptionEndCycle = value.redemptionEndCycle;
         this.redeemId = value.redeemId;
@@ -67,16 +71,13 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
         this.redemptionType = value.redemptionType;
         this.status = value.status;
         this.statusRemarks = value.statusRemarks;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
     }
 
     public CkRedeemActivity(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -86,21 +87,21 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
         String        modifiedBy,
         String        source,
         Integer       version,
-        Long          redeemPoints,
+        String        locationHierarchy,
+        String        loginid,
+        String        outletcode,
+        Double        redeemPoints,
         LocalDateTime redemptionEndCycle,
         String        redeemId,
         LocalDateTime redemptionStartCycle,
         String        redemptionType,
         String        status,
-        String        statusRemarks,
-        String        locationHierarchy,
-        String        loginid,
-        String        outletcode,
-        Byte          changed
+        String        statusRemarks
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -110,6 +111,9 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
         this.modifiedBy = modifiedBy;
         this.source = source;
         this.version = version;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
+        this.outletcode = outletcode;
         this.redeemPoints = redeemPoints;
         this.redemptionEndCycle = redemptionEndCycle;
         this.redeemId = redeemId;
@@ -117,10 +121,6 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
         this.redemptionType = redemptionType;
         this.status = status;
         this.statusRemarks = statusRemarks;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.outletcode = outletcode;
-        this.changed = changed;
     }
 
     /**
@@ -163,6 +163,20 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_redeem_activity.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_redeem_activity.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -292,16 +306,58 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_redeem_activity.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for <code>ck_redeem_activity.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for <code>ck_redeem_activity.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for <code>ck_redeem_activity.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
+     * Getter for <code>ck_redeem_activity.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for <code>ck_redeem_activity.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
      * Getter for <code>ck_redeem_activity.redeem_points</code>.
      */
-    public Long getRedeemPoints() {
+    public Double getRedeemPoints() {
         return this.redeemPoints;
     }
 
     /**
      * Setter for <code>ck_redeem_activity.redeem_points</code>.
      */
-    public void setRedeemPoints(Long redeemPoints) {
+    public void setRedeemPoints(Double redeemPoints) {
         this.redeemPoints = redeemPoints;
     }
 
@@ -389,62 +445,6 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
         this.statusRemarks = statusRemarks;
     }
 
-    /**
-     * Getter for <code>ck_redeem_activity.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for <code>ck_redeem_activity.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for <code>ck_redeem_activity.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for <code>ck_redeem_activity.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for <code>ck_redeem_activity.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for <code>ck_redeem_activity.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for <code>ck_redeem_activity.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_redeem_activity.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkRedeemActivity (");
@@ -452,6 +452,7 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -461,6 +462,9 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
         sb.append(", ").append(modifiedBy);
         sb.append(", ").append(source);
         sb.append(", ").append(version);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(redeemPoints);
         sb.append(", ").append(redemptionEndCycle);
         sb.append(", ").append(redeemId);
@@ -468,10 +472,6 @@ public class CkRedeemActivity extends CommonDataModel implements Serializable {
         sb.append(", ").append(redemptionType);
         sb.append(", ").append(status);
         sb.append(", ").append(statusRemarks);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

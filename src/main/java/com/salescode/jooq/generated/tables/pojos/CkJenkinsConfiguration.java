@@ -24,6 +24,7 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -42,7 +43,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
     private String        taskId;
     private String        timeZone;
     private String        triggerTime;
-    private Byte          changed;
 
     public CkJenkinsConfiguration() {}
 
@@ -50,6 +50,7 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -68,13 +69,13 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
         this.taskId = value.taskId;
         this.timeZone = value.timeZone;
         this.triggerTime = value.triggerTime;
-        this.changed = value.changed;
     }
 
     public CkJenkinsConfiguration(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -92,12 +93,12 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
         LocalDateTime startDate,
         String        taskId,
         String        timeZone,
-        String        triggerTime,
-        Byte          changed
+        String        triggerTime
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -116,7 +117,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
         this.taskId = taskId;
         this.timeZone = timeZone;
         this.triggerTime = triggerTime;
-        this.changed = changed;
     }
 
     /**
@@ -159,6 +159,20 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_jenkins_configuration.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_jenkins_configuration.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -413,20 +427,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
         this.triggerTime = triggerTime;
     }
 
-    /**
-     * Getter for <code>ck_jenkins_configuration.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for <code>ck_jenkins_configuration.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkJenkinsConfiguration (");
@@ -434,6 +434,7 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -452,7 +453,6 @@ public class CkJenkinsConfiguration extends CommonDataModel implements Serializa
         sb.append(", ").append(taskId);
         sb.append(", ").append(timeZone);
         sb.append(", ").append(triggerTime);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

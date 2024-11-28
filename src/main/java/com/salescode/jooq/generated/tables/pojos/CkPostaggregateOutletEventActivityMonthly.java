@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -40,6 +42,8 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
     private String        gpsLongitude;
     private String        hierarchy;
     private JSON          images;
+    private String        locationHierarchy;
+    private String        loginid;
     private String        name;
     private String        referenceNumber;
     private LocalDateTime startTime;
@@ -47,16 +51,13 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
     private String        targetKey;
     private Integer       month;
     private Integer       outletClicked;
+    private String        outletcode;
     private Integer       outletIncart;
     private Integer       outletShared;
     private Integer       outletTotalClicked;
     private Integer       outletTotalIncart;
     private Integer       outletTotalShared;
     private Integer       year;
-    private String        locationHierarchy;
-    private String        loginid;
-    private String        outletcode;
-    private Byte          changed;
 
     public CkPostaggregateOutletEventActivityMonthly() {}
 
@@ -64,6 +65,7 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -79,6 +81,8 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         this.gpsLongitude = value.gpsLongitude;
         this.hierarchy = value.hierarchy;
         this.images = value.images;
+        this.locationHierarchy = value.locationHierarchy;
+        this.loginid = value.loginid;
         this.name = value.name;
         this.referenceNumber = value.referenceNumber;
         this.startTime = value.startTime;
@@ -86,22 +90,20 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         this.targetKey = value.targetKey;
         this.month = value.month;
         this.outletClicked = value.outletClicked;
+        this.outletcode = value.outletcode;
         this.outletIncart = value.outletIncart;
         this.outletShared = value.outletShared;
         this.outletTotalClicked = value.outletTotalClicked;
         this.outletTotalIncart = value.outletTotalIncart;
         this.outletTotalShared = value.outletTotalShared;
         this.year = value.year;
-        this.locationHierarchy = value.locationHierarchy;
-        this.loginid = value.loginid;
-        this.outletcode = value.outletcode;
-        this.changed = value.changed;
     }
 
     public CkPostaggregateOutletEventActivityMonthly(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -117,6 +119,8 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         String        gpsLongitude,
         String        hierarchy,
         JSON          images,
+        String        locationHierarchy,
+        String        loginid,
         String        name,
         String        referenceNumber,
         LocalDateTime startTime,
@@ -124,20 +128,18 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         String        targetKey,
         Integer       month,
         Integer       outletClicked,
+        String        outletcode,
         Integer       outletIncart,
         Integer       outletShared,
         Integer       outletTotalClicked,
         Integer       outletTotalIncart,
         Integer       outletTotalShared,
-        Integer       year,
-        String        locationHierarchy,
-        String        loginid,
-        String        outletcode,
-        Byte          changed
+        Integer       year
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -153,6 +155,8 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         this.gpsLongitude = gpsLongitude;
         this.hierarchy = hierarchy;
         this.images = images;
+        this.locationHierarchy = locationHierarchy;
+        this.loginid = loginid;
         this.name = name;
         this.referenceNumber = referenceNumber;
         this.startTime = startTime;
@@ -160,16 +164,13 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         this.targetKey = targetKey;
         this.month = month;
         this.outletClicked = outletClicked;
+        this.outletcode = outletcode;
         this.outletIncart = outletIncart;
         this.outletShared = outletShared;
         this.outletTotalClicked = outletTotalClicked;
         this.outletTotalIncart = outletTotalIncart;
         this.outletTotalShared = outletTotalShared;
         this.year = year;
-        this.locationHierarchy = locationHierarchy;
-        this.loginid = loginid;
-        this.outletcode = outletcode;
-        this.changed = changed;
     }
 
     /**
@@ -218,6 +219,22 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for
+     * <code>ck_postaggregate_outlet_event_activity_monthly.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_outlet_event_activity_monthly.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -462,6 +479,38 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
 
     /**
      * Getter for
+     * <code>ck_postaggregate_outlet_event_activity_monthly.location_hierarchy</code>.
+     */
+    public String getLocationHierarchy() {
+        return this.locationHierarchy;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_outlet_event_activity_monthly.location_hierarchy</code>.
+     */
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
+
+    /**
+     * Getter for
+     * <code>ck_postaggregate_outlet_event_activity_monthly.loginid</code>.
+     */
+    public String getLoginid() {
+        return this.loginid;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_outlet_event_activity_monthly.loginid</code>.
+     */
+    public void setLoginid(String loginid) {
+        this.loginid = loginid;
+    }
+
+    /**
+     * Getter for
      * <code>ck_postaggregate_outlet_event_activity_monthly.name</code>.
      */
     public String getName() {
@@ -574,6 +623,22 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
 
     /**
      * Getter for
+     * <code>ck_postaggregate_outlet_event_activity_monthly.outletcode</code>.
+     */
+    public String getOutletcode() {
+        return this.outletcode;
+    }
+
+    /**
+     * Setter for
+     * <code>ck_postaggregate_outlet_event_activity_monthly.outletcode</code>.
+     */
+    public void setOutletcode(String outletcode) {
+        this.outletcode = outletcode;
+    }
+
+    /**
+     * Getter for
      * <code>ck_postaggregate_outlet_event_activity_monthly.outlet_incart</code>.
      */
     public Integer getOutletIncart() {
@@ -668,70 +733,6 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         this.year = year;
     }
 
-    /**
-     * Getter for
-     * <code>ck_postaggregate_outlet_event_activity_monthly.location_hierarchy</code>.
-     */
-    public String getLocationHierarchy() {
-        return this.locationHierarchy;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_outlet_event_activity_monthly.location_hierarchy</code>.
-     */
-    public void setLocationHierarchy(String locationHierarchy) {
-        this.locationHierarchy = locationHierarchy;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_outlet_event_activity_monthly.loginid</code>.
-     */
-    public String getLoginid() {
-        return this.loginid;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_outlet_event_activity_monthly.loginid</code>.
-     */
-    public void setLoginid(String loginid) {
-        this.loginid = loginid;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_outlet_event_activity_monthly.outletcode</code>.
-     */
-    public String getOutletcode() {
-        return this.outletcode;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_outlet_event_activity_monthly.outletcode</code>.
-     */
-    public void setOutletcode(String outletcode) {
-        this.outletcode = outletcode;
-    }
-
-    /**
-     * Getter for
-     * <code>ck_postaggregate_outlet_event_activity_monthly.changed</code>.
-     */
-    public Byte getChanged() {
-        return this.changed;
-    }
-
-    /**
-     * Setter for
-     * <code>ck_postaggregate_outlet_event_activity_monthly.changed</code>.
-     */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkPostaggregateOutletEventActivityMonthly (");
@@ -739,6 +740,7 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -754,6 +756,8 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         sb.append(", ").append(gpsLongitude);
         sb.append(", ").append(hierarchy);
         sb.append(", ").append(images);
+        sb.append(", ").append(locationHierarchy);
+        sb.append(", ").append(loginid);
         sb.append(", ").append(name);
         sb.append(", ").append(referenceNumber);
         sb.append(", ").append(startTime);
@@ -761,16 +765,13 @@ public class CkPostaggregateOutletEventActivityMonthly extends CommonDataModel i
         sb.append(", ").append(targetKey);
         sb.append(", ").append(month);
         sb.append(", ").append(outletClicked);
+        sb.append(", ").append(outletcode);
         sb.append(", ").append(outletIncart);
         sb.append(", ").append(outletShared);
         sb.append(", ").append(outletTotalClicked);
         sb.append(", ").append(outletTotalIncart);
         sb.append(", ").append(outletTotalShared);
         sb.append(", ").append(year);
-        sb.append(", ").append(locationHierarchy);
-        sb.append(", ").append(loginid);
-        sb.append(", ").append(outletcode);
-        sb.append(", ").append(changed);
 
         sb.append(")");
         return sb.toString();

@@ -10,16 +10,23 @@ import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
-import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
-import org.jooq.*;
+
+import java.util.Date;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.JSON;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -121,7 +128,7 @@ public class CkFunctionInfo extends TableImpl<Record> {
     /**
      * The column <code>ck_function_info.implementation</code>.
      */
-    public final TableField<Record, String> IMPLEMENTATION = createField(DSL.name("implementation"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<Record, String> IMPLEMENTATION = createField(DSL.name("implementation"), SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>ck_function_info.language</code>.
@@ -131,7 +138,7 @@ public class CkFunctionInfo extends TableImpl<Record> {
     /**
      * The column <code>ck_function_info.name</code>.
      */
-    public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<Record, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>ck_function_info.parameters_info</code>.
@@ -182,18 +189,8 @@ public class CkFunctionInfo extends TableImpl<Record> {
     }
 
     @Override
-    public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.CK_FUNCTION_INFO_CK_FUNCTION_INFO_IDX_1);
-    }
-
-    @Override
     public UniqueKey<Record> getPrimaryKey() {
         return Keys.KEY_CK_FUNCTION_INFO_PRIMARY;
-    }
-
-    @Override
-    public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_FUNCTION_INFO_UK_41TKK3RUR19I0SB2T9YP0PK9K);
     }
 
     @Override

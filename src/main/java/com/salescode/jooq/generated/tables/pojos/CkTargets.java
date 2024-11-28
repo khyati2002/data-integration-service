@@ -7,11 +7,12 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
-import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.jooq.JSON;
 
 
 /**
@@ -25,6 +26,7 @@ public class CkTargets extends CommonDataModel implements Serializable {
     private String        id;
     private ActiveStatus  activeStatus;
     private String        activeStatusReason;
+    private Boolean       changed;
     private String        createdBy;
     private Date          creationTime;
     private JsonNode      extendedAttributes;
@@ -41,6 +43,8 @@ public class CkTargets extends CommonDataModel implements Serializable {
     private JSON          productValue;
     private LocalDateTime startDate;
     private Double        target;
+    private Double        targetcondition;
+    private String        targetconditionunit;
     private String        targetId;
     private String        targetName;
     private String        targetTable;
@@ -48,11 +52,8 @@ public class CkTargets extends CommonDataModel implements Serializable {
     private String        unit;
     private String        userType;
     private JSON          userValue;
-    private Byte          changed;
-    private Double        targetcondition;
-    private String        targetconditionunit;
-    private String        outletValueStr;
     private String        userValueStr;
+    private String        outletValueStr;
 
     public CkTargets() {}
 
@@ -60,6 +61,7 @@ public class CkTargets extends CommonDataModel implements Serializable {
         this.id = value.id;
         this.activeStatus = value.activeStatus;
         this.activeStatusReason = value.activeStatusReason;
+        this.changed = value.changed;
         this.createdBy = value.createdBy;
         this.creationTime = value.creationTime;
         this.extendedAttributes = value.extendedAttributes;
@@ -76,6 +78,8 @@ public class CkTargets extends CommonDataModel implements Serializable {
         this.productValue = value.productValue;
         this.startDate = value.startDate;
         this.target = value.target;
+        this.targetcondition = value.targetcondition;
+        this.targetconditionunit = value.targetconditionunit;
         this.targetId = value.targetId;
         this.targetName = value.targetName;
         this.targetTable = value.targetTable;
@@ -83,17 +87,15 @@ public class CkTargets extends CommonDataModel implements Serializable {
         this.unit = value.unit;
         this.userType = value.userType;
         this.userValue = value.userValue;
-        this.changed = value.changed;
-        this.targetcondition = value.targetcondition;
-        this.targetconditionunit = value.targetconditionunit;
-        this.outletValueStr = value.outletValueStr;
         this.userValueStr = value.userValueStr;
+        this.outletValueStr = value.outletValueStr;
     }
 
     public CkTargets(
         String        id,
         ActiveStatus  activeStatus,
         String        activeStatusReason,
+        Boolean       changed,
         String        createdBy,
         Date          creationTime,
         JsonNode      extendedAttributes,
@@ -110,6 +112,8 @@ public class CkTargets extends CommonDataModel implements Serializable {
         JSON          productValue,
         LocalDateTime startDate,
         Double        target,
+        Double        targetcondition,
+        String        targetconditionunit,
         String        targetId,
         String        targetName,
         String        targetTable,
@@ -117,15 +121,13 @@ public class CkTargets extends CommonDataModel implements Serializable {
         String        unit,
         String        userType,
         JSON          userValue,
-        Byte          changed,
-        Double        targetcondition,
-        String        targetconditionunit,
-        String        outletValueStr,
-        String        userValueStr
+        String        userValueStr,
+        String        outletValueStr
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
         this.activeStatusReason = activeStatusReason;
+        this.changed = changed;
         this.createdBy = createdBy;
         this.creationTime = creationTime;
         this.extendedAttributes = extendedAttributes;
@@ -142,6 +144,8 @@ public class CkTargets extends CommonDataModel implements Serializable {
         this.productValue = productValue;
         this.startDate = startDate;
         this.target = target;
+        this.targetcondition = targetcondition;
+        this.targetconditionunit = targetconditionunit;
         this.targetId = targetId;
         this.targetName = targetName;
         this.targetTable = targetTable;
@@ -149,11 +153,8 @@ public class CkTargets extends CommonDataModel implements Serializable {
         this.unit = unit;
         this.userType = userType;
         this.userValue = userValue;
-        this.changed = changed;
-        this.targetcondition = targetcondition;
-        this.targetconditionunit = targetconditionunit;
-        this.outletValueStr = outletValueStr;
         this.userValueStr = userValueStr;
+        this.outletValueStr = outletValueStr;
     }
 
     /**
@@ -196,6 +197,20 @@ public class CkTargets extends CommonDataModel implements Serializable {
      */
     public void setActiveStatusReason(String activeStatusReason) {
         this.activeStatusReason = activeStatusReason;
+    }
+
+    /**
+     * Getter for <code>ck_targets.changed</code>.
+     */
+    public Boolean getChanged() {
+        return this.changed;
+    }
+
+    /**
+     * Setter for <code>ck_targets.changed</code>.
+     */
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     /**
@@ -423,6 +438,34 @@ public class CkTargets extends CommonDataModel implements Serializable {
     }
 
     /**
+     * Getter for <code>ck_targets.targetcondition</code>.
+     */
+    public Double getTargetcondition() {
+        return this.targetcondition;
+    }
+
+    /**
+     * Setter for <code>ck_targets.targetcondition</code>.
+     */
+    public void setTargetcondition(Double targetcondition) {
+        this.targetcondition = targetcondition;
+    }
+
+    /**
+     * Getter for <code>ck_targets.targetconditionunit</code>.
+     */
+    public String getTargetconditionunit() {
+        return this.targetconditionunit;
+    }
+
+    /**
+     * Setter for <code>ck_targets.targetconditionunit</code>.
+     */
+    public void setTargetconditionunit(String targetconditionunit) {
+        this.targetconditionunit = targetconditionunit;
+    }
+
+    /**
      * Getter for <code>ck_targets.target_id</code>.
      */
     public String getTargetId() {
@@ -521,45 +564,17 @@ public class CkTargets extends CommonDataModel implements Serializable {
     }
 
     /**
-     * Getter for <code>ck_targets.changed</code>.
+     * Getter for <code>ck_targets.user_value_str</code>.
      */
-    public Byte getChanged() {
-        return this.changed;
+    public String getUserValueStr() {
+        return this.userValueStr;
     }
 
     /**
-     * Setter for <code>ck_targets.changed</code>.
+     * Setter for <code>ck_targets.user_value_str</code>.
      */
-    public void setChanged(Byte changed) {
-        this.changed = changed;
-    }
-
-    /**
-     * Getter for <code>ck_targets.targetcondition</code>.
-     */
-    public Double getTargetcondition() {
-        return this.targetcondition;
-    }
-
-    /**
-     * Setter for <code>ck_targets.targetcondition</code>.
-     */
-    public void setTargetcondition(Double targetcondition) {
-        this.targetcondition = targetcondition;
-    }
-
-    /**
-     * Getter for <code>ck_targets.targetconditionunit</code>.
-     */
-    public String getTargetconditionunit() {
-        return this.targetconditionunit;
-    }
-
-    /**
-     * Setter for <code>ck_targets.targetconditionunit</code>.
-     */
-    public void setTargetconditionunit(String targetconditionunit) {
-        this.targetconditionunit = targetconditionunit;
+    public void setUserValueStr(String userValueStr) {
+        this.userValueStr = userValueStr;
     }
 
     /**
@@ -576,20 +591,6 @@ public class CkTargets extends CommonDataModel implements Serializable {
         this.outletValueStr = outletValueStr;
     }
 
-    /**
-     * Getter for <code>ck_targets.user_value_str</code>.
-     */
-    public String getUserValueStr() {
-        return this.userValueStr;
-    }
-
-    /**
-     * Setter for <code>ck_targets.user_value_str</code>.
-     */
-    public void setUserValueStr(String userValueStr) {
-        this.userValueStr = userValueStr;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkTargets (");
@@ -597,6 +598,7 @@ public class CkTargets extends CommonDataModel implements Serializable {
         sb.append(id);
         sb.append(", ").append(activeStatus);
         sb.append(", ").append(activeStatusReason);
+        sb.append(", ").append(changed);
         sb.append(", ").append(createdBy);
         sb.append(", ").append(creationTime);
         sb.append(", ").append(extendedAttributes);
@@ -613,6 +615,8 @@ public class CkTargets extends CommonDataModel implements Serializable {
         sb.append(", ").append(productValue);
         sb.append(", ").append(startDate);
         sb.append(", ").append(target);
+        sb.append(", ").append(targetcondition);
+        sb.append(", ").append(targetconditionunit);
         sb.append(", ").append(targetId);
         sb.append(", ").append(targetName);
         sb.append(", ").append(targetTable);
@@ -620,11 +624,8 @@ public class CkTargets extends CommonDataModel implements Serializable {
         sb.append(", ").append(unit);
         sb.append(", ").append(userType);
         sb.append(", ").append(userValue);
-        sb.append(", ").append(changed);
-        sb.append(", ").append(targetcondition);
-        sb.append(", ").append(targetconditionunit);
-        sb.append(", ").append(outletValueStr);
         sb.append(", ").append(userValueStr);
+        sb.append(", ").append(outletValueStr);
 
         sb.append(")");
         return sb.toString();
