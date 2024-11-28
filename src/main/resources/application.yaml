@@ -1,21 +1,21 @@
 config:
   s3:
-    uri: "s3://dataplatform-flink/properties/{lob}/application.yaml"
+    uri: "s3://salescode-dev-uat/dataintegration/{lob}/application.yaml"
     region: ap-south-1
 
 logging:
-  system: none
+  level:
+    org.apache.kafka.clients: DEBUG
 
 spring:
   application:
     name: disflink
   profiles:
     active: local
-
 app:
-  lob: test-lob
+  lob: ckuatunnati
   bundle:
-    uri: "https://dataplatform-flink.s3.ap-south-1.amazonaws.com/properties/{lob}/dis-bundle.jar"
+    uri: "https://salescode-dev-uat.s3.ap-south-1.amazonaws.com/dataintegration/{lob}/dis-bundle.jar"
   kafka:
     bootstrap-servers: "164.52.202.184:9092"
     # bootstrap-servers: "localhost:9092"
@@ -26,9 +26,9 @@ app:
       main-topic-name: flink-test
       dlq-topic-name: flink-test-dlt
       db:
-        url: "jdbc:mysql://mysql:3306/yourdatabase"
-        user: "youruser"
-        password: "youruserpassword"
+        url: "jdbc:mysql://dev-rds.ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/ckunnatiuat"
+        user: "ckuatadmin"
+        password: "Uat12Oct#"
     from-s3-to-kafka:
       bucket-name: dataplatform-flink
       file-type: csv  # can be csv or excel
