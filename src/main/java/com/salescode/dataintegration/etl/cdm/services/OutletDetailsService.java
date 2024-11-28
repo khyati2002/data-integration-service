@@ -23,6 +23,8 @@ import com.salescode.jooq.generated.tables.pojos.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +72,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     @Autowired
     public OutletDetailsService(DSLContext dsl,HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter,
                                 UserService userService) {
-
+        super(dsl);
         this.dsl = dsl;
         this.hierarchyMetaDataToStringConverter = hierarchyMetaDataToStringConverter;
         this.userService = userService;
@@ -189,6 +191,11 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                    .set(record)
                    .execute();
         }
+
+    @Override
+    protected Table<? extends Record> getTable() {
+        return CK_OUTLET_DETAILS;
+    }
 
     @Override
     public CkOutletDetails save(CkOutletDetails cdmObject) {

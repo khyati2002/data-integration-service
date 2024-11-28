@@ -43,6 +43,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 //import org.apache.http.ssl.SSLContextBuilder;
 //import org.hibernate.transform.Transformers;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.salescode.jooq.generated.Tables.CK_LOCATION;
 
 @Service
 public class LocationService extends AbstractCDMService<CkLocation> {
@@ -154,7 +158,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 	) {
 //		super(locationRepository);
 //		this.locationRepository = locationRepository;
-		super();
+		super(dsl);
 		this.metadataservice = metadataservice;
 		this.dsl = dsl;
 //		this.distributedCache = distributedCache;
@@ -604,6 +608,11 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	protected Table<? extends Record> getTable() {
+		return CK_LOCATION;
 	}
 //
 //	public Location findByOutletCode(String outletCode) {

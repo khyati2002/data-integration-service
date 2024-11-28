@@ -20,6 +20,8 @@ import com.salescode.jooq.CkUser;
 import com.salescode.jooq.generated.tables.pojos.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +33,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-;
+import static com.salescode.jooq.generated.Tables.CK_USER;
 import static com.salescode.jooq.generated.Tables.CK_USER_PARENT;
 import static com.salescode.jooq.generated.tables.CkHierarchyMetadata.CK_HIERARCHY_METADATA;
 
@@ -142,6 +144,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 //	}
 
 	public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice, DSLContext dsl){
+		super(dsl);
 		this.hierarchyMetaDataService = hierarchyMetaDataService;
 		this.roleService = roleService;
 		this.userparentservice = userparentservice;
@@ -685,6 +688,12 @@ public class UserService extends AbstractCDMService<CkUser> {
 
 
 	}
+
+	@Override
+	protected Table<? extends Record> getTable() {
+		return CK_USER;
+	}
+
 	@Override
 	public CkUser refresh(CkUser cdmObject) {
 		var dbRecord = CdmDiffUtil.withOldModel(() -> (CkUser)EntityUtils.getInstance().findRecords(cdmObject.getClass(), cdmObject));

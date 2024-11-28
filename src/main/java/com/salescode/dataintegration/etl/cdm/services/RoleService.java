@@ -2,11 +2,17 @@ package com.salescode.dataintegration.etl.cdm.services;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.repository.RoleRepository;
 import com.salescode.jooq.generated.tables.pojos.CkAuthRole;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
+import org.jooq.Table;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static com.salescode.jooq.generated.Tables.CK_AUTH_ROLE;
 
 @Service
 public class RoleService extends AbstractCDMService<CkAuthRole> {
@@ -15,8 +21,14 @@ public class RoleService extends AbstractCDMService<CkAuthRole> {
 
 	private final RoleRepository roleRepository;
 
-	public RoleService(RoleRepository roleRepository) {
-		this.roleRepository = roleRepository;
+	public RoleService(DSLContext context, RoleRepository repository) {
+		super(context);
+		roleRepository = repository;
+	}
+
+	@Override
+	protected Table<? extends Record> getTable() {
+		return CK_AUTH_ROLE;
 	}
 
 

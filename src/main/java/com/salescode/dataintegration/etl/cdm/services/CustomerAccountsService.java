@@ -4,12 +4,22 @@ package com.salescode.dataintegration.etl.cdm.services;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.jooq.generated.tables.pojos.CkCustomerAccount;
 
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Table;
 import org.springframework.stereotype.Service;
+
+import static com.salescode.jooq.generated.Tables.CK_CUSTOMER_ACCOUNT;
 
 @Service
 public class CustomerAccountsService extends AbstractCDMService<CkCustomerAccount> {
-    public CustomerAccountsService() {
-        super();
+    public CustomerAccountsService(DSLContext dslContext) {
+        super(dslContext);
+    }
+
+    @Override
+    protected Table<? extends Record> getTable() {
+        return CK_CUSTOMER_ACCOUNT;
     }
 
 //	private static final Logger log = LoggerFactory.getLogger(CustomerAccountsService.class);

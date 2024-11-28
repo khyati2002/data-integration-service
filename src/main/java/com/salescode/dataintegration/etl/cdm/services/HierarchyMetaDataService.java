@@ -10,6 +10,9 @@ import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.repository.HierarchyMetaDataRepository;
 import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
 import org.apache.commons.lang3.StringUtils;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+
+import static com.salescode.jooq.generated.Tables.CK_HIERARCHY_METADATA;
 
 /**
  * The class HierarchyMetaDataService.
@@ -41,7 +46,8 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
     @Autowired
 //    private DistributedCache distributedCache;
 
-    public HierarchyMetaDataService(HierarchyMetaDataRepository repository) {
+    public HierarchyMetaDataService(DSLContext dslContext, HierarchyMetaDataRepository repository) {
+        super(dslContext);
         this.hierarchyMetaDataRepository=repository;
     }
 
@@ -168,6 +174,11 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
 
     public CkHierarchyMetadata findByHierarchy(String hierarchy) {
         return hierarchyMetaDataRepository.findByHierarchy(hierarchy);
+    }
+
+    @Override
+    protected Table<? extends Record> getTable() {
+        return CK_HIERARCHY_METADATA;
     }
 
 //    @Transactional(propagation= Propagation.REQUIRED)

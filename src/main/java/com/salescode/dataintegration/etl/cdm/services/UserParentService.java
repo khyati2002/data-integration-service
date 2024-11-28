@@ -11,6 +11,9 @@ import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.repository.UserParentRepository;
 import com.salescode.jooq.generated.tables.pojos.CkUserParent;
 import org.apache.commons.collections.CollectionUtils;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Table;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static com.salescode.jooq.generated.Tables.CK_USER_PARENT;
 
 /**
  * The Class UserParentService.
@@ -33,7 +38,8 @@ public class UserParentService extends AbstractCDMService<CkUserParent> {
 	 *
 	 * @param userParentRepository the user parent repository
 	 */
-	public UserParentService(UserParentRepository userParentRepository) {
+	public UserParentService(DSLContext dslContext, UserParentRepository userParentRepository) {
+		super(dslContext);
 		this.userParentRepository = (UserParentRepository) userParentRepository;
 	}
 
@@ -83,4 +89,8 @@ public class UserParentService extends AbstractCDMService<CkUserParent> {
 		return userParentRepository.findByUserLoginId(loginId);
 	}
 
+	@Override
+	protected Table<? extends Record> getTable() {
+		return CK_USER_PARENT;
+	}
 }

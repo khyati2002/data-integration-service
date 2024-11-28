@@ -19,10 +19,15 @@ package com.salescode.dataintegration.etl.cdm.services;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.repository.MetaDataRepository;
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Table;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Set;
+
+import static com.salescode.jooq.generated.Tables.CK_METADATA;
 
 @Service
 public class MetaDataService extends AbstractCDMService<CkMetadata> {
@@ -40,13 +45,14 @@ public class MetaDataService extends AbstractCDMService<CkMetadata> {
 
 	private static final Map<String,String> playgroudDomainName = Map.of("clientconfig", "playground_config");
 
-	public MetaDataService(MetaDataRepository repository
+	public MetaDataService(MetaDataRepository repository,
+DSLContext dslContext
 //            , DistributedCache distributedCache
 //            , RequestCacheManager requestCache
     )
     {
 //		super(repository);
-        super();
+        super(dslContext);
         this.metaDataRepository = repository;
 //		this.distributedCache = distributedCache;
 //		this.requestCache= requestCache;
@@ -90,6 +96,11 @@ public class MetaDataService extends AbstractCDMService<CkMetadata> {
 		//return AppCacheManager.getInstance().withCache(SecurityContextUtils.getLob()+":"+domainName,domainType,(s)->fetchByValueFromDB(domainName,domainType));
         return fetchByValueFromDB(domainName,domainType);
 		//return fetchAll().stream().filter(f->f.getDomainName().equalsIgnoreCase(domainName) && f.getDomainType().equalsIgnoreCase(domainType)).findFirst().orElse(null);
+	}
+
+	@Override
+	protected Table<? extends Record> getTable() {
+		return CK_METADATA;
 	}
 //
 //	public void onCacheChange(CkMetadata metaData) {

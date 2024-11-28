@@ -8,11 +8,16 @@ package com.salescode.dataintegration.etl.cdm.services;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.repository.DivisionRepository;
 import com.salescode.jooq.generated.tables.pojos.CkDivision;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static com.salescode.jooq.generated.Tables.CK_DIVISION;
 
 /**
  * The class DivisionService.
@@ -46,11 +51,11 @@ public class DivisionService extends AbstractCDMService<CkDivision> {
 	 *
 	 * @param divisionRepository the repository
 	 */
-	public DivisionService(DivisionRepository divisionRepository
-			//, DistributedCache distributedCache
+	public DivisionService(DSLContext dslContext, DivisionRepository divisionRepository
+						   //, DistributedCache distributedCache
 						   ) {
 
-		super();
+		super(dslContext);
 		this.divisionRepository = divisionRepository;
 	//	this.distributedCache = distributedCache;
 	}
@@ -195,6 +200,11 @@ public class DivisionService extends AbstractCDMService<CkDivision> {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	protected Table<? extends Record> getTable() {
+		return CK_DIVISION;
 	}
 
 //	/**
