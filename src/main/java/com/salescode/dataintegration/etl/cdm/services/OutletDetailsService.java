@@ -238,7 +238,6 @@ public CkLocation getLocation(CkOutletDetails outlet) {
         if(record.get(CK_OUTLET_DETAILS.ID) == null) record.set(CK_OUTLET_DETAILS.ID, tempoutlet.getOutletcode());
         if(record.get(CK_OUTLET_DETAILS.VERSION) == null) record.set(CK_OUTLET_DETAILS.VERSION, 1);
         if(record.get(CK_OUTLET_DETAILS.MAPPED) == null) record.set(CK_OUTLET_DETAILS.MAPPED, true);
-        if(record.get(CK_OUTLET_DETAILS.DTYPE) == null) record.set(CK_OUTLET_DETAILS.DTYPE, "1");
         dsl.insertInto(CK_OUTLET_DETAILS)
                 .set(record)
                 .onDuplicateKeyUpdate()
