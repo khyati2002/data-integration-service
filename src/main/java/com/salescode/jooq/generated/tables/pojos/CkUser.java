@@ -7,9 +7,11 @@ package com.salescode.jooq.generated.tables.pojos;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.jooq.CkSupplierMetadata;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -62,6 +64,10 @@ public class CkUser extends CommonDataModel implements Serializable {
     private String       alternateId;
     private String       externalReferenceId;
     private String       reportPassword;
+    private List<CkAuthRole> roles;
+    private List<CkSupplierMetadata> supplierMetaData;
+    private List<CkHierarchyMetadata> immediateParent;
+    private Set<String> designation;
 
     public CkUser() {}
 
@@ -108,6 +114,10 @@ public class CkUser extends CommonDataModel implements Serializable {
         this.alternateId = value.alternateId;
         this.externalReferenceId = value.externalReferenceId;
         this.reportPassword = value.reportPassword;
+        this.roles = value.roles;
+        this.supplierMetaData = new ArrayList<>();
+        this.immediateParent = value.immediateParent;
+        this.designation = value.designation;
     }
 
     public CkUser(
@@ -152,7 +162,11 @@ public class CkUser extends CommonDataModel implements Serializable {
         String       normalizedHierarchy,
         String       alternateId,
         String       externalReferenceId,
-        String       reportPassword
+        String       reportPassword,
+        List<CkAuthRole> roles,
+        List<CkSupplierMetadata> supplierMetaData,
+        List<CkHierarchyMetadata> immediateParent,
+        Set<String> designation
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -196,6 +210,10 @@ public class CkUser extends CommonDataModel implements Serializable {
         this.alternateId = alternateId;
         this.externalReferenceId = externalReferenceId;
         this.reportPassword = reportPassword;
+        this.roles = roles;
+        this.supplierMetaData = supplierMetaData;
+        this.immediateParent = immediateParent;
+        this.designation = designation;
     }
 
     /**
@@ -835,5 +853,75 @@ public class CkUser extends CommonDataModel implements Serializable {
 
         sb.append(")");
         return sb.toString();
+    }
+
+
+    public List<CkAuthRole> getRoles() {
+        return this.roles;
+    }
+
+    /**
+     * Setter for <code>ck_user.report_password</code>.
+     */
+    public void setRoles(List<CkAuthRole> roles) {
+        this.roles = roles;
+    }
+
+    public List<CkSupplierMetadata> getSupplierMetaData() {
+        return this.supplierMetaData;
+    }
+
+    /**
+     * Setter for <code>ck_user.report_password</code>.
+     */
+    public void setSupplierMetaData(List<CkSupplierMetadata> supplierMetaData) {
+        this.supplierMetaData = supplierMetaData;
+    }
+
+    public List<CkHierarchyMetadata> getImmediateParent() {
+        if (this.immediateParent == null && this.hierarchy != null) {
+            List<String> parents = findParents(hierarchy);
+            List<CkHierarchyMetadata> hierarchyMetaDataList = parents.stream().map(parent -> {
+                CkHierarchyMetadata hierarchyMetaData = new CkHierarchyMetadata();
+                hierarchyMetaData.setParent(parent);
+                return hierarchyMetaData;
+            }).collect(Collectors.toList());
+            this.setImmediateParent(hierarchyMetaDataList);
+        }
+        return immediateParent;
+    }
+
+    /**
+     * @param immediateParent the immediateParent to set
+     */
+    public void setImmediateParent(List<CkHierarchyMetadata> immediateParent) {
+        this.immediateParent = immediateParent;
+    }
+
+    public static List<String> findParents(String hierarchy) {
+        return Arrays.stream(hierarchy.split(","))
+                .map(String::trim)
+                .map(com.salescode.jooq.CkUser::getImmediateParentFromHierarchy)
+                .flatMap(Optional::stream)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+    public static Optional<String> getImmediateParentFromHierarchy(String hierarchy) {
+        String[] splitHierarchy = hierarchy.split(" > ");
+        if (splitHierarchy.length > 1) {
+            return Optional.of(splitHierarchy[1].trim());
+        }
+        return Optional.empty();
+    }
+    public Set<String> getDesignation() {
+        return this.designation;
+    }
+
+    /**
+     * @param designation the designation to set
+     */
+    public void setDesignation(Set<String> designation) {
+        this.designation = (designation!=null)?designation.stream().map(String::toLowerCase)
+                .collect(Collectors.toSet()):null;
     }
 }

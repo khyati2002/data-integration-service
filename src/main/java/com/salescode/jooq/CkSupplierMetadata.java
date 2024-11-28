@@ -7,6 +7,7 @@ package com.salescode.jooq;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.jooq.generated.tables.pojos.CkUser;
 
 import java.io.Serializable;
 import java.util.Date;

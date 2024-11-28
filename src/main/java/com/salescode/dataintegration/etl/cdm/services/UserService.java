@@ -16,7 +16,6 @@ import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.repository.UserRepository;
 import com.salescode.dataintegration.etl.enums.OperationType;
 import com.salescode.jooq.CkSupplierMetadata;
-import com.salescode.jooq.CkUser;
 import com.salescode.jooq.generated.tables.pojos.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;

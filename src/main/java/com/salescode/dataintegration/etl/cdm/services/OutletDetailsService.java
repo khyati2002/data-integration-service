@@ -14,7 +14,6 @@ import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.enums.ApplicationCategory;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
-import com.salescode.jooq.CkUser;
 import com.salescode.jooq.generated.tables.pojos.CkLocation;
 import com.salescode.jooq.generated.tables.pojos.*;
 
