@@ -2,7 +2,7 @@ package com.salescode.dataintegration.etl.impl;
 
 import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
-import com.salescode.jooq.CkOutletDetails;
+import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@ package com.salescode.dataintegration.etl.cdm.services;
 import com.salescode.jooq.generated.tables.pojos.CkChannelHierarchyMetadata;
 import com.salescode.jooq.generated.tables.pojos.CkDivision;
 import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
-import com.salescode.jooq.CkOutletDetails;
+import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
