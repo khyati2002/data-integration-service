@@ -547,18 +547,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                 .fetchOneInto(String.class);
    }
 
-   public String findParent(String parent){
-        String hierarchy = dsl.select(CK_USER.HIERARCHY)
-                .from(CK_USER)
-                .where(CK_USER.LOGINID.eq(parent))
-                .fetchOneInto(String.class);
 
-        String[] parentList = hierarchy.split(">");
-        if(parentList.length >= 1){
-            return parentList[1].trim();
-        }
-        return null;
-   }
 
     private Set<String> populateUserParentHierarchy(CkUser user){
         Set<String> hierarchyStr=new HashSet<>();
@@ -566,7 +555,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
         if (ObjectUtils.isNotEmpty(hierarchy)) {
             Set<String> uniqueParents = user.getImmediateParent().stream().map(CkHierarchyMetadata::getParent).collect(Collectors.toSet());
             uniqueParents.forEach(parent -> {
-                List<CkHierarchyMetadata> hierarchyMetaDataList = (List) hierarchyMetaDataService.findByImmediateParent(findParent(parent));
+                List<CkHierarchyMetadata> hierarchyMetaDataList = (List) hierarchyMetaDataService.findByImmediateParent(parent);
                 if (hierarchyMetaDataList.isEmpty()) {
                     hierarchyStr.add(user.getLoginid() + " > " + parent + " > "+ getAdminLoginId());
                 } else {

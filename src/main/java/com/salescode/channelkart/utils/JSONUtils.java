@@ -120,4 +120,10 @@ public class JSONUtils {
     public static Map<String, Object> toMap(Object input) {
         return getObjectMapper().convertValue(input, OBJECT_VALUE_MAP_REFERENCE);
     }
+    public static JsonNode toJsonNode(Object item) {
+        return get().convertValue(item, JsonNode.class);
+    }
+    public static boolean isNull(JsonNode node) {
+        return node == null || node.isNull();
+    }
 }

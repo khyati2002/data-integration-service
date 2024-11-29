@@ -48,4 +48,11 @@ public class StringUtils {
     public static boolean isNotBlank(String input) {
         return input != null && !input.isBlank()	;
     }
+
+    public static boolean isEqual(String firstValue, String secondValue, boolean ignoreCase) {
+        if(ignoreCase) {
+            return firstValue.equalsIgnoreCase(secondValue);
+        }
+        return firstValue.equals(secondValue);
+    }
 }

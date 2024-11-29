@@ -1,64 +1,53 @@
-///*
-// * Copyright (c) 2021. All rights reserved.
-// * APPLICATE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
-// *
-// */
-//package com.salescode.dataintegration.etl.cdm.services;
-//
-//import com.applicate.services.channelkart.cache.AppCacheEvent;
-//import com.applicate.services.channelkart.cache.AppCacheManager;
-//import com.applicate.services.channelkart.cache.CacheOperationsConstant;
-//import com.applicate.services.channelkart.component.model.SequenceGenerator;
-//import com.applicate.services.channelkart.exceptions.CustomRuntimeException;
-//import com.applicate.services.channelkart.exceptions.ResourceNotFoundException;
-//import com.applicate.services.channelkart.exceptions.checked.ConfigurationException;
-//import com.applicate.services.channelkart.models.CustomerAccountInfo;
-//import com.applicate.services.channelkart.models.MetaData;
-//import com.applicate.services.channelkart.models.SequenceInfo;
-//import com.applicate.services.channelkart.repository.SequenceInfoRepository;
-//import com.applicate.services.channelkart.security.SecurityContextUtils;
-//import com.applicate.services.channelkart.templates.TemplateEngine;
-//import com.applicate.services.channelkart.utils.GlobalLock;
-//import com.applicate.services.channelkart.utils.JSONUtils;
-//import com.applicate.services.channelkart.utils.NullUtils;
-//import com.fasterxml.jackson.core.JsonProcessingException;
-//import com.fasterxml.jackson.core.type.TypeReference;
-//import com.fasterxml.jackson.databind.JsonNode;
-//import com.fasterxml.jackson.databind.node.ArrayNode;
-//import com.fasterxml.jackson.databind.node.ObjectNode;
-//import com.salescode.channelkart.services.SpringContext;
-//import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
-//import com.salescode.jooq.generated.tables.pojos.CkSequenceInfo;
-//import org.apache.commons.lang3.ObjectUtils;
-//import org.apache.commons.lang3.StringUtils;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-//import org.springframework.context.event.EventListener;
-//import org.springframework.scheduling.annotation.Async;
-//import org.springframework.stereotype.Service;
-//import org.springframework.util.Assert;
-//
-//import java.time.LocalDate;
-//import java.time.ZoneId;
-//import java.time.format.DateTimeFormatter;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.Optional;
-//import java.util.concurrent.atomic.AtomicInteger;
-//import java.util.stream.Collectors;
-//
-///**
-// * The class SequenceInfoService
-// *
-// * A generic approach to maintain sequence information in a single entity so every entity doesn't have to maintain its own
-// * generator.
-// *
-// * Use to get updated sequence. As this method runs in Transaction Mandatory mode so make sure
-// * caller should also be running in Transactional mode, this helps this service to rollback any unwanted save & to maintain its sequence
-// * in case of any exception.
-// *
-// * To enable this service we need first required to register in metadata. Please follow below example or {@link SequenceInfo}
+/*
+ * Copyright (c) 2021. All rights reserved.
+ * APPLICATE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ */
+package com.salescode.dataintegration.etl.cdm.services;
+
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.salescode.channelkart.component.model.SequenceGenerator;
+import com.salescode.channelkart.services.SpringContext;
+import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
+import com.salescode.dataintegration.etl.cdm.repository.SequenceInfoRepository;
+import com.salescode.jooq.generated.tables.pojos.CkMetadata;
+import com.salescode.jooq.generated.tables.pojos.CkSequenceInfo;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import com.salescode.channelkart.utils.JSONUtils;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+/**
+ * The class SequenceInfoService
+ *
+ * A generic approach to maintain sequence information in a single entity so every entity doesn't have to maintain its own
+ * generator.
+ *
+ * Use to get updated sequence. As this method runs in Transaction Mandatory mode so make sure
+ * caller should also be running in Transactional mode, this helps this service to rollback any unwanted save & to maintain its sequence
+ * in case of any exception.
+ *
+ * To enable this service we need first required to register in metadata. Please follow below example or {@link SequenceInfo}
 // *
 // * {@code
 // *   Example:
@@ -72,50 +61,49 @@
 // * @author  Manish Srivastava
 // * @since   Feb 2021
 // */
-//@Service
-//public class SequenceInfoService extends AbstractCDMService<CkSequenceInfo> {
-//
-//	/** The Constant logger. */
-//	private static final Logger logger = LoggerFactory.getLogger(SequenceInfoService.class);
-//
-//    /** The Constant DOMAIN_NAME. */
-//    private static final String DOMAIN_NAME = "sequence";
-//
-//    /** The Constant DOMAIN_TYPE. */
-//    private static final String DOMAIN_TYPE = "generator";
-//
-//    /** The Constant CONFIGURATION_KEY. */
-//    private static final String CONFIGURATION_KEY = "configurations";
-//
-//	/** The metadata service. */
-//	private final MetaDataService metadataService;
-//
-//	/** The Constant DEFAULT_TYPE. */
-//	private static final String TYPE= "none";
-//
-//	private static final String METADATA_DOMAIN_NAME= "sequenceGenerator";
-//
-//	private static final String SEQUENCE_LENGTH = "sequenceLength";
-//
-//	private final SequenceInfoRepository sequenceInfoRepository;
-//
-//	private static final int DEFAULT_VALUE_FOR_SEQUENCE_LENGTH = 7;
-//
-//	private static final int DEFAULT_VALUE_FOR_SEQUENCE_START_VALUE = 1;
-//
-//
-//	/**
-//	 * Instantiates a new sequence info service.
-//	 *
-//	 * @param sequenceInfoRepository the repository
-//	 * @param metadataService the metadata service
-//	 */
-//	public SequenceInfoService(SequenceInfoRepository sequenceInfoRepository, MetaDataService metadataService) {
-//		super(sequenceInfoRepository);
-//		this.sequenceInfoRepository = sequenceInfoRepository;
-//		this.metadataService= metadataService;
-//	}
-//
+@Service
+public class SequenceInfoService extends AbstractCDMService<CkSequenceInfo> {
+
+	/** The Constant logger. */
+	private static final Logger logger = LoggerFactory.getLogger(SequenceInfoService.class);
+
+    /** The Constant DOMAIN_NAME. */
+    private static final String DOMAIN_NAME = "sequence";
+
+    /** The Constant DOMAIN_TYPE. */
+    private static final String DOMAIN_TYPE = "generator";
+
+    /** The Constant CONFIGURATION_KEY. */
+    private static final String CONFIGURATION_KEY = "configurations";
+
+	/** The metadata service. */
+	private final MetaDataService metadataService;
+
+	/** The Constant DEFAULT_TYPE. */
+	private static final String TYPE= "none";
+
+	private static final String METADATA_DOMAIN_NAME= "sequenceGenerator";
+
+	private static final String SEQUENCE_LENGTH = "sequenceLength";
+
+	private final SequenceInfoRepository sequenceInfoRepository;
+
+	private static final int DEFAULT_VALUE_FOR_SEQUENCE_LENGTH = 7;
+
+	private static final int DEFAULT_VALUE_FOR_SEQUENCE_START_VALUE = 1;
+
+
+	/**
+	 * Instantiates a new sequence info service.
+	 *
+	 * @param sequenceInfoRepository the repository
+	 * @param metadataService the metadata service
+	 */
+	public SequenceInfoService(MetaDataService metadataService,SequenceInfoRepository sequenceInfoRepository) {
+		this.sequenceInfoRepository = sequenceInfoRepository;
+		this.metadataService= metadataService;
+	}
+
 //	/**
 //	 * Gets the configurations.
 //	 *
@@ -148,25 +136,25 @@
 //	 *
 //	 * @return the configurations
 //	 */
-//	public JsonNode getMetaConfigurations(String domainName, String domainType){
-//		MetaData sequenceGenerator = metadataService.fetchByValue(domainName, domainType);
-//		if(ObjectUtils.isEmpty(sequenceGenerator)){
-//			if(logger.isDebugEnabled()) {
-//				logger.info("sequenceGenerator configuration not found for domainName: {}, domainType: {}", domainName, domainType);
-//			}
-//			return null;
-//		}
-//		if(sequenceGenerator.getDomainValues().isEmpty() || !sequenceGenerator.getDomainValues().get(0).has("fields")){
-//			logger.info("Configuration not found for sequenceGenerator");
-//			return null;
-//		}
-//		JsonNode fields = JSONUtils.toJsonNode(sequenceGenerator.getDomainValues().get(0).get("fields"));
-//		if(JSONUtils.isNull(fields)){
-//			logger.info("Key : \"field\" not found in configuration");
-//			return null;
-//		}
-//		return fields;
-//	}
+	public JsonNode getMetaConfigurations(String domainName, String domainType){
+		CkMetadata sequenceGenerator = metadataService.fetchByValue(domainName, domainType);
+		if(ObjectUtils.isEmpty(sequenceGenerator)){
+			if(logger.isDebugEnabled()) {
+				logger.info("sequenceGenerator configuration not found for domainName: {}, domainType: {}", domainName, domainType);
+			}
+			return null;
+		}
+		if(sequenceGenerator.getDomainValues().isEmpty() || !sequenceGenerator.getDomainValues().get(0).has("fields")){
+			logger.info("Configuration not found for sequenceGenerator");
+			return null;
+		}
+		JsonNode fields = JSONUtils.toJsonNode(sequenceGenerator.getDomainValues().get(0).get("fields"));
+		if(JSONUtils.isNull(fields)){
+			logger.info("Key : \"field\" not found in configuration");
+			return null;
+		}
+		return fields;
+	}
 //
 //	/**
 //	 * Gets the configuration.
@@ -245,25 +233,25 @@
 //	 * @param fieldName the field name
 //	 * @return true, if successful
 //	 */
-//	public boolean shouldEnableSequenceGenerator(String entityName, String fieldName, String data) {
-//		Assert.hasLength(fieldName, "Illegal fieldName passed in method argument for  "+fieldName);
-//		Assert.notNull(entityName,"Illegal entity name passed in method : "+entityName);
-//		try{
-//			JsonNode fields = getMetaConfigurations(METADATA_DOMAIN_NAME, entityName);
-//			if(JSONUtils.isNull(fields)){
-//				logger.info("No configuration found for field {}",entityName);
-//				return false;
-//			}
-//			for (JsonNode field : fields) {
-//				if (com.applicate.services.channelkart.utils.StringUtils.isEqual(String.valueOf(field.get("fieldName").textValue()), fieldName, true)) {
-//					return SequenceGenerator.shouldModify(data);
-//				}
-//			}
-//		} catch(Exception e1) {
-//			logger.error("Exception arised while checking sequence generator's method shouldEnabled. Reason : {}", e1.getMessage(),e1);
-//		}
-//		return false;
-//	}
+	public boolean shouldEnableSequenceGenerator(String entityName, String fieldName, String data) {
+		Assert.hasLength(fieldName, "Illegal fieldName passed in method argument for  "+fieldName);
+		Assert.notNull(entityName,"Illegal entity name passed in method : "+entityName);
+		try{
+			JsonNode fields = getMetaConfigurations(METADATA_DOMAIN_NAME, entityName);
+			if(JSONUtils.isNull(fields)){
+				logger.info("No configuration found for field {}",entityName);
+				return false;
+			}
+			for (JsonNode field : fields) {
+				if (com.salescode.channelkart.utils.StringUtils.isEqual(String.valueOf(field.get("fieldName").textValue()), fieldName, true)) {
+					return SequenceGenerator.shouldModify(data);
+				}
+			}
+		} catch(Exception e1) {
+			logger.error("Exception arised while checking sequence generator's method shouldEnabled. Reason : {}", e1.getMessage(),e1);
+		}
+		return false;
+	}
 //
 //	/**
 //	 * Checks if the 'data' of 'field' matches sequence generator pattern or not.
@@ -527,5 +515,5 @@
 //	public void createSequenceProcedure(String sequenceName, long startVal) {
 //		sequenceInfoRepository.createSequenceProcedure(sequenceName, startVal);
 //	}
-//
-//}
+
+}
