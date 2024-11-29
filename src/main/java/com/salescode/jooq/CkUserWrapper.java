@@ -1197,7 +1197,7 @@ public class CkUserWrapper  {
             List<String> parents = findParents(hierarchy);
             List<CkHierarchyMetadata> hierarchyMetaDataList = parents.stream().map(parent -> {
                 CkHierarchyMetadata hierarchyMetaData = new CkHierarchyMetadata();
-                hierarchyMetaData.setImmediateParent(parent);
+                hierarchyMetaData.setParent(parent);
                 return hierarchyMetaData;
             }).collect(Collectors.toList());
             this.setImmediateParent(hierarchyMetaDataList);

@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Geometry;
 import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
@@ -239,7 +238,7 @@ public class CkOutletDetails extends TableImpl<Record> {
     /**
      * The column <code>ck_outlet_details.coordinate</code>.
      */
-    public final TableField<Record, Geometry> COORDINATE = createField(DSL.name("coordinate"), SQLDataType.GEOMETRY, this, "");
+    public final TableField<Record, String> COORDINATE = createField(DSL.name("coordinate"), SQLDataType.VARCHAR, this, "");
 
     /**
      * The column <code>ck_outlet_details.doo</code>.

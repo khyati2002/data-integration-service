@@ -242,7 +242,9 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                 .set(record)
                 .execute();
 
-        saveOutletHierarchyMetadata(tempoutlet);
+        if(cdmObject.getUserName()!=null && cdmObject.getUserName().getImmediateParent()!=null && cdmObject.getUserName().getImmediateParent().size() > 0 ) {
+            saveOutletHierarchyMetadata(tempoutlet);
+        }
         CkOutletDetails saved = super.save(tempoutlet);
         String logMessage = String.format(
                 "OutletDetails is updated for id '%s', outletcode '%s', last updated on '%s', modified by '%s'",
@@ -411,7 +413,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                         : parent.getHierarchy()));
                 CkLocation location = getLocationHierarchy(user);
                 hm.setLocationHierarchy((location == null) ? null : location.getLocationHierarchy());
-                hm.setImmediateParent(user.getLoginid());
+                hm.setParent(user.getLoginid());
                 return hm;
             }).collect(Collectors.toList());
             // If outlet defines its own immediate parent then it should not override by
@@ -598,7 +600,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                     List<CkHierarchyMetadata> lastParent = (List<CkHierarchyMetadata>) hierarchyMetaDataService.findByImmediateParent(loginId);
                     if (lastParent.isEmpty()) {
                         CkHierarchyMetadata hmd = new CkHierarchyMetadata();
-                        hmd.setImmediateParent(loginId);
+                        hmd.setParent(loginId);
                        // hmd.setHierarchy(loginId + " > " + getCustomerAccountsService().getAdminLoginId());
                         setHierarchyElement(hmd, hierarchyusers, hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
                     } else {

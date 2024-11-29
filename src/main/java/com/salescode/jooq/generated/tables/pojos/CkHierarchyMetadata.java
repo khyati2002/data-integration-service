@@ -336,11 +336,6 @@ public class CkHierarchyMetadata extends CommonDataModel implements Serializable
         this.changed = changed;
     }
 
-    public void setImmediateParent(String parent) {
-
-        setParent(parent);
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkHierarchyMetadata (");

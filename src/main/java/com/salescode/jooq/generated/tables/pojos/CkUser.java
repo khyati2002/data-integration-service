@@ -854,8 +854,6 @@ public class CkUser extends CommonDataModel implements Serializable {
         sb.append(")");
         return sb.toString();
     }
-
-
     public List<CkAuthRole> getRoles() {
         return this.roles;
     }
