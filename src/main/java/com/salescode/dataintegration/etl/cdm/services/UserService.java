@@ -6,6 +6,7 @@
 package com.salescode.dataintegration.etl.cdm.services;
 
 
+import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.RoleName;
 import com.salescode.channelkart.services.SpringContext;
@@ -251,18 +252,18 @@ public class UserService extends AbstractCDMService<CkUser> {
 	}
 
    public void saveUserHierarchyMetadata(CkUser user){
-		List<CkHierarchyMetadata> hierarchy = user.getImmediateParent();
-		var record = dsl.newRecord(CK_HIERARCHY_METADATA,hierarchy.get(0));
-		if(hierarchy.get(0).getId()==null){
-			user.getImmediateParent().get(0).setId("hierarchy-parent");
-		}
-		if(record.get(CK_HIERARCHY_METADATA.ID)==null) record.set(CK_HIERARCHY_METADATA.ID,"hierarchy-parent");
+	   List<CkHierarchyMetadata> hierarchy = user.getImmediateParent();
+	   var record = dsl.newRecord(CK_HIERARCHY_METADATA,hierarchy.get(0));
+	   if(hierarchy.get(0).getId()==null){
+		   user.getImmediateParent().get(0).setId("hierarchy-parent");
+	   }
+	   if(record.get(CK_HIERARCHY_METADATA.ID)==null) record.set(CK_HIERARCHY_METADATA.ID,"hierarchy-parent");
 	   if(record.get(CK_HIERARCHY_METADATA.VERSION)==null) record.set(CK_HIERARCHY_METADATA.VERSION,1);
-		dsl.insertInto(CK_HIERARCHY_METADATA)
-				.set(record)
-				.onDuplicateKeyUpdate()
-				.set(record)
-				.execute();
+	   dsl.insertInto(CK_HIERARCHY_METADATA)
+			   .set(record)
+			   .onDuplicateKeyUpdate()
+			   .set(record)
+			   .execute();
    }
 
 	public CkUser save(CkUser inUser, OperationType type) {
@@ -297,7 +298,9 @@ public class UserService extends AbstractCDMService<CkUser> {
 
 		//User savedObj= TimerUtils.withTime("Time Taken to save User[["+user.getLoginId()+"]]", u-> super.save(user));
 		saveUser(user);
-		saveUserHierarchyMetadata(user);
+		if(user.getImmediateParent()!=null && user.getImmediateParent().size() > 0) {
+			saveUserHierarchyMetadata(user);
+		}
         CkUser savedObj = super.save(user);
 		if(inUser.getSupplierMetaData()!=null && !inUser.getSupplierMetaData().isEmpty()) {
 			List<CkSupplierMetadata> supplierMetaInfo= user.getSupplierMetaData();
@@ -319,7 +322,9 @@ public class UserService extends AbstractCDMService<CkUser> {
 	}
 
 	private CkUser saveUser(CkUser user){
+		user.setActiveStatus(ActiveStatus.ACTIVE);
 		var record = dsl.newRecord(com.salescode.jooq.generated.tables.CkUser.CK_USER,user);
+		if(record.get(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERIFIED)==null) record.set(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERIFIED,(byte)1);
 		if(record.get(com.salescode.jooq.generated.tables.CkUser.CK_USER.PASSWORD) == null) record.set(com.salescode.jooq.generated.tables.CkUser.CK_USER.PASSWORD,user.getId());
 		if(record.get(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERSION) == null) record.set(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERSION,1);
 		dsl.insertInto(com.salescode.jooq.generated.tables.CkUser.CK_USER)
