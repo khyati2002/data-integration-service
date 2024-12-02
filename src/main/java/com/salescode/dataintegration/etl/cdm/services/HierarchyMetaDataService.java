@@ -6,6 +6,7 @@
 package com.salescode.dataintegration.etl.cdm.services;
 
 
+import com.salescode.channelkart.utils.SecurityContextUtils;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.dataintegration.etl.cdm.repository.HierarchyMetaDataRepository;
 import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
@@ -24,7 +25,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.salescode.jooq.generated.Tables.CK_HIERARCHY_METADATA;
+//import static com.salescode.jooq.generated.Tables.CK_HIERARCHY_METADATA;
+import static com.salescode.jooq.generated.tables.CkHierarchyMetadata.CK_HIERARCHY_METADATA;
 
 /**
  * The class HierarchyMetaDataService.
@@ -105,13 +107,13 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
 //        return saved;
 //    }
 //
-//    @Override
-//    public List<CkHierarchyMetadata> batchSave(Iterable<CkHierarchyMetadata> iterObj) {
-//        return batchSave(iterObj,true);
-//    }
-//    public List<CkHierarchyMetadata> batchSave(Iterable<CkHierarchyMetadata> iterObj,boolean clearCache) {
-//        String lob= SecurityContextUtils.getLob();
-//
+
+    public List<CkHierarchyMetadata> batchSave(Iterable<CkHierarchyMetadata> iterObj) {
+        return batchSave(iterObj,true);
+    }
+    public List<CkHierarchyMetadata> batchSave(Iterable<CkHierarchyMetadata> iterObj,boolean clearCache) {
+        String lob= SecurityContextUtils.getLob();
+
 //        if(clearCache) {
 //            iterObj.forEach(element -> {
 //                if (element != null) {
@@ -122,12 +124,12 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
 //                }
 //            });
 //        }
-//        List<CkHierarchyMetadata> saved= super.batchSave(iterObj);
+        List<CkHierarchyMetadata> saved= super.batchSave(iterObj);
 //        if(saved != null && clearCache) {
 //            saved.forEach(element->clearCache(lob,element.getImmediateParent()));
 //        }
-//        return saved;
-//    }
+        return saved;
+    }
 //
 //    /**
 //     * Clear cache.

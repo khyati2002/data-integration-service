@@ -11,15 +11,16 @@ import com.salescode.dataintegration.etl.enrichment.EnrichmentOperationResult;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import com.salescode.dataintegration.etl.enrichment.service.DataEnrichmentService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.jooq.DSLContext;
-import org.jooq.Field;
-import org.jooq.Record;
-import org.jooq.Table;
+import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.IdGenerator;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -41,6 +42,8 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     }
 
     protected abstract Table<? extends Record> getTable();
+
+
 
 
     @Override
@@ -85,6 +88,68 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         dslContext.insertInto(getTable()).set(record).onDuplicateKeyUpdate().set(record).execute();
         return cdmObject;
     }
+
+    @Override
+    @Transactional
+    public List<T> batchSave(Iterable<T> iterObj) {
+        return batchSave(iterObj, null);
+    }
+
+    public List<T> batchSave(Iterable<T> iterObj, IdGenerator idGenerator) {
+        List<T> savedData = new ArrayList<>();
+        List<T> duplicateElements = new ArrayList<>();
+
+        // Pre-save enrichment
+        for (T element : iterObj) {
+            preSaveEnrichment(element);
+
+            // Handle duplication checks based on the `IdGenerator` or your logic
+            if (isDuplicate(element, idGenerator)) {
+                duplicateElements.add(element);
+            } else {
+                // Use the provided `save` method for each element
+                T savedElement = save(element);
+                savedData.add(savedElement);
+            }
+        }
+
+        // Combine duplicates and saved data
+        return ListUtils.union(duplicateElements, savedData);
+    }
+    private boolean isDuplicate(T element, IdGenerator idGenerator) {
+        // Implement your duplication check logic here
+        return false;
+    }
+
+
+    private com.applicate.services.channelkart.batch.BatchContainer<T> splitElements(Iterable<T> elements, IdGenerator generator) {
+        List<T> newRecords = new ArrayList<>();
+        List<T> existingRecords = new ArrayList<>();
+        Map<String, T> existingRecordsWithHash = new HashMap<>();
+        for (T element : elements) {
+//            fillCommonAttributes(element, generator);
+            if (element.isCreate()) {
+//                addHash(element);
+                newRecords.add(element);
+            } else {
+//                addHash(element);
+                existingRecords.add(element);
+            }
+        }
+        if (existingRecords.isEmpty()) {
+            com.applicate.services.channelkart.batch.BatchContainer<T> batchContainer = new com.applicate.services.channelkart.batch.BatchContainer<>();
+            batchContainer.setElementsToInsert(newRecords);
+            return batchContainer;
+        }
+
+
+        com.applicate.services.channelkart.batch.BatchContainer<T> batchContainer=new com.applicate.services.channelkart.batch.BatchContainer<>();
+        batchContainer.setElementsToInsert(newRecords);
+        batchContainer.setElementsToUpdate(existingRecords);
+        return batchContainer;
+
+    }
+
 
     public T fillCommonAttributes(T cdm) {
         return fillCommonAttributes(cdm, false, new HashSet<>());

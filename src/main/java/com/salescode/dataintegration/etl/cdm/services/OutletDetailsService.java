@@ -2,9 +2,12 @@ package com.salescode.dataintegration.etl.cdm.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.salescode.channelkart.utils.TimerUtils;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.util.RawValue;
 import com.salescode.channelkart.converters.HierarchyMetaDataToStringConverter;
+import com.salescode.channelkart.exceptions.CustomRuntimeException;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.RoleName;
 import com.salescode.channelkart.services.SpringContext;
@@ -41,6 +44,7 @@ import static com.salescode.jooq.generated.tables.CkOutletDetails.CK_OUTLET_DETA
 import static com.salescode.jooq.generated.tables.CkOutletDetailsHierarchymetadata.CK_OUTLET_DETAILS_HIERARCHYMETADATA;
 import static com.salescode.jooq.generated.tables.CkUser.CK_USER;
 import static com.salescode.jooq.generated.tables.CkUserRoles.CK_USER_ROLES;
+
 import static org.jooq.impl.DSL.table;
 
 
@@ -49,6 +53,8 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 
     public static final String RETAILER = "retailer";
     private static final String WHOLESALER = "wholesaler";
+    private static final String DEFAULT_PASSWORD_DOMAIN_NAME="password";
+    private static final String DEFAULT_PASSWORD_DOMAIN_TYPE="user";
 
     private final DSLContext dsl;
     @Autowired
@@ -68,14 +74,22 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     //     private CkUser retailerInfo;
     //     private UserService userService;
 
+
+    private MetaDataService metadataservice;
+    public static final String DEFAULT_PASSWORD="@1234";
+
+    public static final String DEFAULT_ENCODED_PASSWORD="$2a$10$GetnNjgilfLkIv.2R3nHMevLZfI9HGHWQ3iXw3nrCfJlrpePirkIi";
+//    private final PasswordEncoder encoder= new BCryptPasswordEncoder();
+
    private final HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter;
     @Autowired
     public OutletDetailsService(DSLContext dsl,HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter,
-                                UserService userService) {
+                                UserService userService,MetaDataService metadataservice) {
         super(dsl);
         this.dsl = dsl;
         this.hierarchyMetaDataToStringConverter = hierarchyMetaDataToStringConverter;
         this.userService = userService;
+        this.metadataservice=metadataservice;
     }
 
     private CustomerAccountsService getCustomerAccountsService() {
@@ -92,6 +106,8 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
             createRetailUser(outlet);
         }
     }
+
+
 
     public String getClientProperty(String property){
         final String[] result = {null};
@@ -219,8 +235,8 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                 populateHierarchy(hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
             }
             if (!newMetadata.isEmpty()) {
-//               List<CkHierarchyMetadata> savedData = hierarchyMetaDataService.batchSave(newMetadata);
-//                existingMetadata.addAll(savedData);
+               List<CkHierarchyMetadata> savedData = hierarchyMetaDataService.batchSave(newMetadata);
+                existingMetadata.addAll(savedData);
             }
             if (!existingMetadata.isEmpty())
                 tempoutlet.setImmediateParent(existingMetadata);
@@ -380,6 +396,8 @@ public CkLocation getLocation(CkOutletDetails outlet) {
         user.setMobile(outlet.getContactno());
         user.setName(StringUtils.isEmpty(outlet.getOutletName()) ? outlet.getOutletcode() : outlet.getOutletName());
         user.setImmediateParent(replicateRetailerOutletParent(outlet.getImmediateParent()));
+//            user.setPassword(getDefaultEncryptedUserPassword());
+        user.setPassword("@1234");
         user.setDesignation(Set.of(RETAILER));
         setDesignation(user.getDesignation(),user);
         List<CkAuthRole> roles = roleService.getRoleAsList(RoleName.ROLE_USER.name());
@@ -390,6 +408,34 @@ public CkLocation getLocation(CkOutletDetails outlet) {
         setRoles(user.getRoles(),user);
 
     }
+//    public String getDefaultEncryptedUserPassword() {
+//        try {
+//
+//            CkMetadata metadata= metadataservice.fetchByValue(DEFAULT_PASSWORD_DOMAIN_NAME, DEFAULT_PASSWORD_DOMAIN_TYPE);
+//            String rawPassword;
+//            if(metadata == null) {
+//                rawPassword= DEFAULT_PASSWORD;
+//            }else {
+//                JsonNode arraynode = metadata.getDomainValues();
+////                ArrayNode arraynode= (ArrayNode) metadata.getDomainValues();
+//                if(arraynode == null || arraynode.size()==0) {
+//                    throw new CustomRuntimeException("System has found metadata resource for default password but seems misconfigured. Please check configuration.");
+//                }
+//                JsonNode node= arraynode.get(0);
+//                if(!node.has("default")) {
+//                    throw new CustomRuntimeException("System has found metadata resource for default password but 'default' key not found. Please check configuration.");
+//                }
+//                rawPassword= node.get("default").textValue();
+//            }
+//            if(org.apache.commons.lang.StringUtils.equals(DEFAULT_PASSWORD,rawPassword)){
+//                return DEFAULT_ENCODED_PASSWORD;
+//            }else {
+//                return TimerUtils.withTime("time taken to encode password", () -> encoder.encode(rawPassword));
+//            }
+//        }catch(Exception ex) {
+//            throw new CustomRuntimeException(ex,"Some error occured while getting default password");
+//        }
+//    }
 ////
     private CkLocation getLocationHierarchy(CkUser user){
         return dsl.select(CK_USER.fields())
@@ -609,7 +655,8 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                     if (lastParent.isEmpty()) {
                         CkHierarchyMetadata hmd = new CkHierarchyMetadata();
                         hmd.setImmediateParent(loginId);
-                       // hmd.setHierarchy(loginId + " > " + getCustomerAccountsService().getAdminLoginId());
+//                        hmd.setHierarchy(loginId + " > " + getCustomerAccountsService().getAdminLoginId());
+                        hmd.setHierarchy(loginId + " > " + getAdminLoginId());
                         setHierarchyElement(hmd, hierarchyusers, hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
                     } else {
                         lastParent.stream().forEach(element -> setHierarchyElement(element, hierarchyusers,
@@ -648,7 +695,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                 existingMetadata.add(hm);
             } else if (NullUtils.isNull(hm) && newMetadata.stream().noneMatch(np -> np.getHierarchy().equals(joinedHierarchy))) {
                 CkHierarchyMetadata tempHierarchyMetaData = new CkHierarchyMetadata();
-                EntityUtils.copyProperties(hierarchyMetadata, tempHierarchyMetaData);
+//                EntityUtils.copyProperties(hierarchyMetadata, tempHierarchyMetaData);
                 tempHierarchyMetaData.setHierarchy(joinedHierarchy);
                 CkLocation location = getLocationHierarchy(tempoutlet);
                 tempHierarchyMetaData.setLocationHierarchy((location == null) ? null : location.getLocationHierarchy());
@@ -694,4 +741,9 @@ private void setHierarchy(CkOutletDetails tempoutlet) {
             outletDetails.setExtendedAttributes(extendedAttributes);
         }
     }
+
+//    @Override
+//    public List<com.salescode.jooq.generated.tables.CkHierarchyMetadata> batchSave(Iterable<com.salescode.jooq.generated.tables.CkHierarchyMetadata> iterObj) {
+//        return batchSave(iterObj,true);
+//    }
 }

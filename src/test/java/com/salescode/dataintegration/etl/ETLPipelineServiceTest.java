@@ -65,9 +65,9 @@ class ETLPipelineServiceTest {
 
     @Test
     void execute() {
-        etlPipelineService.execute(" {\n" +
-                "                    \"groupId\": \"USR000008\",\n" +
-                "                    \"lob\": \"mondelezckinduat\",\n" +
+        etlPipelineService.execute("{\n" +
+                "                    \"groupId\": \"OutletDetails_20241121\",\n" +
+                "                    \"lob\": \"\",\n" +
                 "                    \"transformerInfo\": [\n" +
                 "                        {\n" +
                 "                            \"entityName\": \"CkOutletDetails\",\n" +
@@ -77,12 +77,55 @@ class ETLPipelineServiceTest {
                 "                    ],\n" +
                 "                    \"preserveOnFailure\": true,\n" +
                 "                    \"features\": [\n" +
-                "                        {\n" +
-                "                            \"outletcode\": 1076573\n" +
-                "                        }\n" +
-                "                    ]\n" +
+                "        {\n" +
+                "\"address\": \"KARANAM GARI JN\",\n" +
+                "\t\"doo\": null,\n" +
+                "\t\"immediateParent\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"immediateParent\": \"45\",\n" +
+                "\t\t\t\"hierarchy\": \"C20220005809717 > VI3493\"\n" +
+                "\t\t}\n" +
+                "\t],\n" +
+                "\t\"contactName\": \"VISHAKA PALOUR\",\n" +
+                "\t\"latitude\": null,\n" +
+                "\t\"channel\": \"Retail\",\n" +
+                "\t\"outletType\": \"Convenience Outlet\",\n" +
+                "\t\"extendedAttributes\": {\n" +
+                "\t\t\"PCPTier\": null,\n" +
+                "\t\t\"custOrder\": \"Y\",\n" +
+                "\t\t\"foodsTier\": null,\n" +
+                "\t\t\"PCPSubType\": null,\n" +
+                "\t\t\"custLoyalty\": \"N\",\n" +
+                "\t\t\"giftVoucher\": \"Y\",\n" +
+                "\t\t\"ITCProducts\": \"Y\",\n" +
+                "\t\t\"autoRedemption\": \"Y\",\n" +
+                "\t\t\"FCFoodsSubType\": null,\n" +
+                "\t\t\"supplierMapping\": [\n" +
+                "\t\t\t{\n" +
+                "\t\t\t\t\"UID\": \"C20220005809717\",\n" +
+                "\t\t\t\t\"RCSId\": \"181204899725\",\n" +
+                "\t\t\t\t\"CustID\": \"UK029\",\n" +
+                "\t\t\t\t\"SIFYID\": \"VI3493CIS722UK029\",\n" +
+                "\t\t\t\t\"WDDest\": \"VI3493\",\n" +
+                "\t\t\t\t\"WDName\": \"SRI DEVAKI LOGISTICS\",\n" +
+                "\t\t\t\t\"CatMapping\": \"\"\n" +
+                "\t\t\t}\n" +
+                "\t\t]\n" +
+                "\t},\n" +
+                "\t\"outletClass\": \"Retail Others\",\n" +
+                "\t\"outletName\": \"VISHAKA PALOUR\",\n" +
+                "\t\"activeStatus\": \"active\",\n" +
+                "\t\"outletCategory\": \"non loyalty\",\n" +
+                "\t\"displayAddress\": \"KARANAM GARI JN\",\n" +
+                "\t\"activeStatusReason\": \"active\",\n" +
+                "\t\"outletcode\": \"DDDD20220005809717\",\n" +
+                "\t\"locationHierarchy\": \"Bombay>India\"" +
+                "}" +
+                "        ]\n" +
                 "                }");
+
     }
+
 
 
 }
