@@ -1,6 +1,7 @@
 package com.salescode.dataintegration.etl.registry;
 
 import com.salescode.channelkart.converters.EnrichmentPhase;
+import com.salescode.channelkart.utils.ReflectionUtils;
 import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
 import com.salescode.dataintegration.etl.enrichment.Enrichment;
 import com.salescode.dataintegration.etl.interfaces.TypeAwareEtlStep;
@@ -10,9 +11,7 @@ import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
 import com.salescode.dataintegration.scanner.ExternalRegistryScanner;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -26,31 +25,61 @@ public class ETLRegistry {
     }
 
     public <T> T getTransformer(String fullyQualifiedClassName) {
-        return (T) registry.getOrDefault(TypeAwareEtlStep.EtlType.TRANSFORMER, List.of()).stream()
+        Optional<AbstractTransformer> transformer = registry.getOrDefault(TypeAwareEtlStep.EtlType.TRANSFORMER, List.of()).stream()
                 .filter(AbstractTransformer.class::isInstance)
                 .map(AbstractTransformer.class::cast)
                 .filter(s -> s.getClass().getName().equals(fullyQualifiedClassName))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("No transformer found for implementation: " + fullyQualifiedClassName));
+                .findAny();
+        if (transformer.isPresent()) {
+            return (T) transformer.get();
+        }
+        try {
+            AbstractTransformer newInstance = ReflectionUtils.createInstance(fullyQualifiedClassName);
+            registry.computeIfAbsent(TypeAwareEtlStep.EtlType.TRANSFORMER, key -> new ArrayList<>())
+                    .add(newInstance);
+            return (T) newInstance;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("No transformer found for implementation: " + fullyQualifiedClassName);
+        }
     }
 
 
     public <T> T getEnrichment(String fullyQualifiedClassName) {
-        return (T) registry.getOrDefault(TypeAwareEtlStep.EtlType.ENRICHMENT, List.of()).stream()
+        Optional<AbstractEnrichment> enrichment = registry.getOrDefault(TypeAwareEtlStep.EtlType.ENRICHMENT, List.of()).stream()
                 .filter(AbstractEnrichment.class::isInstance)
                 .map(AbstractEnrichment.class::cast)
                 .filter(s -> s.getClass().getName().equals(fullyQualifiedClassName))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("No Enrichment found for implementation: " + fullyQualifiedClassName));
+                .findAny();
+        if (enrichment.isPresent()) {
+            return (T) enrichment.get();
+        }
+        try {
+            AbstractEnrichment newInstance = ReflectionUtils.createInstance(fullyQualifiedClassName);
+            registry.computeIfAbsent(TypeAwareEtlStep.EtlType.ENRICHMENT, key -> new ArrayList<>())
+                    .add(newInstance);
+            return (T) newInstance;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("No Enrichment found for implementation: " + fullyQualifiedClassName);
+        }
     }
 
     public <T> T getValidationRule(String fullyQualifiedClassName) {
-        return (T) registry.getOrDefault(TypeAwareEtlStep.EtlType.VALIDATION, List.of()).stream()
+        Optional<AbstractValidationRule> validationRule = registry.getOrDefault(TypeAwareEtlStep.EtlType.VALIDATION, List.of()).stream()
                 .filter(AbstractValidationRule.class::isInstance)
                 .map(AbstractValidationRule.class::cast)
                 .filter(s -> s.getClass().getName().equals(fullyQualifiedClassName))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("No Validation Rule found for implementation: " + fullyQualifiedClassName));
+                .findAny();
+        if (validationRule.isPresent()) {
+            return (T) validationRule.get();
+        }
+        try {
+            AbstractValidationRule newInstance = ReflectionUtils.createInstance(fullyQualifiedClassName);
+            registry.computeIfAbsent(TypeAwareEtlStep.EtlType.VALIDATION, key -> new ArrayList<>())
+                    .add(newInstance);
+            return (T) newInstance;
+        } catch (Exception e) {
+            throw  new IllegalArgumentException("No Validation Rule found for implementation: " + fullyQualifiedClassName);
+        }
     }
 
 }

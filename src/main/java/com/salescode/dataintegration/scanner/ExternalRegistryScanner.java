@@ -40,6 +40,7 @@ public class ExternalRegistryScanner {
         }
         String s3JarUrl = StringUtils.format(bundleUri, lob);
         String s3JarUrlPreSigned = generatePresignedUrl(s3JarUrl, TimeUnit.DAYS.toMillis(7)).toString();
+        log.info("Loading bundle from uri {}", s3JarUrlPreSigned);
         JarScanner jarScanner = new JarScanner();
         jarScanner.loadAndCacheClasses(s3JarUrlPreSigned, instanceCache);
     }

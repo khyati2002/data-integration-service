@@ -22,6 +22,20 @@ public class DataIntegrationApplication {
         this.environment = environment;
     }
 
+    public static String getEnv() {
+        return SpringContext.getBeanSafely(Environment.class)
+                .map(environment -> environment.getProperty("channelkart.environment", "dev"))
+                .orElseGet(() -> Optional.ofNullable(System.getenv("channelkart.environment")).orElse("dev"));
+    }
+
+    public static String getLob() {
+        return SpringContext.getBeanSafely(Environment.class)
+                .map(environment -> environment.getProperty("channelkart.lobs", "none"))
+                .orElseGet(() -> Optional.ofNullable(System.getenv("channelkart.lobs")).orElse("none"));
+    }
+
+
+
     @PostConstruct
     void init() {
         externalRegistryScanner.loadClassesFromLob(environment.getProperty("app.lob"));
