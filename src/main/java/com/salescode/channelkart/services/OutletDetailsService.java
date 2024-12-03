@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -201,6 +203,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         if (record.get(CK_OUTLET_DETAILS.ID) == null) record.set(CK_OUTLET_DETAILS.ID, tempoutlet.getOutletcode());
         if (record.get(CK_OUTLET_DETAILS.VERSION) == null) record.set(CK_OUTLET_DETAILS.VERSION, 1);
         if (record.get(CK_OUTLET_DETAILS.MAPPED) == null) record.set(CK_OUTLET_DETAILS.MAPPED, true);
+        if(record.get(CK_OUTLET_DETAILS.CREATION_TIME)==null) record.set(CK_OUTLET_DETAILS.CREATION_TIME,  Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         dsl.insertInto(CK_OUTLET_DETAILS).set(record).onDuplicateKeyUpdate().set(record).execute();
 
         if (cdmObject.getUserName() != null && cdmObject.getUserName().getImmediateParent() != null && cdmObject.getUserName().getImmediateParent().size() > 0) {
