@@ -1,5 +1,6 @@
 package com.salescode;
 
+import com.salescode.channelkart.services.SpringContext;
 import com.salescode.dataintegration.scanner.ExternalRegistryScanner;
 import com.salescode.dis.config.DatabaseConfig;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 @SpringBootApplication
 @Import({DatabaseConfig.class})
