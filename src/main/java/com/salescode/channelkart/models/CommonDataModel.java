@@ -34,7 +34,6 @@ public abstract class CommonDataModel implements Serializable {
     private transient CommonDataModel oldModel;
 
     public CommonDataModel() {
-        this.setId(UUID.randomUUID().toString());
         this.setVersion(0);
     }
 
