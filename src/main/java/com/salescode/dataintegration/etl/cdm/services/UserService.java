@@ -6,6 +6,8 @@
 package com.salescode.dataintegration.etl.cdm.services;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.RoleName;
@@ -24,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -32,8 +36,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 ;
+import static com.salescode.jooq.generated.Tables.CK_USER;
 import static com.salescode.jooq.generated.Tables.CK_USER_PARENT;
 import static com.salescode.jooq.generated.tables.CkHierarchyMetadata.CK_HIERARCHY_METADATA;
+import static com.salescode.jooq.generated.tables.CkUserdesignation.CK_USERDESIGNATION;
 
 @Service
 public class UserService extends AbstractCDMService<CkUser> {
@@ -78,7 +84,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 
 	private final DSLContext dsl;
 //
-//	private MetaDataService metadataservice;
+	private MetaDataService metadataservice;
 //
 //	@Autowired
 //	private UserMetadataRepository userMetadataRepository;
@@ -98,7 +104,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 //	@Autowired
 //	private HierarchySynchronizer hierarchySynchronizer;
 //
-//	private final PasswordEncoder encoder= new BCryptPasswordEncoder();
+	private final PasswordEncoder encoder= new BCryptPasswordEncoder();
 //
 //	@Autowired
 //	private EntityManager em;
@@ -117,9 +123,9 @@ public class UserService extends AbstractCDMService<CkUser> {
 //	private DistributedCache distributedCache;
 //
 //	/** The Constant DEFAULT_PASSWORD. */
-//	public static final String DEFAULT_PASSWORD="@1234";
-//
-//	public static final String DEFAULT_ENCODED_PASSWORD="$2a$10$GetnNjgilfLkIv.2R3nHMevLZfI9HGHWQ3iXw3nrCfJlrpePirkIi";
+	public static final String DEFAULT_PASSWORD="@1234";
+
+	public static final String DEFAULT_ENCODED_PASSWORD="$2a$10$GetnNjgilfLkIv.2R3nHMevLZfI9HGHWQ3iXw3nrCfJlrpePirkIi";
 //
 //	private NativeEntityManager nem;
 //
@@ -141,11 +147,12 @@ public class UserService extends AbstractCDMService<CkUser> {
 //
 //	}
 
-	public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice, DSLContext dsl){
+	public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice, DSLContext dsl,MetaDataService metadataservice){
 		this.hierarchyMetaDataService = hierarchyMetaDataService;
 		this.roleService = roleService;
 		this.userparentservice = userparentservice;
 		this.dsl = dsl;
+		this.metadataservice = metadataservice;
 	}
 
 //	public CkUser findByLoginId(String loginId) {
@@ -251,20 +258,6 @@ public class UserService extends AbstractCDMService<CkUser> {
 		return this.save(inUser, OperationType.insert);
 	}
 
-   public void saveUserHierarchyMetadata(CkUser user){
-	   List<CkHierarchyMetadata> hierarchy = user.getImmediateParent();
-	   var record = dsl.newRecord(CK_HIERARCHY_METADATA,hierarchy.get(0));
-	   if(hierarchy.get(0).getId()==null){
-		   user.getImmediateParent().get(0).setId("hierarchy-parent");
-	   }
-	   if(record.get(CK_HIERARCHY_METADATA.ID)==null) record.set(CK_HIERARCHY_METADATA.ID,"hierarchy-parent");
-	   if(record.get(CK_HIERARCHY_METADATA.VERSION)==null) record.set(CK_HIERARCHY_METADATA.VERSION,1);
-	   dsl.insertInto(CK_HIERARCHY_METADATA)
-			   .set(record)
-			   .onDuplicateKeyUpdate()
-			   .set(record)
-			   .execute();
-   }
 
 	public CkUser save(CkUser inUser, OperationType type) {
 		//String lob = SecurityContextUtils.getLob();
@@ -298,9 +291,6 @@ public class UserService extends AbstractCDMService<CkUser> {
 
 		//User savedObj= TimerUtils.withTime("Time Taken to save User[["+user.getLoginId()+"]]", u-> super.save(user));
 		saveUser(user);
-		if(user.getImmediateParent()!=null && user.getImmediateParent().size() > 0) {
-			saveUserHierarchyMetadata(user);
-		}
         CkUser savedObj = super.save(user);
 		if(inUser.getSupplierMetaData()!=null && !inUser.getSupplierMetaData().isEmpty()) {
 			List<CkSupplierMetadata> supplierMetaInfo= user.getSupplierMetaData();
@@ -323,15 +313,20 @@ public class UserService extends AbstractCDMService<CkUser> {
 
 	private CkUser saveUser(CkUser user){
 		user.setActiveStatus(ActiveStatus.ACTIVE);
+
+
+		if(user.getVerified() == null) user.setVerified((byte)1);
+		if(user.getVersion() == null) user.setVersion(1);
+		if(user.getPassword() == null) user.setPassword(getDefaultEncryptedUserPassword());
+		if(user.getId() == null) user.setId(UUID.randomUUID().toString());
 		var record = dsl.newRecord(com.salescode.jooq.generated.tables.CkUser.CK_USER,user);
-		if(record.get(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERIFIED)==null) record.set(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERIFIED,(byte)1);
-		if(record.get(com.salescode.jooq.generated.tables.CkUser.CK_USER.PASSWORD) == null) record.set(com.salescode.jooq.generated.tables.CkUser.CK_USER.PASSWORD,user.getId());
-		if(record.get(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERSION) == null) record.set(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERSION,1);
 		dsl.insertInto(com.salescode.jooq.generated.tables.CkUser.CK_USER)
-				.set(record)
-				.onDuplicateKeyUpdate()
-				.set(record)
-				.execute();
+					.set(record)
+					.onDuplicateKeyUpdate()
+					.set(record)
+					.execute();
+
+
 		return user;
 	}
 //
@@ -489,32 +484,34 @@ public class UserService extends AbstractCDMService<CkUser> {
 //		hierarchyMetaDataService.updateHierarchy();
 //	}
 //
-//	public String getDefaultEncryptedUserPassword() {
-//		try {
-//			MetaData metadata= metadataservice.fetchByValue(DEFAULT_PASSWORD_DOMAIN_NAME, DEFAULT_PASSWORD_DOMAIN_TYPE);
-//			String rawPassword;
-//			if(metadata == null) {
-//				rawPassword= DEFAULT_PASSWORD;
-//			}else {
-//				ArrayNode arraynode= metadata.getDomainValues();
-//				if(arraynode == null || arraynode.size()==0) {
-//					throw new MissingConfigurationException("System has found metadata resource for default password but seems misconfigured. Please check configuration.");
-//				}
-//				JsonNode node= arraynode.get(0);
-//				if(!node.has("default")) {
-//					throw new MissingConfigurationException("System has found metadata resource for default password but 'default' key not found. Please check configuration.");
-//				}
-//				rawPassword= node.get("default").textValue();
-//			}
-//			if(StringUtils.equals(DEFAULT_PASSWORD,rawPassword)){
-//				return DEFAULT_ENCODED_PASSWORD;
-//			}else {
-//				return TimerUtils.withTime("time taken to encode password", () -> encoder.encode(rawPassword));
-//			}
-//		}catch(Exception ex) {
-//			throw new ExecutionInteruptedException(ex,"Some error occured while getting default password");
-//		}
-//	}
+	public String getDefaultEncryptedUserPassword() {
+		try {
+			CkMetadata metadata= metadataservice.fetchByValue(DEFAULT_PASSWORD_DOMAIN_NAME, DEFAULT_PASSWORD_DOMAIN_TYPE);
+			String rawPassword;
+			if(metadata == null) {
+				rawPassword= DEFAULT_PASSWORD;
+			}else {
+				ArrayNode arraynode= (ArrayNode) metadata.getDomainValues();
+				if(arraynode == null || arraynode.size()==0) {
+					throw new Exception("System has found metadata resource for default password but seems misconfigured. Please check configuration.");
+				}
+				JsonNode node= arraynode.get(0);
+				if(!node.has("default")) {
+					throw new Exception("System has found metadata resource for default password but 'default' key not found. Please check configuration.");
+				}
+				rawPassword= node.get("default").textValue();
+			}
+			if(StringUtils.equals(DEFAULT_PASSWORD,rawPassword)){
+				return DEFAULT_ENCODED_PASSWORD;
+			}else {
+				//return TimerUtils.withTime("time taken to encode password", () -> encoder.encode(rawPassword));
+				return encoder.encode(rawPassword);
+			}
+		}catch(Exception ex) {
+			throw new RuntimeException("Error");
+		}
+
+	}
 //
 //
 	private static boolean staleRecords(Set<String> existingParents,List<CkHierarchyMetadata> immediateParents) {
@@ -540,8 +537,13 @@ public class UserService extends AbstractCDMService<CkUser> {
 		}
 		if(!userParents.isEmpty()) {
 			CkUserParent par= userParents.stream().findFirst().orElseThrow(()-> new RuntimeException("value not found"));
-			var record = dsl.newRecord(CK_USER_PARENT,userParents.stream().findFirst());
-			record.set(CK_USER_PARENT.ID,par.getParent());
+			if(par.getId() == null) {
+				par.setId(UUID.randomUUID().toString());
+			}
+			if(par.getVersion() == null){
+				par.setVersion(1);
+			}
+			var record = dsl.newRecord(CK_USER_PARENT,par);
 			dsl.insertInto(CK_USER_PARENT)
 					.set(record)
 					.onDuplicateKeyUpdate()
@@ -592,7 +594,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 			CkUserParent up= new CkUserParent();
 			up.setUserloginid(user.getLoginid());
 			up.setParent(hm.getParent());
-			up.setId(hm.getId());
+			up.setId(UUID.randomUUID().toString());
 			if (up.getUserloginid().equalsIgnoreCase(up.getParent())) {
 			//	throw new UnexpectedResultException("User can't be mapped to itself. Found a record for user " + up.getUserLoginId() + " mapped to itself. Please verify the data once.");
 			}

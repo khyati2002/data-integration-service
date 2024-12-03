@@ -45,7 +45,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
     private Integer      priority;
     private Integer      severity;
     private String       type;
-    private JSON         jsonSchema;
 
     public CkTransformerInfo() {}
 
@@ -73,7 +72,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         this.priority = value.priority;
         this.severity = value.severity;
         this.type = value.type;
-        this.jsonSchema = value.jsonSchema;
     }
 
     public CkTransformerInfo(
@@ -99,8 +97,7 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         String       name,
         Integer      priority,
         Integer      severity,
-        String       type,
-        JSON         jsonSchema
+        String       type
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -125,7 +122,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         this.priority = priority;
         this.severity = severity;
         this.type = type;
-        this.jsonSchema = jsonSchema;
     }
 
     /**
@@ -450,20 +446,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         this.type = type;
     }
 
-    /**
-     * Getter for <code>ck_transformer_info.json_schema</code>.
-     */
-    public JSON getJsonSchema() {
-        return this.jsonSchema;
-    }
-
-    /**
-     * Setter for <code>ck_transformer_info.json_schema</code>.
-     */
-    public void setJsonSchema(JSON jsonSchema) {
-        this.jsonSchema = jsonSchema;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CkTransformerInfo (");
@@ -491,8 +473,6 @@ public class CkTransformerInfo extends CommonDataModel implements Serializable {
         sb.append(", ").append(priority);
         sb.append(", ").append(severity);
         sb.append(", ").append(type);
-        sb.append(", ").append(jsonSchema);
-
         sb.append(")");
         return sb.toString();
     }

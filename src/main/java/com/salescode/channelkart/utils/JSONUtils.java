@@ -126,4 +126,8 @@ public class JSONUtils {
     public static boolean isNull(JsonNode node) {
         return node == null || node.isNull();
     }
+
+    public static <T> T convert(JsonNode node, Class<T> clazz) {
+        return OBJECT_MAPPER.convertValue(node, clazz);
+    }
 }

@@ -170,8 +170,6 @@ public class CkTransformerInfo extends TableImpl<Record> {
     /**
      * The column <code>ck_transformer_info.json_schema</code>.
      */
-    public final TableField<Record, JSON> JSON_SCHEMA = createField(DSL.name("json_schema"), SQLDataType.JSON, this, "");
-
     private CkTransformerInfo(Name alias, Table<Record> aliased) {
         this(alias, aliased, null);
     }

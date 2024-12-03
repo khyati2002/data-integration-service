@@ -6,6 +6,8 @@ import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.dataintegration.etl.enrichment.registry.EnrichmentInfoRegistry;
+import com.salescode.dataintegration.etl.impl.GenericOutletDetailsEnrichment;
+import com.salescode.dataintegration.etl.impl.OutletDetailsNameEnrichmentITCL;
 import com.salescode.dataintegration.etl.impl.TestEnrichment;
 import com.salescode.dataintegration.etl.impl.TestTransformer;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
@@ -45,22 +47,23 @@ class ETLPipelineServiceTest {
     @BeforeEach
     @SneakyThrows
     void setup(){
-        CkMetadata ckMetadata = new CkMetadata();
-        ckMetadata.setDomainValues(JSONUtils.getObjectMapper().readTree("[{\"dynamicKeys\":[\"outletcode\"]}]"));
-        doReturn(Optional.of(ckMetadata)).when(metadataRegistry).getMetadataByDomainNameAndType("CkOutletDetails", "DynamicUniqueKey");
-        CkTransformerInfo ckTransformerInfo = new CkTransformerInfo();
-        ckTransformerInfo.setType("CkOutletDetails");
-        ckTransformerInfo.setImplementation("com.salescode.dataintegration.etl.impl.TestTransformer");
-        ckTransformerInfo.setActiveStatus(ActiveStatus.ACTIVE);
-        doReturn(ckTransformerInfo).when(transformerInfoRegistry).getTransformerInfoById("testId");
-        CkEnrichmentInfo ckEnrichmentInfo = new CkEnrichmentInfo();
-        ckEnrichmentInfo.setType("CkOutletDetails");
-        ckEnrichmentInfo.setImplementation("com.salescode.dataintegration.etl.impl.TestEnrichment");
-        ckEnrichmentInfo.setActiveStatus(ActiveStatus.ACTIVE);
-        doReturn(List.of(ckEnrichmentInfo)).when(enrichmentInfoRegistry).getEnrichmentInfoByPhase(EnrichmentPhase.PRE_VALIDATION);
-        doReturn(List.of(ckEnrichmentInfo)).when(enrichmentInfoRegistry).getEnrichmentInfoByPhase(EnrichmentPhase.POST_VALIDATION);
-        doReturn(new TestTransformer()).when(etlRegistry).getTransformer("com.salescode.dataintegration.etl.impl.TestTransformer");
-        doReturn(new TestEnrichment()).when(etlRegistry).getEnrichment("com.salescode.dataintegration.etl.impl.TestEnrichment");
+//        CkMetadata ckMetadata = new CkMetadata();
+//        ckMetadata.setDomainValues(JSONUtils.getObjectMapper().readTree("[{\"dynamicKeys\":[\"outletcode\"]}]"));
+//        doReturn(Optional.of(ckMetadata)).when(metadataRegistry).getMetadataByDomainNameAndType("CkOutletDetails", "DynamicUniqueKey");
+//        CkTransformerInfo ckTransformerInfo = new CkTransformerInfo();
+//        ckTransformerInfo.setType("CkOutletDetails");
+//        ckTransformerInfo.setImplementation("com.salescode.dataintegration.etl.impl.TestTransformer");
+//        ckTransformerInfo.setActiveStatus(ActiveStatus.ACTIVE);
+//        doReturn(ckTransformerInfo).when(transformerInfoRegistry).getTransformerInfoById("testId");
+//        CkEnrichmentInfo ckEnrichmentInfo = new CkEnrichmentInfo();
+//        ckEnrichmentInfo.setType("CkOutletDetails");
+//        ckEnrichmentInfo.setImplementation("com.salescode.dataintegration.bundle.OutletDetailsNameEnrichmentITCL");
+//        ckEnrichmentInfo.setActiveStatus(ActiveStatus.ACTIVE);
+//        doReturn(List.of(ckEnrichmentInfo)).when(enrichmentInfoRegistry).getEnrichmentInfoByPhase(EnrichmentPhase.PRE_VALIDATION);
+//        doReturn(List.of(ckEnrichmentInfo)).when(enrichmentInfoRegistry).getEnrichmentInfoByPhase(EnrichmentPhase.POST_VALIDATION);
+//        doReturn(new TestTransformer()).when(etlRegistry).getTransformer("com.salescode.dataintegration.etl.impl.TestTransformer");
+//        doReturn(new OutletDetailsNameEnrichmentITCL()).when(etlRegistry).getEnrichment("com.salescode.dataintegration.bundle.OutletDetailsNameEnrichmentITCL");
+
     }
 
     @Test
@@ -77,8 +80,70 @@ class ETLPipelineServiceTest {
                 "                    ],\n" +
                 "                    \"preserveOnFailure\": true,\n" +
                 "                    \"features\": [\n" +
-                "                        {\n" +
-                "                            \"outletcode\": 1076573\n" +
+                "                         {\n" +
+                        "\t\"address\": \"KARANAM GARI JN\",\n" +
+                        "\t\"doo\": null,\n" +
+                        "\t\"immediateParent\": [\n" +
+                        "\t\t{\n" +
+                        "\t\t\t\"parent\": \"TestID\",\n" +
+                        "\t\t\t\"hierarchy\": \"TestID > TESTIDPARENT\"\n" +
+                        "\t\t}\n" +
+                        "\t],\n" +
+                        "\t\"contactName\": \"VISHAKA PALOUR\",\n" +
+                        "\t\"latitude\": null,\n" +
+                        "\t\"channel\": \"Retail\",\n" +
+                        "\t\"outletType\": \"Convenience Outlet\",\n" +
+                        "\t\"userName\": {\n" +
+                        "\t\t\"activeStatus\": \"active\",\n" +
+                        "\t\t\"activeStatusReason\": \"active\",\n" +
+                        "\t\t\"designation\": [\n" +
+                        "\t\t\t\"retailer\"\n" +
+                        "\t\t],\n" +
+                        "\t\t\"contactType\": \"retailer\",\n" +
+                        "\t\t\"loginid\": \"TestID\",\n" +
+                        "\t\t\"useraccountid\": \"TestID\",\n" +
+                        "\t\t\"extendedAttributes\": {\n" +
+                        "\t\t\t\"loyaltyFlag\": \"non loyalty\"\n" +
+                        "\t\t},\n" +
+                        "\t\t\"dob\": null,\n" +
+                        "\t\t\"name\": \"VISHAKA PALOUR\",\n" +
+                        "\t\t\"doa\": null,\n" +
+                        "\t\t\"immediateParent\": [\n" +
+                        "\t\t\t{\n" +
+                        "\t\t\t\t\"parent\": \"TESTIDPARENT\"\n" +
+                        "\t\t\t}\n" +
+                        "\t\t]\n" +
+                        "\t},\n" +
+                        "\t\"extendedAttributes\": {\n" +
+                        "\t\t\"PCPTier\": null,\n" +
+                        "\t\t\"custOrder\": \"Y\",\n" +
+                        "\t\t\"foodsTier\": null,\n" +
+                        "\t\t\"PCPSubType\": null,\n" +
+                        "\t\t\"custLoyalty\": \"N\",\n" +
+                        "\t\t\"giftVoucher\": \"Y\",\n" +
+                        "\t\t\"ITCProducts\": \"Y\",\n" +
+                        "\t\t\"autoRedemption\": \"Y\",\n" +
+                        "\t\t\"FCFoodsSubType\": null,\n" +
+                        "\t\t\"supplierMapping\": [\n" +
+                        "\t\t\t{\n" +
+                        "\t\t\t\t\"UID\": \"C20220005809717\",\n" +
+                        "\t\t\t\t\"RCSId\": \"181204899725\",\n" +
+                        "\t\t\t\t\"CustID\": \"UK029\",\n" +
+                        "\t\t\t\t\"SIFYID\": \"VI3493CIS722UK029\",\n" +
+                        "\t\t\t\t\"WDDest\": \"VI3493\",\n" +
+                        "\t\t\t\t\"WDName\": \"SRI DEVAKI LOGISTICS\",\n" +
+                        "\t\t\t\t\"CatMapping\": \"\"\n" +
+                        "\t\t\t}\n" +
+                        "\t\t]\n" +
+                        "\t},\n" +
+                        "\t\"outletClass\": \"Retail Others\",\n" +
+                        "\t\"outletName\": \"VISHAKA PALOUR\",\n" +
+                        "\t\"activeStatus\": \"active\",\n" +
+                        "\t\"outletCategory\": \"non loyalty\",\n" +
+                        "\t\"displayAddress\": \"KARANAM GARI JN\",\n" +
+                        "\t\"activeStatusReason\": \"active\",\n" +
+                        "\t\"outletcode\": \"TestID\",\n" +
+                        "\t\"longitude\": null\n" +
                 "                        }\n" +
                 "                    ]\n" +
                 "                }");
