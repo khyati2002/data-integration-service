@@ -7,9 +7,9 @@ package com.salescode.dataintegration.bundle;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.salescode.channelkart.component.model.SequenceGenerator;
-import com.salescode.channelkart.converters.ActiveStatus;
+import com.salescode.channelkart.models.enums.ActiveStatus;
+import com.salescode.channelkart.services.SequenceInfoService;
 import com.salescode.channelkart.services.SpringContext;
-import com.salescode.dataintegration.etl.cdm.services.SequenceInfoService;
 import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
@@ -61,8 +61,8 @@ public class GenericOutletDetailsEnrichment extends AbstractEnrichment<CkOutletD
 		if(!StringUtils.isBlank(cdm.getActiveStatusReason()) && cdm.getActiveStatusReason().startsWith("REJECTED")) {
 			   cdm.setActiveStatusReason("REJECTED");
 		   }else {
-			   cdm.setActiveStatusReason("Deactivated by "); //+ SecurityContextUtils.getPrincipal()+
-//						" on "+ new DateToClientTimeZoneStringConverter().convert(new Date()));
+			   cdm.setActiveStatusReason("Deactivated by ");
+
 		   }
 	
 	}

@@ -48,7 +48,7 @@ public class MessageProcessFunction extends KeyedProcessFunction<String, Tuple2<
             e.printStackTrace();
             log.info("Exception Stacktrace {}",e);
              context.output(deadLetterTag, tuple.f1.toString().concat("====").concat(e.getMessage()));
-//            throw e;
+
         }
     }
 

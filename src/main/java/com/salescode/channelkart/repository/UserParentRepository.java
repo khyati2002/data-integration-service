@@ -1,0 +1,56 @@
+package com.salescode.channelkart.repository;
+
+
+import com.salescode.jooq.generated.tables.pojos.CkUserParent;
+import org.springframework.stereotype.Repository;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * The Interface UserParentRepository.
+ *
+ * @author Manish Srivastava
+ * @since Jun 2020
+ */
+@Repository
+public interface UserParentRepository {
+
+    /**
+     * Find by user login id.
+     *
+     * @param loginId the login id
+     * @return the list
+     */
+    public List<CkUserParent> findByUserLoginId(String loginId);
+
+    /**
+     * Find by user login id and parent.
+     *
+     * @param loginid       the loginid
+     * @param parentloginid the parentloginid
+     * @return the user parent
+     */
+    public CkUserParent findByUserLoginIdAndParent(String loginid, String parentloginid);
+
+    /**
+     * Delete by user login id.
+     *
+     * @param loginid the loginid
+     */
+    public void deleteByUserLoginId(String loginid);
+
+    /**
+     * Delete by user login id in.
+     *
+     * @param loginid the loginid
+     */
+    public void deleteByUserLoginIdIn(Collection<String> loginid);
+
+
+    List<CkUserParent> findByParentIn(List<String> parents);
+
+    List<Map<String, Object>> getUserParentMapping(List<String> outletList);
+}
+

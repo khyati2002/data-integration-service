@@ -1,18 +1,17 @@
 package com.salescode.dataintegration.etl;
 
 import com.salescode.DataIntegrationApplication;
-import com.salescode.channelkart.converters.ActiveStatus;
-import com.salescode.channelkart.converters.EnrichmentPhase;
+import com.salescode.channelkart.models.enums.ActiveStatus;
+import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.dataintegration.etl.enrichment.registry.EnrichmentInfoRegistry;
-import com.salescode.dataintegration.etl.impl.TestEnrichment;
-import com.salescode.dataintegration.etl.impl.TestTransformer;
+import com.salescode.channelkart.enrichments.impl.TestEnrichment;
+import com.salescode.channelkart.transformers.impl.TestTransformer;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.dataintegration.etl.registry.ETLRegistry;
-import com.salescode.dataintegration.etl.transformer.impl.JoltTransformer;
+import com.salescode.channelkart.transformers.impl.JoltTransformer;
 import com.salescode.dataintegration.etl.transformer.registry.TransformerInfoRegistry;
-import com.salescode.dis.FlinkApplication;
 import com.salescode.dis.config.DatabaseConfig;
 import com.salescode.jooq.generated.tables.pojos.CkEnrichmentInfo;
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
@@ -52,7 +51,7 @@ class ETLPipelineServiceJoltTest {
         doReturn(Optional.of(ckMetadata)).when(metadataRegistry).getMetadataByDomainNameAndType("CkOutletDetails", "DynamicUniqueKey");
         CkTransformerInfo itcJoltTransformer = new CkTransformerInfo();
         itcJoltTransformer.setType("CkOutletDetails");
-        itcJoltTransformer.setImplementation("com.salescode.dataintegration.etl.transformer.impl.JoltTransformer");
+        itcJoltTransformer.setImplementation("com.salescode.channelkart.transformers.impl.JoltTransformer");
         itcJoltTransformer.setActiveStatus(ActiveStatus.ACTIVE);
         JSON joltCode = JSON.json("[\n" +
                 "  {\n" +
@@ -175,7 +174,7 @@ class ETLPipelineServiceJoltTest {
         doReturn(List.of(ckEnrichmentInfo)).when(enrichmentInfoRegistry).getEnrichmentInfoByPhase(EnrichmentPhase.PRE_VALIDATION);
         doReturn(List.of(ckEnrichmentInfo)).when(enrichmentInfoRegistry).getEnrichmentInfoByPhase(EnrichmentPhase.POST_VALIDATION);
         doReturn(new TestTransformer()).when(etlRegistry).getTransformer("com.salescode.dataintegration.etl.impl.TestTransformer");
-        doReturn(new JoltTransformer()).when(etlRegistry).getTransformer("com.salescode.dataintegration.etl.transformer.impl.JoltTransformer");
+        doReturn(new JoltTransformer()).when(etlRegistry).getTransformer("com.salescode.channelkart.transformers.impl.JoltTransformer");
         doReturn(new TestEnrichment()).when(etlRegistry).getEnrichment("com.salescode.dataintegration.etl.impl.TestEnrichment");
     }
 

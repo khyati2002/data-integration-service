@@ -6,16 +6,13 @@ import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.dataintegration.etl.enrichment.registry.EnrichmentInfoRegistry;
-import com.salescode.dataintegration.etl.impl.TestEnrichment;
-import com.salescode.dataintegration.etl.impl.TestTransformer;
+import com.salescode.channelkart.enrichments.impl.TestEnrichment;
+import com.salescode.channelkart.transformers.impl.TestTransformer;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.dataintegration.etl.registry.ETLRegistry;
-import com.salescode.dataintegration.etl.transformer.registry.TransformerInfoRegistry;
-import com.salescode.dis.FlinkApplication;
 import com.salescode.dis.config.DatabaseConfig;
 import com.salescode.jooq.generated.tables.pojos.CkEnrichmentInfo;
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkTransformerInfo;
 import lombok.SneakyThrows;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,8 +62,6 @@ class ETLPipelineServiceTest {
 
     @Test
     void execute() {
-        etlPipelineService.execute(" {\n" +
-                "                    \"groupId\": \"USR000008\",\n" +
                 "                    \"lob\": \"mondelezckinduat\",\n" +
                 "                    \"transformerInfo\": [\n" +
                 "                        {\n" +

@@ -115,7 +115,7 @@
                             <outputSchemaToDefault>true</outputSchemaToDefault>
                             <forcedTypes>
                                 <forcedType>
-                                    <userType>com.salescode.channelkart.converters.ActiveStatus</userType>
+                                    <userType>com.salescode.channelkart.models.enums.ActiveStatus</userType>
                                     <converter>com.salescode.jooq.ActiveStatusConverter</converter>
                                     <includeExpression>ACTIVE_STATUS</includeExpression>
                                 </forcedType>
@@ -132,7 +132,7 @@
                                     <includeExpression>(.*attributes)|domain_values</includeExpression>
                                 </forcedType>
                                 <forcedType>
-                                    <userType>com.salescode.channelkart.converters.EnrichmentPhase</userType>
+                                    <userType>com.salescode.channelkart.models.enums.EnrichmentPhase</userType>
                                     <converter>com.salescode.jooq.EnrichmentPhaseConverter</converter>
                                     <includeExpression>phase</includeExpression>
                                 </forcedType>

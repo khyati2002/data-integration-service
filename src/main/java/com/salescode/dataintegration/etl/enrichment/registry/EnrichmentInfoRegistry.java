@@ -1,7 +1,7 @@
 package com.salescode.dataintegration.etl.enrichment.registry;
 
-import com.salescode.channelkart.converters.ActiveStatus;
-import com.salescode.channelkart.converters.EnrichmentPhase;
+import com.salescode.channelkart.models.enums.ActiveStatus;
+import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import com.salescode.dataintegration.etl.interfaces.RefreshableRegistry;
 import com.salescode.jooq.generated.tables.pojos.CkEnrichmentInfo;
 import org.jooq.DSLContext;

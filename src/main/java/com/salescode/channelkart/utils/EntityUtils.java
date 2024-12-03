@@ -6,10 +6,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.channelkart.exceptions.CustomRuntimeException;
 import com.salescode.channelkart.models.CommonDataModel;
-
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.templates.TemplateEngine;
-
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.jooq.generated.Tables;
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
@@ -24,10 +22,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -42,11 +37,10 @@ public final class EntityUtils {
     private static final List<Class> jsonNodeClassList = new ArrayList<>(Arrays.asList(JsonNode.class, ObjectNode.class));
     private static final Map<String, Class<? extends CommonDataModel>> entityClassMap = new ConcurrentHashMap<>();
     private static final Map<String, String> nativeTableNames = new HashMap<>();
+    private static final Object lockObj = new Object();
     private static EntityUtils instance;
     private final MetadataRegistry metadataRegistry;
     private final DSLContext dslContext;
-
-    private static final Object lockObj = new Object();
 
 
     @Autowired
@@ -74,6 +68,85 @@ public final class EntityUtils {
             return (T) ois.readObject();
         } catch (Exception e) {
             throw new RuntimeException("Could not clone object:" + src);
+        }
+    }
+
+    public static boolean isNullNode(Object value) {
+        return value instanceof JsonNode && ((JsonNode) value).isNull();
+    }
+
+    public static String[] getNullPropertyNames(Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        Set<String> emptyNames = new HashSet<>();
+        for (java.beans.PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null || isNullNode(srcValue)) emptyNames.add(pd.getName());
+        }
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
+    }
+
+    public static void copyProperties(Object src, Object tgt) {
+        synchronized (lockObj) {
+            String[] data = getNullPropertyNames(src);
+            Set<String> fields = new HashSet<>(Arrays.asList(data));
+            BeanWrapper source = new BeanWrapperImpl(src);
+            BeanWrapper target = new BeanWrapperImpl(tgt);
+            java.beans.PropertyDescriptor[] pdsrc = source.getPropertyDescriptors();
+            for (java.beans.PropertyDescriptor pd : pdsrc) {
+                Object propertyValue = source.getPropertyValue(pd.getName());
+                if (propertyValue != null && JsonNode.class.isAssignableFrom(pd.getPropertyType()) && !fields.contains(pd.getName()) && jsonNodeClassList.contains(propertyValue.getClass())) {
+                    fields.add(pd.getName());
+                    if (target.getPropertyValue(pd.getName()) == null || isNullNode(target.getPropertyValue(pd.getName()))) {
+                        target.setPropertyValue(pd.getName(), source.getPropertyValue(pd.getName()));
+                    } else {
+                        JsonNode mergedJson = null;
+                        try {
+                            mergedJson = JSONUtils.mergeJsonNodes((JsonNode) source.getPropertyValue(pd.getName()), (JsonNode) target.getPropertyValue(pd.getName()));
+                        } catch (IOException e) {
+                            logger.error("stacktrace", e);
+                        }
+                        target.setPropertyValue(pd.getName(), mergedJson);
+                    }
+                }
+            }
+            tgt = target.getWrappedInstance();
+            org.springframework.beans.BeanUtils.copyProperties(src, tgt, fields.toArray(new String[0]));
+        }
+    }
+
+    public static void copyProperties(Object src, Object tgt, String... strings) {
+        synchronized (lockObj) {
+            String[] data = getNullPropertyNames(src);
+            Set<String> fields = new HashSet<>(Arrays.asList(data));
+            if (strings != null) {
+                fields.addAll(
+                        Arrays.asList(strings).stream().filter(Objects::nonNull).collect(Collectors.toList()));
+            }
+            BeanWrapper source = new BeanWrapperImpl(src);
+            BeanWrapper target = new BeanWrapperImpl(tgt);
+            java.beans.PropertyDescriptor[] pdsrc = source.getPropertyDescriptors();
+            for (java.beans.PropertyDescriptor pd : pdsrc) {
+                Object propertyValue = source.getPropertyValue(pd.getName());
+                if (propertyValue != null && JsonNode.class.isAssignableFrom(pd.getPropertyType()) && !fields.contains(pd.getName()) && jsonNodeClassList.contains(propertyValue.getClass())) {
+                    fields.add(pd.getName());
+                    if (target.getPropertyValue(pd.getName()) == null || isNullNode(target.getPropertyValue(pd.getName()))) {
+                        target.setPropertyValue(pd.getName(), source.getPropertyValue(pd.getName()));
+                    } else {
+                        JsonNode mergedJson = null;
+                        try {
+                            mergedJson = JSONUtils.mergeJsonNodes((JsonNode) source.getPropertyValue(pd.getName()), (JsonNode) target.getPropertyValue(pd.getName()));
+                        } catch (IOException e) {
+                            logger.error("stacktrace", e);
+                        }
+                        target.setPropertyValue(pd.getName(), mergedJson);
+                    }
+                }
+            }
+            tgt = target.getWrappedInstance();
+            org.springframework.beans.BeanUtils.copyProperties(src, tgt, fields.toArray(new String[0]));
         }
     }
 
@@ -110,7 +183,8 @@ public final class EntityUtils {
         CkMetadata metaConfig = metadataRegistry.getMetadataByDomainNameAndType(GET_KEY_QUERY_DOMAIN_NAME, cdmClassName).orElse(null);
         if (metaConfig != null && metaConfig.getDomainValues().get(0).has("query")) {
             String sql = metaConfig.getDomainValues().get(0).get("query").asText();
-            Map<String, Object> params = JSONUtils.getObjectMapper().convertValue(cdmObject, new TypeReference<>() {});
+            Map<String, Object> params = JSONUtils.getObjectMapper().convertValue(cdmObject, new TypeReference<>() {
+            });
             String finalQuery = replaceDynamicKeys(sql, params);
             return dslContext.selectFrom(finalQuery).fetchInto(clazz);
         } else {
@@ -197,22 +271,20 @@ public final class EntityUtils {
         if (!dynamicPrimaryKeys.isEmpty()) {
             return findUniqueRecord(clazz, element, dynamicPrimaryKeys);
         } else {
-           //return findUniqueRecord(clazz, element);
+            //return findUniqueRecord(clazz, element);
             return null;
         }
     }
-//
-//    public CommonDataModel findUniqueRecord(Class<? extends CommonDataModel> clazz, CommonDataModel element) {
-//        String tablename = getTableName(clazz);
-//        TableImpl dslContextTable = getDSLContextTable(clazz);
-////        List<? extends TableField<?, ?>> list = dslContext.meta(dslContextTable).getUniqueKeys().stream().flatMap(s -> s.getFields().stream()).toList();
-//        dslContext.meta(dslContextTable).getUniqueKeys()
-//                .stream()
-//                .flatMap(s -> s.getFields().stream())
-//                .flatMap(s -> Arrays.stream(s.getUnqualifiedName().unquotedName().getName()))
-//                .toList();
-//        return null;
-//    }
+
+    public List<CommonDataModel> findRecords(Class<?> clazz, List<CommonDataModel> element) {
+        ArrayNode dynamicPrimaryKeys = fetchDynamicPrimaryKeys(clazz.getSimpleName());
+        if (dynamicPrimaryKeys.size() > 0) {
+
+        } else {
+
+        }
+        return List.of();
+    }
 
     @SneakyThrows
     public <T extends CommonDataModel> String getTableName(Class<T> entityClass) {
@@ -254,92 +326,13 @@ public final class EntityUtils {
             }
         }
         buffer2.append("id").append("=").append("'").append(StringUtils.escapeSql(checkGenerateMD5Hash(clazz.getSimpleName()) ? EncodingUtils.getMd5(value) : value)).append("'");
-//        Query sqlquery = entitymanager.createNativeQuery(buffer1.toString(), clazz);
+
         try {
-            return (CommonDataModel)  Objects.requireNonNull(dslContext.selectFrom(getDSLContextTable(clazz)).where(buffer2.toString())).fetchAnyInto(clazz);
+            return (CommonDataModel) Objects.requireNonNull(dslContext.selectFrom(getDSLContextTable(clazz)).where(buffer2.toString())).fetchAnyInto(clazz);
         } catch (NoResultException nr) {
             //throw new RuntimeException("Invalid ");
         }
         return null;
-    }
-
-    public static boolean isNullNode(Object value) {
-        return value instanceof JsonNode && ((JsonNode) value).isNull();
-    }
-
-    public static String[] getNullPropertyNames(Object source) {
-        final BeanWrapper src = new BeanWrapperImpl(source);
-        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-        Set<String> emptyNames = new HashSet<>();
-        for (java.beans.PropertyDescriptor pd : pds) {
-            Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null || isNullNode(srcValue)) emptyNames.add(pd.getName());
-        }
-        String[] result = new String[emptyNames.size()];
-        return emptyNames.toArray(result);
-    }
-
-    public static void copyProperties(Object src, Object tgt) {
-        synchronized (lockObj) {
-            String[] data = getNullPropertyNames(src);
-            Set<String> fields = new HashSet<>(Arrays.asList(data));
-            BeanWrapper source = new BeanWrapperImpl(src);
-            BeanWrapper target = new BeanWrapperImpl(tgt);
-            java.beans.PropertyDescriptor[] pdsrc = source.getPropertyDescriptors();
-            for (java.beans.PropertyDescriptor pd : pdsrc) {
-                Object propertyValue= source.getPropertyValue(pd.getName());
-                if (propertyValue != null && JsonNode.class.isAssignableFrom(pd.getPropertyType()) && !fields.contains(pd.getName()) && jsonNodeClassList.contains(propertyValue.getClass())) {
-                    fields.add(pd.getName());
-                    if (target.getPropertyValue(pd.getName()) == null || isNullNode(target.getPropertyValue(pd.getName()))) {
-                        target.setPropertyValue(pd.getName(), source.getPropertyValue(pd.getName()));
-                    } else {
-                        JsonNode mergedJson = null;
-                        try {
-                            mergedJson = JSONUtils.mergeJsonNodes((JsonNode) source.getPropertyValue(pd.getName()), (JsonNode) target.getPropertyValue(pd.getName()));
-                        } catch (IOException e) {
-                            logger.error("stacktrace", e);
-                        }
-                        target.setPropertyValue(pd.getName(), mergedJson);
-                    }
-                }
-            }
-            tgt = target.getWrappedInstance();
-            org.springframework.beans.BeanUtils.copyProperties(src, tgt, fields.toArray(new String[0]));
-        }
-    }
-
-    public static void copyProperties(Object src, Object tgt, String... strings) {
-        synchronized (lockObj) {
-            String[] data = getNullPropertyNames(src);
-            Set<String> fields = new HashSet<>(Arrays.asList(data));
-            if(strings!=null) {
-                fields.addAll(
-                        Arrays.asList(strings).stream().filter(Objects::nonNull).collect(Collectors.toList()));
-            }
-            BeanWrapper source = new BeanWrapperImpl(src);
-            BeanWrapper target = new BeanWrapperImpl(tgt);
-            java.beans.PropertyDescriptor[] pdsrc = source.getPropertyDescriptors();
-            for (java.beans.PropertyDescriptor pd : pdsrc) {
-                Object propertyValue= source.getPropertyValue(pd.getName());
-                if (propertyValue != null && JsonNode.class.isAssignableFrom(pd.getPropertyType()) && !fields.contains(pd.getName()) && jsonNodeClassList.contains(propertyValue.getClass())) {
-                    fields.add(pd.getName());
-                    if (target.getPropertyValue(pd.getName()) == null || isNullNode(target.getPropertyValue(pd.getName()))) {
-                        target.setPropertyValue(pd.getName(), source.getPropertyValue(pd.getName()));
-                    } else {
-                        JsonNode mergedJson = null;
-                        try {
-                            mergedJson = JSONUtils.mergeJsonNodes((JsonNode) source.getPropertyValue(pd.getName()), (JsonNode) target.getPropertyValue(pd.getName()));
-                        } catch (IOException e) {
-                            logger.error("stacktrace", e);
-                        }
-                        target.setPropertyValue(pd.getName(), mergedJson);
-                    }
-                }
-            }
-            tgt = target.getWrappedInstance();
-            org.springframework.beans.BeanUtils.copyProperties(src, tgt, fields.toArray(new String[0]));
-        }
     }
 
 

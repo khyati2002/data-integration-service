@@ -11,7 +11,7 @@ import java.util.List;
 public class ValidationResult {
 
     private Status status;
-//    private List<RuleResult> successMessages = new ArrayList<>();
+
     private List<RuleResult> violations = new ArrayList<>();
 
     public ValidationResult(Status status) {

@@ -1,6 +1,6 @@
 package com.salescode.dataintegration.etl.enrichment.service;
 
-import com.salescode.channelkart.converters.EnrichmentPhase;
+import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentOperationResult;
@@ -163,7 +163,6 @@ public class DataEnrichmentService {
             enrichment.setEnrichmentInfo(enrichmentInfo);
             return enrichment.apply(cdm);
         } catch (Exception e) {
-//            cdm.addPreProcessPipelineException(ExceptionUtils.getStackTrace(e));
             return new EnrichmentResult(Status.ERROR, ERROR_MESSAGE + e.getMessage());
         }
     }

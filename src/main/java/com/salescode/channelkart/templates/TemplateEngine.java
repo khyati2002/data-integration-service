@@ -44,8 +44,8 @@ public class TemplateEngine {
                 .with(EscapingStrategy.NOOP);
         StringHelpers.register(hBars);
         Arrays.stream(ConditionalHelpers.values()).forEach(helper -> hBars.registerHelper(helper.name(), helper));
-//      hBars.registerHelpers(new HelperSource());
-//      hBars.registerHelpers(new TemplateHelperService());
+
+
         return hBars;
     }
 

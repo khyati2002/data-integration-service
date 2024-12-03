@@ -20,14 +20,14 @@ public class DISKafkaSinkBuilder {
     public KafkaSink<String> build(String topic){
         return KafkaSink.<String>builder()
             .setBootstrapServers(bootstrapServers)
-            .setProperty("transaction.timeout.ms", producerTxnTimeOut)
+//            .setProperty("transaction.timeout.ms", producerTxnTimeOut)
             .setRecordSerializer(
                     KafkaRecordSerializationSchema.builder()
                             .setTopic(topic)
                             .setValueSerializationSchema(new SimpleStringSchema())
                             .build()
             )
-            .setDeliveryGuarantee(DeliveryGuarantee.EXACTLY_ONCE)
+//            .setDeliveryGuarantee(DeliveryGuarantee.EXACTLY_ONCE)
             .build();
     }
 }

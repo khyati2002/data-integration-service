@@ -1,6 +1,6 @@
 package com.salescode.dataintegration.etl.metadata.registry;
 
-import com.salescode.channelkart.converters.ActiveStatus;
+import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.dataintegration.etl.interfaces.RefreshableRegistry;
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
 import org.jooq.DSLContext;

@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 import com.salescode.channelkart.models.CommonDataModel;
-import com.salescode.dataintegration.etl.cdm.CommonDataModelService;
-import com.salescode.dataintegration.etl.cdm.util.ServiceLocator;
+import com.salescode.channelkart.services.CommonDataModelService;
+import com.salescode.channelkart.services.ServiceLocator;
 import org.apache.commons.io.IOExceptionWithCause;
 import org.apache.flink.api.connector.sink2.SinkWriter;
 import org.jooq.DSLContext;

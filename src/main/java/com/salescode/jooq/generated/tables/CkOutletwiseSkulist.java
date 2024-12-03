@@ -5,7 +5,7 @@ package com.salescode.jooq.generated.tables;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salescode.channelkart.converters.ActiveStatus;
+import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.jooq.ActiveStatusConverter;
 import com.salescode.jooq.DateConverter;
 import com.salescode.jooq.JsonNodeConverter;

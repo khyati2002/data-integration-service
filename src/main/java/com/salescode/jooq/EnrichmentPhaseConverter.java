@@ -1,6 +1,6 @@
 package com.salescode.jooq;
 
-import com.salescode.channelkart.converters.EnrichmentPhase;
+import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import org.jooq.Converter;
 
 import java.util.Objects;

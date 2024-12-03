@@ -5,10 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.diff.Change;
+import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.utils.CdmDiffUtil;
-import com.salescode.channelkart.utils.ReflectionUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,6 +32,11 @@ public abstract class CommonDataModel implements Serializable {
 
     @Getter
     private transient CommonDataModel oldModel;
+
+    public CommonDataModel() {
+        this.setId(UUID.randomUUID().toString());
+        this.setVersion(0);
+    }
 
     public abstract String getId();
 
@@ -107,8 +111,6 @@ public abstract class CommonDataModel implements Serializable {
 
     public abstract void setHash(String hash);
 
-//   public abstract String extractUniqueKey();
-//   public abstract CommonDataModelService<?> getService();
 
     public void addPreProcessPipelineException(String stackTrace) {
         if (preProcessPipelineException == null) {
@@ -128,25 +130,5 @@ public abstract class CommonDataModel implements Serializable {
         setChanges(null);
     }
 
-//    @JsonIgnore
-//    public String hash() {
-//        return hash(new HashSet<>(), 0);
-//    }
-//
-//    @JsonIgnore
-//    private String hash(Set<CommonDataModel> visitedModels, int level) {
-//        int currentLevel = level + 1;
-//        if (visitedModels.contains(this)) {
-//            return "";
-//        }
-//        visitedModels.add(this);
-//        List<Object> props = ReflectionUtils.extractInstanceValues(this, EXCLUDED_PROPERTIES);
-//        Object[] objectsToHash = props.stream()
-//                .filter(Objects::nonNull)
-//                .flatMap(item -> toItems(item, currentLevel))
-//                .map(value -> toHashableItem(value, visitedModels, currentLevel))
-//                .filter(Objects::nonNull)
-//                .toArray();
-//        return String.valueOf(Objects.hash(objectsToHash));
-//    }
+
 }

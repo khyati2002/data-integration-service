@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.salescode.dataintegration.etl.enums.OperationType;
+import com.salescode.channelkart.services.enums.OperationType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,7 +34,6 @@ public class StreamingRawData implements Serializable {
     private boolean ignoreS3Log;
 
     //  private transient List<Future<MdmOperationResponse>> response;
-
 
 
     @Getter

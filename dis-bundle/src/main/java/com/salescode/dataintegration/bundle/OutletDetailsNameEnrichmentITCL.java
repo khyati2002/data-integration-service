@@ -1,7 +1,7 @@
 package com.salescode.dataintegration.bundle;
 
 
-import com.salescode.channelkart.converters.ActiveStatus;
+import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;

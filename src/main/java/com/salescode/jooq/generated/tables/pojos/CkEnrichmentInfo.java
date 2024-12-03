@@ -5,8 +5,8 @@ package com.salescode.jooq.generated.tables.pojos;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salescode.channelkart.converters.ActiveStatus;
-import com.salescode.channelkart.converters.EnrichmentPhase;
+import com.salescode.channelkart.models.enums.ActiveStatus;
+import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import com.salescode.channelkart.models.CommonDataModel;
 
 import java.io.Serializable;

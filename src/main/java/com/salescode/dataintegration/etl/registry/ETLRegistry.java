@@ -1,12 +1,9 @@
 package com.salescode.dataintegration.etl.registry;
 
-import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.channelkart.utils.ReflectionUtils;
 import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
-import com.salescode.dataintegration.etl.enrichment.Enrichment;
 import com.salescode.dataintegration.etl.interfaces.TypeAwareEtlStep;
 import com.salescode.dataintegration.etl.transformer.AbstractTransformer;
-import com.salescode.dataintegration.etl.transformer.Transformer;
 import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
 import com.salescode.dataintegration.scanner.ExternalRegistryScanner;
 import org.springframework.stereotype.Component;
