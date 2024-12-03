@@ -344,6 +344,9 @@ public class UserService extends AbstractCDMService<CkUser> {
             if (par.getVersion() == null) {
                 par.setVersion(1);
             }
+            if(user.getActiveStatus() == ActiveStatus.ACTIVE){
+                par.setActiveStatus(ActiveStatus.ACTIVE);
+            }
             var record = dsl.newRecord(CK_USER_PARENT, par);
             dsl.insertInto(CK_USER_PARENT).set(record).onDuplicateKeyUpdate().set(record).execute();
         }

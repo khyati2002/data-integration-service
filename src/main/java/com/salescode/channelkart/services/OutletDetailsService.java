@@ -363,6 +363,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         );
         if(exists == false) {
             hierarchy.setId(UUID.randomUUID().toString());
+            hierarchy.setActiveStatus(ActiveStatus.ACTIVE);
             var record = dsl.newRecord(CK_HIERARCHY_METADATA,hierarchy);
             dsl.insertInto(CK_HIERARCHY_METADATA)
                     .set(record)
