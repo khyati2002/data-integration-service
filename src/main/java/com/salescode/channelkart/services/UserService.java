@@ -6,6 +6,8 @@
 package com.salescode.channelkart.services;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.models.enums.RoleName;
@@ -15,15 +17,13 @@ import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.jooq.CkSupplierMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkAuthRole;
-import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkUser;
-import com.salescode.jooq.generated.tables.pojos.CkUserParent;
+import com.salescode.jooq.generated.tables.pojos.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -45,6 +45,8 @@ public class UserService extends AbstractCDMService<CkUser> {
     public static final String TEST_USER_STARTS_WITH = "test";
     public static final String DEFAULT_ERROR_MESSAGE = "invalid username or password";
     public static final String RETAILER = "retailer";
+    public static final String DEFAULT_PASSWORD = "@1234";
+    public static final String DEFAULT_ENCODED_PASSWORD = "$2a$10$GetnNjgilfLkIv.2R3nHMevLZfI9HGHWQ3iXw3nrCfJlrpePirkIi";
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private static final String LOG_TYPE = "GENERAL";
     private static final String DEFAULT_PASSWORD_DOMAIN_NAME = "password";
@@ -53,28 +55,30 @@ public class UserService extends AbstractCDMService<CkUser> {
     private static final String MULTIPLE_USER_FOUND = "Got multiple users for single login ";
     private static final String LOGIN_ID = "loginId";
     private final DSLContext dsl;
+
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    private final UserRepository userRepository;
     private final RoleService roleService;
     private final UserParentService userparentservice;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private HierarchyMetaDataService hierarchyMetaDataService;
-    @Autowired
-    private SupplierMetaDataService supplierMetaDataService;
+    private final MetaDataService metadataservice;
 
-
-    public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice, DSLContext dsl) {
-        this.hierarchyMetaDataService = hierarchyMetaDataService;
+    public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice, DSLContext dsl, MetaDataService metadataservice, UserRepository userRepository, SupplierMetaDataService supplierMetaDataService) {
         this.roleService = roleService;
         this.userparentservice = userparentservice;
         this.dsl = dsl;
+        this.metadataservice = metadataservice;
+        this.userRepository = userRepository;
     }
 
+    //
+//
     private static boolean staleRecords(Set<String> existingParents, List<CkHierarchyMetadata> immediateParents) {
         Set<String> hmlist = immediateParents.stream().map(CkHierarchyMetadata::getParent).collect(Collectors.toSet());
         return !existingParents.equals(hmlist);
     }
 
+    //
     private static boolean isSameSupplierMetada(CkUser user1, CkUser user2) {
 
         if ((user1.getSupplierMetaData() == null || user1.getSupplierMetaData().isEmpty()) && (user2.getSupplierMetaData() == null || user2.getSupplierMetaData().isEmpty())) {
@@ -112,47 +116,6 @@ public class UserService extends AbstractCDMService<CkUser> {
 
             return false;
         }
-
-    }
-
-    public static void main(String[] args) {
-
-        CkUser u1 = new CkUser();
-        u1.setLoginid("test1");
-        List<CkSupplierMetadata> spms = new ArrayList<>();
-        u1.setSupplierMetaData(spms);
-
-
-        CkSupplierMetadata spm0 = new CkSupplierMetadata();
-        spm0.setId("11");
-        spm0.setMin(11);
-        spm0.setUser(u1);
-        spms.add(spm0);
-
-        CkSupplierMetadata spm = new CkSupplierMetadata();
-        spm.setId("1");
-        spm.setMin(10);
-        spm.setUser(u1);
-        spms.add(spm);
-
-        CkUser u2 = new CkUser();
-        u2.setLoginid("test1");
-        List<CkSupplierMetadata> spms1 = new ArrayList<>();
-        u2.setSupplierMetaData(spms1);
-        CkSupplierMetadata spm1 = new CkSupplierMetadata();
-        spm1.setId("1");
-        spm1.setMin(10);
-        spm1.setUser(u2);
-        spms1.add(spm1);
-
-        CkSupplierMetadata spm2 = new CkSupplierMetadata();
-        spm2.setId("11");
-        spm2.setMin(11);
-        spm2.setUser(u2);
-        spms1.add(spm2);
-
-        logger.error("{}", isSameSupplierMetada(u1, u2));
-
 
     }
 
@@ -195,13 +158,17 @@ public class UserService extends AbstractCDMService<CkUser> {
     }
 
     public CkUser getLoadedUserObject(String lid, boolean hierarchy) {
-
-
+//		CkUser u = TimerUtils
+//				.withTime("Time taken UserService record ", () -> userRepository.findByLoginId(lid));
         CkUser u = userRepository.findByLoginId(lid);
         if (u != null) {
             loadUserAssociationObjects(u);
-
-
+//			if (hierarchy && outletDetailsService.getImmediateParent(u) == null) {
+//				TimerUtils
+//						.withTime("Time taken UserService hierarchyMetaDataService load ", () ->
+//				u.setImmediateParent(hierarchyMetaDataService.findParentThroughUserLoginId(lid));
+//						);
+//				u.setImmediateParent(hierarchyMetaDataService.findParentThroughUserLoginId(lid));
         }
         return u;
     }
@@ -250,9 +217,6 @@ public class UserService extends AbstractCDMService<CkUser> {
 
         //User savedObj= TimerUtils.withTime("Time Taken to save User[["+user.getLoginId()+"]]", u-> super.save(user));
         saveUser(user);
-        if (user.getImmediateParent() != null && user.getImmediateParent().size() > 0) {
-            saveUserHierarchyMetadata(user);
-        }
         CkUser savedObj = super.save(user);
         if (inUser.getSupplierMetaData() != null && !inUser.getSupplierMetaData().isEmpty()) {
             List<CkSupplierMetadata> supplierMetaInfo = user.getSupplierMetaData();
@@ -275,22 +239,24 @@ public class UserService extends AbstractCDMService<CkUser> {
 
     private CkUser saveUser(CkUser user) {
         user.setActiveStatus(ActiveStatus.ACTIVE);
+
+
+        if (user.getVerified() == null) user.setVerified((byte) 1);
+        if (user.getVersion() == null) user.setVersion(1);
+        if (user.getPassword() == null) user.setPassword(getDefaultEncryptedUserPassword());
+        if (user.getId() == null) user.setId(UUID.randomUUID().toString());
         var record = dsl.newRecord(com.salescode.jooq.generated.tables.CkUser.CK_USER, user);
-        if (record.get(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERIFIED) == null)
-            record.set(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERIFIED, (byte) 1);
-        if (record.get(com.salescode.jooq.generated.tables.CkUser.CK_USER.PASSWORD) == null)
-            record.set(com.salescode.jooq.generated.tables.CkUser.CK_USER.PASSWORD, user.getId());
-        if (record.get(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERSION) == null)
-            record.set(com.salescode.jooq.generated.tables.CkUser.CK_USER.VERSION, 1);
         dsl.insertInto(com.salescode.jooq.generated.tables.CkUser.CK_USER).set(record).onDuplicateKeyUpdate().set(record).execute();
         return user;
     }
 
+    //
     public CkUser fillUser(CkUser user) {
         if (NullUtils.isNotNull(user.getLocationHierarchy())) {
             try {
-
-
+//				CkLocation loc=user.getLocationHierarchy();
+//				//loc = locationService.findLocationOrPersistLocation(loc);
+//				user.setLocationHierarchy(loc);
             } catch (Exception ex) {
                 throw new IllegalStateException("Error occured while setting location for user: " + user.getLoginid(), ex);
             }
@@ -326,6 +292,35 @@ public class UserService extends AbstractCDMService<CkUser> {
         return user;
     }
 
+    public String getDefaultEncryptedUserPassword() {
+        try {
+            CkMetadata metadata = metadataservice.fetchByValue(DEFAULT_PASSWORD_DOMAIN_NAME, DEFAULT_PASSWORD_DOMAIN_TYPE);
+            String rawPassword;
+            if (metadata == null) {
+                rawPassword = DEFAULT_PASSWORD;
+            } else {
+                ArrayNode arraynode = (ArrayNode) metadata.getDomainValues();
+                if (arraynode == null || arraynode.size() == 0) {
+                    throw new Exception("System has found metadata resource for default password but seems misconfigured. Please check configuration.");
+                }
+                JsonNode node = arraynode.get(0);
+                if (!node.has("default")) {
+                    throw new Exception("System has found metadata resource for default password but 'default' key not found. Please check configuration.");
+                }
+                rawPassword = node.get("default").textValue();
+            }
+            if (StringUtils.equals(DEFAULT_PASSWORD, rawPassword)) {
+                return DEFAULT_ENCODED_PASSWORD;
+            } else {
+                //return TimerUtils.withTime("time taken to encode password", () -> encoder.encode(rawPassword));
+                return encoder.encode(rawPassword);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Error");
+        }
+
+    }
+
     public void saveUserParent(CkUser user, OperationType type) {
         Set<CkUserParent> userParents = new HashSet<>();
         List<CkUserParent> dbParents = userparentservice.findByUserLoginId(user.getLoginid());
@@ -343,11 +338,14 @@ public class UserService extends AbstractCDMService<CkUser> {
         }
         if (!userParents.isEmpty()) {
             CkUserParent par = userParents.stream().findFirst().orElseThrow(() -> new RuntimeException("value not found"));
-            var record = dsl.newRecord(CK_USER_PARENT, userParents.stream().findFirst());
-            record.set(CK_USER_PARENT.ID, par.getParent());
+            if (par.getId() == null) {
+                par.setId(UUID.randomUUID().toString());
+            }
+            if (par.getVersion() == null) {
+                par.setVersion(1);
+            }
+            var record = dsl.newRecord(CK_USER_PARENT, par);
             dsl.insertInto(CK_USER_PARENT).set(record).onDuplicateKeyUpdate().set(record).execute();
-
-
         }
     }
 
@@ -373,7 +371,7 @@ public class UserService extends AbstractCDMService<CkUser> {
             CkUserParent up = new CkUserParent();
             up.setUserloginid(user.getLoginid());
             up.setParent(hm.getParent());
-            up.setId(hm.getId());
+            up.setId(UUID.randomUUID().toString());
             if (up.getUserloginid().equalsIgnoreCase(up.getParent())) {
                 //	throw new UnexpectedResultException("User can't be mapped to itself. Found a record for user " + up.getUserLoginId() + " mapped to itself. Please verify the data once.");
             }
@@ -389,6 +387,7 @@ public class UserService extends AbstractCDMService<CkUser> {
         }
         return userParentList.toString();
     }
+
 
     @Override
     public CkUser refresh(CkUser cdmObject) {
@@ -445,7 +444,7 @@ public class UserService extends AbstractCDMService<CkUser> {
             for (CkSupplierMetadata supplier : cdmSupplierList) {
                 supplier.setUser(dbrecordsCopy);
             }
-
+//            cdmSupplierList = supplierMetaDataService.refresh(cdmSupplierList);
             dbrecordsCopy.getSupplierMetaData().clear();
             dbrecordsCopy.getSupplierMetaData().addAll(cdmSupplierList);
         } else {
@@ -455,7 +454,6 @@ public class UserService extends AbstractCDMService<CkUser> {
     }
 
     private void loadUserAssociationObjects(CkUser u) {
-
 
     }
 }

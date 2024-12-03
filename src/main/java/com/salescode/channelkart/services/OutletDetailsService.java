@@ -144,17 +144,21 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 
 
     public void saveOutletHierarchyMetadata(CkOutletDetails cdmOutletDetails) {
-        List<CkHierarchyMetadata> hierarchy = cdmOutletDetails.getUserName().getImmediateParent();
+           List<CkHierarchyMetadata> hierarchy = cdmOutletDetails.getImmediateParent();
         var record = dsl.newRecord(CK_OUTLET_DETAILS_HIERARCHYMETADATA);
         record.set(CK_OUTLET_DETAILS_HIERARCHYMETADATA.OUTLET_ID, cdmOutletDetails.getOutletcode());
-        record.set(CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID, hierarchy.get(0).getId());
+           Collection<CkHierarchyMetadata> list = hierarchyMetaDataService.findByImmediateParent(hierarchy.get(0).getParent());
+           record.set(CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID,list.stream().findFirst().get().getId());
         dsl.insertInto(CK_OUTLET_DETAILS_HIERARCHYMETADATA).set(record).onDuplicateKeyUpdate().set(record).execute();
     }
 
     @Override
     public CkOutletDetails save(CkOutletDetails cdmObject) {
+
+//        TimerUtils.withTime("Time taken to createAssociatedData record ",
+//               () ->
         if (cdmObject.getId() == null) {
-            cdmObject.setId(cdmObject.getOutletcode());
+             cdmObject.setId(UUID.randomUUID().toString());
         }
         createAssociatedData(cdmObject);
 //      printLogsForNullHierarchy(cdmObject,"Location null before prepare outlet details");
@@ -200,7 +204,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         dsl.insertInto(CK_OUTLET_DETAILS).set(record).onDuplicateKeyUpdate().set(record).execute();
 
         if (cdmObject.getUserName() != null && cdmObject.getUserName().getImmediateParent() != null && cdmObject.getUserName().getImmediateParent().size() > 0) {
-            saveOutletHierarchyMetadata(tempoutlet);
+          //  saveOutletHierarchyMetadata(tempoutlet);
         }
         CkOutletDetails saved = super.save(tempoutlet);
         String logMessage = String.format("OutletDetails is updated for id '%s', outletcode '%s', last updated on '%s', modified by '%s'", saved.getId(), saved.getOutletcode(), saved.getLastModifiedTime(), saved.getModifiedBy());
@@ -249,15 +253,24 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     private void setDesignation(Set<String> designation, CkUser user) {
         String Designation = (designation != null) ? designation.stream().map(String::toLowerCase).collect(Collectors.joining(",")) : null;
         boolean exists = dsl.fetchExists(dsl.selectFrom(CK_USERDESIGNATION).where(CK_USERDESIGNATION.LOGIN_ID.eq(user.getLoginid())));
-        if (!exists) {
+      if(exists == false) {
             var new_record = dsl.newRecord(CK_USERDESIGNATION);
             new_record.set(CK_USERDESIGNATION.LOGIN_ID, user.getLoginid());
             new_record.set(CK_USERDESIGNATION.DESIGNATION, Designation);
-            dsl.insertInto(CK_USERDESIGNATION).set(new_record).onDuplicateKeyUpdate().set(new_record).execute();
-        } else {
-            dsl.update(CK_USERDESIGNATION).set(CK_USERDESIGNATION.DESIGNATION, Designation).where(CK_USERDESIGNATION.LOGIN_ID.eq(user.getLoginid())).execute();
+          dsl.insertInto(CK_USERDESIGNATION)
+                  .set(new_record)
+                  .onDuplicateKeyUpdate()
+                  .set(new_record)
+                  .execute();
         }
+      else{
+          dsl.update(CK_USERDESIGNATION)
+                  .set(CK_USERDESIGNATION.DESIGNATION,Designation)
+                  .where(CK_USERDESIGNATION.LOGIN_ID.eq(user.getLoginid()))
+                  .execute();
     }
+    }
+
 
 
 //    private void saveUser(CkUser user){
@@ -309,7 +322,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     private void setRoles(List<CkAuthRole> roles, CkUser user) {
         for (CkAuthRole role : roles) {
             boolean exists = dsl.fetchExists(dsl.selectFrom(CK_USER_ROLES).where(CK_USER_ROLES.USER_ID.eq(user.getLoginid())));
-            if (!exists) {
+         if(exists == false) {
                 dsl.insertInto(CK_USER_ROLES).values(user.getId(), role.getId()).execute();
             }
         }
@@ -342,6 +355,22 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         return dsl.select(CK_USER.fields()).from(CK_USER).join(CK_LOCATION).on(CK_USER.LOCATION_HIERARCHY.eq(CK_LOCATION.LOCATION_HIERARCHY)).where(CK_USER.ID.eq(user.getId())).fetchOneInto(CkLocation.class);
     }
 
+    public void saveUserHierarchyMetadata(CkHierarchyMetadata hierarchy){
+
+        boolean exists = dsl.fetchExists(
+                dsl.selectFrom(CK_HIERARCHY_METADATA)
+                        .where(CK_HIERARCHY_METADATA.HIERARCHY.eq(hierarchy.getHierarchy()))
+        );
+        if(exists == false) {
+            hierarchy.setId(UUID.randomUUID().toString());
+            var record = dsl.newRecord(CK_HIERARCHY_METADATA,hierarchy);
+            dsl.insertInto(CK_HIERARCHY_METADATA)
+                    .set(record)
+                    .onDuplicateKeyUpdate()
+                    .set(record)
+                    .execute();
+        }
+    }
     private void createAssociateDataWithLock(CkOutletDetails outlet) {
 //        User user = TimerUtils.withTime("Time taken to execute getUser([[" + getUserName(outlet).getLoginId()
 //                + "]]) for outlet[[" + outlet.getOutletcode() + "]]", k -> getUser(outlet.getUserName()));
@@ -350,7 +379,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         System.out.println(user);
         outlet.setUserName(user);
         var ans = user.getDesignation();
-        if (getDesignation(user).contains(RETAILER) || getDesignation(user).contains(WHOLESALER)) {
+        if(user.getDesignation() != null && (user.getDesignation().contains(RETAILER) || user.getDesignation().contains(WHOLESALER))) {
             outlet.setActiveStatus(outlet.getUserName().getActiveStatus());
             outlet.setActiveStatus(outlet.getUserName().getActiveStatus());
         }
@@ -361,6 +390,8 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
                 CkLocation location = getLocationHierarchy(user);
                 hm.setLocationHierarchy((location == null) ? null : location.getLocationHierarchy());
                 hm.setParent(user.getLoginid());
+                hm.setVersion(1);
+                saveUserHierarchyMetadata(hm);
                 return hm;
             }).collect(Collectors.toList());
             // If outlet defines its own immediate parent then it should not override by
@@ -380,7 +411,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 //                k -> userService.refresh(user));
         CkUser od = userService.refresh(user);
         if (od.getId() == null) {
-//           od = validateAndGetUser(user);
+          od = validateAndGetUser(user);
 //            User u = TimerUtils.withTime(
 //                    "Time taken to execute findUserByLogindId:[[" + user.getLoginId() + "]] with disabled cache",
 //                    k -> userService.findByLoginId(user.getLoginId(), false));
@@ -474,7 +505,10 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
                 if (hierarchyMetaDataList.isEmpty()) {
                     hierarchyStr.add(user.getLoginid() + " > " + parent + " > " + getAdminLoginId());
                 } else {
-                    hierarchyMetaDataList.forEach(hmList -> hierarchyStr.add(user.getLoginid() + " > " + (StringUtils.isEmpty(hmList.getHierarchy()) ? hmList.getParent() + " > " + getAdminLoginId() : parent + hmList.getHierarchy())));
+                    hierarchyMetaDataList.forEach(hmList -> hierarchyStr.add(user.getLoginid() + " > "
+                            + (StringUtils.isEmpty(hmList.getHierarchy())
+                            ? hmList.getParent() + " > " + getAdminLoginId()
+                            :  hmList.getHierarchy())));
                 }
             });
         }
