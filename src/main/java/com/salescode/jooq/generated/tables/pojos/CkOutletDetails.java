@@ -75,6 +75,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     private String       priceListId;
     private List<CkHierarchyMetadata> immediateParent;
     private CkUser userName;
+    private CkLocation location;
 
     public CkOutletDetails() {}
 
@@ -132,6 +133,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         this.priceListId = value.priceListId;
         this.immediateParent = value.immediateParent;
         this.userName = value.userName;
+        this.location = value.location;
     }
 
     public CkOutletDetails(
@@ -187,7 +189,8 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         String       normalizedHierarchy,
         String       priceListId,
         List<CkHierarchyMetadata> immediateParent,
-        CkUser userName
+        CkUser userName,
+        CkLocation location
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -242,6 +245,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         this.priceListId = priceListId;
         this.immediateParent = immediateParent;
         this.userName = userName;
+        this.location = location;
     }
 
     /**
@@ -1037,5 +1041,16 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
      */
     public void setUserName(CkUser userName) {
         this.userName = userName;
+    }
+
+    public CkLocation getLocation() {
+        return this.location;
+    }
+
+    /**
+     * Setter for <code>ck_outlet_details.id</code>.
+     */
+    public void setLocation(CkLocation location) {
+        this.location = location;
     }
 }

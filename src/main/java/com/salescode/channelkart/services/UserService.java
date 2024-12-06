@@ -8,6 +8,8 @@ package com.salescode.channelkart.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.salescode.channelkart.converters.LocationToStringConverter;
+import com.salescode.channelkart.converters.StringToLocationConverter;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.models.enums.RoleName;
@@ -18,10 +20,12 @@ import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.jooq.CkSupplierMetadata;
 import com.salescode.jooq.generated.tables.pojos.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,8 +35,11 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.salescode.jooq.generated.Tables.CK_USER;
 import static com.salescode.jooq.generated.Tables.CK_USER_PARENT;
 import static com.salescode.jooq.generated.tables.CkHierarchyMetadata.CK_HIERARCHY_METADATA;
+import static com.salescode.jooq.generated.tables.CkOutletDetails.CK_OUTLET_DETAILS;
+import static com.salescode.jooq.generated.tables.CkUserdesignation.CK_USERDESIGNATION;
 
 @Service
 public class UserService extends AbstractCDMService<CkUser> {
@@ -55,13 +62,17 @@ public class UserService extends AbstractCDMService<CkUser> {
     private static final String MULTIPLE_USER_FOUND = "Got multiple users for single login ";
     private static final String LOGIN_ID = "loginId";
     private final DSLContext dsl;
-
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final UserParentService userparentservice;
     private final MetaDataService metadataservice;
+    private final SupplierMetaDataService supplierMetaDataService;
+
+    @Autowired private StringToLocationConverter stringToLocationConverter;
+    @Autowired private LocationService locationService;
+    @Autowired private LocationToStringConverter locationToStringConverter;
 
     public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice, DSLContext dsl, MetaDataService metadataservice, UserRepository userRepository, SupplierMetaDataService supplierMetaDataService) {
         this.roleService = roleService;
@@ -69,10 +80,10 @@ public class UserService extends AbstractCDMService<CkUser> {
         this.dsl = dsl;
         this.metadataservice = metadataservice;
         this.userRepository = userRepository;
+        this.supplierMetaDataService = supplierMetaDataService;
     }
 
-    //
-//
+
     private static boolean staleRecords(Set<String> existingParents, List<CkHierarchyMetadata> immediateParents) {
         Set<String> hmlist = immediateParents.stream().map(CkHierarchyMetadata::getParent).collect(Collectors.toSet());
         return !existingParents.equals(hmlist);
@@ -142,6 +153,10 @@ public class UserService extends AbstractCDMService<CkUser> {
         return System.getProperty("excludeCharNormalizedHierarchy", "[^a-zA-Z0-9>]");
     }
 
+    public CkUser findByLoginId(String loginId) {
+        return findByLoginId(loginId,true,true);
+    }
+
     public CkUser findByLoginId(String loginId, boolean cached) {
         return findByLoginId(loginId, true, true);
     }
@@ -155,6 +170,11 @@ public class UserService extends AbstractCDMService<CkUser> {
 
 
         return function.apply(loginId);
+    }
+
+    public Optional<List<CkUser>> findByMobileSafely(String mobile) {
+        List<CkUser> users= userRepository.findByMobile(mobile);
+        return CollectionUtils.isEmpty(users)? Optional.empty() : Optional.of(users);
     }
 
     public CkUser getLoadedUserObject(String lid, boolean hierarchy) {
@@ -178,21 +198,12 @@ public class UserService extends AbstractCDMService<CkUser> {
         return this.save(inUser, OperationType.insert);
     }
 
-    public void saveUserHierarchyMetadata(CkUser user) {
-        List<CkHierarchyMetadata> hierarchy = user.getImmediateParent();
-        var record = dsl.newRecord(CK_HIERARCHY_METADATA, hierarchy.get(0));
-        if (hierarchy.get(0).getId() == null) {
-            user.getImmediateParent().get(0).setId("hierarchy-parent");
-        }
-        if (record.get(CK_HIERARCHY_METADATA.ID) == null) record.set(CK_HIERARCHY_METADATA.ID, "hierarchy-parent");
-        if (record.get(CK_HIERARCHY_METADATA.VERSION) == null) record.set(CK_HIERARCHY_METADATA.VERSION, 1);
-        dsl.insertInto(CK_HIERARCHY_METADATA).set(record).onDuplicateKeyUpdate().set(record).execute();
-    }
 
     public CkUser save(CkUser inUser, OperationType type) {
         //String lob = SecurityContextUtils.getLob();
         //CkUser user= TimerUtils.withTime("Time Taken to execute fillUser()", u-> fillUser(inUser));
         CkUser user = fillUser(inUser);
+
         //clearCache(lob,user);
         if (user.getRoles().size() == 1 && user.getRoles().stream().allMatch(desig -> desig.getName().equals(RoleName.ROLE_ADMIN.name()))) {
             CkUserParent up = new CkUserParent();
@@ -229,6 +240,9 @@ public class UserService extends AbstractCDMService<CkUser> {
                 //supplierMetaDataService.batchSave(supplierMetaInfo));
             }
 
+
+
+
         }
 
         //AuditLogger.log(LOG_TYPE, "Created new User with loginId '{}'",user.getLoginId());
@@ -238,8 +252,6 @@ public class UserService extends AbstractCDMService<CkUser> {
     }
 
     private CkUser saveUser(CkUser user) {
-        user.setActiveStatus(ActiveStatus.ACTIVE);
-
 
         if (user.getVerified() == null) user.setVerified((byte) 1);
         if (user.getVersion() == null) user.setVersion(1);
@@ -254,9 +266,11 @@ public class UserService extends AbstractCDMService<CkUser> {
     public CkUser fillUser(CkUser user) {
         if (NullUtils.isNotNull(user.getLocationHierarchy())) {
             try {
-//				CkLocation loc=user.getLocationHierarchy();
-//				//loc = locationService.findLocationOrPersistLocation(loc);
-//				user.setLocationHierarchy(loc);
+				CkLocation loc= user.getLocation();
+                if(loc.getActiveStatus() == null ) loc.setActiveStatus(user.getActiveStatus());
+				loc = locationService.findLocationOrPersistLocation(loc);
+                user.setLocation(loc);
+				user.setLocationHierarchy(locationToStringConverter.convert(loc));
             } catch (Exception ex) {
                 throw new IllegalStateException("Error occured while setting location for user: " + user.getLoginid(), ex);
             }
@@ -337,18 +351,21 @@ public class UserService extends AbstractCDMService<CkUser> {
             userParents.addAll(getUserParents(user));
         }
         if (!userParents.isEmpty()) {
-            CkUserParent par = userParents.stream().findFirst().orElseThrow(() -> new RuntimeException("value not found"));
-            if (par.getId() == null) {
-                par.setId(UUID.randomUUID().toString());
-            }
-            if (par.getVersion() == null) {
-                par.setVersion(1);
-            }
-            if(user.getActiveStatus() == ActiveStatus.ACTIVE){
-                par.setActiveStatus(ActiveStatus.ACTIVE);
-            }
-            var record = dsl.newRecord(CK_USER_PARENT, par);
-            dsl.insertInto(CK_USER_PARENT).set(record).onDuplicateKeyUpdate().set(record).execute();
+            userParents.forEach(par -> {
+
+                par = userparentservice.refresh(par);
+                if (par.getId() == null) {
+                    par.setId(UUID.randomUUID().toString());
+                }
+                if (par.getVersion() == null) {
+                    par.setVersion(1);
+                }
+               if(par.getActiveStatus() == null){
+                   par.setActiveStatus(user.getActiveStatus());
+               }
+                var record = dsl.newRecord(CK_USER_PARENT, par);
+                dsl.insertInto(CK_USER_PARENT).set(record).onDuplicateKeyUpdate().set(record).execute();
+            });
         }
     }
 
@@ -374,7 +391,6 @@ public class UserService extends AbstractCDMService<CkUser> {
             CkUserParent up = new CkUserParent();
             up.setUserloginid(user.getLoginid());
             up.setParent(hm.getParent());
-            up.setId(UUID.randomUUID().toString());
             if (up.getUserloginid().equalsIgnoreCase(up.getParent())) {
                 //	throw new UnexpectedResultException("User can't be mapped to itself. Found a record for user " + up.getUserLoginId() + " mapped to itself. Please verify the data once.");
             }
@@ -429,7 +445,7 @@ public class UserService extends AbstractCDMService<CkUser> {
         EntityUtils.copyProperties(cdmObject, dbrecordsCopy, "supplierMetaData", "version");
 
         if (dbrecordsCopy.getMobile() != null && !dbrecordsCopy.getMobile().equals(dbRecord.getMobile())) {
-            //dbrecordsCopy.setVerified(false);
+            dbrecordsCopy.setVerified((byte)0);
         }
 
         if (!changedList.isEmpty()) {
@@ -442,12 +458,12 @@ public class UserService extends AbstractCDMService<CkUser> {
     }
 
     private void setSupplierChanges(CkUser dbrecordsCopy, CkUser cdmObject) {
-        if (!dbrecordsCopy.getSupplierMetaData().isEmpty()) {
+        if (dbrecordsCopy.getSupplierMetaData()!=null && !dbrecordsCopy.getSupplierMetaData().isEmpty()) {
             List<CkSupplierMetadata> cdmSupplierList = cdmObject.getSupplierMetaData();
             for (CkSupplierMetadata supplier : cdmSupplierList) {
                 supplier.setUser(dbrecordsCopy);
             }
-//            cdmSupplierList = supplierMetaDataService.refresh(cdmSupplierList);
+            //cdmSupplierList = supplierMetaDataService.refresh(cdmSupplierList);
             dbrecordsCopy.getSupplierMetaData().clear();
             dbrecordsCopy.getSupplierMetaData().addAll(cdmSupplierList);
         } else {

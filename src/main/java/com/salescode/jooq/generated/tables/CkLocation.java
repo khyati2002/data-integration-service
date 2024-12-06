@@ -12,25 +12,14 @@ import com.salescode.jooq.JsonNodeConverter;
 import com.salescode.jooq.generated.DefaultSchema;
 import com.salescode.jooq.generated.Indexes;
 import com.salescode.jooq.generated.Keys;
+import org.jooq.*;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Identity;
-import org.jooq.Index;
-import org.jooq.Name;
-import org.jooq.Record;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 
 /**
@@ -249,10 +238,6 @@ public class CkLocation extends TableImpl<Record> {
      */
     public final TableField<Record, String> TOWN_CODE = createField(DSL.name("town_code"), SQLDataType.VARCHAR(255), this, "");
 
-    /**
-     * The column <code>ck_location.rowid</code>.
-     */
-    public final TableField<Record, Integer> ROWID = createField(DSL.name("rowid"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>ck_location.changed</code>.
@@ -317,10 +302,7 @@ public class CkLocation extends TableImpl<Record> {
         return Keys.KEY_CK_LOCATION_PRIMARY;
     }
 
-    @Override
-    public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_LOCATION_UK_OOI56BILJI21C7YTRREY3H20S, Keys.KEY_CK_LOCATION_ROWID);
-    }
+
 
     @Override
     public CkLocation as(String alias) {

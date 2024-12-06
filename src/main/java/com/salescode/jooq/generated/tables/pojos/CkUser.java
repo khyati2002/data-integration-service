@@ -68,6 +68,7 @@ public class CkUser extends CommonDataModel implements Serializable {
     private List<CkSupplierMetadata> supplierMetaData;
     private List<CkHierarchyMetadata> immediateParent;
     private Set<String> designation;
+    private CkLocation location;
 
     public CkUser() {}
 
@@ -115,9 +116,10 @@ public class CkUser extends CommonDataModel implements Serializable {
         this.externalReferenceId = value.externalReferenceId;
         this.reportPassword = value.reportPassword;
         this.roles = value.roles;
-        this.supplierMetaData = new ArrayList<>();
+        this.supplierMetaData = value.supplierMetaData;
         this.immediateParent = value.immediateParent;
         this.designation = value.designation;
+        this.location = value.location;
     }
 
     public CkUser(
@@ -166,7 +168,8 @@ public class CkUser extends CommonDataModel implements Serializable {
         List<CkAuthRole> roles,
         List<CkSupplierMetadata> supplierMetaData,
         List<CkHierarchyMetadata> immediateParent,
-        Set<String> designation
+        Set<String> designation,
+        CkLocation location
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -214,6 +217,7 @@ public class CkUser extends CommonDataModel implements Serializable {
         this.supplierMetaData = supplierMetaData;
         this.immediateParent = immediateParent;
         this.designation = designation;
+        this.location = location;
     }
 
     /**
@@ -921,5 +925,13 @@ public class CkUser extends CommonDataModel implements Serializable {
     public void setDesignation(Set<String> designation) {
         this.designation = (designation!=null)?designation.stream().map(String::toLowerCase)
                 .collect(Collectors.toSet()):null;
+    }
+
+    public CkLocation getLocation(){
+        return this.location;
+    }
+
+    public void setLocation(CkLocation location){
+        this.location = location;
     }
 }

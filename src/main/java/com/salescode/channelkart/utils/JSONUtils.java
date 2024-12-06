@@ -131,4 +131,7 @@ public class JSONUtils {
         return OBJECT_MAPPER.convertValue(node, clazz);
     }
 
+    public static <T> T convert(Object node, TypeReference<T> typeReference) {
+        return OBJECT_MAPPER.convertValue(node, typeReference);
+    }
 }

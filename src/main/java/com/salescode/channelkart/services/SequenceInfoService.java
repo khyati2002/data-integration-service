@@ -108,5 +108,52 @@ public class SequenceInfoService extends AbstractCDMService<CkSequenceInfo> {
         return false;
     }
 
+    public String generateSalescodeId(String type) {
+        String nextVal = executeSequenceProcedure(type);
+        JsonNode config = getSequenceConfig(type);
+        if (nextVal == null) {
+            int startValue = config.has("sequenceStartValue") ? config.get("sequenceStartValue").asInt() : DEFAULT_VALUE_FOR_SEQUENCE_START_VALUE;
+            createSequenceProcedure(type, startValue);
+            nextVal = executeSequenceProcedure(type);
+            if (nextVal == null){
+              //  throw new Exception("Next sequence value can not be null, please check for {} sequence");
+            }
+
+        }
+        nextVal = prepareSequence(nextVal, config);
+        return nextVal;
+    }
+
+    public String executeSequenceProcedure(String sequenceName) {
+        return sequenceInfoRepository.executeSequenceProcedures(sequenceName);
+    }
+
+    private JsonNode getSequenceConfig(String type) {
+        CkMetadata metaData = metadataService.fetchByValue("entity", "sequenceConfig", true);
+        JsonNode config;
+        if (metaData == null || !metaData.getDomainValues().get(0).has(type)) {
+            config = JSONUtils.getObjectMapper().createObjectNode();
+        } else {
+            config = metaData.getDomainValues().get(0).get(type);
+        }
+        return config;
+    }
+
+    public void createSequenceProcedure(String sequenceName, long startVal) {
+        sequenceInfoRepository.createSequenceProcedure(sequenceName, startVal);
+    }
+
+    private String prepareSequence(String nextVal, JsonNode config) {
+        int asInt = config.has(SEQUENCE_LENGTH) ? config.get(SEQUENCE_LENGTH).asInt() : DEFAULT_VALUE_FOR_SEQUENCE_LENGTH;
+        nextVal = "0".repeat(asInt - nextVal.length() < 0 ? 0 : asInt - nextVal.length()) + nextVal;
+        if (config.has("sequencePrefix")) {
+            nextVal = config.get("sequencePrefix").asText() + nextVal;
+        }
+        if (config.has("sequenceSuffix")) {
+            nextVal = nextVal + config.get("sequenceSuffix").asText();
+        }
+        return nextVal;
+    }
+
 
 }

@@ -5,8 +5,8 @@ package com.salescode.jooq.generated.tables.pojos;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.channelkart.models.enums.ActiveStatus;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -59,7 +59,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
     private String       district;
     private String       districtCode;
     private String       townCode;
-    private Integer      rowid;
     private Byte         changed;
     private String       salescodeId;
 
@@ -105,7 +104,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
         this.district = value.district;
         this.districtCode = value.districtCode;
         this.townCode = value.townCode;
-        this.rowid = value.rowid;
         this.changed = value.changed;
         this.salescodeId = value.salescodeId;
     }
@@ -150,7 +148,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
         String       district,
         String       districtCode,
         String       townCode,
-        Integer      rowid,
         Byte         changed,
         String       salescodeId
     ) {
@@ -193,7 +190,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
         this.district = district;
         this.districtCode = districtCode;
         this.townCode = townCode;
-        this.rowid = rowid;
         this.changed = changed;
         this.salescodeId = salescodeId;
     }
@@ -744,19 +740,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
         this.townCode = townCode;
     }
 
-    /**
-     * Getter for <code>ck_location.rowid</code>.
-     */
-    public Integer getRowid() {
-        return this.rowid;
-    }
-
-    /**
-     * Setter for <code>ck_location.rowid</code>.
-     */
-    public void setRowid(Integer rowid) {
-        this.rowid = rowid;
-    }
 
     /**
      * Getter for <code>ck_location.changed</code>.
@@ -829,7 +812,6 @@ public class CkLocation extends CommonDataModel implements Serializable {
         sb.append(", ").append(district);
         sb.append(", ").append(districtCode);
         sb.append(", ").append(townCode);
-        sb.append(", ").append(rowid);
         sb.append(", ").append(changed);
         sb.append(", ").append(salescodeId);
 

@@ -4,6 +4,7 @@ package com.salescode.channelkart.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.salescode.channelkart.models.enums.Sequence;
 import com.salescode.channelkart.repository.LocationRepository;
 import com.salescode.channelkart.utils.GlobalLock;
 import com.salescode.channelkart.utils.JSONUtils;
@@ -18,13 +19,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.salescode.jooq.generated.Tables.CK_LOCATION;
 
 @Service
 public class LocationService extends AbstractCDMService<CkLocation> {
@@ -35,7 +35,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
     //
     private static final Object lock1 = new Object();
 
-
+    private LocationRepository locationRepository;
     //
     private final DSLContext dsl;
     //
@@ -43,6 +43,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 
     //
     private MetaDataService metadataservice;
+    private final SequenceInfoService sequenceInfoService;
     @Value("${location.column : area,pincode,territory,city,state,region,zone,cluster,branch,country}")
     private String locationColumns;
 
@@ -50,7 +51,9 @@ public class LocationService extends AbstractCDMService<CkLocation> {
     public LocationService(
 
             MetaDataService metadataservice,
-            DSLContext dsl
+            DSLContext dsl,
+            SequenceInfoService sequenceInfoService,
+            LocationRepository locationRepository
 
 
     ) {
@@ -59,6 +62,8 @@ public class LocationService extends AbstractCDMService<CkLocation> {
         super();
         this.metadataservice = metadataservice;
         this.dsl = dsl;
+        this.sequenceInfoService = sequenceInfoService;
+        this.locationRepository = locationRepository;
 
 
     }
@@ -157,8 +162,6 @@ public class LocationService extends AbstractCDMService<CkLocation> {
                             saveRecursiveLocationHierarchies(tLocation, columnList)
                     );
                     CkLocation locdata = findByLocationHierarchy(hierarchyStr, false);
-
-
                     return locdata;
 
                 }
@@ -208,7 +211,9 @@ public class LocationService extends AbstractCDMService<CkLocation> {
             return result.toArray(new String[0]);
         }
 
+
     }
+
 
 
     public String[] getLocationSecondaryColumns(String key) {
@@ -239,7 +244,14 @@ public class LocationService extends AbstractCDMService<CkLocation> {
                     if (locdata == null) {
                         CkLocation finalLocation = createNewLocationObj(location, columnsList);
                         finalLocation.setLocationHierarchy(hierarchyStr);
-                        CkLocation tresult = this.save(refresh(finalLocation));
+                        CkLocation tresult = refresh(finalLocation);
+                        if(tresult.getId() == null) tresult.setId(UUID.randomUUID().toString());
+                        var record = dsl.newRecord(CK_LOCATION,tresult);
+                        dsl.insertInto(CK_LOCATION)
+                                .set(record)
+                                .onDuplicateKeyUpdate()
+                                .set(record)
+                                .execute();
                         if (i == 0) {
                             result = tresult;
                         }
@@ -253,6 +265,48 @@ public class LocationService extends AbstractCDMService<CkLocation> {
         }
         return result;
     }
+
+    @Override
+    public CkLocation refresh(CkLocation cdmObject){
+        String[] columnList=getLocationColumns();
+        String hierarchy=formHierarchyUsingColumns(cdmObject, columnList, delimiter);
+        cdmObject = createLocationObj(cdmObject, columnList);
+        cdmObject.setLocationHierarchy(hierarchy);
+        cdmObject = setSalescodeId(cdmObject);
+        return super.refresh(cdmObject);
+    }
+
+    public CkLocation createLocationObj(CkLocation locationObj,String[] locationColumns) {
+        try {
+            for(String locationName:locationColumns) {
+                Object locationValue = PropertyUtils.getProperty(locationObj, locationName);
+                if(NullUtils.isNotNull(locationValue)){
+                    locationObj.setLocationName(String.valueOf(locationValue));
+                    locationObj.setLocationType(locationName);
+                    break;
+                }
+            }
+        } catch (IllegalAccessException | InvocationTargetException e1) {
+          //  throw new AccessException(e1.getCause(), ERROR_WHILE_FETCHING_VALUE_FROM_LOCATION_PROPERTY_EXCEPTION,e1.getLocalizedMessage());
+        } catch(NoSuchMethodException e2) {
+         //   throw new UnknownKeyException(e2.getCause(), ASSOCIATE_GETTER_SETTER_METHOD_MISSING_FOR_ONE_OF_THE_FIELD_FROM_LIST_EXCEPTION,
+          //          Arrays.toString(locationColumns),e2.getLocalizedMessage());
+        }
+        return locationObj;
+    }
+
+    public CkLocation setSalescodeId(CkLocation locationObj){
+        if(StringUtils.isNullOrBlank(locationObj.getSalescodeId())) {
+            locationObj.setSalescodeId(sequenceInfoService.generateSalescodeId(Sequence.LOCATION.getSequenceName()));
+        }
+        return locationObj;
+    }
+
+    public String findLocationString(CkLocation value){
+        CkLocation loc = findLocationOrPersistLocation(value);
+        return loc.getLocationHierarchy();
+    }
+
 
 
 }

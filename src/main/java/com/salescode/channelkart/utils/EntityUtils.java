@@ -10,6 +10,7 @@ import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.templates.TemplateEngine;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.jooq.generated.Tables;
+import com.salescode.jooq.generated.tables.pojos.CkLocation;
 import com.salescode.jooq.generated.tables.pojos.CkMetadata;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -317,15 +318,20 @@ public final class EntityUtils {
         for (int i = 0; i < columnArr.size(); i++) {
             String tempval = String.valueOf(getBeanProperty(element, columnArr.get(i).asText()));
             if (tempval != null) {
-                if (value.isBlank()) {
-                    value = tempval.toLowerCase();
-                } else {
-                    value = value + "-" + tempval.toLowerCase();
+                String processedValue = checkGenerateMD5Hash(clazz.getSimpleName())
+                        ? EncodingUtils.getMd5(tempval.toLowerCase())
+                        : tempval.toLowerCase();
+
+                if (i > 0) {
+                    buffer2.append(" AND ");
                 }
-                value = value.replace(" ", "-");
+                if( (element instanceof CkLocation) && columnArr.get(i).asText().equals("locationHierarchy")) columnArr.set(i,"location_hierarchy");
+                buffer2.append(columnArr.get(i).asText())
+                        .append("='")
+                        .append(StringUtils.escapeSql(processedValue))
+                        .append("'");
             }
         }
-        buffer2.append("id").append("=").append("'").append(StringUtils.escapeSql(checkGenerateMD5Hash(clazz.getSimpleName()) ? EncodingUtils.getMd5(value) : value)).append("'");
 
         try {
             return (CommonDataModel) Objects.requireNonNull(dslContext.selectFrom(getDSLContextTable(clazz)).where(buffer2.toString())).fetchAnyInto(clazz);
@@ -334,6 +340,7 @@ public final class EntityUtils {
         }
         return null;
     }
+
 
 
 }

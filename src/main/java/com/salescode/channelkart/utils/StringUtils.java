@@ -55,4 +55,17 @@ public class StringUtils {
         }
         return firstValue.equals(secondValue);
     }
+
+    public static boolean isNullOrBlank(Object value) {
+        return (value == null) || (String.valueOf(value).isBlank());
+    }
+
+    public static boolean hasNullOrEmptyValues(String... values) {
+        for (String value : values) {
+            if(value == null || value.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
