@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.salescode.jooq.generated.Tables.CK_VALIDATION_RULE;
 
@@ -47,6 +50,15 @@ public class ValidationInfoRegistry implements RefreshableRegistry {
                 .where(CK_VALIDATION_RULE.TYPE.eq(type))
                 .and(CK_VALIDATION_RULE.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
                 .fetchInto(CkValidationRule.class);
+    }
+
+    public void init() {
+        Stream<CkValidationRule> ckValidationRuleStream = dsl.selectFrom(CK_VALIDATION_RULE)
+                .where(CK_VALIDATION_RULE.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
+                .groupBy(CK_VALIDATION_RULE.TYPE)
+                .fetchStreamInto(CkValidationRule.class);
+        ConcurrentMap<String, List<CkValidationRule>> collect = ckValidationRuleStream.collect(Collectors.groupingByConcurrent(CkValidationRule::getType));
+        validationCache.putAll(collect);
     }
 
     /**

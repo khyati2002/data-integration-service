@@ -9,6 +9,7 @@ import com.salescode.dataintegration.scanner.ExternalRegistryScanner;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Component
@@ -18,7 +19,7 @@ public class ETLRegistry {
 
     public ETLRegistry(ExternalRegistryScanner externalRegistryScanner) {
         Collection<? extends TypeAwareEtlStep> instances = externalRegistryScanner.getInstances();
-        registry = instances.stream().collect(Collectors.groupingBy(TypeAwareEtlStep::getSourceType, Collectors.toList()));
+        registry = instances.stream().collect(Collectors.groupingBy(TypeAwareEtlStep::getSourceType, ConcurrentHashMap::new, Collectors.toList()));
     }
 
     public <T> T getTransformer(String fullyQualifiedClassName) {

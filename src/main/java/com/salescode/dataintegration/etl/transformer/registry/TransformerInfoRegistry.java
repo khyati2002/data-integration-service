@@ -1,6 +1,7 @@
 package com.salescode.dataintegration.etl.transformer.registry;
 
 import com.salescode.channelkart.models.enums.ActiveStatus;
+import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.dataintegration.etl.interfaces.RefreshableRegistry;
 import com.salescode.jooq.generated.tables.pojos.CkTransformerInfo;
 import org.jooq.DSLContext;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import static com.salescode.jooq.generated.Tables.CK_TRANSFORMER_INFO;
 
@@ -64,7 +66,7 @@ public class TransformerInfoRegistry implements RefreshableRegistry {
                 .where(CK_TRANSFORMER_INFO.ID.eq(id))
                 .and(CK_TRANSFORMER_INFO.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
                 .fetchOneInto(CkTransformerInfo.class);
-        if (info != null) {
+        if (info != null && info.getName() != null) {
             nameToIdCache.put(info.getName(), info.getId()); // Update name-to-ID cache
         }
         return info;
@@ -82,6 +84,18 @@ public class TransformerInfoRegistry implements RefreshableRegistry {
                 .where(CK_TRANSFORMER_INFO.NAME.eq(name))
                 .and(CK_TRANSFORMER_INFO.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
                 .fetchOne(CK_TRANSFORMER_INFO.ID);
+    }
+
+    public void init() {
+        Stream<CkTransformerInfo> info = dsl.selectFrom(CK_TRANSFORMER_INFO)
+                .where(CK_TRANSFORMER_INFO.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
+                .fetchStreamInto(CkTransformerInfo.class);
+        info.filter(transformerInfo -> NullUtils.isNotNull(transformerInfo.getName()) && NullUtils.isNotNull(transformerInfo.getId()))
+                .parallel()
+                .forEach(transformerInfo -> {
+                    transformerCache.put(transformerInfo.getId(), transformerInfo);
+                    nameToIdCache.put(transformerInfo.getName(), transformerInfo.getId());
+                });
     }
 
     /**

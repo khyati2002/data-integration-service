@@ -5,7 +5,7 @@ config:
 
 logging:
   level:
-    org.apache.kafka.clients: DEBUG
+    root: info
 
 spring:
   application:

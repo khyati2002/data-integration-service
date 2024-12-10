@@ -23,6 +23,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.NoResultException;
 import java.io.*;
 import java.lang.reflect.Field;
@@ -46,6 +47,7 @@ public final class EntityUtils {
     private static EntityUtils instance;
     private final MetadataRegistry metadataRegistry;
     private final DSLContext dslContext;
+    Set<Class<? extends CommonDataModel>> subClasses = ReflectionUtils.findSubClasses(CommonDataModel.class);
 
     @Autowired
     public EntityUtils(MetadataRegistry metadataRegistry, DSLContext dslContext) {
@@ -174,7 +176,6 @@ public final class EntityUtils {
         if (entityClassMap.containsKey(entityName)) {
             return entityClassMap.get(entityName);
         }
-        Set<Class<? extends CommonDataModel>> subClasses = ReflectionUtils.findSubClasses(CommonDataModel.class);
         for (var entity : subClasses) {
             if (entityName.equalsIgnoreCase(entity.getSimpleName())) {
                 entityClassMap.put(entityName, entity);
