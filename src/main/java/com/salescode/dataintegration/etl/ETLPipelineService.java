@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.response.OperationResponse;
+import com.salescode.channelkart.services.IntegrationHistoryService;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.services.CommonDataModelService;
@@ -34,13 +35,15 @@ public class ETLPipelineService {
     private final DataEnrichmentService dataEnrichmentService;
     private final DataValidationService dataValidationService;
     private final DataEntityValidationService dataEntityValidationService;
+    private final IntegrationHistoryService integrationHistoryService;
     ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
-    public ETLPipelineService(DataTransformationService dataTransformationService, DataEnrichmentService dataEnrichmentService, DataValidationService dataValidationService, DataEntityValidationService dataEntityValidationService) {
+    public ETLPipelineService(DataTransformationService dataTransformationService, DataEnrichmentService dataEnrichmentService, DataValidationService dataValidationService, DataEntityValidationService dataEntityValidationService,IntegrationHistoryService integrationHistoryService) {
         this.dataTransformationService = dataTransformationService;
         this.dataEnrichmentService = dataEnrichmentService;
         this.dataValidationService = dataValidationService;
         this.dataEntityValidationService = dataEntityValidationService;
+        this.integrationHistoryService = integrationHistoryService;
     }
 
     @SneakyThrows
@@ -53,8 +56,16 @@ public class ETLPipelineService {
             throw new IllegalArgumentException("Features cannot be empty");
         }
         for (JsonNode jsonNode : features) {
-            streamingRawData.setFeatures(objectMapper.createArrayNode().add(jsonNode));
-            transformedObjects.addAll(process(streamingRawData));
+
+            try {
+                streamingRawData.setFeatures(objectMapper.createArrayNode().add(jsonNode));
+                transformedObjects.addAll(process(streamingRawData));
+                integrationHistoryService.save("Success","Success");
+            }
+            catch(Exception e){
+                integrationHistoryService.save("Failure",e.getMessage());
+            }
+
         }
         return transformedObjects;
     }

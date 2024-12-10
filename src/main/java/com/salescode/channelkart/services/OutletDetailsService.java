@@ -15,11 +15,19 @@ import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
-import com.salescode.jooq.generated.tables.pojos.*;
+import com.salescode.jooq.generated.tables.pojos.CkAuthRole;
+import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
+import com.salescode.jooq.generated.tables.pojos.CkLocation;
+import com.salescode.jooq.generated.tables.pojos.CkMetadata;
+import com.salescode.jooq.impl.CkOutletDetails;
+import com.salescode.jooq.impl.CkUser;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.Record;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +40,8 @@ import java.util.stream.Collectors;
 
 import static com.salescode.jooq.generated.Tables.CK_CUSTOMER_ACCOUNT;
 import static com.salescode.jooq.generated.tables.CkHierarchyMetadata.CK_HIERARCHY_METADATA;
-import static com.salescode.jooq.generated.tables.CkLocation.CK_LOCATION;
 import static com.salescode.jooq.generated.tables.CkOutletDetails.CK_OUTLET_DETAILS;
 import static com.salescode.jooq.generated.tables.CkOutletDetailsHierarchymetadata.CK_OUTLET_DETAILS_HIERARCHYMETADATA;
-import static com.salescode.jooq.generated.tables.CkUser.CK_USER;
 import static com.salescode.jooq.generated.tables.CkUserRoles.CK_USER_ROLES;
 import static com.salescode.jooq.generated.tables.CkUserdesignation.CK_USERDESIGNATION;
 
@@ -100,20 +106,6 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         return result[0];
     }
 
-
-    public String getLoginId(CkUser user) {
-        return dsl.select(CK_USER.ID).from(CK_USER).where(CK_USER.ID.eq(user.getId())).fetchOneInto(String.class);
-    }
-
-    public List<CkHierarchyMetadata> getImmediateParent(CkOutletDetails outlet) {
-        return dsl.select(CK_HIERARCHY_METADATA.fields())  // Select fields from the HierarchyMetaData table
-                .from(CK_OUTLET_DETAILS).join(CK_OUTLET_DETAILS_HIERARCHYMETADATA).on(CK_OUTLET_DETAILS.ID.eq(CK_OUTLET_DETAILS_HIERARCHYMETADATA.OUTLET_ID))  // Join on outlet_id
-                .join(CK_HIERARCHY_METADATA).on(CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID.eq(CK_HIERARCHY_METADATA.ID))  // Join on hierarchy_metadata_id
-                .where(CK_OUTLET_DETAILS.ID.eq(outlet.getId()))  // Filter by outlet_id
-                .fetchInto(CkHierarchyMetadata.class);
-    }
-
-
     public CkOutletDetails prepareOutletDetails(CkOutletDetails outletDetails) {
 //        /* location */
 //        refreshLocation(outletDetails);
@@ -122,8 +114,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 //        TimerUtils.withTime("prepareOutletDetails Time taken to fillRetailer ",
 //                () -> fillRetailer(outletDetails, false));
 //     fillRetailer(outletDetails, false);
-//
-        return outletDetails;
+       return outletDetails;
     }
 
 
@@ -163,7 +154,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 //      printLogsForNullHierarchy(cdmObject,"Location null before prepare outlet details");
 //        CkOutletDetails tempoutlet = TimerUtils.withTime("Time taken to prepareOutletDetails new_record ",
 //                k -> prepareOutletDetails(cdmObject));
-
+        String outlet = cdmObject.toString();
         CkOutletDetails tempoutlet = prepareOutletDetails(cdmObject);
         List<CkHierarchyMetadata> immediateParents = tempoutlet.getImmediateParent();
         if (immediateParents != null && !immediateParents.isEmpty()) {
@@ -199,7 +190,8 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         if (record.get(CK_OUTLET_DETAILS.ID) == null) record.set(CK_OUTLET_DETAILS.ID, tempoutlet.getOutletcode());
         if (record.get(CK_OUTLET_DETAILS.VERSION) == null) record.set(CK_OUTLET_DETAILS.VERSION, 1);
         if (record.get(CK_OUTLET_DETAILS.MAPPED) == null) record.set(CK_OUTLET_DETAILS.MAPPED, true);
-        record.set(CK_OUTLET_DETAILS.CREATION_TIME,  Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        if(record.get(CK_OUTLET_DETAILS.CREATION_TIME) == null ) record.set(CK_OUTLET_DETAILS.CREATION_TIME,  Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+
         dsl.insertInto(CK_OUTLET_DETAILS).set(record).onDuplicateKeyUpdate().set(record).execute();
 
         if (tempoutlet != null && tempoutlet.getImmediateParent() != null && tempoutlet.getImmediateParent().size() > 0) {
@@ -256,7 +248,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
             var new_record = dsl.newRecord(CK_USERDESIGNATION);
             new_record.set(CK_USERDESIGNATION.LOGIN_ID, user.getLoginid());
             new_record.set(CK_USERDESIGNATION.DESIGNATION, Designation);
-          dsl.insertInto(CK_USERDESIGNATION)
+            dsl.insertInto(CK_USERDESIGNATION)
                   .set(new_record)
                   .onDuplicateKeyUpdate()
                   .set(new_record)
@@ -309,7 +301,8 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
             refreshedHier.setId(UUID.randomUUID().toString());
         }
 
-            var new_record = dsl.newRecord(CK_HIERARCHY_METADATA,refreshedHier);
+        var new_record = dsl.newRecord(CK_HIERARCHY_METADATA,refreshedHier);
+        if(new_record.get(CK_OUTLET_DETAILS.CREATION_TIME) == null ) new_record.set(CK_OUTLET_DETAILS.CREATION_TIME,  Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
             dsl.insertInto(CK_HIERARCHY_METADATA)
                     .set(new_record)
                     .onDuplicateKeyUpdate()
@@ -361,13 +354,14 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 //                k -> userService.refresh(user));
         CkUser od = userService.refresh(user);
         if (od.getId() == null) {
-          od = validateAndGetUser(user);
+            od = validateAndGetUser(user);
 //            User u = TimerUtils.withTime(
 //                    "Time taken to execute findUserByLogindId:[[" + user.getLoginId() + "]] with disabled cache",
 //                    k -> userService.findByLoginId(user.getLoginId(), false));
             CkUser u = userService.findByLoginId(user.getLoginid(), false);
             if (u != null) {
                 out = u;
+                out.setImmediateParent(od.getImmediateParent());
             } else {
                 out = od;
             }
@@ -388,9 +382,11 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 
 //            User u = TimerUtils.withTime(
 //                    "Time taken to execute findUserByLogindId:[[" + user.getLoginId() + "]] with disabled cache",
-//                    k -> userService.findByLoginId(user.getLoginId(), false));
-            CkUser u = userService.findByLoginId(user.getLoginid(), false);
-            u.setLocation(stringToLocationConverter.convert(u.getLocationHierarchy()));
+//                    k -> ufalse);serService.findByLoginId(user.getLoginId(), false));
+            CkUser u = userService.findByLoginId(user.getLoginid(),false);
+            u.setLocation(outUser.getLocation());
+            u.setImmediateParent(outUser.getImmediateParent());
+
             if (u != null) {
                 out = u;
             } else {

@@ -5,7 +5,7 @@
 package com.salescode.channelkart.repository;
 
 import com.salescode.channelkart.models.enums.ActiveStatus;
-import com.salescode.jooq.generated.tables.pojos.CkUser;
+import com.salescode.jooq.impl.CkUser;
 import com.salescode.jooq.generated.tables.pojos.CkUserMessengerInfo;
 import org.springframework.stereotype.Repository;
 

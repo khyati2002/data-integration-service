@@ -1,7 +1,7 @@
 package com.salescode.channelkart.repository.impl;
 
 import com.salescode.channelkart.repository.OutletDetailsRepository;
-import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
+import com.salescode.jooq.impl.CkOutletDetails;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 

@@ -5,13 +5,12 @@ package com.salescode.jooq.generated.tables.pojos;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.channelkart.models.enums.ActiveStatus;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -73,9 +72,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
     private String       controlGroup;
     private String       normalizedHierarchy;
     private String       priceListId;
-    private List<CkHierarchyMetadata> immediateParent;
-    private CkUser userName;
-    private CkLocation location;
 
     public CkOutletDetails() {}
 
@@ -131,9 +127,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         this.controlGroup = value.controlGroup;
         this.normalizedHierarchy = value.normalizedHierarchy;
         this.priceListId = value.priceListId;
-        this.immediateParent = value.immediateParent;
-        this.userName = value.userName;
-        this.location = value.location;
     }
 
     public CkOutletDetails(
@@ -187,10 +180,7 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         String       blobKey,
         String       controlGroup,
         String       normalizedHierarchy,
-        String       priceListId,
-        List<CkHierarchyMetadata> immediateParent,
-        CkUser userName,
-        CkLocation location
+        String       priceListId
     ) {
         this.id = id;
         this.activeStatus = activeStatus;
@@ -243,9 +233,6 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
         this.controlGroup = controlGroup;
         this.normalizedHierarchy = normalizedHierarchy;
         this.priceListId = priceListId;
-        this.immediateParent = immediateParent;
-        this.userName = userName;
-        this.location = location;
     }
 
     /**
@@ -1020,37 +1007,5 @@ public class CkOutletDetails extends CommonDataModel implements Serializable {
 
         sb.append(")");
         return sb.toString();
-    }
-    public List<CkHierarchyMetadata> getImmediateParent() {
-        return this.immediateParent;
-    }
-
-    /**
-     * Setter for <code>ck_outlet_details.id</code>.
-     */
-    public void setImmediateParent(List<CkHierarchyMetadata>  immediateParent) {
-        this.immediateParent = immediateParent;
-    }
-
-    public CkUser getUserName() {
-        return this.userName;
-    }
-
-    /**
-     * Setter for <code>ck_outlet_details.id</code>.
-     */
-    public void setUserName(CkUser userName) {
-        this.userName = userName;
-    }
-
-    public CkLocation getLocation() {
-        return this.location;
-    }
-
-    /**
-     * Setter for <code>ck_outlet_details.id</code>.
-     */
-    public void setLocation(CkLocation location) {
-        this.location = location;
     }
 }

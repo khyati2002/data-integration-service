@@ -37,12 +37,15 @@ public final class EntityUtils {
     private static final String GET_KEY_QUERY_DOMAIN_NAME = "cdmGetKeyQuery";
     private static final List<Class> jsonNodeClassList = new ArrayList<>(Arrays.asList(JsonNode.class, ObjectNode.class));
     private static final Map<String, Class<? extends CommonDataModel>> entityClassMap = new ConcurrentHashMap<>();
+    private Map<String, Class<? extends CommonDataModel>> entityImplClassMap = new HashMap<>() {{
+        put("CkOutletDetails", com.salescode.jooq.impl.CkOutletDetails.class);
+        put("CkUser", com.salescode.jooq.impl.CkUser.class);
+    }};
     private static final Map<String, String> nativeTableNames = new HashMap<>();
     private static final Object lockObj = new Object();
     private static EntityUtils instance;
     private final MetadataRegistry metadataRegistry;
     private final DSLContext dslContext;
-
 
     @Autowired
     public EntityUtils(MetadataRegistry metadataRegistry, DSLContext dslContext) {
@@ -165,6 +168,9 @@ public final class EntityUtils {
     }
 
     public Class<? extends CommonDataModel> getEntityClass(String entityName) {
+        if(entityImplClassMap.containsKey(entityName)){
+            return entityImplClassMap.get(entityName);
+        }
         if (entityClassMap.containsKey(entityName)) {
             return entityClassMap.get(entityName);
         }

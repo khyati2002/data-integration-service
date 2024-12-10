@@ -19,7 +19,12 @@ import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.jooq.CkSupplierMetadata;
-import com.salescode.jooq.generated.tables.pojos.*;
+import com.salescode.jooq.impl.CkUser;
+import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
+import com.salescode.jooq.generated.tables.pojos.CkUserParent;
+import com.salescode.jooq.generated.tables.pojos.CkLocation;
+import com.salescode.jooq.generated.tables.pojos.CkAuthRole;
+import com.salescode.jooq.generated.tables.pojos.CkMetadata;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;
@@ -31,6 +36,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -68,19 +75,18 @@ public class UserService extends AbstractCDMService<CkUser> {
     private final RoleService roleService;
     private final UserParentService userparentservice;
     private final MetaDataService metadataservice;
-    private final SupplierMetaDataService supplierMetaDataService;
+    @Autowired private SupplierMetaDataService supplierMetaDataService;
 
     @Autowired private StringToLocationConverter stringToLocationConverter;
     @Autowired private LocationService locationService;
     @Autowired private LocationToStringConverter locationToStringConverter;
 
-    public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice, DSLContext dsl, MetaDataService metadataservice, UserRepository userRepository, SupplierMetaDataService supplierMetaDataService) {
+    public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice, DSLContext dsl, MetaDataService metadataservice, UserRepository userRepository) {
         this.roleService = roleService;
         this.userparentservice = userparentservice;
         this.dsl = dsl;
         this.metadataservice = metadataservice;
         this.userRepository = userRepository;
-        this.supplierMetaDataService = supplierMetaDataService;
     }
 
 
@@ -214,6 +220,7 @@ public class UserService extends AbstractCDMService<CkUser> {
             CkUserParent refreshedObj = userparentservice.refresh(up);
             //TimerUtils.withTime("Time taken to save UserParent", ()->
             var record = dsl.newRecord(CK_USER_PARENT, refreshedObj);
+            if(record.get(CK_OUTLET_DETAILS.CREATION_TIME) == null ) record.set(CK_OUTLET_DETAILS.CREATION_TIME,  Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
             dsl.insertInto(CK_USER_PARENT).set(record).onDuplicateKeyUpdate().set(record).execute();
             userparentservice.save(refreshedObj);
             //);
@@ -239,10 +246,6 @@ public class UserService extends AbstractCDMService<CkUser> {
                 //TimerUtils.withTime("Time taken to batchSave SupplierMetadata of Size "+supplierMetaInfo.size(), ()->
                 //supplierMetaDataService.batchSave(supplierMetaInfo));
             }
-
-
-
-
         }
 
         //AuditLogger.log(LOG_TYPE, "Created new User with loginId '{}'",user.getLoginId());
@@ -257,7 +260,9 @@ public class UserService extends AbstractCDMService<CkUser> {
         if (user.getVersion() == null) user.setVersion(1);
         if (user.getPassword() == null) user.setPassword(getDefaultEncryptedUserPassword());
         if (user.getId() == null) user.setId(UUID.randomUUID().toString());
+
         var record = dsl.newRecord(com.salescode.jooq.generated.tables.CkUser.CK_USER, user);
+        if(record.get(CK_OUTLET_DETAILS.CREATION_TIME) == null ) record.set(CK_OUTLET_DETAILS.CREATION_TIME,  Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         dsl.insertInto(com.salescode.jooq.generated.tables.CkUser.CK_USER).set(record).onDuplicateKeyUpdate().set(record).execute();
         return user;
     }
@@ -431,7 +436,9 @@ public class UserService extends AbstractCDMService<CkUser> {
         //attributeUpdateOverrideManager.mergeProperties(cdmObject,dbrecordsCopy);
 
         Map<String, CkHierarchyMetadata> hmMap = new HashMap<>();
-        dbrecordsCopy.getImmediateParent().forEach(h -> hmMap.put(h.getParent(), h));
+        if(dbrecordsCopy.getImmediateParent() != null) {
+            dbrecordsCopy.getImmediateParent().forEach(h -> hmMap.put(h.getParent(), h));
+        }
 
         List<CkHierarchyMetadata> changedList = new ArrayList<>();
         dbrecordsCopy.setImmediateParent(tempList.stream().map(h -> {
@@ -463,7 +470,7 @@ public class UserService extends AbstractCDMService<CkUser> {
             for (CkSupplierMetadata supplier : cdmSupplierList) {
                 supplier.setUser(dbrecordsCopy);
             }
-            //cdmSupplierList = supplierMetaDataService.refresh(cdmSupplierList);
+            cdmSupplierList = supplierMetaDataService.refresh(cdmSupplierList);
             dbrecordsCopy.getSupplierMetaData().clear();
             dbrecordsCopy.getSupplierMetaData().addAll(cdmSupplierList);
         } else {
