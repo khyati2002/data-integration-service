@@ -34,7 +34,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <kafka.version>3.6.1</kafka.version>
         <log4j2.version>2.19.0</log4j2.version>
-        <jooq.version>3.16.23</jooq.version>
         <com.bazaarvoice.jolt.version>0.1.1</com.bazaarvoice.jolt.version>
     </properties>
 
@@ -134,26 +133,6 @@
             <artifactId>s3</artifactId>
             <version>2.29.2</version>
         </dependency>
-
-        <!-- JOOQ -->
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-meta</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-codegen</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jooq</artifactId>
-        </dependency>
-
 
         <!-- MySQL Driver Dependency (since you're using MySQL) -->
         <dependency>
