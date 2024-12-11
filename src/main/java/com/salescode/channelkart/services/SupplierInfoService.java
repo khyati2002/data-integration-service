@@ -50,7 +50,6 @@ public class SupplierInfoService {
         } else {
             logger.error("Cannot find outlet for fetching suppliers");
         }
-
         return List.of();
     }
 

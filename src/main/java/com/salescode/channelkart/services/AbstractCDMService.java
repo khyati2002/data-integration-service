@@ -29,7 +29,10 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     @Override
     public T refresh(T cdmObject) {
+
         T dbRecord = CdmDiffUtil.withOldModel(() -> (T) EntityUtils.getInstance().findRecords(cdmObject.getClass(), cdmObject));
+        CommonDataModelService service = ServiceLocator.lookup(cdmObject.getClass());
+        dbRecord = (T) service.populateData(dbRecord);
         if (dbRecord != null) {
             cdmObject.setOldModel(dbRecord.getOldModel());
             int version = dbRecord.getVersion();
@@ -76,6 +79,11 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 //                    .collect(Collectors.toList());
         }
         return cdmobjects;
+    }
+
+    @Override
+    public T populateData(T cdmObject){
+        return cdmObject;
     }
 
 

@@ -6,15 +6,19 @@ import com.fasterxml.jackson.databind.util.RawValue;
 import com.salescode.channelkart.converters.HierarchyMetaDataToStringConverter;
 import com.salescode.channelkart.converters.LocationToStringConverter;
 import com.salescode.channelkart.converters.StringToLocationConverter;
+import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.models.enums.ApplicationCategory;
 import com.salescode.channelkart.models.enums.RoleName;
 import com.salescode.channelkart.repository.OutletDetailsRepository;
+import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
+import com.salescode.jooq.dto.CkOutletDetailsDTO;
+import com.salescode.jooq.generated.Tables;
 import com.salescode.jooq.generated.tables.pojos.CkAuthRole;
 import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
 import com.salescode.jooq.generated.tables.pojos.CkLocation;
@@ -212,6 +216,8 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 //        userDetailsService.save(cdmObject);
         return cdmObject;
     }
+
+
 
 
     //SAVE IN USER entity
@@ -612,4 +618,22 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     public CkOutletDetails findByOutletCode(String outletCode) {
         return findByOutletCode(outletCode, true);
     }
+
+
+    public List<CkHierarchyMetadata> getImmediateParent(String outletcode){
+        return dsl.select(CK_HIERARCHY_METADATA.fields())
+                .from(CK_HIERARCHY_METADATA)
+                .join(CK_OUTLET_DETAILS_HIERARCHYMETADATA)
+                .on(CK_HIERARCHY_METADATA.ID.eq(CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID))
+                .where(CK_OUTLET_DETAILS_HIERARCHYMETADATA.OUTLET_ID.eq(outletcode))
+                .fetchInto(CkHierarchyMetadata.class);
+    }
+
+    @Override
+    public CkOutletDetails populateData(CkOutletDetails cdmObject) {
+        cdmObject.setImmediateParent(getImmediateParent(cdmObject.getOutletcode()));
+        return cdmObject;
+        }
+
+
 }

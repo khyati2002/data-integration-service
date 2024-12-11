@@ -10,5 +10,6 @@ public interface CommonDataModelService<T extends CommonDataModel> {
 
     public T save(T cdmObject);
 
+    public T populateData(T cdmObject);
 
 }
