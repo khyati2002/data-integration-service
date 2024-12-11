@@ -8,18 +8,20 @@ package com.salescode.channelkart.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.channelkart.component.model.SequenceGenerator;
+import com.salescode.channelkart.models.MetaData;
+import com.salescode.channelkart.models.SequenceInfo;
 import com.salescode.channelkart.repository.SequenceInfoRepository;
 import com.salescode.channelkart.utils.JSONUtils;
-import com.salescode.jooq.generated.tables.pojos.CkMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkSequenceInfo;
+
 import org.apache.commons.lang3.ObjectUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 @Service
-public class SequenceInfoService extends AbstractCDMService<CkSequenceInfo> {
+public class SequenceInfoService extends AbstractCDMService<SequenceInfo> {
 
     /**
      * The Constant logger.
@@ -62,13 +64,14 @@ public class SequenceInfoService extends AbstractCDMService<CkSequenceInfo> {
      * @param metadataService        the metadata service
      */
     public SequenceInfoService(MetaDataService metadataService, SequenceInfoRepository sequenceInfoRepository) {
+        super(sequenceInfoRepository);
         this.sequenceInfoRepository = sequenceInfoRepository;
         this.metadataService = metadataService;
     }
 
 
     public JsonNode getMetaConfigurations(String domainName, String domainType) {
-        CkMetadata sequenceGenerator = metadataService.fetchByValue(domainName, domainType);
+        MetaData sequenceGenerator = metadataService.fetchByValue(domainName, domainType);
         if (ObjectUtils.isEmpty(sequenceGenerator)) {
             if (logger.isDebugEnabled()) {
                 logger.info("sequenceGenerator configuration not found for domainName: {}, domainType: {}", domainName, domainType);
@@ -129,7 +132,7 @@ public class SequenceInfoService extends AbstractCDMService<CkSequenceInfo> {
     }
 
     private JsonNode getSequenceConfig(String type) {
-        CkMetadata metaData = metadataService.fetchByValue("entity", "sequenceConfig", true);
+        MetaData metaData = metadataService.fetchByValue("entity", "sequenceConfig", true);
         JsonNode config;
         if (metaData == null || !metaData.getDomainValues().get(0).has(type)) {
             config = JSONUtils.getObjectMapper().createObjectNode();

@@ -7,7 +7,7 @@ package com.salescode.channelkart.services;
 
 
 import com.salescode.channelkart.repository.HierarchyMetaDataRepository;
-import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
+import com.salescode.channelkart.models.HierarchyMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.function.Function;
  * @since  2020
  */
 @Service
-public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMetadata> {
+public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaData> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -38,6 +38,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
 
 
     public HierarchyMetaDataService(HierarchyMetaDataRepository repository) {
+        super(repository);
         this.hierarchyMetaDataRepository=repository;
     }
 
@@ -54,19 +55,13 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
      * @param loginId the login id
      * @return the hierarchy meta data
      */
-    public Collection<CkHierarchyMetadata> findByImmediateParent(String loginId) {
+    public Collection<HierarchyMetaData> findByImmediateParent(String loginId) {
         return findByImmediateParent(loginId,true);
     }
 
 
-
-
-
-
-
-
-    public Collection<CkHierarchyMetadata> findByImmediateParent(String loginId, boolean cached) {
-        Function<String,Collection<CkHierarchyMetadata>> function = (String lid)->{
+    public Collection<HierarchyMetaData> findByImmediateParent(String loginId, boolean cached) {
+        Function<String,Collection<HierarchyMetaData>> function = (String lid)->{
             return hierarchyMetaDataRepository.findByImmediateParent(lid);
         };
         logger.debug("Find immediate Parent for->>>>>>>>>>>>:{}", loginId);
@@ -74,7 +69,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
        return function.apply(loginId);
     }
 
-    public Collection<CkHierarchyMetadata> findByImmediateParent(List<String> loginId) {
+    public Collection<HierarchyMetaData> findByImmediateParent(List<String> loginId) {
         return hierarchyMetaDataRepository.findByImmediateParentIn(loginId);
     }
 
@@ -85,7 +80,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
      * @param loginid the loginid
      * @return the list
      */
-    public List<CkHierarchyMetadata> findParentThroughUserLoginId(String loginid){
+    public List<HierarchyMetaData> findParentThroughUserLoginId(String loginid){
         return hierarchyMetaDataRepository.findMyHierarchy(loginid);
     }
 
@@ -101,7 +96,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<CkHierarchyMeta
      */
 
 
-    public CkHierarchyMetadata findByHierarchy(String hierarchy) {
+    public HierarchyMetaData findByHierarchy(String hierarchy) {
         return hierarchyMetaDataRepository.findByHierarchy(hierarchy);
     }
 

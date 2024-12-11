@@ -6,16 +6,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.channelkart.exceptions.CustomRuntimeException;
 import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.channelkart.services.CommonDataModelService;
+import com.salescode.channelkart.services.ServiceLocator;
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.templates.TemplateEngine;
-import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
-import com.salescode.jooq.generated.Tables;
-import com.salescode.jooq.generated.tables.pojos.CkLocation;
-import com.salescode.jooq.generated.tables.pojos.CkMetadata;
-import lombok.SneakyThrows;
-import org.apache.commons.beanutils.BeanUtils;
-import org.jooq.DSLContext;
-import org.jooq.impl.TableImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
@@ -38,23 +32,13 @@ public final class EntityUtils {
     private static final String GET_KEY_QUERY_DOMAIN_NAME = "cdmGetKeyQuery";
     private static final List<Class> jsonNodeClassList = new ArrayList<>(Arrays.asList(JsonNode.class, ObjectNode.class));
     private static final Map<String, Class<? extends CommonDataModel>> entityClassMap = new ConcurrentHashMap<>();
-    private Map<String, Class<? extends CommonDataModel>> entityImplClassMap = new HashMap<>() {{
-        put("CkOutletDetails", com.salescode.jooq.impl.CkOutletDetails.class);
-        put("CkUser", com.salescode.jooq.impl.CkUser.class);
-    }};
+
     private static final Map<String, String> nativeTableNames = new HashMap<>();
     private static final Object lockObj = new Object();
     private static EntityUtils instance;
-    private final MetadataRegistry metadataRegistry;
-    private final DSLContext dslContext;
+
     Set<Class<? extends CommonDataModel>> subClasses = ReflectionUtils.findSubClasses(CommonDataModel.class);
 
-    @Autowired
-    public EntityUtils(MetadataRegistry metadataRegistry, DSLContext dslContext) {
-        this.metadataRegistry = metadataRegistry;
-        this.dslContext = dslContext;
-        instance = this;
-    }
 
     public static EntityUtils getInstance() {
         if (instance == null) {
@@ -73,8 +57,9 @@ public final class EntityUtils {
             ObjectInputStream ois = new ObjectInputStream(bais);
             return (T) ois.readObject();
         } catch (Exception e) {
-            throw new RuntimeException("Could not clone object:" + src);
+        //    throw new ConverterException("Could not clone object:" + src);
         }
+        return null;
     }
 
     public static boolean isNullNode(Object value) {
@@ -156,13 +141,6 @@ public final class EntityUtils {
         }
     }
 
-    @SneakyThrows
-    public <T extends CommonDataModel> TableImpl getDSLContextTable(Class<T> entityClass) {
-        Field ckOutletDetails = Arrays.stream(Tables.class.getFields()).filter(s -> s.getType().getSimpleName().equals(entityClass.getSimpleName())).findAny().orElseThrow();
-        ckOutletDetails.setAccessible(true);
-        TableImpl table = (TableImpl) ckOutletDetails.get(null);
-        return table;
-    }
 
     public String replaceDynamicKeys(String string, Map<String, Object> params) {
         TemplateEngine templateEngine = SpringContext.getBean(TemplateEngine.class);
@@ -170,9 +148,6 @@ public final class EntityUtils {
     }
 
     public Class<? extends CommonDataModel> getEntityClass(String entityName) {
-        if(entityImplClassMap.containsKey(entityName)){
-            return entityImplClassMap.get(entityName);
-        }
         if (entityClassMap.containsKey(entityName)) {
             return entityClassMap.get(entityName);
         }
@@ -185,70 +160,6 @@ public final class EntityUtils {
         throw new IllegalArgumentException("Entity not found: " + entityName);
     }
 
-    public <T extends CommonDataModel> List<T> getGetKeyId(T cdmObject) {
-        Class<T> clazz = (Class<T>) cdmObject.getClass();
-        String cdmClassName = clazz.getSimpleName();
-        CkMetadata metaConfig = metadataRegistry.getMetadataByDomainNameAndType(GET_KEY_QUERY_DOMAIN_NAME, cdmClassName).orElse(null);
-        if (metaConfig != null && metaConfig.getDomainValues().get(0).has("query")) {
-            String sql = metaConfig.getDomainValues().get(0).get("query").asText();
-            Map<String, Object> params = JSONUtils.getObjectMapper().convertValue(cdmObject, new TypeReference<>() {
-            });
-            String finalQuery = replaceDynamicKeys(sql, params);
-            return dslContext.selectFrom(finalQuery).fetchInto(clazz);
-        } else {
-            return new ArrayList<>(1);
-        }
-    }
-
-    public String generateId(CommonDataModel cdm, boolean findByDynamicKeyOnly) {
-        String genratedId = "";
-        String entityName = cdm.getClass().getSimpleName();
-        ArrayNode columnArr = fetchDynamicPrimaryKeys(entityName);
-        boolean generateHash = checkGenerateMD5Hash(entityName);
-        if (!columnArr.isEmpty()) {
-            for (int i = 0; i < columnArr.size(); i++) {
-                String columnName = columnArr.get(i).asText();
-                String value = String.valueOf(getBeanProperty(cdm, columnName));
-                if (value != null) {
-                    if (genratedId.isBlank()) {
-                        genratedId = value.toLowerCase();
-                    } else {
-                        genratedId = genratedId + "-" + value.toLowerCase();
-                    }
-                    genratedId = genratedId.replace(" ", "-");
-                }
-            }
-        } else if (findByDynamicKeyOnly) {
-            throw new RuntimeException("dynamic key does not exist");
-        } else {
-            genratedId = UUID.randomUUID().toString();
-        }
-        if (generateHash) {
-            return genratedId.isEmpty() ? UUID.randomUUID().toString() : EncodingUtils.getMd5(genratedId);
-        }
-        return genratedId.isEmpty() ? UUID.randomUUID().toString() : genratedId;
-    }
-
-    public ArrayNode fetchDynamicPrimaryKeys(String entityName) {
-        CkMetadata metaData = metadataRegistry.getMetadataByDomainNameAndType(entityName, "DynamicUniqueKey").orElse(null);
-        ArrayNode columnArr = JSONUtils.getObjectMapper().createArrayNode();
-        if (metaData != null) {
-            columnArr = (ArrayNode) metaData.getDomainValues().get(0).get("dynamicKeys");
-        }
-        return columnArr;
-    }
-
-    private boolean checkGenerateMD5Hash(String entityName) {
-        CkMetadata metaData = metadataRegistry.getMetadataByDomainNameAndType(entityName, "DynamicUniqueKey").orElse(null);
-        boolean generateHash = false;
-        if (metaData != null && metaData.getDomainValues() != null) {
-            JsonNode dynamicKeysNode = metaData.getDomainValues().get(0);
-            if (dynamicKeysNode != null) {
-                generateHash = dynamicKeysNode.has("generateHash") && dynamicKeysNode.get("generateHash").asBoolean();
-            }
-        }
-        return generateHash;
-    }
 
     public String getBeanProperty(Object cdm, String property) {
         try {
@@ -264,89 +175,22 @@ public final class EntityUtils {
                 else
                     throw new CustomRuntimeException("Nested Json Key [{}] is not supported in dynamic key creation.", property);
             }
-            return BeanUtils.getProperty(cdm, property);
+         //   return BeanUtils.getProperty(cdm, property);
         } catch (Exception e) {
             logger.debug("could not find property {} from cdm object {}, class {}", property, cdm, cdm.getClass());
             logger.error(e.getMessage());
             if (e instanceof CustomRuntimeException) throw new CustomRuntimeException(e);
             return "";
         }
+        return null;
     }
 
-    @SneakyThrows
-    public CommonDataModel findRecords(Class<? extends CommonDataModel> clazz, CommonDataModel element) {
-        ArrayNode dynamicPrimaryKeys = fetchDynamicPrimaryKeys(clazz.getSimpleName());
-        if (!dynamicPrimaryKeys.isEmpty()) {
-            return findUniqueRecord(clazz, element, dynamicPrimaryKeys);
-        } else {
-            //return findUniqueRecord(clazz, element);
-            return null;
-        }
-    }
-
-    public List<CommonDataModel> findRecords(Class<?> clazz, List<CommonDataModel> element) {
-        ArrayNode dynamicPrimaryKeys = fetchDynamicPrimaryKeys(clazz.getSimpleName());
-        if (dynamicPrimaryKeys.size() > 0) {
-
-        } else {
-
-        }
-        return List.of();
-    }
-
-    @SneakyThrows
-    public <T extends CommonDataModel> String getTableName(Class<T> entityClass) {
-        if (entityClass == null) {
-            return null;
-        }
-        String fullqname = entityClass.getName();
-        if (org.apache.commons.lang3.StringUtils.isBlank(fullqname)) {
-            return null;
-        }
-        if (nativeTableNames.containsKey(fullqname)) {
-            return nativeTableNames.get(fullqname);
-        }
-        TableImpl table = getDSLContextTable(entityClass);
-        String tableName = table.getName();
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(tableName)) {
-            nativeTableNames.put(fullqname, tableName);
-        }
-        return tableName;
-    }
 
     private String getBaseSQL(String tableName) {
         return "select * from " + tableName + " where ";
     }
 
-    public CommonDataModel findUniqueRecord(Class<? extends CommonDataModel> clazz, CommonDataModel element, ArrayNode columnArr) {
-        StringBuilder buffer2 = new StringBuilder();
 
-        String value = "";
-        for (int i = 0; i < columnArr.size(); i++) {
-            String tempval = String.valueOf(getBeanProperty(element, columnArr.get(i).asText()));
-            if (tempval != null) {
-                String processedValue = checkGenerateMD5Hash(clazz.getSimpleName())
-                        ? EncodingUtils.getMd5(tempval.toLowerCase())
-                        : tempval.toLowerCase();
-
-                if (i > 0) {
-                    buffer2.append(" AND ");
-                }
-                if( (element instanceof CkLocation) && columnArr.get(i).asText().equals("locationHierarchy")) columnArr.set(i,"location_hierarchy");
-                buffer2.append(columnArr.get(i).asText())
-                        .append("='")
-                        .append(StringUtils.escapeSql(processedValue))
-                        .append("'");
-            }
-        }
-
-        try {
-            return (CommonDataModel) Objects.requireNonNull(dslContext.selectFrom(getDSLContextTable(clazz)).where(buffer2.toString())).fetchAnyInto(clazz);
-        } catch (NoResultException nr) {
-            //throw new RuntimeException("Invalid ");
-        }
-        return null;
-    }
 
 
 

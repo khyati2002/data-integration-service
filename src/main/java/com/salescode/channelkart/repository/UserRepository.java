@@ -4,69 +4,117 @@
  */
 package com.salescode.channelkart.repository;
 
+
+import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.models.enums.ActiveStatus;
-import com.salescode.jooq.impl.CkUser;
-import com.salescode.jooq.generated.tables.pojos.CkUserMessengerInfo;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+
 @Repository
-public interface UserRepository {
+public interface UserRepository extends CommonJpaRepository<User, String > {
 
-    CkUser findByLoginId(String loginId);
+    User findByLoginId(String loginId);
+    
+    List<User> findByLoginIdIn(List<String> loginId);
+    
+    User findByHierarchy(String hierarchy);
 
-    List<CkUser> findByLoginIdIn(List<String> loginId);
+    @Procedure(name = "user_hierarchy_procedure")
+    void executeProcedure(@Param("loginids") String loginId);
+    
+    @Procedure(name = "all_user_hierarchy_procedure")
+    void executeProcedure();
+    
+    @Modifying
+    @Query("update User u set userContext = ?2 where loginId = ?1")
+    int updateUserContext(String loginId,String userContext);
+    
+    @Modifying
+    @Query("update User u set deviceId = ?2 where loginId = ?1")
+    int updateDeviceId(String loginId,String deviceId);
 
-    CkUser findByHierarchy(String hierarchy);
-
-    int updateUserContext(String loginId, String userContext);
-
-    int updateDeviceId(String loginId, String deviceId);
-
-    int updateUserContextAndDevideId(String loginId, String userContext, String deviceId);
-
+    @Modifying
+    @Query("update User u set userContext = ?2, deviceId = ?3 where loginId = ?1")
+    int updateUserContextAndDevideId(String loginId,String userContext,String deviceId);
+    
+    @Query("select u.userContext from User u where u.loginId = ?1")
     Optional<String> getUserContext(String loginId);
 
+
+    @Query("select u.loginId as loginId, u.verified as verified from User u where u.loginId in (?1)")
     List<Map<String, Object>> getUserAndVerification(List<String> loginIds);
 
-    List<CkUser> findByMobile(String mobile);
+    List<User> findByMobile(String mobile);
 
-    List<CkUser> findByEmail(String email);
+    List<User> findByEmail(String email);
 
-    List<CkUser> findByActiveMobile(String mobile);
+    @Query("select u from User u where u.mobile = ?1 and u.activeStatus in ('active','1')")
+    List<User> findByActiveMobile(String mobile);
 
-    List<CkUser> findByActiveEmail(String email);
+    @Query("select u from User u where u.email = ?1 and u.activeStatus in ('active','1')")
+    List<User> findByActiveEmail(String email);
+    
+    User findByFacebookPSID(String facebookPSID);
+    
+    /**
+     * Find by messenger info channel id.
+     *
+     * @param channelId the channel id
+     * @return the user
+     */
+    public User findByMessengerInfoChannelId(String channelId);
+    
+    /**
+     * Find by login id and messenger info channel.
+     *
+     * @param loginId the login id
+     * @param channel the channel
+     * @return the user
+     */
+    public User findByLoginIdAndMessengerInfoChannel(String loginId, String channel);
 
-    CkUser findByFacebookPSID(String facebookPSID);
 
-    CkUser findByMessengerInfoChannelId(String channelId);
+   List<User> findByUserContext(String token);
+   
+   public Long countByDesignationIs(String designation);
 
-    CkUser findByLoginIdAndMessengerInfoChannel(String loginId, String channel);
+   List<User> findUserContextAndLoginIdByLoginIdIn(List<String> loginId);
 
-    List<CkUserMessengerInfo> getMessengerInfos(String loginId, String channel);
+    List<User> findByMobileIn(List<String> mobileNumbers);
 
-    List<CkUser> findByUserContext(String token);
+    @Modifying
+    @Query("update User u set blocked=?2, hash = ?3 where loginId = ?1")
+    void updateBlocked(String loginId,boolean blocked, String hash);
 
-    Long countByDesignationIs(String designation);
+    @Modifying
+    @Query("update User u set verified=?2,blocked = ?3, hash = ?4 where loginId = ?1")
+    int updateVerified(String loginId,boolean verified,boolean blocked,String hash);
 
-    List<CkUser> findUserContextAndLoginIdByLoginIdIn(List<String> loginId);
+    @Modifying
+    @Query("update User u set activeStatus = ?2, activeStatusReason = ?3 where loginId = ?1")
+    int updateActiveStatusAndReason(String loginId, ActiveStatus activeStatus, String activeStatusReason);
 
-    List<CkUser> findByMobileIn(List<String> mobileNumbers);
-
-    void updateBlocked(String loginId, boolean blocked, String hash);
-
-     int updateVerified(String loginId, boolean verified, boolean blocked, String hash);
-
-     int updateActiveStatusAndReason(String loginId, ActiveStatus activeStatus, String activeStatusReason);
-
+    @Query(nativeQuery = true,value = "select u.loginId from ck_user u inner join ck_userdesignation ud on ud.login_id = u.loginid where ud.designation !=  'retailer' and loginid in (?1)")
     List<String> getExistingUsers(List<String> loginIdList);
 
-    List<Map<String, Object>> getUserHierarchy(List<String> loginIds);
+    @Query(nativeQuery = true,value = "select loginid,hierarchy from ck_user where loginid in (?1)")
+    List<Map<String,Object>> getUserHierarchy(List<String> loginIds);
 
+    @Query("select loginId from User u  where u.externalReferenceId = ?1")
     Optional<String> findLoginIdByReferenceId(String externalReferenceId);
 
+    @Transactional
+    @Modifying
+    @Query("update User u set report_password = ?2 where loginId = ?1")
     int updateReportPassword(String loginid, String reportPassword);
 }

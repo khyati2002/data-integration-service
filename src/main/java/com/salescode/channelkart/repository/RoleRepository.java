@@ -1,17 +1,15 @@
 package com.salescode.channelkart.repository;
 
-import com.salescode.jooq.generated.tables.pojos.CkAuthRole;
-import org.springframework.stereotype.Repository;
 
+import com.salescode.channelkart.models.Role;
 import java.util.List;
 
-@Repository
-public interface RoleRepository {
+public interface RoleRepository extends CommonJpaRepository<Role, String>{
 
-	List<CkAuthRole> findByName(String name);
+	List<Role> findByName(String name);
 
-	CkAuthRole findByNameIgnoreCaseContaining(String name);
+	Role findByNameIgnoreCaseContaining(String name);
 
-	CkAuthRole findByNameIgnoreCase(String name);
+	Role findByNameIgnoreCase(String name);
 
 }

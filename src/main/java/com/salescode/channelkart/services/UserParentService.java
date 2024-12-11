@@ -7,8 +7,8 @@ package com.salescode.channelkart.services;
 
 
 
+import com.salescode.channelkart.models.UserParent;
 import com.salescode.channelkart.repository.UserParentRepository;
-import com.salescode.jooq.generated.tables.pojos.CkUserParent;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,7 +25,7 @@ import java.util.List;
  * @since  Jun 2020
  */
 @Service
-public class UserParentService extends AbstractCDMService<CkUserParent> {
+public class UserParentService extends AbstractCDMService<UserParent> {
 
 	/**
 	 * Instantiates a new user parent service.
@@ -33,7 +33,8 @@ public class UserParentService extends AbstractCDMService<CkUserParent> {
 	 * @param userParentRepository the user parent repository
 	 */
 	public UserParentService(UserParentRepository userParentRepository) {
-		this.userParentRepository = (UserParentRepository) userParentRepository;
+		super(userParentRepository);
+		this.userParentRepository =  userParentRepository;
 	}
 
 	/** The user parent repository. */
@@ -65,7 +66,7 @@ public class UserParentService extends AbstractCDMService<CkUserParent> {
 	 * @param parentList the list of users loginId whose children user-parent records are to be fetched
 	 * @return the list of user-parent records
 	 */
-	public List<CkUserParent> findByParentIn(List<String> parentList){
+	public List<UserParent> findByParentIn(List<String> parentList){
 		if(CollectionUtils.isNotEmpty(parentList)){
 			return userParentRepository.findByParentIn(parentList);
 		}
@@ -78,7 +79,7 @@ public class UserParentService extends AbstractCDMService<CkUserParent> {
 	 * @param loginId the login id
 	 * @return the list
 	 */
-	public List<CkUserParent> findByUserLoginId(String loginId) {
+	public List<UserParent> findByUserLoginId(String loginId) {
 		return userParentRepository.findByUserLoginId(loginId);
 	}
 

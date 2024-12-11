@@ -1,18 +1,18 @@
 package com.salescode.channelkart.repository;
 
-import com.salescode.jooq.generated.tables.pojos.CkLocation;
+import com.salescode.channelkart.models.Location;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Set;
 
 @Repository
-public interface LocationRepository  {
+public interface LocationRepository extends CommonJpaRepository<Location, String> {
+	
+	Location findByLocationHierarchy(String locationHierarchy);
+	
+	List<Location> findByLocationHierarchyIn(Set<String> locationHierarchy);
 
-	CkLocation findByLocationHierarchy(String locationHierarchy);
-
-	List<CkLocation> findByLocationHierarchyIn(Set<String> locationHierarchy);
-
-	CkLocation findBySalescodeId (String salescodeId);
+	Location findBySalescodeId (String salescodeId);
 
 }

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +18,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * The class JSONUtils.
@@ -133,5 +141,44 @@ public class JSONUtils {
 
     public static <T> T convert(Object node, TypeReference<T> typeReference) {
         return OBJECT_MAPPER.convertValue(node, typeReference);
+    }
+
+    public static Stream<JsonNode> stream(JsonNode nodes) {
+        return StreamSupport.stream(nodes.spliterator(), false);
+    }
+
+    public static Collector<JsonNode, ArrayNode, ArrayNode> toArrayNode() {
+        return new ArrayNodeCollector();
+    }
+
+    private static class ArrayNodeCollector implements Collector<JsonNode, ArrayNode, ArrayNode> {
+
+        @Override
+        public Supplier<ArrayNode> supplier() {
+            return OBJECT_MAPPER::createArrayNode;
+        }
+
+        @Override
+        public BiConsumer<ArrayNode, JsonNode> accumulator() {
+            return ArrayNode::add;
+        }
+
+        @Override
+        public BinaryOperator<ArrayNode> combiner() {
+            return (x, y) -> {
+                x.addAll(y);
+                return x;
+            };
+        }
+
+        @Override
+        public Function<ArrayNode, ArrayNode> finisher() {
+            return accumulator -> accumulator;
+        }
+
+        @Override
+        public Set<Characteristics> characteristics() {
+            return EnumSet.of(Characteristics.UNORDERED);
+        }
     }
 }

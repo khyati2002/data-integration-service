@@ -5,12 +5,13 @@
  */
 package com.salescode.channelkart.services;
 
-import com.salescode.jooq.generated.tables.pojos.CkChannelHierarchyMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkDivision;
-import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
-import org.apache.commons.lang3.StringUtils;
-import org.jooq.DSLContext;
+
+import com.salescode.channelkart.models.ChannelHierarchyMetaData;
+import com.salescode.channelkart.models.Division;
+import com.salescode.channelkart.models.HierarchyMetaData;
+import com.salescode.channelkart.models.OutletDetails;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.salescode.jooq.generated.tables.CkHierarchyMetadata.CK_HIERARCHY_METADATA;
-import static com.salescode.jooq.generated.tables.CkOutletDetails.CK_OUTLET_DETAILS;
-import static com.salescode.jooq.generated.tables.CkOutletDetailsHierarchymetadata.CK_OUTLET_DETAILS_HIERARCHYMETADATA;
-import static com.salescode.jooq.generated.tables.CkUser.CK_USER;
-import static com.salescode.jooq.generated.tables.CkUserdesignation.CK_USERDESIGNATION;
+
 
 /**
  * The class ChannelHierarchyMetaDataService.
@@ -34,34 +31,21 @@ import static com.salescode.jooq.generated.tables.CkUserdesignation.CK_USERDESIG
 public class ChannelHierarchyMetaDataService {
 
     private static final String DESIGNATION = "designation";
-    private final DSLContext dsl;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private DivisionService divisionService;
 
 
-    public ChannelHierarchyMetaDataService(DSLContext dsl, DivisionService divisionService) {
-        this.dsl = dsl;
+    public ChannelHierarchyMetaDataService( DivisionService divisionService) {
         this.divisionService = divisionService;
     }
 
-    //
-    public List<CkHierarchyMetadata> getImmediateParent(CkOutletDetails outlet) {
-        return dsl.select(CK_HIERARCHY_METADATA.fields())  // Select fields from the HierarchyMetaData table
-                .from(CK_OUTLET_DETAILS)
-                .join(CK_OUTLET_DETAILS_HIERARCHYMETADATA)
-                .on(CK_OUTLET_DETAILS.ID.eq(CK_OUTLET_DETAILS_HIERARCHYMETADATA.OUTLET_ID))  // Join on outlet_id
-                .join(CK_HIERARCHY_METADATA)
-                .on(CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID.eq(CK_HIERARCHY_METADATA.ID))  // Join on hierarchy_metadata_id
-                .where(CK_OUTLET_DETAILS.ID.eq(outlet.getId()))  // Filter by outlet_id
-                .fetchInto(CkHierarchyMetadata.class);
-    }
 
-    public Collection<CkChannelHierarchyMetadata> getOutletChannelHierarchy(CkOutletDetails outlet) {
-        if (divisionService.isChannelDivisionPresent()) {
-            List<CkDivision> divisions = (List<CkDivision>) divisionService.findByChannelDivisionOrderByLevelAsc();
-            List<CkHierarchyMetadata> parents = getImmediateParent(outlet);
-            return getData(parents, divisions, outlet.getOutletcode());
+    public Collection<ChannelHierarchyMetaData> getOutletChannelHierarchy(OutletDetails outlet) {
+        if(divisionService.isChannelDivisionPresent()) {
+            List<Division> divisions= (List<Division>)divisionService.findByChannelDivisionOrderByLevelAsc();
+            List<HierarchyMetaData> parents= outlet.getImmediateParent();
+            return getData(parents,divisions,outlet.getOutletCode());
         }
         return List.of();
     }
@@ -76,11 +60,11 @@ public class ChannelHierarchyMetaDataService {
     /// /		return List.of();
     /// /	}
 
-    private Comparator<Map<String, String>> findComparator(Collection<CkDivision> divisions) {
+    private Comparator<Map<String, String>> findComparator(Collection<Division> divisions) {
         return (o1, o2) -> {
             if (o1.get(DESIGNATION) != null && o2.get(DESIGNATION) != null) {
-                Optional<Integer> levelo1 = divisions.stream().filter(element -> element.getDivisionName().equalsIgnoreCase(o1.get(DESIGNATION))).map(CkDivision::getLevel).findFirst();
-                Optional<Integer> levelo2 = divisions.stream().filter(element -> element.getDivisionName().equalsIgnoreCase(o2.get(DESIGNATION))).map(CkDivision::getLevel).findFirst();
+                Optional<Integer> levelo1 = divisions.stream().filter(element -> element.getDivisionName().equalsIgnoreCase(o1.get(DESIGNATION))).map(Division::getLevel).findFirst();
+                Optional<Integer> levelo2 = divisions.stream().filter(element -> element.getDivisionName().equalsIgnoreCase(o2.get(DESIGNATION))).map(Division::getLevel).findFirst();
                 int val1 = levelo1.orElse(0);
                 int val2 = levelo2.orElse(0);
                 if (val1 > val2)
@@ -93,65 +77,41 @@ public class ChannelHierarchyMetaDataService {
         };
     }
 
-    private void addDataInDataset(SortedSet<Map<String, String>> sortedset, Set<CkChannelHierarchyMetadata> dataset) {
+    private void addDataInDataset(SortedSet<Map<String, String>> sortedset, Set<ChannelHierarchyMetaData> dataset) {
         Iterator<Map<String, String>> itr = sortedset.iterator();
-        CkChannelHierarchyMetadata temp = new CkChannelHierarchyMetadata();
+        ChannelHierarchyMetaData temp = new ChannelHierarchyMetaData();
         while (itr.hasNext()) {
             Map<String, String> mapdata = itr.next();
             if (mapdata.get(DESIGNATION) != null && divisionService.isChannelDivision(mapdata.get(DESIGNATION))) {
                 checkAndInsertInChannelHierarchy(temp, mapdata.get("loginid"), mapdata.get("name"));
             }
         }
-        if (temp.getLevel1supplier() != null) {
+        if (temp.getLevel1Supplier() != null) {
             dataset.add(temp);
         }
     }
 
-    //
-    public List<Map<String, String>> findData(String hierarchyUserList) {
-        List<Map<String, Object>> result = dsl.selectDistinct(
-                        CK_USER.LOGINID.as("loginid"),
-                        CK_USERDESIGNATION.DESIGNATION.as("designation"),
-                        CK_USER.NAME.as("name")
-                )
-                .from(CK_USER)
-                .leftJoin(CK_USERDESIGNATION)
-                .on(CK_USER.LOGINID.eq(CK_USERDESIGNATION.LOGIN_ID))
-                .where(CK_USER.LOGINID.in(hierarchyUserList))
-                .and(CK_USERDESIGNATION.DESIGNATION.isNotNull())
-                .fetchMaps();
-
-        return result.stream()
-                .map(row -> row.entrySet().stream()
-                        .collect(Collectors.toMap(
-                                Map.Entry::getKey,
-                                entry -> String.valueOf(entry.getValue()))) // Convert each value to String
-                )
-                .collect(Collectors.toList());
-    }
-
     @SuppressWarnings("unchecked")
-    private Collection<CkChannelHierarchyMetadata> getData(Collection<CkHierarchyMetadata> parents, Collection<CkDivision> divisions, String ignoreLoginId) {
-        Set<CkChannelHierarchyMetadata> dataset = new HashSet<>();
-        if (isParentEmpty(parents)) {
+    private Collection<ChannelHierarchyMetaData> getData(Collection<HierarchyMetaData> parents, Collection<Division> divisions, String ignoreLoginId){
+        Set<ChannelHierarchyMetaData> dataset= new HashSet<>();
+        if(isParentEmpty(parents)) {
             logger.error("Cannot find channel hierarchy as immediate parent found null or empty");
-        } else {
-            for (CkHierarchyMetadata parent : parents) {
-                String temphierarchy = parent.getHierarchy();
-                if (temphierarchy == null) {
-                    //	throw new EmptyParentHierarchyException(parent.getImmediateParent());
+        }else {
+            for(HierarchyMetaData parent: parents) {
+                String temphierarchy= parent.getHierarchy();
+                if(temphierarchy==null) {
+                  //  throw new EmptyParentHierarchyException(parent.getImmediateParent());
                 }
                 List<String> hierarchyLoginId = Arrays.asList(temphierarchy.split(" > "));
-                String hierarchyuserlist = "'" + StringUtils.join(hierarchyLoginId, "','") + "'";
-
-
-                List<Map<String, String>> data = findData(hierarchyuserlist);
-                if (isDataNotEmpty(data)) {
-                    if (findSingleSupplierInHierarchyMetadata()) {
-                        getSingleSuppPerHierarchyMetadata(data, hierarchyLoginId, ignoreLoginId, dataset);
-                    } else {
-                        Comparator<Map<String, String>> comparator = findComparator(divisions);
-                        SortedSet<Map<String, String>> sortedset = new TreeSet<>(comparator);
+                String hierarchyuserlist= "'"+ StringUtils.join(hierarchyLoginId,"','")+"'";
+                List<Map<String,String>> data=  (List<Map<String,String>>) EntityUtils.get().findDataByQuery(Map.class,
+                        "select distinct u.loginid as loginid, d.designation as designation, u.name from ck_user u left join ck_userdesignation d on u.loginid=d.login_id where u.loginid in ("+hierarchyuserlist+") and d.designation is not null",true);
+                if(isDataNotEmpty(data)) {
+                    if(findSingleSupplierInHierarchyMetadata()) {
+                        getSingleSuppPerHierarchyMetadata(data,hierarchyLoginId,ignoreLoginId,dataset);
+                    }else {
+                        Comparator<Map<String,String>> comparator = findComparator(divisions);
+                        SortedSet<Map<String,String>> sortedset= new TreeSet<>(comparator);
                         sortedset.addAll(data);
                         addDataInDataset(sortedset, dataset);
                     }
@@ -167,7 +127,7 @@ public class ChannelHierarchyMetaDataService {
     }
 
     //
-    private boolean isParentEmpty(Collection<CkHierarchyMetadata> parents) {
+    private boolean isParentEmpty(Collection<HierarchyMetaData> parents) {
         return parents == null || parents.isEmpty();
     }
 
@@ -181,7 +141,7 @@ public class ChannelHierarchyMetaDataService {
 
 
 
-    private void getSingleSuppPerHierarchyMetadata(List<Map<String, String>> data, List<String> hierarchyLoginId, String ignoreLoginId, Set<CkChannelHierarchyMetadata> dataset) {
+    private void getSingleSuppPerHierarchyMetadata(List<Map<String, String>> data, List<String> hierarchyLoginId, String ignoreLoginId, Set<ChannelHierarchyMetaData> dataset) {
         Map<String, List<Map<String, String>>> maploginIdDesignation = data.stream()
                 .collect(Collectors.groupingBy(m -> m.get("loginid")));
         Set<String> supp = new HashSet<>();
@@ -192,9 +152,9 @@ public class ChannelHierarchyMetaDataService {
             }
         }
         supp.forEach(s -> {
-            CkChannelHierarchyMetadata temp = new CkChannelHierarchyMetadata();
-            temp.setLevel1supplier(s);
-            temp.setLevel1supplierName(maploginIdDesignation.get(s).get(0).get("name"));
+            ChannelHierarchyMetaData temp = new ChannelHierarchyMetaData();
+            temp.setLevel1Supplier(s);
+            temp.setLevel1SupplierName(maploginIdDesignation.get(s).get(0).get("name"));
             dataset.add(temp);
         });
     }
@@ -209,16 +169,16 @@ public class ChannelHierarchyMetaDataService {
     }
 
     //
-    public void checkAndInsertInChannelHierarchy(CkChannelHierarchyMetadata metadata, String loginid, String name) {
-        if (metadata.getLevel1supplier() == null) {
-            metadata.setLevel1supplier(loginid);
-            metadata.setLevel1supplierName(name);
-        } else if (metadata.getLevel2supplier() == null) {
-            metadata.setLevel2supplier(loginid);
-            metadata.setLevel2supplierName(name);
-        } else if (metadata.getLevel3supplier() == null) {
-            metadata.setLevel3supplier(loginid);
-            metadata.setLevel3supplierName(name);
+    public void checkAndInsertInChannelHierarchy(ChannelHierarchyMetaData metadata, String loginid, String name) {
+        if (metadata.getLevel1Supplier() == null) {
+            metadata.setLevel1Supplier(loginid);
+            metadata.setLevel1SupplierName(name);
+        } else if (metadata.getLevel2Supplier() == null) {
+            metadata.setLevel2Supplier(loginid);
+            metadata.setLevel2SupplierName(name);
+        } else if (metadata.getLevel3Supplier() == null) {
+            metadata.setLevel3Supplier(loginid);
+            metadata.setLevel3SupplierName(name);
         }
     }
 

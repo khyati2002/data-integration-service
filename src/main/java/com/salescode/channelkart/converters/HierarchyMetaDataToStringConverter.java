@@ -2,28 +2,25 @@ package com.salescode.channelkart.converters;
 
 
 import com.fasterxml.jackson.databind.util.StdConverter;
-import com.salescode.jooq.generated.tables.pojos.CkHierarchyMetadata;
-import org.springframework.stereotype.Component;
-
+import com.salescode.channelkart.models.HierarchyMetaData;
 
 import java.util.List;
 
-@Component
-public class HierarchyMetaDataToStringConverter extends StdConverter<List<CkHierarchyMetadata>, String> {
+public class HierarchyMetaDataToStringConverter extends StdConverter<List<HierarchyMetaData>,String> {
 
-
-    @Override
-    public String convert(List<CkHierarchyMetadata> hierarchyMetaDataList) {
-        StringBuilder immediateParent = new StringBuilder();
-        if (hierarchyMetaDataList != null && !hierarchyMetaDataList.isEmpty()) {
-            for (int i = 0; i < hierarchyMetaDataList.size(); i++) {
-                CkHierarchyMetadata hierarchy = hierarchyMetaDataList.get(i);
-                if (i != 0) {
-                    immediateParent.append(",");
-                }
-                immediateParent.append(hierarchy.getParent());
-            }
-        }
-        return immediateParent.toString();
-    }
+	
+	@Override
+	public String convert(List<HierarchyMetaData> hierarchyMetaDataList) {
+		StringBuilder immediateParent = new StringBuilder("");
+		if(hierarchyMetaDataList!=null && !hierarchyMetaDataList.isEmpty() ) {
+			for(int i=0;i<hierarchyMetaDataList.size();i++) {
+				HierarchyMetaData hierarchy = hierarchyMetaDataList.get(i);
+				if(i!=0) {
+					immediateParent.append(",");
+				}
+				immediateParent.append( hierarchy.getImmediateParent());
+			}
+		}
+		return immediateParent.toString();
+	}
 }

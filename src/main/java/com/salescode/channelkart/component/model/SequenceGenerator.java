@@ -6,7 +6,7 @@
 package com.salescode.channelkart.component.model;
 
 
-import com.salescode.jooq.generated.tables.pojos.CkSequenceInfo;
+import com.salescode.channelkart.models.SequenceInfo;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -47,7 +47,7 @@ public interface SequenceGenerator {
 	 * @param nextSequence the next sequence
 	 * @return the value
 	 */
-	public String getValue(CkSequenceInfo sequenceInfo, Object entityObj, Integer nextSequence);
+	public String getValue(SequenceInfo sequenceInfo, Object entityObj, Integer nextSequence);
 
 	/**
 	 * Should modify.

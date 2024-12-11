@@ -1,6 +1,6 @@
 package com.salescode.channelkart.services;
 import com.salescode.channelkart.repository.RoleRepository;
-import com.salescode.jooq.generated.tables.pojos.CkAuthRole;
+import com.salescode.channelkart.models.Role;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -8,22 +8,23 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RoleService extends AbstractCDMService<CkAuthRole> {
+public class RoleService extends AbstractCDMService<Role> {
 
 	private static final String DOMAIN_NAME = "RoleService";
 
 	private final RoleRepository roleRepository;
 
 	public RoleService(RoleRepository roleRepository) {
+		super(roleRepository);
 		this.roleRepository = roleRepository;
 	}
 
 
-	public Optional<CkAuthRole> getRole(String name) {
+	public Optional<Role> getRole(String name) {
 		return Optional.ofNullable(getRoleFromCacheOrRepo(name));
 	}
 
-	public Optional<CkAuthRole> getRole(String name,boolean noCache) {
+	public Optional<Role> getRole(String name,boolean noCache) {
 		return (noCache)? Optional.ofNullable(roleRepository.findByNameIgnoreCase(name)):
 				Optional.ofNullable(getRoleFromCacheOrRepo(name));
 	}
@@ -33,11 +34,11 @@ public class RoleService extends AbstractCDMService<CkAuthRole> {
 		return DOMAIN_NAME + ":" + roleName.toUpperCase();
 	}
 
-	private CkAuthRole getRoleFromCacheOrRepo(String roleName) {
+	private Role getRoleFromCacheOrRepo(String roleName) {
 		//String lob = SecurityContextUtils.getLob();
-		//CkAuthRole roleFromCache = (CkAuthRole) distributedCache.get(lob,null, createRoleKey(roleName), false);
+		//Role roleFromCache = (Role) distributedCache.get(lob,null, createRoleKey(roleName), false);
 		//if (roleFromCache == null) {
-			CkAuthRole roleFromRepo = roleRepository.findByNameIgnoreCase(roleName);
+			Role roleFromRepo = roleRepository.findByNameIgnoreCase(roleName);
 			if (roleFromRepo != null) {
 			//	distributedCache.put(lob,null, createRoleKey(roleName), roleFromRepo,false);
 				return roleFromRepo;
@@ -47,21 +48,21 @@ public class RoleService extends AbstractCDMService<CkAuthRole> {
         return roleFromRepo;
 	}
 
-	public List<CkAuthRole> getRoleAsList(String name) {
+	public List<Role> getRoleAsList(String name) {
 		return getRole(name)
 				.map(List::of)
 				.orElse(Collections.emptyList());
 	}
 
 	@Override
-	public CkAuthRole refresh(CkAuthRole role) {
-		CkAuthRole existingRole = roleRepository.findByNameIgnoreCase(role.getName());
+	public Role refresh(Role role) {
+		Role existingRole = roleRepository.findByNameIgnoreCase(role.getName());
 		return existingRole == null ? role : existingRole;
 	}
 
 	@Override
-	public CkAuthRole save(CkAuthRole role) {
-		CkAuthRole refreshedRole = refresh(role);
+	public Role save(Role role) {
+		Role refreshedRole = refresh(role);
 		return super.save(refreshedRole);
 	}
 

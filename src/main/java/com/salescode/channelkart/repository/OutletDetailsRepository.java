@@ -1,12 +1,11 @@
 package com.salescode.channelkart.repository;
 
-import com.salescode.jooq.dto.CkOutletDetailsDTO;
-import com.salescode.jooq.impl.CkOutletDetails;
+
+import com.salescode.channelkart.models.OutletDetails;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OutletDetailsRepository {
+public interface OutletDetailsRepository extends CommonJpaRepository<OutletDetails,String>{
 
-    CkOutletDetails findByOutletCode(String outletCode);
-    CkOutletDetailsDTO populateDTOFromRepository(String outletcode);
+    OutletDetails findByOutletCode(String outletCode);
 }

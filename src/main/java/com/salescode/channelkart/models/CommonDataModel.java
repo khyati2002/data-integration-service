@@ -1,21 +1,24 @@
 package com.salescode.channelkart.models;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.salescode.channelkart.converters.ActiveStatusConverter;
+import com.salescode.channelkart.converters.DateToClientTimeZoneStringConverter;
+import com.salescode.channelkart.converters.JSONObjectConverter;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.utils.CdmDiffUtil;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
-public abstract class CommonDataModel implements Serializable {
+@Getter
+@Setter
+public class CommonDataModel implements Serializable {
 
     @Transient
     private boolean isCreate;
@@ -33,53 +36,48 @@ public abstract class CommonDataModel implements Serializable {
     @Getter
     private transient CommonDataModel oldModel;
 
-    public CommonDataModel() {
-        this.setVersion(0);
-    }
+    @Getter
+    @Id
+    @GeneratedValue(generator = "UUID")
+    //@GenericGenerator(name = "UUID", strategy = "com.applicate.services.channelkart.services.UUIDIdentifier")
+    private String id;
 
-    public abstract String getId();
+    @Version
+    private Integer version;
 
-    public abstract void setId(String id);
+    @Convert(converter = ActiveStatusConverter.class)
+    private ActiveStatus activeStatus;
 
-    public abstract Integer getVersion();
+    private String activeStatusReason;
 
-    public abstract void setVersion(Integer version);
+    @JsonSerialize(converter = DateToClientTimeZoneStringConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Date creationTime;
 
-    public abstract ActiveStatus getActiveStatus();
 
-    public abstract void setActiveStatus(ActiveStatus activeStatus);
+    @JsonSerialize(converter = DateToClientTimeZoneStringConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Date lastModifiedTime;
 
-    public abstract String getActiveStatusReason();
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String createdBy;
 
-    public abstract void setActiveStatusReason(String activeStatusReason);
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String modifiedBy;
 
-    public abstract Date getCreationTime();
+    private String lob;
 
-    public abstract void setCreationTime(Date creationTime);
+    private String source;
 
-    public abstract Date getLastModifiedTime();
+    @Column(columnDefinition = "json")
+    @Convert(converter = JSONObjectConverter.class)
+    private JsonNode extendedAttributes;
 
-    public abstract void setLastModifiedTime(Date lastModifiedTime);
-
-    public abstract String getCreatedBy();
-
-    public abstract void setCreatedBy(String createdBy);
-
-    public abstract String getModifiedBy();
-
-    public abstract void setModifiedBy(String modifiedBy);
-
-    public abstract String getLob();
-
-    public abstract void setLob(String lob);
-
-    public abstract String getSource();
-
-    public abstract void setSource(String source);
-
-    public abstract JsonNode getExtendedAttributes();
-
-    public abstract void setExtendedAttributes(JsonNode extendedAttributes);
+    @Column(unique = true, columnDefinition = "LONGTEXT")
+    @JsonIgnore
+    private String hash;
 
     public boolean isCreate() {
         return isCreate;
@@ -106,9 +104,6 @@ public abstract class CommonDataModel implements Serializable {
         return oldModel == null ? Collections.emptySet() : CdmDiffUtil.getChanges(this, this.getOldModel());
     }
 
-    public abstract String getHash();
-
-    public abstract void setHash(String hash);
 
 
     public void addPreProcessPipelineException(String stackTrace) {
@@ -118,11 +113,6 @@ public abstract class CommonDataModel implements Serializable {
         preProcessPipelineException.add(stackTrace);
     }
 
-    @JsonIgnore
-    @Transient
-    public boolean canHash() {
-        return false;
-    }
 
     public void setOldModel(CommonDataModel oldModel) {
         this.oldModel = oldModel;

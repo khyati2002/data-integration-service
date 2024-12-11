@@ -1,6 +1,7 @@
 package com.salescode.channelkart.services;
 
 import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.channelkart.repository.CommonJpaRepository;
 import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.EntityUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -14,15 +15,20 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractCDMService<T extends CommonDataModel> implements CommonDataModelService<T> {
 
-    @Value("${jdbc.fetch_size:500}")
+    @Value("${spring.jpa.properties.hibernate.jdbc.fetch_size}")
     private int fetchSize;
 
-    private Class<T> persistentClass;
+    protected CommonJpaRepository<T, String> repository;
 
-    public AbstractCDMService() {
-        if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
-            persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-            ServiceLocator.register(persistentClass, this);
+    private Class<?> persistentClass;
+
+    public AbstractCDMService(CommonJpaRepository<T, String> repository) {
+        this.repository = repository;
+        if(getClass().getGenericSuperclass() instanceof ParameterizedType) {
+            persistentClass = (Class<?>)
+                    ((ParameterizedType) getClass().getGenericSuperclass())
+                            .getActualTypeArguments()[0];
+            ServiceLocator.register(persistentClass, (CommonDataModelService<?>) this);
         }
     }
 
@@ -31,8 +37,6 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     public T refresh(T cdmObject) {
 
         T dbRecord = CdmDiffUtil.withOldModel(() -> (T) EntityUtils.getInstance().findRecords(cdmObject.getClass(), cdmObject));
-        CommonDataModelService service = ServiceLocator.lookup(cdmObject.getClass());
-        dbRecord = (T) service.populateData(dbRecord);
         if (dbRecord != null) {
             cdmObject.setOldModel(dbRecord.getOldModel());
             int version = dbRecord.getVersion();

@@ -1,28 +1,28 @@
 package com.salescode.channelkart.repository;
 
-import com.salescode.jooq.generated.tables.pojos.CkMetadata;
-import org.springframework.stereotype.Repository;
+
+
+import com.salescode.channelkart.models.MetaData;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author : Jinu
  * Date    : 2/8/2021
  **/
-@Repository
 public interface MetaDataCustomRepository {
 
-   List<CkMetadata> findAll(String domainName);
+   List<MetaData> findAll(String domainName);
 
-   CkMetadata findByValue(String domainName,String domainType);
+   MetaData findByValue(String domainName,String domainType);
 
-   CkMetadata merge(CkMetadata metaData);
+   MetaData merge(MetaData metaData);
 
-   List<CkMetadata> findByDomainType(String domainType);
+   List<MetaData> findByDomainType(String domainType);
 
-   List<CkMetadata> findByDomainName(String domainName);
+   List<MetaData> findByDomainName(String domainName);
 
-   CkMetadata deleteByValue(String domainName, String domainType);
-
+   MetaData deleteByValue(String domainName, String domainType) throws NoSuchElementException;
 
 }

@@ -1,15 +1,16 @@
 package com.salescode.channelkart.repository;
 
-
-import com.salescode.jooq.generated.tables.pojos.CkMetadata;
+import com.salescode.channelkart.models.MetaData;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-public interface MetaDataRepository extends MetaDataCustomRepository {
+@Repository
+public interface MetaDataRepository extends CommonJpaRepository<MetaData,String>, MetaDataCustomRepository {
 
-    Optional<CkMetadata> findByDomainNameAndDomainType(String domainName, String domainType);
+    @Transactional(propagation = Propagation.NOT_SUPPORTED )
+    Optional<MetaData> findByDomainNameAndDomainType(String domainName, String domainType);
 
 }

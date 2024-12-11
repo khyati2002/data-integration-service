@@ -4,16 +4,16 @@ package com.salescode.channelkart.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.salescode.channelkart.models.Location;
+import com.salescode.channelkart.models.MetaData;
 import com.salescode.channelkart.models.enums.Sequence;
 import com.salescode.channelkart.repository.LocationRepository;
 import com.salescode.channelkart.utils.GlobalLock;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.channelkart.utils.StringUtils;
-import com.salescode.jooq.generated.tables.pojos.CkLocation;
-import com.salescode.jooq.generated.tables.pojos.CkMetadata;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.jooq.DSLContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,10 +24,9 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.salescode.jooq.generated.Tables.CK_LOCATION;
 
 @Service
-public class LocationService extends AbstractCDMService<CkLocation> {
+public class LocationService extends AbstractCDMService<Location> {
     protected static final String delimiter = " > ";
     private static final String DOMAIN_NAME = "location";
     //	private static final String ASSOCIATE_GETTER_SETTER_METHOD_MISSING_FOR_ONE_OF_THE_FIELD_FROM_LIST_EXCEPTION = "Associate getter/setter method missing for one of the field from list[{}]. Exception:[{}]";
@@ -36,9 +35,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
     private static final Object lock1 = new Object();
 
     private LocationRepository locationRepository;
-    //
-    private final DSLContext dsl;
-    //
+
     ObjectMapper objectMapper = new ObjectMapper();
 
     //
@@ -51,17 +48,13 @@ public class LocationService extends AbstractCDMService<CkLocation> {
     public LocationService(
 
             MetaDataService metadataservice,
-            DSLContext dsl,
             SequenceInfoService sequenceInfoService,
             LocationRepository locationRepository
 
 
     ) {
-
-
-        super();
+        super(locationRepository);
         this.metadataservice = metadataservice;
-        this.dsl = dsl;
         this.sequenceInfoService = sequenceInfoService;
         this.locationRepository = locationRepository;
 
@@ -71,13 +64,13 @@ public class LocationService extends AbstractCDMService<CkLocation> {
     //
 
 
-    public CkLocation findByLocationHierarchy(String locationHierarchy) {
+    public Location findByLocationHierarchy(String locationHierarchy) {
         return findByLocationHierarchy(locationHierarchy, true);
     }
 
-    public CkLocation findByLocationHierarchy(String locationHierarchy, boolean cached) {
+    public Location findByLocationHierarchy(String locationHierarchy, boolean cached) {
         //String lob = SecurityContextUtils.getLob();
-        Function<String, CkLocation> function = (String locationHie) -> {
+        Function<String, Location> function = (String locationHie) -> {
             LocationRepository repo = SpringContext.getBean(LocationRepository.class);
             return repo.findByLocationHierarchy(locationHie);
         };
@@ -87,9 +80,9 @@ public class LocationService extends AbstractCDMService<CkLocation> {
     }
 
 
-    public CkLocation createNewLocationObj(CkLocation locationObj, String[] locationColumns) {
+    public Location createNewLocationObj(Location locationObj, String[] locationColumns) {
         try {
-            CkLocation finalLocation = new CkLocation();
+            Location finalLocation = new Location();
             for (String locationName : locationColumns) {
                 Object locationValue = PropertyUtils.getProperty(locationObj, locationName);
                 if (NullUtils.isNotNull(locationValue)) {
@@ -118,8 +111,12 @@ public class LocationService extends AbstractCDMService<CkLocation> {
         }
         return locationObj;
     }
+    public String formHierarchyUsingColumns(Location location) {
+        return formHierarchyUsingColumns(location,getLocationColumns(),delimiter);
+    }
 
-    public String formHierarchyUsingColumns(CkLocation location, String[] columnList,
+
+    public String formHierarchyUsingColumns(Location location, String[] columnList,
                                             String delimiter) {
         StringBuilder hierarchyStr = new StringBuilder("");
         if (location == null) {
@@ -147,21 +144,21 @@ public class LocationService extends AbstractCDMService<CkLocation> {
     }
 
 
-    public CkLocation findLocationOrPersistLocation(CkLocation dataObj) {
+    public Location findLocationOrPersistLocation(Location dataObj) {
         if (NullUtils.isNotNull(dataObj)) {
 
             String[] columnList = getLocationColumns();
-            CkLocation tLocation = dataObj;
+            Location tLocation = dataObj;
             String hierarchyStr = formHierarchyUsingColumns(tLocation, columnList, delimiter);
             if (StringUtils.isNotEmpty(hierarchyStr)) {
-                CkLocation locationRes = findByLocationHierarchy(hierarchyStr);
+                Location locationRes = findByLocationHierarchy(hierarchyStr);
                 if (locationRes != null) {
                     return locationRes;
                 } else {
                     GlobalLock.withLock(hierarchyStr, k ->
                             saveRecursiveLocationHierarchies(tLocation, columnList)
                     );
-                    CkLocation locdata = findByLocationHierarchy(hierarchyStr, false);
+                    Location locdata = findByLocationHierarchy(hierarchyStr, false);
                     return locdata;
 
                 }
@@ -192,7 +189,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
     public String[] getLocationColumns() {
         //String lob = SecurityContextUtils.getLob();
 
-        CkMetadata metadata = metadataservice.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE, true);
+        MetaData metadata = metadataservice.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE, true);
         if (metadata == null) {
 
             return locationColumns.split(",");
@@ -218,7 +215,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 
     public String[] getLocationSecondaryColumns(String key) {
         //	return distributedCache.withCache(SecurityContextUtils.getLob(), CACHE_DOMAIN, "LocationType" + key, ldata -> {
-        CkMetadata metaData = metadataservice.fetchByValue(DOMAIN_NAME, "secondary_columns", true);
+        MetaData metaData = metadataservice.fetchByValue(DOMAIN_NAME, "secondary_columns", true);
         ArrayNode columnNode = JSONUtils.getObjectMapper().createArrayNode();
         if (metaData != null && metaData.getDomainValues().get(0).has(key)) {
             columnNode = (ArrayNode) metaData.getDomainValues().get(0).get(key);
@@ -231,33 +228,25 @@ public class LocationService extends AbstractCDMService<CkLocation> {
         //	});
     }
 
-
-    private CkLocation saveRecursiveLocationHierarchies(final CkLocation location, String[] columns) {
-        CkLocation result = null;
+    private Location saveRecursiveLocationHierarchies(final Location location, String[] columns) {
+        Location result = null;
         for (int i = 0; i < columns.length; i++) {
-            String[] columnsList = new String[columns.length - i];
+            String[] columnsList= new String[columns.length-i];
             System.arraycopy(columns, i, columnsList, 0, columnsList.length);
-            String hierarchyStr = formHierarchyUsingColumns(location, columnsList, delimiter);
-            if (StringUtils.isNotBlank(hierarchyStr)) {
+            String hierarchyStr =formHierarchyUsingColumns(location, columnsList, delimiter);
+            if(StringUtils.isNotBlank(hierarchyStr)) {
                 synchronized (lock1) {
-                    CkLocation locdata = findByLocationHierarchy(hierarchyStr);
-                    if (locdata == null) {
-                        CkLocation finalLocation = createNewLocationObj(location, columnsList);
+                    Location locdata = findByLocationHierarchy(hierarchyStr);
+                    if(locdata == null) {
+                        Location finalLocation = createNewLocationObj(location, columnsList);
                         finalLocation.setLocationHierarchy(hierarchyStr);
-                        CkLocation tresult = refresh(finalLocation);
-                        if(tresult.getId() == null) tresult.setId(UUID.randomUUID().toString());
-                        var record = dsl.newRecord(CK_LOCATION,tresult);
-                        dsl.insertInto(CK_LOCATION)
-                                .set(record)
-                                .onDuplicateKeyUpdate()
-                                .set(record)
-                                .execute();
-                        if (i == 0) {
-                            result = tresult;
+                        Location tresult = this.save(refresh(finalLocation));
+                        if(i == 0) {
+                            result= tresult;
                         }
-                    } else {
-                        if (i == 0) {
-                            result = locdata;
+                    }else {
+                        if(i == 0) {
+                            result= locdata;
                         }
                     }
                 }
@@ -266,8 +255,9 @@ public class LocationService extends AbstractCDMService<CkLocation> {
         return result;
     }
 
+
     @Override
-    public CkLocation refresh(CkLocation cdmObject){
+    public Location refresh(Location cdmObject){
         String[] columnList=getLocationColumns();
         String hierarchy=formHierarchyUsingColumns(cdmObject, columnList, delimiter);
         cdmObject = createLocationObj(cdmObject, columnList);
@@ -276,7 +266,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
         return super.refresh(cdmObject);
     }
 
-    public CkLocation createLocationObj(CkLocation locationObj,String[] locationColumns) {
+    public Location createLocationObj(Location locationObj,String[] locationColumns) {
         try {
             for(String locationName:locationColumns) {
                 Object locationValue = PropertyUtils.getProperty(locationObj, locationName);
@@ -295,17 +285,14 @@ public class LocationService extends AbstractCDMService<CkLocation> {
         return locationObj;
     }
 
-    public CkLocation setSalescodeId(CkLocation locationObj){
+    public Location setSalescodeId(Location locationObj){
         if(StringUtils.isNullOrBlank(locationObj.getSalescodeId())) {
             locationObj.setSalescodeId(sequenceInfoService.generateSalescodeId(Sequence.LOCATION.getSequenceName()));
         }
         return locationObj;
     }
 
-    public String findLocationString(CkLocation value){
-        CkLocation loc = findLocationOrPersistLocation(value);
-        return loc.getLocationHierarchy();
-    }
+
 
 
 

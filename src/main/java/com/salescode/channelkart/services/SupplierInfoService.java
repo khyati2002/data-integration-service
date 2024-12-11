@@ -6,8 +6,9 @@
 package com.salescode.channelkart.services;
 
 
-import com.salescode.jooq.generated.tables.pojos.CkChannelHierarchyMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
+import com.salescode.channelkart.models.ChannelHierarchyMetaData;
+import com.salescode.channelkart.models.OutletDetails;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +38,14 @@ public class SupplierInfoService {
     @Autowired
     private ChannelHierarchyMetaDataService channelHierarchyService;
 
-    public List<String> findSuppliers(CkOutletDetails outlet) {
+    public List<String> findSuppliers(OutletDetails outlet) {
         if (outlet != null) {
-            Collection<CkChannelHierarchyMetadata> parent = channelHierarchyService.getOutletChannelHierarchy(outlet);
+            Collection<ChannelHierarchyMetaData> parent = channelHierarchyService.getOutletChannelHierarchy(outlet);
             Set<String> suppliers = new HashSet<>();
-            for (CkChannelHierarchyMetadata data : parent) {
-                if (data.getLevel1supplier() != null) suppliers.add(data.getLevel1supplier());
-                if (data.getLevel2supplier() != null) suppliers.add(data.getLevel2supplier());
-                if (data.getLevel3supplier() != null) suppliers.add(data.getLevel3supplier());
+            for (ChannelHierarchyMetaData data : parent) {
+                if (data.getLevel1Supplier() != null) suppliers.add(data.getLevel1Supplier());
+                if (data.getLevel2Supplier() != null) suppliers.add(data.getLevel2Supplier());
+                if (data.getLevel3Supplier() != null) suppliers.add(data.getLevel3Supplier());
             }
             return new ArrayList<>(suppliers);
         } else {

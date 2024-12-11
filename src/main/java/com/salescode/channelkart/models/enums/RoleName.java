@@ -1,7 +1,7 @@
 package com.salescode.channelkart.models.enums;
 
 
-import com.salescode.jooq.generated.tables.pojos.CkAuthRole;
+import com.salescode.channelkart.models.Role;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public enum RoleName {
         return ROLE_SUPER_ADMIN.name().equals(name) || ROLE_ADMIN.name().equals(name);
     }
 
-    public static boolean isLoginBlocked(List<CkAuthRole> roles){return roles.stream().anyMatch(role->role.getName().equals(ROLE_BLOCK_LOGIN.name()));}
+    public static boolean isLoginBlocked(List<Role> roles){return roles.stream().anyMatch(role->role.getName().equals(ROLE_BLOCK_LOGIN.name()));}
 
     public static boolean isAdmin(List<String> names) {
         return names.stream().anyMatch(RoleName::isAdmin);

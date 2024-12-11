@@ -5,8 +5,8 @@
 package com.salescode.channelkart.services;
 
 
+import com.salescode.channelkart.models.Division;
 import com.salescode.channelkart.repository.DivisionRepository;
-import com.salescode.jooq.generated.tables.pojos.CkDivision;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.util.*;
  * @version 1.2
  */
 @Service
-public class DivisionService extends AbstractCDMService<CkDivision> {
+public class DivisionService extends AbstractCDMService<Division> {
 
 	/** The logger. */
 	private static Logger logger = LoggerFactory.getLogger(DivisionService.class);
@@ -49,7 +49,7 @@ public class DivisionService extends AbstractCDMService<CkDivision> {
 			//, DistributedCache distributedCache
 						   ) {
 
-		super();
+		super(divisionRepository);
 		this.divisionRepository = divisionRepository;
 	//	this.distributedCache = distributedCache;
 	}
@@ -62,10 +62,10 @@ public class DivisionService extends AbstractCDMService<CkDivision> {
 	 *
 	 * @return the collection
 	 */
-	public Collection<CkDivision> findByChannelDivisionOrderByLevelAsc() {
+	public Collection<Division> findByChannelDivisionOrderByLevelAsc() {
 
 
-			Collection<CkDivision> data = divisionRepository.findByChannelDivisionOrderByLevelAsc(true);
+			Collection<Division> data = divisionRepository.findByChannelDivisionOrderByLevelAsc(true);
 			if (data == null || data.isEmpty()) {
 				return null;
 			}
@@ -80,27 +80,21 @@ public class DivisionService extends AbstractCDMService<CkDivision> {
 	 * @return true, if is channel division
 	 */
 	public boolean isChannelDivision(String divisionName) {
-		List<CkDivision> divisions = (List<CkDivision>) findByChannelDivisionOrderByLevelAsc();
+		List<Division> divisions = (List<Division>) findByChannelDivisionOrderByLevelAsc();
 		if (divisions == null || divisions.isEmpty()) {
 
 
 		}
-		Optional<CkDivision> division = divisions.parallelStream().filter(
+		Optional<Division> division = divisions.parallelStream().filter(
 				element -> element.getDivisionName().equalsIgnoreCase(divisionName) && element.getChannelDivision())
 				.findAny();
 		return division.isPresent();
 	}
 
-	/**
-	 * Checks if is channel division.
-	 *
-	 * @param divisionNames the division names
-	 * @return true, if is channel division
-	 */
 
 
 	public boolean isChannelDivisionPresent() {
-		List<CkDivision> divisions = (List<CkDivision>) findByChannelDivisionOrderByLevelAsc();
+		List<Division> divisions = (List<Division>) findByChannelDivisionOrderByLevelAsc();
 		if (divisions == null || divisions.isEmpty()) {
 			logger.error("Channel division not found. Please ensure division data are present.");
 			return false;
