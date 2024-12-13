@@ -35,20 +35,20 @@ public interface UserRepository extends CommonJpaRepository<User, String > {
     @Procedure(name = "all_user_hierarchy_procedure")
     void executeProcedure();
     
-    @Modifying
-    @Query("update User u set userContext = ?2 where loginId = ?1")
-    int updateUserContext(String loginId,String userContext);
-    
-    @Modifying
-    @Query("update User u set deviceId = ?2 where loginId = ?1")
-    int updateDeviceId(String loginId,String deviceId);
-
-    @Modifying
-    @Query("update User u set userContext = ?2, deviceId = ?3 where loginId = ?1")
-    int updateUserContextAndDevideId(String loginId,String userContext,String deviceId);
-    
-    @Query("select u.userContext from User u where u.loginId = ?1")
-    Optional<String> getUserContext(String loginId);
+//    @Modifying
+//    @Query("update User u set userContext = ?2 where loginId = ?1")
+//    int updateUserContext(String loginId,String userContext);
+//
+//    @Modifying
+//    @Query("update User u set deviceId = ?2 where loginId = ?1")
+//    int updateDeviceId(String loginId,String deviceId);
+//
+//    @Modifying
+//    @Query("update User u set userContext = ?2, deviceId = ?3 where loginId = ?1")
+//    int updateUserContextAndDevideId(String loginId,String userContext,String deviceId);
+//
+//    @Query("select u.userContext from User u where u.loginId = ?1")
+//    Optional<String> getUserContext(String loginId);
 
 
     @Query("select u.loginId as loginId, u.verified as verified from User u where u.loginId in (?1)")
@@ -66,31 +66,31 @@ public interface UserRepository extends CommonJpaRepository<User, String > {
     
     User findByFacebookPSID(String facebookPSID);
     
-    /**
-     * Find by messenger info channel id.
-     *
-     * @param channelId the channel id
-     * @return the user
-     */
-    public User findByMessengerInfoChannelId(String channelId);
+//    /**
+//     * Find by messenger info channel id.
+//     *
+//     * @param channelId the channel id
+//     * @return the user
+//     */
+    //public User findByMessengerInfoChannelId(String channelId);
     
-    /**
-     * Find by login id and messenger info channel.
-     *
-     * @param loginId the login id
-     * @param channel the channel
-     * @return the user
-     */
-    public User findByLoginIdAndMessengerInfoChannel(String loginId, String channel);
-
-
-   List<User> findByUserContext(String token);
-   
-   public Long countByDesignationIs(String designation);
-
-   List<User> findUserContextAndLoginIdByLoginIdIn(List<String> loginId);
-
-    List<User> findByMobileIn(List<String> mobileNumbers);
+//    /**
+//     * Find by login id and messenger info channel.
+//     *
+//     * @param loginId the login id
+//     * @param channel the channel
+//     * @return the user
+//     */
+//    public User findByLoginIdAndMessengerInfoChannel(String loginId, String channel);
+//
+//
+//   List<User> findByUserContext(String token);
+//
+//   public Long countByDesignationIs(String designation);
+//
+//   List<User> findUserContextAndLoginIdByLoginIdIn(List<String> loginId);
+//
+//    List<User> findByMobileIn(List<String> mobileNumbers);
 
     @Modifying
     @Query("update User u set blocked=?2, hash = ?3 where loginId = ?1")
@@ -110,11 +110,11 @@ public interface UserRepository extends CommonJpaRepository<User, String > {
     @Query(nativeQuery = true,value = "select loginid,hierarchy from ck_user where loginid in (?1)")
     List<Map<String,Object>> getUserHierarchy(List<String> loginIds);
 
-    @Query("select loginId from User u  where u.externalReferenceId = ?1")
-    Optional<String> findLoginIdByReferenceId(String externalReferenceId);
-
-    @Transactional
-    @Modifying
-    @Query("update User u set report_password = ?2 where loginId = ?1")
-    int updateReportPassword(String loginid, String reportPassword);
+//    @Query("select loginId from User u  where u.externalReferenceId = ?1")
+//    Optional<String> findLoginIdByReferenceId(String externalReferenceId);
+//
+//    @Transactional
+//    @Modifying
+//    @Query("update User u set report_password = ?2 where loginId = ?1")
+//    int updateReportPassword(String loginid, String reportPassword);
 }

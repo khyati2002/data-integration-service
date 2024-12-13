@@ -18,10 +18,10 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccountI
 
     public String getTimeZone() {
 
-        String timeZone = SecurityContextUtils.getTimeZone();
-
-        if(timeZone!=null)
-            return timeZone;
+//        String timeZone = SecurityContextUtils.getTimeZone();
+//
+//        if(timeZone!=null)
+//            return timeZone;
 
         return getTimeZone(SecurityContextUtils.getLob());
     }
@@ -38,4 +38,8 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccountI
         return customerAccountsRepository.findByLob(lob);
     }
 
+    public String getAdminLoginId(){
+        String lob = SecurityContextUtils.getLob();
+        return getCustomerAccountInfo(lob).getAdmin().getLoginId();
+    }
 }

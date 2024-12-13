@@ -12,6 +12,15 @@ spring:
     name: disflink
   profiles:
     active: local
+  datasource:
+    url: "jdbc:mysql://dev-rds.ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/ckunnatiuat?autoReconnect=true&useSSL=false&nullCatalogMeansCurrent=true"
+    username: "ckuatadmin"
+    password: "Uat12Oct#"
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          fetch_size: 500
 app:
   lob: ckuatunnati
   bundle:

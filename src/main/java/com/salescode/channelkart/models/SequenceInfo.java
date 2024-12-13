@@ -12,7 +12,7 @@ import com.salescode.channelkart.annotation.UniqueKey;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.salescode.channelkart.utils.EntityUtils;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -179,20 +179,20 @@ public class SequenceInfo extends CommonDataModel {
 	 *
 	 * @return true, if is valid
 	 */
-	public boolean isValid() {
-		try {
-			boolean validity= ((StringUtils.isNotBlank(this.entity)) && 
-					(StringUtils.isNotBlank(this.fieldName) && EntityUtils.get().findField(Class.forName(this.entity), this.fieldName) != null)
-					&& (StringUtils.isNotBlank(this.pattern) && this.incrementValue > 0 ));
-			if(!validity && logger.isWarnEnabled()) {
-				logger.warn("Found invalid configuration for {}",this.toString());
-			}
-			return validity;
-		}catch(ClassNotFoundException | RuntimeException ex) {
-			logger.error("Found invalid configuration for {}, invalid entity : {}",this.toString(), this.getEntity());
-            return false;
-		}
-	}
+//	public boolean isValid() {
+//		try {
+//			boolean validity= ((StringUtils.isNotBlank(this.entity)) &&
+//					(StringUtils.isNotBlank(this.fieldName) && EntityUtils.get().findField(Class.forName(this.entity), this.fieldName) != null)
+//					&& (StringUtils.isNotBlank(this.pattern) && this.incrementValue > 0 ));
+//			if(!validity && logger.isWarnEnabled()) {
+//				logger.warn("Found invalid configuration for {}",this.toString());
+//			}
+//			return validity;
+//		}catch(ClassNotFoundException | RuntimeException ex) {
+//			logger.error("Found invalid configuration for {}, invalid entity : {}",this.toString(), this.getEntity());
+//            return false;
+//		}
+//	}
 	
 	/**
 	 * Hash code.

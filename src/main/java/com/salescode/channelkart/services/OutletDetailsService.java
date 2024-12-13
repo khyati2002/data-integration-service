@@ -14,10 +14,7 @@ import com.salescode.channelkart.models.enums.ApplicationCategory;
 import com.salescode.channelkart.models.enums.RoleName;
 import com.salescode.channelkart.repository.OutletDetailsRepository;
 
-import com.salescode.channelkart.utils.CdmDiffUtil;
-import com.salescode.channelkart.utils.EntityUtils;
-import com.salescode.channelkart.utils.JSONUtils;
-import com.salescode.channelkart.utils.NullUtils;
+import com.salescode.channelkart.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,25 +38,22 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private final SupplierInfoService supplierInfoService;
     private final RoleService roleService;
     private final UserService userService;
-    private final HierarchyMetaDataService hierarchyMetaDataService;
-    private final HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter;
     private LocationService locationService;
     private OutletDetailsRepository outletDetailsRepository;
 
     @Autowired
     private PropertyRegistry propertyRegistry;
 
-
-    @Autowired private LocationToStringConverter locationToStringConverter;
-    @Autowired private StringToLocationConverter stringToLocationConverter;
     @Autowired
-    public OutletDetailsService(OutletDetailsRepository outletDetailsRepository,HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter, UserService userService, SupplierInfoService supplierInfoService, RoleService roleService, HierarchyMetaDataService hierarchyMetaDataService, LocationService locationService) {
+    private HierarchyMetaDataService hierarchyMetaDataService;
+
+
+    @Autowired
+    public OutletDetailsService(OutletDetailsRepository outletDetailsRepository, UserService userService, SupplierInfoService supplierInfoService, RoleService roleService, LocationService locationService) {
         super(outletDetailsRepository);
-        this.hierarchyMetaDataToStringConverter = hierarchyMetaDataToStringConverter;
         this.userService = userService;
         this.supplierInfoService = supplierInfoService;
         this.roleService = roleService;
-        this.hierarchyMetaDataService = hierarchyMetaDataService;
         this.locationService = locationService;
         this.outletDetailsRepository = outletDetailsRepository;
     }
@@ -120,7 +114,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 //        }
     }
 
-    public OutletDetails saveInternal(OutletDetails outletDetails) {
+    @Override
+    public OutletDetails save(OutletDetails outletDetails) {
         //	clearCache(SecurityContextUtils.getLob(), outletDetails);
         createAssociatedData(outletDetails);
         printLogsForNullHierarchy(outletDetails,"Location null before prepare outlet details");
@@ -133,8 +128,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 populateHierarchy(hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
             }
             if (!newMetadata.isEmpty()) {
-                List<HierarchyMetaData> savedData = hierarchyMetaDataService.batchSave(newMetadata);
-                existingMetadata.addAll(savedData);
+               // List<HierarchyMetaData> savedData = hierarchyMetaDataService.batchSave(newMetadata);
+               // existingMetadata.addAll(savedData);
             }
             if (!existingMetadata.isEmpty())
                 tempoutlet.setImmediateParent(existingMetadata);
@@ -146,13 +141,14 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
 //        TimerUtils.withTime("Time taken to set supplier ",
 //                () -> {
-//                    try {
+                    try {
          setOutletSupplier(tempoutlet);
-//                    } catch (JsonProcessingException e) {
+                   } catch (JsonProcessingException e) {
 //                        logger.error("Error while setting supplier in outlet extended attribute");
-//                    }
+                   }
 //                });
         printLogsForNullHierarchy(tempoutlet,"Location null before saving outlet");
+        if(tempoutlet.getMapped() == null) tempoutlet.setMapped(true);
         OutletDetails saved = super.save(tempoutlet);
         String logMessage = String.format(
                 "OutletDetails is updated for id '%s', outletcode '%s', last updated on '%s', modified by '%s'",
@@ -349,13 +345,15 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     //
     private void addAssociatedData(OutletDetails outlet) {
 
-        if (getClientProperty("application.category").equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))) {
+        if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY).equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))) {
             outlet.getChanges().forEach(changed ->
 
-                    setUserAssociateData(outlet, changed));
+                    setUserAssociateData(outlet,changed)
+            );
         }
 //        GlobalLock.withLock(outlet.getUserName().getLoginId(), s ->
-//                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet,cdmObjectDetails)));
+//                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet)));
+
         createAssociateDataWithLock(outlet);
     }
 
@@ -507,7 +505,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             if (outlet.getUserName() != null) {
 //                CkUser u = TimerUtils.withTime("Time taken UserService Association load ",
 //                        () -> userService.getLoadedUserObject(outlet.getUserName().getLoginId(), true));
-                User u = userService.getLoadedUserObject(outlet.getUserName().getLoginid(), true);
+                User u = userService.getLoadedUserObject(outlet.getUserName().getLoginId(), true);
                 outlet.setUserName(u);
             }
         }

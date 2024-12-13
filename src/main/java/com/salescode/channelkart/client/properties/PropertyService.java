@@ -52,41 +52,6 @@ public class PropertyService {
     private Optional<MetaData> findMetaData() {
         return Optional.ofNullable(metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE));
     }
+    
 
-    private MetaData newMetaData() {
-        MetaData metaData = new MetaData();
-        metaData.setDescription("Client specific properties");
-        metaData.setDomainName(DOMAIN_NAME);
-        metaData.setDomainType(DOMAIN_TYPE);
-        metaData.setDomainValues(JSONUtils.getObjectMapper().createArrayNode());
-        return metaData;
-    }
-
-    public Property createOrUpdate(Property clientProperty) {
-        MetaData metaData = findMetaData().orElseGet(this::newMetaData);
-        ArrayNode domainValues = metaData.getDomainValues();
-        Set<Property> filteredProperties = JSONUtils.stream(domainValues)
-                .map(Property::new)
-                //Get all the properties except the current property to update
-                .filter(property -> !property.getName().equals(clientProperty.getName()))
-                .collect(Collectors.toSet());
-        // add the updated property
-        filteredProperties.add(clientProperty);
-        ArrayNode updatedDomainValues = filteredProperties.stream()
-                .map(Property::toNode)
-                .collect(JSONUtils.toArrayNode());
-        metaData.setDomainValues(updatedDomainValues);
-        metaDataService.save(metaData);
-        return clientProperty;
-    }
-
-    public void deleteProperty(String name) {
-        MetaData metaData = findMetaData().orElseGet(this::newMetaData);
-        ArrayNode domainValues = metaData.getDomainValues();
-        ArrayNode filteredDomainValues = JSONUtils.stream(domainValues)
-                .filter(node -> !node.get("name").asText().equals(name))
-                .collect(JSONUtils.toArrayNode());
-        metaData.setDomainValues(filteredDomainValues);
-        metaDataService.save(metaData);
-    }
 }

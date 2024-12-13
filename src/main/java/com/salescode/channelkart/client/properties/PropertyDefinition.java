@@ -273,7 +273,7 @@ public enum PropertyDefinition {
     CALCULATE_PERCENTAGE_SCHEME_ON_INITIALAMOUT("CALCULATE_PERCENTAGE_SCHEME_ON_INITIALAMOUT", Constants.FALSE,
             "It will calculate multiple percentage scheme on its initial price only."),
 
-    APPLICATION_CATETORY("application.category", "",
+    APPLICATION_CATETORY("application.category", "RETAIL",
             "Category of the application like SFA, RETAIL etc", Constants.STRING),
     DAYS_BEFORE_DELIVERY("days.before.delivery", "0", "Days Before Delivery", Constants.STRING),
 

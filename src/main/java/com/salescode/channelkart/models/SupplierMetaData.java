@@ -85,18 +85,18 @@ public class SupplierMetaData extends CommonDataModel {
 		this.type = type;
 	}
 	
-	@Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        SupplierMetaData other = (SupplierMetaData) obj;
-        return checkEquals(getId(),other.getId()) && checkEquals((user!=null && user.getLoginId()!=null)?user.getLoginId():null,other.getUser()!=null?other.getUser().getLoginId():null)
-        		&&  checkEquals(min,other.getMin()) && checkEquals(max,other.getMax()) && checkEquals(level,other.getLevel())   && checkEquals(type,other.getType()); 
-    }
+//	@Override
+//    public boolean equals(Object obj) {
+//        if (this == obj)
+//            return true;
+//        if (obj == null)
+//            return false;
+//        if (getClass() != obj.getClass())
+//            return false;
+//        SupplierMetaData other = (SupplierMetaData) obj;
+//        return checkEquals(getId(),other.getId()) && checkEquals((user!=null && user.getLoginId()!=null)?user.getLoginId():null,other.getUser()!=null?other.getUser().getLoginId():null)
+//        		&&  checkEquals(min,other.getMin()) && checkEquals(max,other.getMax()) && checkEquals(level,other.getLevel())   && checkEquals(type,other.getType());
+//    }
 	
 	@Override
 	public int hashCode() {

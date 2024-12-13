@@ -39,14 +39,13 @@ public class LocationService extends AbstractCDMService<Location> {
     ObjectMapper objectMapper = new ObjectMapper();
 
     //
-    private MetaDataService metadataservice;
+    private MetaDataService metaDataService;
     private final SequenceInfoService sequenceInfoService;
     @Value("${location.column : area,pincode,territory,city,state,region,zone,cluster,branch,country}")
     private String locationColumns;
 
     @Autowired
     public LocationService(
-
             MetaDataService metadataservice,
             SequenceInfoService sequenceInfoService,
             LocationRepository locationRepository
@@ -54,7 +53,7 @@ public class LocationService extends AbstractCDMService<Location> {
 
     ) {
         super(locationRepository);
-        this.metadataservice = metadataservice;
+        this.metaDataService = metadataservice;
         this.sequenceInfoService = sequenceInfoService;
         this.locationRepository = locationRepository;
 
@@ -189,7 +188,7 @@ public class LocationService extends AbstractCDMService<Location> {
     public String[] getLocationColumns() {
         //String lob = SecurityContextUtils.getLob();
 
-        MetaData metadata = metadataservice.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE, true);
+        MetaData metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE, true);
         if (metadata == null) {
 
             return locationColumns.split(",");
@@ -215,7 +214,7 @@ public class LocationService extends AbstractCDMService<Location> {
 
     public String[] getLocationSecondaryColumns(String key) {
         //	return distributedCache.withCache(SecurityContextUtils.getLob(), CACHE_DOMAIN, "LocationType" + key, ldata -> {
-        MetaData metaData = metadataservice.fetchByValue(DOMAIN_NAME, "secondary_columns", true);
+        MetaData metaData = metaDataService.fetchByValue(DOMAIN_NAME, "secondary_columns", true);
         ArrayNode columnNode = JSONUtils.getObjectMapper().createArrayNode();
         if (metaData != null && metaData.getDomainValues().get(0).has(key)) {
             columnNode = (ArrayNode) metaData.getDomainValues().get(0).get(key);

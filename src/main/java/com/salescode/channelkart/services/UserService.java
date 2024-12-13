@@ -7,8 +7,6 @@ package com.salescode.channelkart.services;
 
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.salescode.channelkart.converters.LocationToStringConverter;
-import com.salescode.channelkart.converters.StringToLocationConverter;
 import com.salescode.channelkart.models.*;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.RoleName;
@@ -64,9 +62,9 @@ public class UserService extends AbstractCDMService<User> {
 
     @Autowired private SupplierMetaDataService supplierMetaDataService;
 
-    @Autowired private StringToLocationConverter stringToLocationConverter;
+
     @Autowired private LocationService locationService;
-    @Autowired private LocationToStringConverter locationToStringConverter;
+
 
     public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice,UserRepository userRepository) {
         super(userRepository);
@@ -208,7 +206,7 @@ public class UserService extends AbstractCDMService<User> {
            // UserParent refreshedObj=TimerUtils.withTime("Time taken to refresh UserParent", s-> userparentservice.refresh(up));
             UserParent refreshedObj = userparentservice.refresh(up);
             //TimerUtils.withTime("Time taken to save UserParent", ()->
-                    userparentservice.save(refreshedObj);
+            userparentservice.save(refreshedObj);
             //);
         }
 
@@ -251,7 +249,7 @@ public class UserService extends AbstractCDMService<User> {
                 throw new IllegalStateException("Error occured while setting location for user: "+user.getLoginId(),ex);
             }
         }else {
-            throw new IllegalStateException("Missing location data. Data cannot be saved without location information for user : "+user.getLoginId());
+        //    throw new IllegalStateException("Missing location data. Data cannot be saved without location information for user : "+user.getLoginId());
         }
         if(user.getRoles()== null || user.getRoles().isEmpty()) {
             List<Role> roles = roleService.getRoleAsList(RoleName.ROLE_USER.name());
@@ -278,6 +276,9 @@ public class UserService extends AbstractCDMService<User> {
 
         if(user.getVerified()==null) {
             user.setVerified(false);
+        }
+        if(user.getPassword()==null){
+            user.setPassword(DEFAULT_ENCODED_PASSWORD);
         }
 
         return user;
@@ -357,7 +358,7 @@ public class UserService extends AbstractCDMService<User> {
 
     @Override
     public User refresh(User cdmObject) {
-        var dbRecord = CdmDiffUtil.withOldModel(() -> (User) EntityUtils.getInstance().findRecords(cdmObject.getClass(), cdmObject));
+        var dbRecord = CdmDiffUtil.withOldModel(() -> (User) EntityUtils.get().findRecords(cdmObject.getClass(), cdmObject));
         if (dbRecord != null) {
             cdmObject.setOldModel(dbRecord.getOldModel());
             User dbrecordsCopy = synchronizeNewObject(dbRecord, cdmObject);
@@ -376,18 +377,19 @@ public class UserService extends AbstractCDMService<User> {
 
 
         List<HierarchyMetaData> tempList = NullUtils.isNull(cdmObject.getImmediateParent())?dbrecordsCopy.getImmediateParent():cdmObject.getImmediateParent();
- //       attributeUpdateOverrideManager.mergeProperties(cdmObject,dbrecordsCopy);
+      //  attributeUpdateOverrideManager.mergeProperties(cdmObject,dbrecordsCopy);
 
         Map<String,HierarchyMetaData> hmMap = new HashMap<>();
-        dbrecordsCopy.getImmediateParent().forEach(h->hmMap.put(h.getImmediateParent(),h));
-
+        if(dbrecordsCopy.getImmediateParent() != null) dbrecordsCopy.getImmediateParent().forEach(h->hmMap.put(h.getImmediateParent(),h));
         List<HierarchyMetaData> changedList = new ArrayList<>();
-        dbrecordsCopy.setImmediateParent(tempList.stream().map(h->{
-            if(!hmMap.containsKey(h.getImmediateParent())){
-                changedList.add(h);
-            }
-            return h;
-        }).collect(Collectors.toList()));
+        if(tempList != null) {
+            dbrecordsCopy.setImmediateParent(tempList.stream().map(h -> {
+                if (!hmMap.containsKey(h.getImmediateParent())) {
+                    changedList.add(h);
+                }
+                return h;
+            }).collect(Collectors.toList()));
+        }
 
 
 

@@ -3,6 +3,7 @@ package com.salescode.channelkart.models;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.salescode.channelkart.annotation.UniqueKey;
+import com.salescode.channelkart.converters.JSONArrayConverter;
 
 import javax.persistence.*;
 
@@ -10,7 +11,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "ck_metadata",
 uniqueConstraints = @UniqueConstraint(name="uk_metadata",columnNames = {"domainName","domainType"}))
-@EntityListeners(CdmEntityListener.class)
 public class MetaData extends CommonDataModel {
 
 	private static final long serialVersionUID = 1L;

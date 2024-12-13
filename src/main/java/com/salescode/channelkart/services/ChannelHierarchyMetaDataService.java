@@ -10,7 +10,7 @@ import com.salescode.channelkart.models.ChannelHierarchyMetaData;
 import com.salescode.channelkart.models.Division;
 import com.salescode.channelkart.models.HierarchyMetaData;
 import com.salescode.channelkart.models.OutletDetails;
-
+import com.salescode.channelkart.utils.EntityUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

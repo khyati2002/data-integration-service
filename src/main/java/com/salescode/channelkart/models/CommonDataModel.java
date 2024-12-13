@@ -11,6 +11,7 @@ import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.utils.CdmDiffUtil;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,6 +19,7 @@ import java.util.*;
 
 @Getter
 @Setter
+@MappedSuperclass
 public class CommonDataModel implements Serializable {
 
     @Transient
@@ -36,10 +38,10 @@ public class CommonDataModel implements Serializable {
     @Getter
     private transient CommonDataModel oldModel;
 
-    @Getter
+
     @Id
     @GeneratedValue(generator = "UUID")
-    //@GenericGenerator(name = "UUID", strategy = "com.applicate.services.channelkart.services.UUIDIdentifier")
+    @GenericGenerator(name = "UUID", strategy = "com.salescode.channelkart.services.UUIDIdentifier")
     private String id;
 
     @Version

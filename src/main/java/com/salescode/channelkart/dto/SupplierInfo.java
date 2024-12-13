@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.models.SupplierMetaData;
+import com.salescode.channelkart.utils.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;

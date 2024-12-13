@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.salescode.channelkart.annotation.UniqueKey;
 import com.salescode.channelkart.converters.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 
 import javax.persistence.*;
@@ -195,7 +197,7 @@ public class User extends CommonDataModel {
 	 */
 	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "user", orphanRemoval=true)
 	@JsonManagedReference
-	//@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<SupplierMetaData> supplierMetaData= new ArrayList<>();
 	
 	/**
@@ -300,30 +302,30 @@ public class User extends CommonDataModel {
     * we map with system user.
     * facebookPSID, userContext falls under same category.
     * */
-   @CollectionTable(name="ck_user_messenger_info",
-		   joinColumns=@JoinColumn(
-		   	   name = "loginId", 
-		   	   referencedColumnName = "loginId"
-		   ),
-		   uniqueConstraints = @UniqueConstraint(
-				   name= "uk_user_messenger_info",
-				   columnNames= {"loginId","channel"}
-		   ),
-		   foreignKey = @ForeignKey(
-				   name= "FK_USER_LOGINID",
-				   foreignKeyDefinition="Foreign key with User's loginid"
-		   ),
-		   indexes = {
-				   @Index(columnList = "loginId",name="idx_loginid"),
-				   @Index(columnList = "channel",name="idx_channel"),
-				   @Index(columnList = "loginId,channel",name="idx_loginid_channel", unique=true)
-		   }
-   )
+//   @CollectionTable(name="ck_user_messenger_info",
+//		   joinColumns=@JoinColumn(
+//		   	   name = "loginId",
+//		   	   referencedColumnName = "loginId"
+//		   ),
+//		   uniqueConstraints = @UniqueConstraint(
+//				   name= "uk_user_messenger_info",
+//				   columnNames= {"loginId","channel"}
+//		   ),
+//		   foreignKey = @ForeignKey(
+//				   name= "FK_USER_LOGINID",
+//				   foreignKeyDefinition="Foreign key with User's loginid"
+//		   ),
+//		   indexes = {
+//				   @Index(columnList = "loginId",name="idx_loginid"),
+//				   @Index(columnList = "channel",name="idx_channel"),
+//				   @Index(columnList = "loginId,channel",name="idx_loginid_channel", unique=true)
+//		   }
+//   )
 //   @ElementCollection(targetClass= UserMessengerInfo.class,fetch = FetchType.EAGER)
 //   private Set<UserMessengerInfo> messengerInfo;
    
-   @Transient
-   private List<String> activeNotificationChannels;
+//   @Transient
+//   private List<String> activeNotificationChannels;
 
 	public User() {}
 
@@ -719,7 +721,7 @@ public class User extends CommonDataModel {
 		return true;
 	}
 
-	@Override
+
 	public boolean canHash() {
 		return true;
 	}
@@ -745,28 +747,28 @@ public class User extends CommonDataModel {
 //		return messengerInfo;
 //	}
 
-	/**
-	 * @param messengerInfo the messengerInfo to set
-	 */
+//	/**
+//	 * @param messengerInfo the messengerInfo to set
+//	 */
 //	public void setMessengerInfo(Set<UserMessengerInfo> messengerInfo) {
 //		this.messengerInfo = messengerInfo;
 //	}
 	
-	/**
-	 * Gets the active notification channels.
-	 *
-	 * @return the active notification channels
-	 */
-	public List<String> getActiveNotificationChannels() {
-		if(activeNotificationChannels == null) {
-			activeNotificationChannels= Arrays.stream(NotificationTypeRegistry.values())
-					.map(this::getChannel)
-					.filter(Objects::nonNull)
-					.map(m->m.toString().toLowerCase())
-					.collect(Collectors.toList());
-		}
-		return activeNotificationChannels;
-	}
+//	/**
+//	 * Gets the active notification channels.
+//	 *
+//	 * @return the active notification channels
+//	 */
+//	public List<String> getActiveNotificationChannels() {
+//		if(activeNotificationChannels == null) {
+//			activeNotificationChannels= Arrays.stream(NotificationTypeRegistry.values())
+//					.map(this::getChannel)
+//					.filter(Objects::nonNull)
+//					.map(m->m.toString().toLowerCase())
+//					.collect(Collectors.toList());
+//		}
+//		return activeNotificationChannels;
+//	}
 	
 //	@JsonIgnore
 //	private NotificationTypeRegistry getChannel(NotificationTypeRegistry channel) {
@@ -796,18 +798,18 @@ public class User extends CommonDataModel {
 //		return null;
 //	}
 	
-	/**
-	 * Sets the active notification channels.
-	 *
-	 * @param activeNotificationChannels the new active notification channels
-	 */
-	public void setActiveNotificationChannels(List<String> activeNotificationChannels) {
-		this.activeNotificationChannels = activeNotificationChannels;
-	}
+//	/**
+//	 * Sets the active notification channels.
+//	 *
+//	 * @param activeNotificationChannels the new active notification channels
+//	 */
+//	public void setActiveNotificationChannels(List<String> activeNotificationChannels) {
+//		this.activeNotificationChannels = activeNotificationChannels;
+//	}
 
-	@Override
 	public String hash() {
-		return loginId + super.hash();
+		return loginId ;
+				//+ super.hash();
 	}
 
 	/**
