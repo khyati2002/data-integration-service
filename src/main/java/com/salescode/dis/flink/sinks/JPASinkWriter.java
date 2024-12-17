@@ -37,14 +37,14 @@ public class JPASinkWriter implements SinkWriter<CommonDataModel> {
     public void write(CommonDataModel cdm, Context context) throws java.io.IOException, InterruptedException {
         try {
             System.out.println("About to write the record in DB, entity:"+cdm);
-            entityManager.getTransaction().begin();
-            entityManager.persist(cdm);
-            entityManager.getTransaction().commit();
+//            entityManager.getTransaction().begin();
+//            entityManager.persist(cdm);
+//            entityManager.getTransaction().commit();
             System.out.println("Record persisted:"+cdm);
         } catch (Exception e) {
-            if(entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
+//            if(entityManager.getTransaction().isActive()) {
+//                entityManager.getTransaction().rollback();
+//            }
             e.printStackTrace();
             throw new IOExceptionWithCause(e);
         }
