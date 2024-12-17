@@ -3,6 +3,7 @@ package com.salescode.dataintegration.etl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.salescode.channelkart.exceptions.CustomRuntimeException;
 import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import com.salescode.channelkart.response.OperationResponse;
@@ -22,6 +23,7 @@ import com.salescode.dataintegration.etl.validation.service.DataEntityValidation
 import com.salescode.dataintegration.etl.validation.service.DataValidationService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
@@ -103,6 +105,9 @@ public class ETLPipelineService {
                 th.printStackTrace();
                 errorList.add(StringUtils.format(SAVE_ERROR, ExceptionUtils.getRootCause(th).getMessage()));
             }
+        }
+        if(ObjectUtils.isNotEmpty(errorList)) {
+            throw  new CustomRuntimeException(org.apache.commons.lang3.StringUtils.join(errorList, SEPARATOR));
         }
         return transformedObjects;
     }
