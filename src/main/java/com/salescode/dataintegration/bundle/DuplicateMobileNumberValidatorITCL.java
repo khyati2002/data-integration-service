@@ -33,7 +33,7 @@ public class DuplicateMobileNumberValidatorITCL extends AbstractValidationRule<O
 			ruleResult.append("User is inactive in the system");
 			return new RuleResult(ValidationResult.Status.ERROR, ruleResult.toString());
 		}
-		if (user.getDesignation()!=null && user.getDesignation().contains("retailer")) {
+		if (user != null && user.getDesignation()!=null && user.getDesignation().contains("retailer")) {
 			if (cdm.getUserName().getMobile() != null) {
 				if (!cdm.getUserName().getMobile().isEmpty() && !checkMobileNumberPattern(cdm.getUserName().getMobile())) {
 					ruleResult.append("Mobile number field allowed only 10 digit valid number or blank.");
