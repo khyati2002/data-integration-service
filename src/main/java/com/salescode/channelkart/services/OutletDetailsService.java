@@ -5,9 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.util.RawValue;
 import com.salescode.channelkart.client.properties.PropertyDefinition;
 import com.salescode.channelkart.client.properties.PropertyRegistry;
-import com.salescode.channelkart.converters.HierarchyMetaDataToStringConverter;
-import com.salescode.channelkart.converters.LocationToStringConverter;
-import com.salescode.channelkart.converters.StringToLocationConverter;
 import com.salescode.channelkart.models.*;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.ApplicationCategory;
@@ -19,15 +16,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+
+import javax.persistence.EntityManager;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-//import static com.salescode.channelkart.utils.EntityUtils.logger;
 
 @Service
 public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
@@ -48,6 +46,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private HierarchyMetaDataService hierarchyMetaDataService;
 
 
+
     @Autowired
     public OutletDetailsService(OutletDetailsRepository outletDetailsRepository, UserService userService, SupplierInfoService supplierInfoService, RoleService roleService, LocationService locationService) {
         super(outletDetailsRepository);
@@ -60,6 +59,12 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
     private CustomerAccountsService getCustomerAccountsService() {
         return SpringContext.getBean(CustomerAccountsService.class);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public OutletDetails save(OutletDetails outletDetails) {
+        return saveInternal(outletDetails);
     }
 
 
@@ -102,7 +107,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 //        /* Retailer Info/Username */
 //        TimerUtils.withTime("prepareOutletDetails Time taken to fillRetailer ",
 //                () -> fillRetailer(outletDetails, false));
-         fillRetailer(outletDetails, false);
+        fillRetailer(outletDetails, false);
        return outletDetails;
     }
 
@@ -114,8 +119,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 //        }
     }
 
-    @Override
-    public OutletDetails save(OutletDetails outletDetails) {
+
+    public OutletDetails saveInternal(OutletDetails outletDetails) {
         //	clearCache(SecurityContextUtils.getLob(), outletDetails);
         createAssociatedData(outletDetails);
         printLogsForNullHierarchy(outletDetails,"Location null before prepare outlet details");
@@ -128,8 +133,12 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 populateHierarchy(hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
             }
             if (!newMetadata.isEmpty()) {
-               // List<HierarchyMetaData> savedData = hierarchyMetaDataService.batchSave(newMetadata);
-               // existingMetadata.addAll(savedData);
+                try {
+                    List<HierarchyMetaData> savedData = hierarchyMetaDataService.batchSave(newMetadata);
+                    existingMetadata.addAll(savedData);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
             if (!existingMetadata.isEmpty())
                 tempoutlet.setImmediateParent(existingMetadata);
@@ -246,6 +255,21 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         }
     }
 
+    @Override
+    public OutletDetails refresh(OutletDetails cdmObject) {
+        OutletDetails dbRecord = CdmDiffUtil.withOldModel(() -> findByOutletCode(cdmObject.getOutletCode(), true));
+        if (dbRecord != null) {
+            OutletDetails returnObj = EntityUtils.deepClone(dbRecord);
+            cdmObject.setOldModel(dbRecord.getOldModel());
+            //attributeUpdateOverrideManager.mergeProperties(cdmObject, dbRecord);
+            EntityUtils.copyProperties(cdmObject, returnObj, "version", "userName");
+            if(NullUtils.isNotNull(cdmObject.getUserName())){
+                returnObj.setUserName(cdmObject.getUserName());
+            }
+            return returnObj;
+        }
+        return cdmObject;
+    }
 
 
 
@@ -353,7 +377,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         }
 //        GlobalLock.withLock(outlet.getUserName().getLoginId(), s ->
 //                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet)));
-
+//
         createAssociateDataWithLock(outlet);
     }
 

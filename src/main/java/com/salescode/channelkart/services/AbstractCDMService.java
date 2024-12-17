@@ -1,6 +1,7 @@
 package com.salescode.channelkart.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.salescode.channelkart.batch.hash.BatchContainer;
 import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.models.MetaData;
 import com.salescode.channelkart.models.Role;
@@ -8,18 +9,23 @@ import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.repository.CommonJpaRepository;
+import com.salescode.channelkart.services.enums.OperationType;
 import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.IdGenerator;
 import com.salescode.channelkart.utils.NullUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.hibernate.Session;
 import org.hibernate.collection.internal.PersistentBag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -39,6 +45,10 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     private Class<?> persistentClass;
 
     private static final List<Class<Role>> restrictedList = Arrays.asList(Role.class);
+
+    @Autowired
+    private Environment env;
+
 
     public AbstractCDMService(CommonJpaRepository<T, String> repository) {
         this.repository = repository;
@@ -76,6 +86,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     }
 
 
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public T save(T cdmObject) {
@@ -97,12 +108,12 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
            //     apiFilterAuthorizationManager.assertPermission( cdmObject);
             }
             final T object = cdmObject;
-            T sreturn = repository.save(cdmObject);
-            fixChanges( sreturn , sreturn);
+            T sreturn = repository.save(object);
+            fixChanges( cdmObject , sreturn);
 
             repository.flush();
 
-        T finalCdmObject = cdmObject;
+        T finalCdmObject = sreturn;
         T finalSaved = sreturn;
 
         return finalSaved;
@@ -110,6 +121,106 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
      public T fillCommonAttributes(T cdm){
          return fillCommonAttributes(cdm, false, new HashSet<>(), null);
      }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public T save(T cdmObject, OperationType type) {
+        return save(cdmObject);
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<T> batchSave(Iterable<T> iterObj) throws Exception {
+        return batchSave(iterObj,null);
+    }
+
+
+//    private T preSaveEnrichment(T cdm){
+//        EnrichmentOperationResult er = enrichmentService.enrich(cdm, EnrichmentPhase.PRE_SAVE);
+//        if(!er.getStatus().equals(Status.OK)) {
+//            throw new SystemRuntimeException((ObjectUtils.isNotEmpty(er.getEnrichmentResults()))?er.getEnrichmentResults().get(0).getMessage():
+//                    "Some error occured with pre-enrichment while storing "+cdm.toString());
+//        }
+//        return (T) (ObjectUtils.isNotEmpty(er.getEnrichedData())?er.getEnrichedData().get(0):cdm);
+//    }
+//
+
+    private boolean isNativeBatchSave(Iterable<T> elements) {
+        Iterator<T> iterator = elements.iterator();
+        if (iterator.hasNext()) {
+            T element = iterator.next();
+            return isNativeBatchSave(element);
+        }
+        return false;
+    }
+
+    private boolean isNativeBatchSave(T element) {
+        return Boolean.parseBoolean(env.getProperty("native.batch.save."+element.getClass().getSimpleName(), "false"));
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<T> batchSave(Iterable<T> iterObj, IdGenerator idGenerator) throws Exception {
+       // iterObj.forEach(this::preSaveEnrichment);
+        if(isNativeBatchSave(iterObj)) {
+            throw new Exception("Native batch save not allowed");
+        }else {
+            BatchContainer<T> container = splitElements(iterObj, idGenerator);
+            List<T> elementsToSaveAsList = container.getAllElementstoSave();
+            List<T> savedData = saveAll(elementsToSaveAsList);
+            return ListUtils.union(container.getDuplicateElementsAsList(), savedData);
+
+        }
+    }
+
+    private void fixChanges(List<T> actualObjectWithChange, List<T> dbSavedObject){
+        if(actualObjectWithChange!=null && dbSavedObject!=null && actualObjectWithChange.size() == dbSavedObject.size()){
+            for(int i=0; i< dbSavedObject.size();i++){
+                fixChanges(actualObjectWithChange.get(i), dbSavedObject.get(i));
+            }
+        }else {
+          //  logger.warn("null or empty objects passed to add changes.. , ignoring");
+        }
+    }
+
+    private List<T> saveAll(Iterable<T> items) {
+        //items.forEach(element-> apiFilterAuthorizationManager.assertPermission(element));
+        List<T> saved = this.repository.saveAll(items);
+        fixChanges((List<T>)items, saved); //hack to populate persist changes after putting to db, should find a better place to do this.
+        repository.flush();
+        //notifyBatchSave(saved);
+        return saved;
+    }
+
+    public T fillCommonAttributes(T cdm, IdGenerator idGenerator) {
+        return fillCommonAttributes(cdm, false, new HashSet<>(), idGenerator);
+    }
+
+    private BatchContainer<T> splitElements(Iterable<T> elements, IdGenerator generator) {
+        List<T> newRecords = new ArrayList<>();
+        List<T> existingRecords = new ArrayList<>();
+        Map<String, T> existingRecordsWithHash = new HashMap<>();
+        for (T element : elements) {
+            fillCommonAttributes(element, generator);
+            if (element.isCreate()) {
+                //addHash(element);
+                newRecords.add(element);
+            } else {
+                //addHash(element);
+                existingRecords.add(element);
+            }
+        }
+        if (existingRecords.isEmpty()) {
+            BatchContainer<T> batchContainer = new BatchContainer<>();
+            batchContainer.setElementsToInsert(newRecords);
+            return batchContainer;
+        }
+
+        BatchContainer<T> batchContainer=new BatchContainer<>();
+        batchContainer.setElementsToInsert(newRecords);
+        batchContainer.setElementsToUpdate(existingRecords);
+        return batchContainer;
+
+    }
+
 
 
     @SuppressWarnings("unchecked")

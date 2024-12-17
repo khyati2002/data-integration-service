@@ -23,8 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+
 
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
@@ -62,8 +65,8 @@ public class UserService extends AbstractCDMService<User> {
 
     @Autowired private SupplierMetaDataService supplierMetaDataService;
 
-
     @Autowired private LocationService locationService;
+
 
 
     public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice,UserRepository userRepository) {
@@ -192,7 +195,7 @@ public class UserService extends AbstractCDMService<User> {
         return this.save(inUser, OperationType.insert);
     }
 
-
+    @Override
     public User save(User inUser, OperationType type) {
        // String lob = SecurityContextUtils.getLob();
        // User user= TimerUtils.withTime("Time Taken to execute fillUser()", u-> fillUser(inUser));
@@ -246,7 +249,7 @@ public class UserService extends AbstractCDMService<User> {
                 user.setLocationHierarchy(loc);
             }
             catch(Exception ex) {
-                throw new IllegalStateException("Error occured while setting location for user: "+user.getLoginId(),ex);
+               // throw new IllegalStateException("Error occured while setting location for user: "+user.getLoginId(),ex);
             }
         }else {
         //    throw new IllegalStateException("Missing location data. Data cannot be saved without location information for user : "+user.getLoginId());
@@ -285,6 +288,27 @@ public class UserService extends AbstractCDMService<User> {
     }
 
 
+    private void evaluateUserHierarchy(User user,Set<UserParent> userParents) {
+        StringBuilder hierarchyStr = new StringBuilder();
+        userParents.forEach(parent -> {
+            List<HierarchyMetaData> hmList = (List<HierarchyMetaData>) hierarchyMetaDataService.findByImmediateParent(parent.getParent());
+            if (hmList.isEmpty()) {
+                hierarchyStr.append(user.getLoginId() + " > " + parent.getParent() + " > " + getCustomerAccountsService().getAdminLoginId());
+                hierarchyStr.append(",");
+            } else {
+                hmList.forEach(hierarchyMetaData -> {
+                    hierarchyStr.append(user.getLoginId() + " > " + hierarchyMetaData.getHierarchy());
+                    hierarchyStr.append(",");
+                });
+            }
+        });
+        user.setHierarchy(hierarchyStr.substring(0, hierarchyStr.length() - 1));
+        user.setNormalizedHierarchy(UserService.getNormalizedHierarchy(user.getHierarchy()));
+    }
+    private CustomerAccountsService getCustomerAccountsService() {
+        return SpringContext.getBean(CustomerAccountsService.class);
+    }
+
 
     public void saveUserParent(User user, OperationType type){
         Set<UserParent> userParents= new HashSet<>();
@@ -295,15 +319,19 @@ public class UserService extends AbstractCDMService<User> {
                 userParents.addAll(getNewUserParents(user, dataset, type));
                 if(type.equals(OperationType.insert) || user.getDesignation().contains(RETAILER)) {
                     userparentservice.deleteByUserLoginId(user.getLoginId());
-                 //   hierarchySynchronizer.removeUser(user.getLoginId());
+                   // hierarchySynchronizer.removeUser(user.getLoginId());
                 }
             }
         }else {
             userParents.addAll( getUserParents(user) );
         }
         if(!userParents.isEmpty()) {
-//            userparentservice.batchSave(userParents);
-//            evaluateUserHierarchy(user,userParents);
+             try {
+                 userparentservice.batchSave(userParents);
+             } catch (Exception e) {
+                 throw new RuntimeException(e);
+             }
+              evaluateUserHierarchy(user,userParents);
 //            AuditLogger.log(LOG_TYPE, "Updated parents of User with loginId '{}'. LoginId of parents: '[{}]'", user.getLoginId(), getUserParentList(userParents));
         }
     }

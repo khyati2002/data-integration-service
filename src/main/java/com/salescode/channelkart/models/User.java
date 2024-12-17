@@ -1,54 +1,85 @@
-/*
- * Copyright (c) 2020. All rights reserved.
- * APPLICATE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- * 
- */
 package com.salescode.channelkart.models;
 
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.salescode.channelkart.annotation.UniqueKey;
 import com.salescode.channelkart.converters.*;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-import java.util.*;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedStoredProcedureQueries;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureParameter;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
 @Table(name="ck_user",
-indexes={
-		@Index(name="ck_user_idx_1",columnList="loginid"),
-		@Index(name="ck_user_idx_2",columnList="id")
-})
+		indexes={
+				@Index(name="ck_user_idx_1",columnList="loginid"),
+				@Index(name="ck_user_idx_2",columnList="id")
+		})
 @SuppressWarnings({"java:S4144", "java:S1710", "java:S6353", "java:S1172", "java:S107"})
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NamedStoredProcedureQueries({
-    @NamedStoredProcedureQuery(name = "all_user_hierarchy_procedure", 
-	procedureName = "hierarchycreationhirarchymetadata"
-	),
-    @NamedStoredProcedureQuery(name = "user_hierarchy_procedure", 
-    procedureName = "hierarchycreationhierarchymetadataindividualuser",
-    parameters = {
-          @StoredProcedureParameter(mode = ParameterMode.IN, name = "loginids", type = String.class)
-    })
+		@NamedStoredProcedureQuery(name = "all_user_hierarchy_procedure",
+				procedureName = "hierarchycreationhirarchymetadata"
+		),
+		@NamedStoredProcedureQuery(name = "user_hierarchy_procedure",
+				procedureName = "hierarchycreationhierarchymetadataindividualuser",
+				parameters = {
+						@StoredProcedureParameter(mode = ParameterMode.IN, name = "loginids", type = String.class)
+				})
 })
 
 public class User extends CommonDataModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1548094107145548143L;
 
-	/** 
+	/**
 	 * Common ID linking different login IDs
 	 * For Eg - A Retailer might have multiple people in outlets to place order. This is a case where the outlet is very big
 	 * and employs multiple assistants in the shop.
@@ -60,7 +91,7 @@ public class User extends CommonDataModel {
 	@Size(min = 1, max = 50)
 	private String userAccountId;
 
-	/** 
+	/**
 	 * Login ID of the user
 	 */
 	@UniqueKey
@@ -91,14 +122,14 @@ public class User extends CommonDataModel {
 	 */
 	@Column(unique = true)
 	private String externalReferenceId;
-	
+
 	/**
 	 * Mobile number of the user
 	 */
 	@Column(name = "mobile", length = 15)
 	@Pattern(regexp="(^[0-9]*$)")
 	private String mobile;
-	
+
 	/**
 	 * Id required to send mobile notifications to the user
 	 */
@@ -112,14 +143,14 @@ public class User extends CommonDataModel {
 	@Column(name = "webcontext", length = 500)
 	@Size(min = 0, max = 500)
 	private String webContext;
-	
+
 	/**
 	 * Date when the password what reset or changed
 	 */
 	@Column(name = "last_password_reset_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastPasswordResetDate;
-	
+
 	/**
 	 * Store the last used passwords here and validate when needed
 	 */
@@ -135,10 +166,10 @@ public class User extends CommonDataModel {
 	@JoinTable(name = "ck_user_roles",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "roles_id"))
-//	@JsonSerialize(converter =RoleToStringConverter.class)
-//	@JsonDeserialize(converter = StringToRoleConverter.class)
+	//@JsonSerialize(converter =RoleToStringConverter.class)
+	//@JsonDeserialize(converter = StringToRoleConverter.class)
 	private List<Role> roles;
-	
+
 	private String contactType;
 
 
@@ -159,20 +190,22 @@ public class User extends CommonDataModel {
 	 * Address of the user
 	 */
 	private String address;
-	
+
 	/**
 	 * Reporting manager or Supervisor of the user. It can also be a Supplier or Distributor.
 	 * In some cases, a user can have multiple reporting managers or Supervisors.
 	 * In case of a retailer, multiple suppliers can be providing products to the retailer.
 	 * @see HierarchyMetaData
-	 */	
+	 */
 	@JsonSerialize(converter = HierarchyMetaDataToStringConverter.class)
 	@JsonDeserialize(using = HierarchyMetaDataListDeserializer.class)
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "ck_user_parent",
-			   joinColumns = @JoinColumn(name = "userloginid",referencedColumnName = "loginid"),
-	  		   inverseJoinColumns = @JoinColumn(name = "parent",referencedColumnName = "parent"),foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT),inverseForeignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT) )
-	@Transient 
+//	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+//	@JoinTable(name = "ck_user_parent",
+//			   joinColumns = @JoinColumn(name = "userloginid",referencedColumnName = "loginid"),
+//	  		   inverseJoinColumns = @JoinColumn(name = "parent",referencedColumnName = "parent"),foreignKey = @javax.persistence
+//	  		         .ForeignKey(value = ConstraintMode.NO_CONSTRAINT),inverseForeignKey = @javax.persistence
+//	  		  		         .ForeignKey(value = ConstraintMode.NO_CONSTRAINT) )
+	@Transient
 	private List<HierarchyMetaData> immediateParent;
 
 	/**
@@ -184,12 +217,12 @@ public class User extends CommonDataModel {
 	@JsonDeserialize(using = LocationDeserializer.class)
 	//@ManyToOne(fetch = FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "location_hierarchy",
-        referencedColumnName = "location_hierarchy"
-    )
+	@JoinColumn(
+			name = "location_hierarchy",
+			referencedColumnName = "location_hierarchy"
+	)
 	private Location locationHierarchy;
-	
+
 	/**
 	 * This field is specifically for Supplier designation. If a supplier needs to have a cap of total order,
 	 * it can be set here. The minimum and maximum volume or value for the total order is updated.
@@ -199,7 +232,7 @@ public class User extends CommonDataModel {
 	@JsonManagedReference
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<SupplierMetaData> supplierMetaData= new ArrayList<>();
-	
+
 	/**
 	 * The reporting hierarchy of the user
 	 * For Eg - Retailer is handled by Supplier. And Supplier is handled by an ASM. So, the hierarchy would be
@@ -208,29 +241,29 @@ public class User extends CommonDataModel {
 	@Column(name = "hierarchy",columnDefinition = "LONGTEXT")
 	@Size(min = 0, max = 5000)
 	private String hierarchy;
-	
-	
+
+
 	@Column(name = "normalized_hierarchy",columnDefinition = "LONGTEXT")
 	@Size(min = 0, max = 5000)
 	private String normalizedHierarchy;
-	
+
 	/**
 	 * Designation of the user like Retailer, Supplier, ASM etc.
 	 */
-	
+
 	@CollectionTable(name="ck_userdesignation",joinColumns=@JoinColumn(name = "loginId", referencedColumnName = "loginId"),indexes = {@Index(columnList = "loginId")})
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Column(name = "designation")
 	private Set<String> designation;
-	
+
 	@NotNull
 	@NotBlank(message="name is a mandatory field and must not be empty")
 	private String name;
-	
+
 	@Column(name = "registeredNumber", length = 15)
 	@Pattern(regexp="(^[0-9]*$)")
-	private String registeredNumber; 
-	
+	private String registeredNumber;
+
 	private String facebookPSID;
 
 	public String getAlternateId() {
@@ -244,11 +277,11 @@ public class User extends CommonDataModel {
 	@Column(columnDefinition = "varchar(50)")
 	private String alternateId;
 	private String dialCode;
-	
+
 	/** The sso type. */
 	@Column(columnDefinition = "varchar(100) default 'none'")
 	private String ssoId;
-	
+
 	//@NotBlank(message=ValidationResponseMessage.NOTBLANK)
 	private String deviceId;
 
@@ -256,18 +289,18 @@ public class User extends CommonDataModel {
 	private String assignedHierarchy;
 
 	private Boolean verified;
-	
-//	   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-//	   @JsonSerialize(converter = DateToClientTimeZoneStringConverter.class)
-//		@JsonDeserialize(converter = ClientTimeZoneStringToUTCDateConverter.class)
-//		private Date dob;
-		
-//		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-//		@JsonSerialize(converter = DateToClientTimeZoneStringConverter.class)
-//		@JsonDeserialize(converter = ClientTimeZoneStringToUTCDateConverter.class)
-//		private Date doa;
-		
-		private Boolean blocked;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonSerialize(converter = DateToClientTimeZoneStringConverter.class)
+	//@JsonDeserialize(converter = ClientTimeZoneStringToUTCDateConverter.class)
+	private Date dob;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonSerialize(converter = DateToClientTimeZoneStringConverter.class)
+	//@JsonDeserialize(converter = ClientTimeZoneStringToUTCDateConverter.class)
+	private Date doa;
+
+	private Boolean blocked;
 
 	@JsonIgnore
 	@Column(name = "report_password")
@@ -281,56 +314,56 @@ public class User extends CommonDataModel {
 		this.reportPassword = reportPassword;
 	}
 
-//	public Date getDob() {
-//			return dob;
-//		}
-//
-//		public void setDob(Date dob) {
-//			this.dob = dob;
-//		}
-//
-//		public Date getDoa() {
-//			return doa;
-//		}
-//
-//		public void setDoa(Date doa) {
-//			this.doa = doa;
-//		}
-		
-   /*
-    * Collection table for messenger information. This primary includes messenger defined id which 
-    * we map with system user.
-    * facebookPSID, userContext falls under same category.
-    * */
-//   @CollectionTable(name="ck_user_messenger_info",
-//		   joinColumns=@JoinColumn(
-//		   	   name = "loginId",
-//		   	   referencedColumnName = "loginId"
-//		   ),
-//		   uniqueConstraints = @UniqueConstraint(
-//				   name= "uk_user_messenger_info",
-//				   columnNames= {"loginId","channel"}
-//		   ),
-//		   foreignKey = @ForeignKey(
-//				   name= "FK_USER_LOGINID",
-//				   foreignKeyDefinition="Foreign key with User's loginid"
-//		   ),
-//		   indexes = {
-//				   @Index(columnList = "loginId",name="idx_loginid"),
-//				   @Index(columnList = "channel",name="idx_channel"),
-//				   @Index(columnList = "loginId,channel",name="idx_loginid_channel", unique=true)
-//		   }
-//   )
-//   @ElementCollection(targetClass= UserMessengerInfo.class,fetch = FetchType.EAGER)
-//   private Set<UserMessengerInfo> messengerInfo;
-   
-//   @Transient
-//   private List<String> activeNotificationChannels;
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+
+	public Date getDoa() {
+		return doa;
+	}
+
+	public void setDoa(Date doa) {
+		this.doa = doa;
+	}
+
+	/*
+	 * Collection table for messenger information. This primary includes messenger defined id which
+	 * we map with system user.
+	 * facebookPSID, userContext falls under same category.
+	 * */
+//	@CollectionTable(name="ck_user_messenger_info",
+//			joinColumns=@JoinColumn(
+//					name = "loginId",
+//					referencedColumnName = "loginId"
+//			),
+//			uniqueConstraints = @UniqueConstraint(
+//					name= "uk_user_messenger_info",
+//					columnNames= {"loginId","channel"}
+//			),
+//			foreignKey = @ForeignKey(
+//					name= "FK_USER_LOGINID",
+//					foreignKeyDefinition="Foreign key with User's loginid"
+//			),
+//			indexes = {
+//					@Index(columnList = "loginId",name="idx_loginid"),
+//					@Index(columnList = "channel",name="idx_channel"),
+//					@Index(columnList = "loginId,channel",name="idx_loginid_channel", unique=true)
+//			}
+//	)
+//	@ElementCollection(targetClass= UserMessengerInfo.class,fetch = FetchType.EAGER)
+//	private Set<UserMessengerInfo> messengerInfo;
+
+//	@Transient
+//	private List<String> activeNotificationChannels;
 
 	public User() {}
 
 	public User(String userAccounId, String loginId, String password, String firstname, String lastname, String email, Boolean enabled,
-                Date lastPasswordResetDate, List<Role> roles) {
+				Date lastPasswordResetDate, List<Role> roles) {
 		this.userAccountId = userAccounId;
 		this.loginId = loginId;
 		this.password = password;
@@ -437,7 +470,7 @@ public class User extends CommonDataModel {
 	public void setLastPasswordResetDate(Date lastPasswordResetDate) {
 		this.lastPasswordResetDate = lastPasswordResetDate;
 	}
-	
+
 	public List<String> getLastUsedPasswords() {
 		return lastUsedPasswords;
 	}
@@ -446,7 +479,7 @@ public class User extends CommonDataModel {
 		this.lastUsedPasswords = lastUsedPasswords;
 	}
 
-	
+
 
 	/**
 	 * @return the roles
@@ -617,7 +650,7 @@ public class User extends CommonDataModel {
 	 */
 	public void setDesignation(Set<String> designation) {
 		this.designation = (designation!=null)?designation.stream().map(String::toLowerCase)
-				                              .collect(Collectors.toSet()):null;
+				.collect(Collectors.toSet()):null;
 	}
 
 	public String getName() {
@@ -627,7 +660,7 @@ public class User extends CommonDataModel {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getRegisteredNumber() {
 		return registeredNumber;
 	}
@@ -635,7 +668,7 @@ public class User extends CommonDataModel {
 	public void setRegisteredNumber(String registeredNumber) {
 		this.registeredNumber = registeredNumber;
 	}
-	
+
 	public String getFacebookPSID() {
 		return facebookPSID;
 	}
@@ -643,7 +676,7 @@ public class User extends CommonDataModel {
 	public void setFacebookPSID(String facebookPSID) {
 		this.facebookPSID = facebookPSID;
 	}
-	
+
 	public String getDialCode() {
 		return dialCode;
 	}
@@ -651,7 +684,7 @@ public class User extends CommonDataModel {
 	public void setDialCode(String dialCode) {
 		this.dialCode = dialCode;
 	}
-	
+
 	/**
 	 * @return the ssoId
 	 */
@@ -746,14 +779,14 @@ public class User extends CommonDataModel {
 //	public Set<UserMessengerInfo> getMessengerInfo() {
 //		return messengerInfo;
 //	}
-
+//
 //	/**
 //	 * @param messengerInfo the messengerInfo to set
 //	 */
 //	public void setMessengerInfo(Set<UserMessengerInfo> messengerInfo) {
 //		this.messengerInfo = messengerInfo;
 //	}
-	
+//
 //	/**
 //	 * Gets the active notification channels.
 //	 *
@@ -769,35 +802,35 @@ public class User extends CommonDataModel {
 //		}
 //		return activeNotificationChannels;
 //	}
-	
+
 //	@JsonIgnore
 //	private NotificationTypeRegistry getChannel(NotificationTypeRegistry channel) {
 //		switch(channel) {
-//		case SMS:
-//			if(StringUtils.isNotEmpty(mobile)) {
-//				return channel;
-//			}
-//			break;
+//			case SMS:
+//				if(StringUtils.isNotEmpty(mobile)) {
+//					return channel;
+//				}
+//				break;
 //
-//		case EMAIL:
-//			if(StringUtils.isNotEmpty(email)) {
-//				return channel;
-//			}
-//			break;
-//		case FIREBASE:
-//			if(StringUtils.isNotEmpty(userContext)) {
-//				return channel;
-//			}
-//			break;
-//		default:
-//			if(ObjectUtils.isNotEmpty(messengerInfo) &&
-//					messengerInfo.stream().anyMatch(m->m.getChannel().equalsIgnoreCase(channel.name()))) {
-//				return channel;
-//			}
+//			case EMAIL:
+//				if(StringUtils.isNotEmpty(email)) {
+//					return channel;
+//				}
+//				break;
+//			case FIREBASE:
+//				if(StringUtils.isNotEmpty(userContext)) {
+//					return channel;
+//				}
+//				break;
+//			default:
+//				if(ObjectUtils.isNotEmpty(messengerInfo) &&
+//						messengerInfo.stream().anyMatch(m->m.getChannel().equalsIgnoreCase(channel.name()))) {
+//					return channel;
+//				}
 //		}
 //		return null;
 //	}
-	
+//
 //	/**
 //	 * Sets the active notification channels.
 //	 *
@@ -807,9 +840,10 @@ public class User extends CommonDataModel {
 //		this.activeNotificationChannels = activeNotificationChannels;
 //	}
 
+
 	public String hash() {
 		return loginId ;
-				//+ super.hash();
+		//super.hash();
 	}
 
 	/**

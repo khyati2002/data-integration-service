@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.salescode.channelkart.annotation.UniqueKey;
 import com.salescode.channelkart.converters.*;
 import com.salescode.channelkart.dto.SupplierInfo;
+
 import org.hibernate.validator.constraints.Length;
 
 
@@ -143,7 +144,7 @@ public class OutletDetails extends CommonDataModel {
 	 */
 	@JsonSerialize(converter = HierarchyMetaDataToStringConverter.class)
 	@JsonDeserialize(converter = StringToHierarchyMetaDataConverter.class)
-	@ManyToMany(cascade= {CascadeType.ALL},fetch = FetchType.EAGER)
+	@ManyToMany(cascade= {CascadeType.MERGE},fetch = FetchType.EAGER)
 	@JoinTable(name = "ck_outlet_details_hierarchymetadata",
 			joinColumns = @JoinColumn(name = "outlet_id"),
 			inverseJoinColumns = @JoinColumn(name = "hierarchy_metadata_id"))

@@ -4,12 +4,12 @@ package com.salescode.channelkart.repository;
 import com.salescode.channelkart.models.MetaData;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 

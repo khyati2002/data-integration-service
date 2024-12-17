@@ -14,6 +14,7 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccountI
 
     public CustomerAccountsService(CustomerAccountsRepository repository) {
         super(repository);
+        this.customerAccountsRepository = repository;
     }
 
     public String getTimeZone() {
@@ -40,6 +41,9 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccountI
 
     public String getAdminLoginId(){
         String lob = SecurityContextUtils.getLob();
+        if(lob.equals("none")){
+            return "admin";
+        }
         return getCustomerAccountInfo(lob).getAdmin().getLoginId();
     }
 }

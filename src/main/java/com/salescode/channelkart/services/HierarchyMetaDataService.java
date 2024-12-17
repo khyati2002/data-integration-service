@@ -34,8 +34,6 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
     @Autowired
     private HierarchyMetaDataRepository hierarchyMetaDataRepository;
 
-    @Autowired
-
 
     public HierarchyMetaDataService(HierarchyMetaDataRepository repository) {
         super(repository);
@@ -99,5 +97,32 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
     public HierarchyMetaData findByHierarchy(String hierarchy) {
         return hierarchyMetaDataRepository.findByHierarchy(hierarchy);
     }
+
+    @Override
+    public List<HierarchyMetaData> batchSave(Iterable<HierarchyMetaData> iterObj) throws Exception {
+        return batchSave(iterObj,true);
+    }
+
+
+    public List<HierarchyMetaData> batchSave(Iterable<HierarchyMetaData> iterObj,boolean clearCache) throws Exception {
+//        String lob= SecurityContextUtils.getLob();
+//
+//        if(clearCache) {
+//            iterObj.forEach(element -> {
+//                if (element != null) {
+//                    //AppCacheManager.getInstance().removeByDomain(CACHE_DOMAIN,element.getHierarchy());
+//                    //distributedCache.clearCache(lob, CACHE_DOMAIN, element.getImmediateParent());
+//                    //distributedCache.clearCache(lob, UserService.CACHE_DOMAIN, element.getImmediateParent());
+//                    clearCache(lob, element.getImmediateParent());
+//                }
+//            });
+//        }
+        List<HierarchyMetaData> saved= super.batchSave(iterObj);
+//        if(saved != null && clearCache) {
+//            saved.forEach(element->clearCache(lob,element.getImmediateParent()));
+//        }
+        return saved;
+    }
+
 
 }
