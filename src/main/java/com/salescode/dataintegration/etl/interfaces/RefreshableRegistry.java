@@ -2,20 +2,18 @@ package com.salescode.dataintegration.etl.interfaces;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.annotation.Bean;
 
-public interface RefreshableRegistry extends BeanPostProcessor {
+import javax.annotation.PostConstruct;
 
-    @Override
-    default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        init();
-        return bean;
-    }
+public abstract class RefreshableRegistry  {
 
-    default void init(){};
+    @PostConstruct
+    public void init(){};
 
-    void refreshRegistry();
+    public abstract void refreshRegistry();
 
-    default String getRegistryName() {
+    public String getRegistryName() {
         return RefreshableRegistry.this.getClass().getSimpleName();
     }
 

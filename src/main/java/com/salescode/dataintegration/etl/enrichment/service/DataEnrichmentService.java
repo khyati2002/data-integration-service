@@ -7,7 +7,7 @@ import com.salescode.dataintegration.etl.enrichment.EnrichmentOperationResult;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import com.salescode.dataintegration.etl.enrichment.registry.EnrichmentInfoRegistry;
 import com.salescode.dataintegration.etl.registry.ETLRegistry;
-import com.salescode.jooq.generated.tables.pojos.CkEnrichmentInfo;
+import com.salescode.channelkart.enrichments.EnrichmentInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +57,8 @@ public class DataEnrichmentService {
             return new EnrichmentOperationResult(Status.OK, currentDataModels);
         }
         List<EnrichmentResult> allEnrichmentResults = new ArrayList<>();
-        List<CkEnrichmentInfo> enrichmentRules = fetchEnrichmentRules(currentDataModels.get(0).getClass().getSimpleName(), phase);
-        for (CkEnrichmentInfo rule : enrichmentRules) {
+        List<EnrichmentInfo> enrichmentRules = fetchEnrichmentRules(currentDataModels.get(0).getClass().getSimpleName(), phase);
+        for (EnrichmentInfo rule : enrichmentRules) {
             List<EnrichmentResult> enrichmentResults = applyRuleToDataModels(rule, currentDataModels);
             List<CommonDataModel> currentCDMS = extractEnrichedDataModels(enrichmentResults);
             if (!currentCDMS.isEmpty()) {
@@ -79,10 +79,10 @@ public class DataEnrichmentService {
      * @param phase the enrichment phase
      * @return a list of sorted enrichment rules
      */
-    private List<CkEnrichmentInfo> fetchEnrichmentRules(String type, EnrichmentPhase phase) {
+    private List<EnrichmentInfo> fetchEnrichmentRules(String type, EnrichmentPhase phase) {
         return enrichmentInfoRegistry.getEnrichmentInfoByPhase(phase).stream()
                 .filter(info -> info.getType().equals(type))
-                .sorted(Comparator.comparingInt(CkEnrichmentInfo::getPriority))
+                .sorted(Comparator.comparingInt(EnrichmentInfo::getPriority))
                 .collect(Collectors.toList());
     }
 
@@ -93,7 +93,7 @@ public class DataEnrichmentService {
      * @param dataModels the data models to enrich
      * @return a list of enrichment results
      */
-    private List<EnrichmentResult> applyRuleToDataModels(CkEnrichmentInfo rule, List<CommonDataModel> dataModels) {
+    private List<EnrichmentResult> applyRuleToDataModels(EnrichmentInfo rule, List<CommonDataModel> dataModels) {
         return dataModels.stream()
                 .map(model -> applyEnrichment(model, rule))
                 .collect(Collectors.toList());
@@ -157,7 +157,7 @@ public class DataEnrichmentService {
      * @param enrichmentInfo the enrichment information
      * @return the result of the enrichment
      */
-    private EnrichmentResult applyEnrichment(CommonDataModel cdm, CkEnrichmentInfo enrichmentInfo) {
+    private EnrichmentResult applyEnrichment(CommonDataModel cdm, EnrichmentInfo enrichmentInfo) {
         try {
             AbstractEnrichment<CommonDataModel> enrichment = etlRegistry.getEnrichment(enrichmentInfo.getImplementation());
             enrichment.setEnrichmentInfo(enrichmentInfo);

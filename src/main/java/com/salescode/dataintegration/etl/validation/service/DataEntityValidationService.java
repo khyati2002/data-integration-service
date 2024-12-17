@@ -2,13 +2,12 @@ package com.salescode.dataintegration.etl.validation.service;
 
 import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.utils.StringUtils;
+import com.salescode.channelkart.validations.RuleInfo;
 import com.salescode.dataintegration.etl.registry.ETLRegistry;
 import com.salescode.dataintegration.etl.validation.FormValidator;
 import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;
 import com.salescode.dataintegration.etl.validation.registry.ValidationInfoRegistry;
-import com.salescode.jooq.generated.tables.pojos.CkValidationRule;
-import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -43,8 +42,8 @@ public class DataEntityValidationService extends DataValidationService {
             return new ValidationResult(ValidationResult.Status.OK, Collections.emptyList());
         }
         List<RuleResult> allValidationResults = new ArrayList<>();
-        List<CkValidationRule> validationRules = fetchValidationRules(StringUtils.format(PREFIX, currentDataModels.get(0).getClass().getSimpleName()));
-        for (CkValidationRule validationRule : validationRules) {
+        List<RuleInfo> validationRules = fetchValidationRules(StringUtils.format(PREFIX, currentDataModels.get(0).getClass().getSimpleName()));
+        for (RuleInfo validationRule : validationRules) {
             List<RuleResult> validationResults = applyRuleToDataModels(validationRule, currentDataModels);
             allValidationResults.addAll(validationResults);
         }

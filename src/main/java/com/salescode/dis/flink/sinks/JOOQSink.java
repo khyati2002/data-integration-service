@@ -28,7 +28,7 @@ public class JOOQSink implements Sink<CommonDataModel> {
         try {
             System.out.println("*****************");
             System.out.println(url);            
-            return new JOOQSinkWriter(url, user, password);
+            return new JPASinkWriter();
         } catch (Throwable e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

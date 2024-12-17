@@ -6,11 +6,11 @@
 package com.salescode.channelkart.validations.impl;
 
 
+import com.salescode.channelkart.models.OutletDetails;
 import com.salescode.channelkart.utils.StringUtils;
 import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
 import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;
-import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class OutletDetailsValidator extends AbstractValidationRule<CkOutletDetails> {
+public class OutletDetailsValidator extends AbstractValidationRule<OutletDetails> {
 	/** The factory. */
 	private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 	
@@ -39,16 +39,16 @@ public class OutletDetailsValidator extends AbstractValidationRule<CkOutletDetai
 	 * @return the rule result
 	 */
 	@Override
-	public RuleResult apply(CkOutletDetails cdm) {
+	public RuleResult apply(OutletDetails cdm) {
 	//	return TimerUtils.withTime("Time taken to validate outlet "+cdm.getOutletCode(),k->{
 
 		List<String> errors= new ArrayList<>();
-		Set<ConstraintViolation<CkOutletDetails>> constraintViolations=validator.validate(cdm);
-		for (ConstraintViolation<CkOutletDetails> violation : constraintViolations) {
+		Set<ConstraintViolation<OutletDetails>> constraintViolations=validator.validate(cdm);
+		for (ConstraintViolation<OutletDetails> violation : constraintViolations) {
 			errors.add(StringUtils.format("'{}' : {}",violation.getPropertyPath().toString(),violation.getMessage()));
 		}
 		if(!errors.isEmpty()){
-			String errorstr= StringUtils.format("Error saving outlet : {}, Reason : [{}]", cdm.getOutletcode(),org.apache.commons.lang.StringUtils.join(errors, ","));
+			String errorstr= StringUtils.format("Error saving outlet : {}, Reason : [{}]", cdm.getOutletCode(),org.apache.commons.lang.StringUtils.join(errors, ","));
 			logger.error(errorstr);
 			return new RuleResult(ValidationResult.Status.ERROR,errorstr);
 		}

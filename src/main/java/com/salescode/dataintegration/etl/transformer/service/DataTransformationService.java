@@ -1,18 +1,24 @@
 package com.salescode.dataintegration.etl.transformer.service;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.introspect.Annotated;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.channelkart.transformers.TransformerInfo;
 import com.salescode.channelkart.utils.EntityUtils;
-import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.dataintegration.etl.registry.ETLRegistry;
 import com.salescode.dataintegration.etl.transformer.AbstractTransformer;
 import com.salescode.dataintegration.etl.transformer.registry.TransformerInfoRegistry;
-import com.salescode.jooq.generated.tables.pojos.CkTransformerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,19 +29,40 @@ public class DataTransformationService {
 
     private final TransformerInfoRegistry transformerInfoRegistry;
     private final ETLRegistry etlRegistry;
-    private final ObjectMapper objectMapper = JSONUtils.getObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public DataTransformationService(TransformerInfoRegistry transformerInfoRegistry, ETLRegistry etlRegistry) {
         this.transformerInfoRegistry = transformerInfoRegistry;
         this.etlRegistry = etlRegistry;
+        this.objectMapper = new ObjectMapper();
+        JacksonAnnotationIntrospector ignoreEnumAliasAnnotations = new JacksonAnnotationIntrospector() {
+            private static final long serialVersionUID = -3342803373202589544L;
+
+            @Override
+            protected <A extends Annotation> A _findAnnotation(Annotated annotated, Class<A> annoClass) {
+                if (annotated.hasAnnotation(JsonFormat.class)) {
+                    return super._findAnnotation(annotated, annoClass);
+                }
+                if (annotated.hasAnnotation(JsonDeserialize.class)) {
+                    JsonDeserialize jsonDeserializer = annotated.getAnnotation(JsonDeserialize.class);
+                    if (jsonDeserializer.using() != JsonDeserializer.None.class) {
+                        return super._findAnnotation(annotated, annoClass);
+                    }
+                }
+                return null;
+            }
+        };
+        objectMapper.setAnnotationIntrospector(ignoreEnumAliasAnnotations);
+        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+        objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
     }
 
     public List<? extends CommonDataModel> transformData(String transformerId, String entityName, Map<String, Object> input) {
         if (transformerId == null || transformerId.isEmpty()) {
             return convertToCommonDataModelList(input, entityName);
         }
-        CkTransformerInfo transformerInfo = transformerInfoRegistry.getTransformerInfoById(transformerId);
+        TransformerInfo transformerInfo = transformerInfoRegistry.getTransformerInfoById(transformerId);
         AbstractTransformer<Map<String, Object>, Object> transformerInstance = etlRegistry.getTransformer(transformerInfo.getImplementation());
         transformerInstance.setTransformerInfo(transformerInfo);
         Object transformedData = transformerInstance.transform(input);
@@ -64,7 +91,7 @@ public class DataTransformationService {
         if (data instanceof CommonDataModel) {
             return (CommonDataModel) data;
         } else {
-            Class<? extends CommonDataModel> clazz = EntityUtils.getInstance().getEntityClass(entityName);
+            Class<? extends CommonDataModel> clazz = EntityUtils.get().getEntityClass(entityName);
             return objectMapper.convertValue(data, clazz);
         }
     }

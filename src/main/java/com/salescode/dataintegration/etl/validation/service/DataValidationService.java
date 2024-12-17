@@ -6,7 +6,7 @@ import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
 import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;
 import com.salescode.dataintegration.etl.validation.registry.ValidationInfoRegistry;
-import com.salescode.jooq.generated.tables.pojos.CkValidationRule;
+import com.salescode.channelkart.validations.RuleInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +33,8 @@ public class DataValidationService {
             return new ValidationResult(ValidationResult.Status.OK, Collections.emptyList());
         }
         List<RuleResult> allValidationResults = new ArrayList<>();
-        List<CkValidationRule> validationRules = fetchValidationRules(currentDataModels.get(0).getClass().getSimpleName());
-        for (CkValidationRule validationRule : validationRules) {
+        List<RuleInfo> validationRules = fetchValidationRules(currentDataModels.get(0).getClass().getSimpleName());
+        for (RuleInfo validationRule : validationRules) {
             List<RuleResult> validationResults = applyRuleToDataModels(validationRule, currentDataModels);
             allValidationResults.addAll(validationResults);
         }
@@ -88,7 +88,7 @@ public class DataValidationService {
      * @param dataModels the data models to validate
      * @return a list of validation results
      */
-    protected List<RuleResult> applyRuleToDataModels(CkValidationRule rule, List<CommonDataModel> dataModels) {
+    protected List<RuleResult> applyRuleToDataModels(RuleInfo rule, List<CommonDataModel> dataModels) {
         return dataModels.stream()
                 .map(model -> applyValidation(model, rule))
                 .collect(Collectors.toList());
@@ -101,7 +101,7 @@ public class DataValidationService {
      * @param validationRule the validation rule
      * @return the result of the validation
      */
-    private RuleResult applyValidation(CommonDataModel cdm, CkValidationRule validationRule) {
+    private RuleResult applyValidation(CommonDataModel cdm, RuleInfo validationRule) {
         try {
             AbstractValidationRule<CommonDataModel> validation = etlRegistry.getValidationRule(validationRule.getImplementation());
             validation.setValidationRule(validationRule);
@@ -118,10 +118,10 @@ public class DataValidationService {
      * @param type the validation type
      * @return a list of sorted validation rules
      */
-    protected List<CkValidationRule> fetchValidationRules(String type) {
+    protected List<RuleInfo> fetchValidationRules(String type) {
         return validationInfoRegistry.getValidationRulesByType(type)
                 .stream()
-                .sorted(Comparator.comparingInt(CkValidationRule::getPriority))
+                .sorted(Comparator.comparingInt(RuleInfo::getPriority))
                 .collect(Collectors.toList());
     }
 }

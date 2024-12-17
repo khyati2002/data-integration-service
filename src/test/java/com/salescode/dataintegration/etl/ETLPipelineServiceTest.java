@@ -1,22 +1,13 @@
 package com.salescode.dataintegration.etl;
 
 import com.salescode.DataIntegrationApplication;
-import com.salescode.channelkart.models.enums.ActiveStatus;
-import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import com.salescode.channelkart.utils.EntityUtils;
-import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.dataintegration.etl.enrichment.registry.EnrichmentInfoRegistry;
-import com.salescode.channelkart.enrichments.impl.TestEnrichment;
-import com.salescode.channelkart.transformers.impl.TestTransformer;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.dataintegration.etl.registry.ETLRegistry;
 import com.salescode.dataintegration.etl.transformer.registry.TransformerInfoRegistry;
 import com.salescode.dis.config.DatabaseConfig;
-import com.salescode.jooq.generated.tables.pojos.CkEnrichmentInfo;
-import com.salescode.jooq.generated.tables.pojos.CkMetadata;
-import com.salescode.jooq.generated.tables.pojos.CkTransformerInfo;
 import lombok.SneakyThrows;
-import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.Mockito.doReturn;
-
 @SpringBootTest(classes = DataIntegrationApplication.class)
 @Import(DatabaseConfig.class)
 class ETLPipelineServiceTest {
 
-    @Autowired DSLContext dslContext;
     @Autowired ETLPipelineService etlPipelineService;
     @Autowired @SpyBean MetadataRegistry metadataRegistry;
     @Autowired @SpyBean TransformerInfoRegistry transformerInfoRegistry;
@@ -69,7 +54,7 @@ class ETLPipelineServiceTest {
                 "    \"lob\": \"mondelezckinduat\",\n" +
                 "    \"transformerInfo\": [\n" +
                 "        {\n" +
-                "            \"entityName\": \"CkOutletDetails\",\n" +
+                "            \"entityName\": \"OutletDetails\",\n" +
                 "            \"operationType\": \"insert\",\n" +
                 "            \"transformerId\": \"unnati_csp_outlet_master_mdm\"\n" +
                 "        }\n" +
