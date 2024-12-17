@@ -28,7 +28,7 @@ public class DataValidationService {
         this.etlRegistry = etlRegistry;
     }
 
-    public ValidationResult validate(List<CommonDataModel> currentDataModels) {
+    public ValidationResult validate(List<CommonDataModel> currentDataModels, Optional<String> preprocessValidationExcludeGroup) {
         if (currentDataModels == null || currentDataModels.isEmpty()) {
             return new ValidationResult(ValidationResult.Status.OK, Collections.emptyList());
         }
@@ -39,6 +39,10 @@ public class DataValidationService {
             allValidationResults.addAll(validationResults);
         }
         return evaluateResults(allValidationResults);
+    }
+
+    public ValidationResult validate(List<CommonDataModel> currentDataModels) {
+        return validate(currentDataModels, Optional.empty());
     }
 
 
@@ -111,7 +115,6 @@ public class DataValidationService {
         }
     }
 
-
     /**
      * Fetches and sorts validation rules applicable to the specified type.
      *
@@ -124,4 +127,5 @@ public class DataValidationService {
                 .sorted(Comparator.comparingInt(RuleInfo::getPriority))
                 .collect(Collectors.toList());
     }
+
 }

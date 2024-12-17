@@ -10,26 +10,35 @@ import com.salescode.channelkart.services.CommonDataModelService;
 import com.salescode.channelkart.services.ServiceLocator;
 import com.salescode.channelkart.utils.EntityUtils;
 import com.salescode.channelkart.utils.JSONUtils;
+import com.salescode.channelkart.utils.StringUtils;
 import com.salescode.dataintegration.etl.dto.StreamingRawData;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentOperationResult;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import com.salescode.dataintegration.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dataintegration.etl.transformer.service.DataTransformationService;
+import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;
 import com.salescode.dataintegration.etl.validation.service.DataEntityValidationService;
 import com.salescode.dataintegration.etl.validation.service.DataValidationService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class ETLPipelineService {
 
+    private static final String ENRICHMENT_ERROR = "Enrichment Failed : {}";
+    private static final String ENTITY_VALIDATION_ERROR = "EntityValidation Failed : {}";
+    private static final String VALIDATION_ERROR = "Validation Failed : {}";
+    private static final String SAVE_ERROR = "Error while saving record. Reason: {}";
+    private static final String SEPARATOR = ",";
     private final DataTransformationService dataTransformationService;
     private final DataEnrichmentService dataEnrichmentService;
     private final DataValidationService dataValidationService;
@@ -61,6 +70,8 @@ public class ETLPipelineService {
 
     List<CommonDataModel> process(StreamingRawData streamingRawData) {
         List<CommonDataModel> transformedObjects = new ArrayList<>();
+        List<String> errorList = new ArrayList<>();
+        List<CommonDataModel> dataSet = new ArrayList<>();
         List<StreamingRawData.TransformerInfoRequest> transformerInfos = streamingRawData.getTransformerInfo();
         for (StreamingRawData.TransformerInfoRequest transformerInfo : transformerInfos) {
             String transformerId = transformerInfo.getTransformerId();
@@ -72,34 +83,78 @@ public class ETLPipelineService {
             log.info("CDM : {}", JSONUtils.getObjectMapper().convertValue(cdms, JsonNode.class).toPrettyString());
             for (CommonDataModel tempCdm : cdms) {
                 CommonDataModel refresh = cdmService.refresh(tempCdm);
-                OperationResponse or = new OperationResponse();
-                EnrichmentOperationResult enrich = dataEnrichmentService.enrich(refresh, EnrichmentPhase.PRE_VALIDATION);
-                or.setEnrichment(enrich);
-                List<CommonDataModel> enrichedData = enrich.getEnrichedData();
-                boolean cStatus = enrich.getStatus().equals(EnrichmentResult.Status.OK);
-                if (cStatus) {
-                    ValidationResult vr = dataValidationService.validate(enrichedData);
-                    or.setValidation(vr);
-                    cStatus = vr.getStatus().equals(ValidationResult.Status.OK);
-                }
-                if (cStatus) {
-                    ValidationResult vr = dataEntityValidationService.validate(enrichedData);
-                    or.setEntityValidation(vr);
-                    cStatus = vr.getStatus().equals(ValidationResult.Status.OK);
-                }
-                if (cStatus) {
-                    EnrichmentOperationResult erPost = dataEnrichmentService.enrich(enrichedData, EnrichmentPhase.POST_VALIDATION);
-                    or.getEnrichment().merge(erPost);
-                    cStatus = erPost.getStatus().equals(EnrichmentResult.Status.OK);
-                }
-                if (cStatus) {
-                    or.setStatus(OperationResponse.OperationStatus.Success);
+                Optional<String> preprocessValidationExcludeGroup=Optional.ofNullable(transformerInfo.getPreprocessValidationExcludeGroup());
+                OperationResponse response = pipelineServiceProcess(refresh, preprocessValidationExcludeGroup);
+                if (response.getStatus().equals(OperationResponse.OperationStatus.Failure)) {
+                    findErrors(response, errorList);
                 } else {
-                    or.setStatus(OperationResponse.OperationStatus.Failure);
+                    List<CommonDataModel> enrichedData = response.getEnrichment().getEnrichedData();
+                    dataSet.addAll(enrichedData);
                 }
-                transformedObjects.addAll(or.getEnrichment().getEnrichedData().parallelStream().map(s -> cdmService.save(s)).collect(Collectors.toList()));
+            }
+        }
+        if (errorList.isEmpty()) {
+            try {
+                transformedObjects.addAll(dataSet.parallelStream().map(s -> {
+                    CommonDataModelService cdmService = ServiceLocator.lookup(s.getClass());
+                    return cdmService.save(s);
+                }).collect(Collectors.toList()));
+            } catch (Throwable th) {
+                th.printStackTrace();
+                errorList.add(StringUtils.format(SAVE_ERROR, ExceptionUtils.getRootCause(th).getMessage()));
             }
         }
         return transformedObjects;
+    }
+
+    private void findErrors(OperationResponse response, List<String> errorList) {
+        if (response.getEnrichment() != null && response.getEnrichment().getStatus().equals(EnrichmentResult.Status.ERROR)) {
+            List<EnrichmentResult> enrichmentResult = response.getEnrichment().getEnrichmentResults();
+            enrichmentResult.forEach(en -> log.info("{} {}{}", en, en.getStatus(), en.getMessage()));
+            String error = org.apache.commons.lang.StringUtils.join(enrichmentResult.stream().map(EnrichmentResult::getMessage).collect(Collectors.toList()), SEPARATOR);
+            errorList.add(StringUtils.format(ENRICHMENT_ERROR, error));
+        }
+        if (response.getEntityValidation() != null && response.getEntityValidation().getStatus().equals(ValidationResult.Status.ERROR)) {
+            ValidationResult enrichmentResult = response.getEntityValidation();
+            List<RuleResult> ruleresult = response.getValidation() != null ? response.getValidation().getViolations() : new ArrayList<>();
+            ruleresult.forEach(en -> log.info("status:{}, reason:{}", en.getStatus(), en.getMessage()));
+            String error = org.apache.commons.lang.StringUtils.join(ruleresult.stream().map(RuleResult::getMessage).collect(Collectors.toList()), SEPARATOR);
+            errorList.add(StringUtils.format(ENTITY_VALIDATION_ERROR, error));
+        }
+        if (response.getValidation() != null && response.getValidation().getStatus().equals(ValidationResult.Status.ERROR)) {
+            List<RuleResult> ruleresult = response.getValidation().getViolations();
+            ruleresult.forEach(en -> log.info("status: {}, reason:{}", en.getStatus(), en.getMessage()));
+            String error = org.apache.commons.lang.StringUtils.join(ruleresult.stream().map(RuleResult::getMessage).collect(Collectors.toList()), SEPARATOR);
+            errorList.add(StringUtils.format(VALIDATION_ERROR, error));
+        }
+    }
+
+    private OperationResponse pipelineServiceProcess(CommonDataModel refresh, Optional<String> preprocessValidationExcludeGroup) {
+        OperationResponse or = new OperationResponse();
+        EnrichmentOperationResult enrich = dataEnrichmentService.enrich(refresh, EnrichmentPhase.PRE_VALIDATION);
+        or.setEnrichment(enrich);
+        List<CommonDataModel> enrichedData = enrich.getEnrichedData();
+        boolean cStatus = enrich.getStatus().equals(EnrichmentResult.Status.OK);
+        if (cStatus) {
+            ValidationResult vr = dataValidationService.validate(enrichedData,preprocessValidationExcludeGroup);
+            or.setValidation(vr);
+            cStatus = vr.getStatus().equals(ValidationResult.Status.OK);
+        }
+        if (cStatus) {
+            ValidationResult vr = dataEntityValidationService.validate(enrichedData,preprocessValidationExcludeGroup);
+            or.setEntityValidation(vr);
+            cStatus = vr.getStatus().equals(ValidationResult.Status.OK);
+        }
+        if (cStatus) {
+            EnrichmentOperationResult erPost = dataEnrichmentService.enrich(enrichedData, EnrichmentPhase.POST_VALIDATION);
+            or.getEnrichment().merge(erPost);
+            cStatus = erPost.getStatus().equals(EnrichmentResult.Status.OK);
+        }
+        if (cStatus) {
+            or.setStatus(OperationResponse.OperationStatus.Success);
+        } else {
+            or.setStatus(OperationResponse.OperationStatus.Failure);
+        }
+        return or;
     }
 }
