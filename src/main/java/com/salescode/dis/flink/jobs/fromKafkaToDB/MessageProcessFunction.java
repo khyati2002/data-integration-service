@@ -56,7 +56,7 @@ public class MessageProcessFunction extends ProcessFunction< ObjectNode, CommonD
             logger.info("Exception :===" + e.toString());
             log.info("Exception Stacktrace {}" + e.getMessage(), e);
             log.warn("Exception Stacktrace {}" + e.getMessage(), e);
-            context.output(deadLetterTag, tuple.toString().concat("====").concat(ExceptionUtils.getStackTrace(e)));
+            context.output(deadLetterTag, ExceptionUtils.getStackTrace(e).concat(tuple.toString()));
         }
     }
 
