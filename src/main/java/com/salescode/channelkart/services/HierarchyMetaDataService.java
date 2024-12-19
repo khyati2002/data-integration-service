@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -59,7 +61,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
     }
 
 
-    HashMap<String, Collection<HierarchyMetaData>> map = new HashMap<>();
+    Map<String, Collection<HierarchyMetaData>> map = new ConcurrentHashMap<>();
 
     public Collection<HierarchyMetaData> findByImmediateParent(String loginId, boolean cached) {
         Function<String, Collection<HierarchyMetaData>> function = (String lid) -> {

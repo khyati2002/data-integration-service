@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -497,7 +498,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         }
     }
 
-    HashMap<String,OutletDetails> cacheMap = new HashMap<>();
+    Map<String,OutletDetails> cacheMap = new ConcurrentHashMap<>();
     public OutletDetails findByOutletCode(String outletCode, boolean cache) {
         if (outletCode == null) {
             return null;

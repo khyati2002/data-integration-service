@@ -30,6 +30,7 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -155,7 +156,7 @@ public class UserService extends AbstractCDMService<User> {
         return findByLoginId(loginId, true, true);
     }
 
-    HashMap<String,User> map = new HashMap<>();
+    Map<String,User> map = new ConcurrentHashMap<>();
     public User findByLoginId(String loginId, boolean cached, boolean hierarchy) {
         //String lob = SecurityContextUtils.getLob();
         Function<String, User> function = (String lid) -> {

@@ -15,8 +15,8 @@ public class JPASinkWriter implements SinkWriter<CommonDataModel> {
 
     public JPASinkWriter() throws Throwable {
         try {
-            entityManagerFactory = Persistence.createEntityManagerFactory("default");
-            entityManager = entityManagerFactory.createEntityManager();
+//            entityManagerFactory = Persistence.createEntityManagerFactory("default");
+//            entityManager = entityManagerFactory.createEntityManager();
         } catch (Throwable e) {
             e.printStackTrace();
             throw e;

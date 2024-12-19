@@ -3,10 +3,8 @@ import com.salescode.channelkart.repository.RoleRepository;
 import com.salescode.channelkart.models.Role;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 @Service
@@ -36,7 +34,7 @@ public class RoleService extends AbstractCDMService<Role> {
 		return DOMAIN_NAME + ":" + roleName.toUpperCase();
 	}
 
-	HashMap<String,Role> map = new HashMap<>();
+	Map<String,Role> map = new ConcurrentHashMap<>();
 	private Role getRoleFromCacheOrRepo(String roleName) {
 		//String lob = SecurityContextUtils.getLob();
 		//Role roleFromCache = (Role) distributedCache.get(lob,null, createRoleKey(roleName), false);
