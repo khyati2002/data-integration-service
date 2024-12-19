@@ -155,6 +155,7 @@ public class UserService extends AbstractCDMService<User> {
         return findByLoginId(loginId, true, true);
     }
 
+    HashMap<String,User> map = new HashMap<>();
     public User findByLoginId(String loginId, boolean cached, boolean hierarchy) {
         //String lob = SecurityContextUtils.getLob();
         Function<String, User> function = (String lid) -> {
@@ -162,8 +163,7 @@ public class UserService extends AbstractCDMService<User> {
             return service.getLoadedUserObject(lid, hierarchy);
         };
 
-
-        return function.apply(loginId);
+        return map.computeIfAbsent(loginId, function);
     }
 
     public Optional<List<User>> findByMobileSafely(String mobile) {

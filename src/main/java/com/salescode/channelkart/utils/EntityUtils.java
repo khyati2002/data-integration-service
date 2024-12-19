@@ -15,6 +15,7 @@ import com.salescode.channelkart.services.MetaDataService;
 import com.salescode.channelkart.services.ServiceLocator;
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.templates.TemplateEngine;
+import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -58,7 +59,7 @@ public class EntityUtils implements InitializingBean{
     private static Map<Class, Map<String, String>> nativeFieldsMap = new ConcurrentHashMap<>();
 
 
-    Set<Class<? extends CommonDataModel>> subClasses = ReflectionUtils.findSubClasses(CommonDataModel.class);
+    Set<Class<? extends CommonDataModel>> subClasses;
 
     @Autowired
     private EntityManagerFactory entityManagerFactory;
@@ -67,6 +68,13 @@ public class EntityUtils implements InitializingBean{
     private EntityManager entitymanager;
 
     @Autowired MetaDataService metaDataService;
+    @Autowired
+    private MetadataRegistry metadataRegistry;
+
+
+    public EntityUtils() {
+        subClasses = ReflectionUtils.findSubClasses(CommonDataModel.class);
+    }
 
 
     public static <T> T deepClone(T src) {
@@ -460,7 +468,7 @@ public class EntityUtils implements InitializingBean{
 
     public ArrayNode fetchDynamicPrimaryKeys(String entityName) {
         MetaDataService metaDataSevice = SpringContext.getBean(MetaDataService.class);
-        MetaData metaData = metaDataSevice.fetchByValue(entityName, "DynamicUniqueKey");
+        MetaData metaData = metadataRegistry.getMetadataByDomainNameAndType(entityName, "DynamicUniqueKey").orElse(null);
         ArrayNode columnArr = JSONUtils.getObjectMapper().createArrayNode();
         if (metaData != null) {
             columnArr = (ArrayNode) metaData.getDomainValues().get(0).get("dynamicKeys");

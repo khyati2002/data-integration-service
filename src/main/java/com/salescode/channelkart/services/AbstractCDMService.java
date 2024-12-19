@@ -257,10 +257,9 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 //            cdm.setLob(SecurityContextUtils.getLob());
 //        }
 
-        if (fillModifyAttributes) {
-            cdm.setLastModifiedTime(Calendar.getInstance().getTime());
-          //  cdm.setModifiedBy(SecurityContextUtils.getPrincipal());
-        }
+
+        cdm.setLastModifiedTime(Calendar.getInstance().getTime());
+        cdm.setModifiedBy("dis");
         processAggregations(cdm, visitedTree, idGenerator);
         return cdm;
     }

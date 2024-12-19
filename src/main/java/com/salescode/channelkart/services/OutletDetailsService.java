@@ -159,13 +159,6 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         printLogsForNullHierarchy(tempoutlet,"Location null before saving outlet");
         if(tempoutlet.getMapped() == null) tempoutlet.setMapped(true);
         OutletDetails saved = super.save(tempoutlet);
-        String logMessage = String.format(
-                "OutletDetails is updated for id '%s', outletcode '%s', last updated on '%s', modified by '%s'",
-                saved.getId(),
-                saved.getOutletCode(),
-                saved.getLastModifiedTime(),
-                saved.getModifiedBy()
-        );
 //        AuditLogger.log("OutletDetails Updated",logMessage, AuditLogger.Status.SUCCESS, "OutletDetails", AuditLogger.Operations.UPDATE.toString(),null);
 //        if (ObjectUtils.isEmpty(outletDetails.getChanges())) {
 //            AuditLogger.log(LOG_TYPE, "Created new Outlet with outletCode '{}'", outletDetails.getOutletCode());
@@ -504,7 +497,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         }
     }
 
-
+    HashMap<String,OutletDetails> cacheMap = new HashMap<>();
     public OutletDetails findByOutletCode(String outletCode, boolean cache) {
         if (outletCode == null) {
             return null;
@@ -513,8 +506,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             OutletDetailsService service = SpringContext.getBean(OutletDetailsService.class);
             return service.getLoadedOutletObject(oc);
         };
-
-        return function.apply(outletCode);
+        return cacheMap.computeIfAbsent(outletCode, function);
     }
 
     public OutletDetails getLoadedOutletObject(String outletCode) {

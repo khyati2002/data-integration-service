@@ -4,8 +4,10 @@ import com.salescode.channelkart.models.Role;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 public class RoleService extends AbstractCDMService<Role> {
@@ -34,11 +36,14 @@ public class RoleService extends AbstractCDMService<Role> {
 		return DOMAIN_NAME + ":" + roleName.toUpperCase();
 	}
 
+	HashMap<String,Role> map = new HashMap<>();
 	private Role getRoleFromCacheOrRepo(String roleName) {
 		//String lob = SecurityContextUtils.getLob();
 		//Role roleFromCache = (Role) distributedCache.get(lob,null, createRoleKey(roleName), false);
 		//if (roleFromCache == null) {
-			Role roleFromRepo = roleRepository.findByNameIgnoreCase(roleName);
+
+			Function function =	(role)-> getByNameIgnoreCase(roleName);
+			Role roleFromRepo = map.computeIfAbsent(roleName, function);
 			if (roleFromRepo != null) {
 			//	distributedCache.put(lob,null, createRoleKey(roleName), roleFromRepo,false);
 				return roleFromRepo;
@@ -46,6 +51,10 @@ public class RoleService extends AbstractCDMService<Role> {
 		}
 		//return roleFromCache;
         return roleFromRepo;
+	}
+
+	private Role getByNameIgnoreCase(String roleName) {
+		return roleRepository.findByNameIgnoreCase(roleName);
 	}
 
 	public List<Role> getRoleAsList(String name) {

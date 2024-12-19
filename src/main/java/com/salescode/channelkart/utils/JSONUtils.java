@@ -5,6 +5,7 @@
  */
 package com.salescode.channelkart.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +35,7 @@ import java.util.stream.StreamSupport;
  * @since May 2020
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
+@Slf4j
 public class JSONUtils {
 
     public static final TypeReference<Map<String, String>> STRING_VALUE_MAP_REFERENCE = new TypeReference<>() {
@@ -142,6 +145,16 @@ public class JSONUtils {
     public static <T> T convert(Object node, TypeReference<T> typeReference) {
         return OBJECT_MAPPER.convertValue(node, typeReference);
     }
+
+    public static String stringify(Object object){
+        try {
+            return getObjectMapper().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            log.error("stacktrace", e);
+        }
+        return null;
+    }
+
 
     public static Stream<JsonNode> stream(JsonNode nodes) {
         return StreamSupport.stream(nodes.spliterator(), false);

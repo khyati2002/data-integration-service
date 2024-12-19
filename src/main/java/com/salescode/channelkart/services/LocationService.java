@@ -67,6 +67,7 @@ public class LocationService extends AbstractCDMService<Location> {
         return findByLocationHierarchy(locationHierarchy, true);
     }
 
+    HashMap<String,Location> map = new HashMap<>();
     public Location findByLocationHierarchy(String locationHierarchy, boolean cached) {
         //String lob = SecurityContextUtils.getLob();
         Function<String, Location> function = (String locationHie) -> {
@@ -74,8 +75,7 @@ public class LocationService extends AbstractCDMService<Location> {
             return repo.findByLocationHierarchy(locationHie);
         };
 
-
-        return function.apply(locationHierarchy);
+        return map.computeIfAbsent(locationHierarchy,function);
     }
 
 

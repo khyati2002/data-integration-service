@@ -1,5 +1,6 @@
 package com.salescode.dis.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -23,11 +24,12 @@ public class DatabaseConfig {
     @Bean
     @ConditionalOnMissingBean(DataSource.class)
     public DataSource getDataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("com.mysql.cj.jdbc.Driver");  // MySQL driver
-        dataSourceBuilder.url(url); // MySQL JDBC URL
-        dataSourceBuilder.username(user);                    // MySQL username
-        dataSourceBuilder.password(password);                    // MySQL password
-        return dataSourceBuilder.build();  // Return the DataSource bean
+        HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        hikariDataSource.setJdbcUrl(url);
+        hikariDataSource.setUsername(user);
+        hikariDataSource.setPassword(password);
+        hikariDataSource.setMaximumPoolSize(50);
+        return hikariDataSource;  // Return the DataSource bean
     }
 }

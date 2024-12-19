@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.salescode.channelkart.exceptions.CustomRuntimeException;
 import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.channelkart.models.IntegrationHistory;
 import com.salescode.channelkart.models.enums.EnrichmentPhase;
+import com.salescode.channelkart.repository.IntegrationHistoryRepository;
 import com.salescode.channelkart.response.OperationResponse;
 import com.salescode.channelkart.services.CommonDataModelService;
 import com.salescode.channelkart.services.ServiceLocator;
@@ -28,6 +30,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,13 +48,15 @@ public class ETLPipelineService {
     private final DataEnrichmentService dataEnrichmentService;
     private final DataValidationService dataValidationService;
     private final DataEntityValidationService dataEntityValidationService;
+    private final IntegrationHistoryRepository integrationHistoryRepository;
     ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
-    public ETLPipelineService(DataTransformationService dataTransformationService, DataEnrichmentService dataEnrichmentService, DataValidationService dataValidationService, DataEntityValidationService dataEntityValidationService) {
+    public ETLPipelineService(DataTransformationService dataTransformationService, DataEnrichmentService dataEnrichmentService, DataValidationService dataValidationService, DataEntityValidationService dataEntityValidationService, IntegrationHistoryRepository integrationHistoryRepository, IntegrationHistoryRepository integrationHistoryRepository1) {
         this.dataTransformationService = dataTransformationService;
         this.dataEnrichmentService = dataEnrichmentService;
         this.dataValidationService = dataValidationService;
         this.dataEntityValidationService = dataEntityValidationService;
+        this.integrationHistoryRepository = integrationHistoryRepository1;
     }
 
     @SneakyThrows
@@ -64,8 +69,19 @@ public class ETLPipelineService {
             throw new IllegalArgumentException("Features cannot be empty");
         }
         for (JsonNode jsonNode : features) {
-            streamingRawData.setFeatures(objectMapper.createArrayNode().add(jsonNode));
-            transformedObjects.addAll(process(streamingRawData));
+            try{
+                streamingRawData.setFeatures(objectMapper.createArrayNode().add(jsonNode));
+                transformedObjects.addAll(process(streamingRawData));
+            } catch (Exception e) {
+                integrationHistoryRepository.save(IntegrationHistory.builder()
+                        .groupId(streamingRawData.getGroupId())
+                        .requestId(streamingRawData.getRequestId())
+                        .description(ExceptionUtils.getStackTrace(e))
+                        .timestamp(System.currentTimeMillis())
+                        .build()
+                );
+                throw e;
+            }
         }
         return transformedObjects;
     }
@@ -82,7 +98,6 @@ public class ETLPipelineService {
             Class<? extends CommonDataModel> entityClass = EntityUtils.get().getEntityClass(transformerInfo.getEntityName());
             CommonDataModelService cdmService = ServiceLocator.lookup(entityClass);
             List<? extends CommonDataModel> cdms = dataTransformationService.transformData(transformerId, entityName, jsonNode);
-            log.info("CDM : {}", JSONUtils.getObjectMapper().convertValue(cdms, JsonNode.class).toPrettyString());
             for (CommonDataModel tempCdm : cdms) {
                 CommonDataModel refresh = cdmService.refresh(tempCdm);
                 Optional<String> preprocessValidationExcludeGroup=Optional.ofNullable(transformerInfo.getPreprocessValidationExcludeGroup());
@@ -97,13 +112,13 @@ public class ETLPipelineService {
         }
         if (errorList.isEmpty()) {
             try {
-                transformedObjects.addAll(dataSet.parallelStream().map(s -> {
+               dataSet.parallelStream().forEach(s -> {
                     CommonDataModelService cdmService = ServiceLocator.lookup(s.getClass());
-                    return cdmService.save(s);
-                }).collect(Collectors.toList()));
+                    cdmService.save(s);
+                });
             } catch (Throwable th) {
-                th.printStackTrace();
-                errorList.add(StringUtils.format(SAVE_ERROR, ExceptionUtils.getRootCause(th).getMessage()));
+                log.info("STACKTRACE {}", ExceptionUtils.getStackTrace(th));
+                throw th;
             }
         }
         if(ObjectUtils.isNotEmpty(errorList)) {

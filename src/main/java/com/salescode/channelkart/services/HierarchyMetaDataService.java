@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
@@ -58,13 +59,15 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
     }
 
 
+    HashMap<String, Collection<HierarchyMetaData>> map = new HashMap<>();
+
     public Collection<HierarchyMetaData> findByImmediateParent(String loginId, boolean cached) {
-        Function<String,Collection<HierarchyMetaData>> function = (String lid)->{
+        Function<String, Collection<HierarchyMetaData>> function = (String lid) -> {
             return hierarchyMetaDataRepository.findByImmediateParent(lid);
         };
         logger.debug("Find immediate Parent for->>>>>>>>>>>>:{}", loginId);
-       // return (cached) ? AppCacheManager.getInstance().withCache(CACHE_DOMAIN, loginId,function):function.apply(loginId);
-       return function.apply(loginId);
+        // return (cached) ? AppCacheManager.getInstance().withCache(CACHE_DOMAIN, loginId,function):function.apply(loginId);
+        return map.computeIfAbsent(loginId, function);
     }
 
     public Collection<HierarchyMetaData> findByImmediateParent(List<String> loginId) {

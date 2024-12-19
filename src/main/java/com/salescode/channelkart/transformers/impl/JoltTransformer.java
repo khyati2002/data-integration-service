@@ -27,7 +27,7 @@ public class JoltTransformer extends AbstractTransformer<Map<String, Object>, Ob
                 Object spec= JsonUtils.jsonToObject(String.valueOf(code_node));
                 Chainr chainr = Chainr.fromSpec(spec);
                 Object transformedOutput = chainr.transform(jsonobj);
-                return JSONUtils.getObjectMapper().readValue(JsonUtils.toPrettyJsonString(transformedOutput),new TypeReference<HashMap<String,Object>>(){});
+                return JSONUtils.getObjectMapper().readValue(JsonUtils.toJsonString(transformedOutput),new TypeReference<HashMap<String,Object>>(){});
             }
             catch(Exception ex) {
                 log.error("Jolt Transformer Exception",ex);

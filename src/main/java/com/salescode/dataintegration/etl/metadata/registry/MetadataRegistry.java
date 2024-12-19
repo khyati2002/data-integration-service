@@ -2,11 +2,13 @@ package com.salescode.dataintegration.etl.metadata.registry;
 
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.repository.MetaDataRepository;
+import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.dataintegration.etl.interfaces.RefreshableRegistry;
 import com.salescode.channelkart.models.MetaData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -70,6 +72,15 @@ public class MetadataRegistry extends RefreshableRegistry {
      */
     private String loadIdByDomainAndType(String domainName, String domainType) {
         return metadataRepository.getIdByDomainNameAndDomainType(domainName, domainType);
+    }
+
+    @Override
+    public void init() {
+        List<MetaData> list = metadataRepository.findAllByActiveStatus(ActiveStatus.ACTIVE);
+        list.stream().parallel().filter(s -> NullUtils.isNotNull(s.getDomainName()) && NullUtils.isNotNull(s.getDomainType())).forEach(s -> {
+            metadataCache.put(s.getId(), s);
+            nameToIdCache.put(s.getDomainName(), s.getId());
+        });
     }
 
     /**

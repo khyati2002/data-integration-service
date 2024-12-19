@@ -4,6 +4,7 @@ import com.salescode.channelkart.enrichments.EnrichmentInfo;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import com.salescode.channelkart.repository.EnrichmentInfoRepository;
+import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.dataintegration.etl.interfaces.RefreshableRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -22,6 +24,13 @@ public class EnrichmentInfoRegistry extends RefreshableRegistry {
     @Autowired
     public EnrichmentInfoRegistry(EnrichmentInfoRepository enrichmentInfoRepository) {
         this.enrichmentInfoRepository = enrichmentInfoRepository;
+    }
+
+    @Override
+    public void init() {
+        List<EnrichmentInfo> list = enrichmentInfoRepository.findAllByActiveStatus(ActiveStatus.ACTIVE);
+        list.stream().filter(s-> NullUtils.isNotNull(s.getPhase())).collect(Collectors.groupingBy(EnrichmentInfo::getPhase))
+                .putAll(enrichmentCache);
     }
 
     /**

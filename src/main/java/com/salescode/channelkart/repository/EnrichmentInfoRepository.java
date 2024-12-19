@@ -32,4 +32,6 @@ public interface EnrichmentInfoRepository extends CommonJpaRepository<Enrichment
     List<EnrichmentInfo> findByPhase(@NotNull EnrichmentPhase phase);
 
     List<EnrichmentInfo> findByPhaseAndActiveStatus(@NotNull EnrichmentPhase phase, ActiveStatus activeStatus);
+
+    List<EnrichmentInfo> findAllByActiveStatus(ActiveStatus activeStatus);
 }

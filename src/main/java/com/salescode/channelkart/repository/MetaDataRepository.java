@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,4 +20,6 @@ public interface MetaDataRepository extends CommonJpaRepository<MetaData,String>
     String getIdByDomainNameAndDomainType(String domainName, String domainType);
 
     MetaData findByIdAndActiveStatus(String id, ActiveStatus activeStatus);
+
+    List<MetaData> findAllByActiveStatus(ActiveStatus activeStatus);
 }
