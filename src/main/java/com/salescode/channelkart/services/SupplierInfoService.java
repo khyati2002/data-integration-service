@@ -6,6 +6,7 @@
 package com.salescode.channelkart.services;
 
 
+import com.salescode.channelkart.cache.DistributedCache;
 import com.salescode.channelkart.models.ChannelHierarchyMetaData;
 import com.salescode.channelkart.models.OutletDetails;
 
@@ -33,10 +34,11 @@ public class SupplierInfoService {
     /**
      * The user service.
      */
-
-
     @Autowired
     private ChannelHierarchyMetaDataService channelHierarchyService;
+
+    @Autowired
+    private DistributedCache distributedCache;
 
     public List<String> findSuppliers(OutletDetails outlet) {
         if (outlet != null) {
@@ -52,6 +54,10 @@ public class SupplierInfoService {
             logger.error("Cannot find outlet for fetching suppliers");
         }
         return List.of();
+    }
+
+    public void clearCache(String lob, String cacheKey) {
+        distributedCache.clearCache(lob, CACHE_DOMAIN, cacheKey);
     }
 
 

@@ -4,10 +4,12 @@ package com.salescode.channelkart.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.salescode.channelkart.cache.DistributedCache;
 import com.salescode.channelkart.models.Location;
 import com.salescode.channelkart.models.MetaData;
 import com.salescode.channelkart.models.enums.Sequence;
 import com.salescode.channelkart.repository.LocationRepository;
+import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.utils.GlobalLock;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
@@ -39,26 +41,27 @@ public class LocationService extends AbstractCDMService<Location> {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    //
+    private DistributedCache distributedCache;
     private MetaDataService metaDataService;
     private final SequenceInfoService sequenceInfoService;
     @Value("${location.column : area,pincode,territory,city,state,region,zone,cluster,branch,country}")
     private String locationColumns;
 
+    private static final String CACHE_DOMAIN= "locations";
+
     @Autowired
     public LocationService(
             MetaDataService metadataservice,
             SequenceInfoService sequenceInfoService,
-            LocationRepository locationRepository
-
+            LocationRepository locationRepository,
+            DistributedCache distributedCache
 
     ) {
         super(locationRepository);
         this.metaDataService = metadataservice;
         this.sequenceInfoService = sequenceInfoService;
         this.locationRepository = locationRepository;
-
-
+        this.distributedCache = distributedCache;
     }
 
     //
@@ -70,13 +73,14 @@ public class LocationService extends AbstractCDMService<Location> {
 
     Map<String,Location> map = new ConcurrentHashMap<>();
     public Location findByLocationHierarchy(String locationHierarchy, boolean cached) {
-        //String lob = SecurityContextUtils.getLob();
-        Function<String, Location> function = (String locationHie) -> {
-            LocationRepository repo = SpringContext.getBean(LocationRepository.class);
+        String lob = SecurityContextUtils.getLob();
+        Function<String,Location> function = (String locationHie)->{
+            LocationRepository repo= SpringContext.getBean(LocationRepository.class);
             return repo.findByLocationHierarchy(locationHie);
         };
 
-        return map.computeIfAbsent(locationHierarchy,function);
+        return (cached) ? distributedCache.withCache(lob,CACHE_DOMAIN, locationHierarchy,function):
+                function.apply(locationHierarchy);
     }
 
 
@@ -186,46 +190,44 @@ public class LocationService extends AbstractCDMService<Location> {
         }
     }
 
-    public String[] getLocationColumns() {
-        //String lob = SecurityContextUtils.getLob();
-
-        MetaData metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE, true);
-        if (metadata == null) {
-
-            return locationColumns.split(",");
-        } else {
-            List<Entry<String, JsonNode>> localdata = new ArrayList<>();
-            ArrayNode arraynode = convertToArrayNode(metadata.getDomainValues());
-            Iterator<JsonNode> iter = arraynode.elements();
-            while (iter.hasNext()) {
-                JsonNode node = iter.next();
-                for (Iterator<Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext(); ) {
-                    localdata.add(iterator.next());
+    public String[] getLocationColumns(){
+        String lob = SecurityContextUtils.getLob();
+        return distributedCache.withCache(lob,CACHE_DOMAIN, "constantlocationlevel",ldata->{
+            MetaData metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE,true);
+            if(metadata == null) {
+                //logger.warn("Location level config not found in metadata. Switching to default.");
+                return locationColumns.split(",");
+            }else {
+                List<Entry<String, JsonNode>> localdata= new ArrayList<>();
+                ArrayNode arraynode= metadata.getDomainValues();
+                Iterator<JsonNode> iter= arraynode.elements();
+                while(iter.hasNext()) {
+                    JsonNode node= iter.next();
+                    for (Iterator<Entry<String, JsonNode>> iterator = node.fields(); iterator.hasNext();) {
+                        localdata.add(iterator.next());
+                    }
                 }
+                Collections.sort(localdata,(Entry<String, JsonNode> o1, Entry<String, JsonNode> o2) -> Integer.compare(o1.getValue().intValue(), o2.getValue().intValue()));
+                List<String> result= localdata.stream().map(Entry::getKey).collect(Collectors.toList());
+                return result.toArray(new String[0]);
             }
-            Collections.sort(localdata, (Entry<String, JsonNode> o1, Entry<String, JsonNode> o2) -> Integer.compare(o1.getValue().intValue(), o2.getValue().intValue()));
-            List<String> result = localdata.stream().map(Entry::getKey).collect(Collectors.toList());
-            return result.toArray(new String[0]);
-        }
-
-
+        });
     }
 
 
-
     public String[] getLocationSecondaryColumns(String key) {
-        //	return distributedCache.withCache(SecurityContextUtils.getLob(), CACHE_DOMAIN, "LocationType" + key, ldata -> {
-        MetaData metaData = metaDataService.fetchByValue(DOMAIN_NAME, "secondary_columns", true);
-        ArrayNode columnNode = JSONUtils.getObjectMapper().createArrayNode();
-        if (metaData != null && metaData.getDomainValues().get(0).has(key)) {
-            columnNode = (ArrayNode) metaData.getDomainValues().get(0).get(key);
-        }
-        String[] columnArr = new String[columnNode.size()];
-        for (int i = 0; i < columnNode.size(); i++) {
-            columnArr[i] = columnNode.get(i).asText();
-        }
-        return columnArr;
-        //	});
+        return distributedCache.withCache(SecurityContextUtils.getLob(), CACHE_DOMAIN, "LocationType" + key, ldata -> {
+            MetaData metaData = metaDataService.fetchByValue(DOMAIN_NAME, "secondary_columns", true);
+            ArrayNode columnNode = JSONUtils.getObjectMapper().createArrayNode();
+            if (metaData != null && metaData.getDomainValues().get(0).has(key)) {
+                columnNode = (ArrayNode) metaData.getDomainValues().get(0).get(key);
+            }
+            String[] columnArr = new String[columnNode.size()];
+            for (int i = 0; i < columnNode.size(); i++) {
+                columnArr[i] = columnNode.get(i).asText();
+            }
+            return columnArr;
+        });
     }
 
     private Location saveRecursiveLocationHierarchies(final Location location, String[] columns) {
@@ -292,7 +294,9 @@ public class LocationService extends AbstractCDMService<Location> {
         return locationObj;
     }
 
-
+    public void clearCache(String lob, String locationHierarchy) {
+        distributedCache.clearCache(lob,CACHE_DOMAIN,locationHierarchy);
+    }
 
 
 

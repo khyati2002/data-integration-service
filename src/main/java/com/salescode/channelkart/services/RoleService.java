@@ -1,6 +1,8 @@
 package com.salescode.channelkart.services;
+import com.salescode.channelkart.cache.DistributedCache;
 import com.salescode.channelkart.repository.RoleRepository;
 import com.salescode.channelkart.models.Role;
+import com.salescode.channelkart.security.SecurityContextUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,9 +16,12 @@ public class RoleService extends AbstractCDMService<Role> {
 
 	private final RoleRepository roleRepository;
 
-	public RoleService(RoleRepository roleRepository) {
+	private final DistributedCache distributedCache;
+
+	public RoleService(RoleRepository roleRepository, DistributedCache distributedCache) {
 		super(roleRepository);
 		this.roleRepository = roleRepository;
+		this.distributedCache = distributedCache;
 	}
 
 
@@ -34,21 +39,17 @@ public class RoleService extends AbstractCDMService<Role> {
 		return DOMAIN_NAME + ":" + roleName.toUpperCase();
 	}
 
-	Map<String,Role> map = new ConcurrentHashMap<>();
 	private Role getRoleFromCacheOrRepo(String roleName) {
-		//String lob = SecurityContextUtils.getLob();
-		//Role roleFromCache = (Role) distributedCache.get(lob,null, createRoleKey(roleName), false);
-		//if (roleFromCache == null) {
-
-			Function function =	(role)-> getByNameIgnoreCase(roleName);
-			Role roleFromRepo = map.computeIfAbsent(roleName, function);
+		String lob = SecurityContextUtils.getLob();
+		Role roleFromCache = (Role) distributedCache.get(lob,null, createRoleKey(roleName), false);
+		if (roleFromCache == null) {
+			Role roleFromRepo = roleRepository.findByNameIgnoreCase(roleName);
 			if (roleFromRepo != null) {
-			//	distributedCache.put(lob,null, createRoleKey(roleName), roleFromRepo,false);
+				distributedCache.put(lob,null, createRoleKey(roleName), roleFromRepo,false);
 				return roleFromRepo;
-		//	}
+			}
 		}
-		//return roleFromCache;
-        return roleFromRepo;
+		return roleFromCache;
 	}
 
 	private Role getByNameIgnoreCase(String roleName) {

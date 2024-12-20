@@ -149,7 +149,7 @@ public class ETLPipelineService {
         }
     }
 
-    private OperationResponse pipelineServiceProcess(CommonDataModel refresh, Optional<String> preprocessValidationExcludeGroup) {
+    public OperationResponse pipelineServiceProcess(CommonDataModel refresh, Optional<String> preprocessValidationExcludeGroup) {
         OperationResponse or = new OperationResponse();
         EnrichmentOperationResult enrich = dataEnrichmentService.enrich(refresh, EnrichmentPhase.PRE_VALIDATION);
         or.setEnrichment(enrich);

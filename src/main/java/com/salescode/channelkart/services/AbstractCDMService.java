@@ -9,6 +9,7 @@ import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.repository.CommonJpaRepository;
+import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.services.enums.OperationType;
 import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.EntityUtils;
@@ -123,7 +124,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
      }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public T save(T cdmObject, OperationType type) {
+    public T save(T cdmObject, OperationType type) throws Exception {
         return save(cdmObject);
     }
 
@@ -132,6 +133,8 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     public List<T> batchSave(Iterable<T> iterObj) throws Exception {
         return batchSave(iterObj,null);
     }
+
+
 
 
 //    private T preSaveEnrichment(T cdm){
@@ -249,10 +252,10 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 //            ((TransactionDataModel) cdm).setSystemTime(Calendar.getInstance().getTime());
 //        }
 
-//        if (cdm.getCreatedBy() == null) {
-//            cdm.setCreatedBy(SecurityContextUtils.getPrincipal());
-//        }
-
+        if (cdm.getCreatedBy() == null) {
+            cdm.setCreatedBy(SecurityContextUtils.getPrincipal());
+        }
+//
 //        if (!DataSourceUtils.isDefaultDataSource(SecurityContextUtils.getLob())) {
 //            cdm.setLob(SecurityContextUtils.getLob());
 //        }

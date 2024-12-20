@@ -46,4 +46,7 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccountI
         }
         return getCustomerAccountInfo(lob).getAdmin().getLoginId();
     }
+    public String getAdminHierarchy(String inUser){
+        return inUser+ " > " +getAdminLoginId();
+    }
 }

@@ -3,6 +3,7 @@ package com.salescode.channelkart.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.util.RawValue;
+import com.salescode.channelkart.cache.DistributedCache;
 import com.salescode.channelkart.client.properties.PropertyDefinition;
 import com.salescode.channelkart.client.properties.PropertyRegistry;
 import com.salescode.channelkart.models.*;
@@ -11,7 +12,10 @@ import com.salescode.channelkart.models.enums.ApplicationCategory;
 import com.salescode.channelkart.models.enums.RoleName;
 import com.salescode.channelkart.repository.OutletDetailsRepository;
 
+import com.salescode.channelkart.response.OperationResponse;
+import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.utils.*;
+import com.salescode.dataintegration.etl.ETLPipelineService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +44,19 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private LocationService locationService;
     private OutletDetailsRepository outletDetailsRepository;
 
+    public static final String OUTLETS_CACHE_DOMAIN = "outlets";
+
     @Autowired
     private PropertyRegistry propertyRegistry;
 
     @Autowired
     private HierarchyMetaDataService hierarchyMetaDataService;
+
+    @Autowired
+    private DistributedCache distributedCache;
+
+    @Autowired
+    private ETLPipelineService pipelineService;
 
 
 
@@ -114,15 +126,29 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
     void printLogsForNullHierarchy(OutletDetails outletDetails, String message){
         message += " for outletCode {}";
-//        if(propertyRegistry.getAsBoolean(PropertyDefinition.LOGS_FOR_NULL_LOCATION) &&
-//                (outletDetails.getLocationHierarchy()==null || outletDetails.getLocationHierarchy().getLocationHierarchy()==null)){
-//            logger.error(message, outletDetails.getOutletCode());
-//        }
+        if(propertyRegistry.getAsBoolean(PropertyDefinition.LOGS_FOR_NULL_LOCATION) &&
+                (outletDetails.getLocationHierarchy()==null || outletDetails.getLocationHierarchy().getLocationHierarchy()==null)){
+            //logger.error(message, outletDetails.getOutletCode());
+        }
+    }
+
+    public void clearCache(String lob, String outletCode) {
+        if (StringUtils.isNotBlank(outletCode)) {
+            distributedCache.clearCache(lob, OUTLETS_CACHE_DOMAIN, outletCode);
+           // distributedCache.clearCache(lob, MicroOutletDetailsService.CACHE_DOMAIN, outletCode);
+            userService.clearCache(lob, outletCode);
+        }
+    }
+
+    public void clearCache(String lob, OutletDetails outlet) {
+        if (outlet != null) {
+            clearCache(lob, outlet.getOutletCode());
+        }
     }
 
 
     public OutletDetails saveInternal(OutletDetails outletDetails) {
-        //	clearCache(SecurityContextUtils.getLob(), outletDetails);
+        clearCache(SecurityContextUtils.getLob(), outletDetails);
         createAssociatedData(outletDetails);
         printLogsForNullHierarchy(outletDetails,"Location null before prepare outlet details");
         OutletDetails tempoutlet = prepareOutletDetails(outletDetails);
@@ -167,39 +193,12 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 //            AuditLogger.log(LOG_TYPE, "Outlet with outletCode '{}' updated with data '{}'",
 //                    outletDetails.getOutletCode(), EntityUtils.getDataChanges(outletDetails.getChanges()));
 //        }
-//        clearCache(SecurityContextUtils.getLob(), outletDetails);
+        clearCache(SecurityContextUtils.getLob(), outletDetails);
         return saved;
 
     }
 
 
-
-
-    //SAVE IN USER entity
-
-
-    //hierarchy 'outletcode > admin@applicate.in'
-
-    /// /
-    /// /    void printLogsForNullHierarchy(OutletDetails outletDetails, String message){
-    /// /        message += " for outletCode {}";
-    /// /        if(propertyRegistry.getAsBoolean(PropertyDefinition.LOGS_FOR_NULL_LOCATION) &&
-    /// /                (outletDetails.getLocationHierarchy()==null || outletDetails.getLocationHierarchy().getLocationHierarchy()==null)){
-    /// /            logger.error(message, outletDetails.getOutletcode());
-    /// /        }
-    /// /    }
-    /// /
-    /// /    public OutletDetails prepareOutletDetails(OutletDetails outletDetails) {
-    /// /        /* location */
-    /// /        refreshLocation(outletDetails);
-    /// /
-    /// /        /* Retailer Info/Username */
-    /// /        TimerUtils.withTime("prepareOutletDetails Time taken to fillRetailer ",
-    /// /                () -> fillRetailer(outletDetails, false));
-    /// /
-    /// /        return outletDetails;
-    /// /    }
-    /// /
 
 
 
@@ -319,10 +318,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
 
     private User validateAndGetUser(User user) {
-//        OperationResponse<User> operationResponse = TimerUtils.withTime(
-//                "Time Taken to exceute preprocess pipeline for class:[[" + user.getClass() + "]]",
-//                k -> pipelineService.process(user));
-//        if (operationResponse.getStatus().compareTo(OperationStatus.Success) == 0) {
+        OperationResponse operationResponse = pipelineService.pipelineServiceProcess(user, Optional.empty());
+        if (operationResponse.getStatus().equals(OperationResponse.OperationStatus.Success)) {
             Set<String> hierarchyStr = populateUserParentHierarchy(user);
             if (!hierarchyStr.isEmpty()) {
                 String hierarchy = org.apache.commons.lang.StringUtils.join(hierarchyStr, ",");
@@ -330,11 +327,13 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                     user.setHierarchy(hierarchy);
                     user.setNormalizedHierarchy(UserService.getNormalizedHierarchy(user.getHierarchy()));
                 } else {
-               //     logger.warn("Hierarchy logs: Null hierarchy found for user {}. Skipping setHierarchy() operation", user.getLoginId());
+                    //     logger.warn("Hierarchy logs: Null hierarchy found for user {}. Skipping setHierarchy() operation", user.getLoginId());
                 }
             }
-            return  userService.save(user);
+            return userService.save(user);
         }
+        throw new RuntimeException("Preprocess pipeline failed");
+    }
 //        else {
 //            throw new PreprocessFailedException(pipelineService.getError(operationResponse), operationResponse);
 //        }
@@ -498,7 +497,6 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         }
     }
 
-    Map<String,OutletDetails> cacheMap = new ConcurrentHashMap<>();
     public OutletDetails findByOutletCode(String outletCode, boolean cache) {
         if (outletCode == null) {
             return null;
@@ -507,7 +505,10 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             OutletDetailsService service = SpringContext.getBean(OutletDetailsService.class);
             return service.getLoadedOutletObject(oc);
         };
-        return cacheMap.computeIfAbsent(outletCode, function);
+
+        return (cache)
+                ? distributedCache.withCache(SecurityContextUtils.getLob(), OUTLETS_CACHE_DOMAIN, outletCode, function)
+                : function.apply(outletCode);
     }
 
     public OutletDetails getLoadedOutletObject(String outletCode) {

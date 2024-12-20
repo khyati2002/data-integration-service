@@ -32,5 +32,9 @@ public class SecurityContextUtils {
         return DataIntegrationApplication.getLob();
     }
 
+    public static String getPrincipal(){
+        return "integration_user";
+    }
+
 
 }

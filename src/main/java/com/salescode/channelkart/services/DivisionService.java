@@ -5,13 +5,20 @@
 package com.salescode.channelkart.services;
 
 
+import com.salescode.channelkart.cache.DistributedCache;
+import com.salescode.channelkart.exceptions.CustomRuntimeException;
 import com.salescode.channelkart.models.Division;
 import com.salescode.channelkart.repository.DivisionRepository;
+import com.salescode.channelkart.security.SecurityContextUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * The class DivisionService.
@@ -29,8 +36,6 @@ public class DivisionService extends AbstractCDMService<Division> {
 	/** The repository. */
 	private DivisionRepository divisionRepository;
 
-
-
 	/** The cut. */
 	private static final int CUT = 1;
 
@@ -40,18 +45,17 @@ public class DivisionService extends AbstractCDMService<Division> {
 	/** The Constant NA. */
 	private static final String NA = "none";
 
+	private DistributedCache distributedCache;
     /**
 	 * Instantiates a new division service.
 	 *
 	 * @param divisionRepository the repository
 	 */
-	public DivisionService(DivisionRepository divisionRepository
-			//, DistributedCache distributedCache
-						   ) {
+	public DivisionService(DivisionRepository divisionRepository, DistributedCache distributedCache) {
 
 		super(divisionRepository);
 		this.divisionRepository = divisionRepository;
-	//	this.distributedCache = distributedCache;
+		this.distributedCache = distributedCache;
 	}
 
 	/** The Constant CACHE_DOMAIN. */
@@ -63,14 +67,14 @@ public class DivisionService extends AbstractCDMService<Division> {
 	 * @return the collection
 	 */
 	public Collection<Division> findByChannelDivisionOrderByLevelAsc() {
-
-
+		String lob = SecurityContextUtils.getLob();
+		return distributedCache.withCache(lob, CACHE_DOMAIN, "channeldivision", mapdata -> {
 			Collection<Division> data = divisionRepository.findByChannelDivisionOrderByLevelAsc(true);
 			if (data == null || data.isEmpty()) {
 				return null;
 			}
 			return data;
-
+		});
 	}
 
 	/**
@@ -82,11 +86,11 @@ public class DivisionService extends AbstractCDMService<Division> {
 	public boolean isChannelDivision(String divisionName) {
 		List<Division> divisions = (List<Division>) findByChannelDivisionOrderByLevelAsc();
 		if (divisions == null || divisions.isEmpty()) {
-
-
+			throw new CustomRuntimeException(
+					"Channel division not found. [Hint : Make sure division data present in database]");
 		}
 		Optional<Division> division = divisions.parallelStream().filter(
-				element -> element.getDivisionName().equalsIgnoreCase(divisionName) && element.getChannelDivision())
+						element -> element.getDivisionName().equalsIgnoreCase(divisionName) && element.isChannelDivision())
 				.findAny();
 		return division.isPresent();
 	}
@@ -200,6 +204,24 @@ public class DivisionService extends AbstractCDMService<Division> {
 			return "Node [name=" + name + "]";
 		}
 
-	}	
+	}
+	public List<Division> findByDivisionName(String divisionName) {
+		Assert.notNull(divisionName, "Invalid argument");
+		Collection<Division> divisions = findAllOrderByLevelAsc(true);
+		Function<String, List<Division>> function = division -> divisions.stream()
+				.filter(p -> p.getDivisionName().equalsIgnoreCase(division)).collect(Collectors.toList());
 
+		return (ObjectUtils.isNotEmpty(divisions)) ? function.apply(divisionName) : List.of();
+	}
+
+	public Collection<Division> findAllOrderByLevelAsc(boolean cache) {
+		String lob = SecurityContextUtils.getLob();
+		return (cache) ? distributedCache.withCache(lob, CACHE_DOMAIN, "division", mapdata -> {
+			Collection<Division> data = divisionRepository.findByOrderByLevelAsc();
+			if (data == null || data.isEmpty()) {
+				return null;
+			}
+			return data;
+		}) : divisionRepository.findByOrderByLevelAsc();
+	}
 }

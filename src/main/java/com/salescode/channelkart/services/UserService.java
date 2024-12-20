@@ -7,11 +7,14 @@ package com.salescode.channelkart.services;
 
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.salescode.channelkart.cache.AppCacheManager;
+import com.salescode.channelkart.cache.DistributedCache;
 import com.salescode.channelkart.models.*;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.RoleName;
 import com.salescode.channelkart.models.SupplierMetaData;
 import com.salescode.channelkart.repository.UserRepository;
+import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.services.enums.OperationType;
 import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.EntityUtils;
@@ -68,14 +71,15 @@ public class UserService extends AbstractCDMService<User> {
 
     @Autowired private LocationService locationService;
 
+    private DistributedCache distributedCache;
 
-
-    public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice,UserRepository userRepository) {
+    public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice,UserRepository userRepository, DistributedCache distributedCache) {
         super(userRepository);
         this.roleService = roleService;
         this.userparentservice = userparentservice;
         this.userRepository = userRepository;
         this.hierarchyMetaDataService = hierarchyMetaDataService;
+        this.distributedCache = distributedCache;
     }
 
 
@@ -157,14 +161,32 @@ public class UserService extends AbstractCDMService<User> {
     }
 
     Map<String,User> map = new ConcurrentHashMap<>();
-    public User findByLoginId(String loginId, boolean cached, boolean hierarchy) {
-        //String lob = SecurityContextUtils.getLob();
-        Function<String, User> function = (String lid) -> {
-            UserService service = SpringContext.getBean(UserService.class);
-            return service.getLoadedUserObject(lid, hierarchy);
+    public User findByLoginId(String loginId,boolean cached,boolean hierarchy) {
+        String lob = SecurityContextUtils.getLob();
+        Function<String,User> function = (String lid)->{
+            UserService service= SpringContext.getBean(UserService.class);
+            return service.getLoadedUserObject(lid,hierarchy);
         };
 
-        return map.computeIfAbsent(loginId, function);
+        if(cached) {
+            User user = distributedCache.withCache(lob,CACHE_DOMAIN, loginId,function);
+            if(user != null && org.apache.commons.lang.StringUtils.isBlank(user.getHierarchy())) {
+                return reloadCache(loginId);
+            }
+            return user;
+        }
+
+        return function.apply(loginId);
+    }
+
+    public User reloadCache(String loginId) {
+        String lob = SecurityContextUtils.getLob();
+        Function<String,User> function = (String lid)->{
+            UserService service= SpringContext.getBean(UserService.class);
+            return service.getLoadedUserObject(lid,true);
+        };
+
+        return  distributedCache.withCache(lob,CACHE_DOMAIN, loginId,function);
     }
 
     public Optional<List<User>> findByMobileSafely(String mobile) {
@@ -192,16 +214,16 @@ public class UserService extends AbstractCDMService<User> {
 
 
     @Override
-    public User save(User inUser) {
+    public User save(User inUser)  {
         return this.save(inUser, OperationType.insert);
     }
 
     @Override
     public User save(User inUser, OperationType type) {
-       // String lob = SecurityContextUtils.getLob();
+         String lob = SecurityContextUtils.getLob();
        // User user= TimerUtils.withTime("Time Taken to execute fillUser()", u-> fillUser(inUser));
         User user = fillUser(inUser);
-       // clearCache(lob,user);
+        clearCache(lob,user);
         if(user.getRoles().size()==1 && user.getRoles().stream().allMatch(desig->desig.getName().equals(RoleName.ROLE_ADMIN.name()))) {
             UserParent up= new UserParent();
             up.setUserLoginId(user.getLoginId());
@@ -229,18 +251,29 @@ public class UserService extends AbstractCDMService<User> {
                     cdmObject.setUser(savedObj);
                     cdmObject.setLob(user.getLob());
                 });
-              //  TimerUtils.withTime("Time taken to batchSave SupplierMetadata of Size "+supplierMetaInfo.size(), ()->
-               //         supplierMetaDataService.batchSave(supplierMetaInfo)
+                try {
+                    supplierMetaDataService.batchSave(supplierMetaInfo);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                //  TimerUtils.withTime("Time taken to batchSave SupplierMetadata of Size "+supplierMetaInfo.size(), ()->
+                  //  supplierMetaDataService.batchSave(supplierMetaInfo);
                // );
             }
         }
 
 //        AuditLogger.log(LOG_TYPE, "Created new User with loginId '{}'",user.getLoginId());
-//        clearCache(lob,user);
+        clearCache(lob,user);
 
         return savedObj;
     }
 
+    public void clearCache(String lob, User user) {
+        if(user != null) {
+            clearCache(lob, user.getLoginId());
+            locationService.clearCache(lob,user.getLocationHierarchy().getLocationHierarchy());
+        }
+    }
 
     public User fillUser(User user) {
         if(NullUtils.isNotNull(user.getLocationHierarchy())) {
@@ -273,7 +306,7 @@ public class UserService extends AbstractCDMService<User> {
         if(user.getSupplierMetaData()!=null) {
             user.getSupplierMetaData().forEach(s->
             {
-               // supplierMetaDataService.fillCommonAttributes(s);
+               supplierMetaDataService.fillCommonAttributes(s);
                 s.setUser(user);
             });
         }
@@ -329,10 +362,11 @@ public class UserService extends AbstractCDMService<User> {
         if(!userParents.isEmpty()) {
              try {
                  userparentservice.batchSave(userParents);
+                 evaluateUserHierarchy(user,userParents);
              } catch (Exception e) {
                  throw new RuntimeException(e);
              }
-              evaluateUserHierarchy(user,userParents);
+
 //            AuditLogger.log(LOG_TYPE, "Updated parents of User with loginId '{}'. LoginId of parents: '[{}]'", user.getLoginId(), getUserParentList(userParents));
         }
     }
@@ -375,15 +409,6 @@ public class UserService extends AbstractCDMService<User> {
         return userParentList.toString();
     }
 
-    public ArrayNode fetchDynamicPrimaryKeys(String entityName) {
-        MetaDataService metaDataSevice = SpringContext.getBean(MetaDataService.class);
-        MetaData metaData = metaDataSevice.fetchByValue(entityName, "DynamicUniqueKey");
-        ArrayNode columnArr = JSONUtils.getObjectMapper().createArrayNode();
-        if (metaData != null) {
-            columnArr = (ArrayNode) metaData.getDomainValues().get(0).get("dynamicKeys");
-        }
-        return columnArr;
-    }
 
     @Override
     public User refresh(User cdmObject) {
@@ -449,7 +474,6 @@ public class UserService extends AbstractCDMService<User> {
         }else{
             dbrecordsCopy.setSupplierMetaData(cdmObject.getSupplierMetaData());
         }
-
     }
 
     private void loadUserAssociationObjects(User u) {
@@ -457,5 +481,24 @@ public class UserService extends AbstractCDMService<User> {
         if (u.getSupplierMetaData() != null) u.getSupplierMetaData().size();
         if (u.getDesignation() != null) u.getDesignation().size();
      //   if (u.getMessengerInfo() != null) u.getMessengerInfo().size();
+    }
+
+    public void clearCache(String lob, String loginId) {
+        if(org.apache.commons.lang.StringUtils.isNotBlank(loginId)) {
+            distributedCache.clearCache(lob,CACHE_DOMAIN,loginId);
+            SupplierInfoService supplierInfoService= SpringContext.getBean(SupplierInfoService.class);
+            supplierInfoService.clearCache(lob,"u:"+loginId);
+            supplierInfoService.clearCache(lob,"o:"+loginId);
+            hierarchyMetaDataService.clearCache(lob, loginId);
+            clearChannelCache(loginId);
+        }
+    }
+    private void clearChannelCache(String loginId) {
+        AppCacheManager.getInstance().removeByDomain(SecurityContextUtils.getLob(), CHANNEL_CACHE + loginId);
+        //AppCacheManager.getInstance().removeByDomain(SecurityContextUtils.getLob(), CHANNEL_CACHE + loginId + NotificationTypeRegistry.FIREBASE.name());
+
+    }
+    public String getDefaultEncryptedUserPassword(){
+        return DEFAULT_ENCODED_PASSWORD;
     }
 }

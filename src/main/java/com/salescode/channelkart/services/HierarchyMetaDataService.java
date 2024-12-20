@@ -6,12 +6,17 @@
 package com.salescode.channelkart.services;
 
 
+import com.salescode.channelkart.cache.AppCacheManager;
+import com.salescode.channelkart.cache.DistributedCache;
 import com.salescode.channelkart.repository.HierarchyMetaDataRepository;
 import com.salescode.channelkart.models.HierarchyMetaData;
+import com.salescode.channelkart.security.SecurityContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,6 +41,9 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
     /** The hierarchy meta data repository. */
     @Autowired
     private HierarchyMetaDataRepository hierarchyMetaDataRepository;
+
+    @Autowired
+    private DistributedCache distributedCache;
 
 
     public HierarchyMetaDataService(HierarchyMetaDataRepository repository) {
@@ -68,8 +76,8 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
             return hierarchyMetaDataRepository.findByImmediateParent(lid);
         };
         logger.debug("Find immediate Parent for->>>>>>>>>>>>:{}", loginId);
-        // return (cached) ? AppCacheManager.getInstance().withCache(CACHE_DOMAIN, loginId,function):function.apply(loginId);
-        return map.computeIfAbsent(loginId, function);
+        return (cached) ? AppCacheManager.getInstance().withCache(CACHE_DOMAIN, loginId,function):function.apply(loginId);
+        //return map.computeIfAbsent(loginId, function);
     }
 
     public Collection<HierarchyMetaData> findByImmediateParent(List<String> loginId) {
@@ -98,7 +106,7 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
      * @return the hierarchy meta data
      */
 
-
+    @Transactional(propagation= Propagation.REQUIRED,readOnly=true)
     public HierarchyMetaData findByHierarchy(String hierarchy) {
         return hierarchyMetaDataRepository.findByHierarchy(hierarchy);
     }
@@ -108,24 +116,30 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
         return batchSave(iterObj,true);
     }
 
+    public void clearCache(String lob, String loginId) {
+        if(org.apache.commons.lang3.StringUtils.isNotBlank(loginId)) {
+            AppCacheManager.getInstance().clearCache(lob, CACHE_DOMAIN, loginId);
+            distributedCache.clearCache(lob, CACHE_DOMAIN, loginId);
+        }
+    }
 
     public List<HierarchyMetaData> batchSave(Iterable<HierarchyMetaData> iterObj,boolean clearCache) throws Exception {
-//        String lob= SecurityContextUtils.getLob();
-//
-//        if(clearCache) {
-//            iterObj.forEach(element -> {
-//                if (element != null) {
-//                    //AppCacheManager.getInstance().removeByDomain(CACHE_DOMAIN,element.getHierarchy());
-//                    //distributedCache.clearCache(lob, CACHE_DOMAIN, element.getImmediateParent());
-//                    //distributedCache.clearCache(lob, UserService.CACHE_DOMAIN, element.getImmediateParent());
-//                    clearCache(lob, element.getImmediateParent());
-//                }
-//            });
-//        }
+        String lob= SecurityContextUtils.getLob();
+
+        if(clearCache) {
+            iterObj.forEach(element -> {
+                if (element != null) {
+                    //AppCacheManager.getInstance().removeByDomain(CACHE_DOMAIN,element.getHierarchy());
+                    //distributedCache.clearCache(lob, CACHE_DOMAIN, element.getImmediateParent());
+                    //distributedCache.clearCache(lob, UserService.CACHE_DOMAIN, element.getImmediateParent());
+                    clearCache(lob, element.getImmediateParent());
+                }
+            });
+        }
         List<HierarchyMetaData> saved= super.batchSave(iterObj);
-//        if(saved != null && clearCache) {
-//            saved.forEach(element->clearCache(lob,element.getImmediateParent()));
-//        }
+        if(saved != null && clearCache) {
+            saved.forEach(element->clearCache(lob,element.getImmediateParent()));
+        }
         return saved;
     }
 

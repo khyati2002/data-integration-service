@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.salescode.channelkart.annotation.UniqueKey;
+import com.salescode.channelkart.converters.RoleToStringConverter;
+import com.salescode.channelkart.converters.StringToRoleConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
@@ -49,14 +51,14 @@ public class Division extends CommonDataModel {
 	/** The role access type. */
 	private String roleAccessType;
 	
-//	/** The permission group. */
-//	@JsonSerialize(converter =RoleToStringConverter.class)
-//	@JsonDeserialize(converter = StringToRoleConverter.class)
-//	@ManyToMany(fetch = FetchType.EAGER)
-//	@JoinTable(name = "ck_division_roles",
-//			joinColumns = @JoinColumn(name = "division_id"),
-//			inverseJoinColumns = @JoinColumn(name = "roles_id"))
-//	private List<Role> permissionGroups;
+	/** The permission group. */
+	@JsonSerialize(converter = RoleToStringConverter.class)
+	@JsonDeserialize(converter = StringToRoleConverter.class)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "ck_division_roles",
+			joinColumns = @JoinColumn(name = "division_id"),
+			inverseJoinColumns = @JoinColumn(name = "roles_id"))
+	private List<Role> permissionGroups;
 	
 	/** The division parent : user hierarchy parent */
 	@UniqueKey
@@ -159,16 +161,16 @@ public class Division extends CommonDataModel {
 	/**
 	 * @return the permissionGroup
 	 */
-//	public List<Role> getPermissionGroups() {
-//		return permissionGroups;
-//	}
+	public List<Role> getPermissionGroups() {
+		return permissionGroups;
+	}
 
 //	/**
 //	 * @param permissionGroup the permissionGroup to set
 //	 */
-//	public void setPermissionGroups(List<Role> permissionGroups) {
-//		this.permissionGroups = permissionGroups;
-//	}
+	public void setPermissionGroups(List<Role> permissionGroups) {
+		this.permissionGroups = permissionGroups;
+	}
 
 	/**
 	 * @return the parent
