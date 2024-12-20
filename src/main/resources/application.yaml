@@ -21,6 +21,12 @@ spring:
       hibernate:
         jdbc:
           fetch_size: 500
+
+redisUrl : redis://localhost:6379
+
+redis:
+    localCacheMap : true
+
 app:
   lob: ckuatunnati
   bundle:
