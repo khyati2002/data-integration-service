@@ -142,7 +142,7 @@ public class NativeCDMMapper {
 		Map<String, Method> fieldMap = new HashMap<String, Method>();
 		for (Method m : type.getMethods()) {
 			String name = m.getName();
-			if (name.startsWith("get") && m.getParameterCount() == 0 && !m.isAnnotationPresent(Transient.class)) {
+			if ((name.startsWith("get") || name.startsWith("is")) && m.getParameterCount() == 0 && !m.isAnnotationPresent(Transient.class)) {
 				fieldMap.put(methodToField(name), m);
 			}
 		}

@@ -51,7 +51,7 @@ public class JarScanner {
                     String className = (entry.getName().split("[.]")[0]).replaceAll("[/]", ".");
                     try {
                         Class<?> clazz = classLoader.loadClass(className);
-                        TypeAwareEtlStep instance = (TypeAwareEtlStep) clazz.getDeclaredConstructor().newInstance();
+//                        TypeAwareEtlStep instance = (TypeAwareEtlStep) clazz.getDeclaredConstructor().newInstance();
 //                        Object instance = clazz.getDeclaredConstructor().newInstance();
                         instanceCache.put(className, instance);
                         logger.info("Loaded and cached class: {}", className);

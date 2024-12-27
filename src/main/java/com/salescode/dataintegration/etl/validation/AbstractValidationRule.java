@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class AbstractValidationRule<T extends CommonDataModel> implements Validation<T> {
+public abstract class AbstractRule<T extends CommonDataModel> implements Validation<T> {
 
     private RuleInfo validationRule;
 

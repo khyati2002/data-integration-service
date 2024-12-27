@@ -2,10 +2,10 @@ package com.salescode.dataintegration.bundle;
 
 
 import com.salescode.channelkart.models.OutletDetails;
+import com.salescode.channelkart.validations.AbstractRule;
+import com.salescode.channelkart.validations.RuleResult;
+import com.salescode.channelkart.validations.Status;
 import com.salescode.channelkart.validations.repository.RegexValidation;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
-import com.salescode.dataintegration.etl.validation.RuleResult;
-import com.salescode.dataintegration.etl.validation.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-public class OutletDetailsValidatorITCL extends AbstractValidationRule<OutletDetails> {
+public class OutletDetailsValidatorITCL extends AbstractRule<OutletDetails> {
     /** The factory. */
     private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 
@@ -67,7 +67,7 @@ public class OutletDetailsValidatorITCL extends AbstractValidationRule<OutletDet
         }
 
         if(ruleResult.length()>0) {
-            return new RuleResult(ValidationResult.Status.ERROR,ruleResult.toString());
+            return new RuleResult(Status.ERROR,ruleResult.toString());
         }else {
             return RuleResult.OK;
         }

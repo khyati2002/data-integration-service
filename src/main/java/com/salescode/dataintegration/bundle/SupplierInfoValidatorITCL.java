@@ -3,11 +3,11 @@ package com.salescode.dataintegration.bundle;
 
 import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.utils.StringUtils;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
-import com.salescode.dataintegration.etl.validation.RuleResult;
-import com.salescode.dataintegration.etl.validation.ValidationResult;
+import com.salescode.channelkart.validations.AbstractRule;
+import com.salescode.channelkart.validations.RuleResult;
+import com.salescode.channelkart.validations.Status;
 
-public class SupplierInfoValidatorITCL extends AbstractValidationRule<User> {
+public class SupplierInfoValidatorITCL extends AbstractRule<User> {
 
     @Override
     public RuleResult apply(User cdm) {
@@ -47,7 +47,7 @@ public class SupplierInfoValidatorITCL extends AbstractValidationRule<User> {
 
         }
         if (ruleResult.length() > 0) {
-            return new RuleResult(ValidationResult.Status.ERROR, ruleResult.toString());
+            return new RuleResult(Status.ERROR, ruleResult.toString());
         } else {
             return RuleResult.OK;
         }

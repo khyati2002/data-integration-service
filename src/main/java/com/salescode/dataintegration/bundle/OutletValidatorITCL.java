@@ -6,16 +6,16 @@ import com.salescode.channelkart.models.Location;
 import com.salescode.channelkart.models.OutletDetails;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
+import com.salescode.channelkart.validations.AbstractRule;
+import com.salescode.channelkart.validations.RuleResult;
+import com.salescode.channelkart.validations.Status;
 import com.salescode.channelkart.validations.repository.RegexValidation;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
-import com.salescode.dataintegration.etl.validation.RuleResult;
-import com.salescode.dataintegration.etl.validation.ValidationResult;
 import com.salescode.channelkart.utils.StringUtils;
 
 import java.util.*;
 
 @SuppressWarnings("all")
-public class OutletValidatorITCL extends AbstractValidationRule<OutletDetails> {
+public class OutletValidatorITCL extends AbstractRule<OutletDetails> {
     final String alphabetRegex = "(^[(A-Z a-z)]*$)";
     final String outletCodeRegex = "(^[(A-Za-z-0-9_ )]*$)";
     final String MobileNumberRegex = "(^[0-9]{10}$)";
@@ -197,14 +197,14 @@ public class OutletValidatorITCL extends AbstractValidationRule<OutletDetails> {
             }
 
             if (ruleResult.size() > 0) {
-                return new RuleResult(ValidationResult.Status.ERROR, org.apache.commons.lang.StringUtils.join(ruleResult, ", "));
+                return new RuleResult(Status.ERROR, org.apache.commons.lang.StringUtils.join(ruleResult, ", "));
             } else {
                 return RuleResult.OK;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new RuleResult(ValidationResult.Status.ERROR, "unexpected server error ");
+            return new RuleResult(Status.ERROR, "unexpected server error ");
         }
 
     }

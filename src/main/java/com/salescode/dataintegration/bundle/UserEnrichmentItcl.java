@@ -3,12 +3,13 @@ package com.salescode.dataintegration.bundle;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.salescode.channelkart.enrichments.AbstractEnrichment;
+import com.salescode.channelkart.enrichments.EnrichmentResult;
+import com.salescode.channelkart.enrichments.Status;
 import com.salescode.channelkart.models.SupplierMetaData;
 import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
-import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
-import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class UserEnrichmentItcl extends AbstractEnrichment<User> {
                     try {
                         extAttr=JSONUtils.mergeJsonNodes(newExtAttr,extAttr);
                     } catch (JSONException | IOException e) {
-                        return new EnrichmentResult(EnrichmentResult.Status.ERROR, e.getMessage());
+                        return new EnrichmentResult(Status.ERROR, e.getMessage());
                     }
                     metaData.setExtendedAttributes(extAttr);
                 }else {

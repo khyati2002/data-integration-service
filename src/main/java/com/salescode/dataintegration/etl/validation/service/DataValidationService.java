@@ -2,7 +2,7 @@ package com.salescode.dataintegration.etl.validation.service;
 
 import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.dataintegration.etl.registry.ETLRegistry;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
+import com.salescode.channelkart.validations.AbstractRule;
 import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;
 import com.salescode.dataintegration.etl.validation.registry.ValidationInfoRegistry;
@@ -107,7 +107,7 @@ public class DataValidationService {
      */
     private RuleResult applyValidation(CommonDataModel cdm, RuleInfo validationRule) {
         try {
-            AbstractValidationRule<CommonDataModel> validation = etlRegistry.getValidationRule(validationRule.getImplementation());
+            AbstractRule<CommonDataModel> validation = etlRegistry.getValidationRule(validationRule.getImplementation());
             validation.setValidationRule(validationRule);
             return validation.apply(cdm);
         } catch (Exception e) {

@@ -1,10 +1,11 @@
 package com.salescode.dataintegration.bundle;
 
 
+import com.salescode.channelkart.enrichments.AbstractEnrichment;
+import com.salescode.channelkart.enrichments.EnrichmentResult;
+import com.salescode.channelkart.enrichments.Status;
 import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.models.enums.ActiveStatus;
-import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
-import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 
 public class RetailerItclEnrichment extends AbstractEnrichment<User> {
 
@@ -16,6 +17,6 @@ public class RetailerItclEnrichment extends AbstractEnrichment<User> {
 			cdm.setActiveStatus(ActiveStatus.ACTIVE);
 		    cdm.setActiveStatusReason(ActiveStatus.ACTIVE.name());
 		}
-		return new EnrichmentResult(EnrichmentResult.Status.OK," User Data enriched successfully");	}
+		return new EnrichmentResult(Status.OK," User Data enriched successfully");	}
 
 }

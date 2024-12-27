@@ -4,7 +4,7 @@ package com.salescode.dataintegration.bundle;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.services.OutletDetailsService;
 import com.salescode.channelkart.services.SpringContext;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
+import com.salescode.channelkart.validations.AbstractRule;
 import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;
 import org.apache.commons.lang3.ObjectUtils;
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.ObjectUtils;
  * Checks if the Outlet is being activated.
  * If activeStatus is being changed to Active, throw error message.
  */
-public class OutletActiveStatusValidatorITCL  extends AbstractValidationRule<OutletDetails> {
+public class OutletActiveStatusValidatorITCL  extends AbstractRule<OutletDetails> {
 
     private static final OutletDetailsService outletDetailsService = SpringContext.getBean(OutletDetailsService.class);
 

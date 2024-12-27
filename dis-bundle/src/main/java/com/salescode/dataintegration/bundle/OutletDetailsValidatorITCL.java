@@ -3,7 +3,7 @@ package com.salescode.dataintegration.bundle;
 
 import com.salescode.channelkart.models.OutletDetails;
 import com.salescode.channelkart.validations.repository.RegexValidation;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
+import com.salescode.channelkart.validations.AbstractRule;
 import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-public class OutletDetailsValidatorITCL extends AbstractValidationRule<OutletDetails> {
+public class OutletDetailsValidatorITCL extends AbstractRule<OutletDetails> {
     /** The factory. */
     private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 

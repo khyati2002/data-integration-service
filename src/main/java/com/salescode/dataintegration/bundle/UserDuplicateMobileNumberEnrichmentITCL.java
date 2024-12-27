@@ -1,10 +1,11 @@
 package com.salescode.dataintegration.bundle;
 
 
+import com.salescode.channelkart.enrichments.AbstractEnrichment;
+import com.salescode.channelkart.enrichments.EnrichmentResult;
+import com.salescode.channelkart.enrichments.Status;
 import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.utils.NullUtils;
-import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
-import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 
 public class UserDuplicateMobileNumberEnrichmentITCL extends AbstractEnrichment<User> {
 
@@ -13,6 +14,6 @@ public class UserDuplicateMobileNumberEnrichmentITCL extends AbstractEnrichment<
 		if (NullUtils.isNotNull(cdm) && cdm.getDesignation().contains("retailer") && (cdm.getMobile() == null || cdm.getMobile().isEmpty())) {
 			cdm.setVerified(false);
 		}
-		return new EnrichmentResult(EnrichmentResult.Status.OK, "Data enriched successfully");
+		return new EnrichmentResult(Status.OK, "Data enriched successfully");
 	}
 }

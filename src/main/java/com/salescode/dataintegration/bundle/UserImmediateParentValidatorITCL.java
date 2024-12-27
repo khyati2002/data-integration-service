@@ -7,16 +7,16 @@ import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.services.UserService;
+import com.salescode.channelkart.validations.RuleResult;
+import com.salescode.channelkart.validations.Status;
 import com.salescode.channelkart.validations.repository.RegexValidation;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
-import com.salescode.dataintegration.etl.validation.RuleResult;
-import com.salescode.dataintegration.etl.validation.ValidationResult;
+import com.salescode.channelkart.validations.AbstractRule;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class UserImmediateParentValidatorITCL extends AbstractValidationRule<User> {
+public class UserImmediateParentValidatorITCL extends AbstractRule<User> {
 
     private UserService userService =  SpringContext.getBean(UserService.class);
     private static final String CAPITAL_CASE_REGEX = "(^[A-Z]*$)";
@@ -34,7 +34,7 @@ public class UserImmediateParentValidatorITCL extends AbstractValidationRule<Use
 
         if (checkIfValidationRequiredForUserDesignation(cdm)) {
             if (parentList == null || parentList.isEmpty()) {
-                return new RuleResult(ValidationResult.Status.ERROR, IMMEDIATE_PARENT_MESSAGE_1.concat(" for user ").concat(cdm.getLoginId()));
+                return new RuleResult(Status.ERROR, IMMEDIATE_PARENT_MESSAGE_1.concat(" for user ").concat(cdm.getLoginId()));
             }
             parentListDataCheck(cdm,parentList,ruleResult);
             branchInfoValidation(regexValidation,cdm,ruleResult);
@@ -42,7 +42,7 @@ public class UserImmediateParentValidatorITCL extends AbstractValidationRule<Use
         }
 
         if (!ruleResult.isEmpty() ) {
-            return new RuleResult(ValidationResult.Status.ERROR, org.apache.commons.lang.StringUtils.join(ruleResult, ", "));
+            return new RuleResult(Status.ERROR, org.apache.commons.lang.StringUtils.join(ruleResult, ", "));
         } else {
             return RuleResult.OK;
         }

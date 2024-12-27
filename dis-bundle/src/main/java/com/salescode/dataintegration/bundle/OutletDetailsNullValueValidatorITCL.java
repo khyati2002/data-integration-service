@@ -4,7 +4,7 @@ package com.salescode.dataintegration.bundle;
 import com.salescode.channelkart.models.OutletDetails;
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.services.UserService;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
+import com.salescode.channelkart.validations.AbstractRule;
 import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;
 import org.apache.commons.lang.StringUtils;
@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutletDetailsNullValueValidatorITCL extends AbstractValidationRule<OutletDetails> {
+public class OutletDetailsNullValueValidatorITCL extends AbstractRule<OutletDetails> {
 
     final UserService userService = (UserService) SpringContext.getBean(UserService.class);
 

@@ -6,17 +6,17 @@ import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.services.UserService;
 import com.salescode.channelkart.utils.StringUtils;
+import com.salescode.channelkart.validations.AbstractRule;
+import com.salescode.channelkart.validations.RuleResult;
+import com.salescode.channelkart.validations.Status;
 import com.salescode.channelkart.validations.repository.RegexValidation;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
-import com.salescode.dataintegration.etl.validation.RuleResult;
-import com.salescode.dataintegration.etl.validation.ValidationResult;
 
 
 import java.util.List;
 import java.util.Optional;
 
 
-public class DuplicateMobileNumberValidatorITCL extends AbstractValidationRule<OutletDetails> {
+public class DuplicateMobileNumberValidatorITCL extends AbstractRule<OutletDetails> {
 
 	String regex = "(^[0-9]{10}$)";
 
@@ -31,13 +31,13 @@ public class DuplicateMobileNumberValidatorITCL extends AbstractValidationRule<O
 //		}
 		if (user != null && user.getActiveStatus().equals(ActiveStatus.INACTIVE)) {
 			ruleResult.append("User is inactive in the system");
-			return new RuleResult(ValidationResult.Status.ERROR, ruleResult.toString());
+			return new RuleResult(Status.ERROR, ruleResult.toString());
 		}
 		if (user != null && user.getDesignation()!=null && user.getDesignation().contains("retailer")) {
 			if (cdm.getUserName().getMobile() != null) {
 				if (!cdm.getUserName().getMobile().isEmpty() && !checkMobileNumberPattern(cdm.getUserName().getMobile())) {
 					ruleResult.append("Mobile number field allowed only 10 digit valid number or blank.");
-					return new RuleResult(ValidationResult.Status.ERROR, ruleResult.toString());
+					return new RuleResult(Status.ERROR, ruleResult.toString());
 				}
 				if (!StringUtils.isNullOrBlank(cdm.getUserName().getMobile())) {
 					Optional<List<User>> currentUsersObject = userService.findByMobileSafely(cdm.getUserName().getMobile());
@@ -45,7 +45,7 @@ public class DuplicateMobileNumberValidatorITCL extends AbstractValidationRule<O
 						List<User> currentUsers = currentUsersObject.get();
 						for (User currentUser : currentUsers) {
 							if (!(currentUser.getLoginId().equals(user.getLoginId())) && currentUser.getDesignation().contains("retailer")) {
-								return new RuleResult(ValidationResult.Status.ERROR, "Entered mobile number is already registered with another user: " + currentUser.getLoginId() + ". Please try with a different number.");
+								return new RuleResult(Status.ERROR, "Entered mobile number is already registered with another user: " + currentUser.getLoginId() + ". Please try with a different number.");
 							}
 						}
 					}

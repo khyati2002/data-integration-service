@@ -1,16 +1,16 @@
 package com.salescode.dataintegration.bundle;
 
 
+import com.salescode.channelkart.enrichments.AbstractEnrichment;
+import com.salescode.channelkart.enrichments.EnrichmentResult;
+import com.salescode.channelkart.enrichments.Status;
 import com.salescode.channelkart.models.OutletDetails;
 import com.salescode.channelkart.models.enums.ActiveStatus;
-import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
-import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 
-public class OutletDetailsNameEnrichmentITCL extends AbstractEnrichment<OutletDetails>{
+public class OutletDetailsNameEnrichmentITCL extends AbstractEnrichment<OutletDetails> {
 
     @Override
     public EnrichmentResult apply(OutletDetails cdm) {
-        // TODO Auto-generated method stub
         if(cdm.getContactName() == null) {
             cdm.setContactName(cdm.getOutletName());
         }
@@ -19,7 +19,7 @@ public class OutletDetailsNameEnrichmentITCL extends AbstractEnrichment<OutletDe
             cdm.setActiveStatus(ActiveStatus.ACTIVE);
             cdm.setActiveStatusReason(ActiveStatus.ACTIVE.name());
         }
-        return new EnrichmentResult(EnrichmentResult.Status.OK,"Data enriched successfully");
+        return new EnrichmentResult(Status.OK,"Data enriched successfully");
     }
 
 }

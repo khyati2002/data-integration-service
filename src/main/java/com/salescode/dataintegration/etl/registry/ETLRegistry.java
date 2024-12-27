@@ -4,7 +4,7 @@ import com.salescode.channelkart.utils.ReflectionUtils;
 import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
 import com.salescode.dataintegration.etl.interfaces.TypeAwareEtlStep;
 import com.salescode.dataintegration.etl.transformer.AbstractTransformer;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
+import com.salescode.channelkart.validations.AbstractRule;
 import com.salescode.dataintegration.scanner.ExternalRegistryScanner;
 import org.springframework.stereotype.Component;
 
@@ -62,16 +62,16 @@ public class ETLRegistry {
     }
 
     public <T> T getValidationRule(String fullyQualifiedClassName) {
-        Optional<AbstractValidationRule> validationRule = registry.getOrDefault(TypeAwareEtlStep.EtlType.VALIDATION, List.of()).stream()
-                .filter(AbstractValidationRule.class::isInstance)
-                .map(AbstractValidationRule.class::cast)
+        Optional<AbstractRule> validationRule = registry.getOrDefault(TypeAwareEtlStep.EtlType.VALIDATION, List.of()).stream()
+                .filter(AbstractRule.class::isInstance)
+                .map(AbstractRule.class::cast)
                 .filter(s -> s.getClass().getName().equals(fullyQualifiedClassName))
                 .findAny();
         if (validationRule.isPresent()) {
             return (T) validationRule.get();
         }
         try {
-            AbstractValidationRule newInstance = ReflectionUtils.createInstance(fullyQualifiedClassName);
+            AbstractRule newInstance = ReflectionUtils.createInstance(fullyQualifiedClassName);
             registry.computeIfAbsent(TypeAwareEtlStep.EtlType.VALIDATION, key -> new ArrayList<>())
                     .add(newInstance);
             return (T) newInstance;

@@ -4,6 +4,9 @@ package com.salescode.dataintegration.bundle;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.salescode.channelkart.converters.DateToClientTimeZoneStringConverter;
+import com.salescode.channelkart.enrichments.AbstractEnrichment;
+import com.salescode.channelkart.enrichments.EnrichmentResult;
+import com.salescode.channelkart.enrichments.Status;
 import com.salescode.channelkart.models.CustomerAccountInfo;
 import com.salescode.channelkart.models.HierarchyMetaData;
 import com.salescode.channelkart.models.SupplierMetaData;
@@ -12,8 +15,6 @@ import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.services.*;
 import com.salescode.channelkart.utils.NullUtils;
-import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
-import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -103,9 +104,9 @@ public class UserDetailsEnrichmentITCL extends AbstractEnrichment<User> {
                 }
             }
 
-            return new EnrichmentResult(EnrichmentResult.Status.OK,"Data enriched successfully");
+            return new EnrichmentResult(Status.OK,"Data enriched successfully");
         }
-        return new EnrichmentResult(EnrichmentResult.Status.ERROR,"Enrichment error: User not found null");
+        return new EnrichmentResult(Status.ERROR,"Enrichment error: User not found null");
     }
 
 }

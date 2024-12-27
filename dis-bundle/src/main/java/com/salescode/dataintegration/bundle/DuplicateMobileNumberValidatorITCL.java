@@ -6,7 +6,7 @@ import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.services.UserService;
 import com.salescode.channelkart.utils.StringUtils;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
+import com.salescode.channelkart.validations.AbstractRule;
 import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class DuplicateMobileNumberValidatorITCL extends AbstractValidationRule<OutletDetails> {
+public class DuplicateMobileNumberValidatorITCL extends AbstractRule<OutletDetails> {
 
 	String regex = "(^[0-9]{10}$)";
 
