@@ -59,9 +59,9 @@ public class AppCacheManager {
     }
 
     public void put(String lob, String key, Object value) {
-        String cacheName = lob != null ? lob : COMMON_CACHE_NAME;
-        Cache<String, Object> cache = ensureCache(cacheName);
-        cache.put(key, value);
+//        String cacheName = lob != null ? lob : COMMON_CACHE_NAME;
+//        Cache<String, Object> cache = ensureCache(cacheName);
+//        cache.put(key, value);
     }
 
     public <V> V withCache(String cacheDomain, String key, Function<String, V> function) {
