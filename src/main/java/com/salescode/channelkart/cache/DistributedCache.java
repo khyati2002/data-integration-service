@@ -7,6 +7,7 @@ package com.salescode.channelkart.cache;
 
 
 import com.salescode.channelkart.abstractdatasource.AbstractDataSourceConstants;
+import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.utils.GlobalLock;
 import io.netty.buffer.Unpooled;
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.LocalCachedMapOptions;
 import org.redisson.api.RMap;
+import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.ByteArrayCodec;
 import org.redisson.client.codec.Codec;
@@ -27,16 +29,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import javax.annotation.PostConstruct;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import org.redisson.config.Config;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
+import com.salescode.channelkart.security.SecurityContextUtils;
 
 @Service
 public class DistributedCache {
@@ -48,6 +47,8 @@ public class DistributedCache {
    boolean isFistLevelCacheEnabled;
 
    private static final String DEFAULT_CACHE_NAME = AbstractDataSourceConstants.DEFAULT;
+
+   private final Map<String, Consumer<CacheUpdateEvent>> changeEventSubscribers = new HashMap<>();
 
    private Map<String, RMap<String, Object>> cmc=new ConcurrentHashMap<>();
 
@@ -95,7 +96,47 @@ public class DistributedCache {
 
          redisson = Redisson.create(config);
       }
-      //subscribeForChangeEvents();
+      subscribeForChangeEvents();
+   }
+
+
+   private void subscribeForChangeEvents(){
+      if(redisson!=null) {
+         RTopic topic = redisson.getTopic(env()+"-"+UPDATE_PUBSUB_TOPIC);
+         topic.addListener(CacheUpdateEvent.class, (charSequence, event) -> {
+            logger.debug("Cache update Event {}, Domain ->{}, Key->{}", event.getLob(), event.getDomainName(), event.getKey());
+            try {
+               if (event instanceof LOBRegisterEvent) {
+                  SpringContext.getBean(StartupBooster.class).loadLob(event.getLob());
+               } else if(event instanceof AppCacheRemoveEvent){
+                  logger.info("Removing AppCacheManager cache for lob:{}", event.getLob());
+                  AppCacheManager.getInstance().removeAll(event.getLob());
+               } else {
+                  clearCacheOnEvent(event);
+               }
+            } catch (Exception e) {
+               logger.error("Could not listener cache change event", e);
+            }
+         });
+      }
+   }
+
+   private void clearCacheOnEvent(CacheUpdateEvent event) {
+      SecurityContextUtils.switchWithLOB(event.getLob(),()->{
+         if(event.getKey()!=null) {
+            AppCacheManager.getInstance()
+                    .removeByDomain(event.getDomainName(), event.getKey());
+         }else{
+            AppCacheManager.getInstance()
+                    .removeByDomain(event.getDomainName());
+         }
+         var cacheUpdateEventConsumer = changeEventSubscribers.get(event.getDomainName());
+         if (cacheUpdateEventConsumer != null) {
+            cacheUpdateEventConsumer.accept(event);
+         }
+         logger.debug("Cleared first level cache for key {}",event.getKey());
+         return true;
+      });
    }
    private Codec getCodec(){
       return new ByteArrayCodec(){
@@ -168,13 +209,18 @@ public class DistributedCache {
             }
             return object;
          } catch (Exception e) {
-         //   logGetError(cacheName, key, e);
+              logGetError(cacheName, key, e);
             return null;
          }
       } else {
          return AppCacheManager.getInstance().get(cacheName, key);
       }
    }
+
+   private void logGetError(String cacheName, String key, Exception e) {
+      logger.error("Could not get object from cacheName:{}, key:{}", cacheName, key, e);
+   }
+
 
    private <T> RMap<String, T> getMap(String cacheName,boolean localCacheMap) {
 
@@ -215,7 +261,7 @@ public class DistributedCache {
       if (redisson != null) {
          try {
             RMap<String, Object> map = getMap(cacheName);
-           // logCached(cacheName, obj);
+             logCached(cacheName, obj);
             if(map.size()>MAX_CACHE_MAP_SIZE){
                map.clear();
             }
@@ -224,11 +270,19 @@ public class DistributedCache {
                AppCacheManager.getInstance().put(cacheName, key, obj);
             }
          } catch (Exception e) {
-         //logPutError(cacheName, key, obj, e);
+            logPutError(cacheName, key, obj, e);
          }
       } else {
          AppCacheManager.getInstance().put(cacheName, key, obj);
       }
+   }
+
+   private void logPutError(String cacheName, String key, Object object, Exception e) {
+      logger.error("Could not put the object for cacheName:{}, key:{}, item:{}", cacheName, key, object, e);
+   }
+
+   private void logCached(String cacheName, Object item) {
+      logger.debug("cached {} {}", cacheName, item);
    }
 
    @WithSpan
@@ -245,13 +299,37 @@ public class DistributedCache {
             if(map.containsKey(key)) {
                map.remove(key);
                AppCacheManager.getInstance().remove(cacheName, key);
-            //   sendCacheUpdateEvent(domainName, lob, key);
+               sendCacheUpdateEvent(domainName, lob, key);
             }
          } catch (Exception e) {
-           // logError(cacheName, e);
+            logError(cacheName, e);
          }
       } else {
          AppCacheManager.getInstance().remove(cacheName, key);
+      }
+   }
+
+   private void logError(String cacheName, Exception e) {
+      logger.error("Exception happened while accessing the cacheName:{}", cacheName, e);
+   }
+
+   private void sendCacheUpdateEvent(String domainName,String lob,String key){
+      try {
+         CacheUpdateEvent cue = new CacheUpdateEvent();
+         cue.setDomainName(domainName);
+         cue.setLob(lob);
+         cue.setKey(key);
+      } catch (Exception e) {
+         logger.error("Could not send cache update event for domainName:{}, key:{}", domainName, key, e);
+      }
+   }
+
+   @WithSpan
+   public void publishChangeEvent(CacheUpdateEvent e){
+      if(redisson!=null) {
+         RTopic topic = redisson.getTopic(env() + "-" + UPDATE_PUBSUB_TOPIC);
+         long clientsReceivedMessage = topic.publish(e);
+         logger.debug("Cache published event ->{} for event:{}", clientsReceivedMessage, e);
       }
    }
 }

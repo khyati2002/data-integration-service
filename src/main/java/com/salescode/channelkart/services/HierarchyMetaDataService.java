@@ -69,15 +69,12 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
     }
 
 
-    Map<String, Collection<HierarchyMetaData>> map = new ConcurrentHashMap<>();
-
     public Collection<HierarchyMetaData> findByImmediateParent(String loginId, boolean cached) {
         Function<String, Collection<HierarchyMetaData>> function = (String lid) -> {
             return hierarchyMetaDataRepository.findByImmediateParent(lid);
         };
         logger.debug("Find immediate Parent for->>>>>>>>>>>>:{}", loginId);
         return (cached) ? AppCacheManager.getInstance().withCache(CACHE_DOMAIN, loginId,function):function.apply(loginId);
-        //return map.computeIfAbsent(loginId, function);
     }
 
     public Collection<HierarchyMetaData> findByImmediateParent(List<String> loginId) {
@@ -129,9 +126,9 @@ public class HierarchyMetaDataService extends AbstractCDMService<HierarchyMetaDa
         if(clearCache) {
             iterObj.forEach(element -> {
                 if (element != null) {
-                    //AppCacheManager.getInstance().removeByDomain(CACHE_DOMAIN,element.getHierarchy());
-                    //distributedCache.clearCache(lob, CACHE_DOMAIN, element.getImmediateParent());
-                    //distributedCache.clearCache(lob, UserService.CACHE_DOMAIN, element.getImmediateParent());
+//                    AppCacheManager.getInstance().removeByDomain(CACHE_DOMAIN,element.getHierarchy());
+//                    distributedCache.clearCache(lob, CACHE_DOMAIN, element.getImmediateParent());
+//                    distributedCache.clearCache(lob, UserService.CACHE_DOMAIN, element.getImmediateParent());
                     clearCache(lob, element.getImmediateParent());
                 }
             });

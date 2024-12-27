@@ -9,6 +9,7 @@ package com.salescode.channelkart.services;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.salescode.channelkart.cache.AppCacheManager;
 import com.salescode.channelkart.cache.DistributedCache;
+import com.salescode.channelkart.exceptions.UnexpectedResultException;
 import com.salescode.channelkart.models.*;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.RoleName;
@@ -160,7 +161,7 @@ public class UserService extends AbstractCDMService<User> {
         return findByLoginId(loginId, true, true);
     }
 
-    Map<String,User> map = new ConcurrentHashMap<>();
+
     public User findByLoginId(String loginId,boolean cached,boolean hierarchy) {
         String lob = SecurityContextUtils.getLob();
         Function<String,User> function = (String lid)->{
@@ -379,7 +380,7 @@ public class UserService extends AbstractCDMService<User> {
                 up.setUserLoginId(user.getLoginId());
                 up.setParent(hm.getImmediateParent());
                 if (up.getUserLoginId().equalsIgnoreCase(up.getParent())) {
-                   // throw new UnexpectedResultException("User can't be mapped to itself. Found a record for user " + up.getUserLoginId() + " mapped to itself. Please verify the data once.");
+                   throw new UnexpectedResultException("User can't be mapped to itself. Found a record for user " + up.getUserLoginId() + " mapped to itself. Please verify the data once.");
                 }
                 userParentList.add(up);
             }
@@ -480,7 +481,7 @@ public class UserService extends AbstractCDMService<User> {
         if (u.getRoles() != null) u.getRoles().size();
         if (u.getSupplierMetaData() != null) u.getSupplierMetaData().size();
         if (u.getDesignation() != null) u.getDesignation().size();
-     //   if (u.getMessengerInfo() != null) u.getMessengerInfo().size();
+        // if (u.getMessengerInfo() != null) u.getMessengerInfo().size();
     }
 
     public void clearCache(String lob, String loginId) {

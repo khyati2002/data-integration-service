@@ -15,10 +15,11 @@ import com.salescode.channelkart.repository.OutletDetailsRepository;
 import com.salescode.channelkart.response.OperationResponse;
 import com.salescode.channelkart.response.OperationStatus;
 import com.salescode.channelkart.security.SecurityContextUtils;
-import com.salescode.channelkart.services.enums.OperationType;
 import com.salescode.channelkart.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -56,6 +57,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     @Autowired
     private PreProcessPipelineService preProcessPipelineService;
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public OutletDetailsService(OutletDetailsRepository outletDetailsRepository, UserService userService, SupplierInfoService supplierInfoService, RoleService roleService, LocationService locationService) {
@@ -100,9 +102,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     public void fillRetailer(OutletDetails outlet, boolean hierarchy) {
         if (outlet.getUserName() != null) {
             if (StringUtils.isBlank(outlet.getUserName().getId())) {
-//                User tempuser = TimerUtils.withTime("Time taken UserService findByLoginId from outlet ",
-//                        () -> userService.findByLoginId(outlet.getUserName().getLoginId(), true, hierarchy));
-                User tempuser = userService.findByLoginId(outlet.getUserName().getLoginId(), true, hierarchy);
+                User tempuser = TimerUtils.withTime("Time taken UserService findByLoginId from outlet ",
+                        () -> userService.findByLoginId(outlet.getUserName().getLoginId(), true, hierarchy));
                 outlet.setRetailerInfo(tempuser);
             } else {
                 outlet.setRetailerInfo(outlet.getUserName());
@@ -113,11 +114,10 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     public OutletDetails prepareOutletDetails(OutletDetails outletDetails) {
 //        /* location */
         refreshLocation(outletDetails);
-//
-//        /* Retailer Info/Username */
-//        TimerUtils.withTime("prepareOutletDetails Time taken to fillRetailer ",
-//                () -> fillRetailer(outletDetails, false));
-        fillRetailer(outletDetails, false);
+
+        /* Retailer Info/Username */
+        TimerUtils.withTime("prepareOutletDetails Time taken to fillRetailer ",
+                () -> fillRetailer(outletDetails, false));
        return outletDetails;
     }
 
@@ -125,7 +125,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         message += " for outletCode {}";
         if(propertyRegistry.getAsBoolean(PropertyDefinition.LOGS_FOR_NULL_LOCATION) &&
                 (outletDetails.getLocationHierarchy()==null || outletDetails.getLocationHierarchy().getLocationHierarchy()==null)){
-            //logger.error(message, outletDetails.getOutletCode());
+            logger.error(message, outletDetails.getOutletCode());
         }
     }
 
@@ -177,7 +177,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                     try {
          setOutletSupplier(tempoutlet);
                    } catch (JsonProcessingException e) {
-//                        logger.error("Error while setting supplier in outlet extended attribute");
+                       logger.error("Error while setting supplier in outlet extended attribute");
                    }
 //                });
         printLogsForNullHierarchy(tempoutlet,"Location null before saving outlet");
@@ -194,9 +194,6 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         return saved;
 
     }
-
-
-
 
 
     private void createRetailUser(OutletDetails outlet) {
@@ -324,7 +321,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                     user.setHierarchy(hierarchy);
                     user.setNormalizedHierarchy(UserService.getNormalizedHierarchy(user.getHierarchy()));
                 } else {
-                    //     logger.warn("Hierarchy logs: Null hierarchy found for user {}. Skipping setHierarchy() operation", user.getLoginId());
+                  logger.warn("Hierarchy logs: Null hierarchy found for user {}. Skipping setHierarchy() operation", user.getLoginId());
                 }
             }
             return userService.save(user);
@@ -365,10 +362,10 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                     setUserAssociateData(outlet,changed)
             );
         }
-//        GlobalLock.withLock(outlet.getUserName().getLoginId(), s ->
-//                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet)));
-//
-        createAssociateDataWithLock(outlet);
+        GlobalLock.withLock(outlet.getUserName().getLoginId(), s ->
+                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginId() + "]]) for outlet[[" + outlet.getOutletCode() + "]]", () -> createAssociateDataWithLock(outlet)));
+
+
     }
 
 

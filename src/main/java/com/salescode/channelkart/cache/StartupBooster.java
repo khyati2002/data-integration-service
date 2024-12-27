@@ -83,6 +83,26 @@ public class StartupBooster {
         }
     }
 
+    public synchronized void loadLob(final String lob) {
+        if (!inList.contains(lob)) {
+            try {
+                inList.add(lob);
+                logger.info("loading database profile for new lob {}", lob);
+                if (!DatabaseProfileRegistry.getDataSourceHashMap().containsKey(lob)) {
+                    if (databaseProfileRegistry.loadLob(lob)) {
+                        load(s -> s.equalsIgnoreCase(lob));
+                    }
+                    load(lobName -> lobName.equalsIgnoreCase(lob));
+                    logger.info("Profile loaded successfully {}",lob);
+                } else {
+                    logger.info("Profile already exists. {}", lob);
+                }
+            } finally {
+                inList.remove(lob);
+            }
+        }
+    }
+
 
 }
 

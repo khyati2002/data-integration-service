@@ -42,7 +42,9 @@ public class SecurityContextUtils implements EnvironmentAware {
         return "integration_user";
     }
 
-
+    public static <T> T switchWithLOB(String lob, Function<T> function) {
+        return null;
+    }
     @Override
     public void setEnvironment(Environment environment) {
         setEnv(environment);

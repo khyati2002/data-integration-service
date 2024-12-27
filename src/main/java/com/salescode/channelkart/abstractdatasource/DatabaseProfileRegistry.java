@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.DataIntegrationApplication;
 import com.salescode.channelkart.exceptions.CustomRuntimeException;
 import com.salescode.channelkart.models.Profile;
+import com.salescode.channelkart.repository.ProfileRepository;
 import com.salescode.channelkart.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,8 @@ public class DatabaseProfileRegistry {
 
 	@Autowired
 	private Environment env;
+
+	@Autowired ProfileRepository profileRepository;
 	
 	@PostConstruct
 	public void init() {
@@ -126,5 +129,10 @@ public class DatabaseProfileRegistry {
     public static synchronized DataSource getDefaultDs(){
 		return defaultDatasource;
 	}
-    
+
+	public boolean loadLob(String lob){
+		List<Profile> profiles= profileRepository.findByLobAndType(lob,AbstractDataSourceConstants.DATABASE);
+		profiles.forEach(this :: registerProfile);
+		return (!profiles.isEmpty());
+	}
 }

@@ -2,6 +2,7 @@ package com.salescode.channelkart.cache;
 
 
 import com.salescode.channelkart.security.SecurityContextUtils;
+import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.utils.NullUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,13 +55,13 @@ public class AppCacheManager {
     }
 
     public void put(String key, Object value) {
-//        put(null, key, value);
+        put(null, key, value);
     }
 
     public void put(String lob, String key, Object value) {
-//        String cacheName = lob != null ? lob : COMMON_CACHE_NAME;
-//        Cache<String, Object> cache = ensureCache(cacheName);
-//        cache.put(key, value);
+        String cacheName = lob != null ? lob : COMMON_CACHE_NAME;
+        Cache<String, Object> cache = ensureCache(cacheName);
+        cache.put(key, value);
     }
 
     public <V> V withCache(String cacheDomain, String key, Function<String, V> function) {
@@ -79,6 +80,31 @@ public class AppCacheManager {
             put(cacheName, fullKey, storeData);
         }
         return cached;
+    }
+
+    public boolean removeAll(String lob) {
+        return SecurityContextUtils.switchWithLOB(lob, () -> {
+            try {
+                if(isRoot()){
+                    metaCache.values().forEach(Cache::clear);
+                    metaCache.clear();
+                }else {
+                    Cache<String, Object> entries = metaCache.get(lob);
+                    if (entries != null) {
+                        entries.clear();
+                    }
+                }
+                Cache<String, Object> commonEntries = metaCache.get(COMMON_CACHE_NAME);
+                if (commonEntries != null) {
+                    commonEntries.clear();
+                }
+
+                return true;
+            } catch (Exception e) {
+                log.error("Could not clear app cache manager", e);
+                return false;
+            }
+        });
     }
 
     private Cache<String, Object> ensureCache(String name) {
@@ -160,7 +186,7 @@ public class AppCacheManager {
         } else {
             removeByDomain(domainName, key);
         }
-        //publishOnCacheChange(lob,domainName,key);
+        publishOnCacheChange(lob,domainName,key);
     }
 
     public static void main(String[] args) {
@@ -168,6 +194,18 @@ public class AppCacheManager {
         ac.put("test", "1", "one");
         String value = ac.get("test", "1").toString();
         log.info(value);
+    }
+
+    private void publishOnCacheChange(String lob, String domainName, String key) {
+        try {
+            CacheUpdateEvent event = new CacheUpdateEvent();
+            event.setDomainName(domainName);
+            event.setLob(lob);
+            event.setKey(key);
+            SpringContext.getBean(DistributedCache.class).publishChangeEvent(event);
+        } catch (Exception e) {
+            log.error("Could not notify first cache removal changes ", e);
+        }
     }
 
 }
