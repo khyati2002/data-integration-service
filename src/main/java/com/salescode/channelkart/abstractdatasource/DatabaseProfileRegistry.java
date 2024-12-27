@@ -129,10 +129,5 @@ public class DatabaseProfileRegistry {
     public static synchronized DataSource getDefaultDs(){
 		return defaultDatasource;
 	}
-
-	public boolean loadLob(String lob){
-		List<Profile> profiles= profileRepository.findByLobAndType(lob,AbstractDataSourceConstants.DATABASE);
-		profiles.forEach(this :: registerProfile);
-		return (!profiles.isEmpty());
-	}
+	
 }
