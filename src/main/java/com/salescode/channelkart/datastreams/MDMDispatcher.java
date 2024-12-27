@@ -21,7 +21,7 @@ public class MDMDispatcher {
 	private static Logger logger = LoggerFactory.getLogger(MDMDispatcher.class);
 
 	private static int activeThreadCount = Integer.parseInt(Optional.ofNullable(System.getenv("activeThreads")).orElse(System.getProperty("activeThreads", "5")));
-	private static boolean disableLocalRetry = Boolean.parseBoolean(Optional.ofNullable(System.getenv("disableLocalRetry")).orElse("false"));
+	private static boolean disableLocalRetry = Boolean.parseBoolean(Optional.ofNullable(System.getenv("disableLocalRetry")).orElse("true"));
 
 	private static final List<String> RETRY_SQL_STATES= List.of("23000");
 	

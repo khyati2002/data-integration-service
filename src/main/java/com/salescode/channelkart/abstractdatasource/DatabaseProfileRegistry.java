@@ -66,7 +66,8 @@ public class DatabaseProfileRegistry {
 		Profile profile = new Profile();
 		profile.setLob(env.getProperty("channelkart.lobs"));
 		registerProfile(profile);
-		registerDefault();
+//		registerDefault();
+		
 //		customRoutingDataSource.setTargetDataSources(allProfileRegistry);
 //		customRoutingDataSource.afterPropertiesSet();
 	}

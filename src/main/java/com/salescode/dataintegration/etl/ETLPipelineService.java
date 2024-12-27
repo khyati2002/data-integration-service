@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.salescode.channelkart.datastreams.PipelineDispatcher;
 import com.salescode.channelkart.dto.StreamingRawData;
 import com.salescode.channelkart.dto.StreamingRawData.Response;
+import com.salescode.channelkart.integration.kafka.publisher.KafkaIntegrationPublisher;
 import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.models.IntegrationHistory;
 import com.salescode.channelkart.pojo.MdmOperationResponse;
@@ -38,17 +39,18 @@ public class ETLPipelineService {
     ObjectMapper objectMapper = JSONUtils.getObjectMapper();
 
     private int retryCount;
+    private KafkaIntegrationPublisher publisher = null;
 
     public ETLPipelineService(PipelineDispatcher dispatcher, IntegrationHistoryService ihs, Environment env) {
         this.pipelineDispatcher = dispatcher;
         this.ihs = ihs;
         this.env = env;
+        publisher = KafkaIntegrationPublisher.getInstance();
     }
 
     @SneakyThrows
     public List<CommonDataModel> execute(String message) {
         log.info("Executing etl pipeline");
-        List<CommonDataModel> transformedObjects = new ArrayList<>();
         StreamingRawData streamingRawData = objectMapper.readValue(message, StreamingRawData.class);
         ArrayNode features = streamingRawData.getFeatures();
         if (features.isEmpty()) {
@@ -65,8 +67,7 @@ public class ETLPipelineService {
         List<IntegrationHistory> integrationDataList = new ArrayList<>();
         final boolean allSuccess = processResponse(streamingRawData, integrationDataList, responses, transformerMap);
         processFinalStatus(streamingRawData, integrationDataList, responses, allSuccess);
-
-        return transformedObjects;
+        return new ArrayList<>();
     }
 
     public List<Future<MdmOperationResponse>> process(StreamingRawData data) {
@@ -200,7 +201,7 @@ public class ETLPipelineService {
         }
 
 //        setRawKeys(sdr,ind);
-        ind.setOffset(Double.parseDouble(sdr.getOffset()));
+//        ind.setOffset(Double.parseDouble(sdr.getOffset()));
         ind.setTimestamp(System.currentTimeMillis());
         ind.setStatus(status.name());
         try {
@@ -228,9 +229,9 @@ public class ETLPipelineService {
             sdr.setStatus(OperationStatus.Failure.name());
             sdr.setResponse(null);
             sdr.setResponses(responses);
-//            if (!publisher.publishRec(getFailureTopic(sdr), sdr)) { --> flink
-//                integrationDataList.forEach(s -> s.setDescription(String.valueOf(s.getDescription()).concat("~Failed to publish")));
-//            }
+            if (!publisher.publishRec(getFailureTopic(sdr), sdr)) {
+                integrationDataList.forEach(s -> s.setDescription(String.valueOf(s.getDescription()).concat("~Failed to publish")));
+            }
             if (sdr.isPreserveOnFailure()) {
                 updateStatus(sdr, integrationDataList);
             }
