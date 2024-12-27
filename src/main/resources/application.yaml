@@ -13,7 +13,7 @@ spring:
   profiles:
     active: local
   datasource:
-    url: "jdbc:mysql://dev-rds.ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/ckunnatiuat?autoReconnect=true&useSSL=false&nullCatalogMeansCurrent=true"
+    url: "jdbc:mysql://dev-rds.ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/ckunnatiuat_flink?autoReconnect=true&useSSL=false&nullCatalogMeansCurrent=true"
     username: "ckuatadmin"
     password: "Uat12Oct#"
   jpa:
@@ -23,7 +23,6 @@ spring:
           fetch_size: 500
 
 redisUrl : redis://dev-elasticache-redis-cluster.zymj1k.0001.aps1.cache.amazonaws.com:6379
-
 redis:
     localCacheMap : true
 
@@ -45,7 +44,7 @@ app:
       main-topic-name: flink-test-1
       dlq-topic-name: flink-test-dlt
       db:
-        url: "jdbc:mysql://dev-rds.ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/ckunnatiuat"
+        url: "jdbc:mysql://dev-rds.ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/ckunnatiuat_flink"
         user: "ckuatadmin"
         password: "Uat12Oct#"
     from-s3-to-kafka:
