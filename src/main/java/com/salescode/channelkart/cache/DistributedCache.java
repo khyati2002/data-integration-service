@@ -106,9 +106,7 @@ public class DistributedCache {
          topic.addListener(CacheUpdateEvent.class, (charSequence, event) -> {
             logger.debug("Cache update Event {}, Domain ->{}, Key->{}", event.getLob(), event.getDomainName(), event.getKey());
             try {
-               if (event instanceof LOBRegisterEvent) {
-                 // SpringContext.getBean(StartupBooster.class).loadLob(event.getLob());
-               } else if(event instanceof AppCacheRemoveEvent){
+              if(event instanceof AppCacheRemoveEvent){
                   logger.info("Removing AppCacheManager cache for lob:{}", event.getLob());
                   AppCacheManager.getInstance().removeAll(event.getLob());
                } else {
