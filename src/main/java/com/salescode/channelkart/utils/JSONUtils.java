@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.beanutils.ConversionException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -192,6 +193,30 @@ public class JSONUtils {
         @Override
         public Set<Characteristics> characteristics() {
             return EnumSet.of(Characteristics.UNORDERED);
+        }
+    }
+
+    public static JsonNode parse(String data) {
+        try {
+            return OBJECT_MAPPER.readTree(data);
+        } catch (JsonProcessingException e) {
+            throw new ConversionException("Could not convert to json node. input" + data, e);
+        }
+    }
+
+    public static String toJsonString(Collection<?> collection) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(collection);
+        } catch (JsonProcessingException e) {
+            throw new ConversionException("Could not convert collection to json. input = " + collection, e);
+        }
+    }
+
+    public static String toJsonString(Object object) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new ConversionException("Could not convert collection to json. input= " + object, e);
         }
     }
 }

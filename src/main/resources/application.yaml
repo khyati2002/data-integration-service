@@ -27,6 +27,10 @@ redisUrl : redis://localhost:6379
 redis:
     localCacheMap : true
 
+channelkart:
+  lobs: ckuatunnati
+  environment: uat
+
 app:
   lob: ckuatunnati
   bundle:

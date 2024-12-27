@@ -18,6 +18,7 @@ import com.salescode.channelkart.utils.NullUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.collection.internal.PersistentBag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,22 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     }
 
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<T> saveForList(T cdmObject, OperationType type) {
+        return List.of(save(cdmObject,type));
+    }
+
+    @Override
+    public void deleteById(String id,boolean failsOnEmptyRecord){
+        Optional<T> entityToDelete = repository.findById(id);
+        if(entityToDelete.isEmpty() && failsOnEmptyRecord){
+            throw new ResourceNotFoundException("Record with entity id {}, not present in table. Please verify input data.",id);
+        }else if(entityToDelete.isPresent()){
+            repository.deleteById(id);
+//            eventBroadcaster.broadcast(entityToDelete.get(),EntityOperation.DELETE);
+        }
+    }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -124,7 +141,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
      }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public T save(T cdmObject, OperationType type) throws Exception {
+    public T save(T cdmObject, OperationType type) {
         return save(cdmObject);
     }
 

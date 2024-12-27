@@ -2,7 +2,6 @@ package com.salescode.channelkart.enrichments;
 
 
 import com.salescode.channelkart.models.CommonDataModel;
-import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,19 +1,25 @@
 package com.salescode.channelkart.security;
 
 
-import com.salescode.DataIntegrationApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
-public class SecurityContextUtils {
+@Component
+public class SecurityContextUtils implements EnvironmentAware {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityContextUtils.class);
-
+    private static Environment environment;
 
     private SecurityContextUtils() {
-        throw new IllegalStateException("Utility Class");
+//        throw new IllegalStateException("Utility Class");
     }
 
+    private static void setEnv(Environment env) {
+        environment = env;
+    }
 
     public static String getLob() {
 //        String tempLOB = getTempLOB();
@@ -29,12 +35,16 @@ public class SecurityContextUtils {
 //            lob = AbstractDataSourceConstants.DEFAULT;
 //        }
 //        return lob;
-        return DataIntegrationApplication.getLob();
+        return environment.getProperty("channelkart.lobs");
     }
 
-    public static String getPrincipal(){
+    public static String getPrincipal() {
         return "integration_user";
     }
 
 
+    @Override
+    public void setEnvironment(Environment environment) {
+        setEnv(environment);
+    }
 }

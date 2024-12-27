@@ -1,57 +1,36 @@
 package com.salescode.dataintegration.etl;
 
 import com.salescode.DataIntegrationApplication;
-import com.salescode.channelkart.utils.EntityUtils;
-import com.salescode.dataintegration.etl.enrichment.registry.EnrichmentInfoRegistry;
-import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
-import com.salescode.dataintegration.etl.registry.ETLRegistry;
-import com.salescode.dataintegration.etl.transformer.registry.TransformerInfoRegistry;
 import com.salescode.dis.config.DatabaseConfig;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 
-@SpringBootTest(classes = DataIntegrationApplication.class)
+//@SpringBootTest(classes = DataIntegrationApplication.class)
 @Import(DatabaseConfig.class)
+@PropertySource(value = "classpath:application.yaml")
 class ETLPipelineServiceTest {
 
-    @Autowired ETLPipelineService etlPipelineService;
-    @Autowired @SpyBean MetadataRegistry metadataRegistry;
-    @Autowired @SpyBean TransformerInfoRegistry transformerInfoRegistry;
-    @Autowired @SpyBean EnrichmentInfoRegistry enrichmentInfoRegistry;
-    @Autowired @SpyBean ETLRegistry etlRegistry;
-    @Autowired EntityUtils entityUtils;
+
+    ETLPipelineService etlPipelineService;
 
     @BeforeEach
     @SneakyThrows
     void setup(){
-//        CkMetadata ckMetadata = new CkMetadata();
-//        ckMetadata.setDomainValues(JSONUtils.getObjectMapper().readTree("[{\"dynamicKeys\":[\"outletcode\"]}]"));
-//        doReturn(Optional.of(ckMetadata)).when(metadataRegistry).getMetadataByDomainNameAndType("CkOutletDetails", "DynamicUniqueKey");
-//        CkTransformerInfo ckTransformerInfo = new CkTransformerInfo();
-//        ckTransformerInfo.setType("CkOutletDetails");
-//        ckTransformerInfo.setImplementation("com.salescode.dataintegration.etl.impl.TestTransformer");
-//        ckTransformerInfo.setActiveStatus(ActiveStatus.ACTIVE);
-//        doReturn(ckTransformerInfo).when(transformerInfoRegistry).getTransformerInfoById("testId");
-//        CkEnrichmentInfo ckEnrichmentInfo = new CkEnrichmentInfo();
-//        ckEnrichmentInfo.setType("CkOutletDetails");
-//        ckEnrichmentInfo.setImplementation("com.salescode.dataintegration.etl.impl.TestEnrichment");
-//        ckEnrichmentInfo.setActiveStatus(ActiveStatus.ACTIVE);
-//        doReturn(List.of(ckEnrichmentInfo)).when(enrichmentInfoRegistry).getEnrichmentInfoByPhase(EnrichmentPhase.PRE_VALIDATION);
-//        doReturn(List.of(ckEnrichmentInfo)).when(enrichmentInfoRegistry).getEnrichmentInfoByPhase(EnrichmentPhase.POST_VALIDATION);
-//        doReturn(new TestTransformer()).when(etlRegistry).getTransformer("com.salescode.dataintegration.etl.impl.TestTransformer");
-//        doReturn(new TestEnrichment()).when(etlRegistry).getEnrichment("com.salescode.dataintegration.etl.impl.TestEnrichment");
+        ApplicationContext context = SpringApplication.run(DataIntegrationApplication.class);
+        etlPipelineService = context.getBean(ETLPipelineService.class);
     }
 
     @Test
     void execute() {
         etlPipelineService.execute("{\n" +
                 "    \"groupId\": \"USR000008\",\n" +
-                "    \"lob\": \"mondelezckinduat\",\n" +
+                "    \"lob\": \"ckuatunnati\",\n" +
                 "    \"transformerInfo\": [\n" +
                 "        {\n" +
                 "            \"entityName\": \"OutletDetails\",\n" +

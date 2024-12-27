@@ -9,13 +9,14 @@ package com.salescode.channelkart.enrichments.impl;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.salescode.channelkart.converters.DateToClientTimeZoneStringConverter;
+import com.salescode.channelkart.enrichments.AbstractEnrichment;
+import com.salescode.channelkart.enrichments.EnrichmentResult;
+import com.salescode.channelkart.enrichments.Status;
 import com.salescode.channelkart.models.*;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.services.*;
 import com.salescode.channelkart.utils.NullUtils;
-import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
-import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -85,9 +86,9 @@ public class UserEnrichment extends AbstractEnrichment<User> {
 			
 			setDivisionRoles(cdm);
 			
-			return new EnrichmentResult(EnrichmentResult.Status.OK,"Data enriched successfully");
+			return new EnrichmentResult(Status.OK,"Data enriched successfully");
 		}
-		return new EnrichmentResult(EnrichmentResult.Status.ERROR,"Enrichment error: User not found null");
+		return new EnrichmentResult(Status.ERROR,"Enrichment error: User not found null");
 	}
 	
 	private void setPassword(User cdm) {

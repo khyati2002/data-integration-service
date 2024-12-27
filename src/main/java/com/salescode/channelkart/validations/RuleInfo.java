@@ -25,7 +25,7 @@ public class RuleInfo extends CommonDataModel implements Comparator<RuleInfo> {
     private String language;
     private String implementation;//"com.test.execute.Rule1"
 
-    public boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 

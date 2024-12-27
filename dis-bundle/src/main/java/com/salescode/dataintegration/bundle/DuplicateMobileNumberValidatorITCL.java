@@ -6,7 +6,6 @@ import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.services.UserService;
 import com.salescode.channelkart.utils.StringUtils;
-import com.salescode.channelkart.validations.repository.RegexValidation;
 import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
 import com.salescode.dataintegration.etl.validation.RuleResult;
 import com.salescode.dataintegration.etl.validation.ValidationResult;

@@ -1,7 +1,6 @@
 package com.salescode.dataintegration.bundle;
 
 
-import com.salescode.channelkart.models.OutletDetails;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.services.OutletDetailsService;
 import com.salescode.channelkart.services.SpringContext;

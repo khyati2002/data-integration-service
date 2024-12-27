@@ -1,12 +1,12 @@
 package com.salescode.channelkart.enrichments.impl;
 
+import com.salescode.channelkart.enrichments.AbstractEnrichment;
+import com.salescode.channelkart.enrichments.EnrichmentResult;
 import com.salescode.channelkart.models.CustomerAccountInfo;
 import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.services.CustomerAccountsService;
 import com.salescode.channelkart.services.ServiceLocator;
-import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
-import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import org.apache.commons.lang3.StringUtils;
 
 public class PhoneNumberEnrichment extends AbstractEnrichment<User> {
@@ -19,15 +19,15 @@ public class PhoneNumberEnrichment extends AbstractEnrichment<User> {
 		String lob = SecurityContextUtils.getLob();
 		CustomerAccountInfo customerAccountInfo = customerService.getCustomerAccountInfo(lob);
 		User admin = customerAccountInfo.getAdmin();
-		
+
 		if(StringUtils.isBlank(user.getCountryCode())) {
 			user.setCountryCode(admin.getCountryCode());
 		}
-		
+
 		if(StringUtils.isBlank(user.getDialCode())) {
 			user.setDialCode(admin.getDialCode());
 		}
-		
+
 		} catch (Exception e) {
 			System.err.println("Error while setting dial code " + e.toString());
 		}

@@ -12,10 +12,10 @@ import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.services.DivisionService;
 import com.salescode.channelkart.services.RoleService;
 import com.salescode.channelkart.services.ServiceLocator;
+import com.salescode.channelkart.validations.AbstractRule;
+import com.salescode.channelkart.validations.RuleResult;
+import com.salescode.channelkart.validations.Status;
 import com.salescode.channelkart.validations.ValidationResponseMessage;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
-import com.salescode.dataintegration.etl.validation.RuleResult;
-import com.salescode.dataintegration.etl.validation.ValidationResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class UserValidator extends AbstractValidationRule<User> {
+public class UserValidator extends AbstractRule<User> {
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -48,7 +48,7 @@ public class UserValidator extends AbstractValidationRule<User> {
 		List<String> errors= new ArrayList<>();
 		Set<String> designations= cdm.getDesignation();
 		if(ObjectUtils.isEmpty(designations)) {
-			return new RuleResult(ValidationResult.Status.ERROR,com.salescode.channelkart.utils.StringUtils.format("For User : {}, Reason: Designation must not be empty",cdm.getLoginId()));
+			return new RuleResult(Status.ERROR,com.salescode.channelkart.utils.StringUtils.format("For User : {}, Reason: Designation must not be empty",cdm.getLoginId()));
 		}
 
 		Set<String> unsupported= designations.stream().filter(element-> CollectionUtils.isEmpty(divisionService.findByDivisionName(element)))
@@ -76,7 +76,7 @@ public class UserValidator extends AbstractValidationRule<User> {
 		if(!errors.isEmpty()) {
 			String errorstr= com.salescode.channelkart.utils.StringUtils.format("Some values for User: {} voilating validations. Reason : {}", cdm.getLoginId(), org.apache.commons.lang.StringUtils.join(errors, ","));
 			logger.error(errorstr);
-			return new RuleResult(ValidationResult.Status.ERROR,errorstr);
+			return new RuleResult(Status.ERROR,errorstr);
 		}
 		return  RuleResult.OK;
 

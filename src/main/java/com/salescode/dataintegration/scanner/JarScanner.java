@@ -1,6 +1,5 @@
 package com.salescode.dataintegration.scanner;
 
-import com.salescode.dataintegration.etl.interfaces.TypeAwareEtlStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

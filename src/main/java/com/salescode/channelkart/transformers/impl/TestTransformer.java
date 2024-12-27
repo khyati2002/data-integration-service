@@ -1,6 +1,6 @@
 package com.salescode.channelkart.transformers.impl;
 
-import com.salescode.dataintegration.etl.transformer.AbstractTransformer;
+import com.salescode.channelkart.transformers.AbstractTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

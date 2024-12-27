@@ -8,9 +8,9 @@ package com.salescode.channelkart.validations.impl;
 
 import com.salescode.channelkart.models.OutletDetails;
 import com.salescode.channelkart.utils.StringUtils;
-import com.salescode.dataintegration.etl.validation.AbstractValidationRule;
-import com.salescode.dataintegration.etl.validation.RuleResult;
-import com.salescode.dataintegration.etl.validation.ValidationResult;
+import com.salescode.channelkart.validations.AbstractRule;
+import com.salescode.channelkart.validations.RuleResult;
+import com.salescode.channelkart.validations.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class OutletDetailsValidator extends AbstractValidationRule<OutletDetails> {
+public class OutletDetailsValidator extends AbstractRule<OutletDetails> {
 	/** The factory. */
 	private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 	
@@ -50,7 +50,7 @@ public class OutletDetailsValidator extends AbstractValidationRule<OutletDetails
 		if(!errors.isEmpty()){
 			String errorstr= StringUtils.format("Error saving outlet : {}, Reason : [{}]", cdm.getOutletCode(),org.apache.commons.lang.StringUtils.join(errors, ","));
 			logger.error(errorstr);
-			return new RuleResult(ValidationResult.Status.ERROR,errorstr);
+			return new RuleResult(Status.ERROR,errorstr);
 		}
 		return  RuleResult.OK;
 	//	});

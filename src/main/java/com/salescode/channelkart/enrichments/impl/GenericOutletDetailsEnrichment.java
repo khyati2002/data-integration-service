@@ -7,12 +7,15 @@ package com.salescode.channelkart.enrichments.impl;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.salescode.channelkart.component.model.SequenceGenerator;
+import com.salescode.channelkart.converters.DateToClientTimeZoneStringConverter;
+import com.salescode.channelkart.enrichments.AbstractEnrichment;
+import com.salescode.channelkart.enrichments.EnrichmentResult;
+import com.salescode.channelkart.enrichments.Status;
 import com.salescode.channelkart.models.OutletDetails;
 import com.salescode.channelkart.models.enums.ActiveStatus;
+import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.services.SequenceInfoService;
 import com.salescode.channelkart.services.SpringContext;
-import com.salescode.dataintegration.etl.enrichment.AbstractEnrichment;
-import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 
 
 import java.util.Date;
@@ -23,7 +26,7 @@ import java.util.Date;
  * @author  Manish Srivastava
  * @since   Feb 2021
  */
-public class GenericOutletDetailsEnrichment extends AbstractEnrichment<OutletDetails>{
+public class GenericOutletDetailsEnrichment extends AbstractEnrichment<OutletDetails> {
 
 	private SequenceInfoService sequenceService= SpringContext.getBean(SequenceInfoService.class);
 	/**
@@ -35,7 +38,7 @@ public class GenericOutletDetailsEnrichment extends AbstractEnrichment<OutletDet
 	@Override
 	public EnrichmentResult apply(OutletDetails cdm) {
 
-		if(cdm.getActiveStatus().equals(ActiveStatus.ACTIVE)) {
+		if(cdm.isActive()) {
 			cdm.setActiveStatus(ActiveStatus.ACTIVE);
 			if(StringUtils.isBlank(cdm.getActiveStatusReason()) ||
 					cdm.getActiveStatusReason().startsWith("Deactivated")) {
@@ -54,7 +57,7 @@ public class GenericOutletDetailsEnrichment extends AbstractEnrichment<OutletDet
 			cdm.setOutletCode(SequenceGenerator.Value.STRING.getDefaultValue());
 		}
 
-		return new EnrichmentResult(EnrichmentResult.Status.OK,"Data enriched successfully");
+		return new EnrichmentResult(Status.OK,"Data enriched successfully");
 
 	}
 
@@ -62,8 +65,8 @@ public class GenericOutletDetailsEnrichment extends AbstractEnrichment<OutletDet
 		if(!StringUtils.isBlank(cdm.getActiveStatusReason()) && cdm.getActiveStatusReason().startsWith("REJECTED")) {
 			cdm.setActiveStatusReason("REJECTED");
 		}else {
-//			cdm.setActiveStatusReason("Deactivated by "+SecurityContextUtils.getPrincipal()+
-//					" on "+ new DateToClientTimeZoneStringConverter().convert(new Date()));
+			cdm.setActiveStatusReason("Deactivated by "+ SecurityContextUtils.getPrincipal()+
+					" on "+ new DateToClientTimeZoneStringConverter().convert(new Date()));
 		}
 
 	}

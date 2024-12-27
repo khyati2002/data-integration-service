@@ -308,6 +308,11 @@
             <artifactId>commons-collections4</artifactId>
             <version>4.4</version> <!-- Or the latest version -->
         </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>1.5.1</version>
+        </dependency>
     </dependencies>
 
     <build>

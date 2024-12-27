@@ -1,5 +1,6 @@
 package com.salescode.dis.config;
 
+import com.salescode.channelkart.abstractdatasource.DatabaseProfileRegistry;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -30,6 +31,7 @@ public class DatabaseConfig {
         hikariDataSource.setUsername(user);
         hikariDataSource.setPassword(password);
         hikariDataSource.setMaximumPoolSize(10);
+        DatabaseProfileRegistry.setDefaultDs(hikariDataSource);
         return hikariDataSource;  // Return the DataSource bean
     }
 }

@@ -4,10 +4,10 @@ import com.bazaarvoice.jolt.Chainr;
 import com.bazaarvoice.jolt.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.salescode.channelkart.transformers.AbstractTransformer;
 import com.salescode.channelkart.transformers.TransformerInfo;
 import com.salescode.channelkart.utils.JSONUtils;
 import com.salescode.channelkart.utils.NullUtils;
-import com.salescode.dataintegration.etl.transformer.AbstractTransformer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 

@@ -107,7 +107,6 @@ public class CommonDataModel implements Serializable {
     }
 
 
-
     public void addPreProcessPipelineException(String stackTrace) {
         if (preProcessPipelineException == null) {
             this.preProcessPipelineException = new ArrayList<>();
@@ -121,5 +120,11 @@ public class CommonDataModel implements Serializable {
         setChanges(null);
     }
 
+
+    @JsonIgnore
+    @Transient
+    public boolean isActive() {
+        return activeStatus != null && activeStatus.equals(ActiveStatus.ACTIVE);
+    }
 
 }

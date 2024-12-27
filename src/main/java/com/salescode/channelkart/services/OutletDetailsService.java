@@ -13,9 +13,10 @@ import com.salescode.channelkart.models.enums.RoleName;
 import com.salescode.channelkart.repository.OutletDetailsRepository;
 
 import com.salescode.channelkart.response.OperationResponse;
+import com.salescode.channelkart.response.OperationStatus;
 import com.salescode.channelkart.security.SecurityContextUtils;
+import com.salescode.channelkart.services.enums.OperationType;
 import com.salescode.channelkart.utils.*;
-import com.salescode.dataintegration.etl.ETLPipelineService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -54,10 +53,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
     @Autowired
     private DistributedCache distributedCache;
-
     @Autowired
-    private ETLPipelineService pipelineService;
-
+    private PreProcessPipelineService preProcessPipelineService;
 
 
     @Autowired
@@ -318,8 +315,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
 
     private User validateAndGetUser(User user) {
-        OperationResponse operationResponse = pipelineService.pipelineServiceProcess(user, Optional.empty());
-        if (operationResponse.getStatus().equals(OperationResponse.OperationStatus.Success)) {
+        OperationResponse operationResponse = preProcessPipelineService.process(user, Optional.empty());
+        if (operationResponse.getStatus().equals(OperationStatus.Success)) {
             Set<String> hierarchyStr = populateUserParentHierarchy(user);
             if (!hierarchyStr.isEmpty()) {
                 String hierarchy = org.apache.commons.lang.StringUtils.join(hierarchyStr, ",");

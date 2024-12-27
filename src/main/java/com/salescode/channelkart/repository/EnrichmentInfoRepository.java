@@ -6,8 +6,8 @@
 package com.salescode.channelkart.repository;
 
 import com.salescode.channelkart.enrichments.EnrichmentInfo;
+import com.salescode.channelkart.enrichments.EnrichmentPhase;
 import com.salescode.channelkart.models.enums.ActiveStatus;
-import com.salescode.channelkart.models.enums.EnrichmentPhase;
 import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.NotNull;

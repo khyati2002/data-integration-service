@@ -10,16 +10,14 @@ import com.salescode.channelkart.exceptions.CustomRuntimeException;
 import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.models.MetaData;
 import com.salescode.channelkart.pojo.UniqueKeyContainer;
-import com.salescode.channelkart.services.CommonDataModelService;
 import com.salescode.channelkart.services.MetaDataService;
-import com.salescode.channelkart.services.ServiceLocator;
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.templates.TemplateEngine;
-import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.MappingException;
+import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.annotations.QueryHints;
 import org.hibernate.persister.entity.AbstractEntityPersister;
@@ -31,9 +29,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.hibernate.SQLQuery;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
@@ -45,37 +41,37 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static com.salescode.channelkart.utils.EntityInfo.*;
+
 @Service
-public class EntityUtils implements InitializingBean{
+public class EntityUtils implements InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(EntityUtils.class);
     private static final String GET_KEY_QUERY_DOMAIN_NAME = "cdmGetKeyQuery";
     private static final List<Class> jsonNodeClassList = new ArrayList<>(Arrays.asList(JsonNode.class, ObjectNode.class));
     private static final Map<String, Class<? extends CommonDataModel>> entityClassMap = new ConcurrentHashMap<>();
-    private Map<String, Set<Field>> uniqueFieldsMap = new ConcurrentHashMap<>();
     private static final Map<String, String> nativeTableNames = new HashMap<>();
     private static final Object lockObj = new Object();
-    private final ObjectMapper mapper = JSONUtils.getObjectMapper();
     private static Map<Class, Map<String, String>> nativeFieldsMap = new ConcurrentHashMap<>();
-
-
+    private Map<String, EntityInfo> entityInfoMap = new ConcurrentHashMap<>();
+    private static EntityUtils instance;
+    private final ObjectMapper mapper = JSONUtils.getObjectMapper();
     Set<Class<? extends CommonDataModel>> subClasses;
-
+    @Autowired
+    MetaDataService metaDataService;
+    private Map<String, Set<Field>> uniqueFieldsMap = new ConcurrentHashMap<>();
+    private Map<String, Field> tableFieldsMap = new ConcurrentHashMap<>();
     @Autowired
     private EntityManagerFactory entityManagerFactory;
-
     @PersistenceContext
     private EntityManager entitymanager;
-
-    @Autowired MetaDataService metaDataService;
     @Autowired
-    private MetadataRegistry metadataRegistry;
+    private MetaDataService metaDataervice;
 
 
     public EntityUtils() {
         subClasses = ReflectionUtils.findSubClasses(CommonDataModel.class);
     }
-
 
     public static <T> T deepClone(T src) {
         try {
@@ -87,7 +83,7 @@ public class EntityUtils implements InitializingBean{
             ObjectInputStream ois = new ObjectInputStream(bais);
             return (T) ois.readObject();
         } catch (Exception e) {
-        //    throw new ConverterException("Could not clone object:" + src);
+            //    throw new ConverterException("Could not clone object:" + src);
         }
         return null;
     }
@@ -171,6 +167,13 @@ public class EntityUtils implements InitializingBean{
         }
     }
 
+    public static EntityUtils get() {
+        return instance;
+    }
+
+    private static synchronized void setInstance(EntityUtils e) {
+        instance = e;
+    }
 
     public String replaceDynamicKeys(String string, Map<String, Object> params) {
         TemplateEngine templateEngine = SpringContext.getBean(TemplateEngine.class);
@@ -190,7 +193,6 @@ public class EntityUtils implements InitializingBean{
         throw new IllegalArgumentException("Entity not found: " + entityName);
     }
 
-
     public String getBeanProperty(Object cdm, String property) {
         try {
             String[] field = property.split("[.]");
@@ -202,11 +204,10 @@ public class EntityUtils implements InitializingBean{
                     return (obj != null && obj.has(field[1])) ? obj.get(field[1]).asText() : null;
                 } else if (field.length < 2) {
                     //throw new IllegalArgumentException("Key is not defied for json node {}'", property);
-                }
-                else {
+                } else {
                     // throw new InvalidFieldException("Nested Json Key [{}] is not supported in dynamic key creation.", property);
                 }
-                }
+            }
             return BeanUtils.getProperty(cdm, property);
 
         } catch (Exception e) {
@@ -219,10 +220,10 @@ public class EntityUtils implements InitializingBean{
             return "";
         }
     }
+
     public String generateId(CommonDataModel cdm) {
         return generateId(cdm, false);
     }
-
 
     private String getBaseSQL(String tableName) {
         return "select * from " + tableName + " where ";
@@ -266,7 +267,7 @@ public class EntityUtils implements InitializingBean{
         } else {
             nativeFieldsMap.put(clazz, new HashMap<>());
         }
-        String fieldName = getFieldName(clazz,entityField);
+        String fieldName = getFieldName(clazz, entityField);
         if (fieldName != null) {
             nativeFieldsMap.get(clazz).put(entityField, fieldName);
         }
@@ -274,7 +275,7 @@ public class EntityUtils implements InitializingBean{
 
     }
 
-    private String getFieldName(Class<?> clazz, String entityField){
+    private String getFieldName(Class<?> clazz, String entityField) {
         SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
         AbstractEntityPersister persister = ((AbstractEntityPersister) sessionFactory.getClassMetadata(clazz));
         for (Field field : org.reflections.ReflectionUtils.getAllFields(clazz)) {
@@ -313,6 +314,7 @@ public class EntityUtils implements InitializingBean{
         });
         return ukcontainer;
     }
+
     public Object getFieldValue(Class<?> clazz, UniqueKeyContainer container, CommonDataModel cdm) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         Object val = cdm;
         List<String> splitter = Arrays.asList(container.getPath().split("\\."));
@@ -369,67 +371,18 @@ public class EntityUtils implements InitializingBean{
             StringBuilder buffer3 = new StringBuilder();
             for (UniqueKeyContainer container : ukcontainer) {
                 Object value = getFieldValue(clazz, container, element);
-                fillTempbuffer(element,container,value,buffer3);
+                fillTempbuffer(element, container, value, buffer3);
             }
             buffer2.append(buffer3);
             buffer1.append(buffer2);
             Query sqlquery = entitymanager.createNativeQuery(buffer1.toString(), clazz);
             return execute(sqlquery);
-        }
-        catch(NoResultException nex) {
+        } catch (NoResultException nex) {
             return null;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             //throw new UnexpectedResultException(ex,"Error while fetching unique records. Reason : {}", ex.getMessage());
         }
-     return null;
-    }
-
-    private StringBuilder generateConditionFromValue(Object value){
-        StringBuilder result = new StringBuilder();
-        if (value == null) {
-            result.append(" is null ");
-        } else if (String.valueOf(value).contains("'")) {
-            result.append("\"").append(value).append("\"");
-        } else {
-            result.append("'").append(value).append("'");
-        }
-        return result;
-    }
-
-    private void fillTempbuffer(CommonDataModel element,UniqueKeyContainer container,Object value,StringBuilder buffer3)
-            throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        try {
-            StringBuilder buffer4 = new StringBuilder();
-            Class<?> propertyType = PropertyUtils.getPropertyType(element, container.getPath());
-            if (propertyType == String.class || propertyType.isEnum()) {
-                buffer4.append( generateConditionFromValue(value) );
-            } else {
-                buffer4.append(value);
-            }
-            if (!buffer4.toString().isEmpty()) {
-                if (buffer3.length() > 0) {
-                    buffer3.append(" and ");
-                }
-                if (value != null) {
-                    buffer3.append(container.getNativeName()).append("=").append(buffer4);
-                } else {
-                    buffer3.append(container.getNativeName()).append(buffer4);
-                }
-            }
-        } catch (NestedNullException nestedex) {
-            logger.debug("'{}' found null for unique key generation", container.getPath());
-        }
-    }
-
-    private CommonDataModel execute(Query query) {
-        try {
-            return (CommonDataModel) query.getSingleResult();
-        } catch (NoResultException e) {
-            // we don't need to print this exception. If the query is not matching any record then this exception will throw.
-            // The caller is expecting null as return type, so it's better to ignore this exception.
-            return null;
-        }
+        return null;
     }
 
 //    public CommonDataModel findUniqueRecord(Class<?> clazz, CommonDataModel element) {
@@ -466,14 +419,89 @@ public class EntityUtils implements InitializingBean{
 //
 //    }
 
+    private StringBuilder generateConditionFromValue(Object value) {
+        StringBuilder result = new StringBuilder();
+        if (value == null) {
+            result.append(" is null ");
+        } else if (String.valueOf(value).contains("'")) {
+            result.append("\"").append(value).append("\"");
+        } else {
+            result.append("'").append(value).append("'");
+        }
+        return result;
+    }
+
+    private void fillTempbuffer(CommonDataModel element, UniqueKeyContainer container, Object value, StringBuilder buffer3)
+            throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        try {
+            StringBuilder buffer4 = new StringBuilder();
+            Class<?> propertyType = PropertyUtils.getPropertyType(element, container.getPath());
+            if (propertyType == String.class || propertyType.isEnum()) {
+                buffer4.append(generateConditionFromValue(value));
+            } else {
+                buffer4.append(value);
+            }
+            if (!buffer4.toString().isEmpty()) {
+                if (buffer3.length() > 0) {
+                    buffer3.append(" and ");
+                }
+                if (value != null) {
+                    buffer3.append(container.getNativeName()).append("=").append(buffer4);
+                } else {
+                    buffer3.append(container.getNativeName()).append(buffer4);
+                }
+            }
+        } catch (NestedNullException nestedex) {
+            logger.debug("'{}' found null for unique key generation", container.getPath());
+        }
+    }
+
+    private CommonDataModel execute(Query query) {
+        try {
+            return (CommonDataModel) query.getSingleResult();
+        } catch (NoResultException e) {
+            // we don't need to print this exception. If the query is not matching any record then this exception will throw.
+            // The caller is expecting null as return type, so it's better to ignore this exception.
+            return null;
+        }
+    }
+
     public ArrayNode fetchDynamicPrimaryKeys(String entityName) {
         MetaDataService metaDataSevice = SpringContext.getBean(MetaDataService.class);
-        MetaData metaData = metadataRegistry.getMetadataByDomainNameAndType(entityName, "DynamicUniqueKey").orElse(null);
+        MetaData metaData = metaDataSevice.fetchByValue(entityName, "DynamicUniqueKey");
         ArrayNode columnArr = JSONUtils.getObjectMapper().createArrayNode();
         if (metaData != null) {
             columnArr = (ArrayNode) metaData.getDomainValues().get(0).get("dynamicKeys");
         }
         return columnArr;
+    }
+
+    public Field getClassField(Class<?> clazz, String tableField) {
+        String key = clazz.getName() + ":" + tableField;
+        if (tableFieldsMap.containsKey(key)) {
+            return tableFieldsMap.get(key);
+        }
+        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+        AbstractEntityPersister persister = ((AbstractEntityPersister) sessionFactory.getClassMetadata(clazz));
+        for (Field field : org.reflections.ReflectionUtils.getAllFields(clazz)) {
+            try {
+                String[] columnNames = persister.getPropertyColumnNames(field.getName());
+                if (columnNames.length > 0) {
+                    String column = columnNames[0];
+                    if (tableField.equals(column)) {
+                        tableFieldsMap.put(key, field);
+                        return field;
+                    }
+                }
+            } catch (MappingException ex) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(ex.getMessage());
+                }
+            }
+        }
+
+        return null;
+
     }
 
     public CommonDataModel findUniqueRecord(Class<?> clazz, CommonDataModel element, ArrayNode columnArr) {
@@ -525,12 +553,13 @@ public class EntityUtils implements InitializingBean{
         }
         return tableName;
     }
+
     private boolean checkGenerateMD5Hash(String entityName) {
         MetaDataService metaDataService = SpringContext.getBean(MetaDataService.class);
         MetaData metaData = metaDataService.fetchByValue(entityName, "DynamicUniqueKey");
 
         boolean generateHash = false;
-        if (metaData != null && metaData.getDomainValues()!=null) {
+        if (metaData != null && metaData.getDomainValues() != null) {
             JsonNode dynamicKeysNode = metaData.getDomainValues().get(0);
             if (dynamicKeysNode != null) {
                 generateHash = dynamicKeysNode.has("generateHash") && dynamicKeysNode.get("generateHash").asBoolean();
@@ -574,11 +603,11 @@ public class EntityUtils implements InitializingBean{
                 }
             }
         } else if (findByDynamicKeyOnly) {
-          //  throw new ValidationFailedException("dynamic key doesnot exist");
+            //  throw new ValidationFailedException("dynamic key doesnot exist");
         } else {
             genratedId = UUID.randomUUID().toString();
         }
-        if(generateHash){
+        if (generateHash) {
             return genratedId.equals("") ? UUID.randomUUID().toString() : EncodingUtils.getMd5(genratedId);
         }
         return genratedId.equals("") ? UUID.randomUUID().toString() : genratedId;
@@ -608,18 +637,59 @@ public class EntityUtils implements InitializingBean{
         return List.of();
     }
 
-    private static EntityUtils instance;
-    public static EntityUtils get() {
-        return instance;
-    }
-
     @Override
     public void afterPropertiesSet() {
         setInstance(this);
     }
-    private static synchronized void setInstance(EntityUtils e) {
-        instance = e;
+
+    public EntityInfo getEntityInfo(String entityName) {
+        return getEntityInfo(getEntityClass(entityName));
     }
 
+    /**
+     * Gets the table field.
+     *
+     * @param clazz the clazz
+     * @return the field
+     */
+    public EntityInfo getEntityInfo(Class<?> clazz) {
+        if (entityInfoMap.containsKey(clazz.getName())) {
+            return entityInfoMap.get(clazz.getName());
+        }
+        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+        AbstractEntityPersister persister = ((AbstractEntityPersister) sessionFactory.getClassMetadata(clazz));
+        EntityInfo einfo = new EntityInfo();
+        einfo.setClassName(clazz.getName());
+        einfo.setTableName(getTableName(clazz));
+        Map<String, String> fieldMap = new LinkedHashMap<>();
+        Map<String, EntityFieldInfo> fieldInfoMap = new LinkedHashMap<>();
 
+        for (Field field : org.reflections.ReflectionUtils.getAllFields(clazz)) {
+            try {
+                String[] columnNames = persister.getPropertyColumnNames(field.getName());
+                if (columnNames.length > 0) {
+                    String column = columnNames[0];
+                    fieldMap.put(field.getName(), column);
+                    fieldInfoMap.put(field.getName(),getFieldInfo(field,column));
+                }
+            } catch (MappingException ex) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(ex.getMessage());
+                }
+            }
+        }
+        einfo.setFieldNameMap(fieldMap);
+        einfo.setFieldInfoMap(fieldInfoMap);
+        entityInfoMap.put(clazz.getName(), einfo);
+        return einfo;
+    }
+
+    private EntityFieldInfo getFieldInfo(Field field,String columnName){
+        var finfo = new EntityFieldInfo();
+        finfo.setName(columnName);
+        finfo.setDataType(field.getType().getSimpleName());
+        finfo.setTypeClass(field.getType().getName());
+        finfo.setPrimitive(field.getType().isPrimitive());
+        return finfo;
+    }
 }
