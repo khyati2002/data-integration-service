@@ -71,7 +71,7 @@ public class DistributedCache {
       localCacheMap = Boolean.parseBoolean(env.getProperty("redis.localCacheMap", BOOLEAN_FALSE_STRING));
       String redisUrl = env.getProperty("redisUrl");
       boolean clustered = Boolean.parseBoolean(env.getProperty("cacheClustered", BOOLEAN_FALSE_STRING));
-      int subscriptionConnectionPoolSize = Integer.parseInt(env.getProperty("subscriptionConnectionPoolSize", "50"));
+      int subscriptionConnectionPoolSize = Integer.parseInt(env.getProperty("subscriptionConnectionPoolSize", "30"));
       int subscriptionsPerConnection = Integer.parseInt(env.getProperty("subscriptionsPerConnection", "5"));
 
       if (StringUtils.isNotBlank(redisUrl)) {

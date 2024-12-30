@@ -46,7 +46,7 @@ app:
   jobs:
     from-kafka-to-db:
       consumer-group-id: lob-integration-consumer
-      main-topic-name: flink-test-1
+      main-topic-name: flink-test
       dlq-topic-name: flink-test-dlt
       db:
         url: "jdbc:mysql://dev-rds.ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/ckunnatiuat_flink"
@@ -56,7 +56,7 @@ app:
       bucket-name: dataplatform-flink
       file-type: csv  # can be csv or excel
       file-key: SmileStore_20240905.csv
-      topic: flink-test-1
+      topic: flink-test
       dead-letter-topic: flink-test-dlt
       flink:
         parallelism:
