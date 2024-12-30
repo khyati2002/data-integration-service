@@ -29,6 +29,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.Serializable;
 import java.util.*;
 import org.redisson.config.Config;
@@ -70,8 +71,8 @@ public class DistributedCache {
       localCacheMap = Boolean.parseBoolean(env.getProperty("redis.localCacheMap", BOOLEAN_FALSE_STRING));
       String redisUrl = env.getProperty("redisUrl");
       boolean clustered = Boolean.parseBoolean(env.getProperty("cacheClustered", BOOLEAN_FALSE_STRING));
-      int subscriptionConnectionPoolSize = Integer.parseInt(env.getProperty("subscriptionConnectionPoolSize", "250"));
-      int subscriptionsPerConnection = Integer.parseInt(env.getProperty("subscriptionsPerConnection", "25"));
+      int subscriptionConnectionPoolSize = Integer.parseInt(env.getProperty("subscriptionConnectionPoolSize", "50"));
+      int subscriptionsPerConnection = Integer.parseInt(env.getProperty("subscriptionsPerConnection", "5"));
 
       if (StringUtils.isNotBlank(redisUrl)) {
          Config config = new Config().setCodec(getCodec());
@@ -84,6 +85,7 @@ public class DistributedCache {
          } else {
             config.useSingleServer().
                     setTimeout(30000)
+                    .setConnectionMinimumIdleSize(5)
                     .setRetryAttempts(5)
                     .setSubscriptionConnectionPoolSize(subscriptionConnectionPoolSize)
                     .setSubscriptionsPerConnection(subscriptionsPerConnection)
@@ -328,6 +330,13 @@ public class DistributedCache {
          RTopic topic = redisson.getTopic(env() + "-" + UPDATE_PUBSUB_TOPIC);
          long clientsReceivedMessage = topic.publish(e);
          logger.debug("Cache published event ->{} for event:{}", clientsReceivedMessage, e);
+      }
+   }
+
+   @PreDestroy
+   public void cleanup() {
+      if (redisson != null) {
+         redisson.shutdown();
       }
    }
 }

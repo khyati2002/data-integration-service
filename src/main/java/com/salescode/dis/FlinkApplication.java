@@ -28,6 +28,8 @@ public class FlinkApplication implements CommandLineRunner {
         //     throw new IllegalArgumentException("No job specified. Please provide a job name to execute.");
         // }
         System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
+        System.setProperty("sun.net.maxDatagramSockets", "2048");
+        System.setProperty("illegal-access", "deny");
         SpringApplication.run(FlinkApplication.class, args);
     }
 

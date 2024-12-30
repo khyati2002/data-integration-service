@@ -6,6 +6,11 @@ config:
 logging:
   level:
     root: info
+    org.redisson: DEBUG
+
+sun:
+  net:
+    maxDatagramSockets: 2048
 
 spring:
   application:
