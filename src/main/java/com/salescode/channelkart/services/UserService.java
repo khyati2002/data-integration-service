@@ -14,6 +14,7 @@ import com.salescode.channelkart.models.*;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.RoleName;
 import com.salescode.channelkart.models.SupplierMetaData;
+import com.salescode.channelkart.permission.services.AttributeUpdateOverrideManager;
 import com.salescode.channelkart.repository.UserRepository;
 import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.services.enums.OperationType;
@@ -73,6 +74,8 @@ public class UserService extends AbstractCDMService<User> {
     @Autowired private LocationService locationService;
 
     private DistributedCache distributedCache;
+    @Autowired
+    private AttributeUpdateOverrideManager attributeUpdateOverrideManager;
 
     public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice,UserRepository userRepository, DistributedCache distributedCache) {
         super(userRepository);
@@ -432,7 +435,7 @@ public class UserService extends AbstractCDMService<User> {
 
 
         List<HierarchyMetaData> tempList = NullUtils.isNull(cdmObject.getImmediateParent())?dbrecordsCopy.getImmediateParent():cdmObject.getImmediateParent();
-      //  attributeUpdateOverrideManager.mergeProperties(cdmObject,dbrecordsCopy);
+        attributeUpdateOverrideManager.mergeProperties(cdmObject,dbrecordsCopy);
 
         Map<String,HierarchyMetaData> hmMap = new HashMap<>();
         if(dbrecordsCopy.getImmediateParent() != null) dbrecordsCopy.getImmediateParent().forEach(h->hmMap.put(h.getImmediateParent(),h));

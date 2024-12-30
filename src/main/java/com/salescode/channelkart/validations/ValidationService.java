@@ -1,11 +1,15 @@
 package com.salescode.channelkart.validations;
 
-import com.salescode.channelkart.cache.AppCacheManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.salescode.channelkart.cache.DistributedCache;
 import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.channelkart.models.GenericEntity;
+import com.salescode.channelkart.repository.GenericEntityRepository;
 import com.salescode.channelkart.security.Function;
 import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,8 +26,15 @@ public class ValidationService {
 //	GroupInfoController groupInfoController;
 
 	private static final String VALIDATION_GROUP_KEY="ck_validation_rule";
-	
+
 	public static final String PREFIX = "batch-{}";
+	private final DistributedCache distributedCache;
+	private final GenericEntityRepository genericEntityRepository;
+
+	public ValidationService(DistributedCache distributedCache, GenericEntityRepository genericEntityRepository) {
+		this.distributedCache = distributedCache;
+		this.genericEntityRepository = genericEntityRepository;
+	}
 
 	public ValidationResult validate(CommonDataModel cdm,Optional<String> validationExcludeGroupName) {
 
@@ -45,14 +56,14 @@ public class ValidationService {
 		String lob = SecurityContextUtils.getLob();
 		List<String> validationExcludeGroup=validationExcludeGroupName.isPresent() && StringUtils.isNotBlank(validationExcludeGroupName.get()) ?getExcludeObjectIds(VALIDATION_GROUP_KEY,validationExcludeGroupName.get()):new ArrayList<>();
 
-		
+
 		List<RuleInfo> rules = RuleRegistry.INSTANCE.get(lob,StringUtils.format(PREFIX, cdm.getClass().getSimpleName()));
-		
+
 		List<RuleResult> ruleResult = rules!=null? rules.stream().filter(rule->!(validationExcludeGroup.contains(rule.getId())))
 				.map(f->RuleLogicEngine.INSTANCE.execute(cdm, f))
 				.collect(Collectors.toList()):new ArrayList<>();
 		return  evaluateResults(ruleResult);
-		
+
 	}
 
 	private ValidationResult evaluateResults(List<RuleResult> ruleResult) {
@@ -96,10 +107,16 @@ public class ValidationService {
 	}
 
 	private List<String> getExcludeObjectIds(String type,String name){
-		// fixme
-//		List<String> objectIds= AppCacheManager.getInstance().withCache(SecurityContextUtils.getLob()+":"+type,name, k-> groupInfoController.readGroup(type, name).getObjectIdList());
-//		return objectIds.isEmpty()?new ArrayList<>(1):objectIds;
-		return new ArrayList<>();
+		return distributedCache.withCache(SecurityContextUtils.getLob(), null, "validationExcludeGroup-"+name,s -> {
+			List<GenericEntity> excludeRecord = genericEntityRepository.findByNameAndKey1AndKey2("entity-group", name, type);
+			var a = excludeRecord.stream().map(e -> toList((ArrayNode) e.getPayload().get("objectIdList"))).findFirst().orElse(null);
+            return ObjectUtils.isNotEmpty(a) ? a : new ArrayList<>();
+		});
 	}
 
+	private List<String> toList(ArrayNode an){
+		List<String> oidList = new ArrayList<>();
+		an.forEach(n-> oidList.add(n.textValue()));
+		return oidList;
+	}
 }

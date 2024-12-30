@@ -37,7 +37,7 @@ public class KafkaConsumerJob {
 
 
     public void executeJob() throws Exception {
-        int parallel = 5;
+        int parallel = 8;
 
         // Set the default parallelism to 8 for the execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();

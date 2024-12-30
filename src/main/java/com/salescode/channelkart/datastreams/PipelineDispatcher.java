@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -275,7 +276,7 @@ public class PipelineDispatcher {
             List<RuleResult> ruleResult = response.getValidation().getSuccessMessages();
             String successMessage = org.apache.commons.lang.StringUtils
                     .join(ruleResult.stream().map(RuleResult::getMessage
-                    ).collect(Collectors.toList()), SEPARATOR);
+                    ).filter(ObjectUtils::isNotEmpty).collect(Collectors.toList()), SEPARATOR);
             successMessageList.add(StringUtils.format(successMessage));
         }
         dataset.get(entityClass).addAll(response.getEnrichment().getEnrichedData());

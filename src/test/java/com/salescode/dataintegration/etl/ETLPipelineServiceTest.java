@@ -29,32 +29,36 @@ class ETLPipelineServiceTest {
     @Test
     void execute() {
         etlPipelineService.execute("{\n" +
-                "    \"groupId\": \"USR000008\",\n" +
+                "    \"requestId\": \"a6d6e1f1-bb5f-460a-82bf-e94d4d3446ea\",\n" +
+                "    \"groupId\": \"2024-12-19\",\n" +
+                "    \"fileId\": null,\n" +
                 "    \"lob\": \"ckuatunnati\",\n" +
+                "    \"submittedBy\": null,\n" +
                 "    \"transformerInfo\": [\n" +
                 "        {\n" +
                 "            \"entityName\": \"OutletDetails\",\n" +
+                "            \"transformerId\": \"unnati_csp_outlet_master_mdm\",\n" +
                 "            \"operationType\": \"insert\",\n" +
-                "            \"transformerId\": \"unnati_csp_outlet_master_mdm\"\n" +
+                "            \"preprocessValidationExcludeGroup\": \"outlet_validation_exclude\"\n" +
                 "        }\n" +
                 "    ],\n" +
                 "    \"topicName\": \"flink-test\",\n" +
                 "    \"preserveOnFailure\": true,\n" +
                 "    \"features\": [\n" +
                 "        {\n" +
-                "            \"UID\": \"C20220005809717\",\n" +
-                "            \"CREATIONDATE\": \"2024-06-10 04:08:01.873\",\n" +
+                "            \"UID\": \"180600002708\",\n" +
+                "            \"CREATIONDATE\": \"2024-12-19 02:48:11.067\",\n" +
                 "            \"PICKUPDATE\": null,\n" +
-                "            \"DISTRICT\": \"EDIS\",\n" +
-                "            \"Branch\": \"EVIZ\",\n" +
-                "            \"CUSTName\": \"VISHAKA PALOUR\",\n" +
-                "            \"OwnerName\": \"VISHAKA PALOUR\",\n" +
+                "            \"DISTRICT\": \"SDIS\",\n" +
+                "            \"Branch\": \"SHYD\",\n" +
+                "            \"CUSTName\": \"SAI VENKATESWARA K/G (B/S SHIVA SAI)\",\n" +
+                "            \"OwnerName\": \"SAI VENKATESWARA K/G (B/S SHIVA SAI)\",\n" +
                 "            \"ChannelType\": \"Retail\",\n" +
-                "            \"OutletType\": \"Convenience Outlet\",\n" +
-                "            \"LoyaltyType\": \"Retail Others\",\n" +
+                "            \"OutletType\": \"Grocery\",\n" +
+                "            \"LoyaltyType\": \"Retail Class B\",\n" +
                 "            \"FoodsTier\": null,\n" +
                 "            \"PCPTier\": null,\n" +
-                "            \"CustAddress\": \"KARANAM GARI JN\",\n" +
+                "            \"CustAddress\": \"# 8-4-36/J/275 Site-3 NRR Puram - 988572945 # 8-4-\",\n" +
                 "            \"CustState\": null,\n" +
                 "            \"CustCity\": null,\n" +
                 "            \"PIN\": null,\n" +
@@ -72,19 +76,24 @@ class ETLPipelineServiceTest {
                 "            \"AutoRedemption\": \"Y\",\n" +
                 "            \"Active\": \"Y\",\n" +
                 "            \"TYPE\": \"non loyalty\",\n" +
-                "            \"OutletName\": \"VISHAKA PALOUR\",\n" +
+                "            \"OutletName\": \"SAI VENKATESWARA K/G (B/S SHIVA SAI)\",\n" +
                 "            \"supplierMapping\": [\n" +
                 "                {\n" +
-                "                    \"CustID\": \"UK029\",\n" +
-                "                    \"SIFYID\": \"VI3493CIS722UK029\",\n" +
-                "                    \"WDDest\": \"VI3493\",\n" +
-                "                    \"UID\": \"C20220005809717\",\n" +
-                "                    \"RCSID\": \"181204899725\",\n" +
-                "                    \"WDName\": \"SRI DEVAKI LOGISTICS\"\n" +
+                "                    \"CustID\": \"IMP092401721\",\n" +
+                "                    \"SIFYID\": \"HY382410TRS129IMP092401721\",\n" +
+                "                    \"WDDest\": \"HY382410\",\n" +
+                "                    \"UID\": \"180600002708\",\n" +
+                "                    \"RCSID\": \"180600002708\",\n" +
+                "                    \"WDName\": \"KUMARVELU BROTHERS\"\n" +
                 "                }\n" +
                 "            ]\n" +
                 "        }\n" +
-                "    ]\n" +
+                "    ],\n" +
+                "    \"loginId\": \"integration_user\",\n" +
+                "    \"offset\": null,\n" +
+                "    \"retryCount\": null,\n" +
+                "    \"ignoreS3Log\": false,\n" +
+                "    \"headersMap\": null\n" +
                 "}");
     }
 
