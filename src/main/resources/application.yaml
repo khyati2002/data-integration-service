@@ -22,9 +22,9 @@ spring:
         jdbc:
           fetch_size: 500
 
-redisUrl : redis://dev-elasticache-redis-cluster.zymj1k.0001.aps1.cache.amazonaws.com:6379
+redisUrl: redis://dev-elasticache-redis-cluster.zymj1k.0001.aps1.cache.amazonaws.com:6379
 redis:
-    localCacheMap : true
+    localCacheMap: true
 
 channelkart:
   lobs: ckuatunnati
