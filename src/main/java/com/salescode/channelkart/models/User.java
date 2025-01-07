@@ -840,10 +840,9 @@ public class User extends CommonDataModel {
 //		this.activeNotificationChannels = activeNotificationChannels;
 //	}
 
-
+    @Override
 	public String hash() {
-		return loginId ;
-		//super.hash();
+		return loginId + super.hash();
 	}
 
 	/**

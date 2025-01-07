@@ -385,40 +385,6 @@ public class EntityUtils implements InitializingBean {
         return null;
     }
 
-//    public CommonDataModel findUniqueRecord(Class<?> clazz, CommonDataModel element) {
-//        try {
-//            String tablename = getTableName(clazz);
-//            List<UniqueKeyContainer> ukcontainer = getUniqueKeyContainer(clazz);
-//            if (ukcontainer.isEmpty()) {
-//                UniqueKeyContainer uk = new UniqueKeyContainer();
-//                uk.setNativeName("id");
-//                uk.setPath("id");
-//                ukcontainer.add(uk);
-//            }
-//            StringBuilder buffer1 = new StringBuilder(getBaseSQL(tablename));
-//            StringBuilder buffer2 = new StringBuilder();
-//            if (buffer2.length() > 0) {
-//                buffer2.append(" or ");
-//            }
-//            StringBuilder buffer3 = new StringBuilder();
-//            for (UniqueKeyContainer container : ukcontainer) {
-//                Object value = getFieldValue(clazz, container, element);
-//                fillTempbuffer(element,container,value,buffer3);
-//            }
-//            buffer2.append(buffer3);
-//            buffer1.append(buffer2);
-//            Query sqlquery = entitymanager.createNativeQuery(buffer1.toString(), clazz);
-//            return execute(sqlquery);
-//        }
-//        catch(NoResultException nex) {
-//            return null;
-//        }
-//        catch (Exception ex) {
-//            throw new UnexpectedResultException(ex,"Error while fetching unique records. Reason : {}", ex.getMessage());
-//        }
-//
-//    }
-
     private StringBuilder generateConditionFromValue(Object value) {
         StringBuilder result = new StringBuilder();
         if (value == null) {
@@ -502,6 +468,100 @@ public class EntityUtils implements InitializingBean {
 
         return null;
 
+    }
+
+    public List<CommonDataModel> findRecords(Class<?> clazz, List<CommonDataModel> element) {
+        ArrayNode dynamicPrimaryKeys = fetchDynamicPrimaryKeys(clazz.getSimpleName());
+        if (dynamicPrimaryKeys.size() > 0) {
+            return findUniqueRecordIn(clazz, element, dynamicPrimaryKeys);
+        } else {
+            return findUniqueRecords(clazz, element);
+        }
+    }
+
+    public List<CommonDataModel> findUniqueRecords(Class<?> clazz, List<CommonDataModel> elements) {
+        try {
+
+            String tablename = getTableName(clazz);
+            List<UniqueKeyContainer> ukcontainer = getUniqueKeyContainer(clazz);
+            if (ukcontainer != null && !ukcontainer.isEmpty()) {
+                StringBuilder buffer1 = new StringBuilder(getBaseSQL(tablename));
+                StringBuilder buffer2 = new StringBuilder();
+                Iterator<CommonDataModel> cdmiter = elements.iterator();
+                while (cdmiter.hasNext()) {
+                    CommonDataModel element = cdmiter.next();
+                    if (buffer2.length() > 0) {
+                        buffer2.append(" or ");
+                    }
+                    StringBuilder buffer3 = new StringBuilder();
+                    for (UniqueKeyContainer container : ukcontainer) {
+                        Object value = getFieldValue(clazz, container, element);
+                        fillBuffer(element,container,value,buffer3);
+                    }
+                    buffer2.append(buffer3);
+                }
+                buffer1.append(buffer2);
+                Query sqlquery = entitymanager.createNativeQuery(buffer1.toString(), clazz);
+                return sqlquery.getResultList();
+            } else {
+                return new ArrayList<>();
+            }
+
+        } catch (Exception ex) {
+            logger.error("Error while fetching unique columns. Please check @UniqueKey configuration", ex);
+        }
+        return List.of();
+
+    }
+
+    private void fillBuffer(CommonDataModel element,UniqueKeyContainer container,Object value,StringBuilder buffer3)
+            throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        try {
+            StringBuilder buffer4 = new StringBuilder();
+            if (PropertyUtils.getPropertyType(element, container.getPath()) == String.class) {
+                buffer4.append("'").append(value).append("'");
+            } else {
+                buffer4.append(value);
+            }
+            if (!buffer4.toString().isEmpty()) {
+                if (buffer3.length() > 0) {
+                    buffer3.append(" and ");
+                }
+                buffer3.append(container.getNativeName()).append("=").append(buffer4);
+            }
+        } catch (NestedNullException nestedex) {
+            logger.debug("'{}' found null for unique key generation", container.getPath());
+        }
+    }
+
+    public List<CommonDataModel> findUniqueRecordIn(Class<?> clazz, List<CommonDataModel> elements, ArrayNode columnArr) {
+        String tablename = getTableName(clazz);
+        StringBuilder buffer1 = new StringBuilder(getBaseSQL(tablename));
+        StringBuilder buffer2 = new StringBuilder();
+        Iterator<CommonDataModel> cdmiter = elements.iterator();
+        while (cdmiter.hasNext()) {
+            CommonDataModel element = cdmiter.next();
+            if (buffer2.length() > 0) {
+                buffer2.append(",");
+            } else {
+                buffer2.append(" id in ( ");
+            }
+            String value = "";
+            for (int i = 0; i < columnArr.size(); i++) {
+                String tempVal = String.valueOf(getBeanProperty(element, columnArr.get(i).asText()));
+                if (tempVal != null) {
+                    if (i > 0) {
+                        value = new StringBuilder(value).append("-").append(tempVal.toLowerCase()).toString();
+                    } else {
+                        value = new StringBuilder(value).append(tempVal.toLowerCase()).toString();
+                    }
+                }
+            }
+            buffer2.append("'").append(StringUtils.escapeSql(value.replace(" ", "-"))).append("'");
+        }
+        buffer1.append(buffer2.append(" ) "));
+        Query sqlquery = entitymanager.createNativeQuery(buffer1.toString(), clazz);
+        return sqlquery.getResultList();
     }
 
     public CommonDataModel findUniqueRecord(Class<?> clazz, CommonDataModel element, ArrayNode columnArr) {
@@ -691,5 +751,30 @@ public class EntityUtils implements InitializingBean {
         finfo.setTypeClass(field.getType().getName());
         finfo.setPrimitive(field.getType().isPrimitive());
         return finfo;
+    }
+
+    public Set<String> getUniqueKeys(Class<?> clazz) {
+        ArrayNode dynamicKeys = fetchDynamicPrimaryKeys(clazz.getSimpleName());
+        if (dynamicKeys.size() > 0) {
+            Set<String> uniquekeys = new HashSet<>();
+            dynamicKeys.forEach(dynamicKey -> {
+                String[] splitter = dynamicKey.asText().split("\\.");
+                if (splitter.length > 0) {
+                    uniquekeys.add(splitter[0]);
+                } else uniquekeys.add(dynamicKey.asText());
+            });
+
+            return uniquekeys;
+        } else {
+            List<UniqueKeyContainer> containers = getUniqueKeyContainer(clazz);
+            Set<String> uniquekeys = new HashSet<>();
+            containers.forEach(action -> {
+                String[] splitter = action.getPath().split("\\.");
+                if (splitter.length > 0) {
+                    uniquekeys.add(splitter[0]);
+                } else uniquekeys.add(action.getPath());
+            });
+            return uniquekeys;
+        }
     }
 }

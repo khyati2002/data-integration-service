@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -71,7 +70,6 @@ public class LocationService extends AbstractCDMService<Location> {
         return findByLocationHierarchy(locationHierarchy, true);
     }
 
-    Map<String,Location> map = new ConcurrentHashMap<>();
     public Location findByLocationHierarchy(String locationHierarchy, boolean cached) {
         String lob = SecurityContextUtils.getLob();
         Function<String,Location> function = (String locationHie)->{

@@ -18,10 +18,7 @@ import com.salescode.channelkart.permission.services.AttributeUpdateOverrideMana
 import com.salescode.channelkart.repository.UserRepository;
 import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.services.enums.OperationType;
-import com.salescode.channelkart.utils.CdmDiffUtil;
-import com.salescode.channelkart.utils.EntityUtils;
-import com.salescode.channelkart.utils.JSONUtils;
-import com.salescode.channelkart.utils.NullUtils;
+import com.salescode.channelkart.utils.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -199,17 +196,16 @@ public class UserService extends AbstractCDMService<User> {
     }
 
     public User getLoadedUserObject(String lid,boolean hierarchy) {
-//        User u = TimerUtils
-//                .withTime("Time taken UserService record ", () -> userRepository.findByLoginId(lid));
+        User u = TimerUtils
+                .withTime("Time taken UserService record ", () -> userRepository.findByLoginId(lid));
 
-        User u = userRepository.findByLoginId(lid);
         if (u != null) {
             loadUserAssociationObjects(u);
             if (hierarchy && u.getImmediateParent() == null) {
-//                TimerUtils
-//                        .withTime("Time taken UserService hierarchyMetaDataService load ", () ->
-                                u.setImmediateParent(hierarchyMetaDataService.findParentThroughUserLoginId(lid));
-//                        );
+                TimerUtils
+                        .withTime("Time taken UserService hierarchyMetaDataService load ", () ->
+                                u.setImmediateParent(hierarchyMetaDataService.findParentThroughUserLoginId(lid))
+                        );
             }
         }
         return u;
@@ -321,6 +317,10 @@ public class UserService extends AbstractCDMService<User> {
         if(user.getPassword()==null){
             user.setPassword(DEFAULT_ENCODED_PASSWORD);
         }
+        if(user.getBlocked()!=true) {
+            user.setBlocked(false);
+        }
+
 
         return user;
     }

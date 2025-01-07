@@ -1,9 +1,16 @@
 package com.salescode.channelkart.services;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.salescode.channelkart.batch.BatchService;
 import com.salescode.channelkart.batch.hash.BatchContainer;
+import com.salescode.channelkart.enrichments.DataEnrichmentService;
+import com.salescode.channelkart.enrichments.EnrichmentOperationResult;
+import com.salescode.channelkart.enrichments.EnrichmentPhase;
+import com.salescode.channelkart.enrichments.Status;
+import com.salescode.channelkart.exceptions.CustomRuntimeException;
+import com.salescode.channelkart.exceptions.SystemRuntimeException;
 import com.salescode.channelkart.models.CommonDataModel;
-import com.salescode.channelkart.models.MetaData;
 import com.salescode.channelkart.models.Role;
 import com.salescode.channelkart.models.User;
 import com.salescode.channelkart.models.diff.Change;
@@ -11,11 +18,9 @@ import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.repository.CommonJpaRepository;
 import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.services.enums.OperationType;
-import com.salescode.channelkart.utils.CdmDiffUtil;
-import com.salescode.channelkart.utils.EntityUtils;
-import com.salescode.channelkart.utils.IdGenerator;
-import com.salescode.channelkart.utils.NullUtils;
+import com.salescode.channelkart.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
@@ -26,6 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -50,6 +56,12 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private BatchService batchService;
+
+    @Autowired
+    private DataEnrichmentService enrichmentService;
 
 
     public AbstractCDMService(CommonJpaRepository<T, String> repository) {
@@ -105,17 +117,23 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         }
     }
 
+    protected void addHash(CommonDataModel model) {
+        if (model.canHash()) {
+            batchService.addHashIfPresent( model);
+        }
+    }
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public T save(T cdmObject) {
         final T inObject = cdmObject;
         String existingHash = cdmObject.getHash();
-//        TimerUtils.withTime("Time taken to generate Hash "+cdmObject.getClass().getName()+":"+cdmObject.getId(),
-//                () -> addHash(inObject));
-//        if (!cdmObject.forceHash() && cdmObject.canHash() && StringUtils.isNotEmpty(existingHash) && existingHash.equals(cdmObject.getHash())) {
-//            // no need to save this record because this hash is same
-//            return cdmObject;
-//        }
+        TimerUtils.withTime("Time taken to generate Hash "+cdmObject.getClass().getName()+":"+cdmObject.getId(),
+                () -> addHash(inObject));
+        if (!cdmObject.forceHash() && cdmObject.canHash() && StringUtils.isNotEmpty(existingHash) && existingHash.equals(cdmObject.getHash())) {
+            // no need to save this record because this hash is same
+            return cdmObject;
+        }
         T saved = null;
 //        if(isNativeBatchSave(cdmObject)) {
 //            saved=TimerUtils.withTime("Time taken to native finish native save operation "+cdmObject.getClass().getName()+":"+cdmObject.getId(), () -> nativeBatchSave(Arrays.asList(inObject),null).get(0));
@@ -126,15 +144,16 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
            //     apiFilterAuthorizationManager.assertPermission( cdmObject);
             }
             final T object = cdmObject;
-            T sreturn = repository.save(object);
-            fixChanges( cdmObject , sreturn);
+        saved =TimerUtils.withTime("Time taken to JPA save  "+cdmObject.getClass().getSimpleName()+":"+cdmObject.getId(),()-> {
+            T object1 = preSaveEnrichment(object);
+            T sreturn = repository.save(object1);
+            fixChanges( object1, sreturn);
+            return sreturn;
+          });
 
             repository.flush();
 
-        T finalCdmObject = sreturn;
-        T finalSaved = sreturn;
-
-        return finalSaved;
+        return saved;
     }
      public T fillCommonAttributes(T cdm){
          return fillCommonAttributes(cdm, false, new HashSet<>(), null);
@@ -152,17 +171,15 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     }
 
 
+    private T preSaveEnrichment(T cdm){
+        EnrichmentOperationResult er = enrichmentService.enrich(cdm, EnrichmentPhase.PRE_SAVE);
+        if(!er.getStatus().equals(Status.OK)) {
+            throw new SystemRuntimeException((ObjectUtils.isNotEmpty(er.getEnrichmentResults()))?er.getEnrichmentResults().get(0).getMessage():
+                    "Some error occured with pre-enrichment while storing "+cdm.toString());
+        }
+        return (T) (ObjectUtils.isNotEmpty(er.getEnrichedData())?er.getEnrichedData().get(0):cdm);
+    }
 
-
-//    private T preSaveEnrichment(T cdm){
-//        EnrichmentOperationResult er = enrichmentService.enrich(cdm, EnrichmentPhase.PRE_SAVE);
-//        if(!er.getStatus().equals(Status.OK)) {
-//            throw new SystemRuntimeException((ObjectUtils.isNotEmpty(er.getEnrichmentResults()))?er.getEnrichmentResults().get(0).getMessage():
-//                    "Some error occured with pre-enrichment while storing "+cdm.toString());
-//        }
-//        return (T) (ObjectUtils.isNotEmpty(er.getEnrichedData())?er.getEnrichedData().get(0):cdm);
-//    }
-//
 
     private boolean isNativeBatchSave(Iterable<T> elements) {
         Iterator<T> iterator = elements.iterator();
@@ -179,7 +196,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<T> batchSave(Iterable<T> iterObj, IdGenerator idGenerator) throws Exception {
-       // iterObj.forEach(this::preSaveEnrichment);
+        iterObj.forEach(this::preSaveEnrichment);
         if(isNativeBatchSave(iterObj)) {
             throw new Exception("Native batch save not allowed");
         }else {
@@ -221,10 +238,10 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         for (T element : elements) {
             fillCommonAttributes(element, generator);
             if (element.isCreate()) {
-                //addHash(element);
+               addHash(element);
                 newRecords.add(element);
             } else {
-                //addHash(element);
+                addHash(element);
                 existingRecords.add(element);
             }
         }
@@ -254,9 +271,9 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                 cdm.setId(EntityUtils.get().generateId(cdm));
             }
         }
-        //TimerUtils.withTime("Time taken to find changed value", () -> deltaAnalyzer.findAndSetDeltaChanges(cdm));
-
-        //setOperationType(cdm);
+//        TimerUtils.withTime("Time taken to find changed value", () -> deltaAnalyzer.findAndSetDeltaChanges(cdm));
+//
+//        setOperationType(cdm);
 
         if (cdm.getCreationTime() == null) {
             cdm.setCreationTime(Calendar.getInstance().getTime());
@@ -366,19 +383,37 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
             Class<T> clazz = (Class<T>) cdmobjects.iterator().next().getClass();
             List<List<T>> cdmbatch = ListUtils.partition(cdmobjects, fetchSize);
             String str = "Time taken to refresh :" + cdmobjects.size() + ", enitity :" + clazz.getSimpleName();
-//            return cdmbatch
-//                    .stream()
-//                    .map(l -> (List<T>) TimerUtils.withTime(str, s -> batchRefresh(clazz, l)))
-//                    .flatMap(List::stream)
-//                    .collect(Collectors.toList());
+            return cdmbatch
+                    .stream()
+                    .map(l -> (List<T>) TimerUtils.withTime(str, s -> batchRefresh(clazz, l)))
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList());
         }
         return cdmobjects;
+    }
+
+    protected List<? extends CommonDataModel> batchRefresh(Class<T> clazz, List<T> batchrecords) {
+        List<T> dbRecords = (List<T>) EntityUtils.get().findRecords(clazz, new ArrayList<>(batchrecords));
+        if(CollectionUtils.isNotEmpty(dbRecords)) {
+            return batchrecords.stream().map(element ->{
+                Optional<T> dataObj= dbRecords.stream().filter(p-> element.compare(p, true)).findFirst();
+                if(dataObj.isPresent()){
+                    T dbElement= dataObj.get();
+                    CdmDiffUtil.setOldModel(dbElement);
+                    EntityUtils.copyProperties(element, dbElement, "id","version");
+                    return dbElement;
+                }
+                return element;
+            }).collect(Collectors.toList());
+        }
+        return batchrecords;
     }
 
     @Override
     public T populateData(T cdmObject){
         return cdmObject;
     }
+
 
 
 }

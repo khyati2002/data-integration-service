@@ -708,16 +708,16 @@ public class OutletDetails extends CommonDataModel {
 				+ ", channel=" + channel + "]";
 	}
 
-//	@Override
-//	public boolean canHash() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean forceHash(){
-//		return this.getImmediateParent() != null && this.getImmediateParent().stream()
-//				.anyMatch(CommonDataModel::isCreate);
-//	}
+	@Override
+	public boolean canHash() {
+		return true;
+	}
+
+	@Override
+	public boolean forceHash(){
+		return this.getImmediateParent() != null && this.getImmediateParent().stream()
+				.anyMatch(CommonDataModel::isCreate);
+	}
 
 	/**
 	 * @return the normalizedHierarchy
