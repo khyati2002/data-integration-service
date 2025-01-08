@@ -7,6 +7,7 @@ import com.salescode.dis.flink.sinks.JOOQSink;
 import com.salescode.dis.flink.sources.DISKafkaSourceBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -62,9 +63,12 @@ public class KafkaConsumerJob {
                         .setParallelism(parallel)
                         .windowAll(TumblingProcessingTimeWindows.of(Time.milliseconds(batchTimeoutMs)))
                         .aggregate(new ListAggregator<ObjectNode>())
-                        .map(s->{
-                            log.info("Batch size processing {}", s.size());
-                            return s;
+                        .map(new MapFunction<List<ObjectNode>, List<ObjectNode>>() {
+                            @Override
+                            public List<ObjectNode> map(List<ObjectNode> s) throws Exception {
+                                log.info("Batch size processing {}", s.size());
+                                return (List<ObjectNode>) s;
+                            }
                         })
                         .process(new MessageProcessFunction(deadLetterTag))
                         .setParallelism(parallel);

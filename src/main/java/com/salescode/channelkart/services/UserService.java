@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.io.Serializable;
@@ -73,6 +75,9 @@ public class UserService extends AbstractCDMService<User> {
     private DistributedCache distributedCache;
     @Autowired
     private AttributeUpdateOverrideManager attributeUpdateOverrideManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public UserService(HierarchyMetaDataService hierarchyMetaDataService, RoleService roleService, UserParentService userparentservice,UserRepository userRepository, DistributedCache distributedCache) {
         super(userRepository);
@@ -281,6 +286,7 @@ public class UserService extends AbstractCDMService<User> {
                 Location loc=user.getLocationHierarchy();
                 loc = locationService.findLocationOrPersistLocation(loc);
                 user.setLocationHierarchy(loc);
+                entityManager.detach(user.getLocationHierarchy());
             }
             catch(Exception ex) {
                // throw new IllegalStateException("Error occured while setting location for user: "+user.getLoginId(),ex);

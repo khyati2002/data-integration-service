@@ -6,7 +6,7 @@ config:
 logging:
   level:
     root: info
-    org.redisson: DEBUG
+#    org.redisson: DEBUG
 
 sun:
   net:

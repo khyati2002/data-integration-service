@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
@@ -61,6 +63,9 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private AttributeUpdateOverrideManager attributeUpdateOverrideManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public OutletDetailsService(OutletDetailsRepository outletDetailsRepository, UserService userService, SupplierInfoService supplierInfoService, RoleService roleService, LocationService locationService) {
@@ -98,6 +103,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             Location location = outletDetails.getLocation();
             location = locationService.findLocationOrPersistLocation(location);
             outletDetails.setLocation(location);
+            entityManager.detach(outletDetails.getLocation());
             outletDetails.setLocationHierarchy(location);
         }
     }
