@@ -30,6 +30,7 @@ public class FlinkApplication implements CommandLineRunner {
         System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
         System.setProperty("sun.net.maxDatagramSockets", "2048");
         System.setProperty("illegal-access", "deny");
+        System.setProperty("java.io.serialization.validateSerialVersionUID","false");
         SpringApplication.run(FlinkApplication.class, args);
     }
 

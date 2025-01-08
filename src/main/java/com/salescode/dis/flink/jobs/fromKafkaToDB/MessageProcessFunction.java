@@ -40,6 +40,7 @@ public class MessageProcessFunction extends ProcessFunction<List<ObjectNode>, Li
         log.warn("Initializing Context");
         logger = Logger.getLogger(this.getClass());
         System.setProperty("sun.net.maxDatagramSockets", "2048");
+        System.setProperty("java.io.serialization.validateSerialVersionUID","false");
         ConfigurableApplicationContext run = SpringApplication.run(DataIntegrationApplication.class);
         log.info("Context {}" + run);
         etlPipelineService = run.getBean(ETLPipelineService.class);
