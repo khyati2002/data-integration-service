@@ -14,12 +14,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 public class OutletDetailsValidatorITCL extends AbstractRule<OutletDetails> {
-    /** The factory. */
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-
-    /** The validator. */
-    private Validator validator = factory.getValidator();
-
     /** The logger. */
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
