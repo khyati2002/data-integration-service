@@ -128,6 +128,8 @@ public class OutletDetails extends CommonDataModel {
 	@JoinColumn(
 			name = "location_hierarchy",
 			referencedColumnName = "location_hierarchy"
+			, updatable = false,
+			insertable = false
 	)
 	private Location location;
 
