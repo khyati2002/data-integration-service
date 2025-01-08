@@ -2,6 +2,8 @@ package com.salescode.channelkart.services;
 
 
 
+import com.salescode.channelkart.cache.AppCacheManager;
+import com.salescode.channelkart.cache.DistributedCache;
 import com.salescode.channelkart.models.CustomerAccountInfo;
 import com.salescode.channelkart.repository.CustomerAccountsRepository;
 import com.salescode.channelkart.security.SecurityContextUtils;
@@ -10,11 +12,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerAccountsService extends AbstractCDMService<CustomerAccountInfo> {
 
+    private final DistributedCache distributedCache;
     private CustomerAccountsRepository customerAccountsRepository;
 
-    public CustomerAccountsService(CustomerAccountsRepository repository) {
+    public CustomerAccountsService(CustomerAccountsRepository repository, DistributedCache distributedCache) {
         super(repository);
         this.customerAccountsRepository = repository;
+        this.distributedCache = distributedCache;
     }
 
     public String getTimeZone() {
@@ -36,7 +40,7 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccountI
     }
 
     public CustomerAccountInfo getCustomerAccountInfo(String lob){
-        return customerAccountsRepository.findByLob(lob);
+        return distributedCache.withCache(lob,null,"customerAccountInfo",(s)->customerAccountsRepository.findByLob(lob));
     }
 
     public String getAdminLoginId(){

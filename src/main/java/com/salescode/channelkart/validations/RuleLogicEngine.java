@@ -2,6 +2,7 @@ package com.salescode.channelkart.validations;
 
 import com.salescode.channelkart.models.CommonDataModel;
 import com.salescode.channelkart.scanner.ExternalRegistryScanner;
+import com.salescode.channelkart.utils.ReflectionUtils;
 import com.salescode.channelkart.utils.TimerUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class RuleLogicEngine {
 		if(ExternalRegistryScanner.getInstance().isProxyRule(rule.getImplementation())){
 			return ExternalRegistryScanner.getInstance().getValidationProxyRule();
 		}else {
-			AbstractRule ar = (AbstractRule) Class.forName(rule.getImplementation()).newInstance();
+			AbstractRule ar = (AbstractRule) ReflectionUtils.createInstance(rule.getImplementation());
 			ar.setRuleInfo(rule);
 			return ar;
 		}
