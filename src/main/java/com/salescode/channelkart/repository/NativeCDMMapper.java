@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NativeCDMMapper {
 
@@ -42,9 +43,9 @@ public class NativeCDMMapper {
 
 	private static ObjectMapper mapper = new ObjectMapper();
 
-	private static Map<Class, Map<String, Method>> cdmFieldsMap = new HashMap<>();
+	private static Map<Class, Map<String, Method>> cdmFieldsMap = new ConcurrentHashMap<>();
 
-	private static Map<Class<?>,Map<String, String>> camelCaseMap = new HashMap<>();
+	private static Map<Class<?>,Map<String, String>> camelCaseMap = new ConcurrentHashMap<>();
 
 	private boolean includeCommonFields = false;
 
