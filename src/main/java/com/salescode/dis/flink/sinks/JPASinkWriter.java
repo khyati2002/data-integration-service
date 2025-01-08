@@ -8,7 +8,9 @@ import com.salescode.channelkart.models.CommonDataModel;
 import org.apache.commons.io.IOExceptionWithCause;
 import org.apache.flink.api.connector.sink2.SinkWriter;
 
-public class JPASinkWriter implements SinkWriter<CommonDataModel> {
+import java.util.List;
+
+public class JPASinkWriter implements SinkWriter<List<CommonDataModel>> {
 
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
@@ -34,7 +36,7 @@ public class JPASinkWriter implements SinkWriter<CommonDataModel> {
     }
 
     @Override
-    public void write(CommonDataModel cdm, Context context) throws java.io.IOException, InterruptedException {
+    public void write(List<CommonDataModel> cdm, Context context) throws java.io.IOException, InterruptedException {
         try {
             System.out.println("About to write the record in DB, entity:"+cdm);
 //            entityManager.getTransaction().begin();

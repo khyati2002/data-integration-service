@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.channelkart.datastreams.PipelineDispatcher;
 import com.salescode.channelkart.dto.StreamingRawData;
 import com.salescode.channelkart.dto.StreamingRawData.Response;
@@ -22,7 +23,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,6 +42,7 @@ public class ETLPipelineService {
     private final IntegrationHistoryService ihs;
     private final Environment env;
     ObjectMapper objectMapper = JSONUtils.getObjectMapper();
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     private int retryCount;
     private KafkaIntegrationPublisher publisher = null;
@@ -46,6 +52,24 @@ public class ETLPipelineService {
         this.ihs = ihs;
         this.env = env;
         publisher = KafkaIntegrationPublisher.getInstance();
+    }
+
+    @SneakyThrows
+    public List<CommonDataModel> executeBatch(List<String> messages) {
+        List<CompletableFuture<List<CommonDataModel>>> futures = messages.stream()
+            .map(message -> CompletableFuture.supplyAsync(() -> {
+                try {
+                    return execute(message);
+                } catch (Exception e) {
+                    log.error("Failed to process message", e);
+                    return new ArrayList<CommonDataModel>();
+                }
+            }, executorService))
+            .collect(Collectors.toList());
+        return futures.stream()
+            .map(CompletableFuture::join)
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
     }
 
     @SneakyThrows

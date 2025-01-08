@@ -416,12 +416,12 @@ public class UserService extends AbstractCDMService<User> {
 
     @Override
     public User refresh(User cdmObject) {
-        var dbRecord = CdmDiffUtil.withOldModel(() -> (User) EntityUtils.get().findRecords(cdmObject.getClass(), cdmObject));
-        if (dbRecord != null) {
+        var dbRecord = CdmDiffUtil.withOldModel(() -> findByLoginId(cdmObject.getLoginId(),false));
+        if(dbRecord!=null){
             cdmObject.setOldModel(dbRecord.getOldModel());
-            User dbrecordsCopy = synchronizeNewObject(dbRecord, cdmObject);
-            setSupplierChanges(dbrecordsCopy, cdmObject);
-            setChanges(dbRecord, dbrecordsCopy);
+            User dbrecordsCopy = synchronizeNewObject(dbRecord,cdmObject);
+            setSupplierChanges(dbrecordsCopy,cdmObject);
+            setChanges(dbRecord,dbrecordsCopy);
             return dbrecordsCopy;
         }
         return cdmObject;
