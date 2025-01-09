@@ -32,11 +32,11 @@ redis:
     localCacheMap: true
 
 channelkart:
-  lobs: ckuatunnati
+  lobs: cktestitcloyalty
   environment: uat
 
 app:
-  lob: ckuatunnati
+  lob: cktestitcloyalty
   bundle:
     uri: "https://salescode-dev-uat.s3.ap-south-1.amazonaws.com/dataintegration/{lob}/dis-bundle.jar"
   kafka:
