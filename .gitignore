@@ -34,3 +34,4 @@ build/
 /BOOT-INF
 /META-INF
 .DS_Store
+dependency-reduced-pom.xml
