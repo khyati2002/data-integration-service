@@ -43,7 +43,7 @@ public class KafkaConsumerJob {
     @Value("${app.jobs.from-kafka-to-db.db.password}")
     private String password;
 
-    @Value("${app.kafka.batch.timeout.ms:1000}")
+    @Value("${app.kafka.batch.timeout.ms:250}")
     private long batchTimeoutMs;
 
     @Value("${app.kafka.batch.size:3}")
@@ -60,8 +60,9 @@ public class KafkaConsumerJob {
 
         SingleOutputStreamOperator<List<CommonDataModel>> sourceStream =
                 env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Integration Kafka Source")
-                        .setParallelism(parallel)
-                        .windowAll(TumblingProcessingTimeWindows.of(Time.milliseconds(batchTimeoutMs)))
+                        .setParallelism(5)
+//                        .windowAll(TumblingProcessingTimeWindows.of(Time.milliseconds(batchTimeoutMs)))
+                        .countWindowAll(4)
                         .aggregate(new ListAggregator<ObjectNode>())
                         .map(new MapFunction<List<ObjectNode>, List<ObjectNode>>() {
                             @Override
@@ -70,6 +71,7 @@ public class KafkaConsumerJob {
                                 return (List<ObjectNode>) s;
                             }
                         })
+                        .setParallelism(parallel)
                         .process(new MessageProcessFunction(deadLetterTag))
                         .setParallelism(parallel);
 

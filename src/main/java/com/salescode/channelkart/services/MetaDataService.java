@@ -37,7 +37,8 @@ public class MetaDataService extends AbstractCDMService<MetaData> {
     }
 
     public MetaData fetchByValue(String domainName,String domainType,boolean cached) {
-        return distributedCache.withCache(SecurityContextUtils.getLob(),SecurityContextUtils.getLob()+":"+domainName,domainType,(s)->fetchByValueFromDB(domainName,domainType));
+        return AppCacheManager.getInstance().withCache(SecurityContextUtils.getLob() + ":" + domainName, domainType,
+                (s) -> distributedCache.withCache(SecurityContextUtils.getLob(), SecurityContextUtils.getLob() + ":" + domainName, domainType, (r) -> fetchByValueFromDB(domainName, domainType)));
         //return fetchAll().stream().filter(f->f.getDomainName().equalsIgnoreCase(domainName) && f.getDomainType().equalsIgnoreCase(domainType)).findFirst().orElse(null);
     }
 

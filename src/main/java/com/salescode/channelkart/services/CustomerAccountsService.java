@@ -40,7 +40,8 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccountI
     }
 
     public CustomerAccountInfo getCustomerAccountInfo(String lob){
-        return distributedCache.withCache(lob,null,"customerAccountInfo",(s)->customerAccountsRepository.findByLob(lob));
+        return AppCacheManager.getInstance().withCache(null, "customerAccountInfo",
+                (r) -> distributedCache.withCache(lob, null, "customerAccountInfo", (s) -> customerAccountsRepository.findByLob(lob)));
     }
 
     public String getAdminLoginId(){
