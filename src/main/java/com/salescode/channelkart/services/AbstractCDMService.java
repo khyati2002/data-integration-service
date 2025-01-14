@@ -17,6 +17,7 @@ import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.models.enums.ActiveStatus;
 import com.salescode.channelkart.repository.CommonJpaRepository;
 import com.salescode.channelkart.security.SecurityContextUtils;
+import com.salescode.channelkart.services.enums.EntityOperation;
 import com.salescode.channelkart.services.enums.OperationType;
 import com.salescode.channelkart.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +34,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -62,6 +61,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     @Autowired
     private DataEnrichmentService enrichmentService;
+    private ChangeEventBroadcaster eventBroadcaster;
 
 
     public AbstractCDMService(CommonJpaRepository<T, String> repository) {
@@ -154,6 +154,15 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
             repository.flush();
 
         return saved;
+        T finalSaved = sreturn;
+        T finalCdmObject = cdmObject;
+        if (finalCdmObject.isCreate()) {
+            eventBroadcaster.broadcast(finalSaved, EntityOperation.INSERT);
+        } else {
+            eventBroadcaster.broadcast(finalSaved,EntityOperation.UPDATE);
+        }
+
+        return finalSaved;
     }
      public T fillCommonAttributes(T cdm){
          return fillCommonAttributes(cdm, false, new HashSet<>(), null);

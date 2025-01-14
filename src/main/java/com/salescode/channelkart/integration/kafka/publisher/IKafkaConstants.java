@@ -23,11 +23,13 @@ public class IKafkaConstants {
     /**
      * Event Topic Constants
      */
+    public static final String POST_FIX_EVENTS = "-event-streams";
     public static final String INTEGRATION_CLIENT_ID = "client1";
     private static final Logger LOGGER = LoggerFactory.getLogger(IKafkaConstants.class);
     private static final Object LOCK = new Object();
     private static final String KAFKA_BROKERS_CNST = "KAFKA_BROKERS";
     private static AdminClient adminClient = null;
+    public static final String EVENTS_CLIENT_ID = "client2";
 
     static {
         if (System.getenv(KAFKA_BROKERS_CNST) != null && !System.getenv(KAFKA_BROKERS_CNST).isEmpty()) {
@@ -73,6 +75,10 @@ public class IKafkaConstants {
         Map<String, NewPartitions> newPartitionSet = new HashMap<>();
         newPartitionSet.put(topicName, NewPartitions.increaseTo(PARTITION_COUNT));
         adminClient.createPartitions(newPartitionSet);
+    }
+
+    public static String getEventTopicName(String lob) {
+        return lob + POST_FIX_EVENTS;
     }
 
 

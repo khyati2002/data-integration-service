@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConversionException;
 import org.json.JSONArray;
@@ -217,6 +219,16 @@ public class JSONUtils {
             return OBJECT_MAPPER.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new ConversionException("Could not convert collection to json. input= " + object, e);
+        }
+    }
+
+    public static <T>List<T> toList(String input, Class<T> type) {
+        try {
+            CollectionType typeReference =
+                    TypeFactory.defaultInstance().constructCollectionType(List.class, type);
+            return OBJECT_MAPPER.readValue(input, typeReference);
+        } catch (JsonProcessingException e) {
+            throw new ConversionException("Could not convert to list of type " + type + ". input=" + input, e);
         }
     }
 }
