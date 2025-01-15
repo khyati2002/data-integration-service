@@ -8,6 +8,7 @@ import com.salescode.channelkart.scanner.ExternalRegistryScanner;
 import com.salescode.channelkart.services.SpringContext;
 import com.salescode.channelkart.transformers.TransformerRegistry;
 import com.salescode.channelkart.validations.RuleRegistry;
+import com.salescode.dataintegration.etl.metadata.registry.EventListenerRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,7 @@ public class StartupBooster {
             RuleRegistry.INSTANCE.loadAll(predicate, Boolean.TRUE);
             TransformerRegistry.INSTANCE.loadAll(predicate, Boolean.TRUE);
             ProfileRegistry.INSTANCE.loadAll(predicate, Boolean.TRUE);
-
+            EventListenerRegistry.INSTANCE.loadAll(predicate, Boolean.TRUE);
             logger.info("finished loading registry");
         } catch (Exception e) {
             logger.error("Could not load the registries", e);

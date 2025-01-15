@@ -14,17 +14,4 @@ public class CdmEntityListener {
 
     private static final Logger log = LoggerFactory.getLogger(CdmEntityListener.class);
 
-
-    public void notifyStreamingEvent(StreamingEventData<List<CommonDataModel>> eventData){
-        getCdmPostEventService().ifPresent(cdmPostEventService -> cdmPostEventService.onPostEvent(eventData));
-    }
-
-    private Optional<CdmPostEventService> getCdmPostEventService() {
-        try {
-            return Optional.of(SpringContext.getBean(CdmPostEventService.class));
-        } catch (Exception e) {
-            log.error("CdmPostEventService is not yet initialized... post event service will be ignored until it initialize");
-            return Optional.empty();
-        }
-    }
 }

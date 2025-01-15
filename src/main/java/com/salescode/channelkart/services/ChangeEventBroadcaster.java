@@ -1,6 +1,7 @@
 package com.salescode.channelkart.services;
 
 import com.salescode.channelkart.dto.StreamingEventData;
+import com.salescode.channelkart.exceptions.checked.CustomCheckedException;
 import com.salescode.channelkart.integration.kafka.publisher.IKafkaConstants;
 import com.salescode.channelkart.integration.kafka.publisher.KafkaEventPublisher;
 import com.salescode.channelkart.logging.EventMetrics;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -24,6 +26,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+@Service
 public class ChangeEventBroadcaster {
 
     private static final Logger log = LoggerFactory.getLogger(ChangeEventBroadcaster.class);
@@ -46,15 +49,13 @@ public class ChangeEventBroadcaster {
     };
     private final ThreadPoolExecutor cte = new ThreadPoolExecutor(activeThreadCount, activeThreadCount, 120,
             TimeUnit.SECONDS, abq);
-    @Autowired
-    private RemoteMetricStream metricStream;
 
     @Autowired
     private CdmEntityListener entityListener;
 
     private static KafkaEventPublisher publisher;
     private static final Object LOCK = new Object();
-    @Value("${channelkart.integration.kafka.events.publish:false}")
+    @Value("${channelkart.integration.kafka.events.publish:true}")
     private boolean eventKafkaBroadcast;
 
     public Future<Boolean> broadcast(CommonDataModel entity, EntityOperation operation) {
@@ -94,7 +95,8 @@ public class ChangeEventBroadcaster {
                                 if (eventKafkaBroadcast) {
                                     publisher.publish(IKafkaConstants.getEventTopicName(uc.getLob()), blob);
                                 } else {
-                                    listenFor(blob);
+//                                    listenFor(blob);
+                                    throw new UnsupportedOperationException("Operation not permitted");
                                 }
                                 log(entities, operation);
                             }
@@ -130,7 +132,7 @@ public class ChangeEventBroadcaster {
                     e.setLob(SecurityContextUtils.getLob());
                     e.setEventTime(new Date());
                     e.setPayload(JSONUtils.toJsonNode(cdm));
-                    metricStream.sendAsyncEvent(e);
+//                    metricStream.sendAsyncEvent(e);
                 } catch (Exception e) {
                     log.error("Could not create event metrics",e );
                 }
@@ -138,8 +140,4 @@ public class ChangeEventBroadcaster {
         }
     }
 
-    public StreamingEventData<?> listenFor(StreamingEventData<List<CommonDataModel>> blobData) {
-        entityListener.notifyStreamingEvent(blobData);
-        return blobData;
-    }
 }

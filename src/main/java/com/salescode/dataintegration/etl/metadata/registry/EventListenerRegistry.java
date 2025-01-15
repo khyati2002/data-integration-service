@@ -3,6 +3,7 @@ package com.salescode.dataintegration.etl.metadata.registry;
 import com.salescode.channelkart.cache.AllLOBRouter;
 import com.salescode.channelkart.cache.DistributedCache;
 import com.salescode.channelkart.models.EventListenerInfo;
+import com.salescode.channelkart.registry.AbstractRegistry;
 import com.salescode.channelkart.services.SpringContext;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class EventListenerRegistry {
+public class EventListenerRegistry extends AbstractRegistry<EventListenerInfo>  {
 
     public static final EventListenerRegistry INSTANCE = new EventListenerRegistry();
 
@@ -39,13 +40,13 @@ public class EventListenerRegistry {
         }
     }
 
-//    public void loadAll(Predicate<String> predicate, boolean overrideOld) {
-//        AllLOBRouter.loadAll(EventListenerInfo.class,predicate).stream().map(e->(EventListenerInfo)e).collect(Collectors.groupingBy(a->a.getLob())).
-//                entrySet().stream().forEach(e->{
-//                    if(distributedCache.get(e.getKey(), null, CACHE_DOMAIN, false)==null || overrideOld)
-//                        addAll(e.getKey(),e.getValue());
-//                });
-//    }
+    public void loadAll(Predicate<String> predicate, boolean overrideOld) {
+        AllLOBRouter.loadAll(EventListenerInfo.class,predicate).stream().map(e->(EventListenerInfo)e).collect(Collectors.groupingBy(a->a.getLob())).
+                entrySet().stream().forEach(e->{
+                    if(distributedCache.get(e.getKey(), null, CACHE_DOMAIN, false)==null || overrideOld)
+                        addAll(e.getKey(),e.getValue());
+                });
+    }
 
     public List<EventListenerInfo> get(String lob) {
         return get(lob, false);
@@ -62,9 +63,9 @@ public class EventListenerRegistry {
                 new ArrayList<>(listeners) : Collections.emptyList();
     }
 
-//    public List<EventListenerInfo> get(String lob, String topic) {
-//        return get(lob, eventListenerInfo -> eventListenerInfo.getTopic().equalsIgnoreCase(topic));
-//    }
+    public List<EventListenerInfo> get(String lob, String topic) {
+        return get(lob, eventListenerInfo -> eventListenerInfo.getTopic().equalsIgnoreCase(topic));
+    }
 
     public void clear(String lob) {
         distributedCache.clearCache(lob, null, CACHE_DOMAIN);

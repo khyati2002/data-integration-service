@@ -66,7 +66,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     public AbstractCDMService(CommonJpaRepository<T, String> repository) {
         this.repository = repository;
-        if(getClass().getGenericSuperclass() instanceof ParameterizedType) {
+        if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
             persistentClass = (Class<?>)
                     ((ParameterizedType) getClass().getGenericSuperclass())
                             .getActualTypeArguments()[0];
@@ -103,15 +103,15 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public List<T> saveForList(T cdmObject, OperationType type) {
-        return List.of(save(cdmObject,type));
+        return List.of(save(cdmObject, type));
     }
 
     @Override
-    public void deleteById(String id,boolean failsOnEmptyRecord){
+    public void deleteById(String id, boolean failsOnEmptyRecord) {
         Optional<T> entityToDelete = repository.findById(id);
-        if(entityToDelete.isEmpty() && failsOnEmptyRecord){
-            throw new ResourceNotFoundException("Record with entity id {}, not present in table. Please verify input data.",id);
-        }else if(entityToDelete.isPresent()){
+        if (entityToDelete.isEmpty() && failsOnEmptyRecord) {
+            throw new ResourceNotFoundException("Record with entity id {}, not present in table. Please verify input data.", id);
+        } else if (entityToDelete.isPresent()) {
             repository.deleteById(id);
 //            eventBroadcaster.broadcast(entityToDelete.get(),EntityOperation.DELETE);
         }
@@ -119,7 +119,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     protected void addHash(CommonDataModel model) {
         if (model.canHash()) {
-            batchService.addHashIfPresent( model);
+            batchService.addHashIfPresent(model);
         }
     }
 
@@ -128,7 +128,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     public T save(T cdmObject) {
         final T inObject = cdmObject;
         String existingHash = cdmObject.getHash();
-        TimerUtils.withTime("Time taken to generate Hash "+cdmObject.getClass().getName()+":"+cdmObject.getId(),
+        TimerUtils.withTime("Time taken to generate Hash " + cdmObject.getClass().getName() + ":" + cdmObject.getId(),
                 () -> addHash(inObject));
         if (!cdmObject.forceHash() && cdmObject.canHash() && StringUtils.isNotEmpty(existingHash) && existingHash.equals(cdmObject.getHash())) {
             // no need to save this record because this hash is same
@@ -139,34 +139,35 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 //            saved=TimerUtils.withTime("Time taken to native finish native save operation "+cdmObject.getClass().getName()+":"+cdmObject.getId(), () -> nativeBatchSave(Arrays.asList(inObject),null).get(0));
 //        }
 //        else {
-            cdmObject = fillCommonAttributes(cdmObject);
-            if(!cdmObject.isCreate()){
-           //     apiFilterAuthorizationManager.assertPermission( cdmObject);
-            }
-            final T object = cdmObject;
-        saved =TimerUtils.withTime("Time taken to JPA save  "+cdmObject.getClass().getSimpleName()+":"+cdmObject.getId(),()-> {
+        cdmObject = fillCommonAttributes(cdmObject);
+        if (!cdmObject.isCreate()) {
+            //     apiFilterAuthorizationManager.assertPermission( cdmObject);
+        }
+        final T object = cdmObject;
+        saved = TimerUtils.withTime("Time taken to JPA save  " + cdmObject.getClass().getSimpleName() + ":" + cdmObject.getId(), () -> {
             T object1 = preSaveEnrichment(object);
             T sreturn = repository.save(object1);
-            fixChanges( object1, sreturn);
+            fixChanges(object1, sreturn);
             return sreturn;
-          });
+        });
 
-            repository.flush();
+        repository.flush();
 
-        return saved;
-        T finalSaved = sreturn;
+//        return saved;
         T finalCdmObject = cdmObject;
+        T finalSaved = saved;
         if (finalCdmObject.isCreate()) {
             eventBroadcaster.broadcast(finalSaved, EntityOperation.INSERT);
         } else {
-            eventBroadcaster.broadcast(finalSaved,EntityOperation.UPDATE);
+            eventBroadcaster.broadcast(finalSaved, EntityOperation.UPDATE);
         }
 
         return finalSaved;
     }
-     public T fillCommonAttributes(T cdm){
-         return fillCommonAttributes(cdm, false, new HashSet<>(), null);
-     }
+
+    public T fillCommonAttributes(T cdm) {
+        return fillCommonAttributes(cdm, false, new HashSet<>(), null);
+    }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public T save(T cdmObject, OperationType type) {
@@ -176,17 +177,17 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<T> batchSave(Iterable<T> iterObj) throws Exception {
-        return batchSave(iterObj,null);
+        return batchSave(iterObj, null);
     }
 
 
-    private T preSaveEnrichment(T cdm){
+    private T preSaveEnrichment(T cdm) {
         EnrichmentOperationResult er = enrichmentService.enrich(cdm, EnrichmentPhase.PRE_SAVE);
-        if(!er.getStatus().equals(Status.OK)) {
-            throw new SystemRuntimeException((ObjectUtils.isNotEmpty(er.getEnrichmentResults()))?er.getEnrichmentResults().get(0).getMessage():
-                    "Some error occured with pre-enrichment while storing "+cdm.toString());
+        if (!er.getStatus().equals(Status.OK)) {
+            throw new SystemRuntimeException((ObjectUtils.isNotEmpty(er.getEnrichmentResults())) ? er.getEnrichmentResults().get(0).getMessage() :
+                    "Some error occured with pre-enrichment while storing " + cdm.toString());
         }
-        return (T) (ObjectUtils.isNotEmpty(er.getEnrichedData())?er.getEnrichedData().get(0):cdm);
+        return (T) (ObjectUtils.isNotEmpty(er.getEnrichedData()) ? er.getEnrichedData().get(0) : cdm);
     }
 
 
@@ -200,15 +201,15 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     }
 
     private boolean isNativeBatchSave(T element) {
-        return Boolean.parseBoolean(env.getProperty("native.batch.save."+element.getClass().getSimpleName(), "false"));
+        return Boolean.parseBoolean(env.getProperty("native.batch.save." + element.getClass().getSimpleName(), "false"));
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<T> batchSave(Iterable<T> iterObj, IdGenerator idGenerator) throws Exception {
         iterObj.forEach(this::preSaveEnrichment);
-        if(isNativeBatchSave(iterObj)) {
+        if (isNativeBatchSave(iterObj)) {
             throw new Exception("Native batch save not allowed");
-        }else {
+        } else {
             BatchContainer<T> container = splitElements(iterObj, idGenerator);
             List<T> elementsToSaveAsList = container.getAllElementstoSave();
             List<T> savedData = saveAll(elementsToSaveAsList);
@@ -217,20 +218,20 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         }
     }
 
-    private void fixChanges(List<T> actualObjectWithChange, List<T> dbSavedObject){
-        if(actualObjectWithChange!=null && dbSavedObject!=null && actualObjectWithChange.size() == dbSavedObject.size()){
-            for(int i=0; i< dbSavedObject.size();i++){
+    private void fixChanges(List<T> actualObjectWithChange, List<T> dbSavedObject) {
+        if (actualObjectWithChange != null && dbSavedObject != null && actualObjectWithChange.size() == dbSavedObject.size()) {
+            for (int i = 0; i < dbSavedObject.size(); i++) {
                 fixChanges(actualObjectWithChange.get(i), dbSavedObject.get(i));
             }
-        }else {
-          //  logger.warn("null or empty objects passed to add changes.. , ignoring");
+        } else {
+            //  logger.warn("null or empty objects passed to add changes.. , ignoring");
         }
     }
 
     private List<T> saveAll(Iterable<T> items) {
         //items.forEach(element-> apiFilterAuthorizationManager.assertPermission(element));
         List<T> saved = this.repository.saveAll(items);
-        fixChanges((List<T>)items, saved); //hack to populate persist changes after putting to db, should find a better place to do this.
+        fixChanges((List<T>) items, saved); //hack to populate persist changes after putting to db, should find a better place to do this.
         repository.flush();
         //notifyBatchSave(saved);
         return saved;
@@ -247,7 +248,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         for (T element : elements) {
             fillCommonAttributes(element, generator);
             if (element.isCreate()) {
-               addHash(element);
+                addHash(element);
                 newRecords.add(element);
             } else {
                 addHash(element);
@@ -260,7 +261,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
             return batchContainer;
         }
 
-        BatchContainer<T> batchContainer=new BatchContainer<>();
+        BatchContainer<T> batchContainer = new BatchContainer<>();
         batchContainer.setElementsToInsert(newRecords);
         batchContainer.setElementsToUpdate(existingRecords);
         return batchContainer;
@@ -268,9 +269,8 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     }
 
 
-
     @SuppressWarnings("unchecked")
-    public T fillCommonAttributes(T cdm, boolean createOnly,Set<String> visitedTree, IdGenerator idGenerator) {
+    public T fillCommonAttributes(T cdm, boolean createOnly, Set<String> visitedTree, IdGenerator idGenerator) {
         boolean fillModifyAttributes = !createOnly || cdm.getId() == null;
         if (cdm.getId() == null) {
             if (idGenerator != null) {
@@ -287,7 +287,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         if (cdm.getCreationTime() == null) {
             cdm.setCreationTime(Calendar.getInstance().getTime());
         }
-        if(cdm.getActiveStatus() == null){
+        if (cdm.getActiveStatus() == null) {
             cdm.setActiveStatus(ActiveStatus.ACTIVE);
         }
 
@@ -321,16 +321,16 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                     ParameterizedType type = (ParameterizedType) returnType;
                     Type[] typeArguments = type.getActualTypeArguments();
                     for (Type typeArgument : typeArguments) {
-                        visitParameterizedCDMType(cdm,field,typeArgument,visitedTree,idGenerator);
+                        visitParameterizedCDMType(cdm, field, typeArgument, visitedTree, idGenerator);
                     }
                 } else if (CommonDataModel.class.isAssignableFrom((Class<?>) returnType)) {
-                    visitCDMType(cdm,field,returnType,visitedTree,idGenerator);
+                    visitCDMType(cdm, field, returnType, visitedTree, idGenerator);
                 }
             }
         }
     }
 
-    private void visitParameterizedCDMType(T cdm,Field field,Type typeArgument,Set<String> visitedTree, IdGenerator idGenerator){
+    private void visitParameterizedCDMType(T cdm, Field field, Type typeArgument, Set<String> visitedTree, IdGenerator idGenerator) {
         if (typeArgument instanceof Class
                 && CommonDataModel.class.isAssignableFrom((Class<?>) typeArgument)) {
             try {
@@ -342,12 +342,12 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                     }
                 }
             } catch (Exception e) {
-           //     logger.error("stacktrace", e);
+                //     logger.error("stacktrace", e);
             }
         }
     }
 
-    private void visitCDMType(T cdm,Field field,Type returnType,Set<String> visitedTree, IdGenerator idGenerator){
+    private void visitCDMType(T cdm, Field field, Type returnType, Set<String> visitedTree, IdGenerator idGenerator) {
         try {
             if (!restrictedList.contains(returnType)) {
                 field.setAccessible(true);
@@ -355,7 +355,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                 cdmOpt.ifPresent(cdmAssociation -> fillCommonAttributes(cdmAssociation, true, visitedTree, idGenerator));
             }
         } catch (Exception e) {
-          //  logger.error("stacktrace", e);
+            //  logger.error("stacktrace", e);
         }
     }
 
@@ -368,18 +368,20 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                     logActiveStatusChanges(actualObjectWithChange);
                 }
 
-            //    logger.debug("Got some changes for entity: {} for id:{} changes:{}", dbSavedObject.getClass().getSimpleName(), dbSavedObject.getId(), findInternalChanges(actualObjectWithChange));
+                //    logger.debug("Got some changes for entity: {} for id:{} changes:{}", dbSavedObject.getClass().getSimpleName(), dbSavedObject.getId(), findInternalChanges(actualObjectWithChange));
             }
         }
     }
+
     private void logActiveStatusChanges(T actualObjectWithChange) {
         Change<Serializable> changes = actualObjectWithChange.getChanges().stream().filter(change -> change.getName().equalsIgnoreCase("activeStatus")).collect(Collectors.toList()).get(0);
-      //  logger.info("activeStatus updated for User :'{}' from '{}' to '{}' on '{}'", ((User) actualObjectWithChange).getLoginId(), changes.getPrevious(), changes.getCurrent(),  actualObjectWithChange.getLastModifiedTime());
+        //  logger.info("activeStatus updated for User :'{}' from '{}' to '{}' on '{}'", ((User) actualObjectWithChange).getLoginId(), changes.getPrevious(), changes.getCurrent(),  actualObjectWithChange.getLastModifiedTime());
     }
 
     public boolean hasActiveStatusChange(CommonDataModel cdm) {
         return cdm.getChanges().stream().anyMatch(change -> change.getName().equalsIgnoreCase("activeStatus"));
     }
+
     protected void setChanges(T previous, T current) {
         if (current.getOldModel() != null) {
             current.setOldModel(EntityUtils.deepClone(previous));
@@ -403,13 +405,13 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     protected List<? extends CommonDataModel> batchRefresh(Class<T> clazz, List<T> batchrecords) {
         List<T> dbRecords = (List<T>) EntityUtils.get().findRecords(clazz, new ArrayList<>(batchrecords));
-        if(CollectionUtils.isNotEmpty(dbRecords)) {
-            return batchrecords.stream().map(element ->{
-                Optional<T> dataObj= dbRecords.stream().filter(p-> element.compare(p, true)).findFirst();
-                if(dataObj.isPresent()){
-                    T dbElement= dataObj.get();
+        if (CollectionUtils.isNotEmpty(dbRecords)) {
+            return batchrecords.stream().map(element -> {
+                Optional<T> dataObj = dbRecords.stream().filter(p -> element.compare(p, true)).findFirst();
+                if (dataObj.isPresent()) {
+                    T dbElement = dataObj.get();
                     CdmDiffUtil.setOldModel(dbElement);
-                    EntityUtils.copyProperties(element, dbElement, "id","version");
+                    EntityUtils.copyProperties(element, dbElement, "id", "version");
                     return dbElement;
                 }
                 return element;
@@ -419,10 +421,9 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     }
 
     @Override
-    public T populateData(T cdmObject){
+    public T populateData(T cdmObject) {
         return cdmObject;
     }
-
 
 
 }

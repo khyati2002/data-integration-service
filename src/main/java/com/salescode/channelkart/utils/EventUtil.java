@@ -27,6 +27,18 @@ public class EventUtil {
                 .collect(Collectors.toList());
     }
 
+    public static List<EventListenerInfo> findMatchingListenerConfig(CommonDataModel dataModel,
+                                                                     EntityOperation operation, List<EventListenerInfo> eventListenerInfos, Set<String> eventTopics) {
+        if (CollectionUtils.isNotEmpty(eventTopics)) {
+            return eventListenerInfos.stream()
+                    .filter(info -> eventTopics.contains(info.getTopic()))
+                    .collect(Collectors.toList());
+        }
+        return eventListenerInfos.stream()
+                .filter(info -> EventUtil.isMatching(info, dataModel, operation))
+                .collect(Collectors.toList());
+    }
+
     public static boolean isMatching(EventListenerInfo info, CommonDataModel dataModel, EntityOperation operation) {
         JsonNode configurations = info.getConfigurations();
         if (isModelMatching(dataModel, configurations)) {
