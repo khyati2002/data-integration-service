@@ -157,9 +157,11 @@ public class LocationService extends AbstractCDMService<Location> {
                 if (locationRes != null) {
                     return locationRes;
                 } else {
-                    GlobalLock.withLock(hierarchyStr, k ->
-                            saveRecursiveLocationHierarchies(tLocation, columnList)
-                    );
+                    distributedCache.withLock(hierarchyStr, () -> {
+                        if (findByLocationHierarchy(hierarchyStr) == null)
+                            saveRecursiveLocationHierarchies(tLocation, columnList);
+                        return null;
+                    });
                     Location locdata = findByLocationHierarchy(hierarchyStr, false);
                     return locdata;
 

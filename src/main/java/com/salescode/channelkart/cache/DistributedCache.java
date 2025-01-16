@@ -14,10 +14,7 @@ import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
-import org.redisson.api.LocalCachedMapOptions;
-import org.redisson.api.RMap;
-import org.redisson.api.RTopic;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.*;
 import org.redisson.client.codec.ByteArrayCodec;
 import org.redisson.client.codec.Codec;
 import org.redisson.client.protocol.Decoder;
@@ -36,6 +33,8 @@ import org.redisson.config.Config;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
+
 import com.salescode.channelkart.security.SecurityContextUtils;
 
 @Service
@@ -337,6 +336,17 @@ public class DistributedCache {
    public void cleanup() {
       if (redisson != null) {
          redisson.shutdown();
+      }
+   }
+
+   @WithSpan
+   public <T> T withLock(String lockable, Supplier<T> supplier){
+      RLock lock = redisson.getLock(lockable);
+      lock.lock();
+      try {
+         return supplier.get();
+      } finally {
+         lock.unlock();
       }
    }
 }

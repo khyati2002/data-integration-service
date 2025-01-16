@@ -61,6 +61,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     @Autowired
     private DataEnrichmentService enrichmentService;
+    @Autowired
     private ChangeEventBroadcaster eventBroadcaster;
 
 

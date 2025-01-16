@@ -276,7 +276,8 @@ public class UserService extends AbstractCDMService<User> {
     public void clearCache(String lob, User user) {
         if(user != null) {
             clearCache(lob, user.getLoginId());
-            locationService.clearCache(lob,user.getLocationHierarchy().getLocationHierarchy());
+            if(user.getLocationHierarchy()!=null)
+                locationService.clearCache(lob,user.getLocationHierarchy().getLocationHierarchy());
         }
     }
 
