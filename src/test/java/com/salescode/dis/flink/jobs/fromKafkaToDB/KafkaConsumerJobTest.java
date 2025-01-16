@@ -1,6 +1,6 @@
 package com.salescode.dis.flink.jobs.fromKafkaToDB;
 
-import com.salescode.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dis.config.DatabaseConfig;
 import com.salescode.dis.flink.aggregator.ListAggregator;
 import com.salescode.dis.flink.sinks.DISKafkaSinkBuilder;
@@ -71,7 +71,7 @@ public class KafkaConsumerJobTest {
         // Create a mock execution environment
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         List<ObjectNode> nodes = new ArrayList<>();
-        for(int i = 0;i<20;i++){
+        for(int i = 0;i<1;i++){
             nodes.add(createTestObjectNode(sampleJson.replaceAll("180600002708","180600002708"+i).replace("e94d4d3446ea","e94d4d3446ea="+i)));
         }
         DataStream<ObjectNode> mockInput = env.fromElements(nodes.toArray(new ObjectNode[nodes.size()]));
@@ -80,7 +80,7 @@ public class KafkaConsumerJobTest {
 
         SingleOutputStreamOperator<List<CommonDataModel>> processedStream = mockInput
 //                .windowAll(TumblingProcessingTimeWindows.of(Time.milliseconds(8)))
-                .countWindowAll(4)
+                .countWindowAll(1)
                 .aggregate(new ListAggregator<ObjectNode>())
                 .map(new MapFunction<List<ObjectNode>, List<ObjectNode>>() {
                     @Override
@@ -141,8 +141,8 @@ public class KafkaConsumerJobTest {
             "            \"UID\": \"180600002708\",\n" +
             "            \"CREATIONDATE\": \"2024-12-19 02:48:11.067\",\n" +
             "            \"PICKUPDATE\": null,\n" +
-            "            \"DISTRICT\": \"SDIS\",\n" +
-            "            \"Branch\": \"SHYD\",\n" +
+            "            \"DISTRICT\": \"EDIS\",\n" +
+            "            \"Branch\": \"ECAL\",\n" +
             "            \"CUSTName\": \"SAI VENKATESWARA K/G (B/S SHIVA SAI)\",\n" +
             "            \"OwnerName\": \"SAI VENKATESWARA K/G (B/S SHIVA SAI)\",\n" +
             "            \"ChannelType\": \"Retail\",\n" +

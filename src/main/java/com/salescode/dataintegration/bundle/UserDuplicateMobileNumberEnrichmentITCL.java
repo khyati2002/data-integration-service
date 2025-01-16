@@ -1,11 +1,11 @@
 package com.salescode.dataintegration.bundle;
 
 
-import com.salescode.channelkart.enrichments.AbstractEnrichment;
-import com.salescode.channelkart.enrichments.EnrichmentResult;
-import com.salescode.channelkart.enrichments.Status;
-import com.salescode.channelkart.models.User;
-import com.salescode.channelkart.utils.NullUtils;
+import com.applicate.services.channelkart.enrichments.AbstractEnrichment;
+import com.applicate.services.channelkart.enrichments.EnrichmentResult;
+import com.applicate.services.channelkart.enrichments.Status;
+import com.applicate.services.channelkart.models.User;
+import com.applicate.services.channelkart.utils.NullUtils;
 
 public class UserDuplicateMobileNumberEnrichmentITCL extends AbstractEnrichment<User> {
 

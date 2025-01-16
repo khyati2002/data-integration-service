@@ -1,6 +1,6 @@
 package com.salescode.dis.flink.jobs.fromKafkaToDB;
 
-import com.salescode.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dis.flink.aggregator.ListAggregator;
 import com.salescode.dis.flink.sinks.DISKafkaSinkBuilder;
 import com.salescode.dis.flink.sinks.JOOQSink;
@@ -12,8 +12,6 @@ import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
-import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.OutputTag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

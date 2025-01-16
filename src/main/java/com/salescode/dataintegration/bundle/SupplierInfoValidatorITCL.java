@@ -1,11 +1,11 @@
 package com.salescode.dataintegration.bundle;
 
 
-import com.salescode.channelkart.models.User;
-import com.salescode.channelkart.utils.StringUtils;
-import com.salescode.channelkart.validations.AbstractRule;
-import com.salescode.channelkart.validations.RuleResult;
-import com.salescode.channelkart.validations.Status;
+import com.applicate.services.channelkart.models.User;
+import com.applicate.services.channelkart.utils.StringUtils;
+import com.applicate.services.channelkart.validations.AbstractRule;
+import com.applicate.services.channelkart.validations.RuleResult;
+import com.applicate.services.channelkart.validations.Status;
 
 public class SupplierInfoValidatorITCL extends AbstractRule<User> {
 

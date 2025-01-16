@@ -1,10 +1,10 @@
 package com.salescode.dataintegration.etl.metadata.registry;
 
-import com.salescode.channelkart.cache.AllLOBRouter;
-import com.salescode.channelkart.cache.DistributedCache;
-import com.salescode.channelkart.models.EventListenerInfo;
-import com.salescode.channelkart.registry.AbstractRegistry;
-import com.salescode.channelkart.services.SpringContext;
+import com.applicate.services.channelkart.cache.AllLOBRouter;
+import com.applicate.services.channelkart.cache.DistributedCache;
+import com.applicate.services.channelkart.models.EventListenerInfo;
+import com.applicate.services.channelkart.registry.AbstractRegistry;
+import com.applicate.services.channelkart.services.SpringContext;
 
 import java.util.ArrayList;
 import java.util.Collections;

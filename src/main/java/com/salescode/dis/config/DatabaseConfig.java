@@ -1,10 +1,9 @@
 package com.salescode.dis.config;
 
-import com.salescode.channelkart.abstractdatasource.DatabaseProfileRegistry;
+import com.applicate.services.channelkart.abstractdatasource.DatabaseProfileRegistry;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,7 +29,7 @@ public class DatabaseConfig {
         hikariDataSource.setJdbcUrl(url);
         hikariDataSource.setUsername(user);
         hikariDataSource.setPassword(password);
-        hikariDataSource.setMaximumPoolSize(10);
+        hikariDataSource.setMaximumPoolSize(7);
         hikariDataSource.setMinimumIdle(5);
         hikariDataSource.setConnectionTimeout(60000);
         DatabaseProfileRegistry.setDefaultDs(hikariDataSource);

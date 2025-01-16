@@ -2,19 +2,19 @@
 package com.salescode.dataintegration.bundle;
 
 
+import com.applicate.services.channelkart.services.*;
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
-import com.salescode.channelkart.converters.DateToClientTimeZoneStringConverter;
-import com.salescode.channelkart.enrichments.AbstractEnrichment;
-import com.salescode.channelkart.enrichments.EnrichmentResult;
-import com.salescode.channelkart.enrichments.Status;
-import com.salescode.channelkart.models.CustomerAccountInfo;
-import com.salescode.channelkart.models.HierarchyMetaData;
-import com.salescode.channelkart.models.SupplierMetaData;
-import com.salescode.channelkart.models.User;
-import com.salescode.channelkart.models.enums.ActiveStatus;
-import com.salescode.channelkart.security.SecurityContextUtils;
-import com.salescode.channelkart.services.*;
-import com.salescode.channelkart.utils.NullUtils;
+import com.applicate.services.channelkart.converters.DateToClientTimeZoneStringConverter;
+import com.applicate.services.channelkart.enrichments.AbstractEnrichment;
+import com.applicate.services.channelkart.enrichments.EnrichmentResult;
+import com.applicate.services.channelkart.enrichments.Status;
+import com.applicate.services.channelkart.models.CustomerAccountInfo;
+import com.applicate.services.channelkart.models.HierarchyMetaData;
+import com.applicate.services.channelkart.models.SupplierMetaData;
+import com.applicate.services.channelkart.models.User;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.security.SecurityContextUtils;
+import com.applicate.services.channelkart.utils.NullUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;

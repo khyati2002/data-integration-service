@@ -1,6 +1,6 @@
 package com.salescode.dis;
 
-import com.salescode.channelkart.services.SpringContext;
+import com.applicate.services.channelkart.services.SpringContext;
 import com.salescode.dis.config.DatabaseConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

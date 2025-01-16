@@ -1,11 +1,11 @@
 package com.salescode.dataintegration.bundle;
 
 
-import com.salescode.channelkart.enrichments.AbstractEnrichment;
-import com.salescode.channelkart.enrichments.EnrichmentResult;
-import com.salescode.channelkart.enrichments.Status;
-import com.salescode.channelkart.models.OutletDetails;
-import com.salescode.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.enrichments.AbstractEnrichment;
+import com.applicate.services.channelkart.enrichments.EnrichmentResult;
+import com.applicate.services.channelkart.enrichments.Status;
+import com.applicate.services.channelkart.models.OutletDetails;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 
 public class OutletDetailsNameEnrichmentITCL extends AbstractEnrichment<OutletDetails> {
 

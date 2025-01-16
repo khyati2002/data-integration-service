@@ -1,7 +1,7 @@
 package com.salescode.dis.flink.jobs.fromKafkaToDB;
 
 import com.salescode.DataIntegrationApplication;
-import com.salescode.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dataintegration.etl.ETLPipelineService;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;

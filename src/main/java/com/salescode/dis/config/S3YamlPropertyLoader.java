@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 
-import com.salescode.channelkart.utils.StringUtils;
+import com.applicate.services.channelkart.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.env.YamlPropertySourceLoader;

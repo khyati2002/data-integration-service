@@ -3,7 +3,7 @@ package com.salescode.dis.flink.sinks;
 import java.io.IOException;
 import java.util.List;
 
-import com.salescode.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.models.CommonDataModel;
 import org.apache.commons.io.IOExceptionWithCause;
 import org.apache.flink.api.connector.sink2.Sink;
 import org.apache.flink.api.connector.sink2.SinkWriter;

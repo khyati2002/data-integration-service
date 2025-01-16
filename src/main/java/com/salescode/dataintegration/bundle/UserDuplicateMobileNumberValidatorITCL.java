@@ -2,16 +2,16 @@ package com.salescode.dataintegration.bundle;
 
 
 
-import com.salescode.channelkart.models.User;
-import com.salescode.channelkart.models.enums.ActiveStatus;
-import com.salescode.channelkart.security.SecurityContextUtils;
-import com.salescode.channelkart.services.SpringContext;
-import com.salescode.channelkart.services.UserService;
-import com.salescode.channelkart.utils.StringUtils;
-import com.salescode.channelkart.validations.RuleResult;
-import com.salescode.channelkart.validations.Status;
-import com.salescode.channelkart.validations.repository.RegexValidation;
-import com.salescode.channelkart.validations.AbstractRule;
+import com.applicate.services.channelkart.models.User;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.security.SecurityContextUtils;
+import com.applicate.services.channelkart.services.SpringContext;
+import com.applicate.services.channelkart.services.UserService;
+import com.applicate.services.channelkart.utils.StringUtils;
+import com.applicate.services.channelkart.validations.RuleResult;
+import com.applicate.services.channelkart.validations.Status;
+import com.applicate.services.channelkart.validations.repository.RegexValidation;
+import com.applicate.services.channelkart.validations.AbstractRule;
 
 import java.util.List;
 import java.util.Optional;

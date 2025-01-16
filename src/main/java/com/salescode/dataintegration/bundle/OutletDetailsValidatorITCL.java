@@ -1,17 +1,13 @@
 package com.salescode.dataintegration.bundle;
 
 
-import com.salescode.channelkart.models.OutletDetails;
-import com.salescode.channelkart.validations.AbstractRule;
-import com.salescode.channelkart.validations.RuleResult;
-import com.salescode.channelkart.validations.Status;
-import com.salescode.channelkart.validations.repository.RegexValidation;
+import com.applicate.services.channelkart.models.OutletDetails;
+import com.applicate.services.channelkart.validations.AbstractRule;
+import com.applicate.services.channelkart.validations.RuleResult;
+import com.applicate.services.channelkart.validations.Status;
+import com.applicate.services.channelkart.validations.repository.RegexValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 public class OutletDetailsValidatorITCL extends AbstractRule<OutletDetails> {
     /** The logger. */

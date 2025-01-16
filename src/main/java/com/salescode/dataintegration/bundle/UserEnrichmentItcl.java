@@ -3,13 +3,13 @@ package com.salescode.dataintegration.bundle;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.salescode.channelkart.enrichments.AbstractEnrichment;
-import com.salescode.channelkart.enrichments.EnrichmentResult;
-import com.salescode.channelkart.enrichments.Status;
-import com.salescode.channelkart.models.SupplierMetaData;
-import com.salescode.channelkart.models.User;
-import com.salescode.channelkart.utils.JSONUtils;
-import com.salescode.channelkart.utils.NullUtils;
+import com.applicate.services.channelkart.enrichments.AbstractEnrichment;
+import com.applicate.services.channelkart.enrichments.EnrichmentResult;
+import com.applicate.services.channelkart.enrichments.Status;
+import com.applicate.services.channelkart.models.SupplierMetaData;
+import com.applicate.services.channelkart.models.User;
+import com.applicate.services.channelkart.utils.JSONUtils;
+import com.applicate.services.channelkart.utils.NullUtils;
 import org.json.JSONException;
 
 import java.io.IOException;

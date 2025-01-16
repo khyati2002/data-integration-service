@@ -2,9 +2,8 @@ package com.salescode.dis.flink.sinks;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
-import com.salescode.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.models.CommonDataModel;
 import org.apache.commons.io.IOExceptionWithCause;
 import org.apache.flink.api.connector.sink2.SinkWriter;
 
