@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2020. All rights reserved.
  * APPLICATE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- * 
+ *
  */
 package com.applicate.services.channelkart.exceptions;
 
 import com.applicate.services.channelkart.utils.StringUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+//import org.springframework.http.HttpStatus;
+//import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * The class ResourceNotFoundException.
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @author Manish Srivastava
  * @since  Nov 2020
  */
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
+//@ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends ExecutionInteruptedException {
 
 	/** The Constant serialVersionUID. */
@@ -41,5 +41,5 @@ public class ResourceNotFoundException extends ExecutionInteruptedException {
 	public ResourceNotFoundException(Throwable cause, String message, String ...values) {
 		super(cause,StringUtils.format(message, values));
 	}
-	
+
 }

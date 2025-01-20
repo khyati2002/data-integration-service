@@ -33,7 +33,7 @@ redis:
 
 channelkart:
   lobs: cktestitcloyalty
-  environment: uat
+  environment: dev
 
 app:
   lob: cktestitcloyalty

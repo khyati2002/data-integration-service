@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+//import org.springframework.web.context.request.RequestContextHolder;
+//import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -107,8 +107,9 @@ public class SecurityContextUtils implements EnvironmentAware {
 
     private static Optional<HttpServletRequest> getRequestSafely() {
         try {
-            return Optional.of(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                    .getRequest());
+//            return Optional.of(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+//                    .getRequest());
+            return Optional.empty();
         } catch (Exception e) {
             log.debug("Could not find request", e);
         }
