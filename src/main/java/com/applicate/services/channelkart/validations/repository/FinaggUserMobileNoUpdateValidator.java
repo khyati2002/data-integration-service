@@ -1,4 +1,4 @@
-package com.applicate.services.channelkart.validations.impl;
+package com.applicate.services.channelkart.validations.repository;
 
 
 

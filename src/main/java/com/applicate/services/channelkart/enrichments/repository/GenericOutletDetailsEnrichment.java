@@ -3,7 +3,7 @@
 *
 *All rights reserved
 */
-package com.applicate.services.channelkart.enrichments.impl;
+package com.applicate.services.channelkart.enrichments.repository;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.applicate.services.channelkart.component.model.SequenceGenerator;

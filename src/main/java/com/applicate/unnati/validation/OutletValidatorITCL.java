@@ -1,4 +1,4 @@
-package com.salescode.dataintegration.bundle;
+package com.applicate.unnati.validation;
 
 
 import com.fasterxml.jackson.core.type.TypeReference;

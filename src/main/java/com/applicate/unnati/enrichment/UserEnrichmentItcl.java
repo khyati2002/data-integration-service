@@ -1,4 +1,4 @@
-package com.salescode.dataintegration.bundle;
+package com.applicate.unnati.enrichment;
 
 
 import com.fasterxml.jackson.databind.JsonNode;

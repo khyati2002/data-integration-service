@@ -1,4 +1,4 @@
-package com.applicate.services.channelkart.enrichments.impl;
+package com.applicate.services.channelkart.enrichments.repository;
 
 import com.applicate.services.channelkart.enrichments.AbstractEnrichment;
 import com.applicate.services.channelkart.enrichments.EnrichmentResult;

@@ -3,7 +3,7 @@
  * APPLICATE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  * 
  */
-package com.applicate.services.channelkart.validations.impl;
+package com.applicate.services.channelkart.validations.repository;
 
 
 import com.applicate.services.channelkart.models.OutletDetails;
