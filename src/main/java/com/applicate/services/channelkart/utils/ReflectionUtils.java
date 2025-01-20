@@ -32,7 +32,7 @@ public class ReflectionUtils {
 
     static {
         try {
-            reflections = new Reflections("com.applicate.services.channelkart");
+            reflections = new Reflections("com.applicate");
         } catch (Exception e) {
             log.error("Could not load reflections:{}", e.getMessage());
         }

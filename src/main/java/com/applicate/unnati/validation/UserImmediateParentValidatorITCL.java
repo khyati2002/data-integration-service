@@ -1,4 +1,4 @@
-package com.salescode.dataintegration.bundle;
+package com.applicate.unnati.validation;
 
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
@@ -78,6 +78,7 @@ public class UserImmediateParentValidatorITCL extends AbstractRule<User> {
             User parent = userService.findByLoginId(parentID.getImmediateParent());
             if (parent == null) {
                 ruleResult.add(IMMEDIATE_PARENT_MESSAGE_2);
+                return;
             }
 
             if ((parent.getActiveStatus() != ActiveStatus.ACTIVE)) {
