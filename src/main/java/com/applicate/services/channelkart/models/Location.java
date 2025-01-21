@@ -6,10 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.applicate.services.channelkart.annotation.UniqueKey;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -20,6 +17,7 @@ import java.util.Objects;
 indexes={
 		@Index(name="Location_idx_1",columnList="location_hierarchy")
 })
+@Cacheable(true)
 public class Location extends CommonDataModel {
 
 	private static final long serialVersionUID = -8105119419691406049L;
