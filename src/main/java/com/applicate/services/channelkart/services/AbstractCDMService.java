@@ -312,7 +312,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         }
 //
 //        if (!DataSourceUtils.isDefaultDataSource(SecurityContextUtils.getLob())) {
-//            cdm.setLob(SecurityContextUtils.getLob());
+           cdm.setLob(SecurityContextUtils.getLob());
 //        }
 
 
