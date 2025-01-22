@@ -43,6 +43,8 @@ public class ETLPipelineService {
     ObjectMapper objectMapper = JSONUtils.getObjectMapper();
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
+    public static final List<String> DISABLED_INT_HISTORY_LOBS = List.of(Optional.ofNullable(System.getenv("disabledIntHistory")).orElseGet(()->"unnati").split(","));
+
     private int retryCount;
     private KafkaIntegrationPublisher publisher = null;
 
@@ -263,6 +265,7 @@ public class ETLPipelineService {
 
 
     private void updateStatus(StreamingRawData sdr, List<IntegrationHistory> integrationDataList) {
+        if(!DISABLED_INT_HISTORY_LOBS.contains(sdr.getLob())) {
         if (isIntegration(sdr) && !integrationDataList.isEmpty()) {
             try {
                 ihs.update(integrationDataList);
@@ -270,6 +273,9 @@ public class ETLPipelineService {
                 log.info("Exception while saving record for request ->{} ", sdr.getRequestId(), e);
                 addFailureToUpdate(sdr, integrationDataList, e.getMessage());
             }
+        }
+        } else {
+            log.info("Skipping update for integration history");
         }
 
     }

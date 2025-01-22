@@ -144,6 +144,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                 () -> addHash(inObject));
         if (!cdmObject.forceHash() && cdmObject.canHash() && StringUtils.isNotEmpty(existingHash) && existingHash.equals(cdmObject.getHash())) {
             // no need to save this record because this hash is same
+            log.info("Hash already present in database: {}", existingHash);
             return cdmObject;
         }
         T saved = null;
