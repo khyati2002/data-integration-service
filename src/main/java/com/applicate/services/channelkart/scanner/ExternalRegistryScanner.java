@@ -13,6 +13,9 @@ import com.applicate.services.channelkart.validations.AbstractRule;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.Duration;
@@ -26,6 +29,7 @@ import java.util.function.Predicate;
  * Dhaneesh
  */
 public class ExternalRegistryScanner {
+
     private static Logger logger = LoggerFactory.getLogger(ExternalRegistryScanner.class);
     private  ResourcesLoader resourcesLoader;
     private AbstractRule proxyRule;
@@ -38,12 +42,12 @@ public class ExternalRegistryScanner {
             ProfileRegistry.INSTANCE.get(lob).stream().filter(p->"bundle".equalsIgnoreCase(p.getType())).forEach(p->{
                 String path = p.getAttributes().get("artifactURL").asText();
                 try{
-//                    SecurityContextUtils.switchWithLOB(lob, () -> {
+                    SecurityContextUtils.switchWithLOB(lob, () -> {
                         ExternalRegistryScanner ers =  ExternalRegistryScanner.getInstance();
                         URL presignedUrl = generatePresignedUrl(path, Duration.ofDays(7).toMillis());
-//                        ers.loadBundle(presignedUrl.toString());
-//                        return null;
-//                    });
+                        ers.loadBundle(presignedUrl.toString());
+                        return null;
+                    });
 
                 }catch (Exception e){
                     logger.error("Failed to load bundle from path {}", path, e);

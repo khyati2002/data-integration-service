@@ -11,7 +11,6 @@ import com.applicate.services.channelkart.validations.RuleResult;
 import com.applicate.services.channelkart.validations.Status;
 import com.applicate.services.channelkart.validations.repository.RegexValidation;
 
-
 import java.util.List;
 import java.util.Optional;
 

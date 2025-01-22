@@ -1,16 +1,16 @@
-package com.salescode.dataintegration.bundle;
+package com.applicate.unnati.validation;
 
 
+import com.applicate.services.channelkart.models.Location;
+import com.applicate.services.channelkart.models.OutletDetails;
+import com.applicate.services.channelkart.utils.JSONUtils;
+import com.applicate.services.channelkart.utils.NullUtils;
+import com.applicate.services.channelkart.utils.StringUtils;
+import com.applicate.services.channelkart.validations.AbstractRule;
+import com.applicate.services.channelkart.validations.RuleResult;
+import com.applicate.services.channelkart.validations.Status;
+import com.applicate.services.channelkart.validations.repository.RegexValidation;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.salescode.channelkart.models.Location;
-import com.salescode.channelkart.models.OutletDetails;
-import com.salescode.channelkart.utils.JSONUtils;
-import com.salescode.channelkart.utils.NullUtils;
-import com.salescode.channelkart.validations.repository.RegexValidation;
-import com.salescode.channelkart.validations.AbstractRule;
-import com.salescode.dataintegration.etl.validation.RuleResult;
-import com.salescode.dataintegration.etl.validation.ValidationResult;
-import com.salescode.channelkart.utils.StringUtils;
 
 import java.util.*;
 
@@ -197,14 +197,14 @@ public class OutletValidatorITCL extends AbstractRule<OutletDetails> {
             }
 
             if (ruleResult.size() > 0) {
-                return new RuleResult(ValidationResult.Status.ERROR, org.apache.commons.lang.StringUtils.join(ruleResult, ", "));
+                return new RuleResult(Status.ERROR, org.apache.commons.lang.StringUtils.join(ruleResult, ", "));
             } else {
                 return RuleResult.OK;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new RuleResult(ValidationResult.Status.ERROR, "unexpected server error ");
+            return new RuleResult(Status.ERROR, "unexpected server error ");
         }
 
     }

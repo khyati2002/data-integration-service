@@ -1,6 +1,7 @@
 package com.applicate.services.channelkart.utils;
 
 
+import com.applicate.services.channelkart.scanner.ExternalRegistryScanner;
 import com.applicate.services.channelkart.services.SpringContext;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.reflections.Reflections;
@@ -62,6 +63,15 @@ public class ReflectionUtils {
         } catch (Exception e) {
             throw new ReflectionException("Could not create instance of class:" + tClass, e);
         }
+    }
+
+    public static <T> T createInstance(String fullyQualifiedClassName) {
+        ExternalRegistryScanner scanner = ExternalRegistryScanner.getInstance();
+        if (scanner.isExternal(fullyQualifiedClassName)) {
+            return scanner.createObject(fullyQualifiedClassName);
+        }
+        Class<T> clazz = loadClass(fullyQualifiedClassName);
+        return createInstance(clazz);
     }
 
     @SuppressWarnings("unchecked")

@@ -51,7 +51,7 @@ public class SecurityContextUtils implements EnvironmentAware {
     }
 
     public static <T> T switchWithLOB(String lob, Function<T> function) {
-        return null;
+        return function.invoke();
     }
     
 

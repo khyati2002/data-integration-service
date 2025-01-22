@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 @Service
+@DependsOn("securityContextUtils")
 public class StartupBooster {
     public static final String SYSTEM_INFO = "systemInfo";
     private static final String SYSTEM_TYPE = "systemType";

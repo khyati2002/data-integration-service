@@ -62,7 +62,7 @@ public class KafkaConsumerJob {
                 env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Integration Kafka Source")
                         .setParallelism(5)
 //                        .windowAll(TumblingProcessingTimeWindows.of(Time.milliseconds(batchTimeoutMs)))
-                        .countWindowAll(4)
+                        .countWindowAll(3)
                         .aggregate(new ListAggregator<ObjectNode>())
                         .map(new MapFunction<List<ObjectNode>, List<ObjectNode>>() {
                             @Override

@@ -1,16 +1,16 @@
 package com.applicate.unnati.validation;
 
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.applicate.services.channelkart.models.HierarchyMetaData;
 import com.applicate.services.channelkart.models.User;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.services.SpringContext;
 import com.applicate.services.channelkart.services.UserService;
+import com.applicate.services.channelkart.validations.AbstractRule;
 import com.applicate.services.channelkart.validations.RuleResult;
 import com.applicate.services.channelkart.validations.Status;
 import com.applicate.services.channelkart.validations.repository.RegexValidation;
-import com.applicate.services.channelkart.validations.AbstractRule;
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 
 import java.util.HashSet;
 import java.util.List;
