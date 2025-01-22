@@ -275,7 +275,7 @@ public class ETLPipelineService {
             }
         }
         } else {
-            log.info("Skipping update for integration history");
+            log.info("Skipping update for integration history {}", sdr.getRequestId());
         }
 
     }
