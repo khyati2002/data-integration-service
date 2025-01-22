@@ -46,6 +46,8 @@ public class JarScanner {
                     loaderMap.put(SecurityContextUtils.getLob() + ":" + className, resourcesInfo);
                 } catch (ClassNotFoundException e) {
                     logger.error("Could not find class for resource loader", e);
+                } catch (NoClassDefFoundError e) {
+                    logger.error("Could not load class for resource loader {}", e.getMessage());
                 }
             });
         }
