@@ -6,6 +6,7 @@ import org.apache.flink.formats.json.JsonDeserializationSchema;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +31,9 @@ public class DISKafkaSourceBuilder {
             .setBootstrapServers(bootstrapServers)
             .setTopics(subscribedTopic)
             .setGroupId(consumerGroupId)
-            .setStartingOffsets(OffsetsInitializer.earliest())
+            .setStartingOffsets(OffsetsInitializer.committedOffsets(OffsetResetStrategy.EARLIEST))
             .setValueOnlyDeserializer(new JsonDeserializationSchema<ObjectNode>(ObjectNode.class))
+            .setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1")
             .build();
     }
 }
