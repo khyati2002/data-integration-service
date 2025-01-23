@@ -15,11 +15,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConversionException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
@@ -38,8 +39,9 @@ import java.util.stream.StreamSupport;
  * @since May 2020
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-@Slf4j
 public class JSONUtils {
+
+    static Logger log = LoggerFactory.getLogger(JSONUtils.class);
 
     public static final TypeReference<Map<String, String>> STRING_VALUE_MAP_REFERENCE = new TypeReference<>() {
     };

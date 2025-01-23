@@ -1,17 +1,15 @@
 package com.applicate.services.channelkart.models;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.applicate.services.channelkart.annotation.UniqueKey;
 import com.applicate.services.channelkart.converters.JSONObjectConverter;
 import com.applicate.services.channelkart.security.vault.VaultManager;
 import com.applicate.services.channelkart.utils.EntityUtils;
-import lombok.Getter;
-import lombok.Setter;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
 
 
 @Entity
@@ -19,36 +17,53 @@ import javax.persistence.Table;
 public class Profile extends CommonDataModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Setter
-    @Getter
-    @UniqueKey
+	@UniqueKey
 	@Column(unique = true)
 	private String name;
-	
-	@Setter
-    @Getter
-    private String type;
-	
+
+	private String type;
+
 	@Column(columnDefinition = "json")
 	@Convert(converter= JSONObjectConverter.class)
 	private JsonNode attributes;
-	
-	@Setter
-    @Getter
-    @Column(columnDefinition = "longtext")
+
+	@Column(columnDefinition = "longtext")
 	private String payload;
 
-	@Getter
-    private String implementation;
+	private String implementation;
 
-    public Profile() {
-    }
+	public Profile() {
+	}
 
-    public JsonNode getAttributes() {
+	public String getPayload() {
+		return payload;
+	}
+
+	public void setPayload(String payload) {
+		this.payload = payload;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public JsonNode getAttributes() {
 		if(payload!=null) {
 			return new JSONObjectConverter().convertToEntityAttribute(VaultManager.decrypt(payload));
 		}
@@ -67,7 +82,11 @@ public class Profile extends CommonDataModel {
 		this.attributes = attributes;
 	}
 
-    public Profile setImplementation(String implementation) {
+	public String getImplementation() {
+		return implementation;
+	}
+
+	public Profile setImplementation(String implementation) {
 		this.implementation = implementation;
 		return this;
 	}

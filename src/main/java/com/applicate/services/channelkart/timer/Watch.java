@@ -1,18 +1,16 @@
 package com.applicate.services.channelkart.timer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
 
 /**
  * @author : Jinu
  * Date    : 12/3/2020
  **/
-@Getter
 public class Watch {
 
-    private final String taskName;
+    private String taskName;
 
-    private final long startingTime;
+    private long startingTime;
 
     private long endingTime;
 
@@ -28,6 +26,22 @@ public class Watch {
         this.duration = endingTime - startingTime;
     }
 
+    public long getStartingTime() {
+        return startingTime;
+    }
+
+    public long getEndingTime() {
+        return endingTime;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
     @JsonIgnore
     public boolean isStopped() {
         return !isActive();
@@ -40,6 +54,9 @@ public class Watch {
 
     @Override
     public String toString() {
-        return "taskName='" + taskName + '\'' + ", startingTime=" + startingTime + ", endingTime=" + endingTime + ", duration=" + duration;
+        return  "taskName='" + taskName + '\'' +
+                ", startingTime=" + startingTime +
+                ", endingTime=" + endingTime +
+                ", duration=" + duration ;
     }
 }

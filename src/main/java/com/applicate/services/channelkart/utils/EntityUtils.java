@@ -28,6 +28,7 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
@@ -58,6 +59,7 @@ public class EntityUtils implements InitializingBean {
     private final ObjectMapper mapper = JSONUtils.getObjectMapper();
     Set<Class<? extends CommonDataModel>> subClasses;
     @Autowired
+    @Lazy
     MetaDataService metaDataService;
     private Map<String, Set<Field>> uniqueFieldsMap = new ConcurrentHashMap<>();
     private Map<String, Field> tableFieldsMap = new ConcurrentHashMap<>();
@@ -65,8 +67,6 @@ public class EntityUtils implements InitializingBean {
     private EntityManagerFactory entityManagerFactory;
     @PersistenceContext
     private EntityManager entitymanager;
-    @Autowired
-    private MetaDataService metaDataervice;
 
 
     public EntityUtils() {

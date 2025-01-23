@@ -1,10 +1,14 @@
 package com.applicate.services.channelkart.scanner;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.AmazonS3URI;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.applicate.services.channelkart.cache.AllLOBRouter;
+import com.applicate.services.channelkart.commandline.Profiles;
+import com.applicate.services.channelkart.models.Profile;
 import com.applicate.services.channelkart.profiles.ProfileRegistry;
 import com.applicate.services.channelkart.scanner.ResourcesLoader.ResourcesInfo;
 import com.applicate.services.channelkart.security.SecurityContextUtils;
@@ -37,6 +41,8 @@ public class ExternalRegistryScanner {
     public static ExternalRegistryScanner getInstance(){
         return INSTANCE;
     }
+    public static final String REGION="ap-south-1";
+
     public void loadAll(Predicate<String> predicate) {
         AllLOBRouter.allLobs().forEach(lob->{
             ProfileRegistry.INSTANCE.get(lob).stream().filter(p->"bundle".equalsIgnoreCase(p.getType())).forEach(p->{
@@ -45,6 +51,7 @@ public class ExternalRegistryScanner {
                     SecurityContextUtils.switchWithLOB(lob, () -> {
                         ExternalRegistryScanner ers =  ExternalRegistryScanner.getInstance();
                         URL presignedUrl = generatePresignedUrl(path, Duration.ofDays(7).toMillis());
+                        logger.info("Presigned URL: {}", presignedUrl);
                         ers.loadBundle(presignedUrl.toString());
                         return null;
                     });
@@ -119,8 +126,12 @@ public class ExternalRegistryScanner {
     }
 
     public static URL generatePresignedUrl(String path,long expiration) {
+        Profile profile = Profiles.get(SecurityContextUtils.getLob(), "aws-private");
+        String accessKey = profile.getAttributes().get("access-key").asText();
+        String secretKey = profile.getAttributes().get("secret-key").asText();
         AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                .withRegion("ap-south-1")
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+                .withRegion(REGION)
                 .build();
         AmazonS3URI s3URI = new AmazonS3URI(path);
         long expirationTime = System.currentTimeMillis()+expiration;

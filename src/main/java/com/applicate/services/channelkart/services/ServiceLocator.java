@@ -1,28 +1,31 @@
 package com.applicate.services.channelkart.services;
 
-import com.applicate.services.channelkart.models.CommonDataModel;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.utils.CopyOnWriteMap;
+import com.applicate.services.channelkart.scanner.BundleResource;
+import com.applicate.services.channelkart.scanner.ExternalRegistryScanner;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-@Slf4j
 public class ServiceLocator {
 
-    private static final Map<Class<?>, CommonDataModelService<?>> SERVICE_REGISTRY = new CopyOnWriteMap<>();
+    private static final Map<Class<?>, CommonDataModelService<?>> SERVICE_REGISTRY = new ConcurrentHashMap<>();
 
     private ServiceLocator() {
         throw new UnsupportedOperationException("Utility Class");
     }
 
-    public static <T extends CommonDataModel> CommonDataModelService<T> lookup(Class<T> cdmType) {
-        CommonDataModelService<?> commonDataModelService = SERVICE_REGISTRY.get(cdmType);
-        return (CommonDataModelService<T>) commonDataModelService;
+    @SuppressWarnings("unchecked")
+    public static <T> CommonDataModelService<T> lookup(Class<T> cdmType) {
+        return (CommonDataModelService<T>) SERVICE_REGISTRY.get(cdmType);
     }
 
     public static <T> void register(Class<T> persistentClass, CommonDataModelService<?> abstractCDMService) {
-        log.info("Registering {} service {}", persistentClass.getSimpleName(), abstractCDMService.getClass().getSimpleName());
         SERVICE_REGISTRY.put(persistentClass, abstractCDMService);
+    }
+
+    private static boolean isTaskType(BundleResource resource) {
+        return "task".equalsIgnoreCase(resource.getType());
     }
 
 }

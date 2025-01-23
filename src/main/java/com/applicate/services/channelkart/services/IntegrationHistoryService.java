@@ -7,6 +7,7 @@ import com.applicate.services.channelkart.repository.NativeCDMMapper;
 import com.applicate.services.channelkart.security.SecurityContextUtils;
 import com.applicate.services.channelkart.utils.JdbcUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class IntegrationHistoryService {
     private static final String STATUS = "status";
     private static final String DEFAULT_INTEGRATION_STATUS_QUERY = "select entity_name,status,count from(select attributes->>'$.entityName' entity_name,'total' status, ifNull(attributes->>'$.sourceCount',0) count from ck_task where type='INTEGRATION_AUDIT' and creation_time>=FROM_UNIXTIME('{{startTime}}'/1000) and creation_time<FROM_UNIXTIME('{{endTime}}'/1000) union select entity_name,status,count(1) as count from ck_integration_history where timestamp>={{startTime}} and timestamp<{{endTime}} group by entity_name,status) res1";
     @Autowired
+    @Lazy
     NativeEntityManager nativeEntityManager;
     @Autowired
     IntegrationHistoryRepository repository;

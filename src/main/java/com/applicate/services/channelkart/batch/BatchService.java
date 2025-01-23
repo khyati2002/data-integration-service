@@ -1,7 +1,12 @@
 package com.applicate.services.channelkart.batch;
 
+import com.applicate.services.channelkart.batch.hash.BatchContainer;
 import com.applicate.services.channelkart.batch.repo.BatchRepository;
+import com.applicate.services.channelkart.batch.repo.HashAwareData;
 import com.applicate.services.channelkart.models.CommonDataModel;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +24,22 @@ public class BatchService {
       String hash = model.hash();
       model.setHash(hash);
       return model;
+   }
+
+   public <T extends CommonDataModel> BatchContainer<T> splitElements(Map<String, T> hashedElements) {
+      Class<? extends CommonDataModel> aClass = hashedElements.values().stream().findFirst().orElseThrow(() -> new IllegalArgumentException("cant get entity type from empty map")).getClass();
+      Set<String> strings = hashedElements.keySet();
+      List<HashAwareData> duplicateHashes = batchRepository.getDuplicateHashes(aClass, strings);
+      BatchContainer<T> container = new BatchContainer<>();
+      duplicateHashes.forEach(data -> {
+         T element = hashedElements.remove(data.getHash());
+         if(element!=null) {
+            element.setId(data.getId());
+            element.setVersion(data.getVersion());
+            container.addToDuplicate(element);
+         }
+      });
+      container.setElementsToUpdate(hashedElements.values());
+      return container;
    }
 }

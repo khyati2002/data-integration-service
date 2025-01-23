@@ -3,7 +3,6 @@ package com.salescode.dis.flink.jobs.fromKafkaToDB;
 import com.salescode.DataIntegrationApplication;
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dataintegration.etl.ETLPipelineService;
-import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
@@ -21,7 +20,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-@Log4j
 public class MessageProcessFunction extends ProcessFunction<List<ObjectNode>, List<CommonDataModel>> {
 
     private OutputTag<String> deadLetterTag;
@@ -36,15 +34,11 @@ public class MessageProcessFunction extends ProcessFunction<List<ObjectNode>, Li
     @Override
     public void open(OpenContext openContext) throws Exception {
         super.open(openContext);
-        log.info("Initializing Context");
-        log.warn("Initializing Context");
         logger = Logger.getLogger(this.getClass());
         System.setProperty("sun.net.maxDatagramSockets", "2048");
         System.setProperty("java.io.serialization.validateSerialVersionUID","false");
         ConfigurableApplicationContext run = SpringApplication.run(DataIntegrationApplication.class);
-        log.info("Context {}" + run);
         etlPipelineService = run.getBean(ETLPipelineService.class);
-        log.info("found etlPipelineService {}" + etlPipelineService);
     }
 
     @Override

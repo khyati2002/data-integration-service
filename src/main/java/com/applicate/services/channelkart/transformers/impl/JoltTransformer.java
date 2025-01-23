@@ -1,26 +1,38 @@
+/*
+ * Copyright (c) 2020. All rights reserved.
+ * APPLICATE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ */
 package com.applicate.services.channelkart.transformers.impl;
 
-import com.bazaarvoice.jolt.Chainr;
-import com.bazaarvoice.jolt.JsonUtils;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.applicate.services.channelkart.transformers.AbstractTransformer;
 import com.applicate.services.channelkart.transformers.TransformerInfo;
 import com.applicate.services.channelkart.utils.JSONUtils;
 import com.applicate.services.channelkart.utils.NullUtils;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-
+import com.bazaarvoice.jolt.Chainr;
+import com.bazaarvoice.jolt.JsonUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
-public class JoltTransformer extends AbstractTransformer<Map<String, Object>, Object> {
+/**
+ * The class JoltTransformer.
+ *
+ * @author Manish Srivastava
+ * @since  May 2020
+ */
+public class JoltTransformer extends AbstractTransformer<Map<String,Object>,Map<String,Object>> {
+
+    private static Logger logger = LoggerFactory.getLogger(JoltTransformer.class);
+
+    private TransformerInfo transformerInfo;
 
     @Override
-    @SneakyThrows
-    public Object transform(Map<String, Object> jsonobj) {
-        TransformerInfo transformerInfo= this.getTransformerInfo();
+    public Map<String,Object> transform(Map<String,Object> jsonobj) {
+        transformerInfo= this.getTransformerInfo();
         ArrayNode code_node= transformerInfo.getCode();
         if(NullUtils.isNotNull(code_node) && NullUtils.isNotNull(jsonobj)) {
             try {
@@ -30,7 +42,7 @@ public class JoltTransformer extends AbstractTransformer<Map<String, Object>, Ob
                 return JSONUtils.getObjectMapper().readValue(JsonUtils.toJsonString(transformedOutput),new TypeReference<HashMap<String,Object>>(){});
             }
             catch(Exception ex) {
-                log.error("Jolt Transformer Exception",ex);
+                logger.error("Jolt Transformer Exception",ex);
                 return null;
             }
         }
@@ -38,4 +50,5 @@ public class JoltTransformer extends AbstractTransformer<Map<String, Object>, Ob
             throw new NullPointerException("Either jolt specification/input json found null");
         }
     }
+
 }

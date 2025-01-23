@@ -1,22 +1,39 @@
 package com.applicate.services.channelkart.enrichments;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
-@Getter
 public class EnrichmentOperationResult {
 
     private Status status;
-    private List<EnrichmentResult> enrichmentResults = new ArrayList<EnrichmentResult>();
+    public Status getStatus() {
+        return status;
+    }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+    public EnrichmentOperationResult(Status status) {
+        this.status=status;
+    }
+
+    private List<EnrichmentResult> enrichmentResults=new ArrayList<EnrichmentResult>();
+    public List<EnrichmentResult> getEnrichmentResults() {
+        return enrichmentResults;
+    }
+    public void setEnrichmentResults(List<EnrichmentResult> enrichmentResults) {
+        this.enrichmentResults = enrichmentResults;
+    }
+
     private List<CommonDataModel> enrichedData;
 
-    public EnrichmentOperationResult(Status status) {
-        this.status = status;
+
+    public List<CommonDataModel> getEnrichedData() {
+        return enrichedData;
+    }
+
+    public void setEnrichedData(List<CommonDataModel> enrichedData) {
+        this.enrichedData = enrichedData;
     }
 
 

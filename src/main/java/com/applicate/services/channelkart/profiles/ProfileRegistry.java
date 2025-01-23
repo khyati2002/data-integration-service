@@ -7,8 +7,6 @@ import com.applicate.services.channelkart.cache.DistributedCache;
 import com.applicate.services.channelkart.models.Profile;
 import com.applicate.services.channelkart.registry.AbstractRegistry;
 import com.applicate.services.channelkart.utils.JdbcUtils;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -19,10 +17,9 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@Setter
-@Getter
 @Component
 public class ProfileRegistry extends AbstractRegistry<Profile> implements InitializingBean {
+
 	//public static final ProfileRegistry INSTANCE = new ProfileRegistry();
 	public static ProfileRegistry INSTANCE;
 
@@ -42,7 +39,15 @@ public class ProfileRegistry extends AbstractRegistry<Profile> implements Initia
 		this.distributedCache= distributedCache;
 	}
 
-    @Override
+	public DistributedCache getDistributedCache() {
+		return distributedCache;
+	}
+
+	public void setDistributedCache(DistributedCache distributedCache) {
+		this.distributedCache = distributedCache;
+	}
+
+	@Override
 	public void add(Profile profile) {
 		synchronized (profile.getLob().intern()) {
 			List<Profile> rules = (List<Profile>) distributedCache.get(profile.getLob(), null, CACHE_DOMAIN, false);

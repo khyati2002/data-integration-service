@@ -5,7 +5,6 @@ import com.salescode.dis.flink.aggregator.ListAggregator;
 import com.salescode.dis.flink.sinks.DISKafkaSinkBuilder;
 import com.salescode.dis.flink.sinks.JOOQSink;
 import com.salescode.dis.flink.sources.DISKafkaSourceBuilder;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.connector.kafka.source.KafkaSource;
@@ -15,15 +14,18 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.OutputTag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Slf4j
 @Component
 public class KafkaConsumerJob {
+
+    transient Logger log = LoggerFactory.getLogger(KafkaConsumerJob.class);
 
     @Autowired
     private DISKafkaSourceBuilder kafkaSourceBuilder;
@@ -43,8 +45,11 @@ public class KafkaConsumerJob {
     @Value("${app.jobs.from-kafka-to-db.db.password}")
     private String password;
 
+    @Value("${app.parallelism:1}")
+    private int parallelism;
+
     public void executeJob() throws Exception {
-        int parallel = 12;
+        int parallel = parallelism;
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(parallel);

@@ -1,5 +1,6 @@
 package com.salescode.dataintegration.etl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,8 +17,9 @@ import com.applicate.services.channelkart.response.OperationStatus;
 import com.applicate.services.channelkart.services.IntegrationHistoryService;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.JSONUtils;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +30,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class ETLPipelineService {
+
+    public static Logger log = LoggerFactory.getLogger(ETLPipelineService.class);
 
     public static final String ERROR_STR = "Exception";
     private static final String INTEGRATION_APP_ID = "integration";
@@ -55,7 +58,6 @@ public class ETLPipelineService {
         this.publisher = kafkaIntegrationPublisher;
     }
 
-    @SneakyThrows
     public List<CommonDataModel> executeBatch(List<String> messages) {
         List<CompletableFuture<List<CommonDataModel>>> futures = messages.stream()
             .map(message -> CompletableFuture.supplyAsync(() -> {
@@ -73,10 +75,14 @@ public class ETLPipelineService {
             .collect(Collectors.toList());
     }
 
-    @SneakyThrows
     public List<CommonDataModel> execute(String message) {
         log.info("Executing etl pipeline");
-        StreamingRawData streamingRawData = objectMapper.readValue(message, StreamingRawData.class);
+        StreamingRawData streamingRawData = null;
+        try {
+            streamingRawData = objectMapper.readValue(message, StreamingRawData.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         ArrayNode features = streamingRawData.getFeatures();
         if (features.isEmpty()) {
             throw new IllegalArgumentException("Features cannot be empty");

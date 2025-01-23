@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.applicate.services.channelkart.models.MetaData;
 import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.utils.JSONUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public class PropertyService {
 
     private final MetaDataService metaDataService;
 
-    public PropertyService(MetaDataService metaDataService) {
+    public PropertyService(@Lazy MetaDataService metaDataService) {
         this.metaDataService = metaDataService;
     }
 
