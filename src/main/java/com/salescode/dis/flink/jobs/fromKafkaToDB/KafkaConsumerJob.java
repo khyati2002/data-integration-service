@@ -57,11 +57,10 @@ public class KafkaConsumerJob {
 
         SingleOutputStreamOperator<List<CommonDataModel>> sourceStream =
                 env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Integration Kafka Source")
-                        .setParallelism(5)
+                        .setParallelism(parallelism < 5 ? parallelism : 5)
 //                        .windowAll(TumblingProcessingTimeWindows.of(Time.milliseconds(batchTimeoutMs)))
                         .countWindowAll(3)
                         .aggregate(new ListAggregator<ObjectNode>())
-                        .setParallelism(parallel)
                         .process(new MessageProcessFunction(deadLetterTag))
                         .setParallelism(parallel);
 
