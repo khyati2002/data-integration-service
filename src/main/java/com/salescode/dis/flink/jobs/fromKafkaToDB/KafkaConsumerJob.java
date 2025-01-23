@@ -25,8 +25,6 @@ import java.util.List;
 @Component
 public class KafkaConsumerJob {
 
-    transient Logger log = LoggerFactory.getLogger(KafkaConsumerJob.class);
-
     @Autowired
     private DISKafkaSourceBuilder kafkaSourceBuilder;
 
@@ -63,13 +61,6 @@ public class KafkaConsumerJob {
 //                        .windowAll(TumblingProcessingTimeWindows.of(Time.milliseconds(batchTimeoutMs)))
                         .countWindowAll(3)
                         .aggregate(new ListAggregator<ObjectNode>())
-                        .map(new MapFunction<List<ObjectNode>, List<ObjectNode>>() {
-                            @Override
-                            public List<ObjectNode> map(List<ObjectNode> s) throws Exception {
-                                log.info("Batch size processing {}", s.size());
-                                return (List<ObjectNode>) s;
-                            }
-                        })
                         .setParallelism(parallel)
                         .process(new MessageProcessFunction(deadLetterTag))
                         .setParallelism(parallel);
