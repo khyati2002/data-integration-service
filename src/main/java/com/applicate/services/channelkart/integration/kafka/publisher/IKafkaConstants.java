@@ -3,12 +3,18 @@ package com.applicate.services.channelkart.integration.kafka.publisher;
 import org.apache.kafka.clients.admin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+@Component("iKafkaConstants")
 public class IKafkaConstants {
-    public static final String KAFKA_BROKERS;
+
+    public static String KAFKA_BROKERS;
     /**
      * Common Kafka Properties/Constants
      */
@@ -31,8 +37,15 @@ public class IKafkaConstants {
     private static AdminClient adminClient = null;
     public static final String EVENTS_CLIENT_ID = "client2";
 
-    static {
-        if (System.getenv(KAFKA_BROKERS_CNST) != null && !System.getenv(KAFKA_BROKERS_CNST).isEmpty()) {
+    @Value("${app.kafka.bootstrap-servers}")
+    private String kafkaBrokers;
+
+    @PostConstruct
+    public void init() {
+        if(kafkaBrokers != null && !kafkaBrokers.isEmpty()) {
+            KAFKA_BROKERS = kafkaBrokers;
+        }
+        else if (KAFKA_BROKERS.isEmpty() && System.getenv(KAFKA_BROKERS_CNST) != null && !System.getenv(KAFKA_BROKERS_CNST).isEmpty()) {
             KAFKA_BROKERS = System.getenv(KAFKA_BROKERS_CNST);
         } else {
             KAFKA_BROKERS = "164.52.202.184:9092";

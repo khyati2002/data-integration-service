@@ -84,6 +84,7 @@ import java.util.stream.Collectors;
 						@StoredProcedureParameter(mode = ParameterMode.IN, name = "loginids", type = String.class)
 				})
 })
+@IntegrationEntities(value = "User")
 public class User extends CommonDataModel {
 
 	/**

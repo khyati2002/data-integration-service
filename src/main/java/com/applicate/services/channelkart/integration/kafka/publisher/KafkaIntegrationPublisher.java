@@ -6,13 +6,19 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
-public class KafkaIntegrationPublisher {
+@Component
+@DependsOn("iKafkaConstants")
+public class KafkaIntegrationPublisher implements InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(KafkaIntegrationPublisher.class);
     private static final Map<String, Boolean> TOPIC_MAP = new ConcurrentHashMap<>();
     private static KafkaIntegrationPublisher publisher;
@@ -31,6 +37,10 @@ public class KafkaIntegrationPublisher {
             publisher = new KafkaIntegrationPublisher();
         }
         return publisher;
+    }
+
+    public static synchronized void setInstance(KafkaIntegrationPublisher publisherBean) {
+        publisher = publisherBean;
     }
 
     public static synchronized KafkaIntegrationPublisher getInstance(String brokers) {
@@ -112,4 +122,8 @@ public class KafkaIntegrationPublisher {
         }
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        setInstance(this);
+    }
 }

@@ -43,12 +43,6 @@ public class KafkaConsumerJob {
     @Value("${app.jobs.from-kafka-to-db.db.password}")
     private String password;
 
-    @Value("${app.kafka.batch.timeout.ms:250}")
-    private long batchTimeoutMs;
-
-    @Value("${app.kafka.batch.size:3}")
-    private long batchSize;
-
     public void executeJob() throws Exception {
         int parallel = 12;
 

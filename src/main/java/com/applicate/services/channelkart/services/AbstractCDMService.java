@@ -135,6 +135,15 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         }
     }
 
+    private void setOperationType(CommonDataModel model) {
+        Integer version = model.getVersion();
+        if(version==null) {
+            model.setCreate(true);
+            model.setVersion(0);
+        }
+    }
+
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public T save(T cdmObject) {
@@ -295,7 +304,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         }
 //        TimerUtils.withTime("Time taken to find changed value", () -> deltaAnalyzer.findAndSetDeltaChanges(cdm));
 //
-//        setOperationType(cdm);
+        setOperationType(cdm);
 
         if (cdm.getCreationTime() == null) {
             cdm.setCreationTime(Calendar.getInstance().getTime());
@@ -316,9 +325,10 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
            cdm.setLob(SecurityContextUtils.getLob());
 //        }
 
-
-        cdm.setLastModifiedTime(Calendar.getInstance().getTime());
-        cdm.setModifiedBy("dis");
+        if (fillModifyAttributes) {
+            cdm.setLastModifiedTime(Calendar.getInstance().getTime());
+            cdm.setModifiedBy(SecurityContextUtils.getPrincipal());
+        }
         processAggregations(cdm, visitedTree, idGenerator);
         return cdm;
     }

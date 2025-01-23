@@ -46,13 +46,13 @@ public class ETLPipelineService {
     public static final List<String> DISABLED_INT_HISTORY_LOBS = List.of(Optional.ofNullable(System.getenv("disabledIntHistory")).orElseGet(()->"unnati").split(","));
 
     private int retryCount;
-    private KafkaIntegrationPublisher publisher = null;
+    private final KafkaIntegrationPublisher publisher;
 
-    public ETLPipelineService(PipelineDispatcher dispatcher, IntegrationHistoryService ihs, Environment env) {
+    public ETLPipelineService(PipelineDispatcher dispatcher, IntegrationHistoryService ihs, Environment env, KafkaIntegrationPublisher kafkaIntegrationPublisher) {
         this.pipelineDispatcher = dispatcher;
         this.ihs = ihs;
         this.env = env;
-        publisher = KafkaIntegrationPublisher.getInstance();
+        this.publisher = kafkaIntegrationPublisher;
     }
 
     @SneakyThrows
