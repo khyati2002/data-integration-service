@@ -52,7 +52,7 @@ public class ExternalRegistryScanner {
                         ExternalRegistryScanner ers =  ExternalRegistryScanner.getInstance();
                         URL presignedUrl = generatePresignedUrl(path, Duration.ofDays(7).toMillis());
                         logger.info("Presigned URL: {}", presignedUrl);
-                        ers.loadBundle(presignedUrl.toString());
+//                        ers.loadBundle(presignedUrl.toString());
                         return null;
                     });
 
