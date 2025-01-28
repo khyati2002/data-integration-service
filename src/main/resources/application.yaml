@@ -1,11 +1,19 @@
 config:
   s3:
-    uri: "s3://salescode-dev-uat/dataintegration/{lob}/application.yaml"
+    uri: "s3://globalintegration/dataintegration/{lob}/application.yaml"
     region: ap-south-1
 
 logging:
   level:
     root: info
+#    org:
+#      hibernate:
+#        SQL: DEBUG
+#        type:
+#          descriptor:
+#            sql:
+#              BasicBinder: TRACE
+#    org.hibernate: DEBUG
 #    org.redisson: DEBUG
 
 sun:
@@ -18,30 +26,35 @@ spring:
   profiles:
     active: local
   datasource:
-    url: "jdbc:mysql://dev-rds.ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/ckunnatiuat_flink?autoReconnect=true&useSSL=false&nullCatalogMeansCurrent=true"
-    username: "ckuatadmin"
-    password: "Uat12Oct#"
+    url: "jdbc:mysql://unnati-perfetti-aurora-a-prod-cluster.cluster-c2szfgab1pix.ap-south-1.rds.amazonaws.com:3306/ckprodunnativ1?autoReconnect=true&useSSL=false&nullCatalogMeansCurrent=true"
+    username: "itcunnatiadmin"
+    password: "Itc#june13_#"
   jpa:
     properties:
       hibernate:
         jdbc:
           fetch_size: 500
+#    show-sql: true
 
-redisUrl: redis://dev-elasticache-redis-cluster.zymj1k.0001.aps1.cache.amazonaws.com:6379
+#redisUrl: redis://localhost:6379
+redisUrl: redis://sellina-prod-may26.wguhyp.clustercfg.aps1.cache.amazonaws.com:6379
+cacheClustered: true
+
 redis:
     localCacheMap: true
 
 channelkart:
-  lobs: cktestitcloyalty
-  environment: dev
+  lobs: unnati
+  environment: prod
 
 app:
-  lob: cktestitcloyalty
+  parallelism: 6
+  lob: unnati
   bundle:
     uri: "https://salescode-dev-uat.s3.ap-south-1.amazonaws.com/dataintegration/{lob}/dis-bundle.jar"
   kafka:
-    bootstrap-servers: "164.52.202.184:9092"
-    # bootstrap-servers: "localhost:9092"
+    bootstrap-servers: "b-1.demo-cluster-1.cw43sk.c4.kafka.ap-south-1.amazonaws.com:9092,b-2.demo-cluster-1.cw43sk.c4.kafka.ap-south-1.amazonaws.com:9092,b-3.demo-cluster-1.cw43sk.c4.kafka.ap-south-1.amazonaws.com:9092,b-4.demo-cluster-1.cw43sk.c4.kafka.ap-south-1.amazonaws.com:9092"
+#    bootstrap-servers: "164.52.202.184:9092"
     producer-txn-timeout: 60000
   jobs:
     from-kafka-to-db:
@@ -49,9 +62,9 @@ app:
       main-topic-name: flink-test
       dlq-topic-name: flink-test-dlt
       db:
-        url: "jdbc:mysql://dev-rds.ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/ckunnatiuat_flink"
-        user: "ckuatadmin"
-        password: "Uat12Oct#"
+        url: "jdbc:mysql://unnati-perfetti-aurora-a-prod-cluster.cluster-c2szfgab1pix.ap-south-1.rds.amazonaws.com:3306/ckprodunnativ1"
+        user: "itcunnatiadmin"
+        password: "Itc#june13_#"
     from-s3-to-kafka:
       bucket-name: dataplatform-flink
       file-type: csv  # can be csv or excel
