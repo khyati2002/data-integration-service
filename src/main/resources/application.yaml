@@ -48,7 +48,7 @@ channelkart:
   environment: prod
 
 app:
-  parallelism: 16
+  parallelism: 20
   lob: unnati
   bundle:
     uri: "https://salescode-dev-uat.s3.ap-south-1.amazonaws.com/dataintegration/{lob}/dis-bundle.jar"
