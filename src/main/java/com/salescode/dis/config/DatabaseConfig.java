@@ -29,7 +29,7 @@ public class DatabaseConfig {
         hikariDataSource.setJdbcUrl(url);
         hikariDataSource.setUsername(user);
         hikariDataSource.setPassword(password);
-        hikariDataSource.setMaximumPoolSize(10);
+        hikariDataSource.setMaximumPoolSize(8);
         hikariDataSource.setMinimumIdle(1);
         hikariDataSource.setConnectionTimeout(120000);
         DatabaseProfileRegistry.setDefaultDs(hikariDataSource);

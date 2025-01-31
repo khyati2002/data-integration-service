@@ -59,7 +59,7 @@ public class KafkaConsumerJob {
                 env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Integration Kafka Source")
                         .setParallelism(parallelism < 5 ? parallelism : 5)
 //                        .windowAll(TumblingProcessingTimeWindows.of(Time.milliseconds(batchTimeoutMs)))
-                        .countWindowAll(3)
+                        .countWindowAll(4)
                         .aggregate(new ListAggregator<ObjectNode>())
                         .process(new MessageProcessFunction(deadLetterTag))
                         .setParallelism(parallel);
