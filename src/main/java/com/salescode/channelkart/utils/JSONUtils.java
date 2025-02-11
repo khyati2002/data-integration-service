@@ -17,6 +17,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * The class JSONUtils.
@@ -129,5 +131,8 @@ public class JSONUtils {
 
     public static <T> T convert(JsonNode node, Class<T> clazz) {
         return OBJECT_MAPPER.convertValue(node, clazz);
+    }
+    public static Stream<JsonNode> stream(JsonNode nodes) {
+        return StreamSupport.stream(nodes.spliterator(), false);
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -105,24 +106,24 @@ public class ETLPipelineService {
         }
         return transformedObjects;
     }
-//    public List<CommonDataModel> transformData(StreamingRawData streamingRawData) {
-//        List<StreamingRawData.TransformerInfoRequest> transformerInfos = streamingRawData.getTransformerInfo();
-//        ArrayNode features = streamingRawData.getFeatures();
-//        return StreamSupport.stream(features.spliterator(), true)
-//                .flatMap(feature -> applyTransformersToFeature(transformerInfos, feature).stream())
-//                .collect(Collectors.toList());
-//    }
-//
-//    /**
-//     * Applies each transformer in the list to a single feature and returns a list of transformed CommonDataModel objects.
-//     *
-//     * @param transformerInfos List of transformer configurations
-//     * @param feature          The feature (JsonNode) to transform
-//     * @return List of transformed CommonDataModel objects for the given feature
-//     */
-//    private List<CommonDataModel> applyTransformersToFeature(List<StreamingRawData.TransformerInfoRequest> transformerInfos, JsonNode feature) {
-//        return transformerInfos.stream()
-//                .flatMap(transformerInfo -> dataTransformationService.transformData(transformerInfo.getTransformerId(), transformerInfo.getEntityName(), feature).stream())
-//                .collect(Collectors.toList());
-//    }
+    public List<CommonDataModel> transformData(StreamingRawData streamingRawData) {
+        List<StreamingRawData.TransformerInfoRequest> transformerInfos = streamingRawData.getTransformerInfo();
+        ArrayNode features = streamingRawData.getFeatures();
+        return StreamSupport.stream(features.spliterator(), true)
+                .flatMap(feature -> applyTransformersToFeature(transformerInfos, feature).stream())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Applies each transformer in the list to a single feature and returns a list of transformed CommonDataModel objects.
+     *
+     * @param transformerInfos List of transformer configurations
+     * @param feature          The feature (JsonNode) to transform
+     * @return List of transformed CommonDataModel objects for the given feature
+     */
+    private List<CommonDataModel> applyTransformersToFeature(List<StreamingRawData.TransformerInfoRequest> transformerInfos, JsonNode feature) {
+        return transformerInfos.stream()
+                .flatMap(transformerInfo -> dataTransformationService.transformData(transformerInfo.getTransformerId(), transformerInfo.getEntityName(), feature).stream())
+                .collect(Collectors.toList());
+    }
 }

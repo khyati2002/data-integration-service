@@ -197,14 +197,14 @@ public final class EntityUtils {
         if (!dynamicPrimaryKeys.isEmpty()) {
             return findUniqueRecord(clazz, element, dynamicPrimaryKeys);
         } else {
-           //return findUniqueRecord(clazz, element);
-            return null;
+         //  return findUniqueRecord(clazz, element);
         }
+        return null;
     }
-//
+
 //    public CommonDataModel findUniqueRecord(Class<? extends CommonDataModel> clazz, CommonDataModel element) {
 //        String tablename = getTableName(clazz);
-//        TableImpl dslContextTable = getDSLContextTable(clazz);
+//       TableImpl dslContextTable = getDSLContextTable(clazz);
 ////        List<? extends TableField<?, ?>> list = dslContext.meta(dslContextTable).getUniqueKeys().stream().flatMap(s -> s.getFields().stream()).toList();
 //        dslContext.meta(dslContextTable).getUniqueKeys()
 //                .stream()
@@ -245,15 +245,17 @@ public final class EntityUtils {
         for (int i = 0; i < columnArr.size(); i++) {
             String tempval = String.valueOf(getBeanProperty(element, columnArr.get(i).asText()));
             if (tempval != null) {
-                if (value.isBlank()) {
-                    value = tempval.toLowerCase();
-                } else {
-                    value = value + "-" + tempval.toLowerCase();
+                value = tempval;
+                String colName = columnArr.get(i).toString();
+                if(buffer2.length()> 0) {
+                    buffer2.append(" and ").append(columnArr.get(i).toString().substring(1, colName.length() - 1)).append("=").append("'").append(StringUtils.escapeSql(value)).append("'");
                 }
-                value = value.replace(" ", "-");
+                else{
+                    buffer2.append(columnArr.get(i).toString().substring(1, colName.length() - 1)).append("=").append("'").append(StringUtils.escapeSql(value)).append("'");
+                }
             }
         }
-        buffer2.append("id").append("=").append("'").append(StringUtils.escapeSql(checkGenerateMD5Hash(clazz.getSimpleName()) ? EncodingUtils.getMd5(value) : value)).append("'");
+
 //        Query sqlquery = entitymanager.createNativeQuery(buffer1.toString(), clazz);
         try {
             return (CommonDataModel)  Objects.requireNonNull(dslContext.selectFrom(getDSLContextTable(clazz)).where(buffer2.toString())).fetchAnyInto(clazz);

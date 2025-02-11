@@ -252,7 +252,7 @@ public class CkLocation extends TableImpl<Record> {
     /**
      * The column <code>ck_location.rowid</code>.
      */
-    public final TableField<Record, Integer> ROWID = createField(DSL.name("rowid"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
+   // public final TableField<Record, Integer> ROWID = createField(DSL.name("rowid"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>ck_location.changed</code>.
@@ -317,10 +317,10 @@ public class CkLocation extends TableImpl<Record> {
         return Keys.KEY_CK_LOCATION_PRIMARY;
     }
 
-    @Override
-    public List<UniqueKey<Record>> getUniqueKeys() {
-        return Arrays.asList(Keys.KEY_CK_LOCATION_UK_OOI56BILJI21C7YTRREY3H20S, Keys.KEY_CK_LOCATION_ROWID);
-    }
+//    @Override
+//    public List<UniqueKey<Record>> getUniqueKeys() {
+//        return Arrays.asList(Keys.KEY_CK_LOCATION_UK_OOI56BILJI21C7YTRREY3H20S, Keys.KEY_CK_LOCATION_ROWID);
+//    }
 
     @Override
     public CkLocation as(String alias) {

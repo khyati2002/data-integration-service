@@ -9,14 +9,25 @@ import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.models.diff.Change;
 import com.salescode.channelkart.utils.CdmDiffUtil;
 import com.salescode.channelkart.utils.ReflectionUtils;
+import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Stream;
 
 public abstract class CommonDataModel implements Serializable {
+
+
+    public static final Set<String> EXCLUDED_PROPERTIES =
+            Set.of("hash", "forceHash", "isCreate", "id", "createdBy", "creationTime",
+                    "oldModel", "modifiedBy", "changes", "changed", "lastModifiedTime",
+                    "version", "lob","$jacocoData");
+
+    public static final Set<String> CAN_HASH =
+            Set.of("CkOutletDetails","CkUser");
 
     @Transient
     private boolean isCreate;
@@ -120,7 +131,8 @@ public abstract class CommonDataModel implements Serializable {
     @JsonIgnore
     @Transient
     public boolean canHash() {
-        return false;
+        String className = this.getClass().getSimpleName();
+        return CAN_HASH.contains(className);
     }
 
     public void setOldModel(CommonDataModel oldModel) {
@@ -128,25 +140,57 @@ public abstract class CommonDataModel implements Serializable {
         setChanges(null);
     }
 
-//    @JsonIgnore
-//    public String hash() {
-//        return hash(new HashSet<>(), 0);
-//    }
-//
-//    @JsonIgnore
-//    private String hash(Set<CommonDataModel> visitedModels, int level) {
-//        int currentLevel = level + 1;
-//        if (visitedModels.contains(this)) {
-//            return "";
-//        }
-//        visitedModels.add(this);
-//        List<Object> props = ReflectionUtils.extractInstanceValues(this, EXCLUDED_PROPERTIES);
-//        Object[] objectsToHash = props.stream()
-//                .filter(Objects::nonNull)
-//                .flatMap(item -> toItems(item, currentLevel))
-//                .map(value -> toHashableItem(value, visitedModels, currentLevel))
-//                .filter(Objects::nonNull)
-//                .toArray();
-//        return String.valueOf(Objects.hash(objectsToHash));
-//    }
+    @JsonIgnore
+    public String hash() {
+        return hash(new HashSet<>(), 0);
+    }
+
+    public boolean forceHash(){
+        return false;
+    }
+
+    @JsonIgnore
+    private String hash(Set<CommonDataModel> visitedModels, int level) {
+        int currentLevel = level + 1;
+        if (visitedModels.contains(this)) {
+            return "";
+        }
+        visitedModels.add(this);
+        List<Object> props = ReflectionUtils.extractInstanceValues(this, EXCLUDED_PROPERTIES);
+        Object[] objectsToHash = props.stream()
+                .filter(Objects::nonNull)
+                .flatMap(item -> toItems(item, currentLevel))
+                .map(value -> toHashableItem(value, visitedModels, currentLevel))
+                .filter(Objects::nonNull)
+                .toArray();
+        return String.valueOf(Objects.hash(objectsToHash));
+    }
+
+    private Stream<?> toItems(Object item, int level) {
+        if (item instanceof Collection) {
+            if (level > 1) {
+                return Stream.of("");
+            }
+            return ((Collection<?>) item).stream();
+        }
+        return Stream.of(item);
+    }
+
+    private Object toHashableItem(Object value, Set<CommonDataModel> visitedModels, int level) {
+        if (level > 1 && value instanceof CommonDataModel) {
+            // more than one level of caching is not required
+            return "";
+        }
+        if (value instanceof CommonDataModel && (visitedModels.contains(value))) {
+            // hash is already calculated or still calculating ... no need of check
+            return "";
+        }
+        if (value instanceof CommonDataModel) {
+            return ((CommonDataModel) value).hash(visitedModels, level);
+        }
+        if(JsonNode.class.isAssignableFrom(value.getClass()) || Enum.class.isAssignableFrom(value.getClass()))
+            return value.toString();
+        return value;
+    }
+
 }

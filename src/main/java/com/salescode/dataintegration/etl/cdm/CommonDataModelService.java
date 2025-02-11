@@ -12,5 +12,5 @@ public interface CommonDataModelService<T extends CommonDataModel> {
 
     public T save(T cdmObject);
 
-//    public T batchSave(Iterable<T> iterObj);
+    //public List<T> batchSave(Iterable<T> iterObj);
 }

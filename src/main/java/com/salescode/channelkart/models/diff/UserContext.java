@@ -1,7 +1,7 @@
 //package com.salescode.channelkart.models.diff;
 //
 //import com.salescode.channelkart.services.SpringContext;
-//import com.salescode.channelkart.utils.SecurityContextUtils;
+//import com.salescode.channelkart.security.SecurityContextUtils;
 //import com.salescode.jooq.generated.tables.CkUser;
 //
 //import java.util.LinkedHashMap;
