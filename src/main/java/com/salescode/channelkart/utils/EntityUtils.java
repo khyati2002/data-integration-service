@@ -192,12 +192,23 @@ public final class EntityUtils {
     }
 
     @SneakyThrows
-    public CommonDataModel findRecords(Class<? extends CommonDataModel> clazz, CommonDataModel element) {
+    public CommonDataModel findRecords(Class<? extends CommonDataModel> clazz, CommonDataModel element ) {
         ArrayNode dynamicPrimaryKeys = fetchDynamicPrimaryKeys(clazz.getSimpleName());
         if (!dynamicPrimaryKeys.isEmpty()) {
-            return findUniqueRecord(clazz, element, dynamicPrimaryKeys);
+            return findUniqueRecord(clazz, element, dynamicPrimaryKeys,new HashMap<>());
         } else {
          //  return findUniqueRecord(clazz, element);
+        }
+        return null;
+    }
+
+    @SneakyThrows
+    public CommonDataModel findRecords(Class<? extends CommonDataModel> clazz, CommonDataModel element,Map<String,? extends CommonDataModel> recordsMap) {
+        ArrayNode dynamicPrimaryKeys = fetchDynamicPrimaryKeys(clazz.getSimpleName());
+        if (!dynamicPrimaryKeys.isEmpty()) {
+            return findUniqueRecord(clazz, element, dynamicPrimaryKeys, recordsMap);
+        } else {
+            //  return findUniqueRecord(clazz, element);
         }
         return null;
     }
@@ -238,24 +249,30 @@ public final class EntityUtils {
         return "select * from " + tableName + " where ";
     }
 
-    public CommonDataModel findUniqueRecord(Class<? extends CommonDataModel> clazz, CommonDataModel element, ArrayNode columnArr) {
+    public CommonDataModel findUniqueRecord(Class<? extends CommonDataModel> clazz, CommonDataModel element, ArrayNode columnArr,Map<String,? extends CommonDataModel> recordsMap) {
         StringBuilder buffer2 = new StringBuilder();
 
         String value = "";
+        String mapValue = "";
         for (int i = 0; i < columnArr.size(); i++) {
             String tempval = String.valueOf(getBeanProperty(element, columnArr.get(i).asText()));
             if (tempval != null) {
                 value = tempval;
                 String colName = columnArr.get(i).toString();
                 if(buffer2.length()> 0) {
+                    mapValue += tempval;
                     buffer2.append(" and ").append(columnArr.get(i).toString().substring(1, colName.length() - 1)).append("=").append("'").append(StringUtils.escapeSql(value)).append("'");
                 }
                 else{
+                    mapValue += "-" + tempval;
                     buffer2.append(columnArr.get(i).toString().substring(1, colName.length() - 1)).append("=").append("'").append(StringUtils.escapeSql(value)).append("'");
                 }
             }
         }
 
+        if(recordsMap.containsKey(mapValue)){
+            return recordsMap.get(mapValue);
+        }
 //        Query sqlquery = entitymanager.createNativeQuery(buffer1.toString(), clazz);
         try {
             return (CommonDataModel)  Objects.requireNonNull(dslContext.selectFrom(getDSLContextTable(clazz)).where(buffer2.toString())).fetchAnyInto(clazz);

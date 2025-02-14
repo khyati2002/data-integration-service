@@ -1,7 +1,10 @@
 package com.salescode.channelkart.services;
+import com.salescode.channelkart.cache.DistributedCache;
+import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.channelkart.repository.RoleRepository;
 import com.salescode.jooq.generated.tables.pojos.CkAuthRole;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -14,6 +17,9 @@ public class RoleService extends AbstractCDMService<CkAuthRole> {
 	private static final String DOMAIN_NAME = "RoleService";
 
 	private final RoleRepository roleRepository;
+
+	@Autowired
+	private DistributedCache distributedCache;
 
 	public RoleService(RoleRepository roleRepository) {
 		this.roleRepository = roleRepository;
@@ -35,17 +41,16 @@ public class RoleService extends AbstractCDMService<CkAuthRole> {
 	}
 
 	private CkAuthRole getRoleFromCacheOrRepo(String roleName) {
-		//String lob = SecurityContextUtils.getLob();
-		//CkAuthRole roleFromCache = (CkAuthRole) distributedCache.get(lob,null, createRoleKey(roleName), false);
-		//if (roleFromCache == null) {
+		String lob = SecurityContextUtils.getLob();
+		CkAuthRole roleFromCache = (CkAuthRole) distributedCache.get(lob, null, createRoleKey(roleName), false);
+		if (roleFromCache == null) {
 			CkAuthRole roleFromRepo = roleRepository.findByNameIgnoreCase(roleName);
 			if (roleFromRepo != null) {
-			//	distributedCache.put(lob,null, createRoleKey(roleName), roleFromRepo,false);
+				distributedCache.put(lob, null, createRoleKey(roleName), roleFromRepo, false);
 				return roleFromRepo;
-		//	}
+			}
 		}
-		//return roleFromCache;
-        return roleFromRepo;
+		return roleFromCache;
 	}
 
 	public List<CkAuthRole> getRoleAsList(String name) {

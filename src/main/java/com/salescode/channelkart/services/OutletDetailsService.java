@@ -2,6 +2,7 @@ package com.salescode.channelkart.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.salescode.channelkart.cache.DistributedCache;
+import com.salescode.channelkart.repository.OutletDetailsRepository;
 import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.utils.TimerUtils;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -21,23 +22,24 @@ import com.salescode.jooq.generated.tables.pojos.*;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.DSLContext;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jooq.*;
+import org.jooq.impl.DSL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
 import static com.salescode.jooq.generated.Tables.CK_CUSTOMER_ACCOUNT;
-import static com.salescode.jooq.generated.tables.CkLocation.CK_LOCATION;
 import static com.salescode.jooq.generated.tables.CkUserParent.CK_USER_PARENT;
 import static com.salescode.jooq.generated.tables.CkUserdesignation.CK_USERDESIGNATION;
-import static com.salescode.jooq.generated.tables.CkHierarchyMetadata.CK_HIERARCHY_METADATA;
-import static com.salescode.jooq.generated.tables.CkOutletDetails.CK_OUTLET_DETAILS;
-import static com.salescode.jooq.generated.tables.CkOutletDetailsHierarchymetadata.CK_OUTLET_DETAILS_HIERARCHYMETADATA;
-import static com.salescode.jooq.generated.tables.CkUser.CK_USER;
 import static com.salescode.jooq.generated.tables.CkUserRoles.CK_USER_ROLES;
-import static org.jooq.impl.DSL.table;
+
 
 
 @Service
@@ -47,6 +49,8 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     private static final String WHOLESALER = "wholesaler";
 
     public static final String OUTLETS_CACHE_DOMAIN = "outlets";
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final DSLContext dsl;
     @Autowired
@@ -65,7 +69,6 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     @Autowired
     private DistributedCache distributedCache;
 
-
     @Autowired
     private PropertyRegistry propertyRegistry;
 
@@ -75,8 +78,17 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     @Autowired
     private PreProcessPipelineService preProcessPipelineService;
 
-   private final HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter;
+    private final HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter;
+
     @Autowired
+    private OutletDetailsRepository outletDetailsRepository;
+
+    @Autowired
+    private UserParentService userParentService;
+
+    @Autowired
+    private SupplierMetaDataService supplierMetaDataService;
+
     public OutletDetailsService(DSLContext dsl, HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter,
                                 UserService userService, LocationService locationService) {
 
@@ -91,104 +103,25 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
     }
 
 
-    public void createAssociatedData(CkOutletDetails outlet) {
+    public void createAssociatedData(CkOutletDetails outlet,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap, Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap) {
         if (outlet.getUserName() != null) {
-            addAssociatedData(outlet);
+            addAssociatedData(outlet,userMap,userParentMap,hierarchyMetadataMap);
         } else if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY)
                 .equals(ApplicationCategory.RETAIL.name())) {
-            createRetailUser(outlet);
+            createRetailUser(outlet, userMap, userParentMap,hierarchyMetadataMap);
         }
     }
 
-    public String getClientProperty(String property){
-        final String[] result = {null};
-        CkMetadata metaConfig = metadataRegistry.getMetadataByDomainNameAndType("client", "properties").orElse(null);
-        if (metaConfig != null) {
-            metaConfig.getDomainValues().forEach(pair -> {
-                String str = pair.get("name").toString();
-                String name = str.substring(1,str.length()-1);
-                String val = pair.get("value").asText();
-                if(property.equalsIgnoreCase(name)){
-                    result[0] = pair.get("value").asText();
-                }
-            });
-        }
-        return result[0];
-    }
 
-public CkLocation getLocation(CkOutletDetails outlet) {
-
-    return dsl.select(CK_OUTLET_DETAILS.fields())
-            .from(CK_OUTLET_DETAILS)
-            .join(CK_LOCATION)
-            .on(CK_OUTLET_DETAILS.LOCATION_HIERARCHY.eq(CK_LOCATION.LOCATION_HIERARCHY))
-            .where(CK_OUTLET_DETAILS.ID.eq(outlet.getId()))
-            .fetchOneInto(CkLocation.class);
-}
-
-
-
-    public CkLocation getLocationHierarchy(CkOutletDetails outlet){
-        return getLocation(outlet);
-    }
-//
-    public void refreshLocation(CkOutletDetails outletDetails) {
+    public void refreshLocation(CkOutletDetails outletDetails, Map<String,CkLocation> locationMap) {
 //        /* location */
         if (NullUtils.isNotNull(outletDetails.getLocation())) {
-            CkLocation location = locationService.findLocationOrPersistLocation(outletDetails.getLocation());
+            CkLocation location = locationService.findLocationOrPersistLocation(outletDetails.getLocation(),locationMap);
             outletDetails.setLocation(location);
             outletDetails.setLocationHierarchy(location.getLocationHierarchy());
         }
     }
 
-    public CkUser getUserName(CkOutletDetails outlet) {
-        return dsl.select(CK_OUTLET_DETAILS.fields())
-                .from(CK_OUTLET_DETAILS)
-                .join(CK_USER)
-                .on(CK_OUTLET_DETAILS.LOGINID.eq(CK_USER.LOGINID))
-                .where(CK_OUTLET_DETAILS.ID.eq(outlet.getId()))
-                .fetchOneInto(CkUser.class);
-    }
-
-    public String getLoginId(CkUser user) {
-        return dsl.select(CK_USER.ID)
-                .from(CK_USER)
-                .where(CK_USER.ID.eq(user.getId()))
-                .fetchOneInto(String.class);
-
-    }
-
-    public List<CkHierarchyMetadata> getImmediateParent(CkOutletDetails outlet) {
-        return dsl.select(CK_HIERARCHY_METADATA.fields())  // Select fields from the HierarchyMetaData table
-                .from(CK_OUTLET_DETAILS)
-                .join(CK_OUTLET_DETAILS_HIERARCHYMETADATA)
-                .on(CK_OUTLET_DETAILS.ID.eq(CK_OUTLET_DETAILS_HIERARCHYMETADATA.OUTLET_ID))  // Join on outlet_id
-                .join(CK_HIERARCHY_METADATA)
-                .on(CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID.eq(CK_HIERARCHY_METADATA.ID))  // Join on hierarchy_metadata_id
-                .where(CK_OUTLET_DETAILS.ID.eq(outlet.getId()))  // Filter by outlet_id
-                .fetchInto(CkHierarchyMetadata.class);
-    }
-
-
-    public CkOutletDetails prepareOutletDetails(CkOutletDetails outletDetails) {
-         refreshLocation(outletDetails);
-        return outletDetails;
-    }
-
-
-
-   public void saveOutletHierarchyMetadata(CkOutletDetails cdmOutletDetails) {
-           List<CkHierarchyMetadata> hierarchy = cdmOutletDetails.getImmediateParent();
-           var record = dsl.newRecord(CK_OUTLET_DETAILS_HIERARCHYMETADATA);
-           record.set(CK_OUTLET_DETAILS_HIERARCHYMETADATA.OUTLET_ID,cdmOutletDetails.getOutletcode());
-           Collection<CkHierarchyMetadata> list = hierarchyMetaDataService.findByImmediateParent(hierarchy.get(0).getParent());
-           record.set(CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID,list.stream().findFirst().get().getId());
-           dsl.insertInto(CK_OUTLET_DETAILS_HIERARCHYMETADATA)
-                   .set(record)
-                   .onDuplicateKeyUpdate()
-                   .set(record)
-                   .execute();
-        }
 
     public void clearCache(String lob, String outletCode) {
         if (StringUtils.isNotBlank(outletCode)) {
@@ -204,37 +137,63 @@ public CkLocation getLocation(CkOutletDetails outlet) {
         }
     }
 
-    @Override
-    public CkOutletDetails save(CkOutletDetails cdmObject){
 
-        return saveInternal(cdmObject);
+    public CkOutletDetails save(CkOutletDetails cdmObject,Map<String,CkLocation> locationMap ,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap, Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap){
+        return saveInternal(cdmObject,locationMap,userMap,userParentMap,hierarchyMetadataMap);
     }
-    public CkOutletDetails saveInternal(CkOutletDetails outletDetails) {
+
+    public CkOutletDetails saveInternal(CkOutletDetails outletDetails, Map<String,CkLocation> locationMap,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap, Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap) {
         clearCache(SecurityContextUtils.getLob(), outletDetails);
-        refreshLocation(outletDetails);
+        refreshLocation(outletDetails, locationMap);
         TimerUtils.withTime("Time taken to createAssociatedData record ",
-                () -> createAssociatedData(outletDetails));
+                () -> createAssociatedData(outletDetails, userMap,userParentMap,hierarchyMetadataMap));
         printLogsForNullHierarchy(outletDetails,"Location null before prepare outlet details");
-      CkOutletDetails tempoutlet = TimerUtils.withTime("Time taken to prepareOutletDetails record ",
-					k -> prepareOutletDetails(outletDetails));
+        CkOutletDetails tempoutlet = outletDetails;
         List<CkHierarchyMetadata> immediateParents = tempoutlet.getImmediateParent();
         if (immediateParents != null && !immediateParents.isEmpty()) {
             List<CkHierarchyMetadata> existingMetadata = new ArrayList<>();
             List<CkHierarchyMetadata> newMetadata = new ArrayList<>();
             for (CkHierarchyMetadata hierarchyMetadata : immediateParents) {
-                populateHierarchy(hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
+                populateHierarchy(hierarchyMetadata, existingMetadata, newMetadata, tempoutlet,hierarchyMetadataMap);
             }
             if (!newMetadata.isEmpty()) {
-                List<CkHierarchyMetadata> savedData = hierarchyMetaDataService.batchSave(newMetadata);
-                existingMetadata.addAll(savedData);
+                existingMetadata.addAll(newMetadata);
             }
             if (!existingMetadata.isEmpty())
                 tempoutlet.setImmediateParent(existingMetadata);
+
+            existingMetadata.forEach(hierarchy ->{
+                try {
+                    Collection<CkHierarchyMetadata> hierarchy1 = hierarchyMetaDataService.findByImmediateParent(hierarchy.getHierarchy().split(" > ")[1]);
+                    if(hierarchy1.size() > 0) {
+                        hierarchy1.forEach(hi -> {
+                            String hi1 = hi.getHierarchy();
+                            CkHierarchyMetadata newHierarchy = new CkHierarchyMetadata();
+                            newHierarchy.setId(UUID.randomUUID().toString());
+                            newHierarchy.setHierarchy(outletDetails.getOutletcode() + " > " + hi1);
+                            newHierarchy.setParent(outletDetails.getOutletcode());
+                            newHierarchy.setVersion(1);
+                            hierarchyMetadataMap.put(Pair.of(outletDetails.getOutletcode(),newHierarchy.getHierarchy()), newHierarchy);
+                        });
+                    }
+                    else{
+                        CkHierarchyMetadata newHierarchy = new CkHierarchyMetadata();
+                        newHierarchy.setId(UUID.randomUUID().toString());
+                        newHierarchy.setHierarchy(outletDetails.getOutletcode() + " > " + hierarchy.getParent() + " > " + getAdminLoginId());
+                        newHierarchy.setParent(outletDetails.getOutletcode());
+                        newHierarchy.setVersion(1);
+                        hierarchyMetadataMap.put(Pair.of(outletDetails.getOutletcode(),newHierarchy.getHierarchy()),newHierarchy);
+                    }
+                } catch (Exception e) {
+                  throw new RuntimeException("No parent found");
+                }
+
+            });
+            tempoutlet.setImmediateParent(existingMetadata);
         }
 
         printLogsForNullHierarchy(tempoutlet,"Location null before setting hierarchy");
         setHierarchy(tempoutlet);
-
         tempoutlet.setNormalizedHierarchy(UserService.getNormalizedHierarchy(tempoutlet.getHierarchy()));
         TimerUtils.withTime("Time taken to set supplier ",
                 () -> {
@@ -248,54 +207,10 @@ public CkLocation getLocation(CkOutletDetails outlet) {
      if(tempoutlet.getId() == null) tempoutlet.setId(tempoutlet.getOutletcode());
      if(tempoutlet.getVersion() == null) tempoutlet.setVersion(1);
      if(tempoutlet.getMapped() == null) tempoutlet.setMapped(true);
+     if(tempoutlet.getLastModifiedTime() == null) tempoutlet.setLastModifiedTime(new Date());
 
-        CkOutletDetails saved = super.save(tempoutlet);
-        String logMessage = String.format(
-                "OutletDetails is updated for id '%s', outletcode '%s', last updated on '%s', modified by '%s'",
-                saved.getId(),
-                saved.getOutletcode(),
-                saved.getLastModifiedTime(),
-                saved.getModifiedBy()
-        );
-//       AuditLogger.log("OutletDetails Updated",logMessage, AuditLogger.Status.SUCCESS, "OutletDetails", AuditLogger.Operations.UPDATE.toString(),null);
-//        if (ObjectUtils.isEmpty(outletDetails.getChanges())) {
-//           AuditLogger.log(LOG_TYPE, "Created new Outlet with outletCode '{}'", outletDetails.getOutletCode());
-//       } else {
-//            AuditLogger.log(LOG_TYPE, "Outlet with outletCode '{}' updated with data '{}'",
-//                    outletDetails.getOutletCode(), EntityUtils.getDataChanges(outletDetails.getChanges()));
-//        }
-//       clearCache(SecurityContextUtils.getLob(), outletDetails);
-//
-//              .execute();
-//        userDetailsService.save(cdmObject);
-            return saved;
+     return tempoutlet;
         }
-
-
-    //SAVE IN USER entity
-
-
-    //hierarchy 'outletcode > admin@applicate.in'
-////
-////    void printLogsForNullHierarchy(CkOutletDetails outletDetails, String message){
-////        message += " for outletCode {}";
-////        if(propertyRegistry.getAsBoolean(PropertyDefinition.LOGS_FOR_NULL_LOCATION) &&
-////                (outletDetails.getLocationHierarchy()==null || outletDetails.getLocationHierarchy().getLocationHierarchy()==null)){
-////            logger.error(message, outletDetails.getOutletcode());
-////        }
-////    }
-////
-////    public CkOutletDetails prepareOutletDetails(CkOutletDetails outletDetails) {
-////        /* location */
-////        refreshLocation(outletDetails);
-////
-////        /* Retailer Info/Username */
-////        TimerUtils.withTime("prepareOutletDetails Time taken to fillRetailer ",
-////                () -> fillRetailer(outletDetails, false));
-////
-////        return outletDetails;
-////    }
-////
 
 
     private void setDesignation(Set<String> designation,CkUser user){
@@ -324,71 +239,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
     }
 
 
-
-//    private void saveUser(CkUser user){
-//        var record = dsl.newRecord(CK_USER, user);
-//        dsl.insertInto(CK_USER)
-//                .set(record)
-//                .execute();
-//    }
-
-//    private void setImmediateParent(List<CkHierarchyMetadata> hierarchyMetadata,CkUser user){
-//         String hierarchy = hierarchyMetaDataToStringConverter.convert(hierarchyMetadata);
-//         if(hierarchy == "") return;
-//         int val = dsl.update(CK_USER_PARENT)
-//                .set(CK_USER_PARENT.PARENT,hierarchy)
-//                .where(CK_USER_PARENT.USERLOGINID.eq(user.getId()))
-//                .execute();
-//         if(val == 0){
-//             CkUserParent parent = new CkUserParent();
-//             parent.setId(user.getId());
-//             parent.setUserloginid(user.getId());
-//             parent.setParent(hierarchy);
-////             var parent_record = dsl.newRecord(CK_USER_PARENT,parent);
-////             dsl.insertInto(CK_USER_PARENT)
-////                     .set(parent_record)
-////                     .onDuplicateKeyIgnore()
-////                     .execute();
-//         }
-//    }
-
-    private Set<String> getDesignation(CkUser user){
-//
-//       return dsl.selectFrom(CK_USERDESIGNATION).
-//               where(CK_USERDESIGNATION.LOGIN_ID.eq(user.getId()))
-//               .fetchSet(CK_USERDESIGNATION.DESIGNATION);
-        Set<String> hs = Set.of();
-        return hs;
-    }
-
-    private List<CkHierarchyMetadata> getImmediateParent(CkUser user){
-        var result = dsl.select(CK_USER_PARENT.PARENT)
-                .from(CK_USER_PARENT)
-                .where(CK_USER_PARENT.USERLOGINID.eq(user.getId()))
-                .fetch();
-
-        if (result.isEmpty()) {
-            return null; // Or null, depending on your design
-        }
-
-        return result.into(CkHierarchyMetadata.class);
-    }
-
-   private void setRoles(List<CkAuthRole> roles,CkUser user){
-     for(CkAuthRole role : roles){
-         boolean exists = dsl.fetchExists(
-                 dsl.selectFrom(CK_USER_ROLES)
-                         .where(CK_USER_ROLES.USER_ID.eq(user.getLoginid()))
-         );
-         if(exists == false) {
-             dsl.insertInto(CK_USER_ROLES)
-                     .values(user.getId(), role.getId())
-                     .execute();
-         }
-     }
-   }
-
-    private void createRetailUser(CkOutletDetails outlet) {
+    private void createRetailUser(CkOutletDetails outlet,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap, Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap) {
         CkUser user = new CkUser();
         user.setActiveStatus(outlet.getActiveStatus());
         user.setId(outlet.getOutletcode());
@@ -405,99 +256,87 @@ public CkLocation getLocation(CkOutletDetails outlet) {
         user.setRoles(roles);
         outlet.setUserName(user);
         outlet.setImmediateParent(new ArrayList<>(1));
-        createAssociateDataWithLock(outlet);
-        setRoles(user.getRoles(),user);
-
-    }
-////
-    private CkLocation getLocationHierarchy(CkUser user){
-        return dsl.select(CK_USER.fields())
-                .from(CK_USER)
-                .join(CK_LOCATION)
-                .on(CK_USER.LOCATION_HIERARCHY.eq(CK_LOCATION.LOCATION_HIERARCHY))
-                .where(CK_USER.ID.eq(user.getId()))
-                .fetchOneInto(CkLocation.class);
+        createAssociateDataWithLock(outlet, userMap, userParentMap,hierarchyMetadataMap);
+        //setRoles(user.getRoles(),user);
     }
 
-    public void saveUserHierarchyMetadata(CkHierarchyMetadata hierarchy){
 
-        boolean exists = dsl.fetchExists(
-                dsl.selectFrom(CK_HIERARCHY_METADATA)
-                        .where(CK_HIERARCHY_METADATA.HIERARCHY.eq(hierarchy.getHierarchy()))
-        );
-        if(exists == false) {
-            hierarchy.setId(UUID.randomUUID().toString());
-            var record = dsl.newRecord(CK_HIERARCHY_METADATA,hierarchy);
-            dsl.insertInto(CK_HIERARCHY_METADATA)
-                    .set(record)
-                    .onDuplicateKeyUpdate()
-                    .set(record)
-                    .execute();
+    @Override
+    public CkOutletDetails refresh(CkOutletDetails cdmObject) {
+        CkOutletDetails dbRecord = CdmDiffUtil.withOldModel(() -> findByOutletCode(cdmObject.getOutletcode(), true));
+        if (dbRecord != null) {
+            int version = dbRecord.getVersion();
+            cdmObject.setVersion(version);
+            cdmObject.setId(dbRecord.getId());
+            cdmObject.setHash(dbRecord.getHash());
+            return cdmObject;
         }
+        return cdmObject;
     }
-    private void createAssociateDataWithLock(CkOutletDetails outlet) {
-//        CkUser user = TimerUtils.withTime("Time taken to execute getUser([[" + outlet.getUserName().getLoginid()
-//                + "]]) for outlet[[" + outlet.getOutletcode() + "]]", k -> getUser(outlet.getUserName()));
-        CkUser user = getUser(outlet.getUserName());
+
+    public CkOutletDetails findByOutletCode(String outletCode, boolean cache) {
+        if (outletCode == null) {
+            return null;
+        }
+        Function<String, CkOutletDetails> function = (String oc) -> {
+            OutletDetailsService service = SpringContext.getBean(OutletDetailsService.class);
+            return service.getLoadedOutletObject(oc);
+        };
+
+        return (cache)
+                ? distributedCache.withCache(SecurityContextUtils.getLob(), OUTLETS_CACHE_DOMAIN, outletCode, function)
+                : function.apply(outletCode);
+    }
+
+    public CkOutletDetails getLoadedOutletObject(String outletCode) {
+        CkOutletDetails outlet = outletDetailsRepository.findByOutletCode(outletCode);
+        return outlet;
+    }
+
+    private void createAssociateDataWithLock(CkOutletDetails outlet,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap, Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap) {
+        CkUser user = getUser(outlet.getUserName(),userMap,userParentMap,hierarchyMetadataMap);
         outlet.setUserName(user);
-//        if(user.getDesignation().contains(RETAILER) || user.getDesignation().contains(WHOLESALER)) {
-//            outlet.setActiveStatus(outlet.getUserName().getActiveStatus());
-//        }
         outlet.setActiveStatus(outlet.getUserName().getActiveStatus());
-        if (ObjectUtils.isNotEmpty(user.getImmediateParent())) {
-            List<CkHierarchyMetadata> hms = user.getImmediateParent().stream().map(parent -> {
-                CkHierarchyMetadata hm = new CkHierarchyMetadata();
-                hm.setHierarchy(user.getLoginid() + " > "
-                        + (StringUtils.isEmpty(parent.getHierarchy())
-                        ? parent.getParent() + " > " + getAdminLoginId()
-                        : parent.getHierarchy()));
-                CkLocation location = getLocationHierarchy(user);
-                hm.setId(UUID.randomUUID().toString());
-                hm.setLocationHierarchy((location == null) ? null : location.getLocationHierarchy());
-                hm.setParent(user.getLoginid());
-                hm.setVersion(1);
-                return hm;
-            }).collect(Collectors.toList());
-
-            List<CkHierarchyMetadata> res = hierarchyMetaDataService.batchSave(hms);
-
-            // If outlet defines its own immediate parent then it should not override by
-            // user.
-            // The whole hierarchy should be take care by populate hierarchy in next steps.
-            if (ObjectUtils.isEmpty(outlet.getImmediateParent())) {
-                outlet.setImmediateParent(hms);
-            }
-        }
     }
 
 
-    private CkUser getUser(CkUser user) {
-        CkUser out;
+    private CkUser getUser(CkUser user,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap,Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap) {
+        CkUser out,u;
 //        User od = TimerUtils.withTime("Time taken to execute findUserByLogindId:[[ " + user.getLoginId() + "]]",
 //                k -> userService.refresh(user));
-        CkUser od = userService.refresh(user);
+        CkUser od = userService.refresh(user,userMap);
         if (od.getId() == null) {
-          od = validateAndGetUser(user);
+          od = validateAndGetUser(user,userMap,userParentMap,hierarchyMetadataMap);
 //            User u = TimerUtils.withTime(
 //                    "Time taken to execute findUserByLogindId:[[" + user.getLoginId() + "]] with disabled cache",
 //                    k -> userService.findByLoginId(user.getLoginId(), false));
-            CkUser u = userService.findByLoginId(user.getLoginid(), false);
+            if(userMap.containsKey(user.getLoginid())){
+                u = userMap.get(user.getLoginid());
+            }
+            else {
+                u = userService.findByLoginId(user.getLoginid(), false);
+            }
             if (u != null) {
                 out = u;
             } else {
                 out = od;
             }
         } else {
-            out = updateUser(od);
+            out = updateUser(od,userMap,userParentMap,hierarchyMetadataMap);
         }
         return out;
     }
 
-    private CkUser updateUser(CkUser user) {
-        CkUser out;
+    private CkUser updateUser(CkUser user,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap,Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap ) {
+        CkUser out,u;
         CkUser outUser;
-        outUser = validateAndGetUser(user);
-        CkUser u = userService.findByLoginId(user.getLoginid(), false);
+        outUser = validateAndGetUser(user,userMap,userParentMap,hierarchyMetadataMap);
+        if(userMap.containsKey(user.getLoginid())){
+            u = userMap.get(user.getLoginid());
+        }
+        else {
+            u = userService.findByLoginId(user.getLoginid(), false);
+        }
         if (u != null) {
             out = u;
         } else {
@@ -506,13 +345,13 @@ public CkLocation getLocation(CkOutletDetails outlet) {
             return out;
         }
 
-  private CkUser validateAndGetUser(CkUser user) {
+  private CkUser validateAndGetUser(CkUser user,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap,Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap) {
         OperationResponse operationResponse = TimerUtils.withTime(
                 "Time Taken to exceute preprocess pipeline for class:[[" + user.getClass() + "]]",
                 k -> preProcessPipelineService.process(user));
 
 //        if (operationResponse.getStatus().compareTo(OperationStatus.Success) == 0) {
-            Set<String> hierarchyStr = populateUserParentHierarchy(user);
+            Set<String> hierarchyStr = populateUserParentHierarchy(user,hierarchyMetadataMap);
             if (!hierarchyStr.isEmpty()) {
                 String hierarchy = StringUtils.join(hierarchyStr, ",");
                 if (StringUtils.isNotEmpty(hierarchy)) {
@@ -521,7 +360,7 @@ public CkLocation getLocation(CkOutletDetails outlet) {
                 } else {
                   //  logger.warn("Hierarchy logs: Null hierarchy found for user {}. Skipping setHierarchy() operation", user.getLoginId());
                 }
-                return userService.save(user);
+                return userService.save(user,userMap,userParentMap);
             }
 //            return TimerUtils.withTime("Time taken to execute UserService.save[[" + user.getLoginid() + "]]",
 //                    k -> userService.save(user));
@@ -539,13 +378,14 @@ public CkLocation getLocation(CkOutletDetails outlet) {
 
 
 
-    private Set<String> populateUserParentHierarchy(CkUser user){
+    private Set<String> populateUserParentHierarchy(CkUser user,Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap){
         Set<String> hierarchyStr=new HashSet<>();
         List<CkHierarchyMetadata> hierarchy = user.getImmediateParent();
         if (ObjectUtils.isNotEmpty(hierarchy)) {
             Set<String> uniqueParents = user.getImmediateParent().stream().map(CkHierarchyMetadata::getParent).collect(Collectors.toSet());
             uniqueParents.forEach(parent -> {
-                List<CkHierarchyMetadata> hierarchyMetaDataList = (List) hierarchyMetaDataService.findByImmediateParent(parent);
+                List<CkHierarchyMetadata> hierarchyMetaDataList = (List) hierarchyMetaDataService.findByImmediateParent(parent,hierarchyMetadataMap);
+
                 if (hierarchyMetaDataList.isEmpty()) {
                     hierarchyStr.add(user.getLoginid() + " > " + parent + " > "+ getAdminLoginId());
                 } else {
@@ -559,17 +399,14 @@ public CkLocation getLocation(CkOutletDetails outlet) {
         return hierarchyStr;
     }
 
-
-//
-private void addAssociatedData(CkOutletDetails outlet) {
-
-    if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY).equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))) {
-                setUserAssociateData(outlet);
+    private void addAssociatedData(CkOutletDetails outlet,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap, Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap){
+        if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY).equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))) {
+                    setUserAssociateData(outlet);
+        }
+        GlobalLock.withLock(outlet.getUserName().getLoginid(), s ->
+                TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginid() + "]]) for outlet[[" + outlet.getOutletcode() + "]]", () -> createAssociateDataWithLock(outlet,userMap,userParentMap,hierarchyMetadataMap)));
     }
-    GlobalLock.withLock(outlet.getUserName().getLoginid(), s ->
-            TimerUtils.withTime("Time taken to execute updateUser([[" + outlet.getUserName().getLoginid() + "]]) for outlet[[" + outlet.getOutletcode() + "]]", () -> createAssociateDataWithLock(outlet)));
 
-}
     private void setUserAssociateData(CkOutletDetails outlet) {
         outlet.getUserName().setActiveStatus(outlet.getActiveStatus());
         outlet.getUserName().setName(outlet.getOutletName());
@@ -582,19 +419,10 @@ private void addAssociatedData(CkOutletDetails outlet) {
                 outlet.getUserName().setImmediateParent(replicateRetailerOutletParent(parentList));
                 outlet.setImmediateParent(new ArrayList<>(1));
             }
-
     }
 
-
-
-
-
-//    private String getImmediateParentHierarchy(CkHierarchyMetadata ckHierarchyMetadata){
-//       return ckHierarchyMetadata.getParent();
-//    }
-
     private void populateHierarchy(CkHierarchyMetadata hierarchyMetadata, List<CkHierarchyMetadata> existingMetadata,
-                                   List<CkHierarchyMetadata> newMetadata, CkOutletDetails tempoutlet) {
+                                   List<CkHierarchyMetadata> newMetadata, CkOutletDetails tempoutlet, Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap) {
         String id = hierarchyMetadata.getId();
         if (hierarchyMetadata.getId() == null) {
             String parentHierarchy = hierarchyMetadata.getHierarchy();
@@ -607,48 +435,48 @@ private void addAssociatedData(CkOutletDetails outlet) {
                     if (lastParent.isEmpty()) {
                         CkHierarchyMetadata hmd = new CkHierarchyMetadata();
                         hmd.setParent(loginId);
-                       // hmd.setHierarchy(loginId + " > " + getCustomerAccountsService().getAdminLoginId());
-                        setHierarchyElement(hmd, hierarchyusers, hierarchyMetadata, existingMetadata, newMetadata, tempoutlet);
+                        hmd.setHierarchy(loginId + " > " + getCustomerAccountsService().getAdminLoginId());
+                        hmd.setId(UUID.randomUUID().toString());
+                        setHierarchyElement(hmd, hierarchyusers, hierarchyMetadata, existingMetadata, newMetadata, tempoutlet,hierarchyMetadataMap);
                     } else {
                         lastParent.stream().forEach(element -> setHierarchyElement(element, hierarchyusers,
-                                hierarchyMetadata, existingMetadata, newMetadata, tempoutlet));
+                                hierarchyMetadata, existingMetadata, newMetadata, tempoutlet,hierarchyMetadataMap));
                     }
                 });
             } else {
-                // Handle the case at which Hierarchy is null
- //               TimerUtils.withTime("Time taken to read and populate hierarchyMetadata record ", () -> {
                    List<CkHierarchyMetadata> lastParent = (List<CkHierarchyMetadata>) hierarchyMetaDataService
                            .findByImmediateParent(hierarchyMetadata.getParent());
                     if (lastParent != null) {
                         existingMetadata.addAll(lastParent);
                     }
-//                });
-                // Handle the case where it is a new Hierarchy
             }
         } else {
             existingMetadata.add(hierarchyMetadata);
         }
     }
-//
-//    //
+
     private void setHierarchyElement(CkHierarchyMetadata element, List<String> hierarchyusers,
                                      CkHierarchyMetadata hierarchyMetadata, List<CkHierarchyMetadata> existingMetadata,
-                                     List<CkHierarchyMetadata> newMetadata, CkOutletDetails tempoutlet) {
+                                     List<CkHierarchyMetadata> newMetadata, CkOutletDetails tempoutlet,Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap) {
         String hierarchy = element.getHierarchy();
         if (hierarchy != null) {
             List<String> tempList = new ArrayList<>(hierarchyusers);
             tempList.remove(tempList.size() - 1);
             tempList.add(hierarchy);
             String joinedHierarchy = StringUtils.join(tempList, " > ");
+            CkHierarchyMetadata hm = hierarchyMetadataMap.entrySet()
+                    .stream()
+                    .filter(entry -> entry.getKey().getRight().equals(joinedHierarchy)) // Match left key
+                    .map(Map.Entry::getValue) // Extract value
+                    .findAny().orElse(hierarchyMetaDataService.findByHierarchy(joinedHierarchy)); // Get first match
 
-            CkHierarchyMetadata hm = hierarchyMetaDataService.findByHierarchy(joinedHierarchy);
             if (hm != null && existingMetadata.stream().noneMatch(np -> np.getHierarchy().equals(joinedHierarchy))) {
                 existingMetadata.add(hm);
             } else if (NullUtils.isNull(hm) && newMetadata.stream().noneMatch(np -> np.getHierarchy().equals(joinedHierarchy))) {
                 CkHierarchyMetadata tempHierarchyMetaData = new CkHierarchyMetadata();
                 EntityUtils.copyProperties(hierarchyMetadata, tempHierarchyMetaData);
                 tempHierarchyMetaData.setHierarchy(joinedHierarchy);
-                CkLocation location = getLocationHierarchy(tempoutlet);
+                CkLocation location = tempoutlet.getLocation();
                 tempHierarchyMetaData.setLocationHierarchy((location == null) ? null : location.getLocationHierarchy());
                 tempHierarchyMetaData.setLob(tempoutlet.getLob());
                 newMetadata.add(tempHierarchyMetaData);
@@ -656,20 +484,20 @@ private void addAssociatedData(CkOutletDetails outlet) {
         }
     }
 
-private void setHierarchy(CkOutletDetails tempoutlet) {
-    List<CkHierarchyMetadata> list = tempoutlet.getImmediateParent();
-    String immediateParent = hierarchyMetaDataToStringConverter.convert(list);
-    if (immediateParent != null && !immediateParent.isEmpty()) {
-        String hierarchy = String.join(",",
-                list.stream().map(s -> s.getHierarchy()).collect(Collectors.toList()));
-        if (StringUtils.isNotEmpty(hierarchy)) {
-            tempoutlet.setHierarchy(hierarchy);
-            tempoutlet.setHierarchy(hierarchy);
-        } else {
-            // logger.warn("Hierarchy logs: Null hierarchy found for outlet {}. Skipping setHierarchy() operation",tempoutlet.getOutletCode());
+    private void setHierarchy(CkOutletDetails tempoutlet) {
+        List<CkHierarchyMetadata> list = tempoutlet.getImmediateParent();
+        String immediateParent = hierarchyMetaDataToStringConverter.convert(list);
+        if (immediateParent != null && !immediateParent.isEmpty()) {
+            String hierarchy = String.join(",",
+                    list.stream().map(s -> s.getHierarchy()).collect(Collectors.toList()));
+            if (StringUtils.isNotEmpty(hierarchy)) {
+                tempoutlet.setHierarchy(hierarchy);
+                tempoutlet.setHierarchy(hierarchy);
+            } else {
+                 logger.warn("Hierarchy logs: Null hierarchy found for outlet {}. Skipping setHierarchy() operation",tempoutlet.getOutletcode());
+            }
         }
     }
-}
 
     private List<CkHierarchyMetadata> replicateRetailerOutletParent(List<CkHierarchyMetadata> hms) {
         if (NullUtils.isNull(hms)) {
@@ -696,7 +524,92 @@ private void setHierarchy(CkOutletDetails tempoutlet) {
         message += " for outletCode {}";
         if(propertyRegistry.getAsBoolean(PropertyDefinition.LOGS_FOR_NULL_LOCATION) &&
                 (outletDetails.getLocationHierarchy()==null )){
-            //logger.error(message, outletDetails.getOutletcode());
+            logger.error(message, outletDetails.getOutletcode());
         }
     }
+
+    public List<CkUserRoles> setRoles(Map<String,CkUser> userMap){
+        return userMap.values()
+                .stream()
+                .map(user -> {
+                    CkUserRoles userRoles = new CkUserRoles();
+                    // Set the user ID
+                    userRoles.setUserId(user.getId());
+                    // Check if the user has any roles and then set the first role's id
+                    if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+                        userRoles.setRolesId(user.getRoles().get(0).getId());
+                    } else {
+                        // Optionally set a default value or handle the case where no roles exist
+                        userRoles.setRolesId(null);
+                    }
+                    return userRoles;
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    public void saveRoles(List<CkUserRoles> userRoles) {
+        // 1. Collect keys from the input list as a set of Row2<String, String>
+        Set<Row2<String, String>> keysToInsert = userRoles.stream()
+                .map(userRole -> DSL.row(userRole.getUserId(), userRole.getRolesId()))
+                .collect(Collectors.toSet());
+
+        if (keysToInsert.isEmpty()) {
+            return;
+        }
+
+        // 2. Fetch existing keys from the database in one query
+        Result<Record2<String, String>> result = dsl
+                .select(CK_USER_ROLES.USER_ID, CK_USER_ROLES.ROLES_ID)
+                .from(CK_USER_ROLES)
+                .where(DSL.row(CK_USER_ROLES.USER_ID, CK_USER_ROLES.ROLES_ID).in(keysToInsert))
+                .fetch();
+
+        // 3. Convert the fetched records to a set of Row2 for fast lookup
+        Set<Row2<String, String>> existingKeySet = result.stream()
+                .map(record -> DSL.row(record.get(CK_USER_ROLES.USER_ID), record.get(CK_USER_ROLES.ROLES_ID)))
+                .collect(Collectors.toSet());
+
+        // 4. Filter out userRoles that already exist
+        List<CkUserRoles> newUserRoles = userRoles.stream()
+                .filter(userRole -> !existingKeySet.contains(DSL.row(userRole.getUserId(), userRole.getRolesId())))
+                .collect(Collectors.toList());
+
+        // 5. Map the new userRoles to insert queries
+        List<Query> queries = newUserRoles.stream()
+                .map(userRole ->
+                                dsl.insertInto(CK_USER_ROLES)
+                                        .set(CK_USER_ROLES.USER_ID, userRole.getUserId())
+                                        .set(CK_USER_ROLES.ROLES_ID, userRole.getRolesId())
+                        // Set other fields as necessary
+                )
+                .collect(Collectors.toList());
+
+        // 6. Execute the batch insert if there are new records
+        if (!queries.isEmpty()) {
+            dsl.batch(queries).execute();
+        }
+    }
+
+    @Override
+    public List<CkOutletDetails> batchSave(Iterable<CkOutletDetails> iterObj) {
+        Map<String,CkOutletDetails> outletDetailsMap = new HashMap<>();
+        Map<String,CkLocation> locationMap = new HashMap<>();
+        Map<String,CkUser> userMap = new HashMap<>();
+        Map<String,CkUserParent> userParentMap = new HashMap<>();
+        Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap = new HashMap<>();
+        iterObj.forEach(outletDetails -> outletDetailsMap.put(outletDetails.getOutletcode(),save(outletDetails, locationMap, userMap, userParentMap,hierarchyMetadataMap)));
+        locationService.batchSave(locationMap);
+        userParentService.batchSave(userParentMap);
+        userService.batchSave(userMap);
+        hierarchyMetaDataService.batchSave(hierarchyMetadataMap.values());
+        List<CkUserRoles> roleList = setRoles(userMap);
+        saveRoles(roleList);
+        List<CkOutletDetails> res = super.batchSave(outletDetailsMap);
+        return res;
+    }
+
+
+
+
 }

@@ -10,7 +10,6 @@ import com.salescode.channelkart.cache.AppCacheManager;
 import com.salescode.channelkart.cache.DistributedCache;
 import com.salescode.channelkart.models.enums.RoleName;
 import com.salescode.channelkart.security.SecurityContextUtils;
-import com.salescode.channelkart.utils.NullUtils;
 import com.salescode.channelkart.utils.TimerUtils;
 import com.salescode.dataintegration.etl.cdm.AbstractCDMService;
 import com.salescode.channelkart.repository.UserRepository;
@@ -68,7 +67,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 	private final RoleService roleService;
 
 	@Autowired private HierarchyMetaDataService hierarchyMetaDataService;
-//
+
 	private UserParentService userparentservice;
 
 	private final DSLContext dsl;
@@ -82,6 +81,9 @@ public class UserService extends AbstractCDMService<CkUser> {
 
 	@Autowired
 	private DistributedCache distributedCache;
+
+	@Autowired
+	private LocationService locationService;
 
 
 	public static final String DEFAULT_PASSWORD="@1234";
@@ -100,6 +102,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 	public CkUser findByLoginId(String loginId,boolean cached) {
 		return findByLoginId(loginId,true,true);
 	}
+
 	public CkUser findByLoginId(String loginId,boolean cached,boolean hierarchy) {
 		String lob = SecurityContextUtils.getLob();
 		Function<String,CkUser> function = (String lid)->{
@@ -114,7 +117,6 @@ public class UserService extends AbstractCDMService<CkUser> {
 			}
 			return user;
 		}
-
 		return function.apply(loginId);
 	}
 
@@ -124,8 +126,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 			UserService service= SpringContext.getBean(UserService.class);
 			return service.getLoadedUserObject(lid,true);
 		};
-
-		return  distributedCache.withCache(lob,CACHE_DOMAIN, loginId,function);
+		return distributedCache.withCache(lob,CACHE_DOMAIN, loginId,function);
 	}
 
 	public CkUser getLoadedUserObject(String lid,boolean hierarchy) {
@@ -143,7 +144,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 		return u;
 	}
 
-		public void clearCache (String lob, String loginId){
+	public void clearCache (String lob, String loginId){
 			if (org.apache.commons.lang.StringUtils.isNotBlank(loginId)) {
 				distributedCache.clearCache(lob, CACHE_DOMAIN, loginId);
 				SupplierInfoService supplierInfoService = SpringContext.getBean(SupplierInfoService.class);
@@ -152,7 +153,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 				hierarchyMetaDataService.clearCache(lob, loginId);
 				clearChannelCache(loginId);
 			}
-		}
+	}
 
 		private void clearChannelCache (String loginId){
 			AppCacheManager.getInstance().removeByDomain(SecurityContextUtils.getLob(), CHANNEL_CACHE + loginId);
@@ -160,66 +161,46 @@ public class UserService extends AbstractCDMService<CkUser> {
 
 		}
 
-
-		@Override
-		public CkUser save (CkUser inUser){
-			return this.save(inUser, OperationType.insert);
+		public CkUser save (CkUser inUser,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap){
+		    return save(inUser, OperationType.insert,userMap,userParentMap);
 		}
 
 		public void clearCache (String lob, CkUser user){
 			if (user != null) {
-				//clearCache(lob, user.getLoginid());
+				clearCache(lob, user.getLoginid());
 				if (user.getLocationHierarchy() != null) {
-					//locationService.clearCache(lob,user.getLocationHierarchy().getLocationHierarchy());
+					locationService.clearCache(lob,user.getLocationHierarchy());
 				}
 			}
 		}
 
-
-		public CkUser save(CkUser inUser, OperationType type){
+		public CkUser save(CkUser inUser, OperationType type,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap){
 			String lob = SecurityContextUtils.getLob();
 			//CkUser user= TimerUtils.withTime("Time Taken to execute fillUser()", u-> fillUser(inUser));
 
 			CkUser user = fillUser(inUser);
-		//	clearCache(lob, user);
-//			if (user.getRoles().size() == 1 && user.getRoles().stream().allMatch(desig -> desig.getName().equals(RoleName.ROLE_ADMIN.name()))) {
-//				CkUserParent up = new CkUserParent();
-//				up.setUserloginid(user.getLoginid());
-//				up.setParent(null);
-//				up.setLob(inUser.getLob());
-//				//UserParent refreshedObj=TimerUtils.withTime("Time taken to refresh UserParent", s-> userparentservice.refresh(up));
-//				CkUserParent refreshedObj = userparentservice.refresh(up);
-//				//TimerUtils.withTime("Time taken to save UserParent", ()->
-//				userparentservice.save(refreshedObj);
-//				//);
-//			}
-
-			if (user.getImmediateParent() != null && !user.getImmediateParent().isEmpty()) {
+			clearCache(lob, user);
+			if (user.getRoles().size() == 1 && user.getRoles().stream().allMatch(desig -> desig.getName().equals(RoleName.ROLE_ADMIN.name()))) {
+				CkUserParent up = new CkUserParent();
+				up.setUserloginid(user.getLoginid());
+				up.setParent(null);
+				up.setLob(inUser.getLob());
+				//UserParent refreshedObj=TimerUtils.withTime("Time taken to refresh UserParent", s-> userparentservice.refresh(up));
+				CkUserParent refreshedObj = userparentservice.refresh(up,userParentMap);
 				//TimerUtils.withTime("Time taken to save UserParent", ()->
-				saveUserParent(user, type);
+				String key = refreshedObj.getUserloginid() + "-" + refreshedObj.getParent();
+				userParentMap.put(key,refreshedObj);
 				//);
 			}
 
-			saveUser(user);
-			CkUser savedObj = super.save(user);
-			if (inUser.getSupplierMetaData() != null && !inUser.getSupplierMetaData().isEmpty()) {
-				List<CkSupplierMetadata> supplierMetaInfo = user.getSupplierMetaData();
-				if (!isSameSupplierMetada(savedObj, user)) {
-					supplierMetaInfo.forEach(cdmObject -> {
-						cdmObject.setUser(savedObj);
-						cdmObject.setLob(user.getLob());
-					});
-					//TimerUtils.withTime("Time taken to batchSave SupplierMetadata of Size "+supplierMetaInfo.size(), ()->
-					//supplierMetaDataService.batchSave(supplierMetaInfo));
-					try {
-						supplierMetaDataService.batchSave(supplierMetaInfo);
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}
-
+			if (user.getImmediateParent() != null && !user.getImmediateParent().isEmpty()) {
+				saveUserParent(user, type,userMap,userParentMap);
 			}
 
+			saveUser(user);
+			CkUser savedObj = user;
+
+			userMap.put(user.getLoginid(),user);
 			//AuditLogger.log(LOG_TYPE, "Created new User with loginId '{}'",user.getLoginId());
 			clearCache(lob,user);
 
@@ -237,17 +218,6 @@ public class UserService extends AbstractCDMService<CkUser> {
 		}
 //
 		public CkUser fillUser (CkUser user){
-			if (NullUtils.isNotNull(user.getLocationHierarchy())) {
-				try {
-//				CkLocation loc= user.getLocation();
-//				loc = locationService.findLocationOrPersistLocation(loc);
-//				user.setLocationHierarchy(loc);
-				} catch (Exception ex) {
-					throw new IllegalStateException("Error occured while setting location for user: " + user.getLoginid(), ex);
-				}
-			} else {
-				//	throw new IllegalStateException("Missing location data. Data cannot be saved without location information for user : "+user.getLoginid());
-			}
 			if (user.getRoles() == null || user.getRoles().isEmpty()) {
 				List<CkAuthRole> roles = roleService.getRoleAsList(RoleName.ROLE_USER.name());
 				user.setRoles(roles);
@@ -278,10 +248,6 @@ public class UserService extends AbstractCDMService<CkUser> {
 			if (user.getPassword() == null) {
 				user.setPassword(DEFAULT_ENCODED_PASSWORD);
 			}
-//			if(!user.getBlocked()){
-//				user.setBlocked(false);
-//			}
-
 			return user;
 		}
 
@@ -315,13 +281,12 @@ public class UserService extends AbstractCDMService<CkUser> {
 
 		}
 
-		private static boolean staleRecords
-		(Set < String > existingParents, List < CkHierarchyMetadata > immediateParents){
+		private static boolean staleRecords(Set < String > existingParents, List < CkHierarchyMetadata > immediateParents){
 			Set<String> hmlist = immediateParents.stream().map(CkHierarchyMetadata::getParent).collect(Collectors.toSet());
 			return !existingParents.equals(hmlist);
 		}
 
-		public void saveUserParent (CkUser user, OperationType type){
+		public void saveUserParent (CkUser user, OperationType type,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap){
 			Set<CkUserParent> userParents = new HashSet<>();
 			List<CkUserParent> dbParents = userparentservice.findByUserLoginId(user.getLoginid());
 			if (dbParents != null && !dbParents.isEmpty()) {
@@ -329,7 +294,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 				if (staleRecords(new HashSet<>(dataset), user.getImmediateParent())) {
 					userParents.addAll(getNewUserParents(user, dataset, type));
 					if (type.equals(OperationType.insert) || user.getDesignation().contains(RETAILER)) {
-						userparentservice.deleteByUserLoginId(user.getLoginid());
+					//	userparentservice.deleteByUserLoginId(user.getLoginid());
 						//hierarchySynchronizer.removeUser(user.getLoginid());
 					}
 				}
@@ -338,7 +303,10 @@ public class UserService extends AbstractCDMService<CkUser> {
 			}
 			if (!userParents.isEmpty()) {
 				try {
-					userparentservice.batchSave(userParents);
+					userParents.forEach(userParent -> {
+						String key = userParent.getUserloginid() + "-" + userParent.getParent();
+						userParentMap.put(key,userParent);
+					});
 					evaluateUserHierarchy(user, userParents);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
@@ -391,6 +359,7 @@ public class UserService extends AbstractCDMService<CkUser> {
 				up.setUserloginid(user.getLoginid());
 				up.setParent(hm.getParent());
 				up.setId(UUID.randomUUID().toString());
+				up.setVersion(1);
 				if (up.getUserloginid().equalsIgnoreCase(up.getParent())) {
 					//	throw new UnexpectedResultException("User can't be mapped to itself. Found a record for user " + up.getUserLoginId() + " mapped to itself. Please verify the data once.");
 				}
@@ -417,27 +386,21 @@ public class UserService extends AbstractCDMService<CkUser> {
 				List<CkSupplierMetadata> spms1 = user1.getSupplierMetaData();
 
 				if (user2.getSupplierMetaData() == null || user2.getSupplierMetaData().isEmpty()) {
-
 					return false;
 				} else {
 
 					List<CkSupplierMetadata> spms2 = user2.getSupplierMetaData();
 
-
 					if (spms2.size() != spms1.size()) {
-
 						return false;
 					} else {
 						try {
-
 							return spms1.stream().allMatch(s -> s.getUser() != null && spms2.contains(s));
-
 						} catch (Exception e) {
 							logger.error("stacktrace", e);
 						}
 						return false;
 					}
-
 				}
 
 			} else {
@@ -479,7 +442,6 @@ public class UserService extends AbstractCDMService<CkUser> {
 						if (u.getRoles() != null) u.getRoles().size();
 						if (u.getSupplierMetaData() != null) u.getSupplierMetaData().size();
 						if (u.getDesignation() != null) u.getDesignation().size();
-						//	if (u.getMessengerinfo() != null) u.getMessengerInfo().size();
 					});
 
 		}

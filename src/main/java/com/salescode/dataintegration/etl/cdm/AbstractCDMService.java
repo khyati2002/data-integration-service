@@ -1,32 +1,28 @@
 package com.salescode.dataintegration.etl.cdm;
 
-import com.salescode.channelkart.batch.BatchService;
-import com.salescode.channelkart.batch.hash.BatchContainer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.salescode.channelkart.converters.ActiveStatus;
 import com.salescode.channelkart.converters.EnrichmentPhase;
 import com.salescode.channelkart.exceptions.CustomRuntimeException;
 import com.salescode.channelkart.models.CommonDataModel;
+import com.salescode.channelkart.security.SecurityContextUtils;
 import com.salescode.channelkart.utils.*;
 import com.salescode.dataintegration.etl.cdm.util.ServiceLocator;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentOperationResult;
 import com.salescode.dataintegration.etl.enrichment.EnrichmentResult;
 import com.salescode.dataintegration.etl.enrichment.service.DataEnrichmentService;
-import com.salescode.jooq.generated.DefaultSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.jooq.Field;
 import java.lang.reflect.ParameterizedType;
 import org.springframework.core.env.Environment;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static com.salescode.jooq.generated.tables.CkOutletDetails.CK_OUTLET_DETAILS;
-import static org.jooq.impl.DSL.name;
 
 @Slf4j
 public abstract class AbstractCDMService<T extends CommonDataModel> implements CommonDataModelService<T> {
@@ -42,8 +38,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     @Autowired
     private EntityUtils entityUtils;
 
-    @Autowired
-    private BatchService batchService;
+
 
     @Autowired
     private DSLContext dsl;
@@ -60,8 +55,21 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     public T refresh(T cdmObject) {
         T dbRecord = CdmDiffUtil.withOldModel(() -> (T) EntityUtils.getInstance().findRecords(cdmObject.getClass(), cdmObject));
         if (dbRecord != null) {
-            cdmObject.setOldModel(dbRecord.getOldModel());
             int version = dbRecord.getVersion();
+            cdmObject.setVersion(version);
+            cdmObject.setId(dbRecord.getId());
+            cdmObject.setHash(dbRecord.getHash());
+            return cdmObject;
+        }
+        cdmObject.setCreate(true);
+        return cdmObject;
+    }
+
+
+    public T refresh(T cdmObject,Map<String,T> recordsMap) {
+        T dbRecord = CdmDiffUtil.withOldModel(() -> (T) EntityUtils.getInstance().findRecords(cdmObject.getClass(), cdmObject,recordsMap));
+        if (dbRecord != null) {
+            int version = dbRecord.getVersion()+1;
             cdmObject.setVersion(version);
             cdmObject.setId(dbRecord.getId());
             cdmObject.setHash(dbRecord.getHash());
@@ -156,21 +164,27 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         return TimerUtils.withTime("Time Taken to refresh entity of "+cdm.getClass().getSimpleName(), k->fillCommonAttributes(cdm, false, new HashSet<>(), null));
     }
 
+    @Override
     public List<T> batchSave(Iterable<T> iterObj) {
      return batchSave(iterObj,null);
     }
 
+
+    public List<T> batchSave(Map<String, T> iterObj) {
+         saveAll(iterObj);
+        return List.of();
+    }
+
     public List<T> batchSave(Iterable<T> iterObj, IdGenerator idGenerator) {
-        iterObj.forEach(this::preSaveEnrichment);
         if(isNativeBatchSave(iterObj)) {
             throw new UnsupportedOperationException("nativeBatchSave not supported");
            // return nativeBatchSave(iterObj, idGenerator);
         }else {
-            BatchContainer<T> container = splitElements(iterObj, idGenerator);
-            List<T> elementsToSaveAsList = container.getAllElementstoSave();
-            saveAll(elementsToSaveAsList);
+//            BatchContainer<T> container = splitElements(iterObj, idGenerator);
+//            List<T> elementsToSaveAsList = container.getAllElementstoSave();
+            saveAll(iterObj);
             //return ListUtils.union(container.getDuplicateElementsAsList(), savedData);
-            return elementsToSaveAsList;
+            return List.of();
 
         }
     }
@@ -179,24 +193,38 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 //        items.forEach(element-> apiFilterAuthorizationManager.assertPermission(element))
         List<T> savedItems = new ArrayList<>();
         List<T> itemsToInsert = new ArrayList<>();
-
+        int count = 0;
         for (T item: items) {
-            itemsToInsert.add(item);
+            final T inObject = item;
+            String existingHash = item.getHash();
+            TimerUtils.withTime("Time taken to generate Hash "+item.getClass().getName()+":"+item.getId(),
+                    () -> addHash(inObject));
+            if (!item.forceHash() && item.canHash() && StringUtils.isNotEmpty(existingHash) && existingHash.equals(item.getHash())) {
+                // no need to save this record because this hash is same
+                // logger.info("Hash already present in database: {}", existingHash);
+            }
+            else {
+                T object = fillCommonAttributes(item);
+                T object1 = preSaveEnrichment(object);
+                itemsToInsert.add(object1);
+                count++;
+            }
         }
+      if(count < 1) return;
 
       Class<? extends CommonDataModel> clazz = itemsToInsert.get(0).getClass();
      // TableImpl table = EntityUtils.getInstance().getDSLContextTable(itemsToInsert.get(0).getClass());
 
         String tablename = EntityUtils.getInstance().getTableName(clazz);
 
-        Table<?> table = new DefaultSchema().getTable(tablename);
+        Table<?> table = EntityUtils.getInstance().getDSLContextTable(clazz);
 
 
         List<Field<?>> fields = getTableFields(dsl, table);
         List<Query> insertQueries = new ArrayList<>();
         for (T item : items) {
          //   Object[] values = getFieldValues(item, fields);
-
+            if(item.getLastModifiedTime() == null) item.setLastModifiedTime(new Date());
             Object[] values = getFieldValues(item, fields);
 
             // Create the base insert query
@@ -214,9 +242,27 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
             }
 
             sql += String.join(", ", updateClauses);
+            List<Object> obj = insertQuery.getBindValues();
+
+            List<Object> bindValues = new ArrayList<>();
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            for (Object value : insertQuery.getBindValues()) {
+                if (value instanceof ObjectNode) {
+                    try {
+                        value = objectMapper.writeValueAsString(value);  // Convert to JSON string
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException("Error converting ObjectNode to JSON String", e);
+                    }
+                }
+                bindValues.add(value);
+            }
+
+// Execute the raw SQL query
+            insertQueries.add(dsl.query(sql, bindValues.toArray()));
 
             // Execute the raw SQL query
-            insertQueries.add(dsl.query(sql, insertQuery.getBindValues().toArray()));
+      //   insertQueries.add(dsl.query(sql, insertQuery.getBindValues().toArray()));
 //            insertQueries.add(
 //                    dsl.insertInto(table)
 //                            .columns(fields)
@@ -230,6 +276,65 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         dsl.batch(insertQueries).execute();
     }
 
+
+    private Iterable<T> saveAll(Map<String,T> items) {
+        List<T> savedItems = new ArrayList<>();
+        List<T> itemsToInsert = new ArrayList<>();
+        int count = 0;
+        for (T item: items.values()) {
+                itemsToInsert.add(item);
+                count++;
+        }
+        return itemsToInsert;
+
+    }
+
+    private java.lang.reflect.Field findField(Class<?> clazz, String fieldName) {
+        // Try exact match first
+        try {
+            return clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            // Try camelCase version
+            String camelCase = toCamelCase(fieldName);
+            try {
+                return clazz.getDeclaredField(camelCase);
+            } catch (NoSuchFieldException ex) {
+                // Check superclass if field not found
+                Class<?> superClass = clazz.getSuperclass();
+                if (superClass != null && !superClass.equals(Object.class)) {
+                    return findField(superClass, fieldName);
+                }
+                log.debug("Field not found: {} (or camelCase: {})", fieldName, camelCase);
+                return null;
+            }
+        }
+    }
+
+    private String toCamelCase(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+
+        StringBuilder result = new StringBuilder();
+        boolean nextUpper = false;
+
+        for (int i = 0; i < str.length(); i++) {
+            char currentChar = str.charAt(i);
+            if (currentChar == '_') {
+                nextUpper = true;
+            } else {
+                if (nextUpper) {
+                    result.append(Character.toUpperCase(currentChar));
+                    nextUpper = false;
+                } else {
+                    result.append(i == 0 ? Character.toLowerCase(currentChar) : currentChar);
+                }
+            }
+        }
+
+        return result.toString();
+    }
+
     private List<Field<?>> getTableFields(DSLContext dslContext, Table<?> table) {
         return Arrays.asList(table.fields()); // Get table column fields dynamically
     }
@@ -239,68 +344,35 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
         for (Field<?> field : tableFields) {
             try {
-                java.lang.reflect.Field entityField = entity.getClass().getDeclaredField(field.getName());
+                java.lang.reflect.Field entityField = findField(entity.getClass(),field.getName());
                 entityField.setAccessible(true);
                 values.add(entityField.get(entity));
-            } catch (NoSuchFieldException | IllegalAccessException e) {
+            } catch (IllegalAccessException e) {
                 values.add(null); // Handle missing or inaccessible fields gracefully
             }
         }
         return values.toArray();
     }
 
-    private BatchContainer<T> splitElements(Iterable<T> elements, IdGenerator generator) {
-        List<T> newRecords = new ArrayList<>();
-        List<T> existingRecords = new ArrayList<>();
-        Map<String, T> existingRecordsWithHash = new HashMap<>();
-        for (T element : elements) {
-            fillCommonAttributes(element, generator);
-            if (element.isCreate()) {
-                addHash(element);
-                newRecords.add(element);
-            } else {
-                addHash(element);
-                existingRecords.add(element);
-            }
-        }
-        if (existingRecords.isEmpty()) {
-            BatchContainer<T> batchContainer = new BatchContainer<>();
-            batchContainer.setElementsToInsert(newRecords);
-            return batchContainer;
-        }
-
-        if(isHashableType(elements)) {
-            existingRecords.forEach(rec->existingRecordsWithHash.put((rec).getHash(), rec));
-            BatchContainer<T> batchContainer = batchService.splitElements(existingRecordsWithHash);
-            batchContainer.setElementsToInsert(newRecords);
-          //  logger.debug("BatchSave: duplicate records:{}, records to save/update :{}", batchContainer.getDuplicateElements().size(), batchContainer.getAllElementstoSave().size());
-            return batchContainer;
-        }else {
-            BatchContainer<T> batchContainer=new BatchContainer<>();
-            batchContainer.setElementsToInsert(newRecords);
-            batchContainer.setElementsToUpdate(existingRecords);
-            return batchContainer;
-        }
-    }
-
-    private boolean isHashableType(Iterable<T> elements) {
-        Iterator<T> iterator = elements.iterator();
-        if (iterator.hasNext()) {
-            T element = iterator.next();
-            return element.canHash();
-        }
-        return false;
-    }
-
     protected void addHash(CommonDataModel model) {
         if (model.canHash()) {
-            batchService.addHashIfPresent( model);
+            addHashIfPresent(model);
+        }
+    }
+    public <T extends CommonDataModel> T addHashIfPresent(T model) {
+        String hash = model.hash();
+        model.setHash(hash);
+        return model;
+    }
+
+    private void setOperationType(CommonDataModel model) {
+        Integer version = model.getVersion();
+        if(version==null) {
+            model.setCreate(true);
+            model.setVersion(0);
         }
     }
 
-    public T fillCommonAttributes(T cdm, IdGenerator idGenerator) {
-        return TimerUtils.withTime("Time Taken to refresh entity of "+cdm.getClass().getSimpleName(), k->fillCommonAttributes(cdm, false, new HashSet<>(), idGenerator));
-    }
 
     @SuppressWarnings("unchecked")
     public T fillCommonAttributes(T cdm, boolean createOnly,Set<String> visitedTree, IdGenerator idGenerator) {
@@ -313,56 +385,33 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
               //  cdm.setId(entityUtils.generateId(cdm));
             }
         }
-//        TimerUtils.withTime("Time taken to find changed value", () -> deltaAnalyzer.findAndSetDeltaChanges(cdm));
-//
-//        setOperationType(cdm);
-//
-//        if (cdm.getCreationTime() == null) {
-//            cdm.setCreationTime(Calendar.getInstance().getTime());
-//        }
-//        if(cdm.getActiveStatus() == null){
-//            cdm.setActiveStatus(ActiveStatus.ACTIVE);
-//        }
-//
-////        if (cdm instanceof TransactionDataModel) {
-////            ((TransactionDataModel) cdm).setSystemTime(Calendar.getInstance().getTime());
-////        }
-//
-//        if (cdm.getCreatedBy() == null) {
-//            cdm.setCreatedBy(SecurityContextUtils.getPrincipal());
-//        }
-//
-//        if (!DataSourceUtils.isDefaultDataSource(SecurityContextUtils.getLob())) {
-//            cdm.setLob(SecurityContextUtils.getLob());
-//        }
-//
-//        if (fillModifyAttributes) {
-//            cdm.setLastModifiedTime(Calendar.getInstance().getTime());
-//            cdm.setModifiedBy(SecurityContextUtils.getPrincipal());
-//        }
-//        processAggregations(cdm, visitedTree, idGenerator);
+
+        setOperationType(cdm);
+
+        if (cdm.getCreationTime() == null) {
+            cdm.setCreationTime(Calendar.getInstance().getTime());
+        }
+        if(cdm.getActiveStatus() == null){
+            cdm.setActiveStatus(ActiveStatus.ACTIVE);
+        }
+
+        if (cdm.getCreatedBy() == null) {
+            cdm.setCreatedBy(SecurityContextUtils.getPrincipal());
+        }
+
+        if (cdm.getLob() == null) {
+            cdm.setLob(SecurityContextUtils.getLob());
+        }
+
+        if (fillModifyAttributes) {
+            cdm.setLastModifiedTime(Calendar.getInstance().getTime());
+            cdm.setModifiedBy(SecurityContextUtils.getPrincipal());
+        }
+
         return cdm;
     }
 
-    private void processAggregations(T cdm, Set<String> visitedTree, IdGenerator idGenerator) {
-//        String key = cdm.getId();
-//        if (!visitedTree.contains(key)) {
-//            visitedTree.add(key);
-//            Field[] fields = cdm.getClass().getDeclaredFields();
-//            for (Field field : fields) {
-//                Type returnType = field.getGenericType();
-//                if (returnType instanceof ParameterizedType) {
-//                    ParameterizedType type = (ParameterizedType) returnType;
-//                    Type[] typeArguments = type.getActualTypeArguments();
-//                    for (Type typeArgument : typeArguments) {
-//                        visitParameterizedCDMType(cdm,field,typeArgument,visitedTree,idGenerator);
-//                    }
-//                } else if (CommonDataModel.class.isAssignableFrom((Class<?>) returnType)) {
-//                    visitCDMType(cdm,field,returnType,visitedTree,idGenerator);
-//                }
-//            }
-//        }
-    }
+
 
 
 
@@ -387,5 +436,6 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         }
         return (T) (ObjectUtils.isNotEmpty(er.getEnrichedData())?er.getEnrichedData().get(0):cdm);
     }
+
 
 }

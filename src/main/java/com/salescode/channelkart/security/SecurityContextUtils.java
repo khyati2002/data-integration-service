@@ -52,6 +52,10 @@ public class SecurityContextUtils implements EnvironmentAware {
        return "cktestitcloyalty";
     }
 
+    public static String getPrincipal() {
+        return "integration_user";
+    }
+
 //    public static Optional<UserContext> getUserContext() {
 //        return Optional.ofNullable(userContextHolder.get());
 //    }

@@ -17,6 +17,7 @@ import com.salescode.dataintegration.etl.transformer.service.DataTransformationS
 import com.salescode.dataintegration.etl.validation.ValidationResult;
 import com.salescode.dataintegration.etl.validation.service.DataEntityValidationService;
 import com.salescode.dataintegration.etl.validation.service.DataValidationService;
+import com.salescode.jooq.generated.tables.pojos.CkOutletDetails;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,19 +45,22 @@ public class ETLPipelineService {
     }
 
     @SneakyThrows
-    public List<CommonDataModel> execute(String message) {
+    public List<CommonDataModel> execute(List<String> message) {
         log.info("Executing etl pipeline");
         List<CommonDataModel> transformedObjects = new ArrayList<>();
-        StreamingRawData streamingRawData = objectMapper.readValue(message, StreamingRawData.class);
-        ArrayNode features = streamingRawData.getFeatures();
-        if (features.isEmpty()) {
-            throw new IllegalArgumentException("Features cannot be empty");
+        for(int i=0;i<message.size();i++) {
+            StreamingRawData streamingRawData = objectMapper.readValue(message.get(i), StreamingRawData.class);
+            ArrayNode features = streamingRawData.getFeatures();
+            if (features.isEmpty()) {
+                throw new IllegalArgumentException("Features cannot be empty");
+            }
+            for (JsonNode jsonNode : features) {
+                streamingRawData.setFeatures(objectMapper.createArrayNode().add(jsonNode));
+                transformedObjects.addAll(process(streamingRawData));
+            }
         }
-        for (JsonNode jsonNode : features) {
-            streamingRawData.setFeatures(objectMapper.createArrayNode().add(jsonNode));
-            transformedObjects.addAll(process(streamingRawData));
-        }
-        return transformedObjects;
+        CommonDataModelService cdmService = ServiceLocator.lookup(CkOutletDetails.class);
+        return cdmService.batchSave(transformedObjects);
     }
 
     List<CommonDataModel> process(StreamingRawData streamingRawData) {
@@ -101,7 +105,7 @@ public class ETLPipelineService {
                 } else {
                     or.setStatus(OperationResponse.OperationStatus.Failure);
                 }
-                transformedObjects.addAll(or.getEnrichment().getEnrichedData().parallelStream().map(s -> cdmService.save(s)).collect(Collectors.toList()));
+                transformedObjects.addAll(or.getEnrichment().getEnrichedData());
             }
         }
         return transformedObjects;
@@ -114,13 +118,7 @@ public class ETLPipelineService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Applies each transformer in the list to a single feature and returns a list of transformed CommonDataModel objects.
-     *
-     * @param transformerInfos List of transformer configurations
-     * @param feature          The feature (JsonNode) to transform
-     * @return List of transformed CommonDataModel objects for the given feature
-     */
+
     private List<CommonDataModel> applyTransformersToFeature(List<StreamingRawData.TransformerInfoRequest> transformerInfos, JsonNode feature) {
         return transformerInfos.stream()
                 .flatMap(transformerInfo -> dataTransformationService.transformData(transformerInfo.getTransformerId(), transformerInfo.getEntityName(), feature).stream())

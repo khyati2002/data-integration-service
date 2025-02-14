@@ -149,7 +149,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 		return hierarchyStr.toString();
 	}
 
-	public CkLocation findLocationOrPersistLocation(CkLocation dataObj) {
+	public CkLocation findLocationOrPersistLocation(CkLocation dataObj,Map<String,CkLocation> locationMap) {
 		if (NullUtils.isNotNull(dataObj)) {
 //			return TimerUtils.withTime("Time Taken to FindOrPersist Location Object", s->{
 			String[] columnList = getLocationColumns();
@@ -161,11 +161,11 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 					return locationRes;
 				} else {
 					GlobalLock.withLock(hierarchyStr, k ->
-							saveRecursiveLocationHierarchies(tLocation, columnList)
+							saveRecursiveLocationHierarchies(tLocation, columnList,locationMap)
 					);
 					CkLocation locdata = findByLocationHierarchy(hierarchyStr, false);
-//					distributedCache.put(SecurityContextUtils.getLob(), CACHE_DOMAIN,
-//							locdata.getLocationHierarchy(), locdata, true);
+					distributedCache.put(SecurityContextUtils.getLob(), CACHE_DOMAIN,
+							locdata.getLocationHierarchy(), locdata, true);
 					return locdata;
 
 				}
@@ -233,7 +233,7 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 	   });
 	}
 
-	private CkLocation saveRecursiveLocationHierarchies(final CkLocation location, String[] columns) {
+	private CkLocation saveRecursiveLocationHierarchies(final CkLocation location, String[] columns,Map<String,CkLocation> locationMap) {
 		CkLocation result = null;
 		for (int i = 0; i < columns.length; i++) {
 			String[] columnsList= new String[columns.length-i];
@@ -245,7 +245,8 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 					if(locdata == null) {
 						CkLocation finalLocation = createNewLocationObj(location, columnsList);
 						finalLocation.setLocationHierarchy(hierarchyStr);
-						CkLocation tresult = this.save(refresh(finalLocation));
+						CkLocation tresult = refresh(finalLocation,locationMap);
+						locationMap.put(tresult.getLocationHierarchy(),tresult);
 						if(i == 0) {
 							result= tresult;
 						}
@@ -258,5 +259,8 @@ public class LocationService extends AbstractCDMService<CkLocation> {
 			}
 		}
 		return result;
+	}
+	public void clearCache(String lob, String locationHierarchy) {
+		distributedCache.clearCache(lob,CACHE_DOMAIN,locationHierarchy);
 	}
 }

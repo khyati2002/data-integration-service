@@ -56,7 +56,7 @@ public class MessageProcessFunction extends KeyedProcessFunction<String, Tuple2<
         // Add your processing logic here (e.g., modifying fields, filtering, transforming data)
         // For example, modifying a field or adding a new field
         // return jsonNode;
-        List<CommonDataModel> execute = etlPipelineService.execute(jsonNode.toString());
+        List<CommonDataModel> execute = etlPipelineService.execute(List.of(jsonNode.toString()));
         return execute;
         //Do JSONNode to Record mapping here
 
