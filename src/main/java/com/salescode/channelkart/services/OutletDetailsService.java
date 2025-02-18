@@ -18,8 +18,6 @@ import com.salescode.channelkart.models.enums.ApplicationCategory;
 import com.salescode.dataintegration.etl.metadata.registry.MetadataRegistry;
 import com.salescode.jooq.generated.tables.pojos.CkLocation;
 import com.salescode.jooq.generated.tables.pojos.*;
-
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -36,7 +34,7 @@ import java.util.stream.Collectors;
 
 
 import static com.salescode.jooq.generated.Tables.CK_CUSTOMER_ACCOUNT;
-import static com.salescode.jooq.generated.tables.CkUserParent.CK_USER_PARENT;
+import static com.salescode.jooq.generated.Tables.CK_OUTLET_DETAILS_HIERARCHYMETADATA;
 import static com.salescode.jooq.generated.tables.CkUserdesignation.CK_USERDESIGNATION;
 import static com.salescode.jooq.generated.tables.CkUserRoles.CK_USER_ROLES;
 
@@ -91,7 +89,6 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 
     public OutletDetailsService(DSLContext dsl, HierarchyMetaDataToStringConverter hierarchyMetaDataToStringConverter,
                                 UserService userService, LocationService locationService) {
-
         this.dsl = dsl;
         this.hierarchyMetaDataToStringConverter = hierarchyMetaDataToStringConverter;
         this.userService = userService;
@@ -163,33 +160,8 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
                 tempoutlet.setImmediateParent(existingMetadata);
 
             existingMetadata.forEach(hierarchy ->{
-                try {
-                    Collection<CkHierarchyMetadata> hierarchy1 = hierarchyMetaDataService.findByImmediateParent(hierarchy.getHierarchy().split(" > ")[1]);
-                    if(hierarchy1.size() > 0) {
-                        hierarchy1.forEach(hi -> {
-                            String hi1 = hi.getHierarchy();
-                            CkHierarchyMetadata newHierarchy = new CkHierarchyMetadata();
-                            newHierarchy.setId(UUID.randomUUID().toString());
-                            newHierarchy.setHierarchy(outletDetails.getOutletcode() + " > " + hi1);
-                            newHierarchy.setParent(outletDetails.getOutletcode());
-                            newHierarchy.setVersion(1);
-                            hierarchyMetadataMap.put(Pair.of(outletDetails.getOutletcode(),newHierarchy.getHierarchy()), newHierarchy);
-                        });
-                    }
-                    else{
-                        CkHierarchyMetadata newHierarchy = new CkHierarchyMetadata();
-                        newHierarchy.setId(UUID.randomUUID().toString());
-                        newHierarchy.setHierarchy(outletDetails.getOutletcode() + " > " + hierarchy.getParent() + " > " + getAdminLoginId());
-                        newHierarchy.setParent(outletDetails.getOutletcode());
-                        newHierarchy.setVersion(1);
-                        hierarchyMetadataMap.put(Pair.of(outletDetails.getOutletcode(),newHierarchy.getHierarchy()),newHierarchy);
-                    }
-                } catch (Exception e) {
-                  throw new RuntimeException("No parent found");
-                }
-
+                hierarchyMetadataMap.put(Pair.of(hierarchy.getHierarchy(),hierarchy.getParent()),hierarchy);
             });
-            tempoutlet.setImmediateParent(existingMetadata);
         }
 
         printLogsForNullHierarchy(tempoutlet,"Location null before setting hierarchy");
@@ -307,9 +279,6 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         CkUser od = userService.refresh(user,userMap);
         if (od.getId() == null) {
           od = validateAndGetUser(user,userMap,userParentMap,hierarchyMetadataMap);
-//            User u = TimerUtils.withTime(
-//                    "Time taken to execute findUserByLogindId:[[" + user.getLoginId() + "]] with disabled cache",
-//                    k -> userService.findByLoginId(user.getLoginId(), false));
             if(userMap.containsKey(user.getLoginid())){
                 u = userMap.get(user.getLoginid());
             }
@@ -401,6 +370,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
 
     private void addAssociatedData(CkOutletDetails outlet,Map<String,CkUser> userMap,Map<String,CkUserParent> userParentMap, Map<Pair<String,String>,CkHierarchyMetadata> hierarchyMetadataMap){
         if (propertyRegistry.getValue(PropertyDefinition.APPLICATION_CATETORY).equals(ApplicationCategory.RETAIL.name()) && (outlet.getUserName().getDesignation().contains(RETAILER) || outlet.getUserName().getDesignation().contains(WHOLESALER))) {
+                    Set<String> set = outlet.getUserName().getDesignation();
                     setUserAssociateData(outlet);
         }
         GlobalLock.withLock(outlet.getUserName().getLoginid(), s ->
@@ -464,7 +434,7 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
             tempList.remove(tempList.size() - 1);
             tempList.add(hierarchy);
             String joinedHierarchy = StringUtils.join(tempList, " > ");
-            CkHierarchyMetadata hm = hierarchyMetadataMap.entrySet()
+             CkHierarchyMetadata hm = hierarchyMetadataMap.entrySet()
                     .stream()
                     .filter(entry -> entry.getKey().getRight().equals(joinedHierarchy)) // Match left key
                     .map(Map.Entry::getValue) // Extract value
@@ -547,48 +517,75 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
                 .collect(Collectors.toList());
     }
 
+    public List<CkUserdesignation> setDesignation(Map<String,CkUser> userMap){
+        return userMap.values()
+                .stream()
+                .map(user -> {
+                    CkUserdesignation userdesignation = new CkUserdesignation();
+                    // Set the user ID
+                    userdesignation.setLoginId(user.getLoginid());
+                    // Check if the user has any roles and then set the first role's id
+                    userdesignation.setDesignation(user.getDesignation().stream().collect(Collectors.joining(" ")));
+                    return userdesignation;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public void saveDesignation(List<CkUserdesignation> userDesignation) {
+        BatchInsertUtil.saveBatchWithDuplicateCheck(
+                dsl,
+                userDesignation,
+                CK_USERDESIGNATION,
+                designation -> DSL.row(designation.getLoginId(), designation.getDesignation()),
+                CK_USERDESIGNATION.LOGIN_ID,
+                CK_USERDESIGNATION.DESIGNATION,
+                designation -> dsl.insertInto(CK_USERDESIGNATION)
+                        .set(CK_USERDESIGNATION.LOGIN_ID, designation.getLoginId())
+                        .set(CK_USERDESIGNATION.DESIGNATION, designation.getDesignation())
+        );
+    }
+
+    public void saveOutletDetailHierarchyMetadata(List<CkOutletDetailsHierarchymetadata> outletDetailsHierarchymetadata) {
+        BatchInsertUtil.saveBatchWithDuplicateCheck(
+                dsl,
+                outletDetailsHierarchymetadata,
+                CK_OUTLET_DETAILS_HIERARCHYMETADATA,
+                item -> DSL.row(item.getOutletId(), item.getHierarchyMetadataId()),
+                CK_OUTLET_DETAILS_HIERARCHYMETADATA.OUTLET_ID,
+                CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID,
+                item -> dsl.insertInto(CK_OUTLET_DETAILS_HIERARCHYMETADATA)
+                        .set(CK_OUTLET_DETAILS_HIERARCHYMETADATA.OUTLET_ID, item.getOutletId())
+                        .set(CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID, item.getHierarchyMetadataId())
+        );
+    }
 
     public void saveRoles(List<CkUserRoles> userRoles) {
-        // 1. Collect keys from the input list as a set of Row2<String, String>
-        Set<Row2<String, String>> keysToInsert = userRoles.stream()
-                .map(userRole -> DSL.row(userRole.getUserId(), userRole.getRolesId()))
-                .collect(Collectors.toSet());
+        BatchInsertUtil.saveBatchWithDuplicateCheck(
+                dsl,
+                userRoles,
+                CK_USER_ROLES,
+                role -> DSL.row(role.getUserId(), role.getRolesId()),
+                CK_USER_ROLES.USER_ID,
+                CK_USER_ROLES.ROLES_ID,
+                role -> dsl.insertInto(CK_USER_ROLES)
+                        .set(CK_USER_ROLES.USER_ID, role.getUserId())
+                        .set(CK_USER_ROLES.ROLES_ID, role.getRolesId())
+        );
+    }
 
-        if (keysToInsert.isEmpty()) {
-            return;
-        }
-
-        // 2. Fetch existing keys from the database in one query
-        Result<Record2<String, String>> result = dsl
-                .select(CK_USER_ROLES.USER_ID, CK_USER_ROLES.ROLES_ID)
-                .from(CK_USER_ROLES)
-                .where(DSL.row(CK_USER_ROLES.USER_ID, CK_USER_ROLES.ROLES_ID).in(keysToInsert))
-                .fetch();
-
-        // 3. Convert the fetched records to a set of Row2 for fast lookup
-        Set<Row2<String, String>> existingKeySet = result.stream()
-                .map(record -> DSL.row(record.get(CK_USER_ROLES.USER_ID), record.get(CK_USER_ROLES.ROLES_ID)))
-                .collect(Collectors.toSet());
-
-        // 4. Filter out userRoles that already exist
-        List<CkUserRoles> newUserRoles = userRoles.stream()
-                .filter(userRole -> !existingKeySet.contains(DSL.row(userRole.getUserId(), userRole.getRolesId())))
-                .collect(Collectors.toList());
-
-        // 5. Map the new userRoles to insert queries
-        List<Query> queries = newUserRoles.stream()
-                .map(userRole ->
-                                dsl.insertInto(CK_USER_ROLES)
-                                        .set(CK_USER_ROLES.USER_ID, userRole.getUserId())
-                                        .set(CK_USER_ROLES.ROLES_ID, userRole.getRolesId())
-                        // Set other fields as necessary
+    private List<CkOutletDetailsHierarchymetadata> setOutletHierarchyMetadata(Map<String, CkOutletDetails> outletDetailsMap) {
+        return outletDetailsMap.values().stream()
+                .flatMap(outlet -> outlet.getImmediateParent().stream()
+                        .map(hierarchy -> {
+                            CkOutletDetailsHierarchymetadata metadata = new CkOutletDetailsHierarchymetadata();
+                            // Set the outlet code
+                            metadata.setOutletId(outlet.getId());
+                            // Set the parent ID
+                            metadata.setHierarchyMetadataId(hierarchy.getId());
+                            return metadata;
+                        })
                 )
                 .collect(Collectors.toList());
-
-        // 6. Execute the batch insert if there are new records
-        if (!queries.isEmpty()) {
-            dsl.batch(queries).execute();
-        }
     }
 
     @Override
@@ -605,7 +602,11 @@ public class OutletDetailsService extends AbstractCDMService<CkOutletDetails> {
         hierarchyMetaDataService.batchSave(hierarchyMetadataMap.values());
         List<CkUserRoles> roleList = setRoles(userMap);
         saveRoles(roleList);
+        List<CkUserdesignation> userdesignationsList = setDesignation(userMap);
+        saveDesignation(userdesignationsList);
         List<CkOutletDetails> res = super.batchSave(outletDetailsMap);
+        List<CkOutletDetailsHierarchymetadata> outletDetailsHierarchymetadata = setOutletHierarchyMetadata(outletDetailsMap);
+        saveOutletDetailHierarchyMetadata(outletDetailsHierarchymetadata);
         return res;
     }
 

@@ -171,7 +171,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
 
     public List<T> batchSave(Map<String, T> iterObj) {
-         saveAll(iterObj);
+        saveAll(iterObj);
         return List.of();
     }
 
@@ -258,19 +258,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                 bindValues.add(value);
             }
 
-// Execute the raw SQL query
             insertQueries.add(dsl.query(sql, bindValues.toArray()));
-
-            // Execute the raw SQL query
-      //   insertQueries.add(dsl.query(sql, insertQuery.getBindValues().toArray()));
-//            insertQueries.add(
-//                    dsl.insertInto(table)
-//                            .columns(fields)
-//                            .values(values)
-//                            .onDuplicateKeyUpdate()
-//                            .set(fields, values);
-//            );
-
 
         }
         dsl.batch(insertQueries).execute();
@@ -285,6 +273,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                 itemsToInsert.add(item);
                 count++;
         }
+        saveAll(itemsToInsert);
         return itemsToInsert;
 
     }
@@ -410,10 +399,6 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
         return cdm;
     }
-
-
-
-
 
     private boolean isNativeBatchSave(Iterable<T> elements) {
         Iterator<T> iterator = elements.iterator();
