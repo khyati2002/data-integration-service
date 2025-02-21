@@ -1,0 +1,39 @@
+[
+  {
+    "PropertyGroupId": "Common",
+    "PropertyMap": {
+      "bootstrap.servers": "${bootstrap.servers}",
+      "group.id": "${group.id}",
+      "lob": "${lob}",
+      "jdbc.url": "${jdbc.url}",
+      "jdbc.user": "${jdbc.user}",
+      "jdbc.password": "${jdbc.password}",
+      "schema.includePattern": "${schema.includePattern}",
+      "schema.excludePattern": "${schema.excludePattern}"
+    }
+  },
+  {
+    "PropertyGroupId": "Input0",
+    "PropertyMap": {
+      "topic": "-dataintegration-streams"
+    }
+  },
+  {
+    "PropertyGroupId": "Output0",
+    "PropertyMap": {
+      "topic": "-dataintegration-failure-streams",
+      "transaction.timeout.ms": "1000"
+    }
+  },
+  {
+    "PropertyGroupId": "AuthProperties",
+    "PropertyMap": {
+      "sasl.mechanism": "AWS_MSK_IAM",
+      "sasl.client.callback.handler.class": "software.amazon.msk.auth.iam.IAMClientCallbackHandler",
+      "sasl.jaas.config": "software.amazon.msk.auth.iam.IAMLoginModule required;",
+      "security.protocol": "SASL_SSL",
+      "ssl.truststore.location": "/usr/lib/jvm/java-11-amazon-corretto/lib/security/cacerts",
+      "ssl.truststore.password": "changeit"
+    }
+  }
+]
