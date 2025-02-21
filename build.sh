@@ -1,4 +1,3 @@
-
 mvn clean install -f jooq/pom.xml
 mvn clean \
     compile \
