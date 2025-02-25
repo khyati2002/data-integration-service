@@ -78,7 +78,7 @@ public class OutletDetailsTest {
     @Test
     public void test() {
         OutletDetails details = JSONUtils.getObjectMapper().readValue(s, OutletDetails.class);
-        System.out.println(details);
+        System.out.println(JSONUtils.getObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(details));
     }
 
 }

@@ -15,7 +15,6 @@ import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.DSLContext;
-import org.jooq.JSON;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -272,7 +271,7 @@ public class DataTransformationServiceTest {
 
         @Override
         public Integer getVersion() {
-            return 0;
+            return Integer.valueOf(0);
         }
 
         @Override
@@ -361,12 +360,12 @@ public class DataTransformationServiceTest {
         }
 
         @Override
-        public JSON getExtendedAttributes() {
+        public JsonNode getExtendedAttributes() {
             return null;
         }
 
         @Override
-        public void setExtendedAttributes(JSON extendedAttributes) {
+        public void setExtendedAttributes(JsonNode extendedAttributes) {
 
         }
 

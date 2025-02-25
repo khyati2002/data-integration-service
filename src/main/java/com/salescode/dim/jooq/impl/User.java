@@ -1,13 +1,12 @@
 package com.salescode.dim.jooq.impl;
 
-import com.applicate.services.channelkart.utils.JSONUtils;
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
-import com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata;
-import com.salescode.dim.jooq.generated.tables.pojos.Location;
 import com.salescode.dim.jooq.generated.tables.pojos.SupplierMetadata;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,6 +14,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User extends com.salescode.dim.jooq.generated.tables.pojos.User implements Serializable {
 
     private static final long serialVersionUID = 6364280713919356300L;
@@ -26,9 +26,16 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
     @Getter(value = AccessLevel.NONE)
     private Location locationHierarchy;
 
-    public void setHierarchy(Location hierarchy) {
-        locationHierarchy = JSONUtils.getObjectMapper().convertValue(hierarchy, Location.class);
+    @JsonSetter("loginId")
+    public void setLoginId(String loginId) {
+        setLoginid(loginId);
     }
+
+    @JsonSetter("userAccountId")
+    public void setUserAccountId(String userAccountId) {
+        setUseraccountid(userAccountId);
+    }
+
 
     @Override
     public String toString() {

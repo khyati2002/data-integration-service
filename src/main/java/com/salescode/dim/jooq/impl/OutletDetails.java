@@ -4,9 +4,10 @@
 package com.salescode.dim.jooq.impl;
 
 
-import com.salescode.dim.jooq.generated.tables.pojos.Location;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,12 +19,17 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OutletDetails extends com.salescode.dim.jooq.generated.tables.pojos.OutletDetails implements Serializable {
 
     private List<HierarchyMetadata> immediateParent;
     private User userName;
     private Location location;
 
+    @JsonSetter("outletCode")
+    public void setOutletCode(String outletCode) {
+        setOutletcode(outletCode);
+    }
 
     @Override
     public String toString() {

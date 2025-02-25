@@ -8,12 +8,11 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.dim.utils.ReflectionUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.jooq.JSON;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -58,7 +57,7 @@ public abstract class CommonDataModel implements Serializable {
      */
     public CommonDataModel() {
         // Using the abstract setter; ensure concrete implementations handle nulls appropriately.
-        this.setVersion(0);
+        this.setVersion(Integer.valueOf(0));
     }
 
     public abstract String getId();
@@ -101,9 +100,9 @@ public abstract class CommonDataModel implements Serializable {
 
     public abstract void setSource(String source);
 
-    public abstract JSON getExtendedAttributes();
+    public abstract JsonNode getExtendedAttributes();
 
-    public abstract void setExtendedAttributes(JSON extendedAttributes);
+    public abstract void setExtendedAttributes(JsonNode extendedAttributes);
 
     public boolean isCreate() {
         return isCreate;

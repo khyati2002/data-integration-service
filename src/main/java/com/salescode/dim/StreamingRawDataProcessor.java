@@ -63,14 +63,24 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     @Override
     public void processElement(StreamingRawData streamingRawData, Context ctx, Collector<StreamingRawData> out) throws Exception {
         List<CommonDataModel> transformedObjects = new ArrayList<>();
-        List<TransformerInfo> transformerInfos = streamingRawData.getTransformerInfo();
-        for (TransformerInfo transformerInfo : transformerInfos) {
-            String transformerId = transformerInfo.getTransformerId();
-            String entityName = transformerInfo.getEntityName();
-            JsonNode jsonNode = streamingRawData.getFeatures().get(0);
-            List<? extends CommonDataModel> cdms = dataTransformationService.transformData(transformerId, entityName, jsonNode);
-            System.out.printf(JSONUtils.getObjectMapper().convertValue(cdms, com.fasterxml.jackson.databind.JsonNode.class).toPrettyString());
+        try{
+            List<TransformerInfo> transformerInfos = streamingRawData.getTransformerInfo();
+            for (TransformerInfo transformerInfo : transformerInfos) {
+                String transformerId = transformerInfo.getTransformerId();
+                String entityName = transformerInfo.getEntityName();
+                JsonNode jsonNode = streamingRawData.getFeatures().get(0);
+                List<? extends CommonDataModel> cdms = dataTransformationService.transformData(transformerId, entityName, jsonNode);
+                transformedObjects.addAll(cdms);
 
+                // Log transformation
+                System.out.printf("Transformed Data: %s%n", JSONUtils.getObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(cdms));
+            }
+            streamingRawData.setStatus("SUCCESS");
+            streamingRawData.setTransformedData(transformedObjects);
+            out.collect(streamingRawData);
+        } catch (Exception e) {
+            streamingRawData.setStatus("FAILED");
+            ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData); // Emit failed record to side output
         }
     }
 

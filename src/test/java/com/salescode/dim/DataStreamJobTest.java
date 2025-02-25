@@ -131,6 +131,8 @@ public class DataStreamJobTest {
         for (Object obj : results) {
             System.out.println(obj);
             Assert.assertTrue("Result should be an instance of StreamingRawData", obj instanceof StreamingRawData);
+            StreamingRawData streamingRawData = (StreamingRawData) obj;
+            System.out.println(streamingRawData.getTransformedData());
         }
     }
 

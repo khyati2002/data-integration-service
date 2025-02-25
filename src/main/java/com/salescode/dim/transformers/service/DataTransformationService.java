@@ -138,6 +138,9 @@ public class DataTransformationService implements Serializable {
      */
     private CommonDataModel convertToCommonDataModel(Object data, String entityName) {
         if (data instanceof CommonDataModel) {
+            if (!data.getClass().getName().equals(entityUtils.getEntityClass(entityName).getName())) {
+                throw new RuntimeException(data.getClass() + " is not of type " + entityName);
+            }
             return (CommonDataModel) data;
         }
         Class<? extends CommonDataModel> clazz = entityUtils.getEntityClass(entityName);

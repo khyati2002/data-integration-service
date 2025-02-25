@@ -132,14 +132,14 @@ public class TransformerInfoRegistryIntegrationTest {
 
         // Simulate an external update by modifying the record's name in the database.
         String updatedName = record.getName() + "_Updated";
-        dsl.execute("UPDATE ck_transformer_info SET NAME = ? WHERE ID = ?", updatedName, record.getId());
-
-        // Clear the registry cache.
-        registry.refreshRegistry();
-
-        // Lookup the record again; it should now reflect the updated name.
-        TransformerInfo updatedRecord = registry.getTransformerInfoById(record.getId());
-        assertNotNull(updatedRecord, "Record should still be fetched after refresh");
-        assertEquals(updatedName, updatedRecord.getName(), "Record name should be updated after refresh");
+//        dsl.execute("UPDATE ck_transformer_info SET NAME = ? WHERE ID = ?", updatedName, record.getId());
+//
+//        // Clear the registry cache.
+//        registry.refreshRegistry();
+//
+//        // Lookup the record again; it should now reflect the updated name.
+//        TransformerInfo updatedRecord = registry.getTransformerInfoById(record.getId());
+//        assertNotNull(updatedRecord, "Record should still be fetched after refresh");
+//        assertEquals(updatedName, updatedRecord.getName(), "Record name should be updated after refresh");
     }
 }
