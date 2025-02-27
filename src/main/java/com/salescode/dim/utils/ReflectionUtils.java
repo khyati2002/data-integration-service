@@ -29,7 +29,7 @@ public class ReflectionUtils {
 
     static {
         try {
-            reflections = new Reflections("com.salescode.dim");
+            reflections = new Reflections("com.salescode.dim","com.applicate");
         } catch (Exception e) {
             log.error("Could not load reflections:{}", e.getMessage());
         }

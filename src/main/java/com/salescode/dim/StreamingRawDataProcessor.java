@@ -1,12 +1,18 @@
 package com.salescode.dim;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.repository.HierarchyMetadataRepository;
+import com.applicate.services.channelkart.repository.UserParentRepository;
+import com.applicate.services.channelkart.services.*;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.JSONUtils;
+import com.salescode.dim.jooq.generated.tables.CkOutletDetails;
+import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.registry.ETLRegistry;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.salescode.dim.transformers.registry.TransformerInfoRegistry;
 import com.salescode.dim.transformers.service.DataTransformationService;
+import com.salescode.dim.utils.ReflectionUtils;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
@@ -20,6 +26,7 @@ import java.util.Properties;
 
 public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData, StreamingRawData> {
 
+    private static StreamingRawDataProcessor instance;
     private static final long serialVersionUID = -3351413046175753755L;
     private final Properties properties;
     private transient Connection connection;
@@ -29,9 +36,17 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     private transient TransformerInfoRegistry transformerInfoRegistry;
     private transient EntityUtils entityUtils;
     private transient DataTransformationService dataTransformationService;
+    private transient  CommonDataModelService commonDataModelService;
 
     public StreamingRawDataProcessor(Properties commonProperties) {
         this.properties = commonProperties;
+    }
+
+    public static StreamingRawDataProcessor getInstance(Properties commonProperties){
+        if(instance == null){
+            instance = new StreamingRawDataProcessor(commonProperties);
+        }
+        return instance;
     }
 
     @Override
@@ -69,10 +84,14 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
                 String transformerId = transformerInfo.getTransformerId();
                 String entityName = transformerInfo.getEntityName();
                 JsonNode jsonNode = streamingRawData.getFeatures().get(0);
-                List<? extends CommonDataModel> cdms = dataTransformationService.transformData(transformerId, entityName, jsonNode);
+                Class<? extends CommonDataModel> entityClass = EntityUtils.getInstance().getEntityClass(transformerInfo.getEntityName());
+                CommonDataModelService cdmService = ServiceLocator.lookup(entityClass);
+                List<? extends CommonDataModel> cdms = DataTransformationService.getInstance(transformerInfoRegistry,etlRegistry,entityUtils).transformData(transformerId, entityName, jsonNode);
                 transformedObjects.addAll(cdms);
 
                 // Log transformation
+                cdmService.batchSave(cdms);
+
                 System.out.printf("Transformed Data: %s%n", JSONUtils.getObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(cdms));
             }
             streamingRawData.setStatus("SUCCESS");

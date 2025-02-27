@@ -1,15 +1,17 @@
 package com.applicate.services.channelkart.utils;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.salescode.dim.jooq.generated.Tables;
 import com.salescode.dim.utils.ReflectionUtils;
+import lombok.SneakyThrows;
 import org.jooq.DSLContext;
+import org.jooq.impl.TableImpl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EntityUtils {
 
@@ -42,8 +44,9 @@ public class EntityUtils {
     }
 
     public Set<String> getUniqueKeys(Class<? extends CommonDataModel> aClass) {
-
-        return null;
+        Set<String> hs = new HashSet<>();
+        hs.add("loginid");
+        return hs;
     }
 
     public Class<? extends CommonDataModel> getEntityClass(String entityName) {
@@ -60,4 +63,30 @@ public class EntityUtils {
                              .orElse(candidates.get(0));
         });
     }
+
+    @SneakyThrows
+    public <T extends CommonDataModel> TableImpl getDSLContextTable(Class<T> entityClass) {
+        String str = entityClass.getSimpleName();
+        String tables = Tables.class.getSimpleName();
+        Field[] fields = Tables.class.getDeclaredFields();
+        List<String> tableNames = Arrays.stream(Tables.class.getFields())
+                .map(f -> f.getName() + " -> " + f.getType().getSimpleName())
+                .collect(Collectors.toList());
+
+// Store or log the names for debugging
+        System.out.println("Available tables: " + tableNames);
+
+        Optional<Field> optionalField = Arrays.stream(Tables.class.getFields())
+                .filter(s -> s.getType().getSimpleName().equals("Ck" + entityClass.getSimpleName()))
+                .findAny();
+
+        if (optionalField.isEmpty()) {
+            throw new IllegalStateException("No matching table found for entity: " + entityClass.getSimpleName());
+        }
+        Field ckOutletDetails = optionalField.get();
+        ckOutletDetails.setAccessible(true);
+         TableImpl table = (TableImpl) ckOutletDetails.get(null);
+        return table;
+    }
+
 }
