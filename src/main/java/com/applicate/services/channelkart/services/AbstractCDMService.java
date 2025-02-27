@@ -153,38 +153,61 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         return list;
     }
 
+    public <T extends CommonDataModel> T addHash(T model) {
+        String hash = model.hash();
+        model.setHash(hash);
+        return model;
+    }
+
     public List<T> batchSave(List<T> items) {
 //        items.forEach(element-> apiFilterAuthorizationManager.assertPermission(element))
         List<T> savedItems = new ArrayList<>();
         List<T> itemsToInsert = new ArrayList<>();
+        List<T> itemsToUpdate = new ArrayList<>();
+
         List<T> existingItems = getExisting(items);
         int count = 0;
-        for (T item: items) {
-            final T inObject = item;
-            String existingHash = item.getHash();
-//            TimerUtils.withTime("Time taken to generate Hash "+item.getClass().getName()+":"+item.getId(),
-//                    () -> addHash(inObject));
-            if (item.canHash() && StringUtils.isNotEmpty(existingHash) && existingHash.equals(item.getHash())) {
+        for (int i=0;i<items.size();i++) {
+            final T inObject = items.get(i);
+            String existingHash = existingItems.get(i).getHash();
+            addHash(inObject);
+            if (items.get(i).canHash() && StringUtils.isNotEmpty(existingHash) && existingHash.equals(items.get(i).getHash())) {
                 // no need to save this record because this hash is same
                 // logger.info("Hash already present in database: {}", existingHash);
             }
             else {
 //                T object = fillCommonAttributes(item);
 //                T object1 = preSaveEnrichment(object);
-                itemsToInsert.add(item);
+                if(existingHash == null) {
+                    items.get(i).setId(UUID.randomUUID().toString());
+                    items.get(i).setVersion(0);
+                    itemsToInsert.add(items.get(i));
+                }
+                else{
+                    items.get(i).setId(existingItems.get(i).getId());
+                    items.get(i).setVersion(existingItems.get(i).getVersion() + 1);
+                    itemsToUpdate.add(items.get(i));
+                }
                 count++;
             }
         }
-        if(count < 1) return new ArrayList<>();
 
         Class<? extends CommonDataModel> clazz = itemsToInsert.get(0).getClass();
 
         Table<?> table = EntityUtils.getInstance().getDSLContextTable(clazz);
 
+        batchInsert(itemsToInsert);
+        batchUpdate(itemsToUpdate);
+        return items;
+    }
 
+    private List<T> batchInsert(List<T> itemsToInsert){
+        Class<? extends CommonDataModel> clazz = itemsToInsert.get(0).getClass();
+
+        Table<?> table = EntityUtils.getInstance().getDSLContextTable(clazz);
         List<Field<?>> fields = getTableFields(dsl, table);
         List<Query> insertQueries = new ArrayList<>();
-        for (T item : items) {
+        for (T item : itemsToInsert) {
             //   Object[] values = getFieldValues(item, fields);
             //    if(item.getLastModifiedTime() == null) item.setLastModifiedTime(new Date());
             Object[] values = getFieldValues(item, fields);
@@ -195,15 +218,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                     .values(values);
 
             // Convert the query to a SQL string and append ON DUPLICATE KEY UPDATE manually
-            String sql = insertQuery.getSQL() + " ON DUPLICATE KEY UPDATE ";
-
-            // Build the update part dynamically
-            List<String> updateClauses = new ArrayList<>();
-            for (Field<?> field : fields) {
-                updateClauses.add(field.getName() + " = VALUES(" + field.getName() + ")");
-            }
-
-            sql += String.join(", ", updateClauses);
+            String sql = insertQuery.getSQL();
             List<Object> obj = insertQuery.getBindValues();
 
             List<Object> bindValues = new ArrayList<>();
@@ -224,7 +239,29 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
         }
         dsl.batch(insertQueries).execute();
-        return items;
+        return itemsToInsert;
+    }
+
+    private List<T> batchUpdate(List<T> itemsToUpdate){
+        Class<? extends CommonDataModel> clazz = itemsToUpdate.get(0).getClass();
+
+        Table<?> table = EntityUtils.getInstance().getDSLContextTable(clazz);
+        List<Field<?>> fields = getTableFields(dsl, table);
+        List<Query> updateQueries = new ArrayList<>();
+        for (T item : itemsToUpdate) {
+            Record record = dsl.newRecord(table, item);
+
+            // Create the update query
+            Update<?> updateQuery = dsl.update(table)
+                    .set(record) // Set the entire record
+                    .where(DSL.field("id", String.class).eq(item.getId()));
+
+            // Add the query to the list
+            updateQueries.add(updateQuery);
+
+        }
+        dsl.batch(updateQueries).execute();
+        return itemsToUpdate;
     }
 
     private Map<Field<?>, Object> getUpdateMappings(List<Field<?>> fields, Object[] values) {
