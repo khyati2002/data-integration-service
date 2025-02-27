@@ -8,6 +8,7 @@ import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.etl.transformation.service.DataTransformationService;
 import com.salescode.dim.etl.transformation.service.TransformerInfoRegistry;
 import com.salescode.dim.etl.validation.service.DataValidationService;
+import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -63,7 +64,8 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
 
         // Setup validation service
         ValidationInfoRegistry validationRegistry = new ValidationInfoRegistry(dslContext);
-        DataValidationService dataValidationService = new DataValidationService(validationRegistry, etlRegistry);
+        ValidationExcludeGroupRegistry validationExcludeGroupRegistry = new ValidationExcludeGroupRegistry(dslContext);
+        DataValidationService dataValidationService = new DataValidationService(validationRegistry, validationExcludeGroupRegistry, etlRegistry);
 
         // Initialize pipeline service
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
@@ -117,7 +119,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
         try {
             List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures().get(0));
             for (CommonDataModel cdm : transformedData) {
-                PreProcessOperationResult preProcessOperationResult = preProcessPipelineService.preProcessPipeline(cdm);
+                PreProcessOperationResult preProcessOperationResult = preProcessPipelineService.preProcessPipeline(cdm, transformerInfo.getPreprocessValidationExcludeGroup());
 
                 if (preProcessOperationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
                     preProcessPipelineService.evaluateFailures(preProcessOperationResult, errorList);

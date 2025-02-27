@@ -6,6 +6,7 @@ import com.salescode.dim.etl.ValidationResult;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.etl.validation.AbstractValidationRule;
 import com.salescode.dim.jooq.generated.tables.pojos.ValidationRule;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,18 +22,20 @@ public class DataValidationService {
     private static final String ERROR_MESSAGE = "Validation error: ";
 
     private final ValidationInfoRegistry validationInfoRegistry;
+    private final ValidationExcludeGroupRegistry validationExcludeGroupRegistry;
     private final ETLRegistry etlRegistry;
 
     /**
      * Creates a new DataValidationService with the required dependencies.
      *
-     * @param validationInfoRegistry registry containing validation rule information
-     * @param etlRegistry            registry for obtaining validation implementations
+     * @param validationInfoRegistry         registry containing validation rule information
+     * @param validationExcludeGroupRegistry
+     * @param etlRegistry                    registry for obtaining validation implementations
      */
-    public DataValidationService(ValidationInfoRegistry validationInfoRegistry, ETLRegistry etlRegistry) {
+    public DataValidationService(ValidationInfoRegistry validationInfoRegistry, ValidationExcludeGroupRegistry validationExcludeGroupRegistry, ETLRegistry etlRegistry) {
         this.validationInfoRegistry = Objects.requireNonNull(validationInfoRegistry, "ValidationInfoRegistry cannot be null");
+        this.validationExcludeGroupRegistry = Objects.requireNonNull(validationExcludeGroupRegistry, "ValidationExcludeGroupRegistry cannot be null");
         this.etlRegistry = Objects.requireNonNull(etlRegistry, "ETLRegistry cannot be null");
-
     }
 
     /**
@@ -42,19 +45,20 @@ public class DataValidationService {
      * @return the result of the validation operation
      * @throws NullPointerException if cdm is null
      */
-    public OperationResult validate(CommonDataModel cdm) {
+    public OperationResult validate(CommonDataModel cdm, String preprocessValidationExcludeGroup) {
         Objects.requireNonNull(cdm, "CommonDataModel cannot be null");
-        return validate(Collections.singletonList(cdm));
+        return validate(Collections.singletonList(cdm), preprocessValidationExcludeGroup);
     }
 
     /**
      * Validates a list of CommonDataModels.
      * Applies all relevant validation rules in priority order.
      *
-     * @param currentDataModels the list of data models to validate
+     * @param currentDataModels                the list of data models to validate
+     * @param preprocessValidationExcludeGroup
      * @return the validation result containing validation status and violations
      */
-    public OperationResult validate(List<CommonDataModel> currentDataModels) {
+    public OperationResult validate(List<CommonDataModel> currentDataModels, String preprocessValidationExcludeGroup) {
         if (currentDataModels == null || currentDataModels.isEmpty()) {
             return OperationResult.of(OperationResult.Status.OK, currentDataModels);
         }
@@ -66,7 +70,10 @@ public class DataValidationService {
             return OperationResult.of(OperationResult.Status.OK, currentDataModels);
         }
 
+        Set<String> excludedValidationsIds = StringUtils.isNotBlank(preprocessValidationExcludeGroup) ? validationExcludeGroupRegistry.getObjectIdListByKey(preprocessValidationExcludeGroup) : Collections.emptySet();
+
         List<ValidationResult> allResults = validationRules.parallelStream()
+                .filter(rule -> !excludedValidationsIds.contains(rule.getId()))
                 .map(rule -> validateWithRule(currentDataModels, rule))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());

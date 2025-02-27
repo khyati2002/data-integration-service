@@ -28,14 +28,14 @@ public class PreProcessPipelineService implements Serializable {
         this.dataEnrichmentService = dataEnrichmentService;
     }
 
-    public PreProcessOperationResult preProcessPipeline(CommonDataModel commonDataModel) {
+    public PreProcessOperationResult preProcessPipeline(CommonDataModel commonDataModel, String preprocessValidationExcludeGroup) {
         PreProcessOperationResult finalResult = new PreProcessOperationResult();
 
         OperationResult preValidationEnrich = dataEnrichmentService.enrich(commonDataModel, EnrichmentPhase.PRE_VALIDATION);
         finalResult.setPreValidationEnrichment(preValidationEnrich);
 
         if (finalResult.getPreValidationEnrichment().getStatus().equals(OperationResult.Status.OK)) {
-            OperationResult validate = dataValidationService.validate(finalResult.getPreValidationEnrichment().getOperationResultData());
+            OperationResult validate = dataValidationService.validate(finalResult.getPreValidationEnrichment().getOperationResultData(), preprocessValidationExcludeGroup);
             finalResult.setValidation(validate);
         }
 
