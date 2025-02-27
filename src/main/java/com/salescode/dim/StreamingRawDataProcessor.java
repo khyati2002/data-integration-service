@@ -2,49 +2,71 @@ package com.salescode.dim;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.utils.EntityUtils;
-import com.applicate.services.channelkart.utils.JSONUtils;
-import com.salescode.dim.registry.ETLRegistry;
+import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
+import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
+import com.salescode.dim.etl.registry.ETLRegistry;
+import com.salescode.dim.etl.transformation.service.DataTransformationService;
+import com.salescode.dim.etl.transformation.service.TransformerInfoRegistry;
+import com.salescode.dim.etl.validation.service.DataValidationService;
+import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
-import com.salescode.dim.transformers.registry.TransformerInfoRegistry;
-import com.salescode.dim.transformers.service.DataTransformationService;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
 import org.jooq.DSLContext;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData, StreamingRawData> {
-
     private static final long serialVersionUID = -3351413046175753755L;
+    private static final String TRANSFORMATION_ERROR = "Transformation Failed : ";
+    private static final String SAVE_ERROR = "Error while saving record. Reason: ";
     private final Properties properties;
     private transient Connection connection;
     private transient DSLContext dslContext;
-    private transient ExternalRegistryScanner externalRegistryScanner;
-    private transient ETLRegistry etlRegistry;
-    private transient TransformerInfoRegistry transformerInfoRegistry;
     private transient EntityUtils entityUtils;
     private transient DataTransformationService dataTransformationService;
+    private transient PreProcessPipelineService preProcessPipelineService;
 
     public StreamingRawDataProcessor(Properties commonProperties) {
-        this.properties = commonProperties;
+        this.properties = Objects.requireNonNull(commonProperties, "Properties cannot be null");
     }
 
     @Override
     public void open(Configuration parameters) throws Exception {
         super.open(parameters);
+        initializeResources();
+    }
+
+    private void initializeResources() throws Exception {
         // Create connection & DSLContext using the utility
         this.connection = DatabaseConnectionUtil.createConnection(properties);
         this.dslContext = DatabaseConnectionUtil.createDSLContext(connection);
-        externalRegistryScanner = ExternalRegistryScanner.getInstance(properties);
-        etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
+
+        // Initialize services with dependency injection
+        ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance(properties);
+        ETLRegistry etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
+
+        // Entity utils initialization
         entityUtils = EntityUtils.getInstance(dslContext);
-        transformerInfoRegistry = TransformerInfoRegistry.getInstance(dslContext);
-        dataTransformationService = DataTransformationService.getInstance(transformerInfoRegistry, etlRegistry, entityUtils);
+
+        // Setup transformation service
+        TransformerInfoRegistry transformerInfoRegistry = new TransformerInfoRegistry(dslContext);
+        dataTransformationService = new DataTransformationService(transformerInfoRegistry, etlRegistry, entityUtils);
+
+        // Setup enrichment service
+        EnrichmentInfoRegistry enrichmentInfoRegistry = new EnrichmentInfoRegistry(dslContext);
+        DataEnrichmentService dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry, etlRegistry);
+
+        // Setup validation service
+        ValidationInfoRegistry validationRegistry = new ValidationInfoRegistry(dslContext);
+        DataValidationService dataValidationService = new DataValidationService(validationRegistry, etlRegistry);
+
+        // Initialize pipeline service
+        preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
     }
 
     @Override
@@ -59,28 +81,62 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
         System.out.println("Database connection closed.");
     }
 
-
     @Override
     public void processElement(StreamingRawData streamingRawData, Context ctx, Collector<StreamingRawData> out) throws Exception {
-        List<CommonDataModel> transformedObjects = new ArrayList<>();
-        try{
+        try {
             List<TransformerInfo> transformerInfos = streamingRawData.getTransformerInfo();
-            for (TransformerInfo transformerInfo : transformerInfos) {
-                String transformerId = transformerInfo.getTransformerId();
-                String entityName = transformerInfo.getEntityName();
-                JsonNode jsonNode = streamingRawData.getFeatures().get(0);
-                List<? extends CommonDataModel> cdms = dataTransformationService.transformData(transformerId, entityName, jsonNode);
-                transformedObjects.addAll(cdms);
+            Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>();
+            List<String> errorList = new ArrayList<>();
 
-                // Log transformation
-                System.out.printf("Transformed Data: %s%n", JSONUtils.getObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(cdms));
+            for (TransformerInfo transformerInfo : transformerInfos) {
+                processTransformer(streamingRawData, transformerInfo, dataset, errorList);
             }
-            streamingRawData.setStatus("SUCCESS");
-            streamingRawData.setTransformedData(transformedObjects);
-            out.collect(streamingRawData);
+
+            if (errorList.isEmpty()) {
+                dispatchData(dataset, transformerInfos, errorList);
+            }
+
+            if (!errorList.isEmpty()) {
+                streamingRawData.setStatus("Failure");
+                streamingRawData.setResponses(errorList.stream().map(s -> new StreamingRawData.Response("Failure", s)).collect(Collectors.toList()));
+                ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
+            } else {
+                streamingRawData.setStatus("Success");
+                out.collect(streamingRawData);
+            }
         } catch (Exception e) {
-            streamingRawData.setStatus("FAILED");
-            ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData); // Emit failed record to side output
+            streamingRawData.setStatus("Failure");
+            ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
+        }
+    }
+
+    private void processTransformer(StreamingRawData streamingRawData, TransformerInfo transformerInfo, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset, List<String> errorList) {
+        String transformerId = transformerInfo.getTransformerId();
+        Class<? extends CommonDataModel> entityClass = entityUtils.getEntityClass(transformerInfo.getEntityName());
+
+        try {
+            List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures().get(0));
+            for (CommonDataModel cdm : transformedData) {
+                PreProcessOperationResult preProcessOperationResult = preProcessPipelineService.preProcessPipeline(cdm);
+
+                if (preProcessOperationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
+                    preProcessPipelineService.evaluateFailures(preProcessOperationResult, errorList);
+                } else {
+                    dataset.computeIfAbsent(entityClass, k -> new HashSet<>()).addAll(preProcessOperationResult.getPostValidationEnrichment().getOperationResultData());
+                }
+            }
+        } catch (DataTransformationService.TransformationException e) {
+            errorList.add(TRANSFORMATION_ERROR + e.getMessage());
+        } catch (Exception e) {
+            errorList.add("Unexpected error: " + e.getMessage());
+        }
+    }
+
+    private void dispatchData(Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset, List<TransformerInfo> transformerInfos, List<String> errorList) {
+        try {
+            // MDMDispatcher.dispatch(dataset, transformerInfos); // Uncomment when ready
+        } catch (Throwable th) {
+            errorList.add(SAVE_ERROR + ExceptionUtils.getRootCause(th).getMessage());
         }
     }
 

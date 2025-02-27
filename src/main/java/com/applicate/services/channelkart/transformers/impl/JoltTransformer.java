@@ -4,7 +4,7 @@ import com.applicate.services.channelkart.utils.JSONUtils;
 import com.bazaarvoice.jolt.Chainr;
 import com.bazaarvoice.jolt.JsonUtils;
 import com.salescode.dim.jooq.generated.tables.pojos.TransformerInfo;
-import com.salescode.dim.transformers.AbstractTransformer;
+import com.salescode.dim.etl.transformation.AbstractTransformer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.type.TypeReference;

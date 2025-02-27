@@ -1,4 +1,4 @@
-package com.salescode.dim.transformers;
+package com.salescode.dim.etl.transformation;
 
 import com.salescode.dim.jooq.generated.tables.pojos.TransformerInfo;
 import lombok.Getter;
