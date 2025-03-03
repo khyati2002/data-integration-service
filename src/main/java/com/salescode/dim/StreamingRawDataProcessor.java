@@ -37,6 +37,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     private transient EntityUtils entityUtils;
     private transient DataTransformationService dataTransformationService;
     private transient  CommonDataModelService commonDataModelService;
+    private transient RegisterClassesService registerClassesService;
 
     public StreamingRawDataProcessor(Properties commonProperties) {
         this.properties = commonProperties;
@@ -60,6 +61,8 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
         entityUtils = EntityUtils.getInstance(dslContext);
         transformerInfoRegistry = TransformerInfoRegistry.getInstance(dslContext);
         dataTransformationService = DataTransformationService.getInstance(transformerInfoRegistry, etlRegistry, entityUtils);
+        registerClassesService = RegisterClassesService.getInstance(dslContext);
+        registerClassesService.registerSubClasses();
     }
 
     @Override
@@ -88,11 +91,9 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
                 CommonDataModelService cdmService = ServiceLocator.lookup(entityClass);
                 List<? extends CommonDataModel> cdms = DataTransformationService.getInstance(transformerInfoRegistry,etlRegistry,entityUtils).transformData(transformerId, entityName, jsonNode);
                 transformedObjects.addAll(cdms);
-
-                // Log transformation
                 cdmService.batchSave(cdms);
 
-                System.out.printf("Transformed Data: %s%n", JSONUtils.getObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(cdms));
+              //  System.out.printf("Transformed Data: %s%n", JSONUtils.getObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(cdms));
             }
             streamingRawData.setStatus("SUCCESS");
             streamingRawData.setTransformedData(transformedObjects);

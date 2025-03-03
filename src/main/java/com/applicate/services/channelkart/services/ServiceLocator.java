@@ -21,4 +21,5 @@ public class ServiceLocator {
       //  log.info("Registering {} service {}", persistentClass.getSimpleName(), abstractCDMService.getClass().getSimpleName());
         SERVICE_REGISTRY.put(persistentClass, abstractCDMService);
     }
+
 }

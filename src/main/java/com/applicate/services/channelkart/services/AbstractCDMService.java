@@ -5,16 +5,19 @@ import com.applicate.services.channelkart.utils.EntityUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.salescode.dim.jooq.generated.tables.pojos.User;
 import com.salescode.dim.jooq.impl.Location;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.C;
 import org.jooq.*;
+import org.jooq.Record;
 import org.jooq.impl.DSL;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,10 +30,15 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     public AbstractCDMService(DSLContext dsl) {
 
         if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
-            persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-            ServiceLocator.register(persistentClass, this);
+            Type genericSuperclass = getClass().getGenericSuperclass();
+            ParameterizedType paramType = (ParameterizedType) genericSuperclass;
+            this.persistentClass = (Class<T>) paramType.getActualTypeArguments()[0];
         }
         this.dsl = dsl;
+    }
+
+    public Class<T> getPersistentClass() {
+        return persistentClass;
     }
 
     @SneakyThrows
@@ -83,7 +91,6 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
         // Execute a single query to find all existing items
         Result<Record> existingItems = queryExistingItems(clazz, uniqueKeyField.getName(), uniqueKeyValues);
-
         List<T> result = new ArrayList<>();
         for (Record record : existingItems) {
             T obj = (T) clazz.getDeclaredConstructor().newInstance();
@@ -94,7 +101,9 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                 try {
                     java.lang.reflect.Field objField = findField(clazz,field.getName());
                     objField.setAccessible(true);
-                    objField.set(obj, record.get(field));
+                    if (objField.getType().isAssignableFrom(record.get(field).getClass())) {
+                        objField.set(obj, record.get(field));
+                    }
 
                 } catch (IllegalAccessException e) {
                     System.err.println("Error mapping field: " + field.getName() + " -> " + e.getMessage());
@@ -159,6 +168,10 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         return model;
     }
 
+    public T save1(T cdmObject){
+        return cdmObject;
+    }
+
     public List<T> batchSave(List<T> items) {
 //        items.forEach(element-> apiFilterAuthorizationManager.assertPermission(element))
         List<T> savedItems = new ArrayList<>();
@@ -188,17 +201,13 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                     items.get(i).setVersion(existingItems.get(i).getVersion() + 1);
                     itemsToUpdate.add(items.get(i));
                 }
-                count++;
             }
         }
 
-        Class<? extends CommonDataModel> clazz = itemsToInsert.get(0).getClass();
 
-        Table<?> table = EntityUtils.getInstance().getDSLContextTable(clazz);
-
-        batchInsert(itemsToInsert);
-        batchUpdate(itemsToUpdate);
-        return items;
+       if(itemsToInsert.size() > 0) batchInsert(itemsToInsert);
+       if(itemsToUpdate.size() > 0) batchUpdate(itemsToUpdate);
+       return items;
     }
 
     private List<T> batchInsert(List<T> itemsToInsert){
@@ -293,27 +302,6 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     private java.lang.reflect.Field findField(Class<?> clazz, String fieldName) {
         // Try exact match first
-
-        if ("locationHierarchy".equals(toCamelCase(fieldName))) {
-            java.lang.reflect.Field stringField = null;
-            java.lang.reflect.Field locationField = null;
-
-            for (java.lang.reflect.Field field : clazz.getDeclaredFields()) {
-                if (field.getName().equals("locationHierarchy")) {
-                    if (field.getType().equals(String.class)) {
-                        return field; // Immediately return String type if found
-                    } else if (field.getType().equals(Location.class)) {
-                        locationField = field; // Store Location field for later
-                    }
-                }
-            }
-
-            // If String type is not found, return Location type as fallback
-            if (locationField != null) {
-                return locationField;
-            }
-        }
-
         try {
             return clazz.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
