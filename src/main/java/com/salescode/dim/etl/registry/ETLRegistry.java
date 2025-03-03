@@ -1,4 +1,4 @@
-package com.salescode.dim.registry;
+package com.salescode.dim.etl.registry;
 
 import com.salescode.dim.interfaces.TypeAwareEtlStep;
 import com.salescode.dim.scanner.ExternalRegistryScanner;

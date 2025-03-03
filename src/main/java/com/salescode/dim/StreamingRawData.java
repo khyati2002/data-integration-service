@@ -1,6 +1,5 @@
 package com.salescode.dim;
 
-import com.applicate.services.channelkart.models.CommonDataModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +15,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class StreamingRawData implements Serializable, KeyedKafkaSerialization {
 
     private static final long serialVersionUID = -1415214398611751644L;
@@ -28,7 +27,6 @@ public class StreamingRawData implements Serializable, KeyedKafkaSerialization {
     private String loginId;
     private int batchNumber;
 
-    //    private transient List<Future<MdmOperationResponse>> response; // Keep this transient for serialization purposes
     private String submittedBy;
     private List<TransformerInfo> transformerInfo;
     private ArrayNode features;
@@ -43,12 +41,6 @@ public class StreamingRawData implements Serializable, KeyedKafkaSerialization {
     private boolean ignoreS3Log;
     private Integer batchSize;
     private String topicName;
-
-    private List<CommonDataModel> transformedData;
-
-    public void incrementRetryCount() {
-        this.retryCount += 1;
-    }
 
     @Data
     @NoArgsConstructor

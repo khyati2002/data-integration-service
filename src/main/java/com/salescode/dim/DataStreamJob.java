@@ -93,11 +93,10 @@ public class DataStreamJob {
 //                .name("Process Window Count");
 
         // Process data stream
-        var processedStream = input.process(new StreamingRawDataProcessor(commonProperties))
-                                   .name("Process StreamingRawData");
-
-        // add map function to get old record , create and check hash, sink to separate sink to ignore or process further ??
-//        processedStream.process()
+        var processedStream = input
+                .flatMap(new StreamingRawDataFlatMapper())
+                .process(new StreamingRawDataProcessor(commonProperties))
+                .process(new InsertUpdateIgnoreProcessFunction(commonProperties));
 
         processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
 
@@ -130,4 +129,5 @@ public class DataStreamJob {
         // Execute program, beginning computation.
         env.execute("Flink Java API Skeleton");
     }
+
 }

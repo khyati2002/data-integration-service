@@ -1,11 +1,10 @@
-package com.salescode.dim.transformers.registry;
+package com.salescode.dim.etl.transformation.service;
 
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.salescode.dim.interfaces.RefreshableRegistry;
 import com.salescode.dim.jooq.generated.tables.pojos.TransformerInfo;
 import org.jooq.DSLContext;
 
-import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.salescode.dim.jooq.generated.Tables.CK_TRANSFORMER_INFO;
 
 /**
- * A singleton registry for transformer information.
+ * A registry for transformer information.
  * <p>
  * This class is serializable. The DSLContext is transient and must be reinitialized
  * after deserialization if needed.
@@ -25,47 +24,20 @@ public class TransformerInfoRegistry implements RefreshableRegistry, Serializabl
 
     private static final long serialVersionUID = -2593827028194431363L;
 
-    private static TransformerInfoRegistry instance;
-
     private final Map<String, TransformerInfo> transformerCache = new ConcurrentHashMap<>();
     private final Map<String, String> nameToIdCache = new ConcurrentHashMap<>();
 
     private transient DSLContext dsl;
 
-    private TransformerInfoRegistry(DSLContext dsl) {
-        // Defensive check for null DSLContext.
-        this.dsl = Objects.requireNonNull(dsl, "DSLContext cannot be null");
-    }
-
     /**
-     * Returns the singleton instance, initializing it if necessary and calling init() to preload data.
+     * Constructs a new TransformerInfoRegistry.
      *
      * @param dsl the DSLContext to use for database operations.
-     * @return the singleton instance.
+     * @throws NullPointerException if dsl is null
      */
-    public static synchronized TransformerInfoRegistry getInstance(DSLContext dsl) {
-        if (dsl == null) {
-            throw new IllegalArgumentException("DSLContext cannot be null");
-        }
-        if (instance == null) {
-            instance = new TransformerInfoRegistry(dsl);
-            instance.init(); // Preload transformer info
-        }
-        return instance;
-    }
-
-    /**
-     * Returns the singleton instance.
-     *
-     * @return the singleton instance.
-     * @throws IllegalStateException if the instance has not been initialized.
-     */
-    public static TransformerInfoRegistry getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException("TransformerInfoRegistry has not been initialized. " +
-                    "Call getInstance(DSLContext) first.");
-        }
-        return instance;
+    public TransformerInfoRegistry(DSLContext dsl) {
+        this.dsl = Objects.requireNonNull(dsl, "DSLContext cannot be null");
+        init(); // Preload transformer info
     }
 
     /**
@@ -79,7 +51,11 @@ public class TransformerInfoRegistry implements RefreshableRegistry, Serializabl
         if (id == null) {
             throw new IllegalArgumentException("Transformer ID cannot be null");
         }
-        return transformerCache.computeIfAbsent(id, this::loadTransformerInfoById);
+        TransformerInfo info = transformerCache.computeIfAbsent(id, this::loadTransformerInfoById);
+        if (info == null) {
+            throw new IllegalArgumentException("Transformer with ID " + id + " not found or inactive");
+        }
+        return info;
     }
 
     /**
@@ -108,9 +84,9 @@ public class TransformerInfoRegistry implements RefreshableRegistry, Serializabl
      */
     private TransformerInfo loadTransformerInfoById(String id) {
         TransformerInfo record = dsl.selectFrom(CK_TRANSFORMER_INFO)
-                                      .where(CK_TRANSFORMER_INFO.ID.eq(id))
-                                      .and(CK_TRANSFORMER_INFO.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
-                                      .fetchOneInto(TransformerInfo.class);
+                                    .where(CK_TRANSFORMER_INFO.ID.eq(id))
+                                    .and(CK_TRANSFORMER_INFO.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
+                                    .fetchOneInto(TransformerInfo.class);
         if (record != null && record.getName() != null) {
             nameToIdCache.put(record.getName(), record.getId());
         }
@@ -139,10 +115,10 @@ public class TransformerInfoRegistry implements RefreshableRegistry, Serializabl
      */
     public void init() {
         List<TransformerInfo> infoList = dsl.selectFrom(CK_TRANSFORMER_INFO)
-                                              .where(CK_TRANSFORMER_INFO.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
-                                              .and(CK_TRANSFORMER_INFO.ID.isNotNull())
-                                              .and(CK_TRANSFORMER_INFO.NAME.isNotNull())
-                                              .fetchInto(TransformerInfo.class);
+                                            .where(CK_TRANSFORMER_INFO.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
+                                            .and(CK_TRANSFORMER_INFO.ID.isNotNull())
+                                            .and(CK_TRANSFORMER_INFO.NAME.isNotNull())
+                                            .fetchInto(TransformerInfo.class);
         infoList.parallelStream()
                 .filter(record -> record.getName() != null && record.getId() != null)
                 .forEach(record -> {
@@ -158,22 +134,14 @@ public class TransformerInfoRegistry implements RefreshableRegistry, Serializabl
     public void refreshRegistry() {
         transformerCache.clear();
         nameToIdCache.clear();
-    }
-
-    /**
-     * Ensures that the singleton property is maintained during deserialization.
-     *
-     * @return the singleton instance.
-     * @throws ObjectStreamException if an error occurs during deserialization.
-     */
-    private Object readResolve() throws ObjectStreamException {
-        return getInstance();
+        init(); // Immediately reload the data
     }
 
     /**
      * Sets the DSLContext. Use this method to reinitialize the transient DSLContext after deserialization.
      *
      * @param dsl the DSLContext to set.
+     * @throws NullPointerException if dsl is null
      */
     public void setDslContext(DSLContext dsl) {
         this.dsl = Objects.requireNonNull(dsl, "DSLContext cannot be null");
