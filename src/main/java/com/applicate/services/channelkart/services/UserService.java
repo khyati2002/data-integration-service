@@ -1,12 +1,10 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.RoleName;
-import com.salescode.dim.jooq.generated.tables.CkUser;
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
 import com.salescode.dim.jooq.generated.tables.records.CkUserRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.Location;
-import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.User;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +22,7 @@ public class UserService extends AbstractCDMService<User> {
     private static LocationService locationService;
     private static RoleService roleService;
     private static UserParentService userParentService;
-    private static DSLContext dsl;
+    private final DSLContext dsl;
 
     public static final String DEFAULT_ENCODED_PASSWORD = "$2a$10$GetnNjgilfLkIv.2R3nHMevLZfI9HGHWQ3iXw3nrCfJlrpePirkIi";
 
@@ -157,7 +155,7 @@ public class UserService extends AbstractCDMService<User> {
             user.setId(UUID.randomUUID().toString());
             user.setVersion(0);
         }
-        if (savedObj.getHash() == user.getHash()) {
+        if (savedObj!=null && Objects.equals(savedObj.getHash(), user.getHash())) {
             return user;
         }
 
@@ -242,7 +240,7 @@ public class UserService extends AbstractCDMService<User> {
                 userList.get(i).setId(UUID.randomUUID().toString());
                 itemsToInsert.add(userList.get(i));
             } else {
-                if (userList.get(i).getHash() != savedList.get(userList.get(i).getLoginid()).getHash()) {
+                if (!Objects.equals(userList.get(i).getHash(), savedList.get(userList.get(i).getLoginid()).getHash())) {
                     userList.get(i).setId(savedList.get(userList.get(i).getLoginid()).getId());
                     userList.get(i).setVersion(savedList.get(userList.get(i).getLoginid()).getVersion());
                     itemsToUpdate.add(userList.get(i));
@@ -270,5 +268,11 @@ public class UserService extends AbstractCDMService<User> {
 
         }
         return userList;
+    }
+
+    public User findByLoginId(String loginid){
+        return dsl.selectFrom(CK_USER)
+                .where(CK_USER.LOGINID.eq(loginid))
+                .fetchOneInto(User.class);
     }
 }

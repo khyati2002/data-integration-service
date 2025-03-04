@@ -19,4 +19,12 @@ public class NullUtils {
         }
         return false;
     }
+
+    public static boolean isNull(Object item) {
+        return  item == null;
+    }
+
+    public static boolean isNotNull(Object item) {
+        return !isNull(item);
+    }
 }

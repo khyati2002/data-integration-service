@@ -138,6 +138,27 @@ under the License.
             <version>1.18.34</version> <!-- Use the latest version -->
         </dependency>
 
+
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+        <!-- Hibernate Validator (Actual Implementation) -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>8.0.1.Final</version>
+        </dependency>
+
+        <!-- Required for Expression Language (EL) support -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
         <!--	test dependencies	-->
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -232,6 +253,12 @@ under the License.
             <groupId>com.bazaarvoice.jolt</groupId>
             <artifactId>json-utils</artifactId>
             <version>${com.bazaarvoice.jolt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
         </dependency>
 
         <!--<dependency>

@@ -1,5 +1,6 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.cache.EntityCacheManager;
 import com.applicate.services.channelkart.repository.LocationRepository;
 import com.applicate.services.channelkart.utils.JSONUtils;
 
@@ -17,6 +18,7 @@ import org.jooq.DSLContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_LOCATION;
@@ -153,6 +155,9 @@ public class LocationService extends AbstractCDMService<Location> {
                 if (StringUtils.isNotEmpty(hierarchyStr)) {
                     Location locationRes = locationRepository.findByLocationHierarchy(hierarchyStr);
                     if (locationRes != null) {
+                        Map<Object,Object> locationMap = EntityCacheManager.getInstance().getEntityCache(Location.class);
+                        locationMap.put(locationRes.getLocationHierarchy(), locationRes);
+                        EntityCacheManager.getInstance().put(Location.class,locationRes.getLocationHierarchy(),locationRes);
                         return locationRes;
                     } else {
                         saveRecursiveLocationHierarchies(tLocation, columnList);
@@ -267,7 +272,11 @@ public class LocationService extends AbstractCDMService<Location> {
                 .onDuplicateKeyUpdate()
                 .set(record)
                 .execute();
-       return loc;
+
+//        entityCache.putIfAbsent(Location.class, new HashMap<>());
+//        Map<Object,Object> locationMap = entityCache.get(Location.class);
+//        locationMap.put(record.getLocationHierarchy(), loc);
+        return loc;
     }
 
     @Override

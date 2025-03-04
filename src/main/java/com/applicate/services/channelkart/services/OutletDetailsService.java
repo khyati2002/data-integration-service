@@ -1,7 +1,12 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.JSONUtils;
 
+import com.salescode.dim.jooq.generated.tables.CkHierarchyMetadata;
+import com.salescode.dim.jooq.generated.tables.pojos.OutletDetailsHierarchymetadata;
+import com.salescode.dim.jooq.generated.tables.pojos.UserRoles;
+import com.salescode.dim.jooq.generated.tables.pojos.Userdesignation;
 import com.salescode.dim.jooq.generated.tables.records.CkOutletDetailsRecord;
 import com.salescode.dim.jooq.generated.tables.records.CkUserRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
@@ -16,12 +21,12 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.util.RawV
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Select;
+import org.jooq.impl.DSL;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.salescode.dim.jooq.generated.Tables.CK_OUTLET_DETAILS;
-import static com.salescode.dim.jooq.generated.Tables.CK_USER;
+import static com.salescode.dim.jooq.generated.Tables.*;
 
 public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
@@ -31,7 +36,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private static final String WHOLESALER = "wholesaler";
     private static  CustomerAccountsService customerAccountsService;
     private static  LocationService locationService;
-    private static  HierarchyMetadataService HierarchyMetadataService;
+    private static  HierarchyMetadataService hierarchyMetadataService;
     private static  SupplierInfoService supplierInfoService;
     private final DSLContext dsl;
 
@@ -41,34 +46,57 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         userService = new UserService(dsl);
         customerAccountsService = new CustomerAccountsService(dsl);
         locationService = new LocationService(dsl);
-        HierarchyMetadataService = new HierarchyMetadataService(dsl);
+        hierarchyMetadataService = new HierarchyMetadataService(dsl);
         supplierInfoService = new SupplierInfoService();
     }
 
 
-    private void populateUserOutletHierarchy(User user, OutletDetails outlet){
+    private void populateUserOutletHierarchy(User user, OutletDetails outlet) {
         if (ObjectUtils.isNotEmpty(user.getImmediateParent())) {
-            List<HierarchyMetadata> hms = user.getImmediateParent().stream().map(parent -> {
-                HierarchyMetadata hm = new HierarchyMetadata();
-                hm.setHierarchy(user.getLoginid() + " > "
-                        + (StringUtils.isEmpty(parent.getHierarchy())
-                        ? parent.getParent() + " > " + customerAccountsService.getAdminLoginId()
-                        : parent.getHierarchy()));
-                Location location = user.getLocation();
-                hm.setLocationHierarchy((location == null) ? null : location.getLocationHierarchy());
-                hm.setImmediateParent(user.getLoginid());
-                return hm;
-            }).collect(Collectors.toList());
-            // If outlet defines its own immediate parent then it should not override by
-            // user.
-            // The whole hierarchy should be take care by populate hierarchy in next steps.
+            List<HierarchyMetadata> hms = user.getImmediateParent().stream()
+                    .flatMap(parent -> {
+                        List<HierarchyMetadata> hierarchyMetadataList = hierarchyMetadataService.findByImmediateParent(parent.getParent());
+                        return hierarchyMetadataList.stream().map(hierarchyMetadata -> {
+                            HierarchyMetadata hm = new HierarchyMetadata();
+
+                            // Set parent hierarchy
+                            parent.setHierarchy(hierarchyMetadata.getHierarchy());
+
+                            // Compute hierarchy string
+                            String computedHierarchy = user.getLoginid() + " > " +
+                                    (StringUtils.isEmpty(parent.getHierarchy())
+                                            ? parent.getParent() + " > " + customerAccountsService.getAdminLoginId()
+                                            : parent.getHierarchy());
+
+                            hm.setHierarchy(computedHierarchy);
+
+                            // Set location hierarchy
+                            Location location = user.getLocation();
+                            hm.setLocationHierarchy(location != null ? location.getLocationHierarchy() : null);
+
+                            // Set immediate parent
+                            hm.setImmediateParent(user.getLoginid());
+
+                            return hm;
+                        });
+                    })
+                    .collect(Collectors.toList());
+
+            hierarchyMetadataService.batchSave(hms);
+
+            // If outlet defines its own immediate parent, do not override it
             if (ObjectUtils.isEmpty(outlet.getImmediateParent())) {
                 outlet.setImmediateParent(hms);
             }
         }
     }
 
+
     private void populateLocation(OutletDetails outletDetails){
+            boolean locExists = findEntity(Location.class,outletDetails.getLocationHierarchy());
+            if(locExists == true){
+                return;
+            }
             Location location = outletDetails.getLocation();
             location = locationService.findLocationOrPersistLocation(location);
             outletDetails.setLocation(location);
@@ -85,7 +113,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 populateHierarchy(HierarchyMetadata, existingMetadata, newMetadata, outlet);
             }
             if (!newMetadata.isEmpty()) {
-                List<HierarchyMetadata> savedData = HierarchyMetadataService.batchSave(newMetadata);
+                List<HierarchyMetadata> savedData = hierarchyMetadataService.batchSave(newMetadata);
                 existingMetadata.addAll(savedData);
             }
             if (!existingMetadata.isEmpty())
@@ -117,7 +145,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 Arrays.asList(parentHierarchy.split(",")).stream().forEach(tempHierarchy -> {
                     List<String> hierarchyusers = Arrays.asList(tempHierarchy.split(" > ")).stream().filter(parent->!parent.equals(customerAccountsService.getAdminLoginId())).collect(Collectors.toList());
                     String loginId = hierarchyusers.get(hierarchyusers.size() - 1);
-                    List<HierarchyMetadata> lastParent = (List<HierarchyMetadata>) HierarchyMetadataService
+                    List<HierarchyMetadata> lastParent = (List<HierarchyMetadata>) hierarchyMetadataService
                             .findByImmediateParent(loginId);
                     if(lastParent.isEmpty()){
                         HierarchyMetadata hmd=new HierarchyMetadata();
@@ -132,7 +160,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             } else {
                 // Handle the case at which Hierarchy is null
                
-                    List<HierarchyMetadata> lastParent = (List<HierarchyMetadata>) HierarchyMetadataService
+                    List<HierarchyMetadata> lastParent = (List<HierarchyMetadata>) hierarchyMetadataService
                             .findByImmediateParent(HierarchyMetadata.getParent());
                     if (lastParent != null) {
                         existingMetadata.addAll(lastParent);
@@ -155,7 +183,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             tempList.add(hierarchy);
             String joinedHierarchy = StringUtils.join(tempList, " > ");
 
-            HierarchyMetadata hm = HierarchyMetadataService.findByHierarchy(joinedHierarchy);
+            HierarchyMetadata hm = hierarchyMetadataService.findByHierarchy(joinedHierarchy);
             if (hm != null && existingMetadata.stream().noneMatch(np->np.getHierarchy().equals(joinedHierarchy))) {
                 existingMetadata.add(hm);
             } else if(hm != null && newMetadata.stream().noneMatch(np->np.getHierarchy().equals(joinedHierarchy))) {
@@ -169,9 +197,10 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         }
     }
 
-    private void populateAssociatedData(OutletDetails outlet){
+    private User populateAssociatedData(OutletDetails outlet){
         User user = userService.getUser(outlet.getUserName());
         outlet.setUserName(user);
+        outlet.setLocationHierarchy(user.getLocation().getLocationHierarchy());
         if(user.getDesignation().contains(RETAILER) || user.getDesignation().contains(WHOLESALER)) {
             outlet.setActiveStatus(outlet.getUserName().getActiveStatus());
         }
@@ -179,6 +208,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         populateLocation(outlet);
         setOutletHierarchy(outlet);
         setOutletSupplier(outlet);
+        return user;
     }
 
     public void setOutletSupplier(OutletDetails outletDetails)  {
@@ -197,13 +227,13 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         }
     }
 
-    public void beforeSave(OutletDetails outlet){
-      populateAssociatedData(outlet);
+    public User beforeSave(OutletDetails outlet){
+      return populateAssociatedData(outlet);
     }
 
     @Override
     public OutletDetails save(OutletDetails outlet){
-        beforeSave(outlet);
+        User user = beforeSave(outlet);
         super.addHash(outlet);
         com.salescode.dim.jooq.generated.tables.pojos.OutletDetails savedObj = dsl.select(CK_OUTLET_DETAILS.asterisk().except(CK_OUTLET_DETAILS.COORDINATE))
                 .from(CK_OUTLET_DETAILS)
@@ -212,13 +242,13 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
         if(savedObj != null) {
             outlet.setId(savedObj.getId());
-            savedObj.setVersion(savedObj.getVersion() + 1);
+            outlet.setVersion(savedObj.getVersion() + 1);
         }
         else{
             outlet.setId(UUID.randomUUID().toString());
             outlet.setVersion(0);
         }
-        if(savedObj.getHash() == outlet.getHash()){
+        if(Objects.equals(savedObj.getHash(), outlet.getHash())){
             return outlet;
         }
 
@@ -230,10 +260,17 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 .set(record)
                 .execute();
 
+        List<UserRoles> roleList = setRoles(List.of(user));
+        saveRoles(roleList);
+        List<Userdesignation> userdesignationsList = setDesignation(List.of(user));
+        saveDesignation(userdesignationsList);
+        List<OutletDetailsHierarchymetadata> outletDetailsHierarchymetadata = setOutletHierarchyMetadata(List.of(outlet));
+        saveOutletDetailHierarchyMetadata(outletDetailsHierarchymetadata);
         return outlet;
+
     }
 
-    private void populateBatchAssociatedData(List<OutletDetails> outletDetailsList){
+    private List<User> populateBatchAssociatedData(List<OutletDetails> outletDetailsList){
 
         List<User> userList= outletDetailsList.stream()
                 .map(OutletDetails::getUserName)
@@ -253,10 +290,108 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             setOutletHierarchy(outletDetailsList.get(i));
             setOutletSupplier(outletDetailsList.get(i));
         }
+        return savedUserList;
     }
 
+    public List<UserRoles> setRoles(List<User> userList) {
+        return userList.stream()
+                .map(user -> {
+                    UserRoles userRoles = new UserRoles();
+                    // Set the user ID
+                    userRoles.setUserId(user.getId());
+                    // Check if the user has any roles and set the first role's id
+                    if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+                        userRoles.setRolesId(user.getRoles().get(0).getId());
+                    } else {
+                        // Optionally set a default value or handle the case where no roles exist
+                        userRoles.setRolesId(UUID.randomUUID().toString());
+                    }
+                    return userRoles;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public void saveRoles(List<UserRoles> userRoles) {
+        BatchInsertUtil.saveBatchWithDuplicateCheck(
+                dsl,
+                userRoles,
+                CK_USER_ROLES,
+                role -> DSL.row(role.getUserId(), role.getRolesId()),
+                CK_USER_ROLES.USER_ID,
+                CK_USER_ROLES.ROLES_ID,
+                role -> dsl.insertInto(CK_USER_ROLES)
+                        .set(CK_USER_ROLES.USER_ID, role.getUserId())
+                        .set(CK_USER_ROLES.ROLES_ID, role.getRolesId())
+        );
+    }
+
+    public List<Userdesignation> setDesignation(List<User> userList) {
+        return userList.stream()
+                .map(user -> {
+                    Userdesignation userdesignation = new Userdesignation();
+
+                    // Set the user ID
+                    userdesignation.setLoginId(user.getLoginid());
+
+                    // Ensure designation is not null before joining
+                    if (user.getDesignation() != null) {
+                        userdesignation.setDesignation(user.getDesignation().stream()
+                                .collect(Collectors.joining(" ")));
+                    } else {
+                        userdesignation.setDesignation(null); // Or set a default value if needed
+                    }
+
+                    return userdesignation;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public void saveDesignation(List<Userdesignation> userDesignation) {
+        BatchInsertUtil.saveBatchWithDuplicateCheck(
+                dsl,
+                userDesignation,
+                CK_USERDESIGNATION,
+                designation -> DSL.row(designation.getLoginId(), designation.getDesignation()),
+                CK_USERDESIGNATION.LOGIN_ID,
+                CK_USERDESIGNATION.DESIGNATION,
+                designation -> dsl.insertInto(CK_USERDESIGNATION)
+                        .set(CK_USERDESIGNATION.LOGIN_ID, designation.getLoginId())
+                        .set(CK_USERDESIGNATION.DESIGNATION, designation.getDesignation())
+        );
+    }
+
+    private List<OutletDetailsHierarchymetadata> setOutletHierarchyMetadata(List<OutletDetails> outletDetailsMap) {
+        return outletDetailsMap.stream()
+                .flatMap(outlet -> outlet.getImmediateParent().stream()
+                        .map(hierarchy -> {
+                            OutletDetailsHierarchymetadata metadata = new OutletDetailsHierarchymetadata();
+                            // Set the outlet code
+                            metadata.setOutletId(outlet.getId());
+                            // Set the parent ID
+                            metadata.setHierarchyMetadataId(hierarchy.getId());
+                            return metadata;
+                        })
+                )
+                .collect(Collectors.toList());
+    }
+
+    public void saveOutletDetailHierarchyMetadata(List<OutletDetailsHierarchymetadata> outletDetailsHierarchymetadata) {
+        BatchInsertUtil.saveBatchWithDuplicateCheck(
+                dsl,
+                outletDetailsHierarchymetadata,
+                CK_OUTLET_DETAILS_HIERARCHYMETADATA,
+                item -> DSL.row(item.getOutletId(), item.getHierarchyMetadataId()),
+                CK_OUTLET_DETAILS_HIERARCHYMETADATA.OUTLET_ID,
+                CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID,
+                item -> dsl.insertInto(CK_OUTLET_DETAILS_HIERARCHYMETADATA)
+                        .set(CK_OUTLET_DETAILS_HIERARCHYMETADATA.OUTLET_ID, item.getOutletId())
+                        .set(CK_OUTLET_DETAILS_HIERARCHYMETADATA.HIERARCHY_METADATA_ID, item.getHierarchyMetadataId())
+        );
+    }
+
+
     public List<OutletDetails> batchSave(List<OutletDetails> outletDetailsList){
-        populateBatchAssociatedData(outletDetailsList);
+        List<User> savedUserList = populateBatchAssociatedData(outletDetailsList);
         List<String> outletCodes = outletDetailsList.stream()
                 .map(OutletDetails::getOutletcode)
                 .collect(Collectors.toList());
@@ -305,6 +440,20 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             ).execute();
 
         }
+
+
+        List<UserRoles> roleList = setRoles(savedUserList);
+        saveRoles(roleList);
+        List<Userdesignation> userdesignationsList = setDesignation(savedUserList);
+        saveDesignation(userdesignationsList);
+//        List<OutletDetailsHierarchymetadata> outletDetailsHierarchymetadata = setOutletHierarchyMetadata(outletDetailsList);
+//        saveOutletDetailHierarchyMetadata(outletDetailsHierarchymetadata);
         return outletDetailsList;
+    }
+
+    public OutletDetails findByOutletcode(String outletcode){
+        return dsl.selectFrom(CK_OUTLET_DETAILS)
+                .where(CK_OUTLET_DETAILS.OUTLETCODE.eq(outletcode))
+                .fetchOneInto(OutletDetails.class);
     }
 }

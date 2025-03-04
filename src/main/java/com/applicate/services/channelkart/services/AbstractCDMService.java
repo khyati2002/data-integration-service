@@ -1,7 +1,9 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.cache.EntityCacheManager;
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.utils.EntityUtils;
+import com.applicate.services.channelkart.validations.repository.OutletDetailsValidator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,6 +21,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public abstract class AbstractCDMService<T extends CommonDataModel> implements CommonDataModelService<T>{
@@ -344,6 +347,13 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         }
 
         return result.toString();
+    }
+
+    public boolean findEntity(Class clazz,String uniqueId){
+        if(EntityCacheManager.getInstance().getEntityCache(clazz) != null){
+          return EntityCacheManager.getInstance().getEntityCache(clazz).get(uniqueId) != null;
+        }
+        return false;
     }
 
 }

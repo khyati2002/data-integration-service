@@ -1,6 +1,9 @@
 package com.salescode.dim;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.services.CommonDataModelService;
+import com.applicate.services.channelkart.services.RegisterClassesService;
+import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
@@ -31,6 +34,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     private transient EntityUtils entityUtils;
     private transient DataTransformationService dataTransformationService;
     private transient PreProcessPipelineService preProcessPipelineService;
+    private transient RegisterClassesService registerClassesService;
 
     public StreamingRawDataProcessor(Properties commonProperties) {
         this.properties = Objects.requireNonNull(commonProperties, "Properties cannot be null");
@@ -69,6 +73,8 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
 
         // Initialize pipeline service
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
+        registerClassesService = new RegisterClassesService(dslContext);
+        registerClassesService.registerSubClasses();
     }
 
     @Override
@@ -87,7 +93,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     public void processElement(StreamingRawData streamingRawData, Context ctx, Collector<StreamingRawData> out) throws Exception {
         try {
             List<TransformerInfo> transformerInfos = streamingRawData.getTransformerInfo();
-            Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>();
+            Map<Class<? extends CommonDataModel>, List<CommonDataModel>> dataset = new LinkedHashMap<>();
             List<String> errorList = new ArrayList<>();
 
             for (TransformerInfo transformerInfo : transformerInfos) {
@@ -101,22 +107,22 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
             if (!errorList.isEmpty()) {
                 streamingRawData.setStatus("Failure");
                 streamingRawData.setResponses(errorList.stream().map(s -> new StreamingRawData.Response("Failure", s)).collect(Collectors.toList()));
-                ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
+               // ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
             } else {
                 streamingRawData.setStatus("Success");
                 out.collect(streamingRawData);
             }
         } catch (Exception e) {
             streamingRawData.setStatus("Failure");
-            ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
+           // ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
         }
     }
 
-    private void processTransformer(StreamingRawData streamingRawData, TransformerInfo transformerInfo, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset, List<String> errorList) {
+    private void processTransformer(StreamingRawData streamingRawData, TransformerInfo transformerInfo, Map<Class<? extends CommonDataModel>, List<CommonDataModel>> dataset, List<String> errorList) {
         String transformerId = transformerInfo.getTransformerId();
         Class<? extends CommonDataModel> entityClass = entityUtils.getEntityClass(transformerInfo.getEntityName());
 
-        try {
+       try {
             List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures().get(0));
             for (CommonDataModel cdm : transformedData) {
                 PreProcessOperationResult preProcessOperationResult = preProcessPipelineService.preProcessPipeline(cdm, transformerInfo.getPreprocessValidationExcludeGroup());
@@ -124,7 +130,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
                 if (preProcessOperationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
                     preProcessPipelineService.evaluateFailures(preProcessOperationResult, errorList);
                 } else {
-                    dataset.computeIfAbsent(entityClass, k -> new HashSet<>()).addAll(preProcessOperationResult.getPostValidationEnrichment().getOperationResultData());
+                    dataset.computeIfAbsent(entityClass, k -> new ArrayList<>()).addAll(transformedData);
                 }
             }
         } catch (DataTransformationService.TransformationException e) {
@@ -132,11 +138,22 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
         } catch (Exception e) {
             errorList.add("Unexpected error: " + e.getMessage());
         }
-    }
+   }
 
-    private void dispatchData(Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset, List<TransformerInfo> transformerInfos, List<String> errorList) {
+    private void dispatchData(Map<Class<? extends CommonDataModel>, List<CommonDataModel>> dataset, List<TransformerInfo> transformerInfos, List<String> errorList) {
         try {
             // MDMDispatcher.dispatch(dataset, transformerInfos); // Uncomment when ready
+            Map<Class<?>, Set<CommonDataModel>> collector = new LinkedHashMap<>();
+
+            for (Map.Entry<Class<? extends CommonDataModel>, List<CommonDataModel>> entry : dataset.entrySet()) {
+                Class<? extends CommonDataModel> clazz = entry.getKey();
+                CommonDataModelService cdmService = ServiceLocator.lookup(clazz);
+
+                List<CommonDataModel> cdmList = entry.getValue();
+                if (cdmList != null && !cdmList.isEmpty()) {
+                    cdmService.save(cdmList.get(0)); // Pass the entire list for batch saving
+                }
+            }
         } catch (Throwable th) {
             errorList.add(SAVE_ERROR + ExceptionUtils.getRootCause(th).getMessage());
         }
