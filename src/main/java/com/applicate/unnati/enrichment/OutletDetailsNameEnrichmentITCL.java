@@ -1,0 +1,27 @@
+package com.applicate.unnati.enrichment;
+
+
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.salescode.dim.etl.EnrichmentResult;
+import com.salescode.dim.etl.OperationResult;
+import com.salescode.dim.etl.enrichment.AbstractEnrichment;
+import com.salescode.dim.jooq.impl.OutletDetails;
+
+import java.util.List;
+
+public class OutletDetailsNameEnrichmentITCL extends AbstractEnrichment<OutletDetails> {
+
+    public OperationResult.StepResult apply(OutletDetails cdm) {
+        // TODO Auto-generated method stub
+        if(cdm.getContactName() == null) {
+            cdm.setContactName(cdm.getOutletName());
+        }
+        if (cdm.getActiveStatus()==null)
+        {
+        	cdm.setActiveStatus(ActiveStatus.ACTIVE);
+        	cdm.setActiveStatusReason(ActiveStatus.ACTIVE.name());
+        }
+        return  new OperationResult.StepResult(OperationResult.Status.OK, "Data enriched successfully");
+    }
+
+}
