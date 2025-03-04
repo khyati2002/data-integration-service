@@ -86,9 +86,6 @@ public class JSONUtils {
         return get();
     }
 
-    public static <T> T convert(Object node, com.fasterxml.jackson.core.type.TypeReference<T> typeReference) {
-       return OBJECT_MAPPER.convertValue(node, typeReference);
 
-    }
 
 }
