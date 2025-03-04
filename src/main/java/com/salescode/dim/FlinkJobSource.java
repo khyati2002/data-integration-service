@@ -18,7 +18,8 @@ public class FlinkJobSource {
         // Determine the starting offsets initializer
         OffsetsInitializer startingOffsetsInitializer = inputProperties.containsKey("startTimestamp") ? OffsetsInitializer.timestamp(Long.parseLong(inputProperties.getProperty("startTimestamp"))) : DEFAULT_OFFSETS_INITIALIZER;
 
-        String lobTopicName = inputProperties.getProperty("lob") + inputProperties.getProperty("topic");
+//        String lobTopicName = inputProperties.getProperty("lob") + inputProperties.getProperty("topic");
+        String lobTopicName = inputProperties.getProperty("topic");
 
         return KafkaSource.<T>builder()
                           .setBootstrapServers(inputProperties.getProperty("bootstrap.servers"))

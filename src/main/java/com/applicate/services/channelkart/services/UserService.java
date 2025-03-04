@@ -6,6 +6,7 @@ import com.salescode.dim.jooq.generated.tables.records.CkUserRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.User;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;
@@ -274,5 +275,12 @@ public class UserService extends AbstractCDMService<User> {
         return dsl.selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
                 .fetchOneInto(User.class);
+    }
+
+    public Optional<List<User>> findByMobileSafely(String mobile) {
+        List<User> users= dsl.selectFrom(CK_USER)
+                .where(CK_USER.MOBILE.eq(mobile))
+                .fetchInto(User.class);
+        return CollectionUtils.isEmpty(users)? Optional.empty() : Optional.of(users);
     }
 }

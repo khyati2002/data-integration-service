@@ -15,7 +15,7 @@
   {
     "PropertyGroupId": "Input0",
     "PropertyMap": {
-      "topic": "-dataintegration-streams"
+      "topic": "${topic}"
     }
   },
   {

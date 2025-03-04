@@ -110,7 +110,8 @@ public class DataStreamJobTest {
 
         // For testing, we bypass Kafka and directly use the processor.
         // Prepare dummy commonProperties (if needed by StreamingRawDataProcessor)
-        Map<String, Properties> stringPropertiesMap = PropertyLoader.loadApplicationProperties(null);
+        PropertyLoader propertyLoader = new PropertyLoader();
+        Map<String, Properties> stringPropertiesMap = propertyLoader.loadApplicationProperties(null);
 
         // Apply the process function (simulate the job's pipeline)
         DataStream<StreamingRawData> processedStream = source
