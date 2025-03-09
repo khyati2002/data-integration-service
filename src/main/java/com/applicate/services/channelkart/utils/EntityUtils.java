@@ -41,23 +41,16 @@ public class EntityUtils {
         return instance;
     }
 
-    public Set<String> getUniqueKeys(Class<? extends CommonDataModel> aClass) {
-
-        return null;
-    }
 
     public Class<? extends CommonDataModel> getEntityClass(String entityName) {
         return entityImplClassMap.computeIfAbsent(entityName, key -> {
             List<Class<? extends CommonDataModel>> candidates = subClasses.stream()
-                                                                          .filter(e -> key.equalsIgnoreCase(e.getSimpleName()))
-                                                                          .collect(Collectors.toList());
+                    .filter(e -> key.equalsIgnoreCase(e.getSimpleName())).collect(Collectors.toList());
             if (candidates.isEmpty()) {
                 throw new IllegalArgumentException("Entity not found: " + key);
             }
-            return candidates.stream()
-                             .filter(e -> e.getPackage().getName().contains(".impl"))
-                             .findFirst()
-                             .orElse(candidates.get(0));
+            return candidates.stream().filter(e -> e.getPackage().getName().contains(".impl")).findFirst()
+                    .orElse(candidates.get(0));
         });
     }
 }

@@ -3,7 +3,6 @@ package com.applicate.services.channelkart.models;
 import com.applicate.services.channelkart.models.diff.Change;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
-import com.applicate.services.channelkart.utils.EntityUtils;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -49,7 +48,6 @@ public abstract class CommonDataModel implements Serializable {
     private Set<Change<Serializable>> changes;
 
     @Getter
-    @Setter
     private transient CommonDataModel oldModel;
 
     /**
@@ -180,24 +178,6 @@ public abstract class CommonDataModel implements Serializable {
     public void setOldModel(CommonDataModel oldModel) {
         this.oldModel = oldModel;
         setChanges(null);
-    }
-
-    @JsonIgnore
-    public <M extends CommonDataModel> boolean compare(final M obj2, boolean ignoreId) throws RuntimeException {
-        if (obj2 == null) {
-            throw new IllegalArgumentException("Illegal parameter value for comparison");
-        }
-        if (!this.getClass().equals(obj2.getClass())) {
-            throw new IllegalArgumentException("Comparing objects must belong to same class. Argument: " + obj2.getClass()
-                                                                                                               .getName());
-        }
-        Set<String> uniqueKeys = EntityUtils.getInstance().getUniqueKeys(obj2.getClass());
-        uniqueKeys.add("id");
-        if (ignoreId) {
-            uniqueKeys.remove("id");
-        }
-        return uniqueKeys.stream()
-                         .allMatch(p -> Objects.equals(ReflectionUtils.readData(this, p), ReflectionUtils.readData(obj2, p)));
     }
 
     @JsonGetter

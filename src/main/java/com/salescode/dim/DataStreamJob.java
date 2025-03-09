@@ -95,8 +95,7 @@ public class DataStreamJob {
         // Process data stream
         var processedStream = input
                 .flatMap(new StreamingRawDataFlatMapper())
-                .process(new StreamingRawDataProcessor(commonProperties))
-                .process(new InsertUpdateIgnoreProcessFunction(commonProperties));
+                .process(new StreamingRawDataProcessor(commonProperties));
 
         processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
 
