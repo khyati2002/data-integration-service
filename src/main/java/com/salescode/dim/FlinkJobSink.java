@@ -10,10 +10,10 @@ import java.util.Properties;
 public class FlinkJobSink {
 
     static <T extends KeyedKafkaSerialization> KafkaSink<T> createKafkaSink(Properties outputProperties) {
-        ConfigValidator.validate(outputProperties, "lob", "topic", "bootstrap.servers");
+        ConfigValidator.validate(outputProperties, "lob", "failures.topic", "bootstrap.servers");
 
         KafkaRecordSerializationSchema<T> recordSerializationSchema = KafkaRecordSerializationSchema.<T>builder()
-                                                                                                    .setTopic(outputProperties.getProperty("lob") + outputProperties.getProperty("topic"))
+                                                                                                    .setTopic(outputProperties.getProperty("failures.topic"))
                                                                                                     // Use a field as kafka record key
                                                                                                     // Define no keySerializationSchema to publish kafka records with no key
                                                                                                     .setKeySerializationSchema(srd -> srd.getRequestId()

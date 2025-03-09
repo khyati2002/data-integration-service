@@ -13,16 +13,14 @@ public class FlinkJobSource {
 
     public static <T> KafkaSource<T> createKafkaSource(Properties inputProperties, final DeserializationSchema<T> valueDeserializationSchema) {
         // Validate required properties
-        ConfigValidator.validate(inputProperties, "bootstrap.servers", "topic", "group.id", "lob");
+        ConfigValidator.validate(inputProperties, "bootstrap.servers", "input.topic", "group.id", "lob");
 
         // Determine the starting offsets initializer
         OffsetsInitializer startingOffsetsInitializer = inputProperties.containsKey("startTimestamp") ? OffsetsInitializer.timestamp(Long.parseLong(inputProperties.getProperty("startTimestamp"))) : DEFAULT_OFFSETS_INITIALIZER;
 
-        String lobTopicName = inputProperties.getProperty("lob") + inputProperties.getProperty("topic");
-
         return KafkaSource.<T>builder()
                           .setBootstrapServers(inputProperties.getProperty("bootstrap.servers"))
-                          .setTopics(lobTopicName)
+                          .setTopics(inputProperties.getProperty("input.topic"))
                           .setGroupId(inputProperties.getProperty("group.id"))
                           .setStartingOffsets(startingOffsetsInitializer) // Used when the application starts with no state
                           .setValueOnlyDeserializer(valueDeserializationSchema)

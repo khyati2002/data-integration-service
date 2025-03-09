@@ -15,13 +15,13 @@
   {
     "PropertyGroupId": "Input0",
     "PropertyMap": {
-      "topic": "-dataintegration-streams"
+      "input.topic": "${input.topic}"
     }
   },
   {
     "PropertyGroupId": "Output0",
     "PropertyMap": {
-      "topic": "-dataintegration-failure-streams",
+      "failures.topic": "${failures.topic}",
       "transaction.timeout.ms": "1000"
     }
   },
