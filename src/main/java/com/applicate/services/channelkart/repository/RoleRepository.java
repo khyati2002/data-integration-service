@@ -1,4 +1,4 @@
-package com.applicate.services.channelkart.repository_new;
+package com.applicate.services.channelkart.repository;
 
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
 import org.jooq.DSLContext;
