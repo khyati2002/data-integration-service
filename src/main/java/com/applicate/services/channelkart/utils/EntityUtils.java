@@ -8,12 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class EntityUtils {
 
-    private static final Map<String, Class<? extends CommonDataModel>> entityClassMap = new ConcurrentHashMap<>();
     private static volatile EntityUtils instance;
     private final transient DSLContext dslContext;
     private final Map<String, Class<? extends CommonDataModel>> entityImplClassMap = new HashMap<>();
