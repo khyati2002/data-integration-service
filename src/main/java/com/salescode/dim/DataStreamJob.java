@@ -24,6 +24,7 @@ import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.formats.json.JsonDeserializationSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.assigners.GlobalWindows;
 import org.apache.flink.util.OutputTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,9 +97,16 @@ public class DataStreamJob {
         var processedStream = input
                 .flatMap(new StreamingRawDataFlatMapper())
                 .process(new StreamingRawDataProcessor(commonProperties));
+        // add map function to get old record , create and check hash, sink to separate sink to ignore or process further ??
 
-        processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
+//        processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
 
+        processedStream
+//                .keyBy(t -> t.f0.getTransformerInfo().get(0).getEntityName())
+                .windowAll(GlobalWindows.create())
+                .trigger(CountOrTimeTrigger.of(100, 5000))
+                .aggregate(new ListAggregator<>())
+                .process(new BatchSaveProcessor(commonProperties));
 
         DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
         // Create and add the Sink

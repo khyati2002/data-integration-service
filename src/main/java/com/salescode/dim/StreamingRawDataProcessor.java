@@ -12,6 +12,7 @@ import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
@@ -21,7 +22,7 @@ import java.sql.Connection;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData, StreamingRawData> {
+public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData, Tuple2<StreamingRawData,Map<Class<? extends CommonDataModel>,Set<CommonDataModel>>>> {
     private static final long serialVersionUID = -3351413046175753755L;
     private static final String TRANSFORMATION_ERROR = "Transformation Failed : ";
     private static final String SAVE_ERROR = "Error while saving record. Reason: ";
@@ -84,7 +85,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     }
 
     @Override
-    public void processElement(StreamingRawData streamingRawData, Context ctx, Collector<StreamingRawData> out) throws Exception {
+    public void processElement(StreamingRawData streamingRawData, Context ctx, Collector<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> out) throws Exception {
         try {
             List<TransformerInfo> transformerInfos = streamingRawData.getTransformerInfo();
             Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>();
@@ -95,7 +96,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
             }
 
             if (errorList.isEmpty()) {
-                dispatchData(dataset, transformerInfos, errorList);
+//                dispatchData(dataset, transformerInfos, errorList);
             }
 
             if (!errorList.isEmpty()) {
@@ -103,8 +104,8 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
                 streamingRawData.setResponses(errorList.stream().map(s -> new StreamingRawData.Response("Failure", s)).collect(Collectors.toList()));
                 ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
             } else {
-                streamingRawData.setStatus("Success");
-                out.collect(streamingRawData);
+                streamingRawData.setStatus("Processed");
+                out.collect(Tuple2.of(streamingRawData,dataset));
             }
         } catch (Exception e) {
             streamingRawData.setStatus("Failure");
