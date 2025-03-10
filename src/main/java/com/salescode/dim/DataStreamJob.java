@@ -18,6 +18,9 @@
 
 package com.salescode.dim;
 
+import com.esotericsoftware.kryo.serializers.JavaSerializer;
+import com.salescode.dim.jooq.impl.OutletDetails;
+import com.salescode.dim.jooq.impl.User;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.connector.kafka.source.KafkaSource;
@@ -28,6 +31,7 @@ import org.apache.flink.util.OutputTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -58,18 +62,31 @@ public class DataStreamJob {
         // to building Flink applications.
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-//		env.enableCheckpointing(1000);
+        env.setParallelism(1);
+//        env.getConfig().enableForceKryo();
+//        env.getConfig().registerKryoType(OutletDetails.class);
+       // env.getConfig().registerTypeWithKryoSerializer(OutletDetails.class, com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer.class);
+      // Allow unregistered classes
+        env.getConfig().registerTypeWithKryoSerializer(OutletDetails.class, JavaSerializer.class);
 
+
+
+        //	env.enableCheckpointing(1000);
+
+        PropertyLoader propertyLoader = new PropertyLoader();
         // Load the application properties
-        final Map<String, Properties> applicationProperties = PropertyLoader.loadApplicationProperties(env);
+        final Map<String, Properties> applicationProperties = propertyLoader.loadApplicationProperties(env);
 
         LOG.info("Application properties: {}", applicationProperties);
 
         Properties commonProperties = applicationProperties.getOrDefault("Common", new Properties());
-
+        LOG.info(String.valueOf(commonProperties));
         // Prepare the Source and Sink properties
         Properties inputProperties = mergeProperties(applicationProperties.get("Input0"), commonProperties);
+        LOG.info(String.valueOf(inputProperties));
         Properties outputProperties = mergeProperties(applicationProperties.get("Output0"), commonProperties);
+        LOG.info(String.valueOf(outputProperties));
+
 
         KafkaSource<StreamingRawData> source = FlinkJobSource.createKafkaSource(inputProperties, new JsonDeserializationSchema<>(StreamingRawData.class));
 
@@ -79,6 +96,8 @@ public class DataStreamJob {
          * */
 
         DataStream<StreamingRawData> input = env.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka source");
+        LOG.info(input.toString());
+
 
         /* /Note
          * 	Window by size or time for batching
@@ -89,16 +108,21 @@ public class DataStreamJob {
 //                .trigger(CountOrTimeTrigger.of(100, 5000))
 //                .aggregate(new ListAggregator<>())
 //                .name("Aggregate Window Count")
-//                .process(new StreamingRawDataProcessor(commonProperties))
-//                .name("Process Window Count");
 
-        // Process data stream
+
+//                         .
+
+//        var processedStream = processedData.process(new BatchSaveProcessor(commonProperties));
+
         var processedStream = input
-                .flatMap(new StreamingRawDataFlatMapper())
-                .process(new StreamingRawDataProcessor(commonProperties))
-                .process(new InsertUpdateIgnoreProcessFunction(commonProperties));
+                .flatMap(new StreamingRawDataFlatMapper())   // Convert raw data to CDMs
+                .process(new StreamingRawDataProcessor(commonProperties))  // Process each CDM
+                .process(new BatchSaveProcessor(commonProperties))  // Perform batch saving
+                .name("Batch Save Processor");
 
-        processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
+        //               .process(new InsertUpdateIgnoreProcessFunction(commonProperties));
+
+     processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
 
 
         DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
@@ -128,6 +152,7 @@ public class DataStreamJob {
 
         // Execute program, beginning computation.
         env.execute("Flink Java API Skeleton");
+
     }
 
 }

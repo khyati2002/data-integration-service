@@ -23,7 +23,7 @@ public class UserDuplicateMobileNumberValidatorITCL extends AbstractValidationRu
 	public OperationResult.StepResult apply(User cdm) {
 		UserService userService = (UserService) ServiceLocator.lookup(User.class);
 		StringBuilder ruleResult = new StringBuilder();
-		User user = userService.findByLoginId(cdm.getLoginid());
+		com.salescode.dim.jooq.generated.tables.pojos.User user = userService.findByLoginIdUser(cdm.getLoginid());
 //		if(SecurityContextUtils.getPrincipal().equalsIgnoreCase("integration_user")) {
 //			return RuleResult.OK;
 //		}

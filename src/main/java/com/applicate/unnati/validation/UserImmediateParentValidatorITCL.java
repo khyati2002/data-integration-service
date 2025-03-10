@@ -35,8 +35,8 @@ public class UserImmediateParentValidatorITCL extends AbstractValidationRule<Use
                 return new OperationResult.StepResult(OperationResult.Status.ERROR, IMMEDIATE_PARENT_MESSAGE_1.concat(" for user ").concat(cdm.getLoginid()));
             }
             parentListDataCheck(cdm,parentList,ruleResult);
-            branchInfoValidation(regexValidation,cdm,ruleResult);
-            districtInfoValidation(regexValidation,cdm,ruleResult);
+        //    branchInfoValidation(regexValidation,cdm,ruleResult);
+        //    districtInfoValidation(regexValidation,cdm,ruleResult);
         }
 
         if (!ruleResult.isEmpty() ) {
@@ -73,7 +73,7 @@ public class UserImmediateParentValidatorITCL extends AbstractValidationRule<Use
             if (parentID == null) {
                 ruleResult.add(IMMEDIATE_PARENT_MESSAGE_1);
             }
-            User parent = userService.findByLoginId(parentID.getParent());
+            com.salescode.dim.jooq.generated.tables.pojos.User parent =   userService.findByLoginIdUser(parentID.getParent());
             if (parent == null) {
                 ruleResult.add(IMMEDIATE_PARENT_MESSAGE_2);
                 return;
@@ -84,9 +84,8 @@ public class UserImmediateParentValidatorITCL extends AbstractValidationRule<Use
             }
 
             if (cdm.getDesignation().contains("retailer")
-                    && (!StringUtils.equals(parent.getLocation().getBranch(), cdm.getLocation().getBranch())
-                    || !StringUtils.equals(parent.getLocation().getDistrict(), cdm.getLocation().getDistrict()))) {
-                ruleResult.add(IMMEDIATE_PARENT_MESSAGE_4);
+                    && (!StringUtils.equals(parent.getLocationHierarchy(), cdm.getLocationHierarchy()))) {
+            //    ruleResult.add(IMMEDIATE_PARENT_MESSAGE_4);
             }
         });
     }

@@ -32,7 +32,7 @@ public class GenericOutletDetailsEnrichment extends AbstractEnrichment<OutletDet
 	@Override
 	public OperationResult.StepResult apply(OutletDetails cdm) {
 
-		if(cdm.getActiveStatus().equals("active")) {
+		if(cdm.getActiveStatus().equals(ActiveStatus.ACTIVE)) {
 			cdm.setActiveStatus(ActiveStatus.ACTIVE);
 			if(StringUtils.isBlank(cdm.getActiveStatusReason()) ||
 					cdm.getActiveStatusReason().startsWith("Deactivated")) {

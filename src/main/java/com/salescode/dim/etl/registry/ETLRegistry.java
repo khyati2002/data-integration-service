@@ -16,7 +16,7 @@ public class ETLRegistry implements Serializable {
     private static final Map<TypeAwareEtlStep.EtlType, Map<String, TypeAwareEtlStep>> registry = new ConcurrentHashMap<>();
     private static ETLRegistry instance;
 
-    protected ETLRegistry(ExternalRegistryScanner externalRegistryScanner) {
+    public ETLRegistry(ExternalRegistryScanner externalRegistryScanner) {
         Collection<TypeAwareEtlStep> instances = externalRegistryScanner.getEtlInstances();
         // Populate the registry with each instance using its class name as key.
         for (TypeAwareEtlStep step : instances) {

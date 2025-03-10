@@ -35,6 +35,7 @@ public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetada
         return null;
     }
 
+    @Override
     public List<HierarchyMetadata> batchSave(List<HierarchyMetadata> hierarchyMetadataList){
         List<String> hierarchyList = hierarchyMetadataList.stream()
                 .map(HierarchyMetadata::getHierarchy)

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class PreProcessPipelineService implements Serializable {
 
+    private static PreProcessPipelineService instance;
     private static final long serialVersionUID = 8463462672950445845L;
     private final static String SEPARATOR = ",";
     private final static String ENRICHMENT_ERROR = "Enrichment Failed : ";
@@ -26,6 +27,13 @@ public class PreProcessPipelineService implements Serializable {
     public PreProcessPipelineService(DataValidationService dataValidationService, DataEnrichmentService dataEnrichmentService) {
         this.dataValidationService = dataValidationService;
         this.dataEnrichmentService = dataEnrichmentService;
+    }
+
+    public static synchronized PreProcessPipelineService getInstance(DataValidationService dataValidationService, DataEnrichmentService dataEnrichmentService){
+        if(instance == null){
+            instance = new PreProcessPipelineService(dataValidationService,dataEnrichmentService);
+        }
+        return instance;
     }
 
     public PreProcessOperationResult preProcessPipeline(CommonDataModel commonDataModel, String preprocessValidationExcludeGroup) {

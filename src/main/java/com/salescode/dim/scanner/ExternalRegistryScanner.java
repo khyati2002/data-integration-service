@@ -19,10 +19,10 @@ public class ExternalRegistryScanner implements Serializable {
 
     private static ExternalRegistryScanner instance;
 
-    private ExternalRegistryScanner(Properties properties) {
+    public ExternalRegistryScanner(Properties properties) {
         String externalRegistryPath = properties.getProperty("bundle.relative.path", "lib/bundle.jar");
         String lob = properties.getProperty("lob");
-        instanceCache = loadClassesFromLob(String.format(externalRegistryPath, lob));
+        //instanceCache = loadClassesFromLob(String.format(externalRegistryPath, lob));
     }
 
     public static synchronized ExternalRegistryScanner getInstance(Properties properties) {

@@ -250,11 +250,6 @@ under the License.
             <version>${com.bazaarvoice.jolt.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version>
-        </dependency>
 
         <!--<dependency>
             <groupId>com.h2database</groupId>
@@ -277,6 +272,13 @@ under the License.
                     <include>lib/*.jar</include>
                 </includes>
             </resource>
+
+<!--            <resource>-->
+<!--                <directory>src/main/resources</directory>-->
+<!--                <includes>-->
+<!--                    <include>**/*</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
         </resources>
 
         <plugins>

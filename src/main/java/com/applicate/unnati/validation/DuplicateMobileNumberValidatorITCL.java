@@ -14,6 +14,7 @@ import com.salescode.dim.jooq.impl.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.salescode.dim.etl.OperationResult.Status.OK;
 
@@ -27,15 +28,16 @@ public class DuplicateMobileNumberValidatorITCL extends AbstractValidationRule<O
 	public OperationResult.StepResult apply(OutletDetails cdm) {
 		UserService userService = (UserService) ServiceLocator.lookup(User.class);
 		StringBuilder ruleResult = new StringBuilder();
-		User user = userService.findByLoginId(cdm.getOutletcode());
+		com.salescode.dim.jooq.generated.tables.pojos.User user = userService.findByLoginIdUser(cdm.getOutletcode());
 //		if(SecurityContextUtils.getPrincipal().equalsIgnoreCase("integration_user")) {
 //			return RuleResult.OK;
 //		}
+		Set<String> designation = userService.getDesignation(cdm.getOutletcode());
 		if (user != null && user.getActiveStatus().equals(ActiveStatus.INACTIVE)) {
 			ruleResult.append("User is inactive in the system");
 			return new OperationResult.StepResult(OperationResult.Status.ERROR, ruleResult.toString());
 		}
-		if (user != null && user.getDesignation()!=null && user.getDesignation().contains("retailer")) {
+		if (user != null && designation!=null && designation.contains("retailer")) {
 			if (cdm.getUserName().getMobile() != null) {
 				if (!cdm.getUserName().getMobile().isEmpty() && !checkMobileNumberPattern(cdm.getUserName().getMobile())) {
 					ruleResult.append("Mobile number field allowed only 10 digit valid number or blank.");

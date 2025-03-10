@@ -1,29 +1,52 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.RoleName;
+import com.salescode.dim.PreProcessOperationResult;
+import com.salescode.dim.PreProcessPipelineService;
+import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
+import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
+import com.salescode.dim.etl.registry.ETLRegistry;
+import com.salescode.dim.etl.validation.service.DataValidationService;
+import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
+import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
 import com.salescode.dim.jooq.generated.tables.records.CkUserRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.User;
+import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;
+import org.jooq.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_USER;
+import static com.salescode.dim.jooq.generated.Tables.CK_USERDESIGNATION;
 
 public class UserService extends AbstractCDMService<User> {
-
+    private static UserService instance;
     private static CustomerAccountsService customerAccountsService;
     private static HierarchyMetadataService hierarchyMetadataService;
     private static LocationService locationService;
     private static RoleService roleService;
     private static UserParentService userParentService;
     private final DSLContext dsl;
+    private static DataValidationService dataValidationService;
+    private static DataEnrichmentService dataEnrichmentService;
+    private final ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
+    private static PreProcessPipelineService preProcessPipelineService;
+    private final ValidationInfoRegistry validationInfoRegistry;
+    private final ValidationExcludeGroupRegistry validationExcludeGroupRegistry;
+    private final EnrichmentInfoRegistry enrichmentInfoRegistry;
+    private final ETLRegistry etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     public static final String DEFAULT_ENCODED_PASSWORD = "$2a$10$GetnNjgilfLkIv.2R3nHMevLZfI9HGHWQ3iXw3nrCfJlrpePirkIi";
 
@@ -33,12 +56,34 @@ public class UserService extends AbstractCDMService<User> {
 
     public UserService(DSLContext dsl) {
         super(dsl);
+        System.out.println("UserService constructor executed!");
         this.dsl = dsl;
         customerAccountsService = new CustomerAccountsService(dsl);
+        userParentService = new UserParentService(dsl);
         roleService = new RoleService(dsl);
         hierarchyMetadataService = new HierarchyMetadataService(dsl);
         locationService = new LocationService(dsl);
-        userParentService = new UserParentService(dsl);
+        validationInfoRegistry = new ValidationInfoRegistry(dsl);
+        LOG.info("validation info registry" + validationInfoRegistry);
+        validationExcludeGroupRegistry = new ValidationExcludeGroupRegistry(dsl);
+        LOG.info("validation exclude group registry" + validationInfoRegistry);
+        enrichmentInfoRegistry = new EnrichmentInfoRegistry(dsl);
+        LOG.info("enrichment info registry" + enrichmentInfoRegistry);
+        LOG.info("etl registry" + etlRegistry);
+        dataValidationService = new DataValidationService(validationInfoRegistry,validationExcludeGroupRegistry,etlRegistry);
+        dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry,etlRegistry);
+        LOG.info("Initializing PreProcessPipelineService with DataValidationService: {} and DataEnrichmentService: {}",
+                dataValidationService, dataEnrichmentService);
+        preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
+        LOG.info("PreProcessPipelineService initialized successfully: {}", preProcessPipelineService);
+
+    }
+
+    public static synchronized UserService getInstance(DSLContext dsl) {
+        if (instance == null) {
+            instance = new UserService(dsl);
+        }
+        return instance;
     }
 
     private Set<String> populateUserParentHierarchy(User user) {
@@ -79,12 +124,26 @@ public class UserService extends AbstractCDMService<User> {
     }
 
     public List<User> getUser(List<User> userList) {
+        if(preProcessPipelineService != null) {
+            LOG.info("Pre process value is not null");
+            userList.forEach(user -> {
+                PreProcessOperationResult operationResult = preProcessPipelineService.preProcessPipeline(user,"" );
+                if (operationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
+                    throw new RuntimeException("Pre Process Pipeline Of User Failed");
+                }
+
+            });
+        }
+        else{
+            LOG.info("Pre process called with null value");
+        }
         userList.forEach(user -> {
             Set<String> hierarchyStr = populateUserParentHierarchy(user);
             setHierarchy(user, hierarchyStr);
         });
 
-        return batchSave(userList);
+       List<User> userListSaved = batchSave(userList);
+       return userListSaved;
     }
 
     private void populateUserLocation(User user) {
@@ -216,7 +275,9 @@ public class UserService extends AbstractCDMService<User> {
         });
     }
 
+    @Override
     public List<User> batchSave(List<User> userList) {
+        LOG.info("User list is" + userList.size());
         populateBatchLocation(userList);
         populateBatchRoles(userList);
         userList.forEach(user -> {
@@ -232,6 +293,8 @@ public class UserService extends AbstractCDMService<User> {
                 .fetch()
                 .intoMap(CK_USER.LOGINID, record -> record.into(com.salescode.dim.jooq.generated.tables.pojos.User.class));
 
+        LOG.info("Already saved List" + savedList);
+
         List<User> itemsToInsert = new ArrayList<>();
         List<User> itemsToUpdate = new ArrayList<>();
         for (int i = 0; i < userList.size(); i++) {
@@ -246,8 +309,14 @@ public class UserService extends AbstractCDMService<User> {
                     userList.get(i).setVersion(savedList.get(userList.get(i).getLoginid()).getVersion());
                     itemsToUpdate.add(userList.get(i));
                 }
+                else{
+                    userList.get(i).setId(savedList.get(userList.get(i).getLoginid()).getId());
+                    userList.get(i).setVersion(savedList.get(userList.get(i).getLoginid()).getVersion());
+                }
             }
         }
+        LOG.info("Items to insert" + itemsToInsert);
+        LOG.info("Items to update" + itemsToUpdate);
         if (!itemsToInsert.isEmpty()) {
             dsl.batchInsert(
                     itemsToInsert.stream()
@@ -268,14 +337,32 @@ public class UserService extends AbstractCDMService<User> {
             ).execute();
 
         }
+
         return userList;
+    }
+
+    public com.salescode.dim.jooq.generated.tables.pojos.User findByLoginIdUser(String loginid){
+       return dsl.selectFrom(CK_USER)
+                .where(CK_USER.LOGINID.eq(loginid))
+                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
+
     }
 
     public User findByLoginId(String loginid){
         return dsl.selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
                 .fetchOneInto(User.class);
+
+
     }
+
+    public Set<String> getDesignation(String loginid) {
+        return dsl.select(CK_USERDESIGNATION.DESIGNATION)
+                .from(CK_USERDESIGNATION)
+                .where(CK_USERDESIGNATION.LOGIN_ID.eq(loginid))
+                .fetchSet(CK_USERDESIGNATION.DESIGNATION);
+    }
+
 
     public Optional<List<User>> findByMobileSafely(String mobile) {
         List<User> users= dsl.selectFrom(CK_USER)

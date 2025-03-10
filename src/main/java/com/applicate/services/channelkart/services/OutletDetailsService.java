@@ -3,6 +3,7 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.JSONUtils;
 
+import com.salescode.dim.PropertyLoader;
 import com.salescode.dim.jooq.generated.tables.CkHierarchyMetadata;
 import com.salescode.dim.jooq.generated.tables.pojos.OutletDetailsHierarchymetadata;
 import com.salescode.dim.jooq.generated.tables.pojos.UserRoles;
@@ -22,6 +23,8 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Select;
 import org.jooq.impl.DSL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,8 +41,9 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private static  LocationService locationService;
     private static  HierarchyMetadataService hierarchyMetadataService;
     private static  SupplierInfoService supplierInfoService;
-    private final DSLContext dsl;
 
+    private final DSLContext dsl;
+    private static final Logger LOG = LoggerFactory.getLogger(OutletDetailsService.class);
     public OutletDetailsService (DSLContext dsl) {
         super(dsl);
         this.dsl = dsl;
@@ -47,7 +51,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         customerAccountsService = new CustomerAccountsService(dsl);
         locationService = new LocationService(dsl);
         hierarchyMetadataService = new HierarchyMetadataService(dsl);
-        supplierInfoService = new SupplierInfoService();
+        supplierInfoService = new SupplierInfoService(dsl);
     }
 
 
@@ -228,18 +232,23 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     }
 
     public User beforeSave(OutletDetails outlet){
+        LOG.info("Before Save Called");
       return populateAssociatedData(outlet);
     }
 
     @Override
     public OutletDetails save(OutletDetails outlet){
+        LOG.info("Main Outlet save called");
         User user = beforeSave(outlet);
+        LOG.info("User saved success");
         super.addHash(outlet);
+        LOG.info(outlet.getHash());
         com.salescode.dim.jooq.generated.tables.pojos.OutletDetails savedObj = dsl.select(CK_OUTLET_DETAILS.asterisk().except(CK_OUTLET_DETAILS.COORDINATE))
                 .from(CK_OUTLET_DETAILS)
                 .where(CK_OUTLET_DETAILS.OUTLETCODE.eq(outlet.getOutletcode()))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class);
-
+        LOG.info(String.valueOf(savedObj));
+        LOG.info("Old record found success");
         if(savedObj != null) {
             outlet.setId(savedObj.getId());
             outlet.setVersion(savedObj.getVersion() + 1);
@@ -248,18 +257,27 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             outlet.setId(UUID.randomUUID().toString());
             outlet.setVersion(0);
         }
-        if(Objects.equals(savedObj.getHash(), outlet.getHash())){
+
+        if(savedObj!=null && Objects.equals(savedObj.getHash(), outlet.getHash())){
+            LOG.info("Found outlet");
             return outlet;
         }
 
         CkOutletDetailsRecord record = dsl.newRecord(CK_OUTLET_DETAILS,outlet);
+        LOG.info("Got Record");
         record.setMapped(true);
-        dsl.insertInto(CK_OUTLET_DETAILS)
-                .set(record)
-                .onDuplicateKeyUpdate()
-                .set(record)
-                .execute();
-
+        LOG.info("Create Outlet Record");
+        try {
+            dsl.insertInto(CK_OUTLET_DETAILS)
+                    .set(record)
+                    .onDuplicateKeyUpdate()
+                    .set(record)
+                    .execute();
+        }
+        catch (Exception e){
+            LOG.info(String.valueOf(e));
+        }
+        LOG.info("Save completed successfully");
         List<UserRoles> roleList = setRoles(List.of(user));
         saveRoles(roleList);
         List<Userdesignation> userdesignationsList = setDesignation(List.of(user));
@@ -281,6 +299,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 .collect(Collectors.toList());
 
         List<User> savedUserList = userService.getUser(userList);
+        LOG.info("Saved User List" + savedUserList.get(0));
         List<Location> savedLocList = locationService.findLocationOrPersistLocation(locationList);
         for(int i=0;i<outletDetailsList.size();i++){
             outletDetailsList.get(i).setUserName(savedUserList.get(i));
@@ -390,8 +409,15 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     }
 
 
+    @Override
     public List<OutletDetails> batchSave(List<OutletDetails> outletDetailsList){
+        LOG.info(String.valueOf(outletDetailsList.size()));
+        LOG.info("Batch Save called");
         List<User> savedUserList = populateBatchAssociatedData(outletDetailsList);
+        for(int i=0;i<savedUserList.size();i++){
+            LOG.info(String.valueOf(savedUserList.get(i)));
+        }
+        LOG.info("User populate success");
         List<String> outletCodes = outletDetailsList.stream()
                 .map(OutletDetails::getOutletcode)
                 .collect(Collectors.toList());
@@ -401,6 +427,12 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 .where(CK_OUTLET_DETAILS.OUTLETCODE.in(outletCodes))
                 .fetch()
                 .intoMap(CK_OUTLET_DETAILS.OUTLETCODE, record -> record.into(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class));
+
+        for(OutletDetails outlet : outletDetailsList){
+            outlet.setChanged((byte) 1);
+            outlet.setChanged(true);
+        }
+
 
         List<OutletDetails> itemsToInsert = new ArrayList<>();
         List<OutletDetails> itemsToUpdate = new ArrayList<>();
@@ -412,10 +444,10 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 outletDetailsList.get(i).setMapped(true);
                 itemsToInsert.add(outletDetailsList.get(i));
             } else {
-                if (outletDetailsList.get(i).getHash() != savedList.get(outletDetailsList.get(i).getOutletcode()).getHash()) {
                     outletDetailsList.get(i).setId(savedList.get(outletDetailsList.get(i).getOutletcode()).getId());
-                    outletDetailsList.get(i).setVersion(savedList.get(outletDetailsList.get(i).getOutletcode()).getVersion());
+                    outletDetailsList.get(i).setVersion(savedList.get(outletDetailsList.get(i).getOutletcode()).getVersion() + 1);
                     outletDetailsList.get(i).setMapped(true);
+                if(!Objects.equals(outletDetailsList.get(i).getHash(), savedList.get(outletDetailsList.get(i).getOutletcode()).getHash())) {
                     itemsToUpdate.add(outletDetailsList.get(i));
                 }
             }
@@ -446,13 +478,15 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         saveRoles(roleList);
         List<Userdesignation> userdesignationsList = setDesignation(savedUserList);
         saveDesignation(userdesignationsList);
-//        List<OutletDetailsHierarchymetadata> outletDetailsHierarchymetadata = setOutletHierarchyMetadata(outletDetailsList);
-//        saveOutletDetailHierarchyMetadata(outletDetailsHierarchymetadata);
+        List<OutletDetailsHierarchymetadata> outletDetailsHierarchymetadata = setOutletHierarchyMetadata(outletDetailsList);
+        saveOutletDetailHierarchyMetadata(outletDetailsHierarchymetadata);
+        LOG.info("Batch Execution Successful");
         return outletDetailsList;
     }
 
     public OutletDetails findByOutletcode(String outletcode){
-        return dsl.selectFrom(CK_OUTLET_DETAILS)
+        return dsl.select(CK_OUTLET_DETAILS.asterisk().except(CK_OUTLET_DETAILS.COORDINATE))
+                .from(CK_OUTLET_DETAILS)
                 .where(CK_OUTLET_DETAILS.OUTLETCODE.eq(outletcode))
                 .fetchOneInto(OutletDetails.class);
     }

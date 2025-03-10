@@ -19,12 +19,16 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
 import org.jooq.DSLContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData, StreamingRawData> {
+import static org.apache.flink.runtime.blob.BlobWriter.LOG;
+
+public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData, CommonDataModel> {
     private static final long serialVersionUID = -3351413046175753755L;
     private static final String TRANSFORMATION_ERROR = "Transformation Failed : ";
     private static final String SAVE_ERROR = "Error while saving record. Reason: ";
@@ -35,7 +39,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     private transient DataTransformationService dataTransformationService;
     private transient PreProcessPipelineService preProcessPipelineService;
     private transient RegisterClassesService registerClassesService;
-
+    private static Logger LOG = LoggerFactory.getLogger(StreamingRawDataProcessor.class);
     public StreamingRawDataProcessor(Properties commonProperties) {
         this.properties = Objects.requireNonNull(commonProperties, "Properties cannot be null");
     }
@@ -73,6 +77,8 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
 
         // Initialize pipeline service
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
+        PreProcessPipelineService.getInstance(dataValidationService,dataEnrichmentService);
+        LOG.info("registered classes");
         registerClassesService = new RegisterClassesService(dslContext);
         registerClassesService.registerSubClasses();
     }
@@ -90,31 +96,34 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     }
 
     @Override
-    public void processElement(StreamingRawData streamingRawData, Context ctx, Collector<StreamingRawData> out) throws Exception {
+    public void processElement(StreamingRawData streamingRawData, Context ctx, Collector<CommonDataModel> out) throws Exception {
         try {
             List<TransformerInfo> transformerInfos = streamingRawData.getTransformerInfo();
             Map<Class<? extends CommonDataModel>, List<CommonDataModel>> dataset = new LinkedHashMap<>();
             List<String> errorList = new ArrayList<>();
 
             for (TransformerInfo transformerInfo : transformerInfos) {
+                Class<? extends CommonDataModel> entityClass = entityUtils.getEntityClass(transformerInfo.getEntityName());
                 processTransformer(streamingRawData, transformerInfo, dataset, errorList);
+                if (!errorList.isEmpty()) {
+                    streamingRawData.setStatus("Failure");
+                    streamingRawData.setResponses(errorList.stream().map(s -> new StreamingRawData.Response("Failure", s)).collect(Collectors.toList()));
+                    ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
+                }
+                else {
+                    streamingRawData.setStatus("Success");
+                    out.collect(dataset.get(entityClass).get(0));
+                }
             }
+//
+//            if (errorList.isEmpty()) {
+//                dispatchData(dataset, transformerInfos, errorList);
+//            }
 
-            if (errorList.isEmpty()) {
-                dispatchData(dataset, transformerInfos, errorList);
-            }
 
-            if (!errorList.isEmpty()) {
-                streamingRawData.setStatus("Failure");
-                streamingRawData.setResponses(errorList.stream().map(s -> new StreamingRawData.Response("Failure", s)).collect(Collectors.toList()));
-               // ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
-            } else {
-                streamingRawData.setStatus("Success");
-                out.collect(streamingRawData);
-            }
         } catch (Exception e) {
             streamingRawData.setStatus("Failure");
-           // ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
+            ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
         }
     }
 
@@ -123,8 +132,10 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
         Class<? extends CommonDataModel> entityClass = entityUtils.getEntityClass(transformerInfo.getEntityName());
 
        try {
+           LOG.info("Transformation Called");
             List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures().get(0));
             for (CommonDataModel cdm : transformedData) {
+                LOG.info("Pre Process Pipeline Called");
                 PreProcessOperationResult preProcessOperationResult = preProcessPipelineService.preProcessPipeline(cdm, transformerInfo.getPreprocessValidationExcludeGroup());
 
                 if (preProcessOperationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
@@ -142,13 +153,13 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
 
     private void dispatchData(Map<Class<? extends CommonDataModel>, List<CommonDataModel>> dataset, List<TransformerInfo> transformerInfos, List<String> errorList) {
         try {
-            // MDMDispatcher.dispatch(dataset, transformerInfos); // Uncomment when ready
+            LOG.info("Dispatch data called");
             Map<Class<?>, Set<CommonDataModel>> collector = new LinkedHashMap<>();
 
             for (Map.Entry<Class<? extends CommonDataModel>, List<CommonDataModel>> entry : dataset.entrySet()) {
                 Class<? extends CommonDataModel> clazz = entry.getKey();
                 CommonDataModelService cdmService = ServiceLocator.lookup(clazz);
-
+                LOG.info("Class found is : " + cdmService);
                 List<CommonDataModel> cdmList = entry.getValue();
                 if (cdmList != null && !cdmList.isEmpty()) {
                     cdmService.save(cdmList.get(0)); // Pass the entire list for batch saving

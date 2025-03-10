@@ -29,8 +29,7 @@ public class UserParentService extends AbstractCDMService<UserParent> {
             up.setUserloginid(user.getLoginid());
             up.setParent(null);
             up.setLob(user.getLob());
-            UserParent refreshedObj=refresh(up);
-            save(up,refreshedObj);
+            save(up);
         }
 
         if(user.getImmediateParent() != null && !user.getImmediateParent().isEmpty()) {
@@ -104,10 +103,10 @@ public class UserParentService extends AbstractCDMService<UserParent> {
 
     private UserParent save(UserParent up, UserParent savedObj){
         super.addHash(up);
-        if(up.getHash() == savedObj.getHash()){
-            return up;
-        }
         if(savedObj != null) {
+            if(Objects.equals(up.getHash(), savedObj.getHash())){
+                return up;
+            }
             up.setId(savedObj.getId());
             up.setVersion(savedObj.getVersion() + 1);
         }
@@ -115,6 +114,7 @@ public class UserParentService extends AbstractCDMService<UserParent> {
             up.setId(UUID.randomUUID().toString());
             up.setVersion(0);
         }
+
         CkUserParentRecord record = dsl.newRecord(CK_USER_PARENT,up);
         dsl.insertInto(CK_USER_PARENT)
                 .set(record)
@@ -141,6 +141,6 @@ public class UserParentService extends AbstractCDMService<UserParent> {
 
     @Override
     public UserParent save(UserParent cdmObject) {
-        return null;
+        return save(cdmObject,refresh(cdmObject));
     }
 }
