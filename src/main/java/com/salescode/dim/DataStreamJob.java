@@ -18,10 +18,24 @@
 
 package com.salescode.dim;
 
-import com.esotericsoftware.kryo.serializers.JavaSerializer;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Serializer;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CollectionSerializer;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.User;
+import com.salescode.dim.utils.CustomKryoSerializer;
+import com.salescode.dim.utils.ImmutableListSerializer;
+import com.salescode.dim.utils.KryoConfig;
+import org.apache.flink.api.common.ExecutionConfig;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.java.typeutils.GenericTypeInfo;
+import org.apache.flink.api.java.typeutils.runtime.kryo.JavaSerializer;
+import org.apache.flink.api.java.typeutils.runtime.kryo.KryoSerializer;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.formats.json.JsonDeserializationSchema;
@@ -31,9 +45,7 @@ import org.apache.flink.util.OutputTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import static com.salescode.dim.PropertyLoader.mergeProperties;
 
@@ -62,16 +74,19 @@ public class DataStreamJob {
         // to building Flink applications.
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        env.setParallelism(1);
-//        env.getConfig().enableForceKryo();
-//        env.getConfig().registerKryoType(OutletDetails.class);
-       // env.getConfig().registerTypeWithKryoSerializer(OutletDetails.class, com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer.class);
-      // Allow unregistered classes
-        env.getConfig().registerTypeWithKryoSerializer(OutletDetails.class, JavaSerializer.class);
+        env.setParallelism(1);// Prevents Kryo fallback
+
+        env.enableCheckpointing(5000);
+
+        Kryo kryo = KryoConfig.createKryo();
+        env.getConfig().enableForceKryo();
+
+
+        // kryo.register(java.util.List.class, new JavaSerializer());
+       // kryo.setDefaultSerializer(JavaSerializer.class);
 
 
 
-        //	env.enableCheckpointing(1000);
 
         PropertyLoader propertyLoader = new PropertyLoader();
         // Load the application properties
@@ -117,12 +132,13 @@ public class DataStreamJob {
         var processedStream = input
                 .flatMap(new StreamingRawDataFlatMapper())   // Convert raw data to CDMs
                 .process(new StreamingRawDataProcessor(commonProperties))  // Process each CDM
-                .process(new BatchSaveProcessor(commonProperties))  // Perform batch saving
+                .process(new BatchSaveProcessor(commonProperties))
+                .disableChaining()// Perform batch saving
                 .name("Batch Save Processor");
 
         //               .process(new InsertUpdateIgnoreProcessFunction(commonProperties));
 
-     processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
+        processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
 
 
         DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);

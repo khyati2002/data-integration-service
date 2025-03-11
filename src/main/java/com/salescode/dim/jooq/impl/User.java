@@ -9,6 +9,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInc
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
 
     private static final long serialVersionUID = 6364280713919356300L;
 
-    private List<AuthRole> roles;
+    private transient List<AuthRole> roles;
     private List<SupplierMetadata> supplierMetaData;
     private List<HierarchyMetadata> immediateParent;
     private Set<String> designation;
@@ -53,6 +54,14 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
         sb.append(")");
         return sb.toString();
       }
+
+    public List<AuthRole> getRoles() {
+        return roles == null ? new ArrayList<>() : new ArrayList<>(roles);
+    }
+
+    public void setRoles(List<AuthRole> roles) {
+        this.roles = roles;
+    }
 }
 
 

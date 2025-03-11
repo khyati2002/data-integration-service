@@ -34,7 +34,7 @@ public class UserImmediateParentValidatorITCL extends AbstractValidationRule<Use
             if (parentList == null || parentList.isEmpty()) {
                 return new OperationResult.StepResult(OperationResult.Status.ERROR, IMMEDIATE_PARENT_MESSAGE_1.concat(" for user ").concat(cdm.getLoginid()));
             }
-            parentListDataCheck(cdm,parentList,ruleResult);
+        //    parentListDataCheck(cdm,parentList,ruleResult);
         //    branchInfoValidation(regexValidation,cdm,ruleResult);
         //    districtInfoValidation(regexValidation,cdm,ruleResult);
         }
@@ -75,7 +75,7 @@ public class UserImmediateParentValidatorITCL extends AbstractValidationRule<Use
             }
             com.salescode.dim.jooq.generated.tables.pojos.User parent =   userService.findByLoginIdUser(parentID.getParent());
             if (parent == null) {
-                ruleResult.add(IMMEDIATE_PARENT_MESSAGE_2);
+       //         ruleResult.add(IMMEDIATE_PARENT_MESSAGE_2);
                 return;
             }
 

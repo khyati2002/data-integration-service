@@ -82,6 +82,10 @@ public class JSONUtils {
         return destinationNode;
     }
 
+    public static <T> T convert(Object node, TypeReference<List<Map<String, String>>> typeReference) {
+        return (T) OBJECT_MAPPER.convertValue(node, typeReference);
+    }
+
     public static ObjectMapper getObjectMapper() {
         return get();
     }

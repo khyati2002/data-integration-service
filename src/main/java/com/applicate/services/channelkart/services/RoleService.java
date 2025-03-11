@@ -1,6 +1,6 @@
 package com.applicate.services.channelkart.services;
 
-import com.applicate.services.channelkart.repository_new.RoleRepository;
+import com.applicate.services.channelkart.repository.RoleRepository;
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
 import org.jooq.DSLContext;
 

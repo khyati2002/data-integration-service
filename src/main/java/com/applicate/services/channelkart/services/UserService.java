@@ -118,6 +118,11 @@ public class UserService extends AbstractCDMService<User> {
     }
 
     public User getUser(User user) {
+//        PreProcessOperationResult operationResult = preProcessPipelineService.preProcessPipeline(user,"" );
+//        if (operationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
+//            LOG.info(user.getLoginid());
+//            throw new RuntimeException("Pre Process Pipeline Of User Failed");
+//        }
         Set<String> hierarchyStr = populateUserParentHierarchy(user);
         setHierarchy(user, hierarchyStr);
         return save(user);
@@ -127,10 +132,11 @@ public class UserService extends AbstractCDMService<User> {
         if(preProcessPipelineService != null) {
             LOG.info("Pre process value is not null");
             userList.forEach(user -> {
+                LOG.info(user.getLoginid());
                 PreProcessOperationResult operationResult = preProcessPipelineService.preProcessPipeline(user,"" );
-                if (operationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
-                    throw new RuntimeException("Pre Process Pipeline Of User Failed");
-                }
+//                if (operationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
+//                    throw new RuntimeException("Pre Process Pipeline Of User Failed");
+//                }
 
             });
         }

@@ -5,11 +5,13 @@ import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.io.Serializable;
+
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class HierarchyMetadata extends com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata {
+public class HierarchyMetadata extends com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata implements Serializable {
     private static final long serialVersionUID = -7546424289965519236L;
 
     @JsonSetter("immediateParent")

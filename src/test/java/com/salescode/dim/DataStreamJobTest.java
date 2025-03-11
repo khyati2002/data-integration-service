@@ -1,5 +1,6 @@
 package com.salescode.dim;
 
+import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.utils.JSONUtils;
 import lombok.SneakyThrows;
 import org.apache.commons.text.StringSubstitutor;
@@ -33,32 +34,36 @@ public class DataStreamJobTest {
 
 
     public static String rawStreamingData = "{\n" +
-            "    \"groupId\": \"%(groupId)\",\n" +
-            "    \"lob\": \"mondelezckinduat\",\n" +
+            "    \"requestId\": \"15efecad-7434-4a8f-8b79-cc6c1b66fcc7\",\n" +
+            "    \"groupId\": \"2024-12-19\",\n" +
+            "    \"fileId\": null,\n" +
+            "    \"lob\": \"ckuatunnati\",\n" +
+            "    \"submittedBy\": null,\n" +
             "    \"transformerInfo\": [\n" +
             "        {\n" +
             "            \"entityName\": \"OutletDetails\",\n" +
+            "            \"transformerId\": \"unnati_csp_outlet_master_mdm\",\n" +
             "            \"operationType\": \"insert\",\n" +
-            "            \"transformerId\": \"unnati_csp_outlet_master_mdm\"\n" +
+            "            \"preprocessValidationExcludeGroup\": \"outlet_validation_exclude\"\n" +
             "        }\n" +
             "    ],\n" +
             "    \"topicName\": \"flink-test\",\n" +
             "    \"preserveOnFailure\": true,\n" +
             "    \"features\": [\n" +
             "        {\n" +
-            "            \"UID\": \"C20220005809717\",\n" +
-            "            \"CREATIONDATE\": \"2024-06-10 04:08:01.873\",\n" +
+            "            \"UID\": \"180600161532\",\n" +
+            "            \"CREATIONDATE\": \"2024-12-19 02:48:11.067\",\n" +
             "            \"PICKUPDATE\": null,\n" +
-            "            \"DISTRICT\": \"EDIS\",\n" +
-            "            \"Branch\": \"EVIZ\",\n" +
-            "            \"CUSTName\": \"VISHAKA PALOUR\",\n" +
-            "            \"OwnerName\": \"VISHAKA PALOUR\",\n" +
-            "            \"ChannelType\": \"Retail\",\n" +
-            "            \"OutletType\": \"Convenience Outlet\",\n" +
-            "            \"LoyaltyType\": \"Retail Others\",\n" +
+            "            \"DISTRICT\": \"NDIS\",\n" +
+            "            \"Branch\": \"NDEL\",\n" +
+            "            \"CUSTName\": \"NEW INDIA\",\n" +
+            "            \"OwnerName\": \"NEW INDIA\",\n" +
+            "            \"ChannelType\": \"Town Wholesale\",\n" +
+            "            \"OutletType\": \"Pooja Outlet\",\n" +
+            "            \"LoyaltyType\": \"SWD Others\",\n" +
             "            \"FoodsTier\": null,\n" +
             "            \"PCPTier\": null,\n" +
-            "            \"CustAddress\": \"KARANAM GARI JN\",\n" +
+            "            \"CustAddress\": \"AICHOR  Greater Noida Uttar Pradesh India\",\n" +
             "            \"CustState\": null,\n" +
             "            \"CustCity\": null,\n" +
             "            \"PIN\": null,\n" +
@@ -76,19 +81,24 @@ public class DataStreamJobTest {
             "            \"AutoRedemption\": \"Y\",\n" +
             "            \"Active\": \"Y\",\n" +
             "            \"TYPE\": \"non loyalty\",\n" +
-            "            \"OutletName\": \"VISHAKA PALOUR\",\n" +
+            "            \"OutletName\": \"NEW INDIA\",\n" +
             "            \"supplierMapping\": [\n" +
             "                {\n" +
-            "                    \"CustID\": \"UK029\",\n" +
-            "                    \"SIFYID\": \"VI3493CIS722UK029\",\n" +
-            "                    \"WDDest\": \"VI3493\",\n" +
-            "                    \"UID\": \"C20220005809717\",\n" +
-            "                    \"RCSID\": \"181204899725\",\n" +
-            "                    \"WDName\": \"SRI DEVAKI LOGISTICS\"\n" +
+            "                    \"CustID\": \"807\",\n" +
+            "                    \"SIFYID\": \"DE5390DMM104807\",\n" +
+            "                    \"WDDest\": \"DE5390\",\n" +
+            "                    \"UID\": \"180600161532\",\n" +
+            "                    \"RCSID\": \"180600161532\",\n" +
+            "                    \"WDName\": \"RIDDHI ENTERPRISES\"\n" +
             "                }\n" +
             "            ]\n" +
             "        }\n" +
-            "    ]\n" +
+            "    ],\n" +
+            "    \"loginId\": \"integration_user\",\n" +
+            "    \"offset\": null,\n" +
+            "    \"retryCount\": null,\n" +
+            "    \"ignoreS3Log\": false,\n" +
+            "    \"headersMap\": null\n" +
             "}";
 
     @Test
@@ -114,9 +124,11 @@ public class DataStreamJobTest {
         Map<String, Properties> stringPropertiesMap = propertyLoader.loadApplicationProperties(null);
 
         // Apply the process function (simulate the job's pipeline)
-        DataStream<StreamingRawData> processedStream = source
+        DataStream<CommonDataModel> processedStream = source
                 // If you had windowing or aggregation, adjust accordingly.
                 .process(new StreamingRawDataProcessor(stringPropertiesMap.get("Common")))
+                .process(new BatchSaveProcessor(stringPropertiesMap.get("Common")))
+                .disableChaining()
                 .name("Test Process Function");
 
         // Add a sink to collect output data

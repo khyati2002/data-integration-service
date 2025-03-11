@@ -7,11 +7,11 @@ import com.applicate.services.channelkart.utils.NullUtils;
 
 import com.applicate.services.channelkart.utils.StringUtils;
 import com.applicate.services.channelkart.validations.repository.RegexValidation;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.validation.AbstractValidationRule;
 import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.OutletDetails;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.*;
 
@@ -142,60 +142,60 @@ public class OutletValidatorITCL extends AbstractValidationRule<OutletDetails> {
                 ruleResult.add("District can not be null");
             }
 
-//            if (cdm.getExtendedAttributes() != null && cdm.getExtendedAttributes().has("supplierMapping")) {
-//                if (NullUtils.isNotNull(cdm.getExtendedAttributes().get("supplierMapping"))) {
-//                    List<Map<String,String>> supplierList=JSONUtils.convert(cdm.getExtendedAttributes().get("supplierMapping"), new TypeReference<List<Map<String, String>>>() {});
-//
-//                    supplierList.forEach(supplierMapping->{
-//                        if (supplierMapping.containsKey("WDDest")) {
-//                            if (NullUtils.isNull(supplierMapping.get("WDDest"))) {
-//                                ruleResult.add("WDDest can not be null");
-//                            }else if(duplicateWDCheck.contains(supplierMapping.get("WDDest"))) {
-//                                ruleResult.add("WDDest can not be duplicate");
-//                            }
-//                            duplicateWDCheck.add(supplierMapping.get("WDDest"));
-//                        }else {
-//                            ruleResult.add("WDDest can not be null");
-//                        }
-//
-//                        if (supplierMapping.containsKey("CustID")) {
-//                            if (NullUtils.isNull(supplierMapping.get("CustID"))) {
-//                                ruleResult.add("custID can not be null");
-//                            }
-//                        }else {
-//                            ruleResult.add("custID can not be null");
-//                        }
-//
-//                        if (supplierMapping.containsKey("SIFYID")) {
-//                            if (NullUtils.isNull(supplierMapping.get("SIFYID"))) {
-//                                ruleResult.add("SIFYID can not be null");
-//                            }
-//                        }else {
-//                            ruleResult.add("SIFYID can not be null");
-//                        }
-//
-//                        if (supplierMapping.containsKey("UID")) {
-//                            if (NullUtils.isNull(supplierMapping.get("UID"))) {
-//                                ruleResult.add("UID can not be null");
-//                            }
-//                        }else {
-//                            ruleResult.add("UID can not be null");
-//                        }
-//
-//                        if (supplierMapping.containsKey("RCSId")) {
-//                            if (NullUtils.isNull(supplierMapping.get("RCSId"))) {
-//                                ruleResult.add("RCSId can not be null");
-//                            }
-//                        }else {
-//                            ruleResult.add("RCSId can not be null");
-//                        }
-//                    });
-//                } else {
-//                    ruleResult.add("Value given for Supplier Mapping can not be null");
-//                }
-//            }else {
-//                ruleResult.add("Value given for Supplier Mapping can not be null");
-//            }
+            if (cdm.getExtendedAttributes() != null && cdm.getExtendedAttributes().has("supplierMapping")) {
+                if (NullUtils.isNotNull(cdm.getExtendedAttributes().get("supplierMapping"))) {
+                    List<Map<String,String>> supplierList=JSONUtils.convert(cdm.getExtendedAttributes().get("supplierMapping"), new TypeReference<List<Map<String, String>>>() {});
+
+                    supplierList.forEach(supplierMapping->{
+                        if (supplierMapping.containsKey("WDDest")) {
+                            if (NullUtils.isNull(supplierMapping.get("WDDest"))) {
+                                ruleResult.add("WDDest can not be null");
+                            }else if(duplicateWDCheck.contains(supplierMapping.get("WDDest"))) {
+                                ruleResult.add("WDDest can not be duplicate");
+                            }
+                            duplicateWDCheck.add(supplierMapping.get("WDDest"));
+                        }else {
+                            ruleResult.add("WDDest can not be null");
+                        }
+
+                        if (supplierMapping.containsKey("CustID")) {
+                            if (NullUtils.isNull(supplierMapping.get("CustID"))) {
+                                ruleResult.add("custID can not be null");
+                            }
+                        }else {
+                            ruleResult.add("custID can not be null");
+                        }
+
+                        if (supplierMapping.containsKey("SIFYID")) {
+                            if (NullUtils.isNull(supplierMapping.get("SIFYID"))) {
+                                ruleResult.add("SIFYID can not be null");
+                            }
+                        }else {
+                            ruleResult.add("SIFYID can not be null");
+                        }
+
+                        if (supplierMapping.containsKey("UID")) {
+                            if (NullUtils.isNull(supplierMapping.get("UID"))) {
+                                ruleResult.add("UID can not be null");
+                            }
+                        }else {
+                            ruleResult.add("UID can not be null");
+                        }
+
+                        if (supplierMapping.containsKey("RCSId")) {
+                            if (NullUtils.isNull(supplierMapping.get("RCSId"))) {
+                                ruleResult.add("RCSId can not be null");
+                            }
+                        }else {
+                            ruleResult.add("RCSId can not be null");
+                        }
+                    });
+                } else {
+                    ruleResult.add("Value given for Supplier Mapping can not be null");
+                }
+            }else {
+                ruleResult.add("Value given for Supplier Mapping can not be null");
+            }
 
             if (ruleResult.size() > 0) {
                 return new OperationResult.StepResult(OperationResult.Status.ERROR, org.apache.commons.lang3.StringUtils.join(ruleResult, ", "));
