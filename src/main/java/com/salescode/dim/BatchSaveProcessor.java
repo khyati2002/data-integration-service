@@ -43,8 +43,8 @@ public class BatchSaveProcessor extends ProcessFunction<CommonDataModel, CommonD
     private void initializeResources() throws Exception {
         // Create connection & DSLContext using the utility
         LOG.info("Initialize resources in BatchSaveProcessor.open() called");
-        this.connection = DatabaseConnectionUtil.createConnection(properties);
-        this.dslContext = DatabaseConnectionUtil.createDSLContext(connection);
+        DatabaseConnectionUtil.initConnectionPool(properties);
+        this.dslContext = DatabaseConnectionUtil.createPooledDSLContext();
     }
 
     @Override
