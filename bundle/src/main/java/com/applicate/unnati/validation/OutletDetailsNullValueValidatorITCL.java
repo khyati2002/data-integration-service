@@ -1,12 +1,9 @@
 package com.applicate.unnati.validation;
 
 
-import com.applicate.services.channelkart.services.ServiceLocator;
-import com.applicate.services.channelkart.services.UserService;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.validation.AbstractValidationRule;
 import com.salescode.dim.jooq.impl.OutletDetails;
-import com.salescode.dim.jooq.impl.User;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -14,12 +11,9 @@ import java.util.List;
 
 public class OutletDetailsNullValueValidatorITCL extends AbstractValidationRule<OutletDetails> {
 
-    final UserService userService = (UserService) ServiceLocator.lookup(User.class);
-
     @Override
     public OperationResult.StepResult apply(OutletDetails cdm) {
 
-        // TODO Auto-generated method stub
         List<String> ruleResult = new ArrayList<String>();
         if (cdm.getOutletName() == null || "".equals(cdm.getOutletName())) {
             ruleResult.add("OutletName can not be null");
@@ -38,8 +32,7 @@ public class OutletDetailsNullValueValidatorITCL extends AbstractValidationRule<
                 ruleResult.add("custID can not be null, outletSIFYID can not be null");
             }
         } else {
-            ruleResult.add(
-                    "custID can not be null, outletSIFYID can not be null");
+            ruleResult.add("custID can not be null, outletSIFYID can not be null");
         }
 
         if (ruleResult.size() > 0) {

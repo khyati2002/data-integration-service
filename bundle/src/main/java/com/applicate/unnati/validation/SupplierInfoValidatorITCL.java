@@ -10,7 +10,6 @@ public class SupplierInfoValidatorITCL extends AbstractValidationRule<User> {
 
     @Override
     public OperationResult.StepResult apply(User cdm) {
-        // TODO Auto-generated method stub
         StringBuilder ruleResult = new StringBuilder();
         if (cdm.getDesignation().contains("supplier")) {
             if (cdm.getName() == null || "".equals(cdm.getName())) {

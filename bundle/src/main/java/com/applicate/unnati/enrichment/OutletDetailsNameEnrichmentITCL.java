@@ -9,16 +9,14 @@ import com.salescode.dim.jooq.impl.OutletDetails;
 public class OutletDetailsNameEnrichmentITCL extends AbstractEnrichment<OutletDetails> {
 
     public OperationResult.StepResult apply(OutletDetails cdm) {
-        // TODO Auto-generated method stub
-        if(cdm.getContactName() == null) {
+        if (cdm.getContactName() == null) {
             cdm.setContactName(cdm.getOutletName());
         }
-        if (cdm.getActiveStatus()==null)
-        {
-        	cdm.setActiveStatus(ActiveStatus.ACTIVE);
-        	cdm.setActiveStatusReason(ActiveStatus.ACTIVE.name());
+        if (cdm.getActiveStatus() == null) {
+            cdm.setActiveStatus(ActiveStatus.ACTIVE);
+            cdm.setActiveStatusReason(ActiveStatus.ACTIVE.name());
         }
-        return  new OperationResult.StepResult(OperationResult.Status.OK, "Data enriched successfully");
+        return new OperationResult.StepResult(OperationResult.Status.OK, "Data enriched successfully");
     }
 
 }

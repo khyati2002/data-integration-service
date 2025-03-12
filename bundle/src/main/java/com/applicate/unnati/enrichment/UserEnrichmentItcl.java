@@ -1,7 +1,6 @@
 package com.applicate.unnati.enrichment;
 
 
-
 import com.applicate.services.channelkart.utils.JSONUtils;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.AbstractEnrichment;
@@ -15,43 +14,51 @@ import java.util.List;
 
 public class UserEnrichmentItcl extends AbstractEnrichment<User> {
 
-    @Override
     public OperationResult.StepResult apply(User cdm) {
-        if(cdm.getDesignation().contains("supplier")) {
-            List<SupplierMetadata> supplierMetaDataList=cdm.getSupplierMetaData();
-            if(supplierMetaDataList != null) {
-                SupplierMetadata metaData=supplierMetaDataList.get(0);
-                if(metaData.getExtendedAttributes() != null) {
-                    JsonNode extAttr=metaData.getExtendedAttributes();
-                    ObjectNode newExtAttr= JSONUtils.getObjectMapper().createObjectNode();
-                    if((!extAttr.has("orderFunction")) || (extAttr.has("orderFunction") && "NULL".equalsIgnoreCase(extAttr.get("orderFunction").asText()))) {
-                        newExtAttr.put("orderFunction", "Y");
-                    }
 
-                    if((!extAttr.has("orderFulfillmentTime")) || (extAttr.has("orderFulfillmentTime") && "NULL".equalsIgnoreCase(extAttr.get("orderFulfillmentTime").asText()))) {
-                        newExtAttr.put("orderFulfillmentTime", "2");
-                    }
-
-
-                    try {
-                        extAttr=JSONUtils.mergeJsonNodes(newExtAttr,extAttr);
-                    } catch (IOException e) {
-                        return new OperationResult.StepResult(OperationResult.Status.ERROR, e.getMessage());
-                    }
-                    metaData.setExtendedAttributes(extAttr);
-                }else {
-                    ObjectNode extAttr=JSONUtils.getObjectMapper().createObjectNode();
-                    extAttr.put("orderFunction", "Y");
-                    extAttr.put("orderFulfillmentTime", "2");
-                    metaData.setExtendedAttributes(extAttr);
-                }
-                if(metaData.getMin()==null) {
-                    metaData.setMin(0);
-                }
-            }
-            return OperationResult.StepResult.OK;
-        }else{
+        if (!cdm.getDesignation().contains("supplier")) {
             return OperationResult.StepResult.OK;
         }
+
+        List<SupplierMetadata> supplierMetaDataList = cdm.getSupplierMetaData();
+        if (supplierMetaDataList == null || supplierMetaDataList.isEmpty()) {
+            return OperationResult.StepResult.OK;
+        }
+
+        SupplierMetadata metaData = supplierMetaDataList.get(0);
+        try {
+            metaData.setExtendedAttributes(updateExtendedAttributes(metaData.getExtendedAttributes()));
+        } catch (IOException e) {
+            return new OperationResult.StepResult(OperationResult.Status.ERROR, e.getMessage());
+        }
+
+        if (metaData.getMin() == null) {
+            metaData.setMin(0);
+        }
+
+        return OperationResult.StepResult.OK;
     }
+
+    private ObjectNode updateExtendedAttributes(JsonNode currentAttr) throws IOException {
+        ObjectNode defaultAttr = JSONUtils.getObjectMapper().createObjectNode();
+        defaultAttr.put("orderFunction", "Y");
+        defaultAttr.put("orderFulfillmentTime", "2");
+
+        if (currentAttr == null) {
+            return defaultAttr;
+        }
+
+        ObjectNode updates = JSONUtils.getObjectMapper().createObjectNode();
+        if (!currentAttr.has("orderFunction") ||
+                (currentAttr.has("orderFunction") && "NULL".equalsIgnoreCase(currentAttr.get("orderFunction").asText()))) {
+            updates.put("orderFunction", "Y");
+        }
+        if (!currentAttr.has("orderFulfillmentTime") ||
+                (currentAttr.has("orderFulfillmentTime") && "NULL".equalsIgnoreCase(currentAttr.get("orderFulfillmentTime").asText()))) {
+            updates.put("orderFulfillmentTime", "2");
+        }
+
+        return (ObjectNode) JSONUtils.mergeJsonNodes(updates, currentAttr);
+    }
+
 }
