@@ -56,44 +56,11 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
 
     private void populateUserOutletHierarchy(User user, OutletDetails outlet) {
-        if (ObjectUtils.isNotEmpty(user.getImmediateParent())) {
-            List<HierarchyMetadata> hms = user.getImmediateParent().stream()
-                    .flatMap(parent -> {
-                        List<HierarchyMetadata> hierarchyMetadataList = hierarchyMetadataService.findByImmediateParent(parent.getParent());
-                        return hierarchyMetadataList.stream().map(hierarchyMetadata -> {
-                            HierarchyMetadata hm = new HierarchyMetadata();
-
-                            // Set parent hierarchy
-                            parent.setHierarchy(hierarchyMetadata.getHierarchy());
-
-                            // Compute hierarchy string
-                            String computedHierarchy = user.getLoginid() + " > " +
-                                    (StringUtils.isEmpty(parent.getHierarchy())
-                                            ? parent.getParent() + " > " + customerAccountsService.getAdminLoginId()
-                                            : parent.getHierarchy());
-
-                            hm.setHierarchy(computedHierarchy);
-
-                            // Set location hierarchy
-                            Location location = user.getLocation();
-                            hm.setLocationHierarchy(location != null ? location.getLocationHierarchy() : null);
-
-                            // Set immediate parent
-                            hm.setImmediateParent(user.getLoginid());
-
-                            return hm;
-                        });
-                    })
-                    .collect(Collectors.toList());
-
-            hierarchyMetadataService.batchSave(hms);
-
-            // If outlet defines its own immediate parent, do not override it
             if (ObjectUtils.isEmpty(outlet.getImmediateParent())) {
-                outlet.setImmediateParent(hms);
+                outlet.setImmediateParent(user.getImmediateParent());
             }
         }
-    }
+
 
 
     private void populateLocation(OutletDetails outletDetails){
@@ -232,15 +199,12 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     }
 
     public User beforeSave(OutletDetails outlet){
-        LOG.info("Before Save Called");
       return populateAssociatedData(outlet);
     }
 
     @Override
     public OutletDetails save(OutletDetails outlet){
-        LOG.info("Main Outlet save called");
         User user = beforeSave(outlet);
-        LOG.info("User saved success");
         super.addHash(outlet);
         LOG.info(outlet.getHash());
         com.salescode.dim.jooq.generated.tables.pojos.OutletDetails savedObj = dsl.select(CK_OUTLET_DETAILS.asterisk().except(CK_OUTLET_DETAILS.COORDINATE))
@@ -278,39 +242,52 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             LOG.info(String.valueOf(e));
         }
         LOG.info("Save completed successfully");
-        List<UserRoles> roleList = setRoles(List.of(user));
-        saveRoles(roleList);
-        List<Userdesignation> userdesignationsList = setDesignation(List.of(user));
-        saveDesignation(userdesignationsList);
-        List<OutletDetailsHierarchymetadata> outletDetailsHierarchymetadata = setOutletHierarchyMetadata(List.of(outlet));
-        saveOutletDetailHierarchyMetadata(outletDetailsHierarchymetadata);
+//        List<UserRoles> roleList = setRoles(List.of(user));
+//        saveRoles(roleList);
+//        List<Userdesignation> userdesignationsList = setDesignation(List.of(user));
+//        saveDesignation(userdesignationsList);
+//        List<OutletDetailsHierarchymetadata> outletDetailsHierarchymetadata = setOutletHierarchyMetadata(List.of(outlet));
+//        saveOutletDetailHierarchyMetadata(outletDetailsHierarchymetadata);
         return outlet;
 
     }
 
-    private List<User> populateBatchAssociatedData(List<OutletDetails> outletDetailsList){
+    private List<User> populateBatchAssociatedData(List<OutletDetails> outletDetailsList) {
+        long startTime = System.currentTimeMillis();
 
-        List<User> userList= outletDetailsList.stream()
+        List<User> userList = outletDetailsList.stream()
                 .map(OutletDetails::getUserName)
                 .collect(Collectors.toList());
 
-        List<Location> locationList= outletDetailsList.stream()
+        List<Location> locationList = outletDetailsList.stream()
                 .map(OutletDetails::getLocation)
                 .collect(Collectors.toList());
 
+        long userStartTime = System.currentTimeMillis();
         List<User> savedUserList = userService.getUser(userList);
-        LOG.info("Saved User List" + savedUserList.get(0));
+        long userEndTime = System.currentTimeMillis();
+        LOG.info("UserService save took: " + (userEndTime - userStartTime) + " ms");
+
+        long locationStartTime = System.currentTimeMillis();
         List<Location> savedLocList = locationService.findLocationOrPersistLocation(locationList);
-        for(int i=0;i<outletDetailsList.size();i++){
+        long locationEndTime = System.currentTimeMillis();
+        LOG.info("LocationService save took: " + (locationEndTime - locationStartTime) + " ms");
+
+        for (int i = 0; i < outletDetailsList.size(); i++) {
             outletDetailsList.get(i).setUserName(savedUserList.get(i));
-            populateUserOutletHierarchy(savedUserList.get(i),outletDetailsList.get(i));
+            populateUserOutletHierarchy(savedUserList.get(i), outletDetailsList.get(i));
             outletDetailsList.get(i).setLocation(savedLocList.get(i));
             outletDetailsList.get(i).setLocationHierarchy(savedLocList.get(i).getLocationHierarchy());
             setOutletHierarchy(outletDetailsList.get(i));
             setOutletSupplier(outletDetailsList.get(i));
         }
+
+        long endTime = System.currentTimeMillis();
+        LOG.info("Total populateBatchAssociatedData execution time: " + (endTime - startTime) + " ms");
+
         return savedUserList;
     }
+
 
     public List<UserRoles> setRoles(List<User> userList) {
         return userList.stream()
@@ -410,56 +387,83 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
 
     @Override
-    public List<OutletDetails> batchSave(List<OutletDetails> outletDetailsList){
-        LOG.info(String.valueOf(outletDetailsList.size()));
-        LOG.info("Batch Save called");
+    public List<OutletDetails> batchSave(List<OutletDetails> outletDetailsList) {
+        long startTime = System.currentTimeMillis();
+        LOG.info("Batch Save started with {} records", outletDetailsList.size());
+
+        LOG.info("Step 1: Populating associated data - Start");
+        long step1Start = System.currentTimeMillis();
         List<User> savedUserList = populateBatchAssociatedData(outletDetailsList);
-        for(int i=0;i<savedUserList.size();i++){
-            LOG.info(String.valueOf(savedUserList.get(i)));
+        long step1End = System.currentTimeMillis();
+        LOG.info("Step 1: Completed in {} ms", (step1End - step1Start));
+
+        for (User user : savedUserList) {
+            LOG.info("User: {}", user);
         }
         LOG.info("User populate success");
+
+        LOG.info("Step 2: Fetching existing outlet records - Start");
+        long step2Start = System.currentTimeMillis();
         List<String> outletCodes = outletDetailsList.stream()
                 .map(OutletDetails::getOutletcode)
                 .collect(Collectors.toList());
 
-        Map<String, com.salescode.dim.jooq.generated.tables.pojos.OutletDetails> savedList = dsl.select(CK_OUTLET_DETAILS.asterisk().except(CK_OUTLET_DETAILS.COORDINATE))
+        Map<String, com.salescode.dim.jooq.generated.tables.pojos.OutletDetails> savedList = dsl
+                .select(CK_OUTLET_DETAILS.asterisk().except(CK_OUTLET_DETAILS.COORDINATE))
                 .from(CK_OUTLET_DETAILS)
                 .where(CK_OUTLET_DETAILS.OUTLETCODE.in(outletCodes))
                 .fetch()
                 .intoMap(CK_OUTLET_DETAILS.OUTLETCODE, record -> record.into(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class));
+        long step2End = System.currentTimeMillis();
+        LOG.info("Step 2: Fetching existing outlet records completed in {} ms", (step2End - step2Start));
 
-        for(OutletDetails outlet : outletDetailsList){
+        LOG.info("Step 3: Preparing insert/update lists - Start");
+        long step3Start = System.currentTimeMillis();
+        for (OutletDetails outlet : outletDetailsList) {
             outlet.setChanged((byte) 1);
             outlet.setChanged(true);
         }
 
-
         List<OutletDetails> itemsToInsert = new ArrayList<>();
         List<OutletDetails> itemsToUpdate = new ArrayList<>();
-        for (int i = 0; i < outletDetailsList.size(); i++) {
-            super.addHash(outletDetailsList.get(i));
-            if (savedList.get(outletDetailsList.get(i).getOutletcode()) == null) {
-                outletDetailsList.get(i).setVersion(0);
-                outletDetailsList.get(i).setId(UUID.randomUUID().toString());
-                outletDetailsList.get(i).setMapped(true);
-                itemsToInsert.add(outletDetailsList.get(i));
+
+        for (OutletDetails outlet : outletDetailsList) {
+            super.addHash(outlet);
+            if (savedList.get(outlet.getOutletcode()) == null) {
+                outlet.setVersion(0);
+                outlet.setId(UUID.randomUUID().toString());
+                outlet.setMapped(true);
+                itemsToInsert.add(outlet);
             } else {
-                    outletDetailsList.get(i).setId(savedList.get(outletDetailsList.get(i).getOutletcode()).getId());
-                    outletDetailsList.get(i).setVersion(savedList.get(outletDetailsList.get(i).getOutletcode()).getVersion() + 1);
-                    outletDetailsList.get(i).setMapped(true);
-                if(!Objects.equals(outletDetailsList.get(i).getHash(), savedList.get(outletDetailsList.get(i).getOutletcode()).getHash())) {
-                    itemsToUpdate.add(outletDetailsList.get(i));
+                com.salescode.dim.jooq.generated.tables.pojos.OutletDetails existingOutlet = savedList.get(outlet.getOutletcode());
+                outlet.setId(existingOutlet.getId());
+                outlet.setVersion(existingOutlet.getVersion() + 1);
+                outlet.setMapped(true);
+
+                if (!Objects.equals(outlet.getHash(), existingOutlet.getHash())) {
+                    itemsToUpdate.add(outlet);
                 }
             }
         }
+        long step3End = System.currentTimeMillis();
+        LOG.info("Step 3: Preparation completed in {} ms", (step3End - step3Start));
+
+        LOG.info("Step 4: Batch insert execution - Start");
+
+        long step4Start = System.currentTimeMillis();
         if (!itemsToInsert.isEmpty()) {
             dsl.batchInsert(
                     itemsToInsert.stream()
-                            .map(outlet -> dsl.newRecord(CK_OUTLET_DETAILS, outlet)) // Convert to jOOQ Records
+                            .map(outlet -> dsl.newRecord(CK_OUTLET_DETAILS, outlet))
                             .collect(Collectors.toList())
             ).execute();
         }
 
+        long step4End = System.currentTimeMillis();
+        LOG.info("Step 4: Batch insert completed in {} ms", (step4End - step4Start));
+
+        LOG.info("Step 5: Batch update execution - Start");
+        long step5Start = System.currentTimeMillis();
         if (!itemsToUpdate.isEmpty()) {
             dsl.batchUpdate(
                     itemsToUpdate.stream()
@@ -470,9 +474,12 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                             })
                             .collect(Collectors.toList())
             ).execute();
-
         }
+        long step5End = System.currentTimeMillis();
+        LOG.info("Step 5: Batch update completed in {} ms", (step5End - step5Start));
 
+        long endTime = System.currentTimeMillis();
+        LOG.info("Batch Execution Successful. Total time taken: {} ms", (endTime - startTime));
 
         List<UserRoles> roleList = setRoles(savedUserList);
         saveRoles(roleList);
@@ -480,9 +487,9 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         saveDesignation(userdesignationsList);
         List<OutletDetailsHierarchymetadata> outletDetailsHierarchymetadata = setOutletHierarchyMetadata(outletDetailsList);
         saveOutletDetailHierarchyMetadata(outletDetailsHierarchymetadata);
-        LOG.info("Batch Execution Successful");
         return outletDetailsList;
     }
+
 
     public OutletDetails findByOutletcode(String outletcode){
         return dsl.select(CK_OUTLET_DETAILS.asterisk().except(CK_OUTLET_DETAILS.COORDINATE))

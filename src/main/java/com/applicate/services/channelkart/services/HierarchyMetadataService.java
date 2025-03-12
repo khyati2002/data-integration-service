@@ -1,9 +1,7 @@
 package com.applicate.services.channelkart.services;
 
-import com.applicate.services.channelkart.repository_new.HierarchyMetadataRepository;
-import com.salescode.dim.jooq.generated.tables.pojos.User;
+import com.applicate.services.channelkart.repository.HierarchyMetadataRepository;
 import com.salescode.dim.jooq.generated.tables.records.CkHierarchyMetadataRecord;
-import com.salescode.dim.jooq.generated.tables.records.CkUserRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import org.jooq.DSLContext;
 
@@ -11,7 +9,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_HIERARCHY_METADATA;
-import static com.salescode.dim.jooq.generated.Tables.CK_USER;
 
 public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetadata> {
     private static HierarchyMetadataRepository hierarchyMetadataRepository;

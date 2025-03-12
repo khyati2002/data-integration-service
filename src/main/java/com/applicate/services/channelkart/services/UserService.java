@@ -64,26 +64,12 @@ public class UserService extends AbstractCDMService<User> {
         hierarchyMetadataService = new HierarchyMetadataService(dsl);
         locationService = new LocationService(dsl);
         validationInfoRegistry = new ValidationInfoRegistry(dsl);
-        LOG.info("validation info registry" + validationInfoRegistry);
         validationExcludeGroupRegistry = new ValidationExcludeGroupRegistry(dsl);
-        LOG.info("validation exclude group registry" + validationInfoRegistry);
         enrichmentInfoRegistry = new EnrichmentInfoRegistry(dsl);
-        LOG.info("enrichment info registry" + enrichmentInfoRegistry);
-        LOG.info("etl registry" + etlRegistry);
         dataValidationService = new DataValidationService(validationInfoRegistry,validationExcludeGroupRegistry,etlRegistry);
         dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry,etlRegistry);
-        LOG.info("Initializing PreProcessPipelineService with DataValidationService: {} and DataEnrichmentService: {}",
-                dataValidationService, dataEnrichmentService);
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
-        LOG.info("PreProcessPipelineService initialized successfully: {}", preProcessPipelineService);
 
-    }
-
-    public static synchronized UserService getInstance(DSLContext dsl) {
-        if (instance == null) {
-            instance = new UserService(dsl);
-        }
-        return instance;
     }
 
     private Set<String> populateUserParentHierarchy(User user) {
@@ -92,6 +78,8 @@ public class UserService extends AbstractCDMService<User> {
             Set<String> uniqueParents = user.getImmediateParent().stream().map(HierarchyMetadata::getParent).collect(Collectors.toSet());
             uniqueParents.forEach(parent -> {
                 List<HierarchyMetadata> hierarchyMetaDataList = hierarchyMetadataService.findByImmediateParent(parent);
+
+
                 if (hierarchyMetaDataList.isEmpty()) {
                     hierarchyStr.add(user.getLoginid() + " > " + parent + " > " + customerAccountsService.getAdminLoginId());
                 } else {
@@ -105,6 +93,8 @@ public class UserService extends AbstractCDMService<User> {
         return hierarchyStr;
     }
 
+
+
     private void setHierarchy(User user, Set<String> hierarchyStr) {
         if (!hierarchyStr.isEmpty()) {
             String hierarchy = StringUtils.join(hierarchyStr, ",");
@@ -115,6 +105,16 @@ public class UserService extends AbstractCDMService<User> {
                 //             logger.warn("Hierarchy logs: Null hierarchy found for user {}. Skipping setHierarchy() operation", user.getLoginId());
             }
         }
+
+        List<HierarchyMetadata> hierarchyMetadataList = hierarchyStr.stream().map(hStr -> {
+            HierarchyMetadata hm = new HierarchyMetadata();
+            hm.setHierarchy(hStr);
+            hm.setImmediateParent(user.getLoginid());
+            hm.setLocationHierarchy(user.getLocation() != null ? user.getLocation().getLocationHierarchy() : null);
+            return hm;
+        }).collect(Collectors.toList());
+
+        hierarchyMetadataService.batchSave(hierarchyMetadataList);
     }
 
     public User getUser(User user) {
@@ -129,28 +129,44 @@ public class UserService extends AbstractCDMService<User> {
     }
 
     public List<User> getUser(List<User> userList) {
-        if(preProcessPipelineService != null) {
+        long startTime = System.currentTimeMillis();
+
+        if (preProcessPipelineService != null) {
             LOG.info("Pre process value is not null");
+            long preProcessStartTime = System.currentTimeMillis();
+
             userList.forEach(user -> {
                 LOG.info(user.getLoginid());
-                PreProcessOperationResult operationResult = preProcessPipelineService.preProcessPipeline(user,"" );
-//                if (operationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
-//                    throw new RuntimeException("Pre Process Pipeline Of User Failed");
-//                }
-
+                PreProcessOperationResult operationResult = preProcessPipelineService.preProcessPipeline(user, null);
+//            if (operationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
+//                throw new RuntimeException("Pre Process Pipeline Of User Failed");
+//            }
             });
-        }
-        else{
+
+            long preProcessEndTime = System.currentTimeMillis();
+            LOG.info("Pre-process time: " + (preProcessEndTime - preProcessStartTime) + " ms");
+        } else {
             LOG.info("Pre process called with null value");
         }
+
+        populateBatchLocation(userList);
+
         userList.forEach(user -> {
             Set<String> hierarchyStr = populateUserParentHierarchy(user);
             setHierarchy(user, hierarchyStr);
         });
 
-       List<User> userListSaved = batchSave(userList);
-       return userListSaved;
+        long batchSaveStartTime = System.currentTimeMillis();
+        List<User> userListSaved = batchSave(userList);
+        long batchSaveEndTime = System.currentTimeMillis();
+        LOG.info("Batch save time: " + (batchSaveEndTime - batchSaveStartTime) + " ms");
+
+        long endTime = System.currentTimeMillis();
+        LOG.info("Total getUser execution time: " + (endTime - startTime) + " ms");
+
+        return userListSaved;
     }
+
 
     private void populateUserLocation(User user) {
         if (user.getLocation() != null) {
@@ -273,23 +289,70 @@ public class UserService extends AbstractCDMService<User> {
 
     }
 
-    private void populateBatchRoles(List<User> userList) {
-        userList.forEach(user ->
+    private void populateBatchRoles(List<User> users) {
+        List<String> roleNames = new ArrayList<>();
+        Map<Integer, List<AuthRole>> userRolesMap = new HashMap<>();
+
+        // Collect role names for batch fetching, maintaining order
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            if (user.getRoles() == null || user.getRoles().isEmpty()) {
+                roleNames.add(RoleName.ROLE_USER.name()); // Default role
+            } else {
+                for (AuthRole role : user.getRoles()) {
+                    roleNames.add(role.getName());
+                }
+            }
+            userRolesMap.put(i, user.getRoles()); // Store user roles in order
+        }
+
+        // Fetch roles in batch using a single query
+        Map<String, AuthRole> fetchedRoles = roleService.getRolesByNames(roleNames).stream()
+                .collect(Collectors.toMap(AuthRole::getName, role -> role));
+
+        // Assign fetched roles back to users while maintaining order
+        for (int i = 0; i < users.size(); i++) {
+            List<AuthRole> assignedRoles = new ArrayList<>();
+            List<AuthRole> originalRoles = userRolesMap.get(i);
+
+            if (originalRoles == null || originalRoles.isEmpty()) {
+                assignedRoles.add(fetchedRoles.get(RoleName.ROLE_USER.name()));
+            } else {
+                for (AuthRole role : originalRoles) {
+                    if (role != null && fetchedRoles.containsKey(role.getName())) {
+                        assignedRoles.add(fetchedRoles.get(role.getName()));
+                    }
+                }
+            }
+            users.get(i).setRoles(assignedRoles);
+        }
+
+        users.forEach(user ->
         {
-            populateRoles(user);
             populateUserDetails(user);
         });
     }
 
     @Override
     public List<User> batchSave(List<User> userList) {
-        LOG.info("User list is" + userList.size());
-        populateBatchLocation(userList);
-        populateBatchRoles(userList);
-        userList.forEach(user -> {
-            userParentService.populateAndSaveUserParent(user);
-        });
+        long startTime = System.nanoTime();
+        LOG.info("User list size: " + userList.size());
 
+        long startLocationTime = System.nanoTime();
+        long endLocationTime = System.nanoTime();
+        LOG.info("Time taken for populateBatchLocation: " + (endLocationTime - startLocationTime) / 1_000_000 + " ms");
+
+        long startRolesTime = System.nanoTime();
+        populateBatchRoles(userList);
+        long endRolesTime = System.nanoTime();
+        LOG.info("Time taken for populateBatchRoles: " + (endRolesTime - startRolesTime) / 1_000_000 + " ms");
+
+        long startParentTime = System.nanoTime();
+        userList.forEach(user -> userParentService.populateAndSaveUserParent(user));
+        long endParentTime = System.nanoTime();
+        LOG.info("Time taken for populateAndSaveUserParent: " + (endParentTime - startParentTime) / 1_000_000 + " ms");
+
+        long startFetchTime = System.nanoTime();
         List<String> loginIds = userList.stream()
                 .map(User::getLoginid)
                 .collect(Collectors.toList());
@@ -298,31 +361,39 @@ public class UserService extends AbstractCDMService<User> {
                 .where(CK_USER.LOGINID.in(loginIds))
                 .fetch()
                 .intoMap(CK_USER.LOGINID, record -> record.into(com.salescode.dim.jooq.generated.tables.pojos.User.class));
+        long endFetchTime = System.nanoTime();
+        LOG.info("Time taken for fetching existing users: " + (endFetchTime - startFetchTime) / 1_000_000 + " ms");
 
-        LOG.info("Already saved List" + savedList);
+        LOG.info("Already saved List: " + savedList);
 
         List<User> itemsToInsert = new ArrayList<>();
         List<User> itemsToUpdate = new ArrayList<>();
-        for (int i = 0; i < userList.size(); i++) {
-            super.addHash(userList.get(i));
-            if (savedList.get(userList.get(i).getLoginid()) == null) {
-                userList.get(i).setVersion(0);
-                userList.get(i).setId(UUID.randomUUID().toString());
-                itemsToInsert.add(userList.get(i));
+
+        long startProcessingTime = System.nanoTime();
+        for (User user : userList) {
+            super.addHash(user);
+            if (savedList.get(user.getLoginid()) == null) {
+                user.setVersion(0);
+                user.setId(UUID.randomUUID().toString());
+                itemsToInsert.add(user);
             } else {
-                if (!Objects.equals(userList.get(i).getHash(), savedList.get(userList.get(i).getLoginid()).getHash())) {
-                    userList.get(i).setId(savedList.get(userList.get(i).getLoginid()).getId());
-                    userList.get(i).setVersion(savedList.get(userList.get(i).getLoginid()).getVersion());
-                    itemsToUpdate.add(userList.get(i));
-                }
-                else{
-                    userList.get(i).setId(savedList.get(userList.get(i).getLoginid()).getId());
-                    userList.get(i).setVersion(savedList.get(userList.get(i).getLoginid()).getVersion());
+                if (!Objects.equals(user.getHash(), savedList.get(user.getLoginid()).getHash())) {
+                    user.setId(savedList.get(user.getLoginid()).getId());
+                    user.setVersion(savedList.get(user.getLoginid()).getVersion());
+                    itemsToUpdate.add(user);
+                } else {
+                    user.setId(savedList.get(user.getLoginid()).getId());
+                    user.setVersion(savedList.get(user.getLoginid()).getVersion());
                 }
             }
         }
-        LOG.info("Items to insert" + itemsToInsert);
-        LOG.info("Items to update" + itemsToUpdate);
+        long endProcessingTime = System.nanoTime();
+        LOG.info("Time taken for processing users: " + (endProcessingTime - startProcessingTime) / 1_000_000 + " ms");
+
+        LOG.info("Items to insert: " + itemsToInsert.size());
+        LOG.info("Items to update: " + itemsToUpdate.size());
+
+        long startInsertTime = System.nanoTime();
         if (!itemsToInsert.isEmpty()) {
             dsl.batchInsert(
                     itemsToInsert.stream()
@@ -330,7 +401,10 @@ public class UserService extends AbstractCDMService<User> {
                             .collect(Collectors.toList())
             ).execute();
         }
+        long endInsertTime = System.nanoTime();
+        LOG.info("Time taken for batch insert: " + (endInsertTime - startInsertTime) / 1_000_000 + " ms");
 
+        long startUpdateTime = System.nanoTime();
         if (!itemsToUpdate.isEmpty()) {
             dsl.batchUpdate(
                     itemsToUpdate.stream()
@@ -341,11 +415,16 @@ public class UserService extends AbstractCDMService<User> {
                             })
                             .collect(Collectors.toList())
             ).execute();
-
         }
+        long endUpdateTime = System.nanoTime();
+        LOG.info("Time taken for batch update: " + (endUpdateTime - startUpdateTime) / 1_000_000 + " ms");
+
+        long endTime = System.nanoTime();
+        LOG.info("Total time taken for batchSave: " + (endTime - startTime) / 1_000_000 + " ms");
 
         return userList;
     }
+
 
     public com.salescode.dim.jooq.generated.tables.pojos.User findByLoginIdUser(String loginid){
        return dsl.selectFrom(CK_USER)

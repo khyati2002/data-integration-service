@@ -26,6 +26,10 @@ public class RoleService extends AbstractCDMService<AuthRole> {
         return Optional.ofNullable(roleRepository.findByNameIgnoreCase(name));
     }
 
+    public List<AuthRole> getRolesByNames(List<String> roleNames) {
+        return roleRepository.findByNameIn(roleNames);
+    }
+
 
     @Override
     public AuthRole save(AuthRole cdmObject) {

@@ -18,6 +18,7 @@
 
 package com.salescode.dim;
 
+import com.applicate.services.channelkart.models.CommonDataModel;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
@@ -82,11 +83,6 @@ public class DataStreamJob {
         env.getConfig().enableForceKryo();
 
 
-        // kryo.register(java.util.List.class, new JavaSerializer());
-       // kryo.setDefaultSerializer(JavaSerializer.class);
-
-
-
 
         PropertyLoader propertyLoader = new PropertyLoader();
         // Load the application properties
@@ -131,8 +127,9 @@ public class DataStreamJob {
 
         var processedStream = input
                 .flatMap(new StreamingRawDataFlatMapper())   // Convert raw data to CDMs
-                .process(new StreamingRawDataProcessor(commonProperties))  // Process each CDM
-                .process(new BatchSaveProcessor(commonProperties))
+                .process(new StreamingRawDataProcessor(commonProperties))
+                .keyBy(cdm -> cdm.getClass().getSimpleName())// Process each CDM
+                .process(new KeyedBatchSaveProcessor(commonProperties))
                 .disableChaining()// Perform batch saving
                 .name("Batch Save Processor");
 
