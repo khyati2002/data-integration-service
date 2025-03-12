@@ -7,6 +7,8 @@ import org.jooq.DSLContext;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 public abstract class AbstractCDMService<T extends CommonDataModel> implements CommonDataModelService<T>, DatabaseAwareService {
 
@@ -25,4 +27,13 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         }
     }
 
+    @Override
+    public Collection<T> batchSave(Collection<T> cdmObject) {
+        return cdmObject.stream().map(this::save).collect(Collectors.toList());
+    }
+
+    @Override
+    public T save(T cdmObject) {
+        return cdmObject;
+    }
 }

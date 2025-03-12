@@ -29,7 +29,7 @@ public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRaw
         super.open(openContext);
         this.connection = DatabaseConnectionUtil.createConnection(properties);
         this.dslContext = DatabaseConnectionUtil.createDSLContext(connection);
-        this.serviceLocator = new ServiceLocator(dslContext);
+        this.serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
     }
 
@@ -39,9 +39,7 @@ public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRaw
 
         for (Map.Entry<Class<? extends CommonDataModel>, Set<CommonDataModel>> entry : aggregatedModels.entrySet()) {
             CommonDataModelService service = ServiceLocator.lookup(entry.getKey());
-            Collection preBatchSave = service.preBatchSave(entry.getValue());
-            Collection batchSave = service.batchSave(preBatchSave);
-            service.postBatchSave(batchSave);
+            service.batchSave(entry.getValue());
         }
 
         value.forEach(tuple -> out.collect(tuple.f0));

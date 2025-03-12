@@ -7,9 +7,13 @@ package com.applicate.services.channelkart.utils;
 
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.DeserializationFeature;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.MapperFeature;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,4 +57,26 @@ public class JSONUtils {
         return get();
     }
 
+    public static JsonNode mergeJsonNodes(JsonNode source, JsonNode destination) throws IOException {
+        ObjectNode destinationNode = destination.deepCopy();
+        Iterator<String> fieldNames = source.fieldNames();
+        while (fieldNames.hasNext()) {
+            String fieldName = fieldNames.next();
+            JsonNode jsonNode = destinationNode.get(fieldName);
+            if (jsonNode != null && jsonNode.isObject()) {
+                JsonNode value = mergeJsonNodes(source.get(fieldName), jsonNode);
+                destinationNode.set(fieldName, value);
+            } else {
+                if (destinationNode instanceof ObjectNode) {
+                    JsonNode value = source.get(fieldName);
+                    destinationNode.set(fieldName, value);
+                }
+            }
+        }
+        return destinationNode;
+    }
+
+    public static <T> T convert(Object node, TypeReference<List<Map<String, String>>> typeReference) {
+        return (T) OBJECT_MAPPER.convertValue(node, typeReference);
+    }
 }

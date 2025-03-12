@@ -1,6 +1,7 @@
 package com.salescode.dim;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
@@ -70,6 +71,9 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
 
         // Initialize pipeline service
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
+
+        ServiceLocator serviceLocator = ServiceLocator.getInstance(dslContext);
+        serviceLocator.registerSubClasses();
     }
 
     @Override

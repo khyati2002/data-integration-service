@@ -11,11 +11,23 @@ import java.util.Set;
 public class ServiceLocator {
 
     private static final Map<Class<?>, CommonDataModelService<?>> SERVICE_REGISTRY = new CopyOnWriteMap<>();
+    private static ServiceLocator instance;
 
     private final transient DSLContext dslContext;
 
-    public ServiceLocator(DSLContext dslContext) {
+    private ServiceLocator(DSLContext dslContext) {
         this.dslContext = dslContext;
+    }
+
+    public static ServiceLocator getInstance(DSLContext dslContext) {
+        if (instance == null) {
+            synchronized (ServiceLocator.class) {
+                if (instance == null) {
+                    instance = new ServiceLocator(dslContext);
+                }
+            }
+        }
+        return instance;
     }
 
     public static <T extends CommonDataModel> CommonDataModelService<T> lookup(Class<T> cdmType) {
