@@ -1,9 +1,12 @@
 package com.salescode.dim;
 
+import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.utils.JSONUtils;
 import lombok.SneakyThrows;
 import org.apache.commons.text.StringSubstitutor;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.junit.Assert;
@@ -113,7 +116,7 @@ public class DataStreamJobTest {
         Map<String, Properties> stringPropertiesMap = PropertyLoader.loadApplicationProperties(null);
 
         // Apply the process function (simulate the job's pipeline)
-        DataStream<StreamingRawData> processedStream = source
+        SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = source
                 // If you had windowing or aggregation, adjust accordingly.
                 .process(new StreamingRawDataProcessor(stringPropertiesMap.get("Common")))
                 .name("Test Process Function");
