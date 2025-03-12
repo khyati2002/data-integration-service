@@ -26,6 +26,10 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
     @Getter(value = AccessLevel.NONE)
     private Location locationHierarchy;
 
+    public Location getLocation(){
+        return locationHierarchy;
+    }
+
     @JsonSetter("loginId")
     public void setLoginId(String loginId) {
         setLoginid(loginId);
