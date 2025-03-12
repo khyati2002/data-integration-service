@@ -28,11 +28,11 @@ public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRaw
     @Override
     public void open(OpenContext openContext) throws Exception {
         super.open(openContext);
-        this.connection = DatabaseConnectionUtil.createConnection(properties);
-        this.dslContext = DatabaseConnectionUtil.createDSLContext(connection);
+//        this.connection = DatabaseConnectionUtil.createConnection(properties);
+//        this.dslContext = DatabaseConnectionUtil.createDSLContext(connection);
+        initializeResources();
         this.serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
-        initializeResources();
     }
 
     private void initializeResources () throws SQLException {
