@@ -26,7 +26,15 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
     @Getter(value = AccessLevel.NONE)
     private Location locationHierarchy;
 
-    public Location getLocation(){
+    private User(com.salescode.dim.jooq.generated.tables.pojos.User user) {
+        super(user);
+    }
+
+    public static User of(com.salescode.dim.jooq.generated.tables.pojos.User user) {
+        return new User(user);
+    }
+
+    public Location getLocation() {
         return locationHierarchy;
     }
 
@@ -52,7 +60,7 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
         sb.append(", ").append(locationHierarchy);
         sb.append(")");
         return sb.toString();
-      }
+    }
 }
 
 

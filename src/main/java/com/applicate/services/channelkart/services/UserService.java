@@ -10,8 +10,9 @@ public class UserService extends AbstractCDMService<User> {
 
     @Cacheable
     public User findByLoginId(String loginid) {
-        return getDslContext().selectFrom(CK_USER)
+        com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
-                .fetchOneInto(User.class);
+                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
+        return User.of(user);
     }
 }

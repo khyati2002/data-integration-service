@@ -15,11 +15,12 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccount>
 
     @Cacheable
     public User getAdminInfo() {
-        return getDslContext().select()
+        com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().select()
                 .from(CK_CUSTOMER_ACCOUNT)
                 .join(CK_USER)
                 .on(CK_CUSTOMER_ACCOUNT.USERNAME.eq(CK_USER.LOGINID))
-                .fetchOneInto(User.class);
+                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
+        return User.of(user);
     }
 
     public String getAdminHierarchy(String inUser) {
