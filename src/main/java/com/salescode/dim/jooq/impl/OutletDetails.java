@@ -26,6 +26,14 @@ public class OutletDetails extends com.salescode.dim.jooq.generated.tables.pojos
     private User userName;
     private Location location;
 
+    public OutletDetails(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails outletDetails) {
+        super(outletDetails);
+    }
+
+    public static OutletDetails of(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails outletDetails) {
+        return new OutletDetails(outletDetails);
+    }
+
     @JsonSetter("outletCode")
     public void setOutletCode(String outletCode) {
         setOutletcode(outletCode);

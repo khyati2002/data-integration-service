@@ -66,9 +66,11 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
     @Cacheable
     public OutletDetails findByOutletCode(String outletcode) {
-        return getDslContext().select(CK_OUTLET_DETAILS.asterisk().except(CK_OUTLET_DETAILS.COORDINATE))
+        com.salescode.dim.jooq.generated.tables.pojos.OutletDetails outletDetails = getDslContext().select(CK_OUTLET_DETAILS.asterisk()
+                        .except(CK_OUTLET_DETAILS.COORDINATE))
                 .from(CK_OUTLET_DETAILS).where(CK_OUTLET_DETAILS.OUTLETCODE.eq(outletcode))
-                .fetchOneInto(OutletDetails.class);
+                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class);
+        return OutletDetails.of(outletDetails);
     }
 
     private List<User> preProcessUser(List<User> userList){

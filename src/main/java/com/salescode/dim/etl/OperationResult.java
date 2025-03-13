@@ -10,6 +10,8 @@ import java.util.List;
 @Setter
 public class OperationResult {
 
+    public static OperationResult OK = new OperationResult(Status.OK);
+
     private final Status status;
     private final List<CommonDataModel> operationResultData = new ArrayList<>();
     private final List<StepResult> stepResults = new ArrayList<>();

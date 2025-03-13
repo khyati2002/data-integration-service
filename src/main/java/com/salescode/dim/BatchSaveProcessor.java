@@ -10,6 +10,7 @@ import org.apache.flink.util.Collector;
 import org.jooq.DSLContext;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>>, StreamingRawData> {
@@ -27,10 +28,16 @@ public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRaw
     @Override
     public void open(OpenContext openContext) throws Exception {
         super.open(openContext);
-        this.connection = DatabaseConnectionUtil.createConnection(properties);
-        this.dslContext = DatabaseConnectionUtil.createDSLContext(connection);
+//        this.connection = DatabaseConnectionUtil.createConnection(properties);
+//        this.dslContext = DatabaseConnectionUtil.createDSLContext(connection);
+        initializeResources();
         this.serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
+    }
+
+    private void initializeResources () throws SQLException {
+        DatabaseConnectionUtil.initConnectionPool(properties);
+        this.dslContext = DatabaseConnectionUtil.createPooledDSLContext();
     }
 
     @Override

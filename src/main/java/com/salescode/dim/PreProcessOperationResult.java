@@ -8,9 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PreProcessOperationResult {
-    private OperationResult preValidationEnrichment;
-    private OperationResult validation;
-    private OperationResult postValidationEnrichment;
+    private OperationResult preValidationEnrichment = OperationResult.OK;
+    private OperationResult validation = OperationResult.OK;
+    private OperationResult postValidationEnrichment = OperationResult.OK;
 
     private Status status;
 
