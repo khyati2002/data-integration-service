@@ -1,6 +1,7 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.salescode.dim.jooq.impl.OutletDetails;
 import lombok.Getter;
 import lombok.Setter;
 import org.jooq.DSLContext;
@@ -8,6 +9,7 @@ import org.jooq.DSLContext;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class AbstractCDMService<T extends CommonDataModel> implements CommonDataModelService<T>, DatabaseAwareService {
@@ -32,8 +34,15 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         return cdmObject.stream().map(this::save).collect(Collectors.toList());
     }
 
+    public <T extends CommonDataModel> T addHash(T model) {
+        String hash = model.hash();
+        model.setHash(hash);
+        return model;
+    }
+
     @Override
     public T save(T cdmObject) {
         return cdmObject;
     }
+
 }
