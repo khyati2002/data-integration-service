@@ -1,6 +1,7 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.repository.HierarchyMetadataRepository;
+import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.jooq.generated.tables.records.CkHierarchyMetadataRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
@@ -40,7 +41,7 @@ public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetada
         List<com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata> itemsToInsert = new ArrayList<>();
         List<com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata> itemsToUpdate = new ArrayList<>();
         for (int i = 0; i < hierarchyMetadataList.size(); i++) {
-           // super.addHash(hierarchyMetadataList.get(i));
+            super.addHash(hierarchyMetadataList.get(i));
             if (savedList.get(hierarchyMetadataList.get(i).getHierarchy()) == null) {
                 hierarchyMetadataList.get(i).setVersion(0);
                 hierarchyMetadataList.get(i).setId(UUID.randomUUID().toString());
@@ -49,6 +50,7 @@ public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetada
                 if (!Objects.equals(hierarchyMetadataList.get(i).getHash(), savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getHash())) {
                     hierarchyMetadataList.get(i).setId(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getId());
                     hierarchyMetadataList.get(i).setVersion(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getVersion());
+                    hierarchyMetadataList.get(i).setChanges(CdmDiffUtil.getChanges(hierarchyMetadataList.get(i),HierarchyMetadata.of(savedList.get(hierarchyMetadataList.get(i).getHierarchy()))));
                     itemsToUpdate.add(hierarchyMetadataList.get(i));
                 }
             }

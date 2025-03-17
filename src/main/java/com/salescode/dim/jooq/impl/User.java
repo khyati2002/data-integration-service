@@ -19,12 +19,16 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
 
     private static final long serialVersionUID = 6364280713919356300L;
 
-    private List<AuthRole> roles;
+    private transient List<AuthRole> roles;
     private List<SupplierMetadata> supplierMetaData;
     private List<HierarchyMetadata> immediateParent;
     private Set<String> designation;
     @Getter(value = AccessLevel.NONE)
     private Location locationHierarchy;
+
+    public User(){
+        super();
+    }
 
     private User(com.salescode.dim.jooq.generated.tables.pojos.User user) {
         super(user);

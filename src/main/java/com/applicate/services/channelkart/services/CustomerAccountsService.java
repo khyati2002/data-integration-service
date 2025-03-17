@@ -21,6 +21,7 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccount>
                 .on(CK_CUSTOMER_ACCOUNT.USERNAME.eq(CK_USER.LOGINID))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
         return User.of(user);
+
     }
 
     public String getAdminHierarchy(String inUser) {

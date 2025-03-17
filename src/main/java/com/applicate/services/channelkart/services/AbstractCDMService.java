@@ -5,6 +5,7 @@ import com.salescode.dim.jooq.impl.OutletDetails;
 import lombok.Getter;
 import lombok.Setter;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -12,16 +13,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractCDMService<T extends CommonDataModel> implements CommonDataModelService<T>, DatabaseAwareService {
+public abstract class AbstractCDMService<T extends CommonDataModel> implements CommonDataModelService<T> {
 
     @Getter
     private Class<T> persistentClass;
 
     @Getter
     @Setter
-    private DSLContext dslContext;
+    private static DSLContext dslContext;
 
     public AbstractCDMService() {
+
         if (getClass().getGenericSuperclass() instanceof ParameterizedType) {
             Type genericSuperclass = getClass().getGenericSuperclass();
             ParameterizedType paramType = (ParameterizedType) genericSuperclass;
@@ -42,7 +44,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
 
     @Override
     public T save(T cdmObject) {
-        return cdmObject;
+        return batchSave(List.of(cdmObject)).stream().findFirst().get();
     }
 
 }

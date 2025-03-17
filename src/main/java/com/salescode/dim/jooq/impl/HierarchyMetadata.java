@@ -17,7 +17,11 @@ public class HierarchyMetadata extends com.salescode.dim.jooq.generated.tables.p
         setParent(parent);
     }
 
-    private HierarchyMetadata(com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata hierarchyMetadata) {
+    public HierarchyMetadata(){
+        super();
+    }
+
+    public HierarchyMetadata(com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata hierarchyMetadata) {
         super(hierarchyMetadata);
     }
 

@@ -1,10 +1,12 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.repository.LocationRepository;
+import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.JSONUtils;
 import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import com.salescode.dim.jooq.generated.tables.records.CkLocationRecord;
 import com.salescode.dim.jooq.impl.Location;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ArrayNode;
@@ -28,12 +30,8 @@ public class LocationService extends AbstractCDMService<Location> {
     private static MetaDataService metadataService;
     private static LocationRepository locationRepository;
     public LocationService(){
-        if(metadataService == null){
             metadataService = new MetaDataService();
-        }
-        if(locationRepository == null){
             locationRepository = new LocationRepository(getDslContext());
-        }
     }
     public String[] getLocationColumns() {
 
@@ -220,12 +218,13 @@ public class LocationService extends AbstractCDMService<Location> {
 
     public Location save(Location loc,com.salescode.dim.jooq.generated.tables.pojos.Location  savedLoc){
         super.addHash(loc);
-        if(loc.getHash() == savedLoc.getHash()){
+        if(Objects.equals(loc.getHash(), savedLoc.getHash())){
             return loc;
         }
         if(savedLoc != null) {
             loc.setId(savedLoc.getId());
             loc.setVersion(savedLoc.getVersion() + 1);
+            loc.setChanges(CdmDiffUtil.getChanges(loc,Location.of(savedLoc)));
         }
         else{
             loc.setId(UUID.randomUUID().toString());

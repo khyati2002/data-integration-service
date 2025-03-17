@@ -26,6 +26,10 @@ public class OutletDetails extends com.salescode.dim.jooq.generated.tables.pojos
     private User userName;
     private Location location;
 
+    public OutletDetails(){
+     super();
+    }
+
     public OutletDetails(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails outletDetails) {
         super(outletDetails);
     }

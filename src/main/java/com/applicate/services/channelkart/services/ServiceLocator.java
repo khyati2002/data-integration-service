@@ -20,6 +20,7 @@ public class ServiceLocator {
     }
 
     public static ServiceLocator getInstance(DSLContext dslContext) {
+        AbstractCDMService.setDslContext(dslContext);
         if (instance == null) {
             synchronized (ServiceLocator.class) {
                 if (instance == null) {

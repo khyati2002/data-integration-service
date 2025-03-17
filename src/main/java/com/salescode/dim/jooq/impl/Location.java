@@ -11,4 +11,16 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Location extends com.salescode.dim.jooq.generated.tables.pojos.Location implements Serializable {
 
+    public Location(){
+        super();
+    }
+
+    public Location(com.salescode.dim.jooq.generated.tables.pojos.Location location) {
+        super(location);
+    }
+
+    public static Location of(com.salescode.dim.jooq.generated.tables.pojos.Location location) {
+        return new Location(location);
+    }
+
 }

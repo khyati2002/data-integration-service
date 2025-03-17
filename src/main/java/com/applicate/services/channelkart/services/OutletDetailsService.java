@@ -1,7 +1,10 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
+import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.JSONUtils;
+import com.esotericsoftware.minlog.Log;
+import com.salescode.dim.DataStreamJob;
 import com.salescode.dim.PreProcessOperationResult;
 import com.salescode.dim.PreProcessPipelineService;
 import com.salescode.dim.cache.Cacheable;
@@ -25,7 +28,10 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessin
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.util.RawValue;
 import org.checkerframework.checker.units.qual.C;
+import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,7 +40,7 @@ import static com.salescode.dim.jooq.generated.Tables.*;
 import static com.salescode.dim.jooq.generated.Tables.CK_OUTLET_DETAILS_HIERARCHYMETADATA;
 
 public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
-
+    private static final Logger LOG = LoggerFactory.getLogger(OutletDetailsService.class);
     private final UserService userService;
     private final LocationService locationService;
     private final HierarchyMetadataService hierarchyMetadataService;
@@ -48,8 +54,13 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private final ValidationExcludeGroupRegistry validationExcludeGroupRegistry;
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
     private final ETLRegistry etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
-
+    private final DSLContext dslContext;
     public OutletDetailsService(){
+
+        dslContext = getDslContext();
+        if(dslContext == null){
+            LOG.info("DSL Context is null");
+        }
         userService = new UserService();
         locationService = new LocationService();
         validationInfoRegistry = new ValidationInfoRegistry(getDslContext());
@@ -70,7 +81,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                         .except(CK_OUTLET_DETAILS.COORDINATE))
                 .from(CK_OUTLET_DETAILS).where(CK_OUTLET_DETAILS.OUTLETCODE.eq(outletcode))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class);
-        return OutletDetails.of(outletDetails);
+       return OutletDetails.of(outletDetails);
+      //  return new OutletDetails();
     }
 
     private List<User> preProcessUser(List<User> userList){
@@ -285,22 +297,26 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 outlet.setMapped(true);
                 itemsToInsert.add(outlet);
             } else {
-                com.salescode.dim.jooq.generated.tables.pojos.OutletDetails existingOutlet = savedList.get(outlet.getOutletcode());
+                OutletDetails existingOutlet = OutletDetails.of(savedList.get(outlet.getOutletcode()));
                 outlet.setId(existingOutlet.getId());
                 outlet.setVersion(existingOutlet.getVersion() + 1);
                 outlet.setMapped(true);
 
                 if (!Objects.equals(outlet.getHash(), existingOutlet.getHash())) {
+                    outlet.setChanges(CdmDiffUtil.getChanges(outlet,existingOutlet));
                     itemsToUpdate.add(outlet);
                 }
             }
         }
-        result.set(0,itemsToInsert);
-        result.set(1,itemsToUpdate);
+        result.add(itemsToInsert);
+        result.add(itemsToUpdate);
         return result;
     }
 
-    public Collection<OutletDetails> batchSave(List<OutletDetails> outletDetails){
+    @Override
+    public Collection<OutletDetails> batchSave(Collection<OutletDetails> outletDetailsList){
+        List<OutletDetails> outletDetails = new ArrayList<>(outletDetailsList);
+        LOG.info("Pre Batch Save Called with size " + outletDetails.size());
         List<User> savedUserList = preBatchSave(outletDetails);
         List<List<OutletDetails>> saveItemsList = getItemsToSaveList(outletDetails);
         if (!saveItemsList.get(0).isEmpty()) {

@@ -43,9 +43,6 @@ public class CdmDiffUtil {
      */
     @SuppressWarnings("java:S3011")
     public static <T extends CommonDataModel> Set<Change<Serializable>> getChanges(T current, T previous) {
-        if (NullUtils.hasNullValues(current, previous)) {
-            throw new NullPointerException("current or previous objects should not be null");
-        }
         if (!current.getClass().equals(previous.getClass())) {
             throw new IllegalArgumentException("both current & previous have different class types!");
         }
@@ -57,21 +54,28 @@ public class CdmDiffUtil {
                 field.setAccessible(true);
                 Serializable currentField = (Serializable) field.get(current);
                 Serializable previousField = (Serializable) field.get(previous);
-                if (isValidType(field.getType()) || isValidPrimitiveParameter(field) ) {
+
+                        if (currentField instanceof CommonDataModel) {
+                            continue; // Skip if currentField is an instance of CommonDataModel
+                        }
+
+                        if (currentField instanceof List<?>) {
+                            List<?> list = (List<?>) currentField; // Manually cast
+
+                            if (!list.isEmpty() && list.get(0) instanceof CommonDataModel) {
+                                continue; // Skip if the list contains instances of CommonDataModel
+                            }
+                        }
                     Change<Serializable> change = new Change<>(field.getName(), currentField, previousField);
                     if (!change.getChangeType().equals(ChangeType.NOCHANGE)) {
                         changes.add(change);
                     }
-                } else {
-                    log.debug("Found invalid type:{} while diffing the object:{}", field.getType(), current);
-                }
+
             } catch (IllegalAccessException e) {
                 log.error("Retrieving field for class type {}, throw error {}", current.getClass().getSimpleName(), ExceptionUtils.getRootCauseMessage(e));
             }
         }
         return changes;
-
-
     }
 
     /**

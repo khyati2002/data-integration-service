@@ -2,6 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.RoleName;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
+import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
 import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
@@ -43,7 +44,8 @@ public class UserService extends AbstractCDMService<User> {
         com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
-        return User.of(user);
+       return User.of(user);
+      //  return new User();
     }
 
     private void populateBatchLocation(List<User> userList) {
@@ -186,15 +188,17 @@ public class UserService extends AbstractCDMService<User> {
         List<User> itemsToUpdate = new ArrayList<>();
 
         for (User user : userList) {
-            //  super.addHash(user);
+            super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
                 user.setVersion(0);
                 user.setId(UUID.randomUUID().toString());
                 itemsToInsert.add(user);
             } else {
                 if (!Objects.equals(user.getHash(), savedList.get(user.getLoginid()).getHash())) {
+                    User savedUser = User.of(savedList.get(user.getLoginid()));
                     user.setId(savedList.get(user.getLoginid()).getId());
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
+                    user.setChanges(CdmDiffUtil.getChanges(user,savedUser));
                     itemsToUpdate.add(user);
                 } else {
                     user.setId(savedList.get(user.getLoginid()).getId());
@@ -202,8 +206,8 @@ public class UserService extends AbstractCDMService<User> {
                 }
             }
         }
-        result.set(0,itemsToInsert);
-        result.set(1,itemsToUpdate);
+        result.add(itemsToInsert);
+        result.add(itemsToUpdate);
         return result;
     }
 
