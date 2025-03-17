@@ -6,9 +6,11 @@
 package com.applicate.services.channelkart.repository;
 
 
+import com.applicate.services.channelkart.converters.DateToClientTimeZoneStringConverter;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.services.*;
 import com.applicate.services.channelkart.utils.NullUtils;
+import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.salescode.dim.etl.EnrichmentResult;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.AbstractEnrichment;
@@ -25,6 +27,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.Obje
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,9 +59,9 @@ public class UserEnrichment extends AbstractEnrichment<User> {
 			String lob= setLob(cdm);
 			
 			CustomerAccountsService customerService = (CustomerAccountsService) ServiceLocator.lookup(CustomerAccount.class);
-//			CustomerAccountInfo customerAccount = customerService.getCustomerAccountInfo(lob);
+			CustomerAccount customerAccount = customerService.getCustomerAccountInfo();
 
-//			setLocationHierarchy(cdm, customerAccount);
+			setLocationHierarchy(cdm, customerAccount);
 			
 			setSupplierMetadata(cdm);
 			
@@ -143,8 +146,8 @@ public class UserEnrichment extends AbstractEnrichment<User> {
 		if(cdm.getActiveStatus().equals(ActiveStatus.INACTIVE)) {
 			if(StringUtils.isBlank(cdm.getActiveStatusReason()) || 
 					!cdm.getActiveStatusReason().startsWith("Deactivated")) {
-				cdm.setActiveStatusReason("Deactivated by "); //+SecurityContextUtils.getPrincipal()+
-		//				" on "+ new DateToClientTimeZoneStringConverter().convert(new Date()));
+				cdm.setActiveStatusReason("Deactivated by " + SecurityContextUtils.getPrincipal()+
+					" on "+ new DateToClientTimeZoneStringConverter().convert(new Date()));
 			}
 		}else{
 			if(StringUtils.isBlank(cdm.getActiveStatusReason()) || 
@@ -173,19 +176,19 @@ public class UserEnrichment extends AbstractEnrichment<User> {
 		if(CollectionUtils.isEmpty(user.getRoles()) && CollectionUtils.isNotEmpty(user.getDesignation())) {
 			DivisionService divisionService= (DivisionService) ServiceLocator.lookup(Division.class);
 			List<AuthRole> resultRoles= new ArrayList<>();
-//			user.getDesignation().forEach(divisonName->{
-//				List<Division> divisions= divisionService.findByDivisionName(divisonName);
-//				if(CollectionUtils.isNotEmpty(divisions)) {
-//					divisions.forEach(division->{
-//						List<AuthRole> permissionRoles= division.getPermissionGroups();
-//						permissionRoles.forEach(role->{
-//							if(!resultRoles.contains(role)) {
-//								resultRoles.add(role);
-//							}
-//						});
-//					});
-//				}
-//			});
+			user.getDesignation().forEach(divisonName->{
+				List<Division> divisions= divisionService.findByDivisionName(divisonName);
+				if(CollectionUtils.isNotEmpty(divisions)) {
+					divisions.forEach(division->{
+						List<AuthRole> permissionRoles= divisionService.findRolesByDivisionId(division.getId());
+						permissionRoles.forEach(role->{
+							if(!resultRoles.contains(role)) {
+								resultRoles.add(role);
+							}
+						});
+					});
+				}
+			});
 			if(CollectionUtils.isNotEmpty(resultRoles)) {
 				user.setRoles(resultRoles);
 			}
