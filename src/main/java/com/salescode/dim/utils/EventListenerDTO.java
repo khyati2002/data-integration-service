@@ -15,5 +15,5 @@ public class EventListenerDTO {
     private String entityName;
     private Set<Change<Serializable>> changes;
     private ActionType actionType;
-    
+
 }

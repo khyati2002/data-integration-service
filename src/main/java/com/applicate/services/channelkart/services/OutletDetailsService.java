@@ -55,13 +55,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private final ValidationExcludeGroupRegistry validationExcludeGroupRegistry;
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
     private final ETLRegistry etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
-    private final DSLContext dslContext;
-    public OutletDetailsService(){
 
-        dslContext = getDslContext();
-        if(dslContext == null){
-            LOG.info("DSL Context is null");
-        }
+    public OutletDetailsService(){
         userService = new UserService();
         locationService = new LocationService();
         validationInfoRegistry = new ValidationInfoRegistry(getDslContext());
@@ -83,7 +78,6 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 .from(CK_OUTLET_DETAILS).where(CK_OUTLET_DETAILS.OUTLETCODE.eq(outletcode))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class);
        return OutletDetails.of(outletDetails);
-      //  return new OutletDetails();
     }
 
     private List<User> preProcessUser(List<User> userList){

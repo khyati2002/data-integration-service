@@ -89,8 +89,11 @@ public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRaw
 
                     // Collect DTO for each model separately
                     for (CommonDataModel model : models) {
-                            EventListenerDTO dto = new EventListenerDTO(rawData.getRequestId(), entry.getKey().getSimpleName(), model.getChanges(),model.getOperationPerformed());
-                            out.collect(dto);
+                           if(model.getOperationPerformed() != null) {
+                               EventListenerDTO dto = new EventListenerDTO(rawData.getRequestId(), entry.getKey()
+                                       .getSimpleName(), model.getChanges(), model.getOperationPerformed());
+                               out.collect(dto);
+                           }
 
                     }
                 } catch (Exception batchEx) {
@@ -100,9 +103,11 @@ public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRaw
                             saveIntegrationHistory(model, "SUCCESS", "Individual save successful after batch failure");
 
                             // Collect DTO for individual save
-
-                                EventListenerDTO dto = new EventListenerDTO(rawData.getRequestId(), entry.getKey().getSimpleName(), model.getChanges(),model.getOperationPerformed());
+                            if(model.getOperationPerformed() != null) {
+                                EventListenerDTO dto = new EventListenerDTO(rawData.getRequestId(), entry.getKey()
+                                        .getSimpleName(), model.getChanges(), model.getOperationPerformed());
                                 out.collect(dto);
+                            }
 
                         } catch (Exception individualEx) {
                             saveIntegrationHistory(model, "FAILURE", "Both batch and individual save failed: " + individualEx.getMessage());

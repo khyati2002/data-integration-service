@@ -1,6 +1,7 @@
 package com.applicate.services.channelkart.models;
 
 import com.applicate.services.channelkart.models.diff.Change;
+import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -31,6 +32,7 @@ public abstract class CommonDataModel implements Serializable {
 
     private boolean changed = true;
 
+    private ActionType operationPerformed;
 
     transient private boolean isCreate;
 
