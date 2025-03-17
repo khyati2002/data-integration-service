@@ -1,5 +1,6 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.JSONUtils;
@@ -296,14 +297,19 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 outlet.setId(UUID.randomUUID().toString());
                 outlet.setMapped(true);
                 itemsToInsert.add(outlet);
+                outlet.setOperationPerformed(ActionType.INSERT);
             } else {
                 OutletDetails existingOutlet = OutletDetails.of(savedList.get(outlet.getOutletcode()));
                 outlet.setId(existingOutlet.getId());
                 outlet.setVersion(existingOutlet.getVersion() + 1);
                 outlet.setMapped(true);
 
+                String outlethash = outlet.getHash();
+                String existingHash = existingOutlet.getHash();
+
                 if (!Objects.equals(outlet.getHash(), existingOutlet.getHash())) {
                     outlet.setChanges(CdmDiffUtil.getChanges(outlet,existingOutlet));
+                    outlet.setOperationPerformed(ActionType.UPDATE);
                     itemsToUpdate.add(outlet);
                 }
             }

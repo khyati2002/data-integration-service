@@ -4,6 +4,7 @@ import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.services.CommonDataModelService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
+import com.salescode.dim.utils.EventListenerDTO;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
@@ -17,7 +18,7 @@ import java.util.*;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_INTEGRATION_HISTORY;
 
-public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>>, StreamingRawData> {
+public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>>, EventListenerDTO> {
 
     private static final long serialVersionUID = -8431294998171788516L;
     private final Properties properties;
@@ -76,36 +77,40 @@ public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRaw
     }
 
     @Override
-    public void processElement(List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> value, ProcessFunction<List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>>, StreamingRawData>.Context ctx, Collector<StreamingRawData> out) throws Exception {
-        Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> aggregatedModels = getClassSetMap(value);
+    public void processElement(List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> value, ProcessFunction<List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>>, EventListenerDTO>.Context ctx, Collector<EventListenerDTO> out) throws Exception {
+        for (Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>> tuple : value) {
+            StreamingRawData rawData = tuple.f0;
+            for (Map.Entry<Class<? extends CommonDataModel>, Set<CommonDataModel>> entry : tuple.f1.entrySet()) {
+                CommonDataModelService service = ServiceLocator.lookup(entry.getKey());
+                Set<CommonDataModel> models = entry.getValue();
+                try {
+                    service.batchSave(models);
+                    saveBatchIntegrationHistory(models, "SUCCESS", "Batch save successful");
 
-        for (Map.Entry<Class<? extends CommonDataModel>, Set<CommonDataModel>> entry : aggregatedModels.entrySet()) {
-            CommonDataModelService service = ServiceLocator.lookup(entry.getKey());
-            Set<CommonDataModel> models = entry.getValue();
+                    // Collect DTO for each model separately
+                    for (CommonDataModel model : models) {
+                            EventListenerDTO dto = new EventListenerDTO(rawData.getRequestId(), entry.getKey().getSimpleName(), model.getChanges(),model.getOperationPerformed());
+                            out.collect(dto);
 
-            try {
-                service.batchSave(models);
+                    }
+                } catch (Exception batchEx) {
+                    for (CommonDataModel model : models) {
+                        try {
+                            service.save(model);
+                            saveIntegrationHistory(model, "SUCCESS", "Individual save successful after batch failure");
 
-                saveBatchIntegrationHistory(models, "SUCCESS", "Batch save successful");
-            } catch (Exception batchEx) {
-              //  logger.warn("Batch save failed for " + modelClass.getSimpleName() + ", falling back to individual saves", batchEx);
+                            // Collect DTO for individual save
 
-                // Fallback to individual save for each model
-                for (CommonDataModel model : models) {
-                    try {
-                        service.save(model);
-                        saveIntegrationHistory(model, "SUCCESS", "Individual save successful after batch failure");
-                    } catch (Exception individualEx) {
-                     //   logger.error("Individual save failed for model: " + model.getClass().getSimpleName() + " with ID: " + model.getId(), individualEx);
-                        saveIntegrationHistory(model, "FAILURE", "Both batch and individual save failed: " + individualEx.getMessage());
+                                EventListenerDTO dto = new EventListenerDTO(rawData.getRequestId(), entry.getKey().getSimpleName(), model.getChanges(),model.getOperationPerformed());
+                                out.collect(dto);
+
+                        } catch (Exception individualEx) {
+                            saveIntegrationHistory(model, "FAILURE", "Both batch and individual save failed: " + individualEx.getMessage());
+                        }
                     }
                 }
             }
-
         }
-
-
-        value.forEach(tuple -> out.collect(tuple.f0));
     }
 
     private static Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> getClassSetMap(List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> value) {
@@ -119,4 +124,6 @@ public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRaw
         }
         return aggregatedModels;
     }
+
+
 }

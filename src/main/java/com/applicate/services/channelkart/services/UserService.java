@@ -187,6 +187,7 @@ public class UserService extends AbstractCDMService<User> {
         List<User> itemsToInsert = new ArrayList<>();
         List<User> itemsToUpdate = new ArrayList<>();
 
+
         for (User user : userList) {
             super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
@@ -194,6 +195,8 @@ public class UserService extends AbstractCDMService<User> {
                 user.setId(UUID.randomUUID().toString());
                 itemsToInsert.add(user);
             } else {
+                String new_hash = user.getHash();
+                String old_hash = savedList.get(user.getLoginid()).getHash();
                 if (!Objects.equals(user.getHash(), savedList.get(user.getLoginid()).getHash())) {
                     User savedUser = User.of(savedList.get(user.getLoginid()));
                     user.setId(savedList.get(user.getLoginid()).getId());
