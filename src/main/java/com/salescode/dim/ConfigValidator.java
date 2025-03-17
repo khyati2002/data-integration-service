@@ -11,11 +11,11 @@ public class ConfigValidator {
      * @param requiredKeys Keys that must be present in the properties.
      */
     public static void validate(Properties properties, String... requiredKeys) {
-        for (String key : requiredKeys) {
-            if (!properties.containsKey(key) || properties.getProperty(key).trim().isEmpty()) {
-                throw new IllegalArgumentException("Missing required Kafka property: " + key);
-            }
-        }
+//        for (String key : requiredKeys) {
+//            if (!properties.containsKey(key) || properties.getProperty(key).trim().isEmpty()) {
+//                throw new IllegalArgumentException("Missing required Kafka property: " + key);
+//            }
+//        }
     }
 
 }

@@ -19,7 +19,9 @@
 package com.salescode.dim;
 
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
+import org.apache.flink.connector.kafka.sink.TopicSelector;
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.formats.json.JsonDeserializationSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -29,7 +31,9 @@ import org.apache.flink.util.OutputTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import static com.salescode.dim.PropertyLoader.mergeProperties;
@@ -52,6 +56,9 @@ public class DataStreamJob {
     public static final OutputTag<StreamingRawData> FAILED_TRANSFORMATIONS = new OutputTag<>("failed-transformations") {
     };
 
+    public static final SerializationSchema<StreamingRawData> recordKeySerializationSchema = (StreamingRawData element) -> element.getRequestId()
+                                                                                                                                  .getBytes();
+
     private static final Logger LOG = LoggerFactory.getLogger(DataStreamJob.class);
 
     public static void main(String[] args) throws Exception {
@@ -59,27 +66,72 @@ public class DataStreamJob {
         // to building Flink applications.
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-//		env.enableCheckpointing(1000);
-
         // Load the application properties
         final Map<String, Properties> applicationProperties = PropertyLoader.loadApplicationProperties(env);
-
         LOG.info("Application properties: {}", applicationProperties);
 
         Properties commonProperties = applicationProperties.getOrDefault("Common", new Properties());
 
-        // Prepare the Source and Sink properties
-        Properties inputProperties = mergeProperties(applicationProperties.get("Input0"), commonProperties);
-        Properties outputProperties = mergeProperties(applicationProperties.get("Output0"), commonProperties);
+        // Read from kafka and bifurcate topic on basis of entities and sink to respective topics
+        Properties inout0Properties = mergeProperties(applicationProperties.get("InOut0"), commonProperties);
+        String inputTopic = inout0Properties.getProperty("input.topic");
+        String outTopicPrefix = inout0Properties.getProperty("output.topic.prefix");
+        String failureTopic = inout0Properties.getProperty("failure.topic");
+        String outTopic = inout0Properties.getProperty("output.topic");
+        String bootstrapServers = inout0Properties.getProperty("bootstrap.servers");
 
-        KafkaSource<StreamingRawData> source = FlinkJobSource.createKafkaSource(inputProperties, new JsonDeserializationSchema<>(StreamingRawData.class));
+        KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), inputTopic);
 
+        TopicSelector<StreamingRawData> topicSelector = (StreamingRawData record) -> {
+            String topicName = Optional.ofNullable(record.getTransformerInfo())
+                                       .filter(s -> !s.isEmpty())
+                                       .map(t -> t.get(0).getEntityName())
+                                       .filter(s -> !s.isEmpty())
+                                       .map(entityName -> getEntityTopic(outTopicPrefix, entityName))
+                                       .orElseGet(() -> {
+                                           record.setResponses(List.of(new StreamingRawData.Response("Failure", "Could not find entity name in transformerInfo")));
+                                           return failureTopic;
+                                       });
+            KafkaTopicCreator.createTopicIfNotExists(topicName, bootstrapServers, 5, (short) 1);
+            return topicName;
+        };
+
+        KafkaSink<StreamingRawData> kafkaSink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, topicSelector);
+
+        env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source")
+           .sinkTo(kafkaSink);
+
+
+        // for each entity, read from respective topic and process
+        String entities = commonProperties.getProperty("entities");
+        String[] entityNames = entities.split(",");
+
+        for (String entityName : entityNames) {
+            String entityTopic = getEntityTopic(outTopicPrefix, entityName);
+            KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), entityTopic);
+            DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Kafka source -> " + entityName);
+            var processedStream = input
+                    .flatMap(new StreamingRawDataFlatMapper())
+                    .process(new StreamingRawDataProcessor(commonProperties));
+            // add map function to get old record , create and check hash, sink to separate sink to ignore or process further ??
+            //        processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
+            //                .keyBy(t -> t.f0.getTransformerInfo().get(0).getEntityName())
+            processedStream
+                    .windowAll(GlobalWindows.create())
+                    .trigger(CountOrTimeTrigger.of(100, 5000))
+                    .aggregate(new ListAggregator<>())
+                    .process(new BatchSaveProcessor(commonProperties));
+
+            DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
+//            // Create and add the Sink
+            KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> outTopic);
+//            input.sinkTo(sink);
+            failedRecords.sinkTo(sink).name("Failed Kafka Sink");
+        }
         /* /Note
          * 	Out of order ??
          * 	Key by (entity unique column) for avoiding optimistic errors , but costly process
          * */
-
-        DataStream<StreamingRawData> input = env.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka source");
 
         /* /Note
          * 	Window by size or time for batching
@@ -92,26 +144,6 @@ public class DataStreamJob {
 //                .name("Aggregate Window Count")
 //                .process(new StreamingRawDataProcessor(commonProperties))
 //                .name("Process Window Count");
-
-        // Process data stream
-        var processedStream = input
-                .flatMap(new StreamingRawDataFlatMapper())
-                .process(new StreamingRawDataProcessor(commonProperties));
-        // add map function to get old record , create and check hash, sink to separate sink to ignore or process further ??
-
-//        processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
-
-        processedStream
-//                .keyBy(t -> t.f0.getTransformerInfo().get(0).getEntityName())
-                .windowAll(GlobalWindows.create())
-                .trigger(CountOrTimeTrigger.of(100, 5000))
-                .aggregate(new ListAggregator<>())
-                .process(new BatchSaveProcessor(commonProperties));
-
-        DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
-        // Create and add the Sink
-        KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(outputProperties);
-        failedRecords.sinkTo(sink).name("Failed Kafka Sink");
 
         /*
          * Here, you can start creating your execution plan for Flink.
@@ -135,6 +167,13 @@ public class DataStreamJob {
 
         // Execute program, beginning computation.
         env.execute("Flink Java API Skeleton");
+        if (PropertyLoader.isLocal(env)) {
+            env.disableOperatorChaining();
+        }
+    }
+
+    private static String getEntityTopic(String topicPrefix, String entityName) {
+        return String.join("-", topicPrefix, entityName);
     }
 
 }
