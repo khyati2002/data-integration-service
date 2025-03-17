@@ -13,7 +13,7 @@ public class EventListenerDTO {
 
     private String requestId;
     private String entityName;
+    private String lob;
     private Set<Change<Serializable>> changes;
     private ActionType actionType;
-
 }

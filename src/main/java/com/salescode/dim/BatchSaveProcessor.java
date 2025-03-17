@@ -91,7 +91,7 @@ public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRaw
                     for (CommonDataModel model : models) {
                            if(model.getOperationPerformed() != null) {
                                EventListenerDTO dto = new EventListenerDTO(rawData.getRequestId(), entry.getKey()
-                                       .getSimpleName(), model.getChanges(), model.getOperationPerformed());
+                                       .getSimpleName(),rawData.getLob(),model.getChanges(), model.getOperationPerformed());
                                out.collect(dto);
                            }
 
@@ -105,7 +105,7 @@ public class BatchSaveProcessor extends ProcessFunction<List<Tuple2<StreamingRaw
                             // Collect DTO for individual save
                             if(model.getOperationPerformed() != null) {
                                 EventListenerDTO dto = new EventListenerDTO(rawData.getRequestId(), entry.getKey()
-                                        .getSimpleName(), model.getChanges(), model.getOperationPerformed());
+                                        .getSimpleName(),rawData.getLob(), model.getChanges(), model.getOperationPerformed());
                                 out.collect(dto);
                             }
 
