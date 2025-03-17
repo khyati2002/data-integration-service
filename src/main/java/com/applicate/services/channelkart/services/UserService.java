@@ -69,7 +69,7 @@ public class UserService extends AbstractCDMService<User> {
         dataValidationService = new DataValidationService(validationInfoRegistry,validationExcludeGroupRegistry,etlRegistry);
         dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry,etlRegistry);
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
-
+        userParentService = new UserParentService(dsl);
     }
 
     private Set<String> populateUserParentHierarchy(User user) {
@@ -201,7 +201,7 @@ public class UserService extends AbstractCDMService<User> {
 
     private void populateUserDetails(User user) {
         if (user.getVerified() == null) {
-            user.setVerified(false);
+            user.setVerified(Byte.parseByte("0"));
         }
 
         if (user.getPassword() == null) {

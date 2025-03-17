@@ -120,7 +120,6 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
 //                dispatchData(dataset, transformerInfos, errorList);
 //            }
 
-
         } catch (Exception e) {
             streamingRawData.setStatus("Failure");
             ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
@@ -136,13 +135,14 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
             List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures().get(0));
             for (CommonDataModel cdm : transformedData) {
                 LOG.info("Pre Process Pipeline Called");
-                PreProcessOperationResult preProcessOperationResult = preProcessPipelineService.preProcessPipeline(cdm, transformerInfo.getPreprocessValidationExcludeGroup());
 
-                if (preProcessOperationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
-                    preProcessPipelineService.evaluateFailures(preProcessOperationResult, errorList);
-                } else {
+//                PreProcessOperationResult preProcessOperationResult = preProcessPipelineService.preProcessPipeline(cdm, transformerInfo.getPreprocessValidationExcludeGroup());
+//
+//                if (preProcessOperationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
+//                    preProcessPipelineService.evaluateFailures(preProcessOperationResult, errorList);
+//                } else {
                     dataset.computeIfAbsent(entityClass, k -> new ArrayList<>()).addAll(transformedData);
-                }
+//                }
             }
         } catch (DataTransformationService.TransformationException e) {
             errorList.add(TRANSFORMATION_ERROR + e.getMessage());

@@ -3,7 +3,6 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.cache.EntityCacheManager;
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.utils.EntityUtils;
-import com.applicate.services.channelkart.validations.repository.OutletDetailsValidator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

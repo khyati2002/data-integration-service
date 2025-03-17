@@ -10,7 +10,7 @@ public class UserDuplicateMobileNumberEnrichmentITCL extends AbstractEnrichment<
 	@Override
 	public OperationResult.StepResult apply(User cdm) {
 		if (cdm!=null && cdm.getDesignation().contains("retailer") && (cdm.getMobile() == null || cdm.getMobile().isEmpty())) {
-			cdm.setVerified(false);
+			cdm.setVerified(Byte.parseByte("0"));
 		}
 		return new OperationResult.StepResult(OperationResult.Status.OK, "Data enriched successfully");
 	}

@@ -27,7 +27,7 @@ public class FlinkJobSink {
                         .setBootstrapServers(outputProperties.getProperty("bootstrap.servers"))
                         .setKafkaProducerConfig(outputProperties)
                         .setRecordSerializer(recordSerializationSchema)
-                        .setDeliveryGuarantee(DeliveryGuarantee.EXACTLY_ONCE)
+//                        .setDeliveryGuarantee(DeliveryGuarantee.EXACTLY_ONCE)
                         .build();
     }
 }

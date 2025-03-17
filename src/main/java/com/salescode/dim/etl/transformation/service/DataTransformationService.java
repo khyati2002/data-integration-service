@@ -143,7 +143,7 @@ public class DataTransformationService implements Serializable {
      * @return the transformed data
      * @throws IllegalArgumentException if transformer not found
      */
-    private Object applyTransformer(String transformerId, Map<String, Object> input) {
+    private Object applyTransformer(String transformerId, Map<String, Object> input) throws Exception {
         TransformerInfo transformerInfo = Optional.ofNullable(transformerInfoRegistry.getTransformerInfoById(transformerId))
                                                   .orElseThrow(() -> new IllegalArgumentException("Transformer not found with ID: " + transformerId));
 

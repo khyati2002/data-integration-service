@@ -18,25 +18,11 @@
 
 package com.salescode.dim;
 
-import com.applicate.services.channelkart.models.CommonDataModel;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CollectionSerializer;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.esotericsoftware.kryo.serializers.FieldSerializer;
-import com.salescode.dim.jooq.impl.OutletDetails;
-import com.salescode.dim.jooq.impl.User;
-import com.salescode.dim.utils.CustomKryoSerializer;
-import com.salescode.dim.utils.ImmutableListSerializer;
+
 import com.salescode.dim.utils.KryoConfig;
-import org.apache.flink.api.common.ExecutionConfig;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.api.java.typeutils.GenericTypeInfo;
-import org.apache.flink.api.java.typeutils.runtime.kryo.JavaSerializer;
-import org.apache.flink.api.java.typeutils.runtime.kryo.KryoSerializer;
+
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.formats.json.JsonDeserializationSchema;
@@ -134,6 +120,9 @@ public class DataStreamJob {
                 .name("Batch Save Processor");
 
         //               .process(new InsertUpdateIgnoreProcessFunction(commonProperties));
+//                .flatMap(new StreamingRawDataFlatMapper())
+//                .process(new StreamingRawDataProcessor(commonProperties));
+//                .process(new InsertUpdateIgnoreProcessFunction(commonProperties));
 
         processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
 
