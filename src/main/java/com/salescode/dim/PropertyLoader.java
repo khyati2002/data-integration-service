@@ -19,7 +19,7 @@ public class PropertyLoader {
     public static final String LOCAL_APPLICATION_PROPERTIES_RESOURCE = "flink-application-properties-dev.json";
     private static final Logger LOG = LoggerFactory.getLogger(PropertyLoader.class);
 
-    private static boolean isLocal(StreamExecutionEnvironment env) {
+    public static boolean isLocal(StreamExecutionEnvironment env) {
         return env == null || env instanceof LocalStreamEnvironment;
     }
 
