@@ -1,10 +1,15 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.RoleName;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.salescode.dim.cache.Cacheable;
+import com.salescode.dim.etl.OperationResult;
+import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
+import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
+import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
 import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
 import com.salescode.dim.jooq.generated.tables.pojos.UserRoles;
@@ -14,9 +19,12 @@ import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.User;
+import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.flink.shaded.zookeeper3.org.apache.zookeeper.Op;
 import org.jooq.impl.DSL;
+import scala.tools.ant.sabbus.Use;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,12 +41,18 @@ public class UserService extends AbstractCDMService<User> {
     private final HierarchyMetadataService hierarchyMetadataService;
     private final CustomerAccountsService customerAccountsService;
     private final RoleService roleService;
+    private final DataEnrichmentService dataEnrichmentService;
+    private final EnrichmentInfoRegistry enrichmentInfoRegistry;
+    private final ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
+    private final ETLRegistry etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
     public UserService(){
         locationService = new LocationService();
         userParentService = new UserParentService();
         hierarchyMetadataService = new HierarchyMetadataService();
         customerAccountsService = new CustomerAccountsService();
         roleService = new RoleService();
+        enrichmentInfoRegistry = new EnrichmentInfoRegistry(getDslContext());
+        dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry,etlRegistry);
     }
     @Cacheable
     public User findByLoginId(String loginid) {
@@ -172,6 +186,14 @@ public class UserService extends AbstractCDMService<User> {
         return userList;
     }
 
+    private void preSaveEnrichment(User user){
+        OperationResult or = dataEnrichmentService.enrich(user, EnrichmentPhase.PRE_SAVE);
+        if(!or.getStatus().equals(OperationResult.Status.OK)){
+            throw new RuntimeException("Pre save enrichment error");
+        }
+    }
+
+
     private List<List<User>> getItemsToSaveList(List<User> userList){
 
         List<List<User>> result = new ArrayList<>();
@@ -188,20 +210,19 @@ public class UserService extends AbstractCDMService<User> {
         List<User> itemsToInsert = new ArrayList<>();
         List<User> itemsToUpdate = new ArrayList<>();
 
-
         for (User user : userList) {
             fillAttributes(user,User.of(savedList.get(user.getLoginid())));
             super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
+                preSaveEnrichment(user);
                 user.setVersion(0);
                 user.setId(UUID.randomUUID().toString());
                 user.setOperationPerformed(ActionType.INSERT);
                 itemsToInsert.add(user);
 
             } else {
-                String new_hash = user.getHash();
-                String old_hash = savedList.get(user.getLoginid()).getHash();
                 if (!Objects.equals(user.getHash(), savedList.get(user.getLoginid()).getHash())) {
+                    preSaveEnrichment(user);
                     User savedUser = User.of(savedList.get(user.getLoginid()));
                     user.setId(savedList.get(user.getLoginid()).getId());
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
