@@ -111,8 +111,7 @@ public class UserEnrichment extends AbstractEnrichment<User> {
 	private String setLob(User cdm) {
 		String lob = cdm.getLob();
 		if(lob==null){
-		//	lob = SecurityContextUtils.getLob();
-			lob = "ckunnatiuat";
+		   lob = SecurityContextUtils.getLob();
 		}
 		return lob;
 	}

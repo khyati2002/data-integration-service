@@ -6,7 +6,7 @@ public class SecurityContextUtils {
 
     private static SecurityContextUtils instance;
 
-    private Properties properties;
+    private static Properties properties;
 
     public SecurityContextUtils(Properties properties) {
         this.properties = properties;
@@ -27,11 +27,12 @@ public class SecurityContextUtils {
         return instance;
     }
 
+
     public static String getPrincipal() {
         return "integration_user";
     }
 
-    public String getLob() {
+    public static String getLob() {
         return properties.getProperty("lob");
     }
 

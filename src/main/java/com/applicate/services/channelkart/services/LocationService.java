@@ -1,5 +1,6 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.repository.LocationRepository;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.JSONUtils;
@@ -37,7 +38,7 @@ public class LocationService extends AbstractCDMService<Location> {
 
         Metadata metadata = metadataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE);
         if (metadata == null) {
-//				logger.warn("Location level config not found in metadata. Switching to default.");
+//	logger.warn("Location level config not found in metadata. Switching to default.");
             return locationColumns.split(",");
         } else {
             List<Map.Entry<String, JsonNode>> localdata = new ArrayList<>();
@@ -216,19 +217,21 @@ public class LocationService extends AbstractCDMService<Location> {
         return columnArr;
     }
 
-    public Location save(Location loc,com.salescode.dim.jooq.generated.tables.pojos.Location  savedLoc){
+    public Location save(Location loc,com.salescode.dim.jooq.generated.tables.pojos.Location savedLoc){
         super.addHash(loc);
         if(Objects.equals(loc.getHash(), savedLoc.getHash())){
             return loc;
         }
-        if(savedLoc != null) {
+        if(savedLoc.getHash() != null) {
             loc.setId(savedLoc.getId());
             loc.setVersion(savedLoc.getVersion() + 1);
             loc.setChanges(CdmDiffUtil.getChanges(loc,Location.of(savedLoc)));
+            loc.setOperationPerformed(ActionType.UPDATE);
         }
         else{
             loc.setId(UUID.randomUUID().toString());
             loc.setVersion(0);
+            loc.setOperationPerformed(ActionType.INSERT);
         }
         CkLocationRecord record = getDslContext().newRecord(CK_LOCATION,loc);
         getDslContext().insertInto(CK_LOCATION)

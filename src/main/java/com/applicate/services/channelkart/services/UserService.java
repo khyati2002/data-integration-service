@@ -1,5 +1,6 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.RoleName;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
@@ -189,11 +190,14 @@ public class UserService extends AbstractCDMService<User> {
 
 
         for (User user : userList) {
+            fillAttributes(user,User.of(savedList.get(user.getLoginid())));
             super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
                 user.setVersion(0);
                 user.setId(UUID.randomUUID().toString());
+                user.setOperationPerformed(ActionType.INSERT);
                 itemsToInsert.add(user);
+
             } else {
                 String new_hash = user.getHash();
                 String old_hash = savedList.get(user.getLoginid()).getHash();
@@ -202,6 +206,7 @@ public class UserService extends AbstractCDMService<User> {
                     user.setId(savedList.get(user.getLoginid()).getId());
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
                     user.setChanges(CdmDiffUtil.getChanges(user,savedUser));
+                    user.setOperationPerformed(ActionType.UPDATE);
                     itemsToUpdate.add(user);
                 } else {
                     user.setId(savedList.get(user.getLoginid()).getId());

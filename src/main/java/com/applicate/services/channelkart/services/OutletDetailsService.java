@@ -25,7 +25,9 @@ import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.util.RawValue;
 import org.checkerframework.checker.units.qual.C;
@@ -34,6 +36,7 @@ import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,7 +71,6 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         hierarchyMetadataService = new HierarchyMetadataService();
         customerAccountsService = new CustomerAccountsService();
         supplierInfoService = new SupplierInfoService(getDslContext());
-
     }
 
     @Cacheable
@@ -169,7 +171,6 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     }
 
     public void setOutletSupplier(OutletDetails outletDetails)  {
-        if ((outletDetails.getImmediateParent())!=null && !outletDetails.getImmediateParent().isEmpty() && outletDetails.getImmediateParent().stream().noneMatch(hierarchyMetaData -> (hierarchyMetaData.getHierarchy()) != null)) {
             List<String> supplierList = supplierInfoService.findSuppliers(outletDetails);
             ObjectNode extendedAttributes = (ObjectNode) outletDetails.getExtendedAttributes();
             if (extendedAttributes == null) {
@@ -181,7 +182,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 throw new RuntimeException(e);
             }
             outletDetails.setExtendedAttributes(extendedAttributes);
-        }
+
     }
 
     private List<OutletDetailsHierarchymetadata> setOutletHierarchyMetadata(List<OutletDetails> outletDetailsMap) {
@@ -241,6 +242,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         List<Location> savedLocList = populateLocation(outletDetailsList);
 
         for (int i = 0; i < outletDetailsList.size(); i++) {
+            outletDetailsList.get(i).setLoginid(outletDetailsList.get(i).getOutletcode());
             outletDetailsList.get(i).setUserName(savedUserList.get(i));
             populateUserOutletHierarchy(savedUserList.get(i), outletDetailsList.get(i));
             outletDetailsList.get(i).setLocation(savedLocList.get(i));
@@ -285,6 +287,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         List<OutletDetails> itemsToInsert = new ArrayList<>();
         List<OutletDetails> itemsToUpdate = new ArrayList<>();
         for (OutletDetails outlet : outletDetailsList) {
+            fillAttributes(outlet,OutletDetails.of(savedList.get(outlet.getOutletcode())));
             super.addHash(outlet);
             if (savedList.get(outlet.getOutletcode()) == null) {
                 outlet.setVersion(0);

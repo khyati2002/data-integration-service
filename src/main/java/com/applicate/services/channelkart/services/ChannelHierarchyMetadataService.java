@@ -45,7 +45,6 @@ public class ChannelHierarchyMetadataService {
                //     throw new EmptyParentHierarchyException(parent.getImmediateParent());
                 }
                 List<String> hierarchyLoginId = Arrays.asList(temphierarchy.split(" > "));
-                String hierarchyuserlist= "'"+ StringUtils.join(hierarchyLoginId,"','")+"'";
                 List<Map<String, String>> data = dsl
                         .selectDistinct(
                                 CK_USER.LOGINID.as("loginid"),
@@ -55,7 +54,7 @@ public class ChannelHierarchyMetadataService {
                         .from(CK_USER)
                         .leftJoin(CK_USERDESIGNATION)
                         .on(CK_USER.LOGINID.eq(CK_USERDESIGNATION.LOGIN_ID))
-                        .where(CK_USER.LOGINID.in(hierarchyuserlist)
+                        .where(CK_USER.LOGINID.in(hierarchyLoginId)
                                 .and(CK_USERDESIGNATION.DESIGNATION.isNotNull()))
                         .fetchMaps()
                         .stream()

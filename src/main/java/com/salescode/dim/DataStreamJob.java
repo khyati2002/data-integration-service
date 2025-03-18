@@ -93,18 +93,20 @@ public class DataStreamJob {
         String failureTopic = inout0Properties.getProperty("failure.topic");
         String outTopic = inout0Properties.getProperty("output.topic");
         String bootstrapServers = inout0Properties.getProperty("bootstrap.servers");
+        String lob = inout0Properties.getProperty("lob");
+        String eventTopic = inout0Properties.getProperty("event.topic");
 
-        KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), inputTopic);
+        KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), inputTopic + "-" + lob);
 
         TopicSelector<StreamingRawData> topicSelector = (StreamingRawData record) -> {
             String topicName = Optional.ofNullable(record.getTransformerInfo())
                     .filter(s -> !s.isEmpty())
                     .map(t -> t.get(0).getEntityName())
                     .filter(s -> !s.isEmpty())
-                    .map(entityName -> getEntityTopic(outTopicPrefix, entityName))
+                    .map(entityName -> getEntityTopic(outTopicPrefix, lob, entityName))
                     .orElseGet(() -> {
                         record.setResponses(List.of(new StreamingRawData.Response("Failure", "Could not find entity name in transformerInfo")));
-                        return failureTopic;
+                        return failureTopic + "-" + lob;
                     });
             KafkaTopicCreator.createTopicIfNotExists(topicName, bootstrapServers, 5, (short) 1);
             return topicName;
@@ -122,7 +124,7 @@ public class DataStreamJob {
         String[] entityNames = entities.split(",");
 
         for (String entityName : entityNames) {
-            String entityTopic = getEntityTopic(outTopicPrefix, entityName);
+            String entityTopic = getEntityTopic(outTopicPrefix, lob, entityName);
             KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), entityTopic);
             DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Kafka source -> " + entityName);
             var processedStream = input
@@ -142,12 +144,13 @@ public class DataStreamJob {
             DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
 //            // Create and add the Sink
 
-            KafkaTopicCreator.createTopicIfNotExists("flink-test-event", bootstrapServers, 5, (short) 1);
+            String eventTopicName = eventTopic + "-" + lob;
+            KafkaTopicCreator.createTopicIfNotExists(eventTopicName, bootstrapServers, 5, (short) 1);
 
             KafkaSink<EventListenerDTO> eventListenerSink = FlinkJobSink.createKafkaSink(
                     inout0Properties,
                     eventKeySerializationSchema, // Custom serializer
-                    s -> "flink-test-event" // Define the Kafka topic
+                    s -> eventTopicName// Define the Kafka topic
             );
 
             batchProcessedStream.map(event -> {
@@ -157,7 +160,7 @@ public class DataStreamJob {
             }).sinkTo(eventListenerSink).name("EventListener Kafka Sink");
 
 
-            KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> outTopic);
+            KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> outTopic + "-" + lob);
 //            input.sinkTo(sink);
             failedRecords.sinkTo(sink).name("Failed Kafka Sink");
         }
@@ -205,8 +208,8 @@ public class DataStreamJob {
         }
     }
 
-    private static String getEntityTopic(String topicPrefix, String entityName) {
-        return String.join("-", topicPrefix, entityName);
+    private static String getEntityTopic(String topicPrefix, String lob, String entityName) {
+        return String.join("-", topicPrefix, lob, entityName);
     }
 
 }

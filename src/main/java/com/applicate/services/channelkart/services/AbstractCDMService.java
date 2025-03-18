@@ -4,9 +4,13 @@ import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -46,5 +50,40 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     public T save(T cdmObject) {
         return batchSave(List.of(cdmObject)).stream().findFirst().get();
     }
+
+    public static <T> void fillAttributes(T target, T source) {
+        if (target == null || source == null) return;
+
+        Field[] fields = FieldUtils.getAllFields(target.getClass()); // Get all fields (including superclass)
+
+        for (Field field : fields) {
+            field.setAccessible(true);
+            try {
+                Object targetValue = field.get(target);
+                Object sourceValue = field.get(source);
+
+                if (targetValue == null && sourceValue != null) {
+                    field.set(target, sourceValue); // Copy value if target is null
+                } else if (targetValue instanceof JsonNode && sourceValue instanceof JsonNode) {
+                    // Merge JSON fields if both are JsonNode
+                    JsonNode mergedJson = mergeJson((JsonNode) targetValue, (JsonNode) sourceValue);
+                    field.set(target, mergedJson);
+                }
+
+            } catch (IllegalAccessException e) {
+                e.printStackTrace(); // Handle exception properly
+            }
+        }
+    }
+
+    private static JsonNode mergeJson(JsonNode base, JsonNode updates) {
+        if (base == null) return updates;
+        if (updates == null) return base;
+
+        ObjectNode mergedNode = base.deepCopy();
+        updates.fields().forEachRemaining(entry -> mergedNode.set(entry.getKey(), entry.getValue()));
+        return mergedNode;
+    }
+
 
 }

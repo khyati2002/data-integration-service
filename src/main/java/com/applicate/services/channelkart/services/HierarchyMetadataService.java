@@ -1,5 +1,6 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.repository.HierarchyMetadataRepository;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.salescode.dim.cache.Cacheable;
@@ -38,20 +39,26 @@ public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetada
                 .fetch()
                 .intoMap(CK_HIERARCHY_METADATA.HIERARCHY, record -> record.into(com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata.class));
 
-        List<com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata> itemsToInsert = new ArrayList<>();
-        List<com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata> itemsToUpdate = new ArrayList<>();
+        List<HierarchyMetadata> itemsToInsert = new ArrayList<>();
+        List<HierarchyMetadata> itemsToUpdate = new ArrayList<>();
         for (int i = 0; i < hierarchyMetadataList.size(); i++) {
             super.addHash(hierarchyMetadataList.get(i));
             if (savedList.get(hierarchyMetadataList.get(i).getHierarchy()) == null) {
                 hierarchyMetadataList.get(i).setVersion(0);
                 hierarchyMetadataList.get(i).setId(UUID.randomUUID().toString());
+                hierarchyMetadataList.get(i).setOperationPerformed(ActionType.INSERT);
                 itemsToInsert.add(hierarchyMetadataList.get(i));
             } else {
                 if (!Objects.equals(hierarchyMetadataList.get(i).getHash(), savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getHash())) {
                     hierarchyMetadataList.get(i).setId(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getId());
-                    hierarchyMetadataList.get(i).setVersion(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getVersion());
+                    hierarchyMetadataList.get(i).setVersion(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getVersion() + 1);
                     hierarchyMetadataList.get(i).setChanges(CdmDiffUtil.getChanges(hierarchyMetadataList.get(i),HierarchyMetadata.of(savedList.get(hierarchyMetadataList.get(i).getHierarchy()))));
+                    hierarchyMetadataList.get(i).setOperationPerformed(ActionType.UPDATE);
                     itemsToUpdate.add(hierarchyMetadataList.get(i));
+                }
+                else{
+                    hierarchyMetadataList.get(i).setId(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getId());
+                    hierarchyMetadataList.get(i).setVersion(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getVersion());
                 }
             }
         }
