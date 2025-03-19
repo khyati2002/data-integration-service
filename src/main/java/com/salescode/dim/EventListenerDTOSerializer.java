@@ -1,13 +1,14 @@
 package com.salescode.dim;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.applicate.services.channelkart.utils.JSONUtils;
 import com.salescode.dim.utils.EventListenerDTO;
 import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 public class EventListenerDTOSerializer implements KafkaRecordSerializationSchema<EventListenerDTO> {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = JSONUtils.getObjectMapper();
     private final String topic;
 
     public EventListenerDTOSerializer(String topic) {
