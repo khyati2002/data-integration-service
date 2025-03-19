@@ -35,23 +35,23 @@ public class CachingAspect {
 
         String key = generateCacheKey(pjp);
 
-        logger.info("Checking cache for method: {}", method.getName());
+       // logger.info("Checking cache for method: {}", method.getName());
 
         // Try to get from cache
         Object cachedResult = cache.getIfPresent(key);
         if (cachedResult != null) {
-            logger.info("Cache hit for key: {}", key);
+           // logger.info("Cache hit for key: {}", key);
             return cachedResult;
         }
 
-        logger.info("Cache miss for key: {}. Executing method: {}", key, method.getName());
+       // logger.info("Cache miss for key: {}. Executing method: {}", key, method.getName());
         // Execute the method and cache the result
         Object result = pjp.proceed();
 
         // Don't cache null results
         if (result != null) {
             cache.put(key, result);
-            logger.info("Caching result for key: {}", key);
+         //   logger.info("Caching result for key: {}", key);
         }
 
         return result;

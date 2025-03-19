@@ -47,7 +47,7 @@ public class ServiceLocator {
             try {
                 // Create an instance using the default constructor
                 AbstractCDMService serviceInstance = serviceClass.getDeclaredConstructor().newInstance();
-                serviceInstance.setDslContext(dslContext);
+                // serviceInstance.setDslContext(dslContext);
                 // Get the entity class it handles (assuming each service has a getPersistentClass() method)
                 Class<?> persistentClass = serviceInstance.getPersistentClass();
                 register(persistentClass, serviceInstance);

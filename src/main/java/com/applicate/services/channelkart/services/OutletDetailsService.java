@@ -288,6 +288,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         List<OutletDetails> itemsToUpdate = new ArrayList<>();
         for (OutletDetails outlet : outletDetailsList) {
             fillAttributes(outlet,OutletDetails.of(savedList.get(outlet.getOutletcode())));
+            fillCommonAttributes(outlet);
             super.addHash(outlet);
             if (savedList.get(outlet.getOutletcode()) == null) {
                 outlet.setVersion(0);
@@ -318,6 +319,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
     @Override
     public Collection<OutletDetails> batchSave(Collection<OutletDetails> outletDetailsList){
+        LOG.info("Size of list is "  + outletDetailsList.size());
         List<OutletDetails> outletDetails = new ArrayList<>(outletDetailsList);
         LOG.info("Pre Batch Save Called with size " + outletDetails.size());
         List<User> savedUserList = preBatchSave(outletDetails);
@@ -341,6 +343,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             ).execute();
         }
         postBatchSave(outletDetails);
+        LOG.info("Batch save successful");
         return outletDetails;
     }
 

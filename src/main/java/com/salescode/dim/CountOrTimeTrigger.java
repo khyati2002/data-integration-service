@@ -42,7 +42,7 @@ public class CountOrTimeTrigger<T,W extends Window> extends Trigger<Object, W> {
                 ctx.deleteProcessingTimeTimer(timerTimestamp);
                 timerState.clear();
             }
-            return TriggerResult.FIRE;
+            return TriggerResult.FIRE_AND_PURGE;
         } else if (count == 1) {
             // Register timer for the first element
             long nextFireTime = ctx.getCurrentProcessingTime() + intervalMs;
@@ -58,7 +58,7 @@ public class CountOrTimeTrigger<T,W extends Window> extends Trigger<Object, W> {
         // Clear states and fire
         ctx.getPartitionedState(countDesc).clear();
         ctx.getPartitionedState(timerDesc).clear();
-        return TriggerResult.FIRE;
+        return TriggerResult.FIRE_AND_PURGE;
     }
 
     @Override

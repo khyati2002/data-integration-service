@@ -1,8 +1,10 @@
 package com.salescode.dim;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.services.AbstractCDMService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.EntityUtils;
+import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
@@ -46,8 +48,8 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
 
     private void initializeResources() throws Exception {
         // Create connection & DSLContext using the utility
-        this.connection = DatabaseConnectionUtil.createConnection(properties);
-        this.dslContext = DatabaseConnectionUtil.createDSLContext(connection);
+        DatabaseConnectionUtil.initConnectionPool(properties);
+        this.dslContext = DatabaseConnectionUtil.createPooledDSLContext();
 
         // Initialize services with dependency injection
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance(properties);
@@ -72,6 +74,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
         // Initialize pipeline service
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
 
+        SecurityContextUtils.getInstance(properties);
         ServiceLocator serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
     }
@@ -109,6 +112,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
                 ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
             } else {
                 streamingRawData.setStatus("Processed");
+                Long timestamp = ctx.timestamp();
                 out.collect(Tuple2.of(streamingRawData,dataset));
             }
         } catch (Exception e) {

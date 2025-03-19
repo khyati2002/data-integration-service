@@ -35,6 +35,7 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.windowing.assigners.GlobalWindows;
+import org.apache.flink.streaming.api.windowing.triggers.PurgingTrigger;
 import org.apache.flink.streaming.runtime.operators.windowing.TimestampedValue;
 import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
@@ -70,8 +71,6 @@ public class DataStreamJob {
     public static final SerializationSchema<StreamingRawData> recordKeySerializationSchema = (StreamingRawData element) -> element.getRequestId()
             .getBytes();
 
-    public static final SerializationSchema<EventListenerDTO> eventKeySerializationSchema = (EventListenerDTO element) -> element.getRequestId()
-            .getBytes();
 
     private static final Logger LOG = LoggerFactory.getLogger(DataStreamJob.class);
 
@@ -79,6 +78,9 @@ public class DataStreamJob {
         // Sets up the execution environment, which is the main entry point
         // to building Flink applications.
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+      //   env.enableCheckpointing(10000);
+      //  env.setParallelism(2);
 
         // Load the application properties
         final Map<String, Properties> applicationProperties = PropertyLoader.loadApplicationProperties(env);
@@ -108,7 +110,7 @@ public class DataStreamJob {
                         record.setResponses(List.of(new StreamingRawData.Response("Failure", "Could not find entity name in transformerInfo")));
                         return failureTopic + "-" + lob;
                     });
-            KafkaTopicCreator.createTopicIfNotExists(topicName, bootstrapServers, 5, (short) 1);
+//            KafkaTopicCreator.createTopicIfNotExists(topicName, bootstrapServers, 5, (short) 1);
             return topicName;
         };
 
@@ -133,13 +135,17 @@ public class DataStreamJob {
             // add map function to get old record , create and check hash, sink to separate sink to ignore or process further ??
             //        processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
             //                .keyBy(t -> t.f0.getTransformerInfo().get(0).getEntityName())
+
+
             SingleOutputStreamOperator<EventListenerDTO> batchProcessedStream = processedStream
+//                    .keyBy(s->s.f0.getRequestId())
                     .windowAll(GlobalWindows.create())
-                    .trigger(CountOrTimeTrigger.of(100, 5000))
-                    .aggregate(new ListAggregator<>())
-                    .assignTimestampsAndWatermarks(WatermarkStrategy.<List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>>>forMonotonousTimestamps()
-                            .withTimestampAssigner((element, recordTimestamp) -> System.currentTimeMillis()))
+                    .trigger(CountOrTimeTrigger.of(500, 5000))
+ //                   .aggregate(new ListAggregator<>())
+ //                   .assignTimestampsAndWatermarks(WatermarkStrategy.<List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>>>forMonotonousTimestamps()
+ //                           .withTimestampAssigner((element, recordTimestamp) -> System.currentTimeMillis()))
                     .process(new BatchSaveProcessor(commonProperties));
+
 
             DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
 //            // Create and add the Sink
@@ -147,17 +153,16 @@ public class DataStreamJob {
             String eventTopicName = eventTopic + "-" + lob;
             KafkaTopicCreator.createTopicIfNotExists(eventTopicName, bootstrapServers, 5, (short) 1);
 
-            KafkaSink<EventListenerDTO> eventListenerSink = FlinkJobSink.createKafkaSink(
-                    inout0Properties,
-                    eventKeySerializationSchema, // Custom serializer
-                    s -> eventTopicName// Define the Kafka topic
-            );
+            KafkaSink<EventListenerDTO> eventSink = KafkaSink.<EventListenerDTO>builder()
+                    .setBootstrapServers(bootstrapServers)
+                    .setRecordSerializer(new EventListenerDTOSerializer(eventTopicName))
+                    .build();
 
             batchProcessedStream.map(event -> {
                 String s = JSONUtils.getObjectMapper().writeValueAsString(event);
                 LOG.info("Sinking event to Kafka: {} %n {}", event, s);
                 return event;
-            }).sinkTo(eventListenerSink).name("EventListener Kafka Sink");
+            }).sinkTo(eventSink).name("EventListener Kafka Sink");
 
 
             KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> outTopic + "-" + lob);

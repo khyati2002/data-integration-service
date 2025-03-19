@@ -20,7 +20,8 @@
       "input.topic": "${input.topic}",
       "output.topic.prefix": "${output.topic.prefix}",
       "failure.topic": "${failure.topic}",
-      "output.topic" : "${output.topic}"
+      "output.topic" : "${output.topic}",
+      "event.topic" : "${event.topic}"
     }
   },
   {

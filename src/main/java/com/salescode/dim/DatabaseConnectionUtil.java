@@ -2,9 +2,12 @@ package com.salescode.dim;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.HikariPoolMXBean;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +17,8 @@ import java.util.Properties;
 public class DatabaseConnectionUtil {
 
     private static HikariDataSource dataSource;
+
+    private static final Logger LOG = LoggerFactory.getLogger(DatabaseConnectionUtil.class);
 
     /**
      * Creates a new database connection using the given properties.
@@ -63,6 +68,7 @@ public class DatabaseConnectionUtil {
             return;
         }
 
+        LOG.info("Connection created successfully");
         String jdbcUrl = properties.getProperty("jdbc.url");
         String jdbcUser = properties.getProperty("jdbc.user");
         String jdbcPassword = properties.getProperty("jdbc.password");
@@ -80,8 +86,9 @@ public class DatabaseConnectionUtil {
         config.setPassword(jdbcPassword);
         config.setDriverClassName(jdbcDriver);
 
+
         // Pool size: maximum 10 connections
-        config.setMaximumPoolSize(10);
+        config.setMaximumPoolSize(5);
 
         dataSource = new HikariDataSource(config);
     }
@@ -100,6 +107,13 @@ public class DatabaseConnectionUtil {
         return dataSource.getConnection();
     }
 
+    public static String getTotalConnectionsCreated() {
+        if (dataSource == null) {
+            throw new IllegalStateException("Connection pool is not initialized.");
+        }
+        HikariPoolMXBean poolMXBean = dataSource.getHikariPoolMXBean();
+        return String.valueOf(poolMXBean.getTotalConnections());
+    }
     /**
      * Create a JOOQ DSLContext using a pooled connection.
      * Make sure initConnectionPool() is called before using this method.

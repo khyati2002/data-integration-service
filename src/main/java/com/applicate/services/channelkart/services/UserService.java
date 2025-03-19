@@ -212,6 +212,7 @@ public class UserService extends AbstractCDMService<User> {
 
         for (User user : userList) {
             fillAttributes(user,User.of(savedList.get(user.getLoginid())));
+            fillCommonAttributes(user);
             super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
                 preSaveEnrichment(user);
