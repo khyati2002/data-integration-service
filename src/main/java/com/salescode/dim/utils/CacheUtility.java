@@ -18,7 +18,7 @@ public final class CacheUtility {
     // Static initializer to build the cache once.
     static {
         CACHE = Caffeine.newBuilder()
-                .maximumSize(1000)
+                .maximumSize(5000)
                 .expireAfterWrite(15, TimeUnit.MINUTES)
                 .build();
     }

@@ -18,14 +18,9 @@
 
 package com.salescode.dim;
 
-import com.applicate.services.channelkart.models.CommonDataModel;
-import com.applicate.services.channelkart.utils.JSONUtils;
 import com.salescode.dim.utils.EventListenerDTO;
-import org.apache.flink.api.common.RuntimeExecutionMode;
-import org.apache.flink.api.common.eventtime.WatermarkGenerator;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.serialization.SerializationSchema;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.connector.kafka.sink.TopicSelector;
 import org.apache.flink.connector.kafka.source.KafkaSource;
@@ -33,21 +28,13 @@ import org.apache.flink.formats.json.JsonDeserializationSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.windowing.assigners.GlobalWindows;
-import org.apache.flink.streaming.api.windowing.triggers.PurgingTrigger;
-import org.apache.flink.streaming.runtime.operators.windowing.TimestampedValue;
-import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
+import java.util.*;
 import static com.salescode.dim.PropertyLoader.mergeProperties;
 
 /**
@@ -72,15 +59,14 @@ public class DataStreamJob {
             .getBytes();
 
 
+
     private static final Logger LOG = LoggerFactory.getLogger(DataStreamJob.class);
 
     public static void main(String[] args) throws Exception {
         // Sets up the execution environment, which is the main entry point
         // to building Flink applications.
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-      //   env.enableCheckpointing(10000);
-      //  env.setParallelism(2);
+        
 
         // Load the application properties
         final Map<String, Properties> applicationProperties = PropertyLoader.loadApplicationProperties(env);
@@ -130,39 +116,29 @@ public class DataStreamJob {
             KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), entityTopic);
             DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Kafka source -> " + entityName);
             var processedStream = input
+                    .rebalance()
                     .flatMap(new StreamingRawDataFlatMapper())
                     .process(new StreamingRawDataProcessor(commonProperties));
             // add map function to get old record , create and check hash, sink to separate sink to ignore or process further ??
             //        processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
             //                .keyBy(t -> t.f0.getTransformerInfo().get(0).getEntityName())
 
-
-            SingleOutputStreamOperator<EventListenerDTO> batchProcessedStream = processedStream
-//                    .keyBy(s->s.f0.getRequestId())
-                    .windowAll(GlobalWindows.create())
-                    .trigger(CountOrTimeTrigger.of(500, 5000))
- //                   .aggregate(new ListAggregator<>())
- //                   .assignTimestampsAndWatermarks(WatermarkStrategy.<List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>>>forMonotonousTimestamps()
- //                           .withTimestampAssigner((element, recordTimestamp) -> System.currentTimeMillis()))
-                    .process(new BatchSaveProcessor(commonProperties));
+           processedStream.sinkTo(new JooqDatabaseBatchSink(commonProperties)).name("Database Success Sink");
+             //      .disableChaining();
 
 
             DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
 //            // Create and add the Sink
 
             String eventTopicName = eventTopic + "-" + lob;
-            KafkaTopicCreator.createTopicIfNotExists(eventTopicName, bootstrapServers, 5, (short) 1);
+//            KafkaTopicCreator.createTopicIfNotExists(eventTopicName, bootstrapServers, 5, (short) 1);
+//
+//            KafkaSink<EventListenerDTO> eventSink = KafkaSink.<EventListenerDTO>builder()
+//                    .setBootstrapServers(bootstrapServers)
+//                    .setRecordSerializer(new EventListenerDTOSerializer(eventTopicName))
+//                    .build();
 
-            KafkaSink<EventListenerDTO> eventSink = KafkaSink.<EventListenerDTO>builder()
-                    .setBootstrapServers(bootstrapServers)
-                    .setRecordSerializer(new EventListenerDTOSerializer(eventTopicName))
-                    .build();
-
-            batchProcessedStream.map(event -> {
-                String s = JSONUtils.getObjectMapper().writeValueAsString(event);
-                LOG.info("Sinking event to Kafka: {} %n {}", event, s);
-                return event;
-            }).sinkTo(eventSink).name("EventListener Kafka Sink");
+    //        batchProcessedStream.sinkTo(eventSink).name("EventListener Kafka Sink");
 
 
             KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> outTopic + "-" + lob);
@@ -208,9 +184,9 @@ public class DataStreamJob {
 
         // Execute program, beginning computation.
         env.execute("Flink Java API Skeleton");
-        if (PropertyLoader.isLocal(env)) {
-            env.disableOperatorChaining();
-        }
+//        if (PropertyLoader.isLocal(env)) {
+//            env.disableOperatorChaining();
+//        }
     }
 
     private static String getEntityTopic(String topicPrefix, String lob, String entityName) {
