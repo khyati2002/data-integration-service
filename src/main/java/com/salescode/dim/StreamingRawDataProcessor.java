@@ -45,7 +45,6 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
         this.properties = Objects.requireNonNull(commonProperties, "Properties cannot be null");
     }
 
-    Logger logger = LoggerFactory.getLogger(StreamingRawDataProcessor.class);
 
     @Override
     public void open(Configuration parameters) throws Exception {
