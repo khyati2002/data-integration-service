@@ -20,6 +20,8 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
 import org.jooq.DSLContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.*;
@@ -35,6 +37,8 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     private transient EntityUtils entityUtils;
     private transient DataTransformationService dataTransformationService;
     private transient PreProcessPipelineService preProcessPipelineService;
+
+    Logger logger = LoggerFactory.getLogger(StreamingRawDataProcessor.class);
 
     public StreamingRawDataProcessor(Properties commonProperties) {
         this.properties = Objects.requireNonNull(commonProperties, "Properties cannot be null");
@@ -137,8 +141,10 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
                 }
             }
         } catch (DataTransformationService.TransformationException e) {
+            logger.info("Transformation Exception ", e);
             errorList.add(TRANSFORMATION_ERROR + e.getMessage());
         } catch (Exception e) {
+            logger.info("Transformation Exception ", e);
             errorList.add("Unexpected error: " + e.getMessage());
         }
     }
