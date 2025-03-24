@@ -14,6 +14,7 @@ import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
@@ -27,7 +28,7 @@ import java.sql.Connection;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData, Tuple2<StreamingRawData,Map<Class<? extends CommonDataModel>,Set<CommonDataModel>>>> {
+public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
     private static final long serialVersionUID = -3351413046175753755L;
     private static final String TRANSFORMATION_ERROR = "Transformation Failed : ";
     private static final String SAVE_ERROR = "Error while saving record. Reason: ";
@@ -44,6 +45,8 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
         this.properties = Objects.requireNonNull(commonProperties, "Properties cannot be null");
     }
 
+    Logger logger = LoggerFactory.getLogger(StreamingRawDataProcessor.class);
+
     @Override
     public void open(Configuration parameters) throws Exception {
         super.open(parameters);
@@ -52,8 +55,10 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
 
     private void initializeResources() throws Exception {
         // Create connection & DSLContext using the utility
-        DatabaseConnectionUtil.initConnectionPool(properties);
-        this.dslContext = DatabaseConnectionUtil.createPooledDSLContext();
+//        this.connection = DatabaseConnectionUtil.createConnection(properties);
+//        this.dslContext = DatabaseConnectionUtil.createDSLContext(connection);
+        HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 4);
+        this.dslContext = DatabaseConnectionUtil.createPooledDSLContext(hikariDataSource);
 
         // Initialize services with dependency injection
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance(properties);
@@ -98,6 +103,7 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     @Override
     public void processElement(StreamingRawData streamingRawData, Context ctx, Collector<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> out) throws Exception {
         try {
+            long start = System.currentTimeMillis();
             List<TransformerInfo> transformerInfos = streamingRawData.getTransformerInfo();
             Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>();
             List<String> errorList = new ArrayList<>();
@@ -109,15 +115,17 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
             if (errorList.isEmpty()) {
 //                dispatchData(dataset, transformerInfos, errorList);
             }
-
+            long stop = System.currentTimeMillis();
+            logger.info("Time to preProcess record : {} ms", stop - start);
             if (!errorList.isEmpty()) {
                 streamingRawData.setStatus("Failure");
-                streamingRawData.setResponses(errorList.stream().map(s -> new StreamingRawData.Response("Failure", s)).collect(Collectors.toList()));
+                streamingRawData.setResponses(errorList.stream().map(s -> new StreamingRawData.Response("Failure", s))
+                        .collect(Collectors.toList()));
                 ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
             } else {
                 streamingRawData.setStatus("Processed");
                 Long timestamp = ctx.timestamp();
-                out.collect(Tuple2.of(streamingRawData,dataset));
+                out.collect(Tuple2.of(streamingRawData, dataset));
             }
         } catch (Exception e) {
             streamingRawData.setStatus("Failure");
@@ -130,14 +138,19 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
         Class<? extends CommonDataModel> entityClass = entityUtils.getEntityClass(transformerInfo.getEntityName());
 
         try {
-            List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures().get(0));
+            long pstart = System.currentTimeMillis();
+            List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures()
+                    .get(0));
+            long pstartTransform = System.currentTimeMillis();
+            logger.info("Time to transform single record {}", pstartTransform - pstart);
             for (CommonDataModel cdm : transformedData) {
                 PreProcessOperationResult preProcessOperationResult = preProcessPipelineService.preProcessPipeline(cdm, transformerInfo.getPreprocessValidationExcludeGroup());
 
                 if (preProcessOperationResult.getStatus() == PreProcessOperationResult.Status.FAILURE) {
                     preProcessPipelineService.evaluateFailures(preProcessOperationResult, errorList);
                 } else {
-                    dataset.computeIfAbsent(entityClass, k -> new HashSet<>()).addAll(preProcessOperationResult.getPostValidationEnrichment().getOperationResultData());
+                    dataset.computeIfAbsent(entityClass, k -> new HashSet<>())
+                            .addAll(preProcessOperationResult.getPostValidationEnrichment().getOperationResultData());
                 }
             }
         } catch (DataTransformationService.TransformationException e) {

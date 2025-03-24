@@ -6,7 +6,9 @@ import com.salescode.dim.etl.ValidationResult;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.etl.validation.AbstractValidationRule;
 import com.salescode.dim.jooq.generated.tables.pojos.ValidationRule;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jooq.meta.derby.sys.Sys;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,6 +19,7 @@ import static com.salescode.dim.etl.OperationServiceHelper.getOperationResult;
  * Service responsible for validating data models based on configured validation rules.
  * Applies rules in order of priority and manages the validation lifecycle.
  */
+@Slf4j
 public class DataValidationService {
 
     private static final String ERROR_MESSAGE = "Validation error: ";
@@ -112,6 +115,7 @@ public class DataValidationService {
      * @return the result of the validation
      */
     private ValidationResult applyValidation(CommonDataModel cdm, ValidationRule validationRule) {
+        long p1 = System.nanoTime();
         String implementationName = validationRule.getImplementation();
         try {
             AbstractValidationRule<CommonDataModel> validation = etlRegistry.getValidationRule(implementationName);
@@ -119,6 +123,9 @@ public class DataValidationService {
             return validation.apply(cdm);
         } catch (Exception e) {
             return new OperationResult.StepResult(OperationResult.Status.ERROR, ERROR_MESSAGE + String.format("Implementation '%s' failed: %s", implementationName, e.getMessage()));
+        } finally {
+            long p2 = System.nanoTime();
+            log.info("CDM {} Validation {} took {} ns", cdm.getClass().getSimpleName(), validationRule.getImplementation(), p2 - p1);
         }
     }
 
