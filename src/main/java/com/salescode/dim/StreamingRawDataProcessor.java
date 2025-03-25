@@ -39,11 +39,12 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     private transient DataTransformationService dataTransformationService;
     private transient PreProcessPipelineService preProcessPipelineService;
 
+    Logger logger = LoggerFactory.getLogger(StreamingRawDataProcessor.class);
+
     public StreamingRawDataProcessor(Properties commonProperties) {
         this.properties = Objects.requireNonNull(commonProperties, "Properties cannot be null");
     }
 
-    Logger logger = LoggerFactory.getLogger(StreamingRawDataProcessor.class);
 
     @Override
     public void open(Configuration parameters) throws Exception {
@@ -152,8 +153,10 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
                 }
             }
         } catch (DataTransformationService.TransformationException e) {
+            logger.info("Transformation Exception ", e);
             errorList.add(TRANSFORMATION_ERROR + e.getMessage());
         } catch (Exception e) {
+            logger.info("Transformation Exception ", e);
             errorList.add("Unexpected error: " + e.getMessage());
         }
     }
