@@ -3,10 +3,15 @@ package com.salescode.dim;
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.services.CommonDataModelService;
 import com.applicate.services.channelkart.services.ServiceLocator;
+import com.applicate.services.channelkart.utils.JSONUtils;
 import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
+import com.salescode.dim.utils.EventListenerDTO;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.flink.api.connector.sink2.Sink;
 import org.apache.flink.api.connector.sink2.SinkWriter;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +56,8 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         private final long batchIntervalMs;
         private long lastBatchTime;
         private transient ServiceLocator serviceLocator;
+        private final KafkaProducer<String, EventListenerDTO> producer;
+        private final String topicName;
 
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
             HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 10);
@@ -61,10 +68,21 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             this.lastBatchTime = System.currentTimeMillis();
             this.serviceLocator = ServiceLocator.getInstance(dslContext);
             serviceLocator.registerSubClasses();
+
+            Properties kafkaProps = new Properties();
+            kafkaProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
+            kafkaProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+            kafkaProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EventListenerDTOSerializer.class.getName());
+
+
+            this.producer = new KafkaProducer<>(kafkaProps);
+            this.topicName = properties.getProperty("event.topic") + "-" + properties.getProperty("lob");
+
         }
 
         @Override
         public void write(Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>> value, Context context) throws IOException {
+            LOG.info("Write method called with value: {}", value);
             try {
                 batchBuffer.add(value);
                 long currentTime = System.currentTimeMillis();
@@ -83,10 +101,15 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             if (!batchBuffer.isEmpty()) {
                 try {
                     Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> consolidatedModels = new HashMap<>();
+                    Map<CommonDataModel, StreamingRawData> modelToRawDataMap = new HashMap<>();
                     for (Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>> tuple : batchBuffer) {
+                        StreamingRawData data = tuple.f0;
                         for (Map.Entry<Class<? extends CommonDataModel>, Set<CommonDataModel>> entry : tuple.f1.entrySet()) {
                             consolidatedModels.putIfAbsent(entry.getKey(), new HashSet<>());
                             consolidatedModels.get(entry.getKey()).addAll(entry.getValue());
+                            for(CommonDataModel cdm : entry.getValue()){
+                                modelToRawDataMap.put(cdm, data);
+                            }
                         }
                     }
 
@@ -94,6 +117,35 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                         CommonDataModelService service = ServiceLocator.lookup(entry.getKey());
                         try {
                             service.batchSave(entry.getValue());
+                            for (CommonDataModel model : entry.getValue()) {
+                                LOG.info("Operation performed is " + model.getOperationPerformed());
+                                if (model.getOperationPerformed() != null) {
+                                    StreamingRawData rawData = modelToRawDataMap.get(model);
+                                    EventListenerDTO dto = new EventListenerDTO(
+                                            rawData.getRequestId(),
+                                            entry.getKey().getSimpleName(),
+                                            rawData.getLob(),
+                                            model.getChanges(),
+                                            model.getOperationPerformed()
+                                    );
+
+                                    try {
+                                        // Convert DTO to JSON
+
+                                        // Publish to Kafka
+                                        ProducerRecord<String, EventListenerDTO> record = new ProducerRecord<>(topicName, dto.getRequestId(), dto);
+                                        producer.send(record, (metadata, exception) -> {
+                                            if (exception != null) {
+                                                LOG.error("Failed to publish message to Kafka", exception);
+                                            } else {
+                                                LOG.info("Published message to Kafka topic: {} at offset {}", metadata.topic(), metadata.offset());
+                                            }
+                                        });
+                                    } catch (Exception ex) {
+                                        LOG.error("Error serializing EventListenerDTO for Kafka", ex);
+                                    }
+                                }
+                            }
                             saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
                         } catch (Exception batchEx) {
                             LOG.error("Batch save failed. Falling back to individual saves.");

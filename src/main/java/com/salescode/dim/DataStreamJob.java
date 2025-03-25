@@ -106,6 +106,9 @@ public class DataStreamJob {
         env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source")
                 .sinkTo(kafkaSink);
 
+        String eventTopicName = eventTopic + "-" + lob;
+        KafkaTopicCreator.createTopicIfNotExists(eventTopicName, bootstrapServers, 5, (short) 1);
+
 
         // for each entity, read from respective topic and process
         String entities = commonProperties.getProperty("entities");
@@ -123,14 +126,13 @@ public class DataStreamJob {
             //        processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
             //                .keyBy(t -> t.f0.getTransformerInfo().get(0).getEntityName())
 
-           processedStream.sinkTo(new JooqDatabaseBatchSink(commonProperties)).name("Database Success Sink");
+           processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
              //      .disableChaining();
 
 
             DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
 //            // Create and add the Sink
 
-            String eventTopicName = eventTopic + "-" + lob;
 //            KafkaTopicCreator.createTopicIfNotExists(eventTopicName, bootstrapServers, 5, (short) 1);
 //
 //            KafkaSink<EventListenerDTO> eventSink = KafkaSink.<EventListenerDTO>builder()

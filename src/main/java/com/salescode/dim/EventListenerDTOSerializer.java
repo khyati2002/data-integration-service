@@ -2,30 +2,31 @@ package com.salescode.dim;
 
 import com.applicate.services.channelkart.utils.JSONUtils;
 import com.salescode.dim.utils.EventListenerDTO;
-import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.Serializer;
 
-public class EventListenerDTOSerializer implements KafkaRecordSerializationSchema<EventListenerDTO> {
+import java.util.Map;
+
+public class EventListenerDTOSerializer implements Serializer<EventListenerDTO> {
 
     private static final ObjectMapper objectMapper = JSONUtils.getObjectMapper();
-    private final String topic;
 
-    public EventListenerDTOSerializer(String topic) {
-        this.topic = topic;
+    @Override
+    public void configure(Map<String, ?> configs, boolean isKey) {
+        // No special configuration needed
     }
 
     @Override
-    public ProducerRecord<byte[], byte[]> serialize(EventListenerDTO element, KafkaSinkContext context, Long timestamp) {
+    public byte[] serialize(String topic, EventListenerDTO data) {
         try {
-            byte[] key = element.getRequestId().getBytes(); // Key as requestId
-            byte[] value = objectMapper.writeValueAsBytes(element); // Convert DTO to JSON bytes
-
-            long eventTimestamp = System.currentTimeMillis(); // Use processing time
-
-            return new ProducerRecord<>(topic, null, eventTimestamp, key, value);
+            return objectMapper.writeValueAsBytes(data);
         } catch (Exception e) {
             throw new RuntimeException("Error serializing EventListenerDTO", e);
         }
+    }
+
+    @Override
+    public void close() {
+        // No resources to close
     }
 }
