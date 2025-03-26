@@ -6,6 +6,7 @@ import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.JSONUtils;
 import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
+import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.salescode.dim.utils.EventListenerDTO;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.flink.api.common.operators.MailboxExecutor;
@@ -40,6 +41,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 
 
     public JooqDatabaseBatchSink(Properties dbProperties) {
+        ExternalRegistryScanner.getInstance(dbProperties);
         this.properties = dbProperties;
         this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "500"));
         this.batchIntervalMs = Long.parseLong(dbProperties.getProperty("batch.interval.ms", "20000"));
