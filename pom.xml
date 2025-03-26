@@ -372,7 +372,7 @@ under the License.
                                 <forcedType>
                                     <userType>org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode</userType>
                                     <converter>com.salescode.dim.jooq.JsonNodeConverter</converter>
-                                    <includeExpression>(.*attributes)|domain_values|ck_generic_object\.payload</includeExpression>
+                                    <includeExpression>(.*attributes)|domain_values|ck_generic_object\.payload|ck_scheme_calculation\.slab_info</includeExpression>
                                 </forcedType>
                             </forcedTypes>
                         </database>
