@@ -82,20 +82,19 @@ public class DataStreamJob {
         ConfigValidator.validate(commonProperties, "lob", "bootstrapServers", "entities");
 
         String bootstrapServers = commonProperties.getProperty("bootstrap.servers").trim();
-        String lob = commonProperties.getProperty("lob").trim();
         String entities = commonProperties.getProperty("entities").trim();
         String[] entityNames = entities.split(",");
 
         Properties inout0Properties = mergeProperties(applicationProperties.get("InOut0"), commonProperties);
         ConfigValidator.validate(inout0Properties, "input.topic", "failure.topic");
 
-        String inputTopicPostFix = inout0Properties.getProperty("input.topic").trim();
-        String failureTopicPostFix = inout0Properties.getProperty("failure.topic").trim();
-        String eventTopicPostFix = inout0Properties.getProperty("event.topic", "event").trim();
+        // cktestitcloyalty-dataintegration
+        // cktestitcloyalty-dataintegration-failure or cktestitcloyalty-int-failure-streams
+        // cktestitcloyalty-dataintegration-event
 
-        String lobTopic = String.join("-", lob, inputTopicPostFix);           // cktestitcloyalty-dataintegration
-        String lobFailureTopic = String.join("-", lob, failureTopicPostFix);  // cktestitcloyalty-dataintegration-failure or cktestitcloyalty-int-failure-streams
-        String lobEventTopic = String.join("-", lob, eventTopicPostFix);      // cktestitcloyalty-dataintegration-event
+        String lobTopic = getLobTopic(inout0Properties);
+        String lobFailureTopic = getLobFailureTopic(inout0Properties);
+        String lobEventTopic = getLobEventTopic(inout0Properties);
         String lobOutTopic = String.join("-", lobTopic, "out");     // cktestitcloyalty-dataintegration-out (for testing only)
 
         // Create lob topics if not exists
@@ -104,6 +103,7 @@ public class DataStreamJob {
         KafkaTopicCreator.createTopicIfNotExists(lobEventTopic, bootstrapServers);
         if(isLocal(env)) {
             KafkaTopicCreator.clearAndRecreateTopic(lobOutTopic, bootstrapServers);
+            env.setParallelism(1);
         }
 
         Map<String, String> entityTopicMap = Arrays.stream(entityNames).distinct().parallel()
@@ -154,6 +154,21 @@ public class DataStreamJob {
          * */
 
         env.execute("Flink Java API Skeleton");
+    }
+
+    public static String getLobEventTopic(Properties inout0Properties) {
+        return String.join("-", inout0Properties.getProperty("lob")
+                                                .trim(), inout0Properties.getProperty("event.topic", "event").trim());
+    }
+
+    public static String getLobFailureTopic(Properties inout0Properties) {
+        return String.join("-", inout0Properties.getProperty("lob")
+                                                .trim(), inout0Properties.getProperty("failure.topic").trim());
+    }
+
+    public static String getLobTopic(Properties inout0Properties) {
+        return String.join("-", inout0Properties.getProperty("lob").trim(), inout0Properties.getProperty("input.topic")
+                                                                                            .trim());
     }
 
     private static void createEntityTopic(Map.Entry<String, String> lobEntityTopic, StreamExecutionEnvironment env, String bootstrapServers) {
