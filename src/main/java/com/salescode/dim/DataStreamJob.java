@@ -82,8 +82,6 @@ public class DataStreamJob {
         StreamExecutionEnvironment baseEnv = StreamExecutionEnvironment.getExecutionEnvironment();
         final StreamExecutionEnvironment env = isLocal(baseEnv) ? StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(cfg) : baseEnv;
 
-//    https://medium.com/@vndhya/apache-flink-streaming-kafka-events-in-json-format-complete-sample-code-in-java-70372d62f61
-
         // Load the application properties
         final Map<String, Properties> applicationProperties = PropertyLoader.loadApplicationProperties(env);
         LOG.info("Application properties: {}", applicationProperties);
