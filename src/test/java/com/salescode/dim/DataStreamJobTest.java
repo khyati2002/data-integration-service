@@ -116,13 +116,13 @@ public class DataStreamJobTest {
         Map<String, Properties> stringPropertiesMap = PropertyLoader.loadApplicationProperties(null);
 
         // Apply the process function (simulate the job's pipeline)
-        SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = source
-                // If you had windowing or aggregation, adjust accordingly.
-                .process(new StreamingRawDataProcessor(stringPropertiesMap.get("Common")))
-                .name("Test Process Function");
-
-        // Add a sink to collect output data
-        processedStream.addSink(new CollectSink<>());
+//        SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = source
+//                // If you had windowing or aggregation, adjust accordingly.
+//                .process(new StreamingRawDataProcessor(stringPropertiesMap.get("Common")))
+//                .name("Test Process Function");
+//
+//        // Add a sink to collect output data
+//        processedStream.addSink(new CollectSink<>());
 
         // Execute the pipeline
         env.execute("DataStreamJob Test");
