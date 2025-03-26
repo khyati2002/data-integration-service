@@ -13,7 +13,7 @@ public class LocationRepository {
         this.dsl = dsl;
     }
 
-    @Cacheable
+    @Cacheable(cacheName = "dataintegration-location")
     public Location findByLocationHierarchy(String locationHierarchy) {
         return dsl.selectFrom(CK_LOCATION)
                 .where(CK_LOCATION.LOCATION_HIERARCHY.eq(locationHierarchy))

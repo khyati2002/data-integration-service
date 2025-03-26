@@ -47,8 +47,8 @@ public class BatchSaveProcessor extends ProcessAllWindowFunction<Tuple2<Streamin
     }
 
     private void initializeResources () throws SQLException {
-        DatabaseConnectionUtil.initConnectionPool(properties);
-        this.dslContext = DatabaseConnectionUtil.createPooledDSLContext();
+//        DatabaseConnectionUtil.initConnectionPool(properties);
+//        this.dslContext = DatabaseConnectionUtil.createPooledDSLContext();
     }
 
     private void saveIntegrationHistory(CommonDataModel model, String status, String message) {
@@ -139,7 +139,8 @@ public class BatchSaveProcessor extends ProcessAllWindowFunction<Tuple2<Streamin
                                 modelClass.getSimpleName(),
                                 rawData.getLob(),
                                 model.getChanges(),
-                                model.getOperationPerformed()
+                                model.getOperationPerformed(),
+                                model.getId()
                         );
                         out.collect(dto);
                     }
@@ -162,7 +163,8 @@ public class BatchSaveProcessor extends ProcessAllWindowFunction<Tuple2<Streamin
                                     modelClass.getSimpleName(),
                                     rawData.getLob(),
                                     model.getChanges(),
-                                    model.getOperationPerformed()
+                                    model.getOperationPerformed(),
+                                    model.getId()
                             );
                             out.collect(dto);
                         }

@@ -20,7 +20,7 @@ public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetada
         hierarchyMetadataRepository = new HierarchyMetadataRepository(getDslContext());
     }
 
-    @Cacheable
+    @Cacheable(cacheName = "dataintegration-hierarchymetadatas")
     public List<HierarchyMetadata> findByImmediateParent(String loginId) {
         return hierarchyMetadataRepository.findByImmediateParent(loginId);
     }

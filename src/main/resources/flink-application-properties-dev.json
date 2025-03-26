@@ -9,8 +9,6 @@
       "jdbc.url": "${jdbc.url}",
       "jdbc.user": "${jdbc.user}",
       "jdbc.password": "${jdbc.password}",
-      "schema.includePattern": "${schema.includePattern}",
-      "schema.excludePattern": "${schema.excludePattern}",
       "entities": "${entities}"
     }
   },
@@ -18,7 +16,6 @@
     "PropertyGroupId": "InOut0",
     "PropertyMap": {
       "input.topic": "${input.topic}",
-      "output.topic.prefix": "${output.topic.prefix}",
       "failure.topic": "${failure.topic}",
       "output.topic" : "${output.topic}",
       "event.topic" : "${event.topic}"

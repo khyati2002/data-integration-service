@@ -286,6 +286,12 @@ under the License.
             <version>1.9.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.25.2</version>
+        </dependency>
+
     </dependencies>
 
 

@@ -1,14 +1,22 @@
 package com.salescode.dim.scanner;
 
 import com.salescode.dim.interfaces.TypeAwareEtlStep;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class ExternalRegistryScanner implements Serializable {
 
     private static final long serialVersionUID = -7659444822219009942L;
@@ -21,8 +29,17 @@ public class ExternalRegistryScanner implements Serializable {
 
     private ExternalRegistryScanner(Properties properties) {
         String externalRegistryPath = properties.getProperty("bundle.relative.path", "lib/bundle.jar");
-        String lob = properties.getProperty("lob");
-        instanceCache = loadClassesFromLob(String.format(externalRegistryPath, lob));
+        log.info("Loading external registry from {}", externalRegistryPath);
+        InputStream jarStream = ExternalRegistryScanner.class.getClassLoader().getResourceAsStream(externalRegistryPath);
+        try {
+            Path tempJar = Files.createTempFile("embedded-lib-", ".jar");
+            Files.copy(Objects.requireNonNull(jarStream), tempJar, StandardCopyOption.REPLACE_EXISTING);
+            jarStream.close();
+            String lob = properties.getProperty("lob");
+            instanceCache = loadClassesFromLob(String.format(tempJar.toAbsolutePath().toString(), lob));
+        } catch (Exception e) {
+            log.error("Failed to load external registry", e);
+        }
     }
 
     public static synchronized ExternalRegistryScanner getInstance(Properties properties) {

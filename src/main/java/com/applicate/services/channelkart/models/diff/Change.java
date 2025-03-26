@@ -1,16 +1,11 @@
 package com.applicate.services.channelkart.models.diff;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * created by Siddarth Sreeni on 07-05-2021
  */
-@Getter
-@Setter
 public class Change<T extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = 4139767709103310389L;
@@ -23,8 +18,7 @@ public class Change<T extends Serializable> implements Serializable {
 
     private ChangeType changeType;
 
-    public Change() {
-    }
+    public Change() {}
 
     public Change(String name, T current, T previous) {
         this.current = current;
@@ -54,8 +48,24 @@ public class Change<T extends Serializable> implements Serializable {
         return ChangeType.UPDATED;
     }
 
+    public T getCurrent() {
+        return current;
+    }
+
+    public T getPrevious() {
+        return previous;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ChangeType getChangeType() {
+        return changeType;
+    }
+
     @Override
     public String toString() {
-        return "{field:" + name + ", currentValue:" + current + ", previousValue:" + previous + ", type:" + changeType + '}';
+        return "{field:" + name +", currentValue:" +current + ", previousValue:" + previous + ", type:" +changeType + '}';
     }
 }
