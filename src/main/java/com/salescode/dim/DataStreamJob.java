@@ -18,13 +18,9 @@
 
 package com.salescode.dim;
 
-import com.applicate.services.channelkart.models.CommonDataModel;
-import com.salescode.dim.cache.CacheManager;
-import com.salescode.dim.utils.EventListenerDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.serialization.SerializationSchema;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
@@ -33,11 +29,7 @@ import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.formats.json.JsonDeserializationSchema;
 import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.ProcessFunction;
-import org.apache.flink.streaming.api.windowing.assigners.GlobalWindows;
-import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,8 +79,6 @@ public class DataStreamJob {
         LOG.info("Application properties: {}", applicationProperties);
 
         Properties commonProperties = applicationProperties.getOrDefault("Common", new Properties());
-
-        // Read from kafka and bifurcate topic on basis of entities and sink to respective topics
         ConfigValidator.validate(commonProperties, "lob", "bootstrapServers", "entities");
 
         String bootstrapServers = commonProperties.getProperty("bootstrap.servers").trim();
@@ -103,23 +93,25 @@ public class DataStreamJob {
         String failureTopicPostFix = inout0Properties.getProperty("failure.topic").trim();
         String eventTopicPostFix = inout0Properties.getProperty("event.topic", "event").trim();
 
-        String lobTopic = String.join("-", lob, inputTopicPostFix);
-        String lobFailureTopic = String.join("-", lob, failureTopicPostFix);
-        String lobEventTopic = String.join("-", lob, eventTopicPostFix);
-        String lobOutTopic = String.join("-", lobTopic, "out");
+        String lobTopic = String.join("-", lob, inputTopicPostFix);           // cktestitcloyalty-dataintegration
+        String lobFailureTopic = String.join("-", lob, failureTopicPostFix);  // cktestitcloyalty-dataintegration-failure or cktestitcloyalty-int-failure-streams
+        String lobEventTopic = String.join("-", lob, eventTopicPostFix);      // cktestitcloyalty-dataintegration-event
+        String lobOutTopic = String.join("-", lobTopic, "out");     // cktestitcloyalty-dataintegration-out (for testing only)
 
-        // Create topics if not exists
+        // Create lob topics if not exists
         KafkaTopicCreator.createTopicIfNotExists(lobTopic, bootstrapServers);
-        KafkaTopicCreator.createTopicIfNotExists(lobFailureTopic, bootstrapServers);
-        KafkaTopicCreator.createTopicIfNotExists(lobEventTopic, bootstrapServers);
-        KafkaTopicCreator.clearAndRecreateTopic(lobOutTopic, bootstrapServers);
-
+        KafkaTopicCreator.clearAndRecreateTopic(lobFailureTopic, bootstrapServers);
+        KafkaTopicCreator.clearAndRecreateTopic(lobEventTopic, bootstrapServers);
+        if(isLocal(env)) {
+            KafkaTopicCreator.clearAndRecreateTopic(lobOutTopic, bootstrapServers);
+        }
 
         Map<String, String> entityTopicMap = Arrays.stream(entityNames).distinct().parallel()
                                             .map(entityName -> Map.entry(entityName, String.join("-", lobTopic, entityName)))
-                                            .peek(lobEntityTopic -> KafkaTopicCreator.clearAndRecreateTopic(lobEntityTopic.getValue(), bootstrapServers))
+                                            .peek(lobEntityTopic -> createEntityTopic(lobEntityTopic, env, bootstrapServers))
                                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+        // Read from kafka and bifurcate on basis of entities and sink to respective topics
         KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), lobTopic);
 
         TopicSelector<StreamingRawData> topicSelector = (StreamingRawData record) -> Optional.ofNullable(record.getTransformerInfo())
@@ -134,8 +126,10 @@ public class DataStreamJob {
 
         KafkaSink<StreamingRawData> kafkaSink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, topicSelector);
 
-        env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source").name("Entity Bifurcation").sinkTo(kafkaSink);
+        env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source").name("Entity Bifurcation")
+           .sinkTo(kafkaSink);
 
+        // for each entity, read from respective topic and process
         for (String entityName : entityNames) {
             String entityTopic = entityTopicMap.get(entityName);
             KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), entityTopic);
@@ -160,6 +154,14 @@ public class DataStreamJob {
          * */
 
         env.execute("Flink Java API Skeleton");
+    }
+
+    private static void createEntityTopic(Map.Entry<String, String> lobEntityTopic, StreamExecutionEnvironment env, String bootstrapServers) {
+        if (isLocal(env)) {
+            KafkaTopicCreator.clearAndRecreateTopic(lobEntityTopic.getValue(), bootstrapServers);
+        } else {
+            KafkaTopicCreator.createTopicIfNotExists(lobEntityTopic.getValue(), bootstrapServers);
+        }
     }
 
 }
