@@ -100,8 +100,8 @@ public class DataStreamJob {
 
         // Create lob topics if not exists
         KafkaTopicCreator.createTopicIfNotExists(lobTopic, bootstrapServers);
-        KafkaTopicCreator.clearAndRecreateTopic(lobFailureTopic, bootstrapServers);
-        KafkaTopicCreator.clearAndRecreateTopic(lobEventTopic, bootstrapServers);
+        KafkaTopicCreator.createTopicIfNotExists(lobFailureTopic, bootstrapServers);
+        KafkaTopicCreator.createTopicIfNotExists(lobEventTopic, bootstrapServers);
         if(isLocal(env)) {
             KafkaTopicCreator.clearAndRecreateTopic(lobOutTopic, bootstrapServers);
         }
