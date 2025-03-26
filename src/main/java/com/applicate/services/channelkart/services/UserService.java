@@ -43,9 +43,10 @@ public class UserService extends AbstractCDMService<User> {
     private final RoleService roleService;
     private final DataEnrichmentService dataEnrichmentService;
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
-    private final ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
-    private final ETLRegistry etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
+    private final ETLRegistry etlRegistry;
     public UserService(){
+        ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
+        etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
         locationService = new LocationService();
         userParentService = new UserParentService();
         hierarchyMetadataService = new HierarchyMetadataService();
@@ -171,7 +172,7 @@ public class UserService extends AbstractCDMService<User> {
     private void fillUserDetails(List<User> userList) {
         for(User user : userList) {
             if (user.getVerified() == null) {
-                user.setVerified(false);
+                user.setVerified(Byte.valueOf("0"));
             }
 
             if (user.getPassword() == null) {
