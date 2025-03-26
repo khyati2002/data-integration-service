@@ -172,7 +172,7 @@ public class UserService extends AbstractCDMService<User> {
     private void fillUserDetails(List<User> userList) {
         for(User user : userList) {
             if (user.getVerified() == null) {
-                user.setVerified(Byte.valueOf("0"));
+                user.setVerified(false);
             }
 
             if (user.getPassword() == null) {
