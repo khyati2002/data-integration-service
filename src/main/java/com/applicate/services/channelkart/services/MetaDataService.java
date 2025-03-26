@@ -23,11 +23,11 @@ public class MetaDataService extends AbstractCDMService<Metadata> {
 		}
 	}
 
-	@Cacheable
 	public Metadata fetchByValueFromDB(String domainName,String domainType) {
 		return this.metaDataRepository.findByDomainNameAndDomainType(domainName, domainType).orElse(null);
 	}
 
+	@Cacheable
 	public Metadata fetchByValue(String domainName,String domainType) {
 		return fetchByValueFromDB(domainName,domainType);
 	}
