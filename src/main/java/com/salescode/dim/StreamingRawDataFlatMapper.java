@@ -7,7 +7,6 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMap
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ArrayNode;
 import org.apache.flink.util.Collector;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class StreamingRawDataFlatMapper extends RichFlatMapFunction<StreamingRawData, StreamingRawData> {

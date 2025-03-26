@@ -145,8 +145,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
 
         try {
             long pstart = System.currentTimeMillis();
-            List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures()
-                    .get(0));
+            List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures().get(0));
             long pstartTransform = System.currentTimeMillis();
             logger.info("Time to transform single record {}", pstartTransform - pstart);
             for (CommonDataModel cdm : transformedData) {

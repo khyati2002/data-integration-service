@@ -16,7 +16,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class StreamingRawData implements Serializable, KeyedKafkaSerialization {
+public class StreamingRawData implements Serializable {
 
     private static final long serialVersionUID = -1415214398611751644L;
 

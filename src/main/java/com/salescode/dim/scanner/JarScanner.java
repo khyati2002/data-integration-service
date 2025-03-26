@@ -1,6 +1,7 @@
 package com.salescode.dim.scanner;
 
 import com.salescode.dim.interfaces.TypeAwareEtlStep;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.util.ExceptionUtils;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.util.jar.JarFile;
  * JarScanner loads a jar from a given URL or relative file path, scans it for classes that implement {@link TypeAwareEtlStep},
  * and caches instances of these classes.
  */
+@Slf4j
 public class JarScanner<T extends TypeAwareEtlStep> {
 
     /**
@@ -109,13 +111,13 @@ public class JarScanner<T extends TypeAwareEtlStep> {
                         T instance = (T) clazz.getDeclaredConstructor().newInstance();
                         instance.open();
                         instanceCache.put(className, instance);
-                        System.err.printf("Loaded and cached class: %s%n", className);
+                        log.info("Loaded and cached class: {}%n", className);
                     } catch (ClassCastException e) {
-                        System.err.printf("Class %s does not implement TypeAwareEtlStep: %s%n", className, e.getMessage());
+                        log.info("Class {} does not implement TypeAwareEtlStep: {}%n", className, e.getMessage());
                     } catch (Exception e) {
-                        System.err.printf("Error loading class: %s: %s%n", className, e.getMessage());
+                        log.info("Error loading class: {}: {}%n", className, e.getMessage());
                     } catch (NoClassDefFoundError e) {
-                        System.err.printf("Class not found: %s: %s%n", className, e.getMessage());
+                        log.info("Class not found: {}: {}%n", className, e.getMessage());
                     }
                 }
             }

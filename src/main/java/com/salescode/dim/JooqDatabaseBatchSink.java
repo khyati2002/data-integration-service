@@ -4,11 +4,14 @@ import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.services.CommonDataModelService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.JSONUtils;
+import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
 import com.salescode.dim.utils.EventListenerDTO;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.flink.api.common.operators.MailboxExecutor;
 import org.apache.flink.api.connector.sink2.Sink;
 import org.apache.flink.api.connector.sink2.SinkWriter;
+import org.apache.flink.util.concurrent.Executors;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -21,6 +24,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 import static com.salescode.dim.jooq.generated.tables.CkIntegrationHistory.CK_INTEGRATION_HISTORY;
 
@@ -28,6 +33,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 
     private static final long serialVersionUID = 6676299950699299484L;
     private static final Logger LOG = LoggerFactory.getLogger(JooqDatabaseBatchSink.class);
+    private static MailboxExecutor mailboxExecutor;
     private final Properties properties;
     private final int batchSize;
     private final long batchIntervalMs;
@@ -42,6 +48,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
     @Override
     public SinkWriter<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> createWriter(InitContext context) {
         try {
+            mailboxExecutor = context.getMailboxExecutor();
             return new JooqDatabaseBatchSinkWriter(properties, batchSize, batchIntervalMs);
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException("Error initializing JooqDatabaseBatchSink", e);
@@ -54,10 +61,10 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         private final List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> batchBuffer;
         private final int batchSize;
         private final long batchIntervalMs;
+        private final String topicName;
+        private final EventPublisher eventPublisher;
         private long lastBatchTime;
         private transient ServiceLocator serviceLocator;
-        private final KafkaProducer<String, EventListenerDTO> producer;
-        private final String topicName;
 
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
             HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 10);
@@ -74,10 +81,8 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             kafkaProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
             kafkaProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EventListenerDTOSerializer.class.getName());
 
-
-            this.producer = new KafkaProducer<>(kafkaProps);
             this.topicName = properties.getProperty("event.topic") + "-" + properties.getProperty("lob");
-
+            this.eventPublisher = new EventPublisher(kafkaProps, topicName, mailboxExecutor);
         }
 
         @Override
@@ -107,7 +112,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                         for (Map.Entry<Class<? extends CommonDataModel>, Set<CommonDataModel>> entry : tuple.f1.entrySet()) {
                             consolidatedModels.putIfAbsent(entry.getKey(), new HashSet<>());
                             consolidatedModels.get(entry.getKey()).addAll(entry.getValue());
-                            for(CommonDataModel cdm : entry.getValue()){
+                            for (CommonDataModel cdm : entry.getValue()) {
                                 modelToRawDataMap.put(cdm, data);
                             }
                         }
@@ -121,29 +126,14 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                 LOG.info("Operation performed is " + model.getOperationPerformed());
                                 if (model.getOperationPerformed() != null) {
                                     StreamingRawData rawData = modelToRawDataMap.get(model);
-                                    EventListenerDTO dto = new EventListenerDTO(
+                                    eventPublisher.publishEventAsync(
                                             rawData.getRequestId(),
                                             entry.getKey().getSimpleName(),
                                             rawData.getLob(),
                                             model.getChanges(),
-                                            model.getOperationPerformed()
+                                            model.getOperationPerformed(),
+                                            model.getId()
                                     );
-
-                                    try {
-                                        // Convert DTO to JSON
-
-                                        // Publish to Kafka
-                                        ProducerRecord<String, EventListenerDTO> record = new ProducerRecord<>(topicName, dto.getRequestId(), dto);
-                                        producer.send(record, (metadata, exception) -> {
-                                            if (exception != null) {
-                                                LOG.error("Failed to publish message to Kafka", exception);
-                                            } else {
-                                                LOG.info("Published message to Kafka topic: {} at offset {}", metadata.topic(), metadata.offset());
-                                            }
-                                        });
-                                    } catch (Exception ex) {
-                                        LOG.error("Error serializing EventListenerDTO for Kafka", ex);
-                                    }
                                 }
                             }
                             saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
@@ -152,6 +142,17 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             for (CommonDataModel model : entry.getValue()) {
                                 try {
                                     service.batchSave(List.of(model));
+                                    if (model.getOperationPerformed() != null) {
+                                        StreamingRawData rawData = modelToRawDataMap.get(model);
+                                        eventPublisher.publishEventAsync(
+                                                rawData.getRequestId(),
+                                                entry.getKey().getSimpleName(),
+                                                rawData.getLob(),
+                                                model.getChanges(),
+                                                model.getOperationPerformed(),
+                                                model.getId()
+                                        );
+                                    }
                                     saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
                                 } catch (Exception individualEx) {
                                     saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
@@ -192,6 +193,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         @Override
         public void close() throws Exception {
             flush(true);
+            eventPublisher.close();
 //            if (connection != null) {
 //                connection.close();
 //            }

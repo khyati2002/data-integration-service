@@ -1,16 +1,20 @@
 // 3. CacheManager to handle multiple caches
 package com.salescode.dim.cache;
 
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
+import org.redisson.api.RFuture;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class CacheManager {
     private static final CacheManager INSTANCE = new CacheManager();
 
@@ -59,15 +63,16 @@ public class CacheManager {
         return caches;
     }
 
-//    public void printStats() {
-//        caches.forEach((name, cache) -> {
-//            if (cache.stats() != null) {
-//                System.out.println("Cache: " + name);
-//                System.out.println("  Hit rate: " + cache.stats().hitRate());
-//                System.out.println("  Miss rate: " + cache.stats().missRate());
-//                System.out.println("  Request count: " + cache.stats().requestCount());
-//                System.out.println("  Size: " + cache.estimatedSize());
-//            }
-//        });
-//    }
+    public void printStats() {
+        caches.forEach((name, cache) -> {
+            RFuture<Set<Map.Entry<String, Object>>> setRFuture = cache.readAllEntrySetAsync();
+            setRFuture.thenAccept(entrySet -> {
+                log.info("Cache: {}", name);
+                log.info("  Size: {}", entrySet.size());
+            }).exceptionally(ex -> {
+                log.info("Error retrieving cache stats for cache: {}", name, ex);
+                return null;
+            });
+        });
+    }
 }

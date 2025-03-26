@@ -9,11 +9,13 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventListenerDTO {
+@Builder
+public class EventListenerDTO implements Serializable {
 
     private String requestId;
     private String entityName;
     private String lob;
     private Set<Change<Serializable>> changes;
     private ActionType actionType;
+    private String cdmId;
 }
