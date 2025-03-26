@@ -84,7 +84,6 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         // Initialize pipeline service
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
 
-        CacheManager.getInstance(properties);
         SecurityContextUtils.getInstance(properties);
         ServiceLocator serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
@@ -109,7 +108,6 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         // Using Flink's directExecutor to execute tasks immediately
         org.apache.flink.util.concurrent.Executors.directExecutor().execute(() -> {
             try {
-                long start = System.currentTimeMillis();
                 Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>(); // Data storage
                 List<String> errorList = new ArrayList<>(); // Error tracking
 

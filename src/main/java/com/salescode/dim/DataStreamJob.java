@@ -21,9 +21,12 @@ package com.salescode.dim;
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.utils.EventListenerDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.connector.kafka.sink.TopicSelector;
 import org.apache.flink.connector.kafka.source.KafkaSource;
@@ -42,7 +45,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import static com.salescode.dim.PropertyLoader.isLocal;
 import static com.salescode.dim.PropertyLoader.mergeProperties;
 
 /**
@@ -57,14 +62,13 @@ import static com.salescode.dim.PropertyLoader.mergeProperties;
  * <p>If you change the name of the main class (with the public static void main(String[] args))
  * method, change the respective entry in the POM.xml file (simply search for 'mainClass').
  */
+@Slf4j
 public class DataStreamJob {
 
     // Define SideOutputTag for failed records
-    public static final OutputTag<StreamingRawData> FAILED_TRANSFORMATIONS = new OutputTag<>("failed-transformations") {
-    };
+    public static final OutputTag<StreamingRawData> FAILED_TRANSFORMATIONS = new OutputTag<>("failed-transformations") {};
 
-    public static final SerializationSchema<StreamingRawData> recordKeySerializationSchema = (StreamingRawData element) -> element.getRequestId()
-            .getBytes();
+    public static final SerializationSchema<StreamingRawData> recordKeySerializationSchema = (StreamingRawData element) -> element.getRequestId().getBytes();
 
 
 
@@ -73,8 +77,12 @@ public class DataStreamJob {
     public static void main(String[] args) throws Exception {
         // Sets up the execution environment, which is the main entry point
         // to building Flink applications.
-        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        Configuration cfg = new Configuration();
+        cfg.set(RestOptions.PORT, 8085);
+        StreamExecutionEnvironment baseEnv = StreamExecutionEnvironment.getExecutionEnvironment();
+        final StreamExecutionEnvironment env = isLocal(baseEnv) ? StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(cfg) : baseEnv;
 
+//    https://medium.com/@vndhya/apache-flink-streaming-kafka-events-in-json-format-complete-sample-code-in-java-70372d62f61
 
         // Load the application properties
         final Map<String, Properties> applicationProperties = PropertyLoader.loadApplicationProperties(env);
@@ -83,146 +91,77 @@ public class DataStreamJob {
         Properties commonProperties = applicationProperties.getOrDefault("Common", new Properties());
 
         // Read from kafka and bifurcate topic on basis of entities and sink to respective topics
+        ConfigValidator.validate(commonProperties, "lob", "bootstrapServers", "entities");
+
+        String bootstrapServers = commonProperties.getProperty("bootstrap.servers").trim();
+        String lob = commonProperties.getProperty("lob").trim();
+        String entities = commonProperties.getProperty("entities").trim();
+        String[] entityNames = entities.split(",");
+
         Properties inout0Properties = mergeProperties(applicationProperties.get("InOut0"), commonProperties);
-        String inputTopic = inout0Properties.getProperty("input.topic");
-        String outTopicPrefix = inout0Properties.getProperty("output.topic.prefix");
-        String failureTopic = inout0Properties.getProperty("failure.topic");
-        String outTopic = inout0Properties.getProperty("output.topic");
-        String bootstrapServers = inout0Properties.getProperty("bootstrap.servers");
-        String lob = inout0Properties.getProperty("lob");
-        String eventTopic = inout0Properties.getProperty("event.topic");
+        ConfigValidator.validate(inout0Properties, "input.topic", "failure.topic");
+
+        String inputTopicPostFix = inout0Properties.getProperty("input.topic").trim();
+        String failureTopicPostFix = inout0Properties.getProperty("failure.topic").trim();
+        String eventTopicPostFix = inout0Properties.getProperty("event.topic", "event").trim();
+
+        String lobTopic = String.join("-", lob, inputTopicPostFix);
+        String lobFailureTopic = String.join("-", lob, failureTopicPostFix);
+        String lobEventTopic = String.join("-", lob, eventTopicPostFix);
+        String lobOutTopic = String.join("-", lobTopic, "out");
+
+        // Create topics if not exists
+        KafkaTopicCreator.createTopicIfNotExists(lobTopic, bootstrapServers);
+        KafkaTopicCreator.createTopicIfNotExists(lobFailureTopic, bootstrapServers);
+        KafkaTopicCreator.createTopicIfNotExists(lobEventTopic, bootstrapServers);
+        KafkaTopicCreator.clearAndRecreateTopic(lobOutTopic, bootstrapServers);
 
 
-        KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), inputTopic + "-" + lob);
+        Map<String, String> entityTopicMap = Arrays.stream(entityNames).distinct().parallel()
+                                            .map(entityName -> Map.entry(entityName, String.join("-", lobTopic, entityName)))
+                                            .peek(lobEntityTopic -> KafkaTopicCreator.clearAndRecreateTopic(lobEntityTopic.getValue(), bootstrapServers))
+                                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        TopicSelector<StreamingRawData> topicSelector = (StreamingRawData record) -> {
-            String topicName = Optional.ofNullable(record.getTransformerInfo())
-                    .filter(s -> !s.isEmpty())
-                    .map(t -> t.get(0).getEntityName())
-                    .filter(s -> !s.isEmpty())
-                    .map(entityName -> getEntityTopic(outTopicPrefix, lob, entityName))
-                    .orElseGet(() -> {
-                        record.setResponses(List.of(new StreamingRawData.Response("Failure", "Could not find entity name in transformerInfo")));
-                        return failureTopic + "-" + lob;
-                    });
-//            KafkaTopicCreator.createTopicIfNotExists(topicName, bootstrapServers, 5, (short) 1);
-            return topicName;
-        };
+        KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), lobTopic);
 
+        TopicSelector<StreamingRawData> topicSelector = (StreamingRawData record) -> Optional.ofNullable(record.getTransformerInfo())
+                                                                                             .filter(s -> !s.isEmpty())
+                                                                                             .map(t -> t.get(0).getEntityName()) // we will process all entities in TransformerList in transformation function
+                                                                                             .filter(entity -> !entity.isEmpty() && entityTopicMap.containsKey(entity))
+                                                                                             .map(entityTopicMap::get)
+                                                                                             .orElseGet(() -> {
+                                                                                                 record.setResponses(List.of(new StreamingRawData.Response("Failure", "Entity not found")));
+                                                                                                 return lobFailureTopic;
+                                                                                             });
 
         KafkaSink<StreamingRawData> kafkaSink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, topicSelector);
 
-        env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source")
-                .sinkTo(kafkaSink);
-
-        String eventTopicName = eventTopic + "-" + lob;
-        KafkaTopicCreator.createTopicIfNotExists(eventTopicName, bootstrapServers, 5, (short) 1);
-
-
-        // for each entity, read from respective topic and process
-        String entities = commonProperties.getProperty("entities");
-        String[] entityNames = entities.split(",");
+        env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source").name("Entity Bifurcation").sinkTo(kafkaSink);
 
         for (String entityName : entityNames) {
-            String entityTopic = getEntityTopic(outTopicPrefix, lob, entityName);
+            String entityTopic = entityTopicMap.get(entityName);
             KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), entityTopic);
-            DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Kafka source -> " + entityName);
-            var processedStream = AsyncDataStream
-                    .unorderedWait(
+            DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Entity Kafka source" + entityName).name(entityName + "-Source");
+            var processedStream = AsyncDataStream.unorderedWait(
                             input.rebalance().flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
                             new StreamingRawDataProcessor(commonProperties),  // Async Processing
                             5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
-                    ).process(new ProcessFunction<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>>() {
-
-                        @Override
-                        public void processElement(
-                                Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>> record,
-                                Context ctx,
-                                Collector<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> out) {
-
-                            StreamingRawData streamingRawData = record.f0;
-                            Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = record.f1;
-
-                            if (dataset == null) {
-                                // If dataset is null, it means there was a failure → send to side output
-                                ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
-                            } else {
-                                // Otherwise, collect the valid processed data
-                                out.collect(record);
-                            }
-                        }
-                    });
-//             add map function to get old record , create and check hash, sink to separate sink to ignore or process further ??
-//                    processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
-//                            .keyBy(t -> t.f0.getTransformerInfo().get(0).getEntityName())
+                    ).process(new ProcessRecordStatus());
 
            processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
-             //      .disableChaining();
 
-
+           // Failed records
             DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
-//            // Create and add the Sink
-
-//            KafkaTopicCreator.createTopicIfNotExists(eventTopicName, bootstrapServers, 5, (short) 1);
-//
-//            KafkaSink<EventListenerDTO> eventSink = KafkaSink.<EventListenerDTO>builder()
-//                    .setBootstrapServers(bootstrapServers)
-//                    .setRecordSerializer(new EventListenerDTOSerializer(eventTopicName))
-//                    .build();
-
-    //        batchProcessedStream.sinkTo(eventSink).name("EventListener Kafka Sink");
-
-
-            KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> outTopic + "-" + lob);
-//            input.sinkTo(sink);
+            KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> lobFailureTopic);
             failedRecords.sinkTo(sink).name("Failed Kafka Sink");
         }
         /* /Note
          * 	Out of order ??
          * 	Key by (entity unique column) for avoiding optimistic errors , but costly process
-         * */
-
-        /* /Note
          * 	Window by size or time for batching
          * */
 
-//         var aggregate = input
-//                .windowAll(GlobalWindows.create())
-//                .trigger(CountOrTimeTrigger.of(100, 5000))
-//                .aggregate(new ListAggregator<>())
-//                .name("Aggregate Window Count")
-//                .process(new StreamingRawDataProcessor(commonProperties))
-//                .name("Process Window Count");
-
-        /*
-         * Here, you can start creating your execution plan for Flink.
-         *
-         * Start with getting some data from the environment, like
-         * 	env.fromSequence(1, 10);
-         *
-         * then, transform the resulting DataStream<Long> using operations
-         * like
-         * 	.filter()
-         * 	.flatMap()
-         * 	.window()
-         * 	.process()
-         *
-         * and many more.
-         * Have a look at the programming guide:
-         *
-         * https://nightlies.apache.org/flink/flink-docs-stable/
-         *
-         */
-
-        // Execute program, beginning computation.
         env.execute("Flink Java API Skeleton");
-//        if (PropertyLoader.isLocal(env)) {
-//            env.disableOperatorChaining();
-//        }
-    }
-
-    private static String getEntityTopic(String topicPrefix, String lob, String entityName) {
-        return String.join("-", topicPrefix, lob, entityName);
     }
 
 }
