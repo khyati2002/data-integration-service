@@ -4,8 +4,10 @@ import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.services.CommonDataModelService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.JSONUtils;
+import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
+import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.salescode.dim.utils.EventListenerDTO;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.flink.api.common.operators.MailboxExecutor;
@@ -67,6 +69,8 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         private transient ServiceLocator serviceLocator;
 
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
+            ExternalRegistryScanner.getInstance(properties);
+
             HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 10);
             this.dslContext = DatabaseConnectionUtil.createPooledDSLContext(hikariDataSource);
             this.batchBuffer = new ArrayList<>();
@@ -81,7 +85,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             kafkaProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
             kafkaProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EventListenerDTOSerializer.class.getName());
 
-            this.topicName = properties.getProperty("event.topic") + "-" + properties.getProperty("lob");
+            this.topicName = DataStreamJob.getLobEventTopic(properties);
             this.eventPublisher = new EventPublisher(kafkaProps, topicName, mailboxExecutor);
         }
 
