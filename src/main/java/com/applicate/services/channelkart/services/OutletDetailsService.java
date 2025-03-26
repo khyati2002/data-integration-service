@@ -52,14 +52,15 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private final SupplierInfoService supplierInfoService;
     private final DataValidationService dataValidationService;
     private final DataEnrichmentService dataEnrichmentService;
-    private final ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
     private final PreProcessPipelineService preProcessPipelineService;
     private final ValidationInfoRegistry validationInfoRegistry;
     private final ValidationExcludeGroupRegistry validationExcludeGroupRegistry;
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
-    private final ETLRegistry etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
+    private ETLRegistry etlRegistry;
 
     public OutletDetailsService(){
+        ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
+        etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
         userService = new UserService();
         locationService = new LocationService();
         validationInfoRegistry = new ValidationInfoRegistry(getDslContext());
