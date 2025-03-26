@@ -18,23 +18,31 @@
 
 package com.salescode.dim;
 
+import com.applicate.services.channelkart.models.CommonDataModel;
+import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.utils.EventListenerDTO;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.serialization.SerializationSchema;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.connector.kafka.sink.TopicSelector;
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.formats.json.JsonDeserializationSchema;
+import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.windowing.assigners.GlobalWindows;
+import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+
 import static com.salescode.dim.PropertyLoader.mergeProperties;
 
 /**
@@ -66,7 +74,7 @@ public class DataStreamJob {
         // Sets up the execution environment, which is the main entry point
         // to building Flink applications.
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        
+
 
         // Load the application properties
         final Map<String, Properties> applicationProperties = PropertyLoader.loadApplicationProperties(env);
@@ -83,6 +91,7 @@ public class DataStreamJob {
         String bootstrapServers = inout0Properties.getProperty("bootstrap.servers");
         String lob = inout0Properties.getProperty("lob");
         String eventTopic = inout0Properties.getProperty("event.topic");
+
 
         KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), inputTopic + "-" + lob);
 
@@ -118,13 +127,34 @@ public class DataStreamJob {
             String entityTopic = getEntityTopic(outTopicPrefix, lob, entityName);
             KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), entityTopic);
             DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Kafka source -> " + entityName);
-            var processedStream = input
-                    .rebalance()
-                    .flatMap(new StreamingRawDataFlatMapper())
-                    .process(new StreamingRawDataProcessor(commonProperties));
-            // add map function to get old record , create and check hash, sink to separate sink to ignore or process further ??
-            //        processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
-            //                .keyBy(t -> t.f0.getTransformerInfo().get(0).getEntityName())
+            var processedStream = AsyncDataStream
+                    .unorderedWait(
+                            input.rebalance().flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
+                            new StreamingRawDataProcessor(commonProperties),  // Async Processing
+                            5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
+                    ).process(new ProcessFunction<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>>() {
+
+                        @Override
+                        public void processElement(
+                                Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>> record,
+                                Context ctx,
+                                Collector<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> out) {
+
+                            StreamingRawData streamingRawData = record.f0;
+                            Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = record.f1;
+
+                            if (dataset == null) {
+                                // If dataset is null, it means there was a failure → send to side output
+                                ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
+                            } else {
+                                // Otherwise, collect the valid processed data
+                                out.collect(record);
+                            }
+                        }
+                    });
+//             add map function to get old record , create and check hash, sink to separate sink to ignore or process further ??
+//                    processedStream.sinkTo(new JooqDatabaseBatchSink(outputProperties)).name("Database Success Sink");
+//                            .keyBy(t -> t.f0.getTransformerInfo().get(0).getEntityName())
 
            processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
              //      .disableChaining();

@@ -54,13 +54,24 @@ public class UserService extends AbstractCDMService<User> {
         enrichmentInfoRegistry = new EnrichmentInfoRegistry(getDslContext());
         dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry,etlRegistry);
     }
-    @Cacheable
+    @Cacheable(cacheName = "dataintegration-user")
     public User findByLoginId(String loginid) {
         com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
-       return User.of(user);
-      //  return new User();
+//       if(user == null){
+//           return null;
+//       }
+      return User.of(user);
+    }
+
+    @Cacheable(cacheName = "dataintegration-user")
+    public User findByLoginIdParent(String loginid) {
+        com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
+                .where(CK_USER.LOGINID.eq(loginid))
+                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
+        return User.of(user);
+        //  return new User();
     }
 
     private void populateBatchLocation(List<User> userList) {

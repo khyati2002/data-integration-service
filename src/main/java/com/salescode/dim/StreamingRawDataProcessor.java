@@ -1,10 +1,10 @@
 package com.salescode.dim;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
-import com.applicate.services.channelkart.services.AbstractCDMService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
+import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
@@ -19,6 +19,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
+import org.apache.flink.streaming.api.functions.async.ResultFuture;
+import org.apache.flink.streaming.api.functions.async.RichAsyncFunction;
 import org.apache.flink.util.Collector;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
@@ -28,7 +30,7 @@ import java.sql.Connection;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
+public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawData, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
     private static final long serialVersionUID = -3351413046175753755L;
     private static final String TRANSFORMATION_ERROR = "Transformation Failed : ";
     private static final String SAVE_ERROR = "Error while saving record. Reason: ";
@@ -82,9 +84,12 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
         // Initialize pipeline service
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
 
+        CacheManager.getInstance(properties);
         SecurityContextUtils.getInstance(properties);
         ServiceLocator serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
+
+
     }
 
     @Override
@@ -100,37 +105,39 @@ public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData,
     }
 
     @Override
-    public void processElement(StreamingRawData streamingRawData, Context ctx, Collector<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> out) throws Exception {
-        try {
-            long start = System.currentTimeMillis();
-            List<TransformerInfo> transformerInfos = streamingRawData.getTransformerInfo();
-            Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>();
-            List<String> errorList = new ArrayList<>();
+    public void asyncInvoke(StreamingRawData streamingRawData, ResultFuture<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> resultFuture) {
+        // Using Flink's directExecutor to execute tasks immediately
+        org.apache.flink.util.concurrent.Executors.directExecutor().execute(() -> {
+            try {
+                long start = System.currentTimeMillis();
+                Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>(); // Data storage
+                List<String> errorList = new ArrayList<>(); // Error tracking
 
-            for (TransformerInfo transformerInfo : transformerInfos) {
-                processTransformer(streamingRawData, transformerInfo, dataset, errorList);
-            }
+                // Processing each transformer in the streaming data
+                for (TransformerInfo transformerInfo : streamingRawData.getTransformerInfo()) {
+                    processTransformer(streamingRawData, transformerInfo, dataset, errorList);
+                }
 
-            if (errorList.isEmpty()) {
-//                dispatchData(dataset, transformerInfos, errorList);
-            }
-            long stop = System.currentTimeMillis();
-            logger.info("Time to preProcess record : {} ms", stop - start);
-            if (!errorList.isEmpty()) {
+                if (!errorList.isEmpty()) {
+                    streamingRawData.setStatus("Failure");
+                    streamingRawData.setResponses(
+                            errorList.stream()
+                                    .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
+                                    .collect(Collectors.toList())
+                    );
+                    resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
+                } else {
+                    streamingRawData.setStatus("Processed");
+                    resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, dataset))); // Handle success case
+                }
+            } catch (Exception e) {
+                logger.error("Processing failed", e);
                 streamingRawData.setStatus("Failure");
-                streamingRawData.setResponses(errorList.stream().map(s -> new StreamingRawData.Response("Failure", s))
-                        .collect(Collectors.toList()));
-                ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
-            } else {
-                streamingRawData.setStatus("Processed");
-                Long timestamp = ctx.timestamp();
-                out.collect(Tuple2.of(streamingRawData, dataset));
+                resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap())));
             }
-        } catch (Exception e) {
-            streamingRawData.setStatus("Failure");
-            ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
-        }
+        });
     }
+
 
     private void processTransformer(StreamingRawData streamingRawData, TransformerInfo transformerInfo, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset, List<String> errorList) {
         String transformerId = transformerInfo.getTransformerId();

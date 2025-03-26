@@ -73,7 +73,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         supplierInfoService = new SupplierInfoService(getDslContext());
     }
 
-    @Cacheable
+    @Cacheable(cacheName = "dataintegration-outlets")
     public OutletDetails findByOutletCode(String outletcode) {
         com.salescode.dim.jooq.generated.tables.pojos.OutletDetails outletDetails = getDslContext().select(CK_OUTLET_DETAILS.asterisk()
                         .except(CK_OUTLET_DETAILS.COORDINATE))
