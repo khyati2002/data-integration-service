@@ -1,5 +1,6 @@
 package com.salescode.dim.services;
 
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.services.AbstractCDMService;
 import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.utils.IDGenerator;
@@ -55,10 +56,10 @@ public class SchemeLocationBifurcationService extends AbstractCDMService<SchemeL
         return (InsertSetMoreStep<CkSchemeLocationBifurcationsRecord>)
                 dslContext.insertInto(CK_SCHEME_LOCATION_BIFURCATIONS)
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.ID, ros.getId())
-                        .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.ACTIVE_STATUS, ros.getActiveStatus())
+                        .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.CHANGED, ros.getChanged())
-                        .set(CK_SCHEME_LOCATION_BIFURCATIONS.CREATED_BY, ros.getCreatedBy())
+                        .set(CK_SCHEME_LOCATION_BIFURCATIONS.CREATED_BY, "flink job")
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.CREATION_TIME, LocalDateTime.now(ZoneId.of("UTC")))
                         .set(CK_SCHEME_LOCATION_BIFURCATIONS.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.HASH, ros.getHash())
@@ -77,9 +78,10 @@ public class SchemeLocationBifurcationService extends AbstractCDMService<SchemeL
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.DISTRICT, ros.getDistrict())
                         .onConflict(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.ID)
                         .doUpdate()
-                        .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.ACTIVE_STATUS, ros.getActiveStatus())
+                        .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.CHANGED, ros.getChanged())
+                        .set(CK_SCHEME_LOCATION_BIFURCATIONS.CREATED_BY, "flink job")
                         .set(CK_SCHEME_LOCATION_BIFURCATIONS.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.HASH, ros.getHash())
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.LAST_MODIFIED_TIME, LocalDateTime.now(ZoneId.of("UTC")))
@@ -103,11 +105,15 @@ public class SchemeLocationBifurcationService extends AbstractCDMService<SchemeL
         for (SchemeLocationBifurcations slb : bifurcations) {
             slb.setId(idGenerator.getIdWithMetaData(slb, metadata));
         }
+//        try {
         dsl.batch(
                 bifurcations.stream()
                         .map(spb -> schemeLocationBiFunctionMapper.apply(spb,dsl))
                         .collect(Collectors.toList())
         ).execute();
+//                } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         logger.info("Saved Scheme Location Bifurcations");
     }
 

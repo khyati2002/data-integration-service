@@ -1,5 +1,6 @@
 package com.salescode.dim.services;
 
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.services.AbstractCDMService;
 import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.utils.IDGenerator;
@@ -62,7 +63,7 @@ public class SchemeDefinationService extends AbstractCDMService<SchemeDefination
         return (InsertSetMoreStep<CkSchemeDefinationRecord>)
                 dslContext.insertInto(CK_SCHEME_DEFINATION)
                         .set(Tables.CK_SCHEME_DEFINATION.ID, ros.getId())
-                        .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_STATUS, ros.getActiveStatus())
+                        .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
                         .set(Tables.CK_SCHEME_DEFINATION.CHANGED, ros.getChanged())
                         .set(CK_SCHEME_DEFINATION.CREATED_BY, "flink job")
@@ -96,9 +97,10 @@ public class SchemeDefinationService extends AbstractCDMService<SchemeDefination
                         .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_TIME, ros.getActiveTime())
                         .onConflict(Tables.CK_SCHEME_DEFINATION.ID)
                         .doUpdate()
-                        .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_STATUS, ros.getActiveStatus())
+                        .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
                         .set(Tables.CK_SCHEME_DEFINATION.CHANGED, ros.getChanged())
+                        .set(CK_SCHEME_DEFINATION.CREATED_BY, "flink job")
                         .set(CK_SCHEME_DEFINATION.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
                         .set(Tables.CK_SCHEME_DEFINATION.HASH, ros.getHash())
                         .set(Tables.CK_SCHEME_DEFINATION.LAST_MODIFIED_TIME, LocalDateTime.now(ZoneId.of("UTC")))
@@ -138,6 +140,8 @@ public class SchemeDefinationService extends AbstractCDMService<SchemeDefination
 
     @Override
     public Collection<SchemeDefination> batchSave(Collection<SchemeDefination> schemes) {
+        logger.info("starting saving schemedefination...");
+
         for (SchemeDefination s : schemes) {
             schemeProductBifurcationService.spbSave(s.getSchemeProductBifurcationsList());
             schemeLocationBifurcationService.slbSave(s.getSchemeLocationBifurcationsList());

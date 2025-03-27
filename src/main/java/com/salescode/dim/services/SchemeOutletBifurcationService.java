@@ -1,5 +1,6 @@
 package com.salescode.dim.services;
 
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.services.AbstractCDMService;
 import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.utils.IDGenerator;
@@ -50,10 +51,10 @@ public class SchemeOutletBifurcationService extends AbstractCDMService<SchemeOut
         return (InsertSetMoreStep<CkSchemeOutletBifurcationsRecord>)
                 dslContext.insertInto(CK_SCHEME_OUTLET_BIFURCATIONS)
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ID, ros.getId())
-                        .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ACTIVE_STATUS, ros.getActiveStatus())
+                        .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.CHANGED, ros.getChanged())
-                        .set(CK_SCHEME_OUTLET_BIFURCATIONS.CREATED_BY, ros.getCreatedBy())
+                        .set(CK_SCHEME_OUTLET_BIFURCATIONS.CREATED_BY, "flink job")
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.CREATION_TIME, LocalDateTime.now(ZoneId.of("UTC")))
                         .set(CK_SCHEME_OUTLET_BIFURCATIONS.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.HASH, ros.getHash())
@@ -83,9 +84,10 @@ public class SchemeOutletBifurcationService extends AbstractCDMService<SchemeOut
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.BEAT, ros.getBeat())
                         .onConflict(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ID)
                         .doUpdate()
-                        .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ACTIVE_STATUS, ros.getActiveStatus())
+                        .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.CHANGED, ros.getChanged())
+                        .set(CK_SCHEME_OUTLET_BIFURCATIONS.CREATED_BY, "flink job")
                         .set(CK_SCHEME_OUTLET_BIFURCATIONS.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.HASH, ros.getHash())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.LAST_MODIFIED_TIME, LocalDateTime.now(ZoneId.of("UTC")))

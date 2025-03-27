@@ -1,5 +1,6 @@
 package com.salescode.dim.services;
 
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.services.AbstractCDMService;
 import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.utils.IDGenerator;
@@ -23,11 +24,15 @@ import static com.salescode.dim.jooq.generated.Tables.CK_SCHEME_PRODUCT_BIFURCAT
 
 public class SchemeProductBifurcationService extends AbstractCDMService<SchemeProductBifurcations> {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private static final Logger logger = LoggerFactory.getLogger(SchemeProductBifurcationService.class);
     private static DSLContext dsl;
 
-    /** The repository. */
+    /**
+     * The repository.
+     */
     private SchemeProductBifurcationRepo schemeProductBifurcationRepo;
     private static IDGenerator idGenerator = null;
     private static MetaDataService metaDataService;
@@ -37,7 +42,7 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
 
     public SchemeProductBifurcationService() {
         this.dsl = getDslContext();
-        idGenerator=new IDGenerator();
+        idGenerator = new IDGenerator();
         metaDataService = new MetaDataService();
 
     }
@@ -45,7 +50,7 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
     public List<SchemeProductBifurcations> findBySchemeId(String schemeId) {
 
         List<SchemeProductBifurcations> schemeProductBifurcationsList = schemeProductBifurcationRepo.findBySchemeId(schemeId);
-        if (schemeProductBifurcationsList == null ) {
+        if (schemeProductBifurcationsList == null) {
             return null;
         }
         return schemeProductBifurcationsList;
@@ -56,10 +61,10 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
         return (InsertSetMoreStep<CkSchemeProductBifurcationsRecord>)
                 dslContext.insertInto(CK_SCHEME_PRODUCT_BIFURCATIONS)
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ID, ros.getId())
-                        .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ACTIVE_STATUS, ros.getActiveStatus())
+                        .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.CHANGED, ros.getChanged())
-                        .set(CK_SCHEME_PRODUCT_BIFURCATIONS.CREATED_BY, ros.getCreatedBy())
+                        .set(CK_SCHEME_PRODUCT_BIFURCATIONS.CREATED_BY, "flink job")
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.CREATION_TIME, LocalDateTime.now(ZoneId.of("UTC")))
                         .set(CK_SCHEME_PRODUCT_BIFURCATIONS.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.HASH, ros.getHash())
@@ -92,9 +97,10 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.M_CODE, ros.getMCode())
                         .onConflict(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ID)
                         .doUpdate()
-                        .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ACTIVE_STATUS, ros.getActiveStatus())
+                        .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.CHANGED, ros.getChanged())
+                        .set(CK_SCHEME_PRODUCT_BIFURCATIONS.CREATED_BY, "flink job")
                         .set(CK_SCHEME_PRODUCT_BIFURCATIONS.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.HASH, ros.getHash())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.LAST_MODIFIED_TIME, LocalDateTime.now(ZoneId.of("UTC")))
@@ -127,18 +133,17 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
     };
 
     public void spbSave(List<SchemeProductBifurcations> bifurcations) {
-
+        logger.info("starting saving SchemeProductBifurcations...");
         JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
 
         for (SchemeProductBifurcations spb : bifurcations) {
             spb.setId(idGenerator.getIdWithMetaData(spb, metadata));
         }
-
-        dsl.batch(
-                bifurcations.stream()
-                        .map(spb -> schemeProductBiFunctionMapper.apply(spb,dsl))
-                        .collect(Collectors.toList())
-        ).execute();
+            dsl.batch(
+                    bifurcations.stream()
+                            .map(spb -> schemeProductBiFunctionMapper.apply(spb, dsl))
+                            .collect(Collectors.toList())
+            ).execute();
 
         logger.info("Saved scheme product bifurcations");
     }

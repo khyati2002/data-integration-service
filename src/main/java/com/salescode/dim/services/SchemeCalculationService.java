@@ -1,5 +1,6 @@
 package com.salescode.dim.services;
 
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.services.AbstractCDMService;
 import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.utils.IDGenerator;
@@ -55,10 +56,10 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
         return (InsertSetMoreStep<CkSchemeCalculationRecord>)
                 dslContext.insertInto(CK_SCHEME_CALCULATION)
                         .set(Tables.CK_SCHEME_CALCULATION.ID, ros.getId())
-                        .set(Tables.CK_SCHEME_CALCULATION.ACTIVE_STATUS, ros.getActiveStatus())
+                        .set(Tables.CK_SCHEME_CALCULATION.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_CALCULATION.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
                         .set(Tables.CK_SCHEME_CALCULATION.CHANGED, ros.getChanged())
-                        .set(CK_SCHEME_CALCULATION.CREATED_BY, ros.getCreatedBy())
+                        .set(CK_SCHEME_CALCULATION.CREATED_BY, "flink job")
                         .set(Tables.CK_SCHEME_CALCULATION.CREATION_TIME, ros.getCreationTime())
                         .set(CK_SCHEME_CALCULATION.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
                         .set(Tables.CK_SCHEME_CALCULATION.HASH, ros.getHash())
@@ -98,10 +99,10 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
                         .set(Tables.CK_SCHEME_CALCULATION.QUOTA_CODE, ros.getQuotaCode())
                         .onConflict(Tables.CK_SCHEME_CALCULATION.ID)
                         .doUpdate()
-                        .set(Tables.CK_SCHEME_CALCULATION.ACTIVE_STATUS, ros.getActiveStatus())
+                        .set(Tables.CK_SCHEME_CALCULATION.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_CALCULATION.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
                         .set(Tables.CK_SCHEME_CALCULATION.CHANGED, ros.getChanged())
-                        .set(CK_SCHEME_CALCULATION.CREATED_BY, ros.getCreatedBy())
+                        .set(CK_SCHEME_CALCULATION.CREATED_BY, "flink job")
                         .set(Tables.CK_SCHEME_CALCULATION.CREATION_TIME, ros.getCreationTime())
                         .set(CK_SCHEME_CALCULATION.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
                         .set(Tables.CK_SCHEME_CALCULATION.HASH, ros.getHash())
