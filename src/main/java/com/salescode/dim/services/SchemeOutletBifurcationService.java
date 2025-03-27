@@ -6,6 +6,7 @@ import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.utils.IDGenerator;
 import com.salescode.dim.jooq.generated.Tables;
 import com.salescode.dim.jooq.generated.tables.pojos.SchemeOutletBifurcations;
+import com.salescode.dim.jooq.generated.tables.pojos.SchemeProductBifurcations;
 import com.salescode.dim.jooq.generated.tables.records.CkSchemeOutletBifurcationsRecord;
 import com.salescode.dim.repository.SchemeOutletBifurcationRepo;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
@@ -127,8 +128,19 @@ public class SchemeOutletBifurcationService extends AbstractCDMService<SchemeOut
         for (SchemeOutletBifurcations spb : bifurcations) {
             spb.setId(idGenerator.getIdWithMetaData(spb, metadata));
         }
+        List<SchemeOutletBifurcations> uniqueBifurcations = bifurcations.stream()
+                .collect(Collectors.toMap(
+                        SchemeOutletBifurcations::getId,  // Key: Unique ID
+                        spb -> spb,  // Value: Original Object
+                        (existing, replacement) -> existing // Keep first occurrence if duplicate
+                ))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+
+        logger.info("old size === {},new size==={}",bifurcations.size(),uniqueBifurcations.size());
         dsl.batch(
-                bifurcations.stream()
+                uniqueBifurcations.stream()
                         .map(sob -> schemeOutletBiFunctionMapper.apply(sob,dsl))
                         .collect(Collectors.toList())
         ).execute();

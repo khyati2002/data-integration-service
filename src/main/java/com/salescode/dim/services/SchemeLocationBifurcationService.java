@@ -105,9 +105,19 @@ public class SchemeLocationBifurcationService extends AbstractCDMService<SchemeL
         for (SchemeLocationBifurcations slb : bifurcations) {
             slb.setId(idGenerator.getIdWithMetaData(slb, metadata));
         }
-//        try {
+        List<SchemeLocationBifurcations> uniqueBifurcations = bifurcations.stream()
+                .collect(Collectors.toMap(
+                        SchemeLocationBifurcations::getId,  // Key: Unique ID
+                        spb -> spb,  // Value: Original Object
+                        (existing, replacement) -> existing // Keep first occurrence if duplicate
+                ))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+
+        logger.info("old size === {},new size==={}",bifurcations.size(),uniqueBifurcations.size());
         dsl.batch(
-                bifurcations.stream()
+                uniqueBifurcations.stream()
                         .map(spb -> schemeLocationBiFunctionMapper.apply(spb,dsl))
                         .collect(Collectors.toList())
         ).execute();

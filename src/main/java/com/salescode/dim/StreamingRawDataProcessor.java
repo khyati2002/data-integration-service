@@ -30,7 +30,7 @@ import java.sql.Connection;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawData, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
+public class StreamingRawDataProcessor extends ProcessFunction<StreamingRawData, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
     private static final long serialVersionUID = -3351413046175753755L;
     private static final String TRANSFORMATION_ERROR = "Transformation Failed : ";
     private static final String SAVE_ERROR = "Error while saving record. Reason: ";
@@ -104,37 +104,37 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
     }
 
     @Override
-    public void asyncInvoke(StreamingRawData streamingRawData, ResultFuture<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> resultFuture) {
-        // Using Flink's directExecutor to execute tasks immediately
-        org.apache.flink.util.concurrent.Executors.directExecutor().execute(() -> {
-            try {
-                Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>(); // Data storage
-                List<String> errorList = new ArrayList<>(); // Error tracking
+    public void processElement(
+            StreamingRawData streamingRawData,
+            Context context,
+            Collector<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> collector) {
 
-                // Processing each transformer in the streaming data
-                for (TransformerInfo transformerInfo : streamingRawData.getTransformerInfo()) {
-                    processTransformer(streamingRawData, transformerInfo, dataset, errorList);
-                }
+        Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new HashMap<>();
+        List<String> errorList = new ArrayList<>();
 
-                if (!errorList.isEmpty()) {
-                    streamingRawData.setStatus("Failure");
-                    streamingRawData.setResponses(
-                            errorList.stream()
-                                    .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
-                                    .collect(Collectors.toList())
-                    );
-                    resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
-                } else {
-                    streamingRawData.setStatus("Processed");
-                    resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, dataset))); // Handle success case
-                }
-            } catch (Exception e) {
-                logger.error("Processing failed", e);
-                streamingRawData.setStatus("Failure");
-                resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap())));
+        try {
+            for (TransformerInfo transformerInfo : streamingRawData.getTransformerInfo()) {
+                processTransformer(streamingRawData, transformerInfo, dataset, errorList);
             }
-        });
+
+            if (!errorList.isEmpty()) {
+                streamingRawData.setStatus("Failure");
+                streamingRawData.setResponses(
+                        errorList.stream()
+                                .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg)).collect(Collectors.toList())
+                );
+            } else {
+                streamingRawData.setStatus("Processed");
+            }
+
+            collector.collect(Tuple2.of(streamingRawData, dataset));
+
+        } catch (Exception e) {
+            streamingRawData.setStatus("Failure");
+            collector.collect(Tuple2.of(streamingRawData, Collections.emptyMap()));
+        }
     }
+
 
 
     private void processTransformer(StreamingRawData streamingRawData, TransformerInfo transformerInfo, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset, List<String> errorList) {

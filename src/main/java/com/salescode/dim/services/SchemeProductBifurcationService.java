@@ -139,8 +139,19 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
         for (SchemeProductBifurcations spb : bifurcations) {
             spb.setId(idGenerator.getIdWithMetaData(spb, metadata));
         }
+        List<SchemeProductBifurcations> uniqueBifurcations = bifurcations.stream()
+                .collect(Collectors.toMap(
+                        SchemeProductBifurcations::getId,  // Key: Unique ID
+                        spb -> spb,  // Value: Original Object
+                        (existing, replacement) -> existing // Keep first occurrence if duplicate
+                ))
+                .values()
+                .stream()
+                        .collect(Collectors.toList());
+
+        logger.info("old size === {},new size==={}",bifurcations.size(),uniqueBifurcations.size());
             dsl.batch(
-                    bifurcations.stream()
+                    uniqueBifurcations.stream()
                             .map(spb -> schemeProductBiFunctionMapper.apply(spb, dsl))
                             .collect(Collectors.toList())
             ).execute();
