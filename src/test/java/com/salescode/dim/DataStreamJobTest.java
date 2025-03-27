@@ -101,7 +101,7 @@ public class DataStreamJobTest {
 
         // Set up a local Flink streaming environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1); // Simplify testing with one parallel instance
+//        env.setParallelism(1); // Simplify testing with one parallel instance
 
         // Create a few sample StreamingRawData objects
         StreamingRawData data1 = createStreamingDataObject(Map.of("groupId", "req-1"));
