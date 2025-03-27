@@ -92,7 +92,7 @@ public class DataStreamJob {
         // cktestitcloyalty-dataintegration-failure or cktestitcloyalty-int-failure-streams
         // cktestitcloyalty-dataintegration-event
 
-        String lobTopic = getLobTopic(inout0Properties);
+        String lobTopic = inout0Properties.getProperty("input.topic").trim();
         String lobFailureTopic = getLobFailureTopic(inout0Properties);
         String lobEventTopic = getLobEventTopic(inout0Properties);
         String lobOutTopic = String.join("-", lobTopic, "out");     // cktestitcloyalty-dataintegration-out (for testing only)
@@ -103,50 +103,55 @@ public class DataStreamJob {
         KafkaTopicCreator.createTopicIfNotExists(lobEventTopic, bootstrapServers);
         if(isLocal(env)) {
             KafkaTopicCreator.clearAndRecreateTopic(lobOutTopic, bootstrapServers);
-            env.setParallelism(1);
         }
+            env.setParallelism(3);
 
-        Map<String, String> entityTopicMap = Arrays.stream(entityNames).distinct().parallel()
-                                            .map(entityName -> Map.entry(entityName, String.join("-", lobTopic, entityName)))
-                                            .peek(lobEntityTopic -> createEntityTopic(lobEntityTopic, env, bootstrapServers))
-                                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+//        Map<String, String> entityTopicMap = Arrays.stream(entityNames).distinct().parallel()
+//                                            .map(entityName -> Map.entry(entityName, String.join("-", lobTopic, entityName)))
+//                                            .peek(lobEntityTopic -> createEntityTopic(lobEntityTopic, env, bootstrapServers))
+//                                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         // Read from kafka and bifurcate on basis of entities and sink to respective topics
-        KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), lobTopic);
+//        KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), lobTopic);
 
-        TopicSelector<StreamingRawData> topicSelector = (StreamingRawData record) -> Optional.ofNullable(record.getTransformerInfo())
-                                                                                             .filter(s -> !s.isEmpty())
-                                                                                             .map(t -> t.get(0).getEntityName()) // we will process all entities in TransformerList in transformation function
-                                                                                             .filter(entity -> !entity.isEmpty() && entityTopicMap.containsKey(entity))
-                                                                                             .map(entityTopicMap::get)
-                                                                                             .orElseGet(() -> {
-                                                                                                 record.setResponses(List.of(new StreamingRawData.Response("Failure", "Entity not found")));
-                                                                                                 return lobFailureTopic;
-                                                                                             });
+//        TopicSelector<StreamingRawData> topicSelector = (StreamingRawData record) -> Optional.ofNullable(record.getTransformerInfo())
+//                                                                                             .filter(s -> !s.isEmpty())
+//                                                                                             .map(t -> t.get(0).getEntityName()) // we will process all entities in TransformerList in transformation function
+//                                                                                             .filter(entity -> !entity.isEmpty() && entityTopicMap.containsKey(entity))
+//                                                                                             .map(entityTopicMap::get)
+//                                                                                             .orElseGet(() -> {
+//                                                                                                 record.setResponses(List.of(new StreamingRawData.Response("Failure", "Entity not found")));
+//                                                                                                 return lobFailureTopic;
+//                                                                                             });
+//
+//        KafkaSink<StreamingRawData> kafkaSink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, topicSelector);
 
-        KafkaSink<StreamingRawData> kafkaSink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, topicSelector);
-
-        env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source").name("Entity Bifurcation")
-           .sinkTo(kafkaSink);
+//        env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source").name("Entity Bifurcation")
+//           .sinkTo(kafkaSink);
 
         // for each entity, read from respective topic and process
-        for (String entityName : entityNames) {
-            String entityTopic = entityTopicMap.get(entityName);
+//        for (String entityName : entityNames) {
+            String entityTopic = lobTopic;
             KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), entityTopic);
-            DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Entity Kafka source" + entityName).name(entityName + "-Source");
-            var processedStream = AsyncDataStream.unorderedWait(
-                            input.rebalance().flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
-                            new StreamingRawDataProcessor(commonProperties),  // Async Processing
-                            5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
-                    ).process(new ProcessRecordStatus());
+            DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Entity Kafka source" + entityNames[0]).name(entityNames[0] + "-Source");
+        var processedStream = input
+                .flatMap(new StreamingRawDataFlatMapper())  // Pre-process data
+                .process(new StreamingRawDataProcessor(commonProperties)) // Process data synchronously
+                .process(new ProcessRecordStatus())  // Post-processing
+                .disableChaining();
+//var processedStream = AsyncDataStream.unorderedWait(
+//                            input.flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
+//                            new StreamingRawDataProcessor(commonProperties),  // Async Processing
+//                            5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
+//                    ).process(new ProcessRecordStatus()).disableChaining();
 
-           processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
+           processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink").disableChaining();
 
            // Failed records
             DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
             KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> lobFailureTopic);
             failedRecords.sinkTo(sink).name("Failed Kafka Sink");
-        }
+//        }
         /* /Note
          * 	Out of order ??
          * 	Key by (entity unique column) for avoiding optimistic errors , but costly process

@@ -43,6 +43,7 @@ public class ExternalRegistryScanner implements Serializable {
     }
 
     public static synchronized ExternalRegistryScanner getInstance(Properties properties) {
+        log.info("error");
         if (instance == null) {
             instance = new ExternalRegistryScanner(properties);
         }

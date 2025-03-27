@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.tables.CkIntegrationHistory.CK_INTEGRATION_HISTORY;
 
@@ -42,7 +43,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 
 
     public JooqDatabaseBatchSink(Properties dbProperties) {
-        ExternalRegistryScanner.getInstance(dbProperties);
+//        ExternalRegistryScanner.getInstance(dbProperties);
         this.properties = dbProperties;
         this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "500"));
         this.batchIntervalMs = Long.parseLong(dbProperties.getProperty("batch.interval.ms", "20000"));
@@ -70,7 +71,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         private transient ServiceLocator serviceLocator;
 
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
-            ExternalRegistryScanner.getInstance(properties);
+//            ExternalRegistryScanner.getInstance(properties);
 
             HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 10);
             this.dslContext = DatabaseConnectionUtil.createPooledDSLContext(hikariDataSource);
@@ -143,7 +144,11 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             }
                             saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
                         } catch (Exception batchEx) {
+                            batchEx.printStackTrace();
                             LOG.error("Batch save failed. Falling back to individual saves.");
+                            LOG.error("Batch save error log {}.",batchEx.getMessage());
+                            LOG.error("Batch save error log {}.",batchEx.getLocalizedMessage());
+                            LOG.error("Batch save error log {}.", Arrays.stream(batchEx.getStackTrace()).collect(Collectors.toList()));
                             for (CommonDataModel model : entry.getValue()) {
                                 try {
                                     service.batchSave(List.of(model));
