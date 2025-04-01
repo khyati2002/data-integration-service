@@ -2,6 +2,7 @@ package com.salescode.dim.event;
 
 import com.applicate.services.channelkart.models.diff.Change;
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.salescode.dim.utils.EventListenerDTO;
 import org.apache.flink.api.common.operators.MailboxExecutor;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -28,7 +29,7 @@ public class EventPublisher {
     public void publishEventAsync(String requestId, String modelClass, String lob,
                                   Set<Change<Serializable>> changes, ActionType operation, String id) {
 
-        EventListenerDTO dto = new EventListenerDTO(requestId, modelClass, lob, changes, operation, id);
+        EventListenerDTO dto = createEventListenerDTO(requestId, modelClass, lob, changes, operation, id);
         ProducerRecord<String, EventListenerDTO> record = new ProducerRecord<>(topicName, requestId, dto);
 
         executor.execute(() -> {
@@ -44,6 +45,19 @@ public class EventPublisher {
                 LOG.error("Error while sending Kafka message", e);
             }
         }, "Kafka async publish");
+    }
+
+    private EventListenerDTO createEventListenerDTO(String requestId, String modelClass, String lob,
+                                                    Set<Change<Serializable>> changes, ActionType operation, String id) {
+        return EventListenerDTO.builder()
+                               .requestId(requestId)
+                               .entityName(modelClass)
+                               .lob(lob)
+                               .changes(changes)
+                               .actionType(operation)
+                               .cdmId(id)
+                               .loginId(SecurityContextUtils.getPrincipal())
+                               .build();
     }
 
     public void close() {
