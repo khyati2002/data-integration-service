@@ -136,7 +136,7 @@ public class CdmDiffUtil {
             if (CACHED_FIELDS.containsKey(name)) {
                 return CACHED_FIELDS.get(name);
             }
-            Set<Field> fields = ReflectionUtils.getInstanceFields(type, Set.of("changed"));
+            Set<Field> fields = ReflectionUtils.getInstanceFields(type, Set.of("changed","lastModifiedTime","hash","version"));
             CACHED_FIELDS.put(name, fields);
             return fields;
         }

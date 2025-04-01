@@ -5,11 +5,13 @@ import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.RoleName;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
+import com.salescode.dim.JooqDatabaseBatchSink;
 import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
+import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
 import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
 import com.salescode.dim.jooq.generated.tables.pojos.UserRoles;
@@ -60,11 +62,13 @@ public class UserService extends AbstractCDMService<User> {
         com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
-//       if(user == null){
-//           return null;
-//       }
+       if(user == null){
+           return null;
+       }
       return User.of(user);
     }
+
+
 
     @Cacheable(cacheName = "dataintegration-user")
     public User findByLoginIdParent(String loginid) {
@@ -114,20 +118,49 @@ public class UserService extends AbstractCDMService<User> {
             if (StringUtils.isNotEmpty(hierarchy)) {
                 user.setHierarchy(hierarchy);
                 user.setNormalizedHierarchy(getNormalizedHierarchy(user.getHierarchy()));
+                // Find existing hierarchies in the database
+                List<HierarchyMetadata> existingHierarchies = hierarchyMetadataService.findByHierarchyIn(hierarchyStr);
+
+                // Determine which hierarchies need to be created
+                Set<String> existingHierarchyStrings = existingHierarchies.stream()
+                        .map(HierarchyMetadata::getHierarchy)
+                        .collect(Collectors.toSet());
+
+                // Prepare new hierarchies to create
+                List<HierarchyMetadata> newHierarchies = hierarchyStr.stream()
+                        .filter(hStr -> !existingHierarchyStrings.contains(hStr))
+                        .map(hStr -> {
+                            HierarchyMetadata hm = new HierarchyMetadata();
+                            hm.setId(UUID.randomUUID().toString());
+                            hm.setHierarchy(hStr);
+
+                            // Set immediate parent as the comma-separated list of ALL hierarchies
+                            String immediateParent = hierarchyStr.stream()
+                                    .collect(Collectors.joining(","));
+                            hm.setImmediateParent(user.getLoginid());
+
+                            hm.setLocationHierarchy(
+                                    user.getLocationHierarchy() != null ?
+                                            user.getLocationHierarchy() :
+                                            null
+                            );
+                            hm.setChanged((byte) 1);
+                            return hm;
+                        })
+                        .collect(Collectors.toList());
+
+                // Combine existing and new hierarchies
+                List<HierarchyMetadata> allHierarchies = new ArrayList<>(existingHierarchies);
+                allHierarchies.addAll(newHierarchies);
+                user.setImmediateParent(allHierarchies);
+
+                hierarchyMetadataService.batchSave(newHierarchies);
             } else {
                 //             logger.warn("Hierarchy logs: Null hierarchy found for user {}. Skipping setHierarchy() operation", user.getLoginId());
             }
         }
 
-        List<HierarchyMetadata> hierarchyMetadataList = hierarchyStr.stream().map(hStr -> {
-            HierarchyMetadata hm = new HierarchyMetadata();
-            hm.setHierarchy(hStr);
-            hm.setImmediateParent(user.getLoginid());
-            hm.setLocationHierarchy(user.getLocation() != null ? user.getLocation().getLocationHierarchy() : null);
-            return hm;
-        }).collect(Collectors.toList());
 
-        hierarchyMetadataService.batchSave(hierarchyMetadataList);
     }
 
     private void populateBatchRoles(List<User> users) {
@@ -186,15 +219,15 @@ public class UserService extends AbstractCDMService<User> {
     public List<User> preBatchSave(List<User> userList) {
         populateBatchLocation(userList);
 
-        userList.forEach(user -> {
-            Set<String> hierarchyStr = populateUserParentHierarchy(user);
-            setHierarchy(user, hierarchyStr);
-        });
-
         populateBatchRoles(userList);
         fillUserDetails(userList);
 
         userList.forEach(user -> userParentService.populateAndSaveUserParent(user));
+
+        userList.stream().parallel().forEachOrdered(user -> {
+            Set<String> hierarchyStr = populateUserParentHierarchy(user);
+            setHierarchy(user, hierarchyStr);
+        });
         return userList;
     }
 
@@ -231,6 +264,7 @@ public class UserService extends AbstractCDMService<User> {
                 user.setVersion(0);
                 user.setId(UUID.randomUUID().toString());
                 user.setOperationPerformed(ActionType.INSERT);
+                user.setChanged((byte) 1);
                 itemsToInsert.add(user);
 
             } else {
@@ -241,10 +275,12 @@ public class UserService extends AbstractCDMService<User> {
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
                     user.setChanges(CdmDiffUtil.getChanges(user,savedUser));
                     user.setOperationPerformed(ActionType.UPDATE);
+                    user.setChanged((byte) 1);
                     itemsToUpdate.add(user);
                 } else {
                     user.setId(savedList.get(user.getLoginid()).getId());
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
+                    user.setChanged((byte) 1);
                 }
             }
         }
@@ -253,7 +289,9 @@ public class UserService extends AbstractCDMService<User> {
         return result;
     }
 
-    public List<User> batchSave(List<User> userList){
+    @Override
+    public Collection<User> batchSave(Collection<User> usersList){
+        List<User> userList = new ArrayList<>(usersList);
         preBatchSave(userList);
         List<List<User>> saveItemsList = getItemsToSaveList(userList);
         if (!saveItemsList.get(0).isEmpty()) {
@@ -275,7 +313,10 @@ public class UserService extends AbstractCDMService<User> {
                             .collect(Collectors.toList())
             ).execute();
         }
-        postBatchSave(userList);
+        if(!saveItemsList.get(0).isEmpty() || !saveItemsList.get(1).isEmpty()){
+            postBatchSave(userList);
+        }
+
         return userList;
     }
 
@@ -284,6 +325,19 @@ public class UserService extends AbstractCDMService<User> {
         saveRoles(roleList);
         List<Userdesignation> userdesignationsList = setDesignation(savedUserList);
         saveDesignation(userdesignationsList);
+        EventPublisher eventPublisher = JooqDatabaseBatchSink.JooqDatabaseBatchSinkWriter.getEventPublisher();
+        savedUserList.stream().parallel().forEach(user -> {
+            if(user.getOperationPerformed() != null) {
+                eventPublisher.publishEventAsync(
+                        user.getReqId(),
+                        user.getClass().getSimpleName(),
+                        user.getLob(),
+                        user.getChanges(),
+                        user.getOperationPerformed(),
+                        user.getId()
+                );
+            }
+        });
     }
 
     public List<UserRoles> setRoles(List<User> userList) {

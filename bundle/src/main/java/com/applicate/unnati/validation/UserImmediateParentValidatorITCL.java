@@ -21,10 +21,11 @@ public class UserImmediateParentValidatorITCL extends AbstractValidationRule<Use
     private static final String IMMEDIATE_PARENT_MESSAGE_2 = "Given immediate parent is not present in database.Please verify the input data.";
     private static final String IMMEDIATE_PARENT_MESSAGE_3 = "Given immediate parent is not active any more.Please verify the input data.";
     private static final String IMMEDIATE_PARENT_MESSAGE_4 = "District and Branch value of loginId is not matching with Supplier's location.Please verify the input data.";
-    private UserService userService = (UserService) ServiceLocator.lookup(User.class);
+
 
     @Override
     public OperationResult.StepResult apply(User cdm) {
+       UserService userService = (UserService) ServiceLocator.lookup(User.class);
         Set<String> ruleResult = new HashSet<>();
         List<HierarchyMetadata> parentList = cdm.getImmediateParent();
 
@@ -39,7 +40,7 @@ public class UserImmediateParentValidatorITCL extends AbstractValidationRule<Use
         }
 
         if (!ruleResult.isEmpty()) {
-            return new OperationResult.StepResult(OperationResult.Status.ERROR, org.apache.commons.lang3.StringUtils.join(ruleResult, ", "));
+            return new OperationResult.StepResult(OperationResult.Status.ERROR, StringUtils.join(ruleResult, ", "));
         } else {
             return OperationResult.StepResult.OK;
         }
@@ -68,6 +69,7 @@ public class UserImmediateParentValidatorITCL extends AbstractValidationRule<Use
     }
 
     private void parentListDataCheck(User cdm, List<HierarchyMetadata> parentList, Set<String> ruleResult) {
+        UserService userService = (UserService) ServiceLocator.lookup(User.class);
         parentList.forEach(parentID -> {
             if (parentID == null) {
                 ruleResult.add(IMMEDIATE_PARENT_MESSAGE_1);

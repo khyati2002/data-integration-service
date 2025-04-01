@@ -5,12 +5,15 @@ import com.applicate.services.channelkart.repository.UserParentRepository;
 import com.salescode.dim.jooq.generated.tables.pojos.UserParent;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.User;
+import org.jooq.TableRecord;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.salescode.dim.jooq.generated.Tables.CK_USER_PARENT;
 
 public class UserParentService extends AbstractCDMService<UserParent> {
 
@@ -72,6 +75,17 @@ public class UserParentService extends AbstractCDMService<UserParent> {
         return userParentList;
     }
 
+    public void batchSave(Set<UserParent> userParents) {
+        userParents.forEach(this::fillCommonAttributes);
+
+        List<TableRecord<?>> records = userParents.stream()
+                .map(userParent -> getDslContext().newRecord(CK_USER_PARENT, userParent))
+                .collect(Collectors.toList());
+
+        getDslContext().batchInsert(records).execute();
+    }
+
+
     public void saveUserParent(User user){
         Set<UserParent> userParents= new HashSet<>();
         List<UserParent> dbParents= findByUserLoginId(user.getLoginid());
@@ -91,4 +105,5 @@ public class UserParentService extends AbstractCDMService<UserParent> {
     public List<UserParent> findByUserLoginId(String loginId) {
         return userParentRepository.findByUserLoginId(loginId);
     }
+
 }

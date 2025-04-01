@@ -11,10 +11,11 @@ import java.util.regex.Pattern;
 
 public class UserValidatorITCL extends AbstractValidationRule<User> {
 
-    final UserService userservice = (UserService) ServiceLocator.lookup(User.class);
+
 
     @Override
     public OperationResult.StepResult apply(User cdm) {
+        UserService userservice = (UserService) ServiceLocator.lookup(User.class);
         StringBuilder ruleResult = new StringBuilder();
         String regexNum = "^[0-9]*";
         String regexY_N = "^(Y|N)$";

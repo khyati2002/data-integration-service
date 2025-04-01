@@ -15,10 +15,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractCDMService<T extends CommonDataModel> implements CommonDataModelService<T> {
 
@@ -62,7 +64,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     public static <T> void fillAttributes(T target, T source) {
         if (target == null || source == null) return;
 
-        Field[] fields = FieldUtils.getAllFields(target.getClass()); // Get all fields (including superclass)
+        Field[] fields = getImmediateFields(target.getClass()); // Get all fields (including superclass)
 
         for (Field field : fields) {
             field.setAccessible(true);
@@ -83,6 +85,25 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
             }
         }
     }
+
+
+
+    public static Field[] getImmediateFields(Class<?> targetClass) {
+        boolean isImplClass = targetClass.getName().contains(".impl");
+
+        // Always include fields from the current class
+        Stream<Field> fieldsStream = Arrays.stream(targetClass.getDeclaredFields());
+
+        // If the class is ".impl", also include fields from its direct superclass (excluding CommonDataModel)
+        Class<?> superClass = targetClass.getSuperclass();
+        if (isImplClass && superClass != null && superClass != CommonDataModel.class) {
+            fieldsStream = Stream.concat(fieldsStream, Arrays.stream(superClass.getDeclaredFields()));
+        }
+
+        return fieldsStream.toArray(Field[]::new);
+    }
+
+
 
     public void fillCommonAttributes(T cdmObject){
 

@@ -12,7 +12,7 @@ public @interface CacheEvict {
     /**
      * Cache name to evict entries from
      */
-    String cacheName() default "default";
+    String cacheName() default "dataintegration";
     
     /**
      * Whether to evict all entries

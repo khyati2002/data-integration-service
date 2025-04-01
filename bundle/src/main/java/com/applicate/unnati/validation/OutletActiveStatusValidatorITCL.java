@@ -15,9 +15,11 @@ import org.apache.commons.lang3.ObjectUtils;
  */
 public class OutletActiveStatusValidatorITCL extends AbstractValidationRule<OutletDetails> {
 
-    OutletDetailsService outletDetailsService = (OutletDetailsService) ServiceLocator.lookup(OutletDetails.class);
 
     public OperationResult.StepResult apply(OutletDetails cdm) {
+
+        OutletDetailsService outletDetailsService = (OutletDetailsService) ServiceLocator.lookup(OutletDetails.class);
+
         OutletDetails dbRecord = outletDetailsService.findByOutletCode(cdm.getOutletcode());
 
         if ("auto_generated".equals(cdm.getOutletcode())) {

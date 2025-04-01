@@ -29,59 +29,23 @@ public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetada
         return hierarchyMetadataRepository.findByHierarchy(hierarchy);
     }
 
-    public List<HierarchyMetadata> batchSave(List<HierarchyMetadata> hierarchyMetadataList){
-        List<String> hierarchyList = hierarchyMetadataList.stream()
-                .map(HierarchyMetadata::getHierarchy)
-                .collect(Collectors.toList());
-
-        Map<String, com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata> savedList = getDslContext().selectFrom(CK_HIERARCHY_METADATA)
-                .where(CK_HIERARCHY_METADATA.HIERARCHY.in(hierarchyList))
-                .fetch()
-                .intoMap(CK_HIERARCHY_METADATA.HIERARCHY, record -> record.into(com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata.class));
-
-        List<HierarchyMetadata> itemsToInsert = new ArrayList<>();
-        List<HierarchyMetadata> itemsToUpdate = new ArrayList<>();
-        for (int i = 0; i < hierarchyMetadataList.size(); i++) {
-            super.addHash(hierarchyMetadataList.get(i));
-            if (savedList.get(hierarchyMetadataList.get(i).getHierarchy()) == null) {
-                hierarchyMetadataList.get(i).setVersion(0);
-                hierarchyMetadataList.get(i).setId(UUID.randomUUID().toString());
-                hierarchyMetadataList.get(i).setOperationPerformed(ActionType.INSERT);
-                itemsToInsert.add(hierarchyMetadataList.get(i));
-            } else {
-                if (!Objects.equals(hierarchyMetadataList.get(i).getHash(), savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getHash())) {
-                    hierarchyMetadataList.get(i).setId(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getId());
-                    hierarchyMetadataList.get(i).setVersion(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getVersion() + 1);
-                    hierarchyMetadataList.get(i).setChanges(CdmDiffUtil.getChanges(hierarchyMetadataList.get(i),HierarchyMetadata.of(savedList.get(hierarchyMetadataList.get(i).getHierarchy()))));
-                    hierarchyMetadataList.get(i).setOperationPerformed(ActionType.UPDATE);
-                    itemsToUpdate.add(hierarchyMetadataList.get(i));
-                }
-                else{
-                    hierarchyMetadataList.get(i).setId(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getId());
-                    hierarchyMetadataList.get(i).setVersion(savedList.get(hierarchyMetadataList.get(i).getHierarchy()).getVersion());
-                }
-            }
+    public List<HierarchyMetadata> findByHierarchyIn(Set<String> hierarchyStrings) {
+        if (hierarchyStrings == null || hierarchyStrings.isEmpty()) {
+            return Collections.emptyList();
         }
-        if (!itemsToInsert.isEmpty()) {
+
+        return hierarchyMetadataRepository.findByHierarchyIn(hierarchyStrings);
+    }
+
+    public List<HierarchyMetadata> batchSave(List<HierarchyMetadata> hierarchyMetadataList){
+        if (!hierarchyMetadataList.isEmpty()) {
             getDslContext().batchInsert(
-                    itemsToInsert.stream()
+                    hierarchyMetadataList.stream()
                             .map(hierarchy -> getDslContext().newRecord(CK_HIERARCHY_METADATA, hierarchy)) // Convert to jOOQ Records
                             .collect(Collectors.toList())
             ).execute();
         }
 
-        if (!itemsToUpdate.isEmpty()) {
-            getDslContext().batchUpdate(
-                    itemsToUpdate.stream()
-                            .map(hierarchy -> {
-                                CkHierarchyMetadataRecord record = getDslContext().newRecord(CK_HIERARCHY_METADATA, hierarchy);
-                                record.changed(CK_HIERARCHY_METADATA.ID, false); // Avoid updating primary key
-                                return record;
-                            })
-                            .collect(Collectors.toList())
-            ).execute();
-
-        }
         return hierarchyMetadataList;
     }
 

@@ -219,10 +219,10 @@ public class LocationService extends AbstractCDMService<Location> {
 
     public Location save(Location loc,com.salescode.dim.jooq.generated.tables.pojos.Location savedLoc){
         super.addHash(loc);
-        if(Objects.equals(loc.getHash(), savedLoc.getHash())){
+        if(savedLoc!=null && Objects.equals(loc.getHash(), savedLoc.getHash())){
             return loc;
         }
-        if(savedLoc.getHash() != null) {
+        if(savedLoc != null) {
             loc.setId(savedLoc.getId());
             loc.setVersion(savedLoc.getVersion() + 1);
             loc.setChanges(CdmDiffUtil.getChanges(loc,Location.of(savedLoc)));

@@ -4,9 +4,11 @@ import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.services.CommonDataModelService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.JSONUtils;
+import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
+import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.salescode.dim.utils.EventListenerDTO;
 import com.zaxxer.hikari.HikariDataSource;
@@ -57,14 +59,14 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         }
     }
 
-    private static class JooqDatabaseBatchSinkWriter implements SinkWriter<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
+    public static class JooqDatabaseBatchSinkWriter implements SinkWriter<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
 
         private final DSLContext dslContext;
         private final List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> batchBuffer;
         private final int batchSize;
         private final long batchIntervalMs;
         private final String topicName;
-        private final EventPublisher eventPublisher;
+        public static EventPublisher eventPublisher;
         private long lastBatchTime;
         private transient ServiceLocator serviceLocator;
 
@@ -77,6 +79,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             this.batchSize = batchSize;
             this.batchIntervalMs = batchIntervalMs;
             this.lastBatchTime = System.currentTimeMillis();
+            CacheManager.getInstance(properties);
             this.serviceLocator = ServiceLocator.getInstance(dslContext);
             serviceLocator.registerSubClasses();
 
@@ -87,6 +90,10 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 
             this.topicName = DataStreamJob.getLobEventTopic(properties);
             this.eventPublisher = new EventPublisher(kafkaProps, topicName, mailboxExecutor);
+        }
+
+        public static EventPublisher getEventPublisher(){
+            return eventPublisher;
         }
 
         @Override
@@ -117,6 +124,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             consolidatedModels.putIfAbsent(entry.getKey(), new HashSet<>());
                             consolidatedModels.get(entry.getKey()).addAll(entry.getValue());
                             for (CommonDataModel cdm : entry.getValue()) {
+                                cdm.setReqId(data.getRequestId());
                                 modelToRawDataMap.put(cdm, data);
                             }
                         }
@@ -126,18 +134,20 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                         CommonDataModelService service = ServiceLocator.lookup(entry.getKey());
                         try {
                             service.batchSave(entry.getValue());
-                            for (CommonDataModel model : entry.getValue()) {
-                                LOG.info("Operation performed is " + model.getOperationPerformed());
-                                if (model.getOperationPerformed() != null) {
-                                    StreamingRawData rawData = modelToRawDataMap.get(model);
-                                    eventPublisher.publishEventAsync(
-                                            rawData.getRequestId(),
-                                            entry.getKey().getSimpleName(),
-                                            rawData.getLob(),
-                                            model.getChanges(),
-                                            model.getOperationPerformed(),
-                                            model.getId()
-                                    );
+                            if(!entry.getKey().getSimpleName().equals(User.class.getSimpleName())) {
+                                for (CommonDataModel model : entry.getValue()) {
+                                    LOG.info("Operation performed is " + model.getOperationPerformed());
+                                    if (model.getOperationPerformed() != null) {
+                                        StreamingRawData rawData = modelToRawDataMap.get(model);
+                                        eventPublisher.publishEventAsync(
+                                                rawData.getRequestId(),
+                                                entry.getKey().getSimpleName(),
+                                                rawData.getLob(),
+                                                model.getChanges(),
+                                                model.getOperationPerformed(),
+                                                model.getId()
+                                        );
+                                    }
                                 }
                             }
                             saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");

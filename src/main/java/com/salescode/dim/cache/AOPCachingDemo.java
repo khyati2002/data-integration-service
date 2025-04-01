@@ -50,7 +50,7 @@ public class AOPCachingDemo {
         log.info("Retrieved " + electronics.size() + " electronic products");
 
         log.info("\n\n==== Cache Statistics ====");
-        CacheManager.getInstance().printStats();
+      //  CacheManager.getInstance().printStats();
     }
 
     @Data

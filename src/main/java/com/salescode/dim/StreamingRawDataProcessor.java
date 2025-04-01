@@ -17,7 +17,10 @@ import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.ConfigOption;
+import org.apache.flink.configuration.ConfigOptions;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.TaskManagerOptions;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.functions.async.ResultFuture;
 import org.apache.flink.streaming.api.functions.async.RichAsyncFunction;
@@ -50,6 +53,8 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
 
     @Override
     public void open(Configuration parameters) throws Exception {
+
+        System.setProperty("sun.net.maxDatagramSockets","2048");
         super.open(parameters);
         initializeResources();
     }
@@ -61,7 +66,6 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 4);
         this.dslContext = DatabaseConnectionUtil.createPooledDSLContext(hikariDataSource);
 
-        // Initialize services with dependency injection
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance(properties);
         ETLRegistry etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
 
@@ -84,6 +88,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         // Initialize pipeline service
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
 
+        CacheManager.getInstance(properties);
         SecurityContextUtils.getInstance(properties);
         ServiceLocator serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
@@ -108,6 +113,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         // Using Flink's directExecutor to execute tasks immediately
         org.apache.flink.util.concurrent.Executors.directExecutor().execute(() -> {
             try {
+                long start = System.currentTimeMillis();
                 Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>(); // Data storage
                 List<String> errorList = new ArrayList<>(); // Error tracking
 
@@ -143,7 +149,8 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
 
         try {
             long pstart = System.currentTimeMillis();
-            List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures().get(0));
+            List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures()
+                    .get(0));
             long pstartTransform = System.currentTimeMillis();
             logger.info("Time to transform single record {}", pstartTransform - pstart);
             for (CommonDataModel cdm : transformedData) {

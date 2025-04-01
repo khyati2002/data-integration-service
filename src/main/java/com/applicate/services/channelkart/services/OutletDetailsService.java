@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.*;
@@ -83,21 +84,33 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
        return OutletDetails.of(outletDetails);
     }
 
-    private List<User> preProcessUser(List<User> userList){
-        userList.forEach(user -> {
-           preProcessPipelineService.preProcessPipeline(user, null);
+    private List<User> preProcessUser(List<User> userList) {
+        userList.parallelStream().forEach(user -> {
+            preProcessPipelineService.preProcessPipeline(user, null);
         });
         return userList;
     }
 
-    private List<User> populateUser(List<OutletDetails> outletDetailsList){
+
+    private ConcurrentHashMap<String, User> populateUser(List<OutletDetails> outletDetailsList){
         List<User> userList = outletDetailsList.stream()
                 .map(OutletDetails::getUserName)
                 .collect(Collectors.toList());
 
+        for(int i=0;i<userList.size();i++){
+            userList.get(i).setReqId(outletDetailsList.get(i).getReqId());
+            userList.get(i).setLocationHierarchy(outletDetailsList.get(i).getLocation());
+        }
+
         List<User> preProcessedUserList = preProcessUser(userList);
-        List<User> savedUserList = userService.batchSave(userList);
-        return savedUserList;
+        Collection<User> savedUserList = userService.batchSave(userList);
+        ConcurrentHashMap<String, User> userMap = new ConcurrentHashMap<>();
+
+        // Populate ConcurrentHashMap from savedUserList
+        savedUserList.parallelStream()
+                .forEach(user -> userMap.put(user.getLoginid(), user));
+
+        return userMap;
     }
 
     private List<Location> populateLocation(List<OutletDetails> outletDetailsList){
@@ -108,68 +121,6 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         return savedLocList;
     }
 
-    private void populateUserOutletHierarchy(User user, OutletDetails outlet) {
-        if (ObjectUtils.isEmpty(outlet.getImmediateParent())) {
-            outlet.setImmediateParent(user.getImmediateParent());
-        }
-    }
-
-    private void setOutletHierarchy(OutletDetails outlet){
-        List<HierarchyMetadata> immediateParents = outlet.getImmediateParent();
-        if (immediateParents != null && !immediateParents.isEmpty()) {
-            List<HierarchyMetadata> existingMetadata = new ArrayList<>();
-            List<HierarchyMetadata> newMetadata = new ArrayList<>();
-            for (HierarchyMetadata HierarchyMetadata : immediateParents) {
-                populateHierarchy(HierarchyMetadata, existingMetadata, newMetadata, outlet);
-            }
-            if (!newMetadata.isEmpty()) {
-                List<HierarchyMetadata> savedData = hierarchyMetadataService.batchSave(newMetadata);
-                existingMetadata.addAll(savedData);
-            }
-            if (!existingMetadata.isEmpty())
-                outlet.setImmediateParent(existingMetadata);
-        }
-        setHierarchy(outlet);
-
-        outlet.setNormalizedHierarchy(com.applicate.services.channelkart.services.UserService.getNormalizedHierarchy(outlet.getHierarchy()));
-    }
-
-    private void populateHierarchy(HierarchyMetadata HierarchyMetadata, List<HierarchyMetadata> existingMetadata,
-                                   List<HierarchyMetadata> newMetadata, OutletDetails tempoutlet) {
-        if (HierarchyMetadata.getId() == null) {
-            String parentHierarchy = HierarchyMetadata.getHierarchy();
-            // Dangerous code, this has to be fixed. Very bad workaround
-            if (parentHierarchy != null) {
-                Arrays.asList(parentHierarchy.split(",")).stream().forEach(tempHierarchy -> {
-                    List<String> hierarchyusers = Arrays.asList(tempHierarchy.split(" > ")).stream().filter(parent->!parent.equals(customerAccountsService.getAdminLoginId())).collect(Collectors.toList());
-                    String loginId = hierarchyusers.get(hierarchyusers.size() - 1);
-                    List<HierarchyMetadata> lastParent = (List<HierarchyMetadata>) hierarchyMetadataService
-                            .findByImmediateParent(loginId);
-                    if(lastParent.isEmpty()){
-                        HierarchyMetadata hmd=new HierarchyMetadata();
-                        hmd.setImmediateParent(loginId);
-                        hmd.setHierarchy(loginId + " > " + customerAccountsService.getAdminLoginId());
-                        setHierarchyElement(hmd,hierarchyusers,HierarchyMetadata,existingMetadata,newMetadata,tempoutlet);
-                    }else {
-                        lastParent.stream().forEach(element -> setHierarchyElement(element, hierarchyusers,
-                                HierarchyMetadata, existingMetadata, newMetadata, tempoutlet));
-                    }
-                });
-            } else {
-                // Handle the case at which Hierarchy is null
-
-                List<HierarchyMetadata> lastParent = (List<HierarchyMetadata>) hierarchyMetadataService
-                        .findByImmediateParent(HierarchyMetadata.getParent());
-                if (lastParent != null) {
-                    existingMetadata.addAll(lastParent);
-                }
-
-                // Handle the case where it is a new Hierarchy
-            }
-        } else {
-            existingMetadata.add(HierarchyMetadata);
-        }
-    }
 
     public void setOutletSupplier(OutletDetails outletDetails)  {
             List<String> supplierList = supplierInfoService.findSuppliers(outletDetails);
@@ -201,61 +152,25 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 .collect(Collectors.toList());
     }
 
-    private void setHierarchy(OutletDetails tempoutlet) {
-        if (tempoutlet.getImmediateParent() != null && !tempoutlet.getImmediateParent().isEmpty()) {
-            String hierarchy = String.join(",",
-                    tempoutlet.getImmediateParent().stream().map(s -> s.getHierarchy()).collect(Collectors.toList()));
-            if(StringUtils.isNotEmpty(hierarchy)) {
-                tempoutlet.setHierarchy(hierarchy);
-            }else{
-                //              logger.warn("Hierarchy logs: Null hierarchy found for outlet {}. Skipping setHierarchy() operation",tempoutlet.getOutletCode());
-            }
-        }
-    }
 
-    private void setHierarchyElement(HierarchyMetadata element, List<String> hierarchyusers,
-                                     HierarchyMetadata HierarchyMetadata, List<HierarchyMetadata> existingMetadata,
-                                     List<HierarchyMetadata> newMetadata, OutletDetails tempoutlet) {
-        String hierarchy = element.getHierarchy();
-        if (hierarchy != null) {
-            List<String> tempList = new ArrayList<>(hierarchyusers);
-            tempList.remove(tempList.size() - 1);
-            tempList.add(hierarchy);
-            String joinedHierarchy = StringUtils.join(tempList, " > ");
-
-            HierarchyMetadata hm = hierarchyMetadataService.findByHierarchy(joinedHierarchy);
-            if (hm != null && existingMetadata.stream().noneMatch(np->np.getHierarchy().equals(joinedHierarchy))) {
-                existingMetadata.add(hm);
-            } else if(hm != null && newMetadata.stream().noneMatch(np->np.getHierarchy().equals(joinedHierarchy))) {
-                HierarchyMetadata tempHierarchyMetadata = new HierarchyMetadata();
-                tempHierarchyMetadata.setHierarchy(joinedHierarchy);
-                Location location = tempoutlet.getLocation();
-                tempHierarchyMetadata.setLocationHierarchy((location == null) ? null : location.getLocationHierarchy());
-                tempHierarchyMetadata.setLob(tempoutlet.getLob());
-                newMetadata.add(tempHierarchyMetadata);
-            }
-        }
-    }
-
-
-    private List<User> populateBatchAssociatedData(List<OutletDetails> outletDetailsList) {
-        List<User> savedUserList = populateUser(outletDetailsList);
-        List<Location> savedLocList = populateLocation(outletDetailsList);
+    private ConcurrentHashMap<String,User> populateBatchAssociatedData(List<OutletDetails> outletDetailsList) {
+        ConcurrentHashMap<String,User> savedUserList = populateUser(outletDetailsList);
 
         for (int i = 0; i < outletDetailsList.size(); i++) {
-            outletDetailsList.get(i).setLoginid(outletDetailsList.get(i).getOutletcode());
-            outletDetailsList.get(i).setUserName(savedUserList.get(i));
-            populateUserOutletHierarchy(savedUserList.get(i), outletDetailsList.get(i));
-            outletDetailsList.get(i).setLocation(savedLocList.get(i));
-            outletDetailsList.get(i).setLocationHierarchy(savedLocList.get(i).getLocationHierarchy());
-            setOutletHierarchy(outletDetailsList.get(i));
+            String outletCode = outletDetailsList.get(i).getOutletcode();
+            outletDetailsList.get(i).setLoginid(outletCode);
+            outletDetailsList.get(i).setUserName(savedUserList.get(outletCode));
+            outletDetailsList.get(i).setLocation(savedUserList.get(outletCode).getLocation());
+            outletDetailsList.get(i).setLocationHierarchy(savedUserList.get(outletCode).getLocationHierarchy());
+            outletDetailsList.get(i).setHierarchy(savedUserList.get(outletCode).getHierarchy());
+            outletDetailsList.get(i).setImmediateParent(savedUserList.get(outletCode).getImmediateParent());
             setOutletSupplier(outletDetailsList.get(i));
         }
         return savedUserList;
     }
 
-    private List<User> preBatchSave(List<OutletDetails> outletDetailsList){
-        List<User> savedUserList = populateBatchAssociatedData(outletDetailsList);
+    private ConcurrentHashMap<String,User> preBatchSave(List<OutletDetails> outletDetailsList){
+        ConcurrentHashMap<String,User> savedUserList = populateBatchAssociatedData(outletDetailsList);
         return savedUserList;
     }
 
@@ -295,6 +210,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 outlet.setVersion(0);
                 outlet.setId(UUID.randomUUID().toString());
                 outlet.setMapped(true);
+                outlet.setChanged((byte) 1);
                 itemsToInsert.add(outlet);
                 outlet.setOperationPerformed(ActionType.INSERT);
             } else {
@@ -309,6 +225,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 if (!Objects.equals(outlet.getHash(), existingOutlet.getHash())) {
                     outlet.setChanges(CdmDiffUtil.getChanges(outlet,existingOutlet));
                     outlet.setOperationPerformed(ActionType.UPDATE);
+                    outlet.setChanged((byte) 1);
                     itemsToUpdate.add(outlet);
                 }
             }
@@ -323,7 +240,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         LOG.info("Size of list is "  + outletDetailsList.size());
         List<OutletDetails> outletDetails = new ArrayList<>(outletDetailsList);
         LOG.info("Pre Batch Save Called with size " + outletDetails.size());
-        List<User> savedUserList = preBatchSave(outletDetails);
+        Map<String,User> savedUserList = preBatchSave(outletDetails);
         List<List<OutletDetails>> saveItemsList = getItemsToSaveList(outletDetails);
         if (!saveItemsList.get(0).isEmpty()) {
             getDslContext().batchInsert(
@@ -343,7 +260,9 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                             .collect(Collectors.toList())
             ).execute();
         }
-        postBatchSave(outletDetails);
+        if(!saveItemsList.get(0).isEmpty() || !saveItemsList.get(1).isEmpty()){
+            postBatchSave(outletDetails);
+        }
         LOG.info("Batch save successful");
         return outletDetails;
     }

@@ -18,6 +18,7 @@
 
 package com.salescode.dim;
 
+import com.salescode.dim.cache.CacheEvictionFunction;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.serialization.SerializationSchema;
@@ -87,6 +88,13 @@ public class DataStreamJob {
 
         Properties inout0Properties = mergeProperties(applicationProperties.get("InOut0"), commonProperties);
         ConfigValidator.validate(inout0Properties, "input.topic", "failure.topic");
+
+        boolean clearCache = Boolean.parseBoolean(inout0Properties.getProperty("clearCache", "false"));
+        // Create lob topics if not exists
+        if(clearCache) {
+            String cachePattern = "dataintegration*"; // Matches any cache name containing "dataintegration"
+            env.fromElements(cachePattern).flatMap(new CacheEvictionFunction(inout0Properties));
+        }
 
         // cktestitcloyalty-dataintegration
         // cktestitcloyalty-dataintegration-failure or cktestitcloyalty-int-failure-streams

@@ -12,7 +12,7 @@ public @interface Cacheable {
     /**
      * Cache name to use for storing results
      */
-    String cacheName() default "default";
+    String cacheName() default "dataintegration";
 
     /**
      * Time to live in minutes

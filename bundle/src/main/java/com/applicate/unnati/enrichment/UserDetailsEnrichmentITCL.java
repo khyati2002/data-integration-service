@@ -24,13 +24,15 @@ import java.util.stream.Collectors;
 
 public class UserDetailsEnrichmentITCL extends AbstractEnrichment<User> {
 
-    CustomerAccountsService customerAccountsService = (CustomerAccountsService) ServiceLocator.lookup(CustomerAccount.class);
-    HierarchyMetadataService hierarchyMetaDataService = (HierarchyMetadataService) ServiceLocator.lookup(HierarchyMetadata.class);
-
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public OperationResult.StepResult apply(User cdm) {
+
+        CustomerAccountsService customerAccountsService = (CustomerAccountsService) ServiceLocator.lookup(CustomerAccount.class);
+        HierarchyMetadataService hierarchyMetaDataService = (HierarchyMetadataService) ServiceLocator.lookup(HierarchyMetadata.class);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         if (cdm == null) {
             return new OperationResult.StepResult(OperationResult.Status.ERROR, "Enrichment error: User not found null");
         }

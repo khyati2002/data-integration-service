@@ -36,6 +36,8 @@ public abstract class CommonDataModel implements Serializable {
 
     transient private boolean isCreate;
 
+    transient private String reqId;
+
     @JsonIgnore
     private boolean forceHash;
 
