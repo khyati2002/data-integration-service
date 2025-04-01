@@ -137,7 +137,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             if(!entry.getKey().getSimpleName().equals(User.class.getSimpleName())) {
                                 for (CommonDataModel model : entry.getValue()) {
                                     LOG.info("Operation performed is " + model.getOperationPerformed());
-                                    if (model.getOperationPerformed() != null) {
+                                    if (model.getOperationPerformed() != null && !model.getChanges().isEmpty()) {
                                         StreamingRawData rawData = modelToRawDataMap.get(model);
                                         eventPublisher.publishEventAsync(
                                                 rawData.getRequestId(),

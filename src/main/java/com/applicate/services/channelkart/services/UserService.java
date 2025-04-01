@@ -327,7 +327,7 @@ public class UserService extends AbstractCDMService<User> {
         saveDesignation(userdesignationsList);
         EventPublisher eventPublisher = JooqDatabaseBatchSink.JooqDatabaseBatchSinkWriter.getEventPublisher();
         savedUserList.stream().parallel().forEach(user -> {
-            if(user.getOperationPerformed() != null) {
+            if(user.getOperationPerformed() != null && !user.getChanges().isEmpty()) {
                 eventPublisher.publishEventAsync(
                         user.getReqId(),
                         user.getClass().getSimpleName(),
