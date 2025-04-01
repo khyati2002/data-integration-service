@@ -21,7 +21,7 @@ public class ProcessRecordStatus extends ProcessFunction<Tuple2<StreamingRawData
         StreamingRawData streamingRawData = record.f0;
         Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = record.f1;
 
-        if (dataset == null) {
+        if (streamingRawData.getStatus().equals("Failure")) {
             // If dataset is null, it means there was a failure → send to side output
             ctx.output(DataStreamJob.FAILED_TRANSFORMATIONS, streamingRawData);
         } else {
