@@ -33,7 +33,7 @@ public class StreamingRawData implements Serializable {
     private List<Response> responses;
     private String status;
     private String appId = "integration";
-    private String offset;
+    private Long offset;
 
     private Map<String, String> headersMap;
     private int retryCount = 0;

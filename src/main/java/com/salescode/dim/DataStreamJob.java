@@ -63,7 +63,7 @@ public class DataStreamJob {
 
     public static final SerializationSchema<StreamingRawData> recordKeySerializationSchema = (StreamingRawData element) -> element.getRequestId().getBytes();
 
-
+    public static final StreamingRawDataDeserializer VALUE_DESERIALIZATION_SCHEMA = new StreamingRawDataDeserializer();
 
     private static final Logger LOG = LoggerFactory.getLogger(DataStreamJob.class);
 
@@ -120,7 +120,7 @@ public class DataStreamJob {
                                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         // Read from kafka and bifurcate on basis of entities and sink to respective topics
-        KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), lobTopic);
+        KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, VALUE_DESERIALIZATION_SCHEMA, lobTopic);
 
         TopicSelector<StreamingRawData> topicSelector = (StreamingRawData record) -> Optional.ofNullable(record.getTransformerInfo())
                                                                                              .filter(s -> !s.isEmpty())
@@ -140,7 +140,7 @@ public class DataStreamJob {
         // for each entity, read from respective topic and process
         for (String entityName : entityNames) {
             String entityTopic = entityTopicMap.get(entityName);
-            KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), entityTopic);
+            KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, VALUE_DESERIALIZATION_SCHEMA, entityTopic);
             DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Entity Kafka source" + entityName).name(entityName + "-Source");
             var processedStream = AsyncDataStream.unorderedWait(
                             input.rebalance().flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
