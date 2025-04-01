@@ -1,5 +1,6 @@
 package com.salescode.dim.cache;
 
+import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -28,6 +29,7 @@ public class CachingAspect {
 
         Cacheable cacheableAnnotation = method.getAnnotation(Cacheable.class);
         String cacheName = cacheableAnnotation.cacheName();
+        cacheName = String.join(":",cacheName,SecurityContextUtils.getLob());
         int maximumSize = cacheableAnnotation.maximumSize();
         int expireAfterMinutes = cacheableAnnotation.expireAfterMinutes();
 

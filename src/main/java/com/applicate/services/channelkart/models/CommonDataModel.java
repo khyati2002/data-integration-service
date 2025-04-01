@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 @Accessors(chain = true)
 public abstract class CommonDataModel implements Serializable {
 
-    public static final Set<String> EXCLUDED_PROPERTIES = Set.of("hash", "forceHash", "isCreate", "id", "createdBy", "creationTime", "oldModel", "modifiedBy", "changes", "changed", "lastModifiedTime", "version", "lob", "$jacocoData");
+    public static final Set<String> EXCLUDED_PROPERTIES = Set.of("reqId", "hash", "forceHash", "isCreate", "id", "createdBy", "creationTime", "oldModel", "modifiedBy", "changes", "changed", "lastModifiedTime", "version", "lob", "$jacocoData");
     private static final long serialVersionUID = 1L;
 
     private boolean changed = true;

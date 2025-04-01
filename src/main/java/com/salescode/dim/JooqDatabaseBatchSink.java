@@ -45,7 +45,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 
     public JooqDatabaseBatchSink(Properties dbProperties) {
         this.properties = dbProperties;
-        this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "500"));
+        this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "1"));
         this.batchIntervalMs = Long.parseLong(dbProperties.getProperty("batch.interval.ms", "20000"));
     }
 
@@ -199,6 +199,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                 record.setStatus(status);
                 record.setDescription(message);
                 record.setTimestamp(currentTimestamp);
+                record.setEntityName(model.getClass().getSimpleName());
                 records.add(record);
             }
             dslContext.batchInsert(records).execute();

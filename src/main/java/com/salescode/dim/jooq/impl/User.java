@@ -22,7 +22,7 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
     private transient List<AuthRole> roles;
     private List<SupplierMetadata> supplierMetaData;
     private List<HierarchyMetadata> immediateParent;
-    private Set<String> designation;
+    private transient Set<String> designation;
     @Getter(value = AccessLevel.NONE)
     private Location locationHierarchy;
 
