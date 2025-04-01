@@ -423,10 +423,11 @@ public class UserService extends AbstractCDMService<User> {
         try {
             return normalizedHierarchy.replaceAll(exludedCharactors, "");
         } catch (Exception e) {
-            //    logger.error("Exception happend while removing special charactors {} in normalized hierarchy {}",exludedCharactors,normalizedHierarchy);
+          //  logger.error("Exception happend while removing special charactors {} in normalized hierarchy {}",exludedCharactors,normalizedHierarchy);
             return normalizedHierarchy;
         }
     }
+
     public static String getExludedCharactors() {
         return System.getProperty("excludeCharNormalizedHierarchy", "[^a-zA-Z0-9>]");
     }

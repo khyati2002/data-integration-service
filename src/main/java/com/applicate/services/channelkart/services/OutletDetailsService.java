@@ -163,6 +163,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             outletDetailsList.get(i).setLocation(savedUserList.get(outletCode).getLocation());
             outletDetailsList.get(i).setLocationHierarchy(savedUserList.get(outletCode).getLocationHierarchy());
             outletDetailsList.get(i).setHierarchy(savedUserList.get(outletCode).getHierarchy());
+            outletDetailsList.get(i).setNormalizedHierarchy(savedUserList.get(outletCode).getNormalizedHierarchy());
             outletDetailsList.get(i).setImmediateParent(savedUserList.get(outletCode).getImmediateParent());
             setOutletSupplier(outletDetailsList.get(i));
         }
