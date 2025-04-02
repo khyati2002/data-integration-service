@@ -35,6 +35,9 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
     }
 
     public static User of(com.salescode.dim.jooq.generated.tables.pojos.User user) {
+        if(user == null) {
+            return null;
+        }
         return new User(user);
     }
 

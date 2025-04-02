@@ -38,6 +38,7 @@ public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetada
     }
 
     public List<HierarchyMetadata> batchSave(List<HierarchyMetadata> hierarchyMetadataList){
+        hierarchyMetadataList.forEach(this::fillCommonAttributes);
         if (!hierarchyMetadataList.isEmpty()) {
             getDslContext().batchInsert(
                     hierarchyMetadataList.stream()

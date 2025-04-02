@@ -7,10 +7,7 @@ import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.User;
 import org.jooq.TableRecord;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_USER_PARENT;
@@ -45,6 +42,7 @@ public class UserParentService extends AbstractCDMService<UserParent> {
             if(!dataset.contains(hm.getParent())) {
                 UserParent up= new UserParent();
                 up.setUserloginid(user.getLoginid());
+                up.setId(UUID.randomUUID().toString());
                 up.setParent(hm.getParent());
                 if (up.getUserloginid().equalsIgnoreCase(up.getParent())) {
                     //     throw new UnexpectedResultException("User can't be mapped to itself. Found a record for user " + up.getUserLoginId() + " mapped to itself. Please verify the data once.");
@@ -66,6 +64,7 @@ public class UserParentService extends AbstractCDMService<UserParent> {
             UserParent up= new UserParent();
             up.setUserloginid(user.getLoginid());
             up.setParent(hm.getParent());
+            up.setId(UUID.randomUUID().toString());
             if (up.getUserloginid().equalsIgnoreCase(up.getParent())) {
                 //  throw new UnexpectedResultException("User can't be mapped to itself. Found a record for user " + up.getUserLoginId() + " mapped to itself. Please verify the data once.");
                 throw new RuntimeException("User can't be mapped to itself");

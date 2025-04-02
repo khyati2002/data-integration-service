@@ -26,9 +26,9 @@ public class OutletActiveStatusValidatorITCL extends AbstractValidationRule<Outl
             return new OperationResult.StepResult(OperationResult.Status.ERROR, "null values are not allowed in outletCode column");
         }
 
-        if (ObjectUtils.isEmpty(dbRecord)) {
-            return new OperationResult.StepResult(OperationResult.Status.ERROR, "UID is not present in our system");
-        }
+//        if (ObjectUtils.isEmpty(dbRecord)) {
+//            return new OperationResult.StepResult(OperationResult.Status.ERROR, "UID is not present in our system");
+//        }
 
         if (dbRecord.getActiveStatus().equals(ActiveStatus.INACTIVE) && cdm.getActiveStatus()
                 .equals(ActiveStatus.ACTIVE)) {

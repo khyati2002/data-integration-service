@@ -35,6 +35,9 @@ public class OutletDetails extends com.salescode.dim.jooq.generated.tables.pojos
     }
 
     public static OutletDetails of(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails outletDetails) {
+        if(outletDetails == null) {
+            return null;
+        }
         return new OutletDetails(outletDetails);
     }
 
