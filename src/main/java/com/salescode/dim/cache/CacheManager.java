@@ -1,78 +1,66 @@
 // 3. CacheManager to handle multiple caches
 package com.salescode.dim.cache;
 
-import lombok.extern.slf4j.Slf4j;
-import org.redisson.Redisson;
-import org.redisson.api.RFuture;
-import org.redisson.api.RMapCache;
-import org.redisson.api.RedissonClient;
-import org.redisson.config.Config;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-@Slf4j
 public class CacheManager {
     private static final CacheManager INSTANCE = new CacheManager();
 
-    private Map<String, RMapCache<String, Object>> caches =new ConcurrentHashMap<>();
+    private final Map<String, Cache<String, Object>> caches = new ConcurrentHashMap<>();
 
     private CacheManager() {
-    }
-
-    private static RedissonClient redissonClient;
-    static {
-        Config config = new Config();
-        config.useSingleServer().setAddress("redis://localhost:6379");
-        redissonClient = Redisson.create(config);
     }
 
     public static CacheManager getInstance() {
         return INSTANCE;
     }
 
-    public RMapCache<String, Object> getCache(String name, int expireAfterMinutes) {
-        return caches.computeIfAbsent(name, cacheName -> {
-            RMapCache<String, Object> mapCache = redissonClient.getMapCache(cacheName);
-            return mapCache;
-        });
+    public Cache<String, Object> getCache(String name, int maximumSize, int expireAfterMinutes) {
+        return caches.computeIfAbsent(name, cacheName ->
+                Caffeine.newBuilder()
+                        .maximumSize(maximumSize)
+                        .expireAfterWrite(expireAfterMinutes, TimeUnit.MINUTES)
+                        .recordStats()
+                        .build()
+        );
     }
 
     public void evictAll(String cacheName) {
-        RMapCache<String, Object> cache = caches.get(cacheName);
+        Cache<String, Object> cache = caches.get(cacheName);
         if (cache != null) {
-            cache.clear();
+            cache.invalidateAll();
         }
     }
 
     public void evictByPattern(String cacheName, String keyPattern) {
-        RMapCache<String, Object> cache = caches.get(cacheName);
+        Cache<String, Object> cache = caches.get(cacheName);
         if (cache != null && keyPattern != null && !keyPattern.isEmpty()) {
             Pattern pattern = Pattern.compile(keyPattern);
-            cache.keySet().stream()
+            cache.asMap().keySet().stream()
                     .filter(key -> pattern.matcher(key).matches())
-                    .forEach(cache::remove);
+                    .forEach(cache::invalidate);
         }
     }
 
-
-    public Map<String, RMapCache<String, Object>> getAllCaches() {
+    public Map<String, Cache<String, Object>> getAllCaches() {
         return caches;
     }
 
     public void printStats() {
         caches.forEach((name, cache) -> {
-            RFuture<Set<Map.Entry<String, Object>>> setRFuture = cache.readAllEntrySetAsync();
-            setRFuture.thenAccept(entrySet -> {
-                log.info("Cache: {}", name);
-                log.info("  Size: {}", entrySet.size());
-            }).exceptionally(ex -> {
-                log.info("Error retrieving cache stats for cache: {}", name, ex);
-                return null;
-            });
+            if (cache.stats() != null) {
+                System.out.println("Cache: " + name);
+                System.out.println("  Hit rate: " + cache.stats().hitRate());
+                System.out.println("  Miss rate: " + cache.stats().missRate());
+                System.out.println("  Request count: " + cache.stats().requestCount());
+                System.out.println("  Size: " + cache.estimatedSize());
+            }
         });
     }
 }

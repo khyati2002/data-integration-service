@@ -6,7 +6,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.redisson.api.RMapCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,27 +31,27 @@ public class CachingAspect {
         int maximumSize = cacheableAnnotation.maximumSize();
         int expireAfterMinutes = cacheableAnnotation.expireAfterMinutes();
 
-       RMapCache<String, Object> cache = cacheManager.getCache(cacheName,expireAfterMinutes);
+        Cache<String, Object> cache = cacheManager.getCache(cacheName, maximumSize, expireAfterMinutes);
 
         String key = generateCacheKey(pjp);
 
-       // logger.info("Checking cache for method: {}", method.getName());
+        logger.info("Checking cache for method: {}", method.getName());
 
         // Try to get from cache
-        Object cachedResult = cache.get(key);
+        Object cachedResult = cache.getIfPresent(key);
         if (cachedResult != null) {
             logger.info("Cache hit for key: {}", key);
             return cachedResult;
         }
 
         logger.info("Cache miss for key: {}. Executing method: {}", key, method.getName());
-    //     Execute the method and cache the result
+        // Execute the method and cache the result
         Object result = pjp.proceed();
 
         // Don't cache null results
         if (result != null) {
             cache.put(key, result);
-           logger.info("Caching result for key: {}", key);
+            logger.info("Caching result for key: {}", key);
         }
 
         return result;
@@ -85,7 +84,7 @@ public class CachingAspect {
                 // Evict based on the method call
                 String key = generateCacheKey(pjp);
                 logger.info("Evicting specific key: {} in cache: {}", key, cacheName);
-                cacheManager.getCache(cacheName, 10).remove(key);
+                cacheManager.getCache(cacheName, 100, 10).invalidate(key);
             }
         }, asyncExecutor);
 
@@ -98,9 +97,9 @@ public class CachingAspect {
 
         StringBuilder keyBuilder = new StringBuilder();
         keyBuilder.append(method.getDeclaringClass().getName())
-                  .append(".")
-                  .append(method.getName())
-                  .append("(");
+                .append(".")
+                .append(method.getName())
+                .append("(");
 
         // Add parameter types to make the signature more specific
         for (Class<?> paramType : method.getParameterTypes()) {
