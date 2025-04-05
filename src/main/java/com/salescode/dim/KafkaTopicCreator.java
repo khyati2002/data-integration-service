@@ -67,10 +67,14 @@ public class KafkaTopicCreator {
 
 
     public static void clearAndRecreateTopic(String topic, String bootstrapServers) {
-        // First delete the topic if it exists
-        clearTopic(topic, bootstrapServers);
+        try {// First delete the topic if it exists
+            clearTopic(topic, bootstrapServers);
 
-        // Now create the topic again
-        createTopicIfNotExists(topic, bootstrapServers);
+            // Now create the topic again
+            createTopicIfNotExists(topic, bootstrapServers);
+        } catch (Exception e) {
+            clearTopic(topic, bootstrapServers);
+            createTopicIfNotExists(topic, bootstrapServers);
+        }
     }
 }

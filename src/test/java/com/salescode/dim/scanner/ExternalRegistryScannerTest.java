@@ -21,7 +21,7 @@ public class ExternalRegistryScannerTest {
         props.setProperty("lob", "testlob");
 
         // Create an instance of ExternalRegistryScanner.
-        scanner = ExternalRegistryScanner.getInstance(props);
+        scanner = ExternalRegistryScanner.createInstance(props);
     }
 
     @Test

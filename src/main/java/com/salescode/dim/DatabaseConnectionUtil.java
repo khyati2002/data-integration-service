@@ -3,6 +3,7 @@ package com.salescode.dim;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.HikariPoolMXBean;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
@@ -15,14 +16,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+@Slf4j
 public class DatabaseConnectionUtil {
 
-    private HikariDataSource dataSource;
-
-    private static final Logger LOG = LoggerFactory.getLogger(DatabaseConnectionUtil.class);
-
     public static synchronized HikariDataSource initConnectionPool(Properties properties, int connectionCount) {
-        LOG.info("Connection created successfully");
+        log.info("Connection created successfully");
         String jdbcUrl = properties.getProperty("jdbc.url");
         String jdbcUser = properties.getProperty("jdbc.user");
         String jdbcPassword = properties.getProperty("jdbc.password");

@@ -125,7 +125,7 @@ public class DataValidationService {
             return new OperationResult.StepResult(OperationResult.Status.ERROR, ERROR_MESSAGE + String.format("Implementation '%s' failed: %s", implementationName, e.getMessage()));
         } finally {
             long p2 = System.nanoTime();
-            log.info("CDM {} Validation {} took {} ns", cdm.getClass().getSimpleName(), validationRule.getImplementation(), p2 - p1);
+//            log.info("CDM {} Validation {} took {} ns", cdm.getClass().getSimpleName(), validationRule.getImplementation(), p2 - p1);
         }
     }
 

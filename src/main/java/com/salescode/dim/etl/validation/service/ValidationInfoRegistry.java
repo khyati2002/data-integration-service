@@ -62,6 +62,7 @@ public class ValidationInfoRegistry implements RefreshableRegistry, Serializable
         // Load all active validation rules and group by type
         Map<String, List<ValidationRule>> rules = dsl.selectFrom(CK_VALIDATION_RULE)
                                                      .where(CK_VALIDATION_RULE.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
+                                                     .and(CK_VALIDATION_RULE.ENABLED.eq(true))
                                                      .fetchInto(ValidationRule.class)
                                                      .stream()
                                                      .collect(Collectors.groupingBy(ValidationRule::getType));

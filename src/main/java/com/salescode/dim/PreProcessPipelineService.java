@@ -61,7 +61,7 @@ public class PreProcessPipelineService implements Serializable {
         } else {
             finalResult.setStatus(PreProcessOperationResult.Status.FAILURE);
         }
-        logger.info("Time to preEnrich {}, validate {}, postEnrich record {}", pstart1 - pstart, pstart2 - pstart1, pstart3 - pstart2);
+//        logger.info("Time to preEnrich {}, validate {}, postEnrich record {}", pstart1 - pstart, pstart2 - pstart1, pstart3 - pstart2);
 
         return finalResult;
     }

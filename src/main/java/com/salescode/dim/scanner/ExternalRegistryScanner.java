@@ -3,7 +3,6 @@ package com.salescode.dim.scanner;
 import com.salescode.dim.interfaces.TypeAwareEtlStep;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
@@ -42,7 +41,7 @@ public class ExternalRegistryScanner implements Serializable {
         }
     }
 
-    public static synchronized ExternalRegistryScanner getInstance(Properties properties) {
+    public static synchronized ExternalRegistryScanner createInstance(Properties properties) {
         if (instance == null) {
             instance = new ExternalRegistryScanner(properties);
         }

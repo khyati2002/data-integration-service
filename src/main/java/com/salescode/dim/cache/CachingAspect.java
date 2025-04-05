@@ -37,16 +37,16 @@ public class CachingAspect {
 
         String key = generateCacheKey(pjp);
 
-        logger.info("Checking cache for method: {}", method.getName());
+//        logger.info("Checking cache for method: {}", method.getName());
 
         // Try to get from cache
         Object cachedResult = cache.get(key);
         if (cachedResult != null) {
-            logger.info("Cache hit for key: {}", key);
+//            logger.info("Cache hit for key: {}", key);
             return cachedResult;
         }
 
-        logger.info("Cache miss for key: {}. Executing method: {}", key, method.getName());
+        logger.info("Cache miss for key: {}. Executing method: {}, Args {}", key, method.getName(), pjp.getArgs());
         // Execute the method and cache the result
         Object result = pjp.proceed();
 

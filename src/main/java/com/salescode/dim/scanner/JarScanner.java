@@ -113,11 +113,11 @@ public class JarScanner<T extends TypeAwareEtlStep> {
                         instanceCache.put(className, instance);
                         log.info("Loaded and cached class: {}%n", className);
                     } catch (ClassCastException e) {
-                        log.info("Class {} does not implement TypeAwareEtlStep: {}%n", className, e.getMessage());
+                        log.error("Class {} does not implement TypeAwareEtlStep: {}%n", className, e.getMessage());
                     } catch (Exception e) {
-                        log.info("Error loading class: {}: {}%n", className, e.getMessage());
+                        log.error("Error loading class: {}: {}%n", className, e.getMessage());
                     } catch (NoClassDefFoundError e) {
-                        log.info("Class not found: {}: {}%n", className, e.getMessage());
+                        log.error("Class not found: {}: {}%n", className, e.getMessage());
                     }
                 }
             }

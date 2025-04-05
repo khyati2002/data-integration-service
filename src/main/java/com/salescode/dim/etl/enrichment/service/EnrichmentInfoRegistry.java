@@ -94,6 +94,7 @@ public class EnrichmentInfoRegistry implements RefreshableRegistry, Serializable
         List<EnrichmentInfo> enrichmentInfos = dsl.selectFrom(CK_ENRICHMENT_INFO)
                                                   .where(CK_ENRICHMENT_INFO.PHASE.eq(phase))
                                                   .and(CK_ENRICHMENT_INFO.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
+                                                  .and(CK_ENRICHMENT_INFO.ENABLED.eq(true))
                                                   .fetchInto(EnrichmentInfo.class);
 
         // Group the enrichments by type and store them with phase+type as key

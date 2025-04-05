@@ -22,7 +22,9 @@
       "input.topic": "${input.topic}",
       "failure.topic": "${failure.topic}",
       "output.topic" : "${output.topic}",
-      "event.topic" : "${event.topic}"
+      "event.topic" : "${event.topic}",
+      "partition.discovery.interval.ms":"300000",
+      "commit.offsets.on.checkpoint":"true"
     }
   },
   {

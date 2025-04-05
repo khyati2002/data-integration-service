@@ -27,14 +27,12 @@ import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.connector.kafka.sink.TopicSelector;
 import org.apache.flink.connector.kafka.source.KafkaSource;
-import org.apache.flink.formats.json.JsonDeserializationSchema;
 import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.OutputTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -59,9 +57,11 @@ import static com.salescode.dim.PropertyLoader.mergeProperties;
 public class DataStreamJob {
 
     // Define SideOutputTag for failed records
-    public static final OutputTag<StreamingRawData> FAILED_TRANSFORMATIONS = new OutputTag<>("failed-transformations") {};
+    public static final OutputTag<StreamingRawData> FAILED_TRANSFORMATIONS = new OutputTag<>("failed-transformations") {
+    };
 
-    public static final SerializationSchema<StreamingRawData> recordKeySerializationSchema = (StreamingRawData element) -> element.getRequestId().getBytes();
+    public static final SerializationSchema<StreamingRawData> recordKeySerializationSchema = (StreamingRawData element) -> element.getRequestId()
+                                                                                                                                  .getBytes();
 
     public static final StreamingRawDataDeserializer VALUE_DESERIALIZATION_SCHEMA = new StreamingRawDataDeserializer();
 
@@ -109,15 +109,15 @@ public class DataStreamJob {
         KafkaTopicCreator.createTopicIfNotExists(lobTopic, bootstrapServers);
         KafkaTopicCreator.createTopicIfNotExists(lobFailureTopic, bootstrapServers);
         KafkaTopicCreator.createTopicIfNotExists(lobEventTopic, bootstrapServers);
-        if(isLocal(env)) {
+        if (isLocal(env)) {
             KafkaTopicCreator.clearAndRecreateTopic(lobOutTopic, bootstrapServers);
-            env.setParallelism(1);
+            env.setParallelism(8);
         }
 
         Map<String, String> entityTopicMap = Arrays.stream(entityNames).distinct().parallel()
-                                            .map(entityName -> Map.entry(entityName, String.join("-", lobTopic, entityName)))
-                                            .peek(lobEntityTopic -> createEntityTopic(lobEntityTopic, env, bootstrapServers))
-                                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                                                   .map(entityName -> Map.entry(entityName, String.join("-", lobTopic, entityName)))
+                                                   .peek(lobEntityTopic -> createEntityTopic(lobEntityTopic, env, bootstrapServers))
+                                                   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         // Read from kafka and bifurcate on basis of entities and sink to respective topics
         KafkaSource<StreamingRawData> kafkaSource = FlinkJobSource.createKafkaSource(inout0Properties, VALUE_DESERIALIZATION_SCHEMA, lobTopic);
@@ -134,23 +134,28 @@ public class DataStreamJob {
 
         KafkaSink<StreamingRawData> kafkaSink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, topicSelector);
 
-        env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source").name("Entity Bifurcation")
-           .sinkTo(kafkaSink);
+        env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source").name("Input Kafka Source")
+           .setParallelism(Math.min(env.getParallelism(), 5)).sinkTo(kafkaSink).name("Entity Bifurcation Sink");
 
         // for each entity, read from respective topic and process
         for (String entityName : entityNames) {
             String entityTopic = entityTopicMap.get(entityName);
             KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, VALUE_DESERIALIZATION_SCHEMA, entityTopic);
-            DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Entity Kafka source" + entityName).name(entityName + "-Source");
-            var processedStream = AsyncDataStream.unorderedWait(
-                            input.rebalance().flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
-                            new StreamingRawDataProcessor(commonProperties),  // Async Processing
-                            5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
-                    ).process(new ProcessRecordStatus());
 
-           processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
+            DataStream<StreamingRawData> input = env.fromSource(kafkaSourceEntity, WatermarkStrategy.noWatermarks(), "Entity Kafka source" + entityName)
+                                                    .name(entityName + "-Source")
+                                                    .setParallelism(Math.min(env.getParallelism(), 5));
 
-           // Failed records
+            DataStream<StreamingRawData> flatStream = input.rebalance().flatMap(new StreamingRawDataFlatMapper())
+                                                           .name(entityName + "-FlatMap");
+
+            var processedStream = AsyncDataStream.unorderedWait(flatStream, new StreamingRawDataProcessor(commonProperties), 5, TimeUnit.SECONDS);
+
+            processedStream.process(new ProcessRecordStatus());
+
+            processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
+
+            // Failed records
             DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
             KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> lobFailureTopic);
             failedRecords.sinkTo(sink).name("Failed Kafka Sink");
@@ -163,6 +168,7 @@ public class DataStreamJob {
 
         env.execute("Flink Java API Skeleton");
     }
+
 
     public static String getLobEventTopic(Properties inout0Properties) {
         return String.join("-", inout0Properties.getProperty("lob")
