@@ -30,6 +30,56 @@ public class ValidationExcludeGroupRegistry implements RefreshableRegistry, Seri
         init(); // Preload validation rules on construction
     }
 
+    /**
+     * Main method for testing the ValidationExcludeGroupRegistry
+     */
+    public static void main(String[] args) {
+        try {
+            // Load database properties
+            final Map<String, Properties> applicationProperties = PropertyLoader.loadApplicationProperties(null);
+
+            Properties commonProperties = applicationProperties.getOrDefault("Common", new Properties());
+
+            var connection = DatabaseConnectionUtil.createConnection(commonProperties);
+            var dslContext = DatabaseConnectionUtil.createDSLContext(connection);
+
+            // Initialize and return the registry
+            System.out.println("Initializing ValidationExcludeGroupRegistry...");
+            ValidationExcludeGroupRegistry registry = new ValidationExcludeGroupRegistry(dslContext);
+
+            // Print all cached keys and their associated object ID lists
+            System.out.println("Cached entity groups:");
+            for (Map.Entry<String, Set<String>> entry : registry.objectIdListCache.entrySet()) {
+                System.out.println("Group Key: " + entry.getKey());
+                System.out.println("Object IDs: " + String.join(", ", entry.getValue()));
+                System.out.println("-----------------------------------");
+            }
+
+            // Test retrieval method
+            String testKey = "outlet_validation_exclude";
+            System.out.println("\nTesting retrieval for key: " + testKey);
+            Set<String> objectIds = registry.getObjectIdListByKey(testKey);
+
+            if (objectIds != null) {
+                System.out.println("Found " + objectIds.size() + " objects for key: " + testKey);
+                for (String id : objectIds) {
+                    System.out.println(" - " + id);
+                }
+            } else {
+                System.out.println("No objects found for key: " + testKey);
+            }
+
+            // Test refreshing registry
+            System.out.println("\nRefreshing registry...");
+            registry.refreshRegistry();
+            System.out.println("Registry refreshed. Cache size: " + registry.objectIdListCache.size());
+
+        } catch (Exception e) {
+            System.err.println("Error during registry testing: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void init() {
         // Query entity groups from database
