@@ -3,6 +3,7 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.repository.HierarchyMetadataRepository;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
+import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.jooq.generated.tables.records.CkHierarchyMetadataRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
@@ -47,6 +48,7 @@ public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetada
             ).execute();
         }
 
+        CacheManager.getInstance().evictAll("dataintegration-hierarchymetadatas");
         return hierarchyMetadataList;
     }
 

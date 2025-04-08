@@ -71,8 +71,8 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         private transient ServiceLocator serviceLocator;
 
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
+            System.setProperty("sun.net.maxDatagramSockets","4096");
             ExternalRegistryScanner.getInstance(properties);
-
             HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 10);
             this.dslContext = DatabaseConnectionUtil.createPooledDSLContext(hikariDataSource);
             this.batchBuffer = new ArrayList<>();
@@ -87,7 +87,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             kafkaProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
             kafkaProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
             kafkaProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EventListenerDTOSerializer.class.getName());
-
+            kafkaProps.put(ProducerConfig.ACKS_CONFIG, "1");
             this.topicName = DataStreamJob.getLobEventTopic(properties);
             this.eventPublisher = new EventPublisher(kafkaProps, topicName, mailboxExecutor);
         }

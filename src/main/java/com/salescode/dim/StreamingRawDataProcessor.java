@@ -13,24 +13,22 @@ import com.salescode.dim.etl.transformation.service.TransformerInfoRegistry;
 import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
+import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.configuration.ConfigOption;
-import org.apache.flink.configuration.ConfigOptions;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.configuration.TaskManagerOptions;
-import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.functions.async.ResultFuture;
 import org.apache.flink.streaming.api.functions.async.RichAsyncFunction;
-import org.apache.flink.util.Collector;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawData, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
@@ -54,7 +52,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
     @Override
     public void open(Configuration parameters) throws Exception {
 
-        System.setProperty("sun.net.maxDatagramSockets","2048");
+        System.setProperty("sun.net.maxDatagramSockets","4096");
         super.open(parameters);
         initializeResources();
     }
@@ -131,9 +129,12 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                     );
                     resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                 } else {
+                    // Handle success case
                     streamingRawData.setStatus("Processed");
-                    resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, dataset))); // Handle success case
-                }
+                    resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, dataset)));
+                    }
+
+
             } catch (Exception e) {
                 logger.error("Processing failed", e);
                 streamingRawData.setStatus("Failure");

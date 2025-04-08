@@ -18,10 +18,15 @@
 
 package com.salescode.dim;
 
+import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dim.cache.CacheEvictionFunction;
+import com.salescode.dim.jooq.generated.tables.pojos.User;
+import com.salescode.dim.jooq.impl.OutletDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SerializationSchema;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
@@ -137,7 +142,7 @@ public class DataStreamJob {
         env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source").name("Entity Bifurcation")
            .sinkTo(kafkaSink);
 
-        // for each entity, read from respective topic and process
+ //        for each entity, read from respective topic and process
         for (String entityName : entityNames) {
             String entityTopic = entityTopicMap.get(entityName);
             KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), entityTopic);
@@ -148,10 +153,18 @@ public class DataStreamJob {
                             5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
                     ).process(new ProcessRecordStatus());
 
-           processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
+
+            var finalStream = AsyncDataStream.unorderedWait(
+                        processedStream,
+                        new OutletUserProcessor(commonProperties),  // Async Processing
+                        5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
+                ).process(new ProcessRecordStatus());
+
+
+           finalStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
 
            // Failed records
-            DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
+            DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS).union(finalStream.getSideOutput(FAILED_TRANSFORMATIONS));
             KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> lobFailureTopic);
             failedRecords.sinkTo(sink).name("Failed Kafka Sink");
         }
@@ -163,7 +176,6 @@ public class DataStreamJob {
 
         env.execute("Flink Java API Skeleton");
     }
-
     public static String getLobEventTopic(Properties inout0Properties) {
         return String.join("-", inout0Properties.getProperty("lob")
                                                 .trim(), inout0Properties.getProperty("event.topic", "event").trim());

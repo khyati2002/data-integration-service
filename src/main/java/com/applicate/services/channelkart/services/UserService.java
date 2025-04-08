@@ -6,6 +6,7 @@ import com.applicate.services.channelkart.models.enums.RoleName;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.salescode.dim.JooqDatabaseBatchSink;
+import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
@@ -211,7 +212,10 @@ public class UserService extends AbstractCDMService<User> {
             if (user.getPassword() == null) {
                 user.setPassword(DEFAULT_ENCODED_PASSWORD);
             }
-            user.setBlocked(false);
+
+            if(user.getBlocked()==null || !user.getBlocked()) {
+                user.setBlocked(false);
+            }
         }
     }
 
@@ -258,6 +262,15 @@ public class UserService extends AbstractCDMService<User> {
             fillAttributes(user,User.of(savedList.get(user.getLoginid())));
             fillCommonAttributes(user);
             fillUserDetails(userList);
+            new AttributeUpdateOverrideManager().overrideAttributes(user,savedList.get(user.getLoginid()));
+            if (savedList.get(user.getLoginid()) != null){
+                if(savedList.get(user.getLoginid()).getPassword() != null){
+                    user.setPassword(savedList.get(user.getLoginid()).getPassword());
+                }
+            }
+            if (savedList.get(user.getLoginid()) != null && User.of(savedList.get(user.getLoginid())).getVerified()) {
+                user.setVerified(true);
+            }
             super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
                 preSaveEnrichment(user);
@@ -313,6 +326,7 @@ public class UserService extends AbstractCDMService<User> {
                             .collect(Collectors.toList())
             ).execute();
         }
+        CacheManager.getInstance().evictAll("dataintegration-user");
         if(!saveItemsList.get(0).isEmpty() || !saveItemsList.get(1).isEmpty()){
             postBatchSave(userList);
         }

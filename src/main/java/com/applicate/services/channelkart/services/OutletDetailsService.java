@@ -1,13 +1,17 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.JSONUtils;
+import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.esotericsoftware.minlog.Log;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.salescode.dim.DataStreamJob;
 import com.salescode.dim.PreProcessOperationResult;
 import com.salescode.dim.PreProcessPipelineService;
+import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
@@ -16,6 +20,7 @@ import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
+import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import com.salescode.dim.jooq.generated.tables.pojos.OutletDetailsHierarchymetadata;
 import com.salescode.dim.jooq.generated.tables.records.CkOutletDetailsRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
@@ -27,7 +32,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.util.RawValue;
 import org.checkerframework.checker.units.qual.C;
@@ -41,8 +48,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+
 import static com.salescode.dim.jooq.generated.Tables.*;
 import static com.salescode.dim.jooq.generated.Tables.CK_OUTLET_DETAILS_HIERARCHYMETADATA;
+import static java.util.Arrays.stream;
 
 public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private static final Logger LOG = LoggerFactory.getLogger(OutletDetailsService.class);
@@ -58,6 +67,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private final ValidationExcludeGroupRegistry validationExcludeGroupRegistry;
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
     private ETLRegistry etlRegistry;
+
 
     public OutletDetailsService(){
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
@@ -85,9 +95,9 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     }
 
     private List<User> preProcessUser(List<User> userList) {
-        userList.parallelStream().forEach(user -> {
-            preProcessPipelineService.preProcessPipeline(user, null);
-        });
+//        userList.parallelStream().forEach(user -> {
+//            preProcessPipelineService.preProcessPipeline(user, null);
+//        });
         return userList;
     }
 
@@ -206,6 +216,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         for (OutletDetails outlet : outletDetailsList) {
             fillAttributes(outlet,OutletDetails.of(savedList.get(outlet.getOutletcode())));
             fillCommonAttributes(outlet);
+            new AttributeUpdateOverrideManager().overrideAttributes(outlet,savedList.get(outlet.getOutletcode()));
             if(outlet.getMapped()==null){
                 outlet.setMapped(false);
             }
@@ -237,6 +248,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         return result;
     }
 
+
+
     @Override
     public Collection<OutletDetails> batchSave(Collection<OutletDetails> outletDetailsList){
         LOG.info("Size of list is "  + outletDetailsList.size());
@@ -266,6 +279,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             postBatchSave(outletDetails);
         }
         LOG.info("Batch save successful");
+        CacheManager.getInstance().evictAll("dataintegration-outlets");
         return outletDetails;
     }
 
@@ -273,4 +287,6 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         List<OutletDetailsHierarchymetadata> outletDetailsHierarchymetadata = setOutletHierarchyMetadata(outletDetailsList);
         saveOutletDetailHierarchyMetadata(outletDetailsHierarchymetadata);
     }
+
+
 }
