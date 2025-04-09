@@ -5,6 +5,7 @@ import com.applicate.services.channelkart.utils.JSONUtils;
 import lombok.SneakyThrows;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -13,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A custom sink that collects all elements into a static list for assertions.
@@ -116,13 +118,15 @@ public class DataStreamJobTest {
         Map<String, Properties> stringPropertiesMap = PropertyLoader.loadApplicationProperties(null);
 
         // Apply the process function (simulate the job's pipeline)
-//        SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = source
-//                // If you had windowing or aggregation, adjust accordingly.
-//                .process(new StreamingRawDataProcessor(stringPropertiesMap.get("Common")))
-//                .name("Test Process Function");
-//
-//        // Add a sink to collect output data
-//        processedStream.addSink(new CollectSink<>());
+        SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = AsyncDataStream.unorderedWait(
+                source.rebalance().flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
+                new StreamingRawDataProcessor(stringPropertiesMap.get("Common")),  // Async Processing
+                5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
+        ).process(new ProcessRecordStatus());
+        // Add a sink to collect output data
+
+        processedStream.sinkTo(new JooqDatabaseBatchSink(stringPropertiesMap.get("Common"))).name("Database Success Sink");
+        processedStream.addSink(new CollectSink<>());
 
         // Execute the pipeline
         env.execute("DataStreamJob Test");
