@@ -18,17 +18,20 @@ import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.ConfigOption;
+import org.apache.flink.configuration.ConfigOptions;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.TaskManagerOptions;
+import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.functions.async.ResultFuture;
 import org.apache.flink.streaming.api.functions.async.RichAsyncFunction;
+import org.apache.flink.util.Collector;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawData, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
@@ -129,12 +132,28 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                     );
                     resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                 } else {
-                    // Handle success case
-                    streamingRawData.setStatus("Processed");
-                    resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, dataset)));
+                    streamingRawData.setStatus("Success");
+                    if(entityUtils.getEntityClass(streamingRawData.getTransformerInfo().get(0).getEntityName()).getSimpleName().equals(OutletDetails.class.getSimpleName())) {
+                        PreProcessOperationResult res = preProcessPipelineService.preProcessPipeline(dataset.values().stream()
+                                .flatMap(Set::stream)
+                                .findFirst()
+                                .orElse(null), "");
+                        if (res.getStatus().equals(PreProcessOperationResult.Status.FAILURE)) {
+                            streamingRawData.setStatus("Failure");
+                            streamingRawData.setResponses(
+                                    errorList.stream()
+                                            .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
+                                            .collect(Collectors.toList())
+                            );
+                            resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
+                        }
                     }
 
-
+                    if(streamingRawData.getStatus().equals("Success")){
+                            resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, dataset)));
+                    }
+                    // Handle success case
+                }
             } catch (Exception e) {
                 logger.error("Processing failed", e);
                 streamingRawData.setStatus("Failure");
