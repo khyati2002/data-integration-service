@@ -7,7 +7,7 @@ import com.applicate.services.channelkart.utils.IDGenerator;
 import com.applicate.services.channelkart.utils.JSONUtils;
 import com.applicate.services.channelkart.utils.NullUtils;
 import com.salescode.dim.jooq.generated.Tables;
-import com.salescode.dim.jooq.generated.tables.pojos.SchemeCalculation;
+import com.salescode.dim.jooq.impl.SchemeCalculation;
 import com.salescode.dim.jooq.generated.tables.records.CkSchemeCalculationRecord;
 import com.salescode.dim.repository.SchemeCalculationRepo;
 import com.salescode.dim.repository.SchemeCalculationRepoImpl;
@@ -23,17 +23,23 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_SCHEME_CALCULATION;
 
 public class SchemeCalculationService extends AbstractCDMService<SchemeCalculation> {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private static final Logger logger = LoggerFactory.getLogger(SchemeCalculationService.class);
 
-    /** The repository. */
+    /**
+     * The repository.
+     */
     private final SchemeCalculationRepo schemeCalculationRepo;
     private SchemeMustBuyGroupRepo schemeMustBuyGroupRepo;
     private final DSLContext dsl;
@@ -48,10 +54,11 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
         this.dsl = getDslContext();
         this.schemeCalculationRepo = new SchemeCalculationRepoImpl(dsl);
         metaDataService = new MetaDataService();
-        idGenerator=new IDGenerator();
+        idGenerator = new IDGenerator();
 //        schemeMustBuyGroupService = new SchemeMustBuyGroupService(dsl);
 //        schemeFreeProductInfoService = new SchemeFreeProductInfoService(dsl);
     }
+
     private BiFunction<SchemeCalculation, DSLContext, InsertSetMoreStep<?>> schemeCalculationBiFunctionMapper = (ros, dslContext) -> {
         return (InsertSetMoreStep<CkSchemeCalculationRecord>)
                 dslContext.insertInto(CK_SCHEME_CALCULATION)
@@ -146,41 +153,83 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
         return schemeCalculationRepo.findBySchemeId(schemeId);
     }
 
-    public SchemeCalculation scSave(SchemeCalculation schemeCalculation) {
-//        schemeMustBuyGroupService.smbSave(schemeMustBuyGroupService.findBySchemeId(schemeCalculation.getSchemeId()));
-//        schemeFreeProductInfoService.sfpSave(schemeFreeProductInfoService.findBySchemeId(schemeCalculation.getSchemeId()));
+    public SchemeCalculation updateWithIds(SchemeCalculation schemeCalculation) {
         JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
         schemeCalculation.setId(idGenerator.getIdWithMetaData(schemeCalculation, metadata));
-        CkSchemeCalculationRecord calculationRecord=dsl.selectFrom(CK_SCHEME_CALCULATION).where(CK_SCHEME_CALCULATION.SCHEME_ID.eq(schemeCalculation.getSchemeId())).fetchOne();
-        JsonNode previousSlabArray= JSONUtils.getObjectMapper().createArrayNode();
+        return schemeCalculation;
+    }
+
+    public List<SchemeCalculation> scSave(List<SchemeCalculation> schemeCalculations, DSLContext transDSL) {
+        long currentTime = System.currentTimeMillis();
+
+        for (SchemeCalculation schemeCalculation : schemeCalculations) {
+
+//        schemeMustBuyGroupService.smbSave(schemeMustBuyGroupService.findBySchemeId(schemeCalculation.getSchemeId()));
+//        schemeFreeProductInfoService.sfpSave(schemeFreeProductInfoService.findBySchemeId(schemeCalculation.getSchemeId()));
+            JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
+            schemeCalculation.setId(idGenerator.getIdWithMetaData(schemeCalculation, metadata));
+            CkSchemeCalculationRecord calculationRecord = transDSL.selectFrom(CK_SCHEME_CALCULATION).where(CK_SCHEME_CALCULATION.SCHEME_ID.eq(schemeCalculation.getSchemeId())).fetchOne();
+            JsonNode previousSlabArray = JSONUtils.getObjectMapper().createArrayNode();
+            if (calculationRecord != null) {
+                previousSlabArray = calculationRecord.getValue(CK_SCHEME_CALCULATION.SLAB_INFO);
+            }
+            Map<String, JsonNode> slabMap = new HashMap<>();
+            if (NullUtils.isNotNull(previousSlabArray)) {
+                previousSlabArray.forEach(slab -> slabMap.put(slab.get("startRange").asText(), slab));
+            }
+            ArrayNode newSlabArray = new ObjectMapper().createArrayNode();
+            JsonNode slabNode = schemeCalculation.getSlabInfo();
+            if (NullUtils.isNotNull(slabNode)) {
+                slabNode.forEach(slab -> slabMap.put(slab.get("startRange").asText(), slab));
+            }
+            slabMap.values().forEach(newSlabArray::add);
+            if (schemeCalculation.getUsabilityPeriod() == null && schemeCalculation.getUsabilityPeriodLimit() == null) {
+                schemeCalculation.setUsabilityPeriod(null);
+                schemeCalculation.setUsabilityPeriodLimit(null);
+            }
+            if (schemeCalculation.getOutletLimitOnOrder() == null) {
+                schemeCalculation.setOutletLimitOnOrder(null);
+            }
+            schemeCalculation.setSlabInfo(newSlabArray);
+        }
+        transDSL.batch(schemeCalculations.stream().map(entity -> schemeCalculationBiFunctionMapper.apply(entity, transDSL)).collect(Collectors.toList())).execute();
+
+        logger.info("Scheme Calculation Saved Successfully");
+        logger.info("Time taken for schemeCalculation : {}", System.currentTimeMillis() - currentTime);
+
+        return schemeCalculations;
+    }
+
+    @Override
+    public SchemeCalculation save(SchemeCalculation scheme) {
+        long currentTime = System.currentTimeMillis();
+        JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
+        scheme.setId(idGenerator.getIdWithMetaData(scheme, metadata));
+        CkSchemeCalculationRecord calculationRecord = dsl.selectFrom(CK_SCHEME_CALCULATION).where(CK_SCHEME_CALCULATION.SCHEME_ID.eq(scheme.getSchemeId())).fetchOne();
+        JsonNode previousSlabArray = JSONUtils.getObjectMapper().createArrayNode();
         if (calculationRecord != null) {
             previousSlabArray = calculationRecord.getValue(CK_SCHEME_CALCULATION.SLAB_INFO);
         }
         Map<String, JsonNode> slabMap = new HashMap<>();
-        if(NullUtils.isNotNull(previousSlabArray)){
+        if (NullUtils.isNotNull(previousSlabArray)) {
             previousSlabArray.forEach(slab -> slabMap.put(slab.get("startRange").asText(), slab));
         }
         ArrayNode newSlabArray = new ObjectMapper().createArrayNode();
-        JsonNode slabNode = schemeCalculation.getSlabInfo();
-        if(NullUtils.isNotNull(slabNode)){
+        JsonNode slabNode = scheme.getSlabInfo();
+        if (NullUtils.isNotNull(slabNode)) {
             slabNode.forEach(slab -> slabMap.put(slab.get("startRange").asText(), slab));
         }
         slabMap.values().forEach(newSlabArray::add);
-        if(schemeCalculation.getUsabilityPeriod()==null && schemeCalculation.getUsabilityPeriodLimit()==null){
-            schemeCalculation.setUsabilityPeriod(null);
-            schemeCalculation.setUsabilityPeriodLimit(null);
+        if (scheme.getUsabilityPeriod() == null && scheme.getUsabilityPeriodLimit() == null) {
+            scheme.setUsabilityPeriod(null);
+            scheme.setUsabilityPeriodLimit(null);
         }
-        if(schemeCalculation.getOutletLimitOnOrder()==null){
-            schemeCalculation.setOutletLimitOnOrder(null);
+        if (scheme.getOutletLimitOnOrder() == null) {
+            scheme.setOutletLimitOnOrder(null);
         }
-        dsl.batch(
-                schemeCalculationBiFunctionMapper.apply(schemeCalculation,dsl)
-        ).execute();
-        logger.info("Scheme Calculation Saved Successfully");
-        return schemeCalculation;
-    }
-    @Override
-    public SchemeCalculation save(SchemeCalculation scheme) {
-        return scSave(scheme);
+        scheme.setSlabInfo(newSlabArray);
+        logger.info("Time taken for schemeCalculation : {}", System.currentTimeMillis() - currentTime);
+
+        return scheme;
     }
 }

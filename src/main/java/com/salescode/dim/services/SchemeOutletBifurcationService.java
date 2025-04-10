@@ -5,6 +5,7 @@ import com.applicate.services.channelkart.services.AbstractCDMService;
 import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.utils.IDGenerator;
 import com.salescode.dim.jooq.generated.Tables;
+import com.salescode.dim.jooq.generated.tables.pojos.SchemeLocationBifurcations;
 import com.salescode.dim.jooq.generated.tables.pojos.SchemeOutletBifurcations;
 import com.salescode.dim.jooq.generated.tables.records.CkSchemeOutletBifurcationsRecord;
 import com.salescode.dim.repository.SchemeOutletBifurcationRepo;
@@ -115,7 +116,8 @@ public class SchemeOutletBifurcationService extends AbstractCDMService<SchemeOut
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.MARKET_START_DATE, ros.getMarketStartDate())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.BEAT, ros.getBeat());
     };
-    public void sobSave(List<SchemeOutletBifurcations> bifurcations) {
+    public void sobSave(List<SchemeOutletBifurcations> bifurcations, DSLContext transDSL) {
+        long currentTime = System.currentTimeMillis();
         JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
         if (bifurcations != null) {
             bifurcations.forEach(sob -> {
@@ -127,12 +129,22 @@ public class SchemeOutletBifurcationService extends AbstractCDMService<SchemeOut
         for (SchemeOutletBifurcations spb : bifurcations) {
             spb.setId(idGenerator.getIdWithMetaData(spb, metadata));
         }
-        dsl.batch(
+        transDSL.batch(
                 bifurcations.stream()
-                        .map(sob -> schemeOutletBiFunctionMapper.apply(sob,dsl))
+                        .map(sob -> schemeOutletBiFunctionMapper.apply(sob, transDSL))
                         .collect(Collectors.toList())
         ).execute();
         logger.info("SchemeOutletBifurcations saved!!!");
+        logger.info("Time taken for schemeOutletBifurcations : {}", System.currentTimeMillis() - currentTime);
+
+    }
+    public List<SchemeOutletBifurcations> updateWithIds(List<SchemeOutletBifurcations> bifurcations){
+        JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
+
+        for (SchemeOutletBifurcations spb : bifurcations) {
+            spb.setId(idGenerator.getIdWithMetaData(spb, metadata));
+        }
+        return bifurcations;
     }
 
     @Override

@@ -9,7 +9,6 @@ import com.salescode.dim.jooq.generated.tables.pojos.SchemeLocationBifurcations;
 import com.salescode.dim.jooq.generated.tables.pojos.SchemeProductBifurcations;
 import com.salescode.dim.jooq.generated.tables.records.CkSchemeLocationBifurcationsRecord;
 import com.salescode.dim.repository.SchemeLocationBifurcationRepo;
-import com.salescode.dim.repository.SchemeOutletBifurcationRepo;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.jooq.DSLContext;
 import org.jooq.InsertSetMoreStep;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -100,23 +98,33 @@ public class SchemeLocationBifurcationService extends AbstractCDMService<SchemeL
                 ;
     };
 
-    public void slbSave(List<SchemeLocationBifurcations> bifurcations) {
+    public void slbSave(List<SchemeLocationBifurcations> bifurcations, DSLContext transDSL) {
+        long currentTime = System.currentTimeMillis();
         JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
         for (SchemeLocationBifurcations slb : bifurcations) {
             slb.setId(idGenerator.getIdWithMetaData(slb, metadata));
         }
 //        try {
-        dsl.batch(
+        transDSL.batch(
                 bifurcations.stream()
-                        .map(spb -> schemeLocationBiFunctionMapper.apply(spb,dsl))
+                        .map(spb -> schemeLocationBiFunctionMapper.apply(spb, transDSL))
                         .collect(Collectors.toList())
         ).execute();
 //                } catch (Exception e) {
 //            e.printStackTrace();
 //        }
         logger.info("Saved Scheme Location Bifurcations");
-    }
+        logger.info("Time taken for schemeProductBifurcations : {}", System.currentTimeMillis() - currentTime);
 
+    }
+    public List<SchemeLocationBifurcations> updateWithIds(List<SchemeLocationBifurcations> bifurcations){
+        JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
+
+        for (SchemeLocationBifurcations spb : bifurcations) {
+            spb.setId(idGenerator.getIdWithMetaData(spb, metadata));
+        }
+        return bifurcations;
+    }
     @Override
     public SchemeLocationBifurcations save(SchemeLocationBifurcations scheme) {
         return null;

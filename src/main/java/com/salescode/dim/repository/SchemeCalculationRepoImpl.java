@@ -1,6 +1,6 @@
 package com.salescode.dim.repository;
 
-import com.salescode.dim.jooq.generated.tables.pojos.SchemeCalculation;
+import com.salescode.dim.jooq.impl.SchemeCalculation;
 import org.jooq.DSLContext;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_SCHEME_CALCULATION;

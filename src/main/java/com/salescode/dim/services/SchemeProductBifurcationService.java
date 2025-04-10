@@ -28,7 +28,7 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
      * The logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(SchemeProductBifurcationService.class);
-    private static DSLContext dsl;
+//    private static DSLContext dsl;
 
     /**
      * The repository.
@@ -41,7 +41,7 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
 
 
     public SchemeProductBifurcationService() {
-        this.dsl = getDslContext();
+//        this.dsl = getDslContext();
         idGenerator = new IDGenerator();
         metaDataService = new MetaDataService();
 
@@ -132,20 +132,31 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.M_CODE, ros.getMCode());
     };
 
-    public void spbSave(List<SchemeProductBifurcations> bifurcations) {
+    public void spbSave(List<SchemeProductBifurcations> bifurcations, DSLContext transDSL ) {
         logger.info("starting saving SchemeProductBifurcations...");
+        long currentTime = System.currentTimeMillis();
         JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
 
         for (SchemeProductBifurcations spb : bifurcations) {
             spb.setId(idGenerator.getIdWithMetaData(spb, metadata));
         }
-            dsl.batch(
+        transDSL.batch(
                     bifurcations.stream()
-                            .map(spb -> schemeProductBiFunctionMapper.apply(spb, dsl))
+                            .map(spb -> schemeProductBiFunctionMapper.apply(spb, transDSL))
                             .collect(Collectors.toList())
             ).execute();
 
         logger.info("Saved scheme product bifurcations");
+        logger.info("Time taken for schemeProductBifurcations : {}", System.currentTimeMillis() - currentTime);
+
+    }
+    public List<SchemeProductBifurcations> updateWithIds(List<SchemeProductBifurcations> bifurcations){
+        JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
+
+        for (SchemeProductBifurcations spb : bifurcations) {
+            spb.setId(idGenerator.getIdWithMetaData(spb, metadata));
+        }
+        return bifurcations;
     }
 
     @Override
