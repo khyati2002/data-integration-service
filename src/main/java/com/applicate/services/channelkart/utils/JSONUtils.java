@@ -5,6 +5,7 @@
  */
 package com.applicate.services.channelkart.utils;
 
+import com.applicate.services.channelkart.converters.CustomLocalDateTimeDeserializer;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.DeserializationFeature;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
@@ -14,9 +15,12 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.Obje
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * The class JSONUtils.
@@ -50,7 +54,9 @@ public class JSONUtils {
             OBJECT_MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
             OBJECT_MAPPER.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
             OBJECT_MAPPER.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
-            OBJECT_MAPPER.registerModule(new JavaTimeModule());
+            JavaTimeModule module = new JavaTimeModule();
+            module.addDeserializer(LocalDateTime.class, new CustomLocalDateTimeDeserializer());
+            OBJECT_MAPPER.registerModule(module);
         }
         return OBJECT_MAPPER;
     }
@@ -80,5 +86,9 @@ public class JSONUtils {
 
     public static <T> T convert(Object node, TypeReference<List<Map<String, String>>> typeReference) {
         return (T) OBJECT_MAPPER.convertValue(node, typeReference);
+    }
+
+    public static Stream<JsonNode> stream(JsonNode nodes) {
+        return StreamSupport.stream(nodes.spliterator(), false);
     }
 }

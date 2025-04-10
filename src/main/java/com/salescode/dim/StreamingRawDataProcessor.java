@@ -1,6 +1,9 @@
 package com.salescode.dim;
 
+import com.applicate.services.channelkart.client.properties.PropertyRegistry;
+import com.applicate.services.channelkart.client.properties.PropertyService;
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
@@ -13,6 +16,7 @@ import com.salescode.dim.etl.transformation.service.TransformerInfoRegistry;
 import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
+import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -93,6 +97,8 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         ServiceLocator serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
 
+        PropertyService propertyService = new PropertyService((MetaDataService) ServiceLocator.lookup(Metadata.class));
+        PropertyRegistry.getInstance(propertyService);
 
     }
 
