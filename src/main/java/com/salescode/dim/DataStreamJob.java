@@ -154,17 +154,12 @@ public class DataStreamJob {
                     ).process(new ProcessRecordStatus());
 
 
-            var finalStream = AsyncDataStream.unorderedWait(
-                        processedStream,
-                        new OutletUserProcessor(commonProperties),  // Async Processing
-                        5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
-                ).process(new ProcessRecordStatus());
 
 
-           finalStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
+           processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
 
            // Failed records
-            DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS).union(finalStream.getSideOutput(FAILED_TRANSFORMATIONS));
+            DataStream<StreamingRawData> failedRecords = processedStream.getSideOutput(FAILED_TRANSFORMATIONS);
             KafkaSink<StreamingRawData> sink = FlinkJobSink.createKafkaSink(inout0Properties, recordKeySerializationSchema, s -> lobFailureTopic);
             failedRecords.sinkTo(sink).name("Failed Kafka Sink");
         }
