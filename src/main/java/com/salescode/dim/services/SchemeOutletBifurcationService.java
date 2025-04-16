@@ -54,7 +54,6 @@ public class SchemeOutletBifurcationService extends AbstractCDMService<SchemeOut
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ID, ros.getId())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.ACTIVE)
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ACTIVE_STATUS_REASON, ros.getActiveStatusReason())
-                        .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.CHANGED, ros.getChanged())
                         .set(CK_SCHEME_OUTLET_BIFURCATIONS.CREATED_BY, "flink job")
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.CREATION_TIME, LocalDateTime.now(ZoneId.of("UTC")))
                         .set(CK_SCHEME_OUTLET_BIFURCATIONS.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
@@ -83,6 +82,7 @@ public class SchemeOutletBifurcationService extends AbstractCDMService<SchemeOut
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.MARKET_END_DATE, ros.getMarketEndDate())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.MARKET_START_DATE, ros.getMarketStartDate())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.BEAT, ros.getBeat())
+                        .set(CK_SCHEME_OUTLET_BIFURCATIONS.CHANGED, false)
                         .onConflict(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ID)
                         .doUpdate()
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.ACTIVE)
@@ -114,7 +114,10 @@ public class SchemeOutletBifurcationService extends AbstractCDMService<SchemeOut
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.PRICE_LIST_ID, ros.getPriceListId())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.MARKET_END_DATE, ros.getMarketEndDate())
                         .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.MARKET_START_DATE, ros.getMarketStartDate())
-                        .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.BEAT, ros.getBeat());
+                        .set(Tables.CK_SCHEME_OUTLET_BIFURCATIONS.BEAT, ros.getBeat())
+                        .set(CK_SCHEME_OUTLET_BIFURCATIONS.CHANGED, true)
+                        .set(CK_SCHEME_OUTLET_BIFURCATIONS.MODIFIED_BY, "flink job");
+
     };
     public void sobSave(List<SchemeOutletBifurcations> bifurcations, DSLContext transDSL) {
         long currentTime = System.currentTimeMillis();

@@ -74,6 +74,7 @@ public class SchemeLocationBifurcationService extends AbstractCDMService<SchemeL
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.STATE, ros.getState())
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.TOWN, ros.getTown())
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.DISTRICT, ros.getDistrict())
+                        .set(CK_SCHEME_LOCATION_BIFURCATIONS.CHANGED, false)
                         .onConflict(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.ID)
                         .doUpdate()
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.ACTIVE)
@@ -95,6 +96,7 @@ public class SchemeLocationBifurcationService extends AbstractCDMService<SchemeL
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.STATE, ros.getState())
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.TOWN, ros.getTown())
                         .set(Tables.CK_SCHEME_LOCATION_BIFURCATIONS.DISTRICT, ros.getDistrict())
+                        .set(CK_SCHEME_LOCATION_BIFURCATIONS.CHANGED, true)
                 ;
     };
 

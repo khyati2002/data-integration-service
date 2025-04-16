@@ -106,6 +106,7 @@ public class SchemeDefinationService extends AbstractCDMService<SchemeDefination
                         .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_MONTHS, ros.getActiveMonths())
                         .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_WEEKS, ros.getActiveWeeks())
                         .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_TIME, ros.getActiveTime())
+                        .set(CK_SCHEME_DEFINATION.CHANGED, false)
                         .onConflict(Tables.CK_SCHEME_DEFINATION.ID)
                         .doUpdate()
                         .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_STATUS, ActiveStatus.ACTIVE)
@@ -138,7 +139,9 @@ public class SchemeDefinationService extends AbstractCDMService<SchemeDefination
                         .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_DAYS, ros.getActiveDays())
                         .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_MONTHS, ros.getActiveMonths())
                         .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_WEEKS, ros.getActiveWeeks())
-                        .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_TIME, ros.getActiveTime());
+                        .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_TIME, ros.getActiveTime())
+                        .set(CK_SCHEME_DEFINATION.CHANGED, true);
+
     };
 
     public void sdSave(Collection<SchemeDefination> schemeDefinations, DSLContext trxContext) {

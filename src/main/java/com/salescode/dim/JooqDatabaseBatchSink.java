@@ -44,7 +44,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
     public JooqDatabaseBatchSink(Properties dbProperties) {
         ExternalRegistryScanner.getInstance(dbProperties);
         this.properties = dbProperties;
-        this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "500"));
+        this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "200"));
         this.batchIntervalMs = Long.parseLong(dbProperties.getProperty("batch.interval.ms", "20000"));
     }
 
@@ -72,7 +72,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
             ExternalRegistryScanner.getInstance(properties);
 
-            HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 10);
+            HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 15);
             this.dslContext = DatabaseConnectionUtil.createPooledDSLContext(hikariDataSource);
             this.batchBuffer = new ArrayList<>();
             this.batchSize = batchSize;

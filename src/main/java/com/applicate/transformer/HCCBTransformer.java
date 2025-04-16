@@ -126,7 +126,13 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         schemeProductMap.put("flavour", "all");
         schemeProductMap.put("marketSku", "all");
         schemeProductMap.put("purchaseUnit", "all");
+        schemeProductMap.put("qualifier_", "1");
         schemeProductMap.put("size", "all");
+        schemeProductMap.put("product", "all");
+        schemeProductMap.put("itemType", "all");
+        schemeProductMap.put("articleCode", "all");
+        schemeProductMap.put("skuCode", "all");
+        schemeProductMap.put("mcode", "all");
         if (monitoringScope == 1) {
             schemeProductMap.put(ITEM_CLASS, monitoringValue);
         } else if (monitoringScope == 2) {
@@ -135,6 +141,8 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
             schemeProductMap.put("customGroupCode", monitoringValue);
         return schemeProductMap;
     }
+
+    // batchCode, brand, category, itemclass, itemId, pieceSize, scheme_id, subCategory, custom_group_code, ctg, flavour, marketsku, piece_size_desc, purchase_unit, size, subCategorycode, qualifier, itemType, product, articlecode, skucode, m_code
 
     private Map<String, Object> calculationTransformer(Map<String, Object> inputMap) {
         Map<String, Object> schemeCalculationMap = new HashMap<>();

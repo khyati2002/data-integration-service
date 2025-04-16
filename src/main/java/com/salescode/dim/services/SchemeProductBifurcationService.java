@@ -95,6 +95,7 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ARTICLE_CODE, ros.getArticleCode())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.SKU_CODE, ros.getSkuCode())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.M_CODE, ros.getMCode())
+                        .set(CK_SCHEME_PRODUCT_BIFURCATIONS.CHANGED, false)
                         .onConflict(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ID)
                         .doUpdate()
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.ACTIVE)
@@ -129,7 +130,8 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ITEM_TYPE, ros.getItemType())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ARTICLE_CODE, ros.getArticleCode())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.SKU_CODE, ros.getSkuCode())
-                        .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.M_CODE, ros.getMCode());
+                        .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.M_CODE, ros.getMCode())
+                        .set(CK_SCHEME_PRODUCT_BIFURCATIONS.CHANGED, true);
     };
 
     public void spbSave(List<SchemeProductBifurcations> bifurcations, DSLContext transDSL ) {

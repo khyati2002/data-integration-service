@@ -104,6 +104,9 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
                         .set(Tables.CK_SCHEME_CALCULATION.USABILITY_PERIOD_LIMIT, ros.getUsabilityPeriodLimit())
                         .set(Tables.CK_SCHEME_CALCULATION.OUTLET_LIMIT_ON_ORDER, ros.getOutletLimitOnOrder())
                         .set(Tables.CK_SCHEME_CALCULATION.QUOTA_CODE, ros.getQuotaCode())
+                        .set(Tables.CK_SCHEME_CALCULATION.CHANGED, false)
+                        .set(Tables.CK_SCHEME_CALCULATION.BENEFIT_LIMIT, 0.0)
+                        .set(Tables.CK_SCHEME_CALCULATION.LIMIT_ON_ORDER, 0)
                         .onConflict(Tables.CK_SCHEME_CALCULATION.ID)
                         .doUpdate()
                         .set(Tables.CK_SCHEME_CALCULATION.ACTIVE_STATUS, ActiveStatus.ACTIVE)
@@ -146,7 +149,11 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
                         .set(Tables.CK_SCHEME_CALCULATION.USABILITY_PERIOD, ros.getUsabilityPeriod())
                         .set(Tables.CK_SCHEME_CALCULATION.USABILITY_PERIOD_LIMIT, ros.getUsabilityPeriodLimit())
                         .set(Tables.CK_SCHEME_CALCULATION.OUTLET_LIMIT_ON_ORDER, ros.getOutletLimitOnOrder())
-                        .set(Tables.CK_SCHEME_CALCULATION.QUOTA_CODE, ros.getQuotaCode());
+                        .set(Tables.CK_SCHEME_CALCULATION.QUOTA_CODE, ros.getQuotaCode())
+                        .set(Tables.CK_SCHEME_CALCULATION.CHANGED, true)
+                        .set(Tables.CK_SCHEME_CALCULATION.BENEFIT_LIMIT, 0.0)
+                        .set(CK_SCHEME_CALCULATION.LIMIT_ON_ORDER, 0)
+                ;
     };
 
     public SchemeCalculation findBySchemeId(String schemeId) {
