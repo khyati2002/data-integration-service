@@ -49,3 +49,7 @@ generate-dis-jar:
 generate-all: setup-submodule init generate-bundle generate-dis-jar
 
 generate-bundle-only: init generate-bundle
+
+generate-project-jar:
+	mvn clean install -f bundle/pom.xml
+	mvn clean compile install -DskipTests=true
