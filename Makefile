@@ -17,8 +17,8 @@ setup-submodule:
 		echo "Skipping submodule setup for main branch."; \
 	else \
 		echo "Attempting to clean up any existing submodule information for 'bundle'..."; \
-		git submodule deinit -f bundle; \
-		git rm -f bundle; \
+		git submodule deinit -f bundle || true; \
+		git rm -rf --cached bundle || true; \
 		rm -rf .git/modules/bundle; \
 		if [ -d "bundle" ]; then \
 			echo "Double-checking and deleting 'bundle' directory..."; \
@@ -28,6 +28,7 @@ setup-submodule:
 		git submodule add -b $(BRANCH) https://applicatetech.git.beanstalkapp.com/data-integration-bundles.git bundle; \
 		git submodule update --init --recursive; \
 	fi
+
 
 
 generate-bundle:
