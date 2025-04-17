@@ -110,6 +110,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         for(int i=0;i<userList.size();i++){
             userList.get(i).setReqId(outletDetailsList.get(i).getReqId());
             userList.get(i).setLocationHierarchy(outletDetailsList.get(i).getLocation());
+            userList.get(i).setActiveStatus(outletDetailsList.get(i).getActiveStatus());
         }
 
         List<User> preProcessedUserList = preProcessUser(userList);
@@ -257,23 +258,28 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         LOG.info("Pre Batch Save Called with size " + outletDetails.size());
         Map<String,User> savedUserList = preBatchSave(outletDetails);
         List<List<OutletDetails>> saveItemsList = getItemsToSaveList(outletDetails);
-        if (!saveItemsList.get(0).isEmpty()) {
-            getDslContext().batchInsert(
-                    saveItemsList.get(0).stream()
-                            .map(outlet -> getDslContext().newRecord(CK_OUTLET_DETAILS, outlet))
-                            .collect(Collectors.toList())
-            ).execute();
+        try {
+            if (!saveItemsList.get(0).isEmpty()) {
+                getDslContext().batchInsert(
+                        saveItemsList.get(0).stream()
+                                .map(outlet -> getDslContext().newRecord(CK_OUTLET_DETAILS, outlet))
+                                .collect(Collectors.toList())
+                ).execute();
+            }
+            if (!saveItemsList.get(1).isEmpty()) {
+                getDslContext().batchUpdate(
+                        saveItemsList.get(1).stream()
+                                .map(outlet -> {
+                                    CkOutletDetailsRecord record = getDslContext().newRecord(CK_OUTLET_DETAILS, outlet);
+                                    record.changed(CK_USER.ID, false); // Avoid updating primary key
+                                    return record;
+                                })
+                                .collect(Collectors.toList())
+                ).execute();
+            }
         }
-        if (!saveItemsList.get(1).isEmpty()) {
-            getDslContext().batchUpdate(
-                    saveItemsList.get(1).stream()
-                            .map(outlet -> {
-                                CkOutletDetailsRecord record = getDslContext().newRecord(CK_OUTLET_DETAILS, outlet);
-                                record.changed(CK_USER.ID, false); // Avoid updating primary key
-                                return record;
-                            })
-                            .collect(Collectors.toList())
-            ).execute();
+        catch(Exception e){
+            System.out.println(e);
         }
         if(!saveItemsList.get(0).isEmpty() || !saveItemsList.get(1).isEmpty()){
             postBatchSave(outletDetails);

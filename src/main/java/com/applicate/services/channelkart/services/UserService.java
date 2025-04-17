@@ -206,7 +206,7 @@ public class UserService extends AbstractCDMService<User> {
     private void fillUserDetails(List<User> userList) {
         for(User user : userList) {
             if (user.getVerified() == null) {
-                user.setVerified(false);
+               // user.setVerified(false);
             }
 
             if (user.getPassword() == null) {
@@ -262,15 +262,17 @@ public class UserService extends AbstractCDMService<User> {
             fillAttributes(user,User.of(savedList.get(user.getLoginid())));
             fillCommonAttributes(user);
             fillUserDetails(userList);
+            user.setName("default");
+            user.setUserAccountId(user.getLoginid());
             new AttributeUpdateOverrideManager().overrideAttributes(user,savedList.get(user.getLoginid()));
             if (savedList.get(user.getLoginid()) != null){
                 if(savedList.get(user.getLoginid()).getPassword() != null){
                     user.setPassword(savedList.get(user.getLoginid()).getPassword());
                 }
             }
-            if (savedList.get(user.getLoginid()) != null && User.of(savedList.get(user.getLoginid())).getVerified()) {
-                user.setVerified(true);
-            }
+//            if (savedList.get(user.getLoginid()) != null && User.of(savedList.get(user.getLoginid())).getVerified()) {
+//              // user.setVerified(true);
+//            }
             super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
                 preSaveEnrichment(user);
@@ -307,24 +309,29 @@ public class UserService extends AbstractCDMService<User> {
         List<User> userList = new ArrayList<>(usersList);
         preBatchSave(userList);
         List<List<User>> saveItemsList = getItemsToSaveList(userList);
-        if (!saveItemsList.get(0).isEmpty()) {
-            getDslContext().batchInsert(
-                    saveItemsList.get(0).stream()
-                            .map(user -> getDslContext().newRecord(CK_USER, user)) // Convert to jOOQ Records
-                            .collect(Collectors.toList())
-            ).execute();
-        }
+        try {
+            if (!saveItemsList.get(0).isEmpty()) {
+                getDslContext().batchInsert(
+                        saveItemsList.get(0).stream()
+                                .map(user -> getDslContext().newRecord(CK_USER, user)) // Convert to jOOQ Records
+                                .collect(Collectors.toList())
+                ).execute();
+            }
 
-        if (!saveItemsList.get(1).isEmpty()) {
-            getDslContext().batchUpdate(
-                    saveItemsList.get(1).stream()
-                            .map(user -> {
-                                CkUserRecord record = getDslContext().newRecord(CK_USER, user);
-                                record.changed(CK_USER.ID, false); // Avoid updating primary key
-                                return record;
-                            })
-                            .collect(Collectors.toList())
-            ).execute();
+            if (!saveItemsList.get(1).isEmpty()) {
+                getDslContext().batchUpdate(
+                        saveItemsList.get(1).stream()
+                                .map(user -> {
+                                    CkUserRecord record = getDslContext().newRecord(CK_USER, user);
+                                    record.changed(CK_USER.ID, false); // Avoid updating primary key
+                                    return record;
+                                })
+                                .collect(Collectors.toList())
+                ).execute();
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
         }
         CacheManager.getInstance().evictAll("dataintegration-user");
         if(!saveItemsList.get(0).isEmpty() || !saveItemsList.get(1).isEmpty()){
