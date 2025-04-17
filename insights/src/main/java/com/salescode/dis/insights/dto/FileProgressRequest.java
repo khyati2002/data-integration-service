@@ -1,0 +1,10 @@
+package com.salescode.dis.insights.dto;
+
+import jakarta.validation.constraints.Min;
+import lombok.*;
+
+@Data @NoArgsConstructor @AllArgsConstructor
+public class FileProgressRequest {
+    @Min(0) private Integer consumerSuccessCount;
+    @Min(0) private Integer consumerFailCount;
+}
