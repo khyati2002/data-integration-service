@@ -1,5 +1,5 @@
 init:
-	@if [ -d "$$HOME/.m2/repository/com/salescode/dim/" ]; then \
+	@if [ -d "./bundle/target/" ]; then \
 		echo "Directory exists, skipping install."; \
 		exit 0; \
 	else \
@@ -9,13 +9,36 @@ init:
 		mvn clean install -f bundle/pom.xml; \
 	fi
 
+setup-submodule:
+	@if [ -z "$(BRANCH)" ]; then \
+		echo "Error: BRANCH is not set."; \
+		exit 1; \
+	elif [ "$(BRANCH)" = "main" ]; then \
+		echo "Skipping submodule setup for main branch."; \
+	else \
+		echo "Attempting to clean up any existing submodule information for 'bundle'..."; \
+		git submodule deinit -f bundle; \
+		git rm -f bundle; \
+		rm -rf .git/modules/bundle; \
+		if [ -d "bundle" ]; then \
+			echo "Double-checking and deleting 'bundle' directory..."; \
+			rm -rf bundle; \
+		fi; \
+		echo "Adding submodule with branch: $(BRANCH)"; \
+		git submodule add -b $(BRANCH) https://applicatetech.git.beanstalkapp.com/data-integration-bundles.git bundle; \
+		git submodule update --init --recursive; \
+	fi
+
+
 generate-bundle:
 	mvn clean install -f bundle/pom.xml
 	@mkdir -p lib
-	@rm -r lib/*
+	@rm -r lib/* || true
 	cp bundle/target/bundle.jar lib/bundle.jar
 
 generate-dis-jar:
 	mvn clean compile install -DskipTests=true
 
-generate-all: init generate-bundle generate-dis-jar
+generate-all: setup-submodule init generate-bundle generate-dis-jar
+
+generate-bundle-only: setup-submodule init generate-bundle
