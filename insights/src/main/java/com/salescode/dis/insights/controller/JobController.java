@@ -1,6 +1,5 @@
 package com.salescode.dis.insights.controller;
 
-import com.salescode.dis.insights.mapper.JobMapper;
 import com.salescode.dis.insights.dto.JobRequest;
 import com.salescode.dis.insights.dto.JobResponse;
 import com.salescode.dis.insights.dto.StatusUpdateRequest;
@@ -21,26 +20,53 @@ import org.springframework.web.bind.annotation.*;
 public class JobController {
 
     private final JobService jobService;
-    private final JobMapper jobMapper;
 
     @PostMapping
     public ResponseEntity<JobResponse> createJob(@Validated @RequestBody JobRequest req) {
-        JobEntity job = jobService.createJob(req); // Service likely uses JobRequest -> JobEntity mapping
-        JobResponse resp = jobMapper.jobEntityToJobResponse(job);
+
+        JobEntity job = jobService.createJob(req);
+        JobResponse resp = JobResponse.builder()
+                .id(job.getId())
+                .lob(job.getLob())
+                .master(job.getMaster())
+                .status(job.getStatus())
+                .totalFileCount(0)
+                .completedFiles(0)
+                .failedFiles(0)
+                .build();
+
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<JobResponse> getJob(@PathVariable Long id) {
+
         JobEntity job = jobService.getJob(id);
-        JobResponse resp = jobMapper.jobEntityToJobResponse(job);
+        JobResponse resp = JobResponse.builder()
+                .id(job.getId())
+                .lob(job.getLob())
+                .master(job.getMaster())
+                .status(job.getStatus())
+                .totalFileCount(job.getTotalFileCount())
+                .completedFiles(job.getCompletedFiles())
+                .failedFiles(job.getFailedFiles())
+                .build();
         return ResponseEntity.ok(resp);
     }
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<JobResponse> updateStatus(@PathVariable Long id, @Validated @RequestBody StatusUpdateRequest req) {
+
         JobEntity job = jobService.updateStatus(id, JobStatus.valueOf(req.getStatus()));
-        JobResponse resp = jobMapper.jobEntityToJobResponse(job);
+        JobResponse resp = JobResponse.builder()
+                .id(job.getId())
+                .lob(job.getLob())
+                .master(job.getMaster())
+                .status(job.getStatus())
+                .totalFileCount(job.getTotalFileCount())
+                .completedFiles(job.getCompletedFiles())
+                .failedFiles(job.getFailedFiles())
+                .build();
         return ResponseEntity.ok(resp);
     }
 }
