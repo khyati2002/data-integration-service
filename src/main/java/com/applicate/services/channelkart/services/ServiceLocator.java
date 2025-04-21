@@ -40,6 +40,7 @@ public class ServiceLocator {
         SERVICE_REGISTRY.put(persistentClass, abstractCDMService);
     }
 
+
     public void registerSubClasses() {
         Set<Class<? extends AbstractCDMService>> subClasses = ReflectionUtils.findSubClasses(AbstractCDMService.class);
 

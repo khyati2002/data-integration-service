@@ -39,4 +39,13 @@ public class StringUtils {
             return output;
         }
     }
+
+    public static boolean isEmpty(String value) {
+        return value == null || value.isEmpty();
+    }
+
+
+    public static boolean isValidString(String value) {
+        return !isEmpty(value) && !value.equals("null") && !value.equals("\"\"") && !value.equalsIgnoreCase("undefined");
+    }
 }
