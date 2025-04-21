@@ -122,7 +122,22 @@ public class UserService extends AbstractCDMService<User> {
                 user.setNormalizedHierarchy(getNormalizedHierarchy(user.getHierarchy()));
                 // Find existing hierarchies in the database
                 List<HierarchyMetadata> existingHierarchies = hierarchyMetadataService.findByHierarchyIn(hierarchyStr);
+                List<HierarchyMetadata> hierarchiesToUpdate = new ArrayList<>();
+                for (HierarchyMetadata existingHierarchy : existingHierarchies) {
+                    if (Objects.equals(existingHierarchy.getLocationHierarchy(), user.getLocationHierarchy()) && existingHierarchy.getActiveStatus() == user.getActiveStatus()) {
 
+                    }
+                    else {
+                        if (!Objects.equals(existingHierarchy.getLocationHierarchy(), user.getLocationHierarchy())) {
+                            existingHierarchy.setLocationHierarchy(user.getLocationHierarchy());
+                        }
+                        if (existingHierarchy.getActiveStatus() != user.getActiveStatus()) {
+                            existingHierarchy.setActiveStatus(user.getActiveStatus());
+                            existingHierarchy.setActiveStatusReason(user.getActiveStatusReason());
+                        }
+                        hierarchiesToUpdate.add(existingHierarchy);
+                    }
+                }
                 // Determine which hierarchies need to be created
                 Set<String> existingHierarchyStrings = existingHierarchies.stream()
                         .map(HierarchyMetadata::getHierarchy)
@@ -151,6 +166,13 @@ public class UserService extends AbstractCDMService<User> {
                         })
                         .collect(Collectors.toList());
 
+                if (!hierarchiesToUpdate.isEmpty()) {
+                    getDslContext().batchUpdate(
+                           hierarchiesToUpdate.stream()
+                                    .map(hierarchyMetadata -> getDslContext().newRecord(CK_HIERARCHY_METADATA, hierarchyMetadata)) // Convert to jOOQ Records
+                                    .collect(Collectors.toList())
+                    ).execute();
+                }
                 // Combine existing and new hierarchies
                 List<HierarchyMetadata> allHierarchies = new ArrayList<>(existingHierarchies);
                 allHierarchies.addAll(newHierarchies);

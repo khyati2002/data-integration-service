@@ -22,18 +22,11 @@ setup-submodule:
 	fi
 
 remove-submodule:
-	@if [ -z "$(BRANCH)" ]; then \
-		echo "Error: BRANCH is not set." ; \
-		exit 1 ; \
-	elif [ "$(BRANCH)" = "main" ]; then \
-		echo "Skipping submodule setup for main branch." ; \
-	else \
-		echo "Attempting to clean up any existing submodule information for 'bundle'..." ; \
-		[ -d ".git/modules/bundle" ] && git submodule deinit -f bundle || true ; \
-		[ -d "bundle" ] && git rm -rf --cached bundle || true ; \
-		[ -d ".git/modules/bundle" ] && rm -rf .git/modules/bundle || true ; \
-		[ -d "bundle" ] && rm -rf bundle || true ; \
-	fi
+	@echo "Attempting to clean up any existing submodule information for 'bundle'..."
+	[ -d ".git/modules/bundle" ] && git submodule deinit -f bundle || true
+	[ -d "bundle" ] && git rm -rf --cached bundle || true
+	[ -d ".git/modules/bundle" ] && rm -rf .git/modules/bundle || true
+	[ -d "bundle" ] && rm -rf bundle || true
 
 
 
@@ -46,7 +39,7 @@ generate-bundle:
 generate-dis-jar:
 	mvn clean compile install -DskipTests=true
 
-generate-all: setup-submodule init generate-bundle generate-dis-jar
+generate-all: remove-submodule setup-submodule init generate-bundle generate-dis-jar
 
 generate-bundle-only: init generate-bundle
 
