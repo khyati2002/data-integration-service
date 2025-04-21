@@ -1,30 +1,35 @@
-// File: controller/FileController.java
 package com.salescode.dis.insights.controller;
 
-import com.salescode.dis.insights.dto.FileProgressRequest;
-import com.salescode.dis.insights.dto.FileRequest;
-import com.salescode.dis.insights.dto.FileResponse;
-import com.salescode.dis.insights.dto.StatusUpdateRequest;
+import com.salescode.dis.insights.dto.*;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.enums.FileStatus;
 import com.salescode.dis.insights.service.FileService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
-@RequestMapping("/api/file")
+@RequestMapping("/api/{lob}/master/{master-name}/job/{job_id}/unit")
 @RequiredArgsConstructor
 @Slf4j
 public class FileController {
 
     private final FileService fileService;
 
-    @PostMapping("/job/{jobId}")
-    public ResponseEntity<FileResponse> registerFile(@PathVariable Long jobId, @Validated @RequestBody FileRequest req) {
+    @PostMapping
+    public ResponseEntity<FileResponse> registerFile(@PathVariable("lob") String lob,
+                                                     @PathVariable("master-name") String masterName,
+                                                     @PathVariable("job_id") Long jobId,
+                                                     @Validated @RequestBody FileRequest req) {
+
 
         FileEntity file = fileService.register(jobId, req);
         FileResponse resp = FileResponse.builder()
@@ -43,7 +48,9 @@ public class FileController {
     }
 
     @GetMapping("/{fileId}")
-    public ResponseEntity<FileResponse> getFile(@PathVariable String fileId) {
+    public ResponseEntity<FileResponse> getFile(@PathVariable String fileId,
+                                                @PathVariable("lob") String lob,
+                                                @PathVariable("master-name") String masterName) {
         FileEntity file = fileService.get(fileId);
         FileResponse resp = FileResponse.builder()
                 .fileId(file.getFileId())
@@ -56,13 +63,32 @@ public class FileController {
                 .status(file.getStatus())
                 .jobId(file.getJob().getId())
                 .build();
+
         return ResponseEntity.ok(resp);
     }
 
-    @PutMapping("/{fileId}/progress")
-    public ResponseEntity<FileResponse> updateProgress(@PathVariable String fileId, @Validated @RequestBody FileProgressRequest req) {
+    @PutMapping("/{fileId}/update")
+    public ResponseEntity<FileResponse> updateFile(
+            @PathVariable String fileId,
+            @PathVariable("lob") String lob,
+            @PathVariable("master-name") String masterName,
+            @Validated @RequestBody FileUpdateRequest req) {
 
-        FileEntity file = fileService.updateProgress(fileId, req);
+        FileEntity file = null;
+
+        // Check if progress is provided, update progress
+        if (req.isProgressUpdate()) {
+            file = fileService.updateProgress(fileId, req.getProgress());
+        }
+        // Check if status is provided, update status
+        if (req.isStatusUpdate()) {
+            file = fileService.updateStatus(fileId, FileStatus.valueOf(req.getStatus()));
+        }
+
+        if (!req.isProgressUpdate() && !req.isStatusUpdate()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         FileResponse resp = FileResponse.builder()
                 .fileId(file.getFileId())
                 .source(file.getSource())
@@ -74,24 +100,21 @@ public class FileController {
                 .status(file.getStatus())
                 .jobId(file.getJob().getId())
                 .build();
+
         return ResponseEntity.ok(resp);
     }
 
-    @PatchMapping("/{fileId}/status")
-    public ResponseEntity<FileResponse> updateStatus(@PathVariable String fileId, @Validated @RequestBody StatusUpdateRequest req) {
+    @GetMapping
+    public ResponseEntity<Page<FileResponse>> getUnitsByJob(
+            @PathVariable String lob,
+            @PathVariable("master-name") String masterName,
+            @PathVariable("job_id") Long jobId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
-        FileEntity file = fileService.updateStatus(fileId, FileStatus.valueOf(req.getStatus()));
-        FileResponse resp = FileResponse.builder()
-                .fileId(file.getFileId())
-                .source(file.getSource())
-                .totalCount(file.getTotalCount())
-                .publishedSuccessCount(file.getPublishedSuccessCount())
-                .publishedFailCount(file.getPublishedFailCount())
-                .consumedSuccessCount(file.getConsumerSuccessCount())
-                .consumedFailCount(file.getConsumerFailCount())
-                .status(file.getStatus())
-                .jobId(file.getJob().getId())
-                .build();
-        return ResponseEntity.ok(resp);
+        Page<FileResponse> units = fileService.getUnitsByJob(jobId, PageRequest.of(page, size));
+        return ResponseEntity.ok(units);
     }
+
+
 }

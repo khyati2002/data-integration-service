@@ -7,4 +7,6 @@ import lombok.*;
 public class FileProgressRequest {
     @Min(0) private Integer consumerSuccessCount;
     @Min(0) private Integer consumerFailCount;
+    @Min(0) private Integer publishedSuccessCount;
+    @Min(0) private Integer publishedFailCount;
 }

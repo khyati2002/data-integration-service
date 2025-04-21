@@ -23,7 +23,7 @@ public class JobService {
         JobEntity job = JobEntity.builder()
                 .lob(req.getLob())
                 .master(req.getMaster())
-                .status(JobStatus.IN_PROGRESS)
+                .status(JobStatus.PENDING)
                 .build();
 
         JobEntity saved = jobRepo.save(job);
