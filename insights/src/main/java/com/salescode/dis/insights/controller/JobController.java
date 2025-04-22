@@ -21,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/{lob}/master")
@@ -34,7 +35,6 @@ public class JobController {
     @PostMapping("/{master_name}/job")
     public ResponseEntity<JobEntityResponseDto> createJob(@PathVariable String lob, @PathVariable("master_name") String master, @Validated @RequestBody JobEntityRequestDto req, UriComponentsBuilder uriBuilder) {
         JobEntity entity = jobEntityMapper.toEntity(req, lob, master);
-        entity.setStatus(JobStatus.PENDING);
         JobEntity job = jobService.createJob(entity);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         URI uri = uriBuilder.path("/api/{lob}/master/{master_name}/job/{id}")

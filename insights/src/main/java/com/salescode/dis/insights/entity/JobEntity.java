@@ -37,4 +37,10 @@ public class JobEntity extends TimeAwareEntity {
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FileEntity> files = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        if(this.status == null)
+            this.status = JobStatus.PENDING;
+    }
 }

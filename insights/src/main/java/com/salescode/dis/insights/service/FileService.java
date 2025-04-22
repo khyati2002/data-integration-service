@@ -34,13 +34,12 @@ public class FileService {
         file.setJob(job);
         file.setConsumedStatus(FileStatus.PENDING);
         file.setPublishedStatus(FileStatus.PENDING);
-
         if (fileRepo.existsById(file.getId())) {
             throw new RuntimeException("File with ID " + file.getId() + " already exists");
         }
         else {
-            entityManager.detach(file);
-            FileEntity savedFile = fileRepo.saveAndFlush(file);
+
+            FileEntity savedFile = fileRepo.save(file);
 
             job.getFiles().add(savedFile);
             job.setTotalFileCount(job.getFiles().size());
