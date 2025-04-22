@@ -9,8 +9,11 @@ import com.salescode.dis.insights.enums.JobStatus;
 import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.repository.JobRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,13 +26,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class FileService {
     private final FileRepository fileRepo;
     private final JobRepository jobRepo;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public FileEntity register(String jobId, FileEntity file) {
         JobEntity job = jobRepo.findById(jobId).orElseThrow(() -> new ResourceNotFoundException("Job not found: " + jobId));
         file.setJob(job);
-        job.getFiles().add(file);
-        job.setTotalFileCount(job.getFiles().size());
-        jobRepo.save(job);
+        file.setConsumedStatus(FileStatus.PENDING);
+        file.setPublishedStatus(FileStatus.PENDING);
+
+        if (fileRepo.existsById(file.getId())) {
+            throw new RuntimeException("File with ID " + file.getId() + " already exists");
+        }
+        else {
+            entityManager.detach(file);
+            FileEntity savedFile = fileRepo.saveAndFlush(file);
+
+            job.getFiles().add(savedFile);
+            job.setTotalFileCount(job.getFiles().size());
+            jobRepo.save(job);
+        }
         log.info("Registered file {} under job {}", file.getId(), jobId);
         return file;
     }
@@ -41,31 +57,47 @@ public class FileService {
 
     public FileEntity updateProgress(String fileId, FileProgressRequest progress) {
         FileEntity file = get(fileId);
-        file.setConsumedSuccessCount(progress.getConsumerSuccessCount());
-        file.setConsumedFailCount(progress.getConsumerFailCount());
-        file.setPublishedSuccessCount(progress.getPublishedSuccessCount());
-        file.setPublishedFailCount(progress.getPublishedFailCount());
+        if(progress.getConsumerSuccessCount()!=null) {
+            file.setConsumedSuccessCount(progress.getConsumerSuccessCount());
+        }
+        if(progress.getConsumerFailCount()!=null) {
+            file.setConsumedFailCount(progress.getConsumerFailCount());
+        }
+        if(progress.getPublishedSuccessCount()!=null) {
+            file.setPublishedSuccessCount(progress.getPublishedSuccessCount());
+        }
+        if(progress.getPublishedFailCount()!=null) {
+            file.setPublishedFailCount(progress.getPublishedFailCount());
+        }
+
+        if(progress.getConsumerSuccessCount()!=null && progress.getConsumerFailCount()!=null && progress.getConsumerSuccessCount() + progress.getConsumerFailCount() == file.getTotalCount() ){
+            file.setConsumedStatus(FileStatus.COMPLETED);
+        }
+        if(progress.getPublishedSuccessCount()!=null && progress.getPublishedFailCount()!=null && progress.getPublishedSuccessCount() + progress.getPublishedFailCount() == file.getTotalCount() ){
+            file.setPublishedStatus(FileStatus.COMPLETED);
+        }
         log.info("File {} progress updated", fileId);
         recalcJobMetrics(file.getJob());
         return fileRepo.save(file);
     }
 
-    public FileEntity updateStatus(String fileId, FileStatus status) {
+    public FileEntity updateStatus(String fileId, FileStatus consumedStatus, FileStatus publishedStatus) {
         FileEntity file = get(fileId);
-        file.setStatus(status);
-        log.info("File {} status -> {}", fileId, status);
+        file.setConsumedStatus(consumedStatus);
+        file.setPublishedStatus(publishedStatus);
+        log.info("File {} status -> {}", fileId, consumedStatus + "  " + publishedStatus);
         recalcJobMetrics(file.getJob());
         return fileRepo.save(file);
     }
 
     @Transactional(readOnly = true)
-    public Page<FileEntity> listByJob(Long jobId, Pageable pageable) {
+    public Page<FileEntity> listByJob(String jobId, Pageable pageable) {
         return fileRepo.findByJobId(jobId, pageable);
     }
 
     private void recalcJobMetrics(JobEntity job) {
-        long completed = job.getFiles().stream().filter(f -> f.getStatus() == FileStatus.COMPLETED).count();
-        long failed = job.getFiles().stream().filter(f -> f.getStatus() == FileStatus.FAILED).count();
+        long completed = job.getFiles().stream().filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED && f.getPublishedStatus() == FileStatus.COMPLETED).count();
+        long failed = job.getFiles().stream().filter(f -> f.getConsumedStatus() == FileStatus.FAILED && f.getPublishedStatus() == FileStatus.FAILED).count();
         job.setCompletedFiles((int) completed);
         job.setFailedFiles((int) failed);
         if (completed + failed == job.getTotalFileCount()) {

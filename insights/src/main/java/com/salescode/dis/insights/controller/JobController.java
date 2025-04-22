@@ -2,11 +2,11 @@ package com.salescode.dis.insights.controller;
 
 import com.salescode.dis.insights.dto.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.JobEntityResponseDto;
+import com.salescode.dis.insights.dto.JobStatusUpdateRequestDto;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.JobStatus;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
 import com.salescode.dis.insights.service.JobService;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,6 +29,7 @@ public class JobController {
     @PostMapping
     public ResponseEntity<JobEntityResponseDto> createJob(@PathVariable String lob, @PathVariable("master_name") String master, @Validated @RequestBody JobEntityRequestDto req, UriComponentsBuilder uriBuilder) {
         JobEntity entity = jobEntityMapper.toEntity(req, lob, master);
+        entity.setStatus(JobStatus.PENDING);
         JobEntity job = jobService.createJob(entity);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         URI uri = uriBuilder.path("/api/{lob}/master/{master_name}/job/{id}")
@@ -45,8 +46,8 @@ public class JobController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable("master_name") String master, @PathVariable String id, @NotBlank String status) {
-        JobEntity job = jobService.updateStatus(id, JobStatus.valueOf(status));
+    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable("master_name") String master, @PathVariable String id, @RequestBody JobStatusUpdateRequestDto statusReequest) {
+        JobEntity job = jobService.updateStatus(id, JobStatus.valueOf(statusReequest.getStatus()));
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
     }

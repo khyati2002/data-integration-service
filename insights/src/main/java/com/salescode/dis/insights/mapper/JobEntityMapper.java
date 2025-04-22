@@ -5,6 +5,8 @@ import com.salescode.dis.insights.dto.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.JobEntity;
 import org.mapstruct.*;
 
+import java.util.UUID;
+
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface JobEntityMapper {
     JobEntity toEntity(JobEntityRequestDto jobEntityResponseDto);
@@ -16,6 +18,7 @@ public interface JobEntityMapper {
 
     default JobEntity toEntity(JobEntityRequestDto jobEntityRequestDto, String lob, String master){
         JobEntity entity = toEntity(jobEntityRequestDto);
+        entity.setId(UUID.randomUUID().toString());
         entity.setLob(lob);
         entity.setMaster(master);
         return entity;

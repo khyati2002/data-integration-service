@@ -5,11 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FileUpdateRequest {
+public class FileUpdateRequestDto {
 
     private FileProgressRequest progress;
 
-    private String status;
+    private FileStatusRequestDto status;
 
     public boolean isProgressUpdate() {
         return progress != null;

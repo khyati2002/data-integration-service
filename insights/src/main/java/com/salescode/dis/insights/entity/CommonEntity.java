@@ -20,7 +20,6 @@ import java.time.Instant;
 public abstract class CommonEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "creation_time", nullable = false, updatable = false)
