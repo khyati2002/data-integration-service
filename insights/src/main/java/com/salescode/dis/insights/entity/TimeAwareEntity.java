@@ -19,13 +19,15 @@ import java.time.Instant;
 @MappedSuperclass
 public abstract class TimeAwareEntity extends CommonEntity {
 
+    public static final String START_TIME = "startTime";
+
     @Column(name = "start_time", nullable = false, updatable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = YYYY_MM_DD_HH_MM_SS, timezone = "UTC")
     @Builder.Default
     private Instant startTime = Instant.now();
 
     @Column(name = "end_time", nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = YYYY_MM_DD_HH_MM_SS, timezone = "UTC")
     @Builder.Default
     private Instant endTime = Instant.now();
 

@@ -6,12 +6,17 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
+import com.salescode.dis.insights.enums.JobStatus;
+import lombok.Value;
+
+/**
+ * DTO for {@link com.salescode.dis.insights.entity.JobEntity}
+ */
+@Value
 @Getter
 @Setter
 public class JobEntityRequestDto implements Serializable {
-    String lob;
     JsonNode extendedAttributes;
-    String master;
     String publisherJobUri;
     String consumerJobUri;
     Integer totalFileCount;

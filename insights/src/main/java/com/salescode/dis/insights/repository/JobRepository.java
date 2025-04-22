@@ -9,4 +9,5 @@ public interface JobRepository extends JpaRepository<JobEntity, String> {
 
     Page<JobEntity> getJobEntitiesByLob(String lob, Pageable pageable);
 
+    Page<JobEntity> getJobEntitiesByLobAndMaster(String lob, String master, Pageable pageable);
 }
