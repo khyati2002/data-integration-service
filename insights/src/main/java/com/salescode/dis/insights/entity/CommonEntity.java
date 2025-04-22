@@ -3,7 +3,7 @@ package com.salescode.dis.insights.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salescode.dis.insights.config.JsonNodeConverter;
+import com.salescode.dis.insights.converter.JsonNodeConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
