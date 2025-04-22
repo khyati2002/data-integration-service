@@ -32,7 +32,7 @@ public class FileController {
 
     @PostMapping
     public ResponseEntity<FileEntityResponseDto> registerFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @Validated @RequestBody FileEntityRequestDto req, UriComponentsBuilder uriBuilder) {
-        FileEntity toSave = fileEntityMapper.toEntity(req);
+        FileEntity toSave = fileEntityMapper.toEntity(req,lob);
         FileEntity saved = fileService.register(jobId, toSave);
         FileEntityResponseDto resp = fileEntityMapper.toDto(saved);
         URI uri = uriBuilder.path("/api/{lob}/master/{masterName}/job/{jobId}/unit/{id")

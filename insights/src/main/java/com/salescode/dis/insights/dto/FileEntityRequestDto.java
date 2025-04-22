@@ -11,8 +11,6 @@ import java.io.Serializable;
 @Setter
 public class FileEntityRequestDto implements Serializable {
     String id;
-    String lob;
-    String master;
     JsonNode extendedAttributes;
     Integer totalCount;
 }
