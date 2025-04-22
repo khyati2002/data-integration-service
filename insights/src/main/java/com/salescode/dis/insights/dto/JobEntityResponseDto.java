@@ -11,7 +11,7 @@ import java.time.Instant;
  * DTO for {@link com.salescode.dis.insights.entity.JobEntity}
  */
 @Value
-public class JobEntityDto implements Serializable {
+public class JobEntityResponseDto implements Serializable {
     String id;
     Instant creationTime;
     Instant lastModifiedTime;

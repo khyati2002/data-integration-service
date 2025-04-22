@@ -25,12 +25,10 @@ public class FileService {
     private final JobRepository jobRepo;
 
     public FileEntity register(String jobId, FileEntity file) {
-        JobEntity job = jobRepo.findById(jobId)
-                .orElseThrow(() -> new ResourceNotFoundException("Job not found: " + jobId));
+        JobEntity job = jobRepo.findById(jobId).orElseThrow(() -> new ResourceNotFoundException("Job not found: " + jobId));
         file.setJob(job);
         job.getFiles().add(file);
         job.setTotalFileCount(job.getFiles().size());
-        // cascade saves file
         jobRepo.save(job);
         log.info("Registered file {} under job {}", file.getId(), jobId);
         return file;

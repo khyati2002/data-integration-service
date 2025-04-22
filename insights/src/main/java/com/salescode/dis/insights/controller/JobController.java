@@ -1,6 +1,6 @@
 package com.salescode.dis.insights.controller;
 
-import com.salescode.dis.insights.dto.JobEntityDto;
+import com.salescode.dis.insights.dto.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.JobStatus;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
@@ -26,10 +26,10 @@ public class JobController {
     private final JobEntityMapper jobEntityMapper;
 
     @PostMapping
-    public ResponseEntity<JobEntityDto> createJob(@PathVariable String lob, @PathVariable("master_name") String master, @Validated @RequestBody JobEntityDto req, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<JobEntityResponseDto> createJob(@PathVariable String lob, @PathVariable("master_name") String master, @Validated @RequestBody JobEntityResponseDto req, UriComponentsBuilder uriBuilder) {
         JobEntity entity = jobEntityMapper.toEntity(req, lob, master);
         JobEntity job = jobService.createJob(entity);
-        JobEntityDto dto = jobEntityMapper.toDto(job);
+        JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         URI uri = uriBuilder.path("/api/{lob}/master/{master_name}/job/{id}")
                 .buildAndExpand(lob, master, job.getId())
                 .toUri();
@@ -37,16 +37,16 @@ public class JobController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JobEntityDto> getJob(@PathVariable String lob, @PathVariable("master_name") String master, @PathVariable String id) {
+    public ResponseEntity<JobEntityResponseDto> getJob(@PathVariable String lob, @PathVariable("master_name") String master, @PathVariable String id) {
         JobEntity job = jobService.getJob(id);
-        JobEntityDto dto = jobEntityMapper.toDto(job);
+        JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<JobEntityDto> updateStatus(@PathVariable String lob, @PathVariable("master_name") String master, @PathVariable String id, @NotBlank String status) {
+    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable("master_name") String master, @PathVariable String id, @NotBlank String status) {
         JobEntity job = jobService.updateStatus(id, JobStatus.valueOf(status));
-        JobEntityDto dto = jobEntityMapper.toDto(job);
+        JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
     }
 }

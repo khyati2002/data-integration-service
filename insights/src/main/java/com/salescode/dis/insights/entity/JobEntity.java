@@ -29,10 +29,13 @@ public class JobEntity extends TimeAwareEntity {
 
     private String consumerJobUri;
 
+    @Builder.Default
     private Integer totalFileCount = 0;
 
+    @Builder.Default
     private Integer completedFiles = 0;
 
+    @Builder.Default
     private Integer failedFiles = 0;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
