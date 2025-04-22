@@ -7,14 +7,14 @@ import org.mapstruct.*;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface JobEntityMapper {
-    JobEntity toEntity(JobEntityRequestDto jobEntityResponseDto);
+    JobEntity toEntity(JobEntityRequestDto jobEntityRequestDto);
 
     JobEntityResponseDto toDto(JobEntity jobEntity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     JobEntity partialUpdate(JobEntityResponseDto jobEntityResponseDto, @MappingTarget JobEntity jobEntity);
 
-    default JobEntity toEntity(JobEntityRequestDto jobEntityRequestDto, String lob, String master){
+    default JobEntity toEntity(JobEntityRequestDto jobEntityRequestDto, String lob, String master) {
         JobEntity entity = toEntity(jobEntityRequestDto);
         entity.setLob(lob);
         entity.setMaster(master);

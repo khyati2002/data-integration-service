@@ -19,17 +19,18 @@ import java.time.Instant;
 @MappedSuperclass
 public abstract class CommonEntity {
 
+    public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "creation_time", nullable = false, updatable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = YYYY_MM_DD_HH_MM_SS, timezone = "UTC")
     @Builder.Default
     private Instant creationTime = Instant.now();
 
     @Column(name = "last_modified_time", nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = YYYY_MM_DD_HH_MM_SS, timezone = "UTC")
     @Builder.Default
     private Instant lastModifiedTime = Instant.now();
 
@@ -45,6 +46,7 @@ public abstract class CommonEntity {
         if (creationTime == null) {
             creationTime = Instant.now();
         }
+        lastModifiedTime = Instant.now();
     }
 
     @PreUpdate

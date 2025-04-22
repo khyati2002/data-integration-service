@@ -42,4 +42,9 @@ public class JobService {
     public Page<JobEntity> getAllJobsByLob(String lob, Pageable pageable) {
         return jobRepo.getJobEntitiesByLob(lob, pageable);
     }
+
+    @Transactional(readOnly = true)
+    public Page<JobEntity> getAllJobsByLobAndMaster(String lob, String master, Pageable pageable) {
+        return jobRepo.getJobEntitiesByLobAndMaster(lob, master, pageable);
+    }
 }

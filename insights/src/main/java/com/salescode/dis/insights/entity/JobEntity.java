@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@SuperBuilder(toBuilder = true)
+@SuperBuilder
 public class JobEntity extends TimeAwareEntity {
 
     /**
