@@ -5,13 +5,22 @@ import com.salescode.dis.insights.dto.FileEntityRequestDto;
 import com.salescode.dis.insights.dto.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.FileUpdateRequestDto;
 import com.salescode.dis.insights.entity.FileEntity;
+import com.salescode.dis.insights.entity.TimeAwareEntity;
 import com.salescode.dis.insights.enums.FileStatus;
+import com.salescode.dis.insights.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.service.FileService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,22 +38,27 @@ public class FileController {
     private final FileService fileService;
     private final FileEntityMapper fileEntityMapper;
 
-
+    @Operation(summary = "Register a new file", description = "Registers a new file entity for the job.")
+    @ApiResponse(responseCode = "201", description = "File created successfully", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @PostMapping
     public ResponseEntity<FileEntityResponseDto> registerFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @Validated @RequestBody FileEntityRequestDto req, UriComponentsBuilder uriBuilder) {
         FileEntity toSave = fileEntityMapper.toEntity(req,lob);
         FileEntity saved = fileService.register(jobId, toSave);
         FileEntityResponseDto resp = fileEntityMapper.toDto(saved);
-        URI uri = uriBuilder.path("/api/{lob}/master/{masterName}/job/{jobId}/unit/{id")
+        URI uri = uriBuilder.path("/api/{lob}/master/{masterName}/job/{jobId}/unit/{id}")
                 .buildAndExpand(lob, masterName, jobId, saved.getId())
                 .toUri();
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(uri)
                 .body(resp);
-
     }
 
+    @Operation(summary = "Get a specific file by ID", description = "Fetch a file by its unique ID.")
+    @ApiResponse(responseCode = "200", description = "File found", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
+    @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @GetMapping("/{fileId}")
     public ResponseEntity<FileEntityResponseDto> getFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String fileId) {
         FileEntity file = fileService.get(fileId);
@@ -52,13 +66,18 @@ public class FileController {
         return ResponseEntity.ok(resp);
     }
 
+    @Operation(summary = "Update file details", description = "Updates the progress or status of an existing file.")
+    @ApiResponse(responseCode = "200", description = "File updated successfully", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid update request", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @PutMapping("/{fileId}/update")
     public ResponseEntity<FileEntityResponseDto> updateFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String fileId, @Validated @RequestBody FileUpdateRequestDto req) {
         FileEntity updated;
         if (req.isProgressUpdate()) {
             updated = fileService.updateProgress(fileId, req.getProgress());
         } else if (req.isStatusUpdate()) {
-            updated = fileService.updateStatus(fileId,req.getStatus().getConsumedStatus(), req.getStatus()
+            updated = fileService.updateStatus(fileId, req.getStatus().getConsumedStatus(), req.getStatus()
                     .getPublishedStatus());
         } else {
             return ResponseEntity.badRequest().build();
@@ -67,9 +86,13 @@ public class FileController {
         return ResponseEntity.ok(resp);
     }
 
+    @Operation(summary = "Get all files for a specific job", description = "Retrieve a paginated list of all files associated with a specific job.")
+    @ApiResponse(responseCode = "200", description = "List of files for the job", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
+    @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @GetMapping
-    public ResponseEntity<Page<FileEntityResponseDto>> listByJob(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Page<FileEntity> pageEnt = fileService.listByJob(jobId, PageRequest.of(page, size));
+    public ResponseEntity<Page<FileEntityResponseDto>> listByJob(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, Pageable pageable) {
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.ASC, TimeAwareEntity.START_TIME)));
+        Page<FileEntity> pageEnt = fileService.listByJob(jobId, pageRequest);
         Page<FileEntityResponseDto> pageDto = pageEnt.map(fileEntityMapper::toDto);
         return ResponseEntity.ok(pageDto);
     }
