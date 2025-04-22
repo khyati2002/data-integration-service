@@ -11,7 +11,7 @@ import java.time.Instant;
  * DTO for {@link com.salescode.dis.insights.entity.FileEntity}
  */
 @Value
-public class FileEntityDto implements Serializable {
+public class FileEntityResponseDto implements Serializable {
     String id;
     Instant creationTime;
     Instant lastModifiedTime;
@@ -26,5 +26,6 @@ public class FileEntityDto implements Serializable {
     Integer consumedFailCount;
     Integer publisherThroughput;
     Integer consumerThroughput;
-    FileStatus status;
+    FileStatus publishedStatus;
+    FileStatus consumedStatus;
 }

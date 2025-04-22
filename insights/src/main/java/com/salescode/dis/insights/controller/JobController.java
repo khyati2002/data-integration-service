@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.controller;
 
+import com.salescode.dis.insights.dto.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.JobStatus;
@@ -26,7 +27,7 @@ public class JobController {
     private final JobEntityMapper jobEntityMapper;
 
     @PostMapping
-    public ResponseEntity<JobEntityResponseDto> createJob(@PathVariable String lob, @PathVariable("master_name") String master, @Validated @RequestBody JobEntityResponseDto req, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<JobEntityResponseDto> createJob(@PathVariable String lob, @PathVariable("master_name") String master, @Validated @RequestBody JobEntityRequestDto req, UriComponentsBuilder uriBuilder) {
         JobEntity entity = jobEntityMapper.toEntity(req, lob, master);
         JobEntity job = jobService.createJob(entity);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
