@@ -1,10 +1,11 @@
 package com.salescode.dis.insights.controller;
 
-import com.salescode.dis.insights.dto.*;
+import com.salescode.dis.insights.dto.FileEntityDto;
+import com.salescode.dis.insights.dto.FileUpdateRequest;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.enums.FileStatus;
+import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.service.FileService;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,107 +15,48 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/api/{lob}/master/{master-name}/job/{job_id}/unit")
+@RequestMapping("/api/{lob}/master/{masterName}/job/{jobId}/unit")
 @RequiredArgsConstructor
 @Slf4j
 public class FileController {
 
     private final FileService fileService;
+    private final FileEntityMapper fileEntityMapper;
 
     @PostMapping
-    public ResponseEntity<FileResponse> registerFile(@PathVariable("lob") String lob,
-                                                     @PathVariable("master-name") String masterName,
-                                                     @PathVariable("job_id") Long jobId,
-                                                     @Validated @RequestBody FileRequest req) {
-
-
-        FileEntity file = fileService.register(jobId, req);
-        FileResponse resp = FileResponse.builder()
-                .fileId(file.getFileId())
-                .source(file.getSource())
-                .totalCount(file.getTotalCount())
-                .publishedSuccessCount(file.getPublishedSuccessCount())
-                .publishedFailCount(file.getPublishedFailCount())
-                .consumedSuccessCount(file.getConsumerSuccessCount())
-                .consumedFailCount(file.getConsumerFailCount())
-                .status(file.getStatus())
-                .jobId(jobId)
-                .build();
-
+    public ResponseEntity<FileEntityDto> registerFile(@PathVariable String lob, @PathVariable String masterName, @PathVariable String jobId, @Validated @RequestBody FileEntityDto req) {
+        FileEntity toSave = fileEntityMapper.toEntity(req);
+        FileEntity saved = fileService.register(jobId, toSave);
+        FileEntityDto resp = fileEntityMapper.toDto(saved);
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 
     @GetMapping("/{fileId}")
-    public ResponseEntity<FileResponse> getFile(@PathVariable String fileId,
-                                                @PathVariable("lob") String lob,
-                                                @PathVariable("master-name") String masterName) {
+    public ResponseEntity<FileEntityDto> getFile(@PathVariable String lob, @PathVariable String masterName, @PathVariable String fileId) {
         FileEntity file = fileService.get(fileId);
-        FileResponse resp = FileResponse.builder()
-                .fileId(file.getFileId())
-                .source(file.getSource())
-                .totalCount(file.getTotalCount())
-                .publishedSuccessCount(file.getPublishedSuccessCount())
-                .publishedFailCount(file.getPublishedFailCount())
-                .consumedSuccessCount(file.getConsumerSuccessCount())
-                .consumedFailCount(file.getConsumerFailCount())
-                .status(file.getStatus())
-                .jobId(file.getJob().getId())
-                .build();
-
+        FileEntityDto resp = fileEntityMapper.toDto(file);
         return ResponseEntity.ok(resp);
     }
 
     @PutMapping("/{fileId}/update")
-    public ResponseEntity<FileResponse> updateFile(
-            @PathVariable String fileId,
-            @PathVariable("lob") String lob,
-            @PathVariable("master-name") String masterName,
-            @Validated @RequestBody FileUpdateRequest req) {
-
-        FileEntity file = null;
-
-        // Check if progress is provided, update progress
+    public ResponseEntity<FileEntityDto> updateFile(@PathVariable String lob, @PathVariable String masterName, @PathVariable String fileId, @Validated @RequestBody FileUpdateRequest req) {
+        FileEntity updated;
         if (req.isProgressUpdate()) {
-            file = fileService.updateProgress(fileId, req.getProgress());
-        }
-        // Check if status is provided, update status
-        if (req.isStatusUpdate()) {
-            file = fileService.updateStatus(fileId, FileStatus.valueOf(req.getStatus()));
-        }
-
-        if (!req.isProgressUpdate() && !req.isStatusUpdate()) {
+            updated = fileService.updateProgress(fileId, req.getProgress());
+        } else if (req.isStatusUpdate()) {
+            updated = fileService.updateStatus(fileId, FileStatus.valueOf(req.getStatus()));
+        } else {
             return ResponseEntity.badRequest().build();
         }
-
-        FileResponse resp = FileResponse.builder()
-                .fileId(file.getFileId())
-                .source(file.getSource())
-                .totalCount(file.getTotalCount())
-                .publishedSuccessCount(file.getPublishedSuccessCount())
-                .publishedFailCount(file.getPublishedFailCount())
-                .consumedSuccessCount(file.getConsumerSuccessCount())
-                .consumedFailCount(file.getConsumerFailCount())
-                .status(file.getStatus())
-                .jobId(file.getJob().getId())
-                .build();
-
+        FileEntityDto resp = fileEntityMapper.toDto(updated);
         return ResponseEntity.ok(resp);
     }
 
     @GetMapping
-    public ResponseEntity<Page<FileResponse>> getUnitsByJob(
-            @PathVariable String lob,
-            @PathVariable("master-name") String masterName,
-            @PathVariable("job_id") Long jobId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Page<FileResponse> units = fileService.getUnitsByJob(jobId, PageRequest.of(page, size));
-        return ResponseEntity.ok(units);
+    public ResponseEntity<Page<FileEntityDto>> listByJob(@PathVariable String lob, @PathVariable String masterName, @PathVariable Long jobId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Page<FileEntity> pageEnt = fileService.listByJob(jobId, PageRequest.of(page, size));
+        Page<FileEntityDto> pageDto = pageEnt.map(fileEntityMapper::toDto);
+        return ResponseEntity.ok(pageDto);
     }
-
-
 }

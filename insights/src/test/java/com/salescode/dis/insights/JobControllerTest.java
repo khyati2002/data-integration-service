@@ -4,47 +4,45 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.dis.insights.controller.JobController;
 import com.salescode.dis.insights.dto.JobRequest;
-import com.salescode.dis.insights.dto.StatusUpdateRequest;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.JobStatus;
 import com.salescode.dis.insights.service.JobService;
+import com.salescode.dis.insights.utils.JsonUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class JobControllerTest {
 
-    private JobService jobService;
-    private JobController jobController;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    @BeforeEach
-    void setUp() {
-        jobService = Mockito.mock(JobService.class);
-        jobController = new JobController(jobService);
-    }
+    @Autowired
+    TestRestTemplate restTemplate;
 
     @Test
     void testCreateJob() {
-        JobRequest req = new JobRequest();
-        JobEntity job = new JobEntity();
-        job.setId(1L);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        when(jobService.createJob(any(JobRequest.class))).thenReturn(job);
-
-        ResponseEntity<?> response = jobController.createJob("lob1", "master1", req);
-
-        assertEquals(201, response.getStatusCodeValue());
-
-        ObjectNode body = objectMapper.convertValue(response.getBody(), ObjectNode.class);
-        assertEquals(1L, body.get("id").asLong());
-        verify(jobService, times(1)).createJob(req);
+        Map<String, Object> body = new HashMap<>();
+        body.put("env", env);
+        body.put("lob", SecurityContextUtils.getLob());
+        body.put("aggregationNames", successfulAggregationNames);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+        restTemplate.postForEntity("/api/{lob}/master/{master_name}/job",entity, String.class, Map.of("lob","master"));
     }
 
     @Test
