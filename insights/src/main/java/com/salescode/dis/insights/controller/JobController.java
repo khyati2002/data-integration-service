@@ -89,7 +89,7 @@ public class JobController {
     @ApiResponse(responseCode = "200", description = "List of jobs by master", content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class)))
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @GetMapping(path = "/{master_name}/jobs")
-    public ResponseEntity<List<JobEntityResponseDto>> getJobsByMaster(@PathVariable String lob, @PathVariable String master, Pageable pageable) {
+    public ResponseEntity<List<JobEntityResponseDto>> getJobsByMaster(@PathVariable String lob, @PathVariable("master_name") String master, Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.ASC, TimeAwareEntity.START_TIME)));
         List<JobEntityResponseDto> content = jobService.getAllJobsByLobAndMaster(lob, master, pageRequest)
                 .map(jobEntityMapper::toDto)

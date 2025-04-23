@@ -6,12 +6,10 @@ import com.salescode.dis.insights.dto.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.FileUpdateRequestDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.TimeAwareEntity;
-import com.salescode.dis.insights.enums.FileStatus;
 import com.salescode.dis.insights.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,8 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/{lob}/master/{master_name}/job/{jobId}/unit")
@@ -90,10 +88,10 @@ public class FileController {
     @ApiResponse(responseCode = "200", description = "List of files for the job", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @GetMapping
-    public ResponseEntity<Page<FileEntityResponseDto>> listByJob(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, Pageable pageable) {
+    public ResponseEntity<List<FileEntityResponseDto>> listByJob(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.ASC, TimeAwareEntity.START_TIME)));
         Page<FileEntity> pageEnt = fileService.listByJob(jobId, pageRequest);
         Page<FileEntityResponseDto> pageDto = pageEnt.map(fileEntityMapper::toDto);
-        return ResponseEntity.ok(pageDto);
+        return ResponseEntity.ok(pageDto.getContent());
     }
 }
