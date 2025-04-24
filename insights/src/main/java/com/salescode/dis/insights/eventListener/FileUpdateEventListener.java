@@ -23,7 +23,8 @@ public class FileUpdateEventListener {
 
         if (req.isProgressUpdate()) {
             fileService.updateProgress(fileId, req.getProgress());
-        } else if (req.isStatusUpdate()) {
+        }
+        if (req.isStatusUpdate()) {
             fileService.updateStatus(fileId, req.getStatus().getConsumedStatus(),
                     req.getStatus().getPublishedStatus());
         }

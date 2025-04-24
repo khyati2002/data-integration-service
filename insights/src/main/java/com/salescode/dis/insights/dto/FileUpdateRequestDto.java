@@ -18,5 +18,7 @@ public class FileUpdateRequestDto {
     public boolean isStatusUpdate() {
         return status != null;
     }
+
+    private transient String jobId;
 }
 

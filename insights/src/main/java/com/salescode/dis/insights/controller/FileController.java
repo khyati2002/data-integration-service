@@ -6,12 +6,15 @@ import com.salescode.dis.insights.dto.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.FileUpdateRequestDto;
 import com.salescode.dis.insights.dto.UpdateRequestResponseDto;
 import com.salescode.dis.insights.entity.FileEntity;
+import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.entity.TimeAwareEntity;
 import com.salescode.dis.insights.error.ApiError;
 import com.salescode.dis.insights.events.FileUpdateEvent;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.service.FileUpdateKafkaProducer;
+import com.salescode.dis.insights.service.JobService;
+import com.salescode.dis.insights.service.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,7 +45,13 @@ public class FileController {
     private final FileEntityMapper fileEntityMapper;
 
     @Autowired
+    private JobService jobService;
+
+    @Autowired
     private FileUpdateKafkaProducer fileUpdateKafkaProducer;
+
+    @Autowired
+    private RedisService redisService;
 
     @Operation(summary = "Register a new file", description = "Registers a new file entity for the job.")
     @ApiResponse(responseCode = "201", description = "File created successfully", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
@@ -87,6 +96,52 @@ public class FileController {
         // Validate the request
         if (!req.isProgressUpdate() && !req.isStatusUpdate()) {
             return ResponseEntity.badRequest().build();
+        }
+
+        // Create a file update event
+        FileUpdateEvent event = new FileUpdateEvent();
+        event.setFileId(fileId);
+        event.setLob(lob);
+        event.setMasterName(masterName);
+        event.setUpdateRequest(req);
+        event.setTimestamp(System.currentTimeMillis());
+
+        // Send to Kafka
+        fileUpdateKafkaProducer.sendFileUpdateEvent(event);
+
+        // Return accepted response with tracking info
+        UpdateRequestResponseDto response = new UpdateRequestResponseDto();
+        response.setRequestId(UUID.randomUUID().toString());
+        response.setStatus("ACCEPTED");
+        response.setMessage("Update request has been queued for processing");
+
+        return ResponseEntity.accepted().body(response);
+    }
+
+    @Operation(summary = "Update file details", description = "Updates the progress or status of an existing file.")
+    @ApiResponse(responseCode = "202", description = "Update request accepted", content = @Content(schema = @Schema(implementation = UpdateRequestResponseDto.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid update request", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @PutMapping("unit/update")
+    public ResponseEntity<UpdateRequestResponseDto> updateFileWithoutId(@PathVariable String lob, @PathVariable("master_name") String masterName, @Validated @RequestBody FileUpdateRequestDto req) {
+        //Redis-check
+        String fileId = redisService.getFileIdAndRefreshTtl(lob,masterName);
+
+        if(fileId == null){
+            if(req.getJobId() == null){
+                JobEntity entity = new JobEntity();
+                entity.setLob(lob);
+                entity.setMaster(masterName);
+                JobEntity saved = jobService.createJob(entity);
+                req.setJobId(saved.getId());
+            }
+
+            FileEntity fileEntity = new FileEntity();
+            fileEntity.setLob(lob);
+            FileEntity savedFileEntity = fileService.register(req.getJobId(), fileEntity);
+            fileId = savedFileEntity.getId();
+            redisService.saveFileId(lob,masterName,fileId,10);
         }
 
         // Create a file update event

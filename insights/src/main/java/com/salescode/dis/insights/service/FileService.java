@@ -34,7 +34,7 @@ public class FileService {
         file.setJob(job);
         file.setConsumedStatus(FileStatus.PENDING);
         file.setPublishedStatus(FileStatus.PENDING);
-        if (fileRepo.existsById(file.getId())) {
+        if (file.getId() !=null && fileRepo.existsById(file.getId())) {
             throw new RuntimeException("File with ID " + file.getId() + " already exists");
         }
         else {
