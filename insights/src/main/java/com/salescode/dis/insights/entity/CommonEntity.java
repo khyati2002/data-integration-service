@@ -3,10 +3,13 @@ package com.salescode.dis.insights.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salescode.dis.insights.converter.JsonNodeConverter;
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 
@@ -37,8 +40,9 @@ public abstract class CommonEntity {
     @Column(name = "lob", length = 50, nullable = false)
     private String lob;
 
-    @Convert(converter = JsonNodeConverter.class)
-    @Column(name = "extended_attributes", columnDefinition = "json")
+    @Type(JsonBinaryType.class)
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "extended_attributes", columnDefinition = "jsonb")
     private JsonNode extendedAttributes;
 
     @PrePersist

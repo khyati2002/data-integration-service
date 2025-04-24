@@ -1,0 +1,99 @@
+# Define the active profiles, default is dev,h2 or dev,postgres depending on the environment.
+spring:
+  application:
+    name: insights
+
+  # Set the active profiles, default to dev,h2,debug
+  profiles:
+    active: postgres,dev,info  # Active profiles to be loaded together
+
+server:
+  port: 8081
+
+---
+
+# Configuration for 'dev' profile (common dev properties, no database configuration)
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  # Development-specific settings (no logging or datasource properties)
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+---
+
+# Configuration for 'h2' profile (H2-specific properties for in-memory DB)
+spring:
+  config:
+    activate:
+      on-profile: h2
+
+  # H2 Database-specific properties for local in-memory database
+  datasource:
+    url: jdbc:h2:mem:testDB
+    username: h2
+    password: ''
+  jpa:
+    # Dialect for H2 in-memory database
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+---
+
+# Configuration for 'postgres' profile (PostgreSQL-specific properties for persistent DB)
+spring:
+  config:
+    activate:
+      on-profile: postgres
+
+  # PostgreSQL Database-specific properties for persistent database
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dis_insights
+    username: postgres
+    password: postgres
+  jpa:
+    # Dialect for PostgreSQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+---
+
+# Configuration for 'info' profile (INFO-level logging)
+spring:
+  config:
+    activate:
+      on-profile: info
+
+# Logging level for INFO
+logging:
+  level:
+    com.salescode: INFO
+    org.springframework: INFO   # Set Spring framework logs to INFO level
+    org.hibernate.SQL: INFO     # Log SQL queries at INFO level
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO  # Log parameter binding at INFO level
+    org.springframework.web: INFO  # Set web-related logs to INFO level
+
+---
+
+# Configuration for 'debug' profile (DEBUG-level logging)
+spring:
+  config:
+    activate:
+      on-profile: debug
+
+# Logging level for DEBUG
+logging:
+  level:
+    com.salescode: DEBUG
+    org.springframework: DEBUG  # Set Spring framework logs to DEBUG level
+    org.hibernate.SQL: DEBUG    # Log SQL queries at DEBUG level
+    org.hibernate.type.descriptor.sql.BasicBinder: DEBUG  # Trace parameter binding for SQL
+    org.springframework.web: DEBUG  # Set web-related logs to DEBUG level
