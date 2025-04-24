@@ -4,6 +4,7 @@ import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.services.CommonDataModelService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.JSONUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.event.EventPublisher;
@@ -24,10 +25,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.flink.api.java.tuple.Tuple2;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
@@ -43,9 +51,10 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
     private final long batchIntervalMs;
 
 
+
     public JooqDatabaseBatchSink(Properties dbProperties) {
         this.properties = dbProperties;
-        this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "100"));
+        this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "5"));
         this.batchIntervalMs = Long.parseLong(dbProperties.getProperty("batch.interval.ms", "20000"));
     }
 
@@ -69,6 +78,31 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         public static EventPublisher eventPublisher;
         private long lastBatchTime;
         private transient ServiceLocator serviceLocator;
+        private final Map<String, FileProgress> fileProgressMap;
+        private final String baseUrl;
+        private final ObjectMapper objectMapper;
+
+        // Add this inner class to track progress
+        private static class FileProgress {
+            private int successCount;
+            private int failCount;
+
+            public void incrementSuccess() {
+                successCount++;
+            }
+
+            public void incrementFail() {
+                failCount++;
+            }
+
+            public int getSuccessCount() {
+                return successCount;
+            }
+
+            public int getFailCount() {
+                return failCount;
+            }
+        }
 
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
             System.setProperty("sun.net.maxDatagramSockets","4096");
@@ -82,6 +116,9 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             CacheManager.getInstance(properties);
             this.serviceLocator = ServiceLocator.getInstance(dslContext);
             serviceLocator.registerSubClasses();
+            this.fileProgressMap = new ConcurrentHashMap<>();
+            this.baseUrl = properties.getProperty("api.base.url");
+            this.objectMapper = new ObjectMapper();
 
             Properties kafkaProps = new Properties();
             kafkaProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
@@ -100,6 +137,11 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         public void write(Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>> value, Context context) throws IOException {
             LOG.info("Write method called with value: {}", value);
             try {
+                String fileId = value.f0.getFileId();
+                if (fileId != null && !fileId.isEmpty()) {
+                    // Initialize progress tracker for this fileId if not exists
+                    fileProgressMap.putIfAbsent(fileId, new FileProgress());
+                }
                 batchBuffer.add(value);
                 long currentTime = System.currentTimeMillis();
                 if (batchBuffer.size() >= batchSize) {
@@ -137,8 +179,12 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             if(!entry.getKey().getSimpleName().equals(User.class.getSimpleName())) {
                                 for (CommonDataModel model : entry.getValue()) {
                                     LOG.info("Operation performed is " + model.getOperationPerformed());
+                                    StreamingRawData rawData = modelToRawDataMap.get(model);
+                                    String fileId = rawData.getFileId();
+                                    if (fileId != null && !fileId.isEmpty()) {
+                                        fileProgressMap.get(fileId).incrementSuccess();
+                                    }
                                     if (model.getOperationPerformed() != null && !model.getChanges().isEmpty()) {
-                                        StreamingRawData rawData = modelToRawDataMap.get(model);
                                         eventPublisher.publishEventAsync(
                                                 rawData.getRequestId(),
                                                 entry.getKey().getSimpleName(),
@@ -156,8 +202,13 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             for (CommonDataModel model : entry.getValue()) {
                                 try {
                                     service.batchSave(List.of(model));
+                                    StreamingRawData rawData = modelToRawDataMap.get(model);
+                                    String fileId = rawData.getFileId();
+                                    // Track success
+                                    if (fileId != null && !fileId.isEmpty()) {
+                                        fileProgressMap.get(fileId).incrementSuccess();
+                                    }
                                     if (model.getOperationPerformed() != null) {
-                                        StreamingRawData rawData = modelToRawDataMap.get(model);
                                         eventPublisher.publishEventAsync(
                                                 rawData.getRequestId(),
                                                 entry.getKey().getSimpleName(),
@@ -169,11 +220,27 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     }
                                     saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
                                 } catch (Exception individualEx) {
+                                    StreamingRawData rawData = modelToRawDataMap.get(model);
+                                    String fileId = rawData.getFileId();
+                                    if (fileId != null && !fileId.isEmpty()) {
+                                        fileProgressMap.get(fileId).incrementFail();
+                                    }
                                     saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
                                 }
                             }
                         }
                     }
+
+                    for (String fileId : fileProgressMap.keySet()) {
+                        updateFileProgress(
+                                fileId,
+                                "OutletDetails",
+                                getLobFromBatch(batchBuffer),
+                                getJobIdFromBatch(batchBuffer)
+                        );
+                    }
+
+                    fileProgressMap.clear();
                     batchBuffer.clear();
                 } catch (Exception e) {
                     throw new IOException("Batch processing failed", e);
@@ -213,6 +280,92 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 //                connection.close();
 //            }
             LOG.info("Closed connection successfully");
+        }
+
+        private String getEntityTypeFromBatch(Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> consolidatedModels) {
+            // Get the first entity type from the batch
+            if (!consolidatedModels.isEmpty()) {
+                return consolidatedModels.keySet().iterator().next().getSimpleName().toLowerCase();
+            }
+            return "unknown";
+        }
+
+        private String getLobFromBatch(List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> buffer) {
+            if (!buffer.isEmpty()) {
+                return buffer.get(0).f0.getLob();
+            }
+            return "unknown";
+        }
+
+        private String getJobIdFromBatch(List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> buffer) {
+            if (!buffer.isEmpty()) {
+                return buffer.get(0).f0.getGroupId();
+            }
+            return "unknown";
+        }
+
+        private void updateFileProgress(String fileId, String entity, String lob, String jobId) {
+            if (fileId == null || fileId.isEmpty()) {
+                LOG.warn("Skipping update for empty fileId");
+                return;
+            }
+
+            FileProgress progress = fileProgressMap.get(fileId);
+            if (progress == null) {
+                LOG.warn("No progress data found for fileId: {}", fileId);
+                return;
+            }
+
+            try {
+                // Construct the URL
+                String url = String.format("%s/api/%s/master/%s/job/%s/unit/%s/update",
+                        "http://localhost:8081", lob, entity, jobId, fileId);
+
+                // Prepare the request body
+                Map<String, Object> requestBody = new HashMap<>();
+                Map<String, Object> progressMap = new HashMap<>();
+                progressMap.put("consumerSuccessCount", progress.getSuccessCount());
+                progressMap.put("consumerFailCount", progress.getFailCount());
+                requestBody.put("progress", progressMap);
+
+                String jsonBody = objectMapper.writeValueAsString(requestBody);
+
+                // Make the HTTP request
+                URL apiUrl = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
+                connection.setRequestMethod("PUT");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setDoOutput(true);
+
+                try (OutputStream os = connection.getOutputStream()) {
+                    byte[] input = jsonBody.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode >= 200 && responseCode < 300) {
+                    LOG.info("Successfully updated progress for fileId: {}, Success: {}, Fail: {}",
+                            fileId, progress.getSuccessCount(), progress.getFailCount());
+                } if (responseCode >= 200 && responseCode < 300) {
+                    LOG.info("Successfully updated progress...");
+                } else {
+                    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
+                        String responseLine;
+                        StringBuilder response = new StringBuilder();
+                        while ((responseLine = br.readLine()) != null) {
+                            response.append(responseLine.trim());
+                        }
+                        LOG.error("Failed to update progress for fileId: {}, response code: {}, message: {}",
+                                fileId, responseCode, response.toString());
+                    }
+                }
+
+
+                connection.disconnect();
+
+            } catch (Exception e) {
+                LOG.error("Error updating file progress for fileId: " + fileId, e);
+            }
         }
     }
 }

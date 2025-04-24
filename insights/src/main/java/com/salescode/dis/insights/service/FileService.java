@@ -38,9 +38,7 @@ public class FileService {
             throw new RuntimeException("File with ID " + file.getId() + " already exists");
         }
         else {
-
             FileEntity savedFile = fileRepo.save(file);
-
             job.getFiles().add(savedFile);
             job.setTotalFileCount(job.getFiles().size());
             jobRepo.save(job);
@@ -57,16 +55,16 @@ public class FileService {
     public FileEntity updateProgress(String fileId, FileProgressRequest progress) {
         FileEntity file = get(fileId);
         if(progress.getConsumerSuccessCount()!=null) {
-            file.setConsumedSuccessCount(progress.getConsumerSuccessCount());
+            file.setConsumedSuccessCount(file.getConsumedSuccessCount() + progress.getConsumerSuccessCount());
         }
         if(progress.getConsumerFailCount()!=null) {
-            file.setConsumedFailCount(progress.getConsumerFailCount());
+            file.setConsumedFailCount(file.getConsumedFailCount() + progress.getConsumerFailCount());
         }
         if(progress.getPublishedSuccessCount()!=null) {
-            file.setPublishedSuccessCount(progress.getPublishedSuccessCount());
+            file.setPublishedSuccessCount(file.getPublishedSuccessCount() + progress.getPublishedSuccessCount());
         }
         if(progress.getPublishedFailCount()!=null) {
-            file.setPublishedFailCount(progress.getPublishedFailCount());
+            file.setPublishedFailCount(file.getPublishedFailCount() + progress.getPublishedFailCount());
         }
 
         if(progress.getConsumerSuccessCount()!=null && progress.getConsumerFailCount()!=null && progress.getConsumerSuccessCount() + progress.getConsumerFailCount() == file.getTotalCount() ){
@@ -104,5 +102,9 @@ public class FileService {
         }
         jobRepo.save(job);
         log.info("Job {} metrics recalculated", job.getId());
+    }
+
+    public boolean fileExists(String fileId) {
+        return fileRepo.existsById(fileId);
     }
 }
