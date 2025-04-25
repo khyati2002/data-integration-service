@@ -26,6 +26,24 @@ spring:
     properties:
       hibernate.format_sql: true
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      properties:
+        spring.json.trusted.packages: com.salescode.dis.insights.events
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer.value-typed: true
+      value-deserializer.default-type: com.salescode.dis.insights.events.FileUpdateEvent
+
+
+cache:
+  redisUrl: redis://localhost:6379
+
+
 ---
 
 # Configuration for 'h2' profile (H2-specific properties for in-memory DB)
@@ -97,3 +115,4 @@ logging:
     org.hibernate.SQL: DEBUG    # Log SQL queries at DEBUG level
     org.hibernate.type.descriptor.sql.BasicBinder: DEBUG  # Trace parameter binding for SQL
     org.springframework.web: DEBUG  # Set web-related logs to DEBUG level
+

@@ -126,28 +126,9 @@ public class FileController {
     @PutMapping("unit/update")
     public ResponseEntity<UpdateRequestResponseDto> updateFileWithoutId(@PathVariable String lob, @PathVariable("master_name") String masterName, @Validated @RequestBody FileUpdateRequestDto req) {
         //Redis-check
-        String fileId = redisService.getFileIdAndRefreshTtl(lob,masterName);
-
-        if(fileId == null){
-            if(jobService.getJob(req.getJobId())== null){
-                JobEntity entity = new JobEntity();
-                entity.setId(req.getJobId());
-                entity.setLob(lob);
-                entity.setMaster(masterName);
-                JobEntity saved = jobService.createJob(entity);
-                req.setJobId(saved.getId());
-            }
-
-            FileEntity fileEntity = new FileEntity();
-            fileEntity.setLob(lob);
-            FileEntity savedFileEntity = fileService.register(req.getJobId(), fileEntity);
-            fileId = savedFileEntity.getId();
-            redisService.saveFileId(lob,masterName,fileId,10);
-        }
 
         // Create a file update event
         FileUpdateEvent event = new FileUpdateEvent();
-        event.setFileId(fileId);
         event.setLob(lob);
         event.setMasterName(masterName);
         event.setUpdateRequest(req);
@@ -161,7 +142,6 @@ public class FileController {
         response.setRequestId(UUID.randomUUID().toString());
         response.setStatus("ACCEPTED");
         response.setMessage("Update request has been queued for processing");
-        response.setFileId(fileId);
         return ResponseEntity.accepted().body(response);
     }
 
