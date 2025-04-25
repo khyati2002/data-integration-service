@@ -18,69 +18,24 @@ spring:
     activate:
       on-profile: dev
 
-  # Development-specific settings (no logging or datasource properties)
+  # Development-specific settings
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate.format_sql: true
-
-  kafka:
-    bootstrap-servers: localhost:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    consumer:
-      properties:
-        spring.json.trusted.packages: com.salescode.dis.insights.events
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      value-deserializer.value-typed: true
-      value-deserializer.default-type: com.salescode.dis.insights.events.FileUpdateEvent
-
-
-cache:
-  redisUrl: redis://localhost:6379
-
-
----
-
-# Configuration for 'h2' profile (H2-specific properties for in-memory DB)
-spring:
-  config:
-    activate:
-      on-profile: h2
-
-  # H2 Database-specific properties for local in-memory database
-  datasource:
-    url: jdbc:h2:mem:testDB
-    username: h2
-    password: ''
-  jpa:
-    # Dialect for H2 in-memory database
-    database-platform: org.hibernate.dialect.H2Dialect
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
----
-
-# Configuration for 'postgres' profile (PostgreSQL-specific properties for persistent DB)
-spring:
-  config:
-    activate:
-      on-profile: postgres
+    # Dialect for PostgreSQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   # PostgreSQL Database-specific properties for persistent database
   datasource:
     url: jdbc:postgresql://localhost:5432/dis_insights
     username: postgres
     password: postgres
-  jpa:
-    # Dialect for PostgreSQL
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+cache:
+  redisUrl: redis://localhost:6379
 
 ---
 
@@ -113,6 +68,11 @@ logging:
     com.salescode: DEBUG
     org.springframework: DEBUG  # Set Spring framework logs to DEBUG level
     org.hibernate.SQL: DEBUG    # Log SQL queries at DEBUG level
-    org.hibernate.type.descriptor.sql.BasicBinder: DEBUG  # Trace parameter binding for SQL
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # Trace parameter binding for SQL
     org.springframework.web: DEBUG  # Set web-related logs to DEBUG level
+
+    org.springframework.transaction: DEBUG
+    org.springframework.kafka.transaction: DEBUG
+    org.springframework.kafka.producer: DEBUG
+    org.springframework.kafka.core: DEBUG
 
