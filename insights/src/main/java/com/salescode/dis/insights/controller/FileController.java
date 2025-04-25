@@ -129,8 +129,9 @@ public class FileController {
         String fileId = redisService.getFileIdAndRefreshTtl(lob,masterName);
 
         if(fileId == null){
-            if(req.getJobId() == null){
+            if(jobService.getJob(req.getJobId())== null){
                 JobEntity entity = new JobEntity();
+                entity.setId(req.getJobId());
                 entity.setLob(lob);
                 entity.setMaster(masterName);
                 JobEntity saved = jobService.createJob(entity);
@@ -160,7 +161,7 @@ public class FileController {
         response.setRequestId(UUID.randomUUID().toString());
         response.setStatus("ACCEPTED");
         response.setMessage("Update request has been queued for processing");
-
+        response.setFileId(fileId);
         return ResponseEntity.accepted().body(response);
     }
 

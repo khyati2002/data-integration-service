@@ -16,9 +16,9 @@ public class RedisService {
     public RedisService(RedissonClient redissonClient) {
         this.redissonClient = redissonClient;
     }
-    long ttlMinutes = 10;
+     long ttlMinutes = 10;
     // Save a string with TTL
-    public void saveFileId(String lob, String masterName, String fileId, long ttlSeconds) {
+     public void saveFileId(String lob, String masterName, String fileId, long ttlSeconds) {
         String key = buildKey(lob, masterName);
         RBucket<String> bucket = redissonClient.getBucket(key);
         bucket.set(fileId, ttlSeconds, TimeUnit.MINUTES); // TTL set

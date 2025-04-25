@@ -13,8 +13,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class FileEntity extends TimeAwareEntity {
-
-    private Integer totalCount;
+    @Builder.Default
+    private Integer totalCount = 0;
 
     @Builder.Default
     private Integer publishedSuccessCount = 0;
