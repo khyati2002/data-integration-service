@@ -1,4 +1,4 @@
-package com.salescode.dis.insights.error;
+package com.salescode.dis.insights.exception.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

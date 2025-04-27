@@ -5,7 +5,7 @@ spring:
 
   # Set the active profiles, default to dev,h2,debug
   profiles:
-    active: postgres,dev,info  # Active profiles to be loaded together
+    active: postgres,dev,info,kafka  # Active profiles to be loaded together
 
 server:
   port: 8081
@@ -25,10 +25,7 @@ spring:
     show-sql: true
     properties:
       hibernate.format_sql: true
-    # Dialect for PostgreSQL
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-  # PostgreSQL Database-specific properties for persistent database
   datasource:
     url: jdbc:postgresql://localhost:5432/dis_insights
     username: postgres
@@ -36,19 +33,22 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    consumer:
-      properties:
-        spring.json.trusted.packages: com.salescode.dis.insights.events
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      value-deserializer.value-typed: true
-      value-deserializer.default-type: com.salescode.dis.insights.events.FileUpdateEvent
 
 cache:
   redisUrl: redis://localhost:6379
+
+---
+
+# Configuration for 'postgres' profile (PostgreSQL-specific properties for persistent DB)
+spring:
+  config:
+    activate:
+      on-profile: postgres
+
+  # PostgreSQL Database-specific properties for persistent database
+  jpa:
+    # Dialect for PostgreSQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 ---
 
@@ -88,4 +88,21 @@ logging:
     org.springframework.kafka.transaction: DEBUG
     org.springframework.kafka.producer: DEBUG
     org.springframework.kafka.core: DEBUG
+
+---
+
+# Configuration for 'kafka' profile
+
+spring:
+  config:
+    activate:
+      on-profile: kafka
+
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 

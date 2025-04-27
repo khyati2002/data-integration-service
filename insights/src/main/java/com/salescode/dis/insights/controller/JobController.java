@@ -5,7 +5,7 @@ import com.salescode.dis.insights.dto.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.entity.TimeAwareEntity;
 import com.salescode.dis.insights.enums.JobStatus;
-import com.salescode.dis.insights.error.ApiError;
+import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
 import com.salescode.dis.insights.service.JobService;
 import io.swagger.v3.oas.annotations.Operation;

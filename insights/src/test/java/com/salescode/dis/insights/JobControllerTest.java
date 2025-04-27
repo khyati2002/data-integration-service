@@ -134,7 +134,7 @@ class JobControllerTest {
         // Assertions
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().size() > 0);
+        assertFalse(response.getBody().isEmpty());
         boolean foundCreatedJob = response.getBody().stream()
                 .anyMatch(job -> job.getId().equals(createdJobId));
         assertTrue(foundCreatedJob, "Should find the job we created earlier");
@@ -158,7 +158,7 @@ class JobControllerTest {
         // Assertions
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().size() > 0);
+        assertFalse(response.getBody().isEmpty());
         boolean foundCreatedJob = response.getBody().stream()
                 .anyMatch(job -> job.getId().equals(createdJobId));
         assertTrue(foundCreatedJob, "Should find the job we created earlier");
@@ -234,8 +234,7 @@ class JobControllerTest {
         JobEntityRequestDto dto = new JobEntityRequestDto(
                 extendedAttrs,
                 "http://publisher/job/123",
-                "http://consumer/job/456",
-                10
+                "http://consumer/job/456"
         );
 
         return dto;

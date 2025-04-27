@@ -1,6 +1,6 @@
 package com.salescode.dis.insights.exception;
 
-import com.salescode.dis.insights.error.ApiError;
+import com.salescode.dis.insights.exception.error.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

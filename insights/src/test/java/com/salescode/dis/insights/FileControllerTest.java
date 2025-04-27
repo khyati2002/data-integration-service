@@ -284,8 +284,7 @@ class FileControllerTest {
         JobEntityRequestDto dto = new JobEntityRequestDto(
                 extendedAttrs,
                 "http://publisher/job/123",
-                "http://consumer/job/456",
-                10
+                "http://consumer/job/456"
         );
 
         return dto;
