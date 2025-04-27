@@ -1,4 +1,4 @@
-package com.salescode.dis.insights.events;
+package com.salescode.dis.insights.kafka;
 
 import com.salescode.dis.insights.dto.FileUpdateRequestDto;
 import lombok.Getter;

@@ -1,9 +1,8 @@
-package com.salescode.dis.insights.eventListener;
+package com.salescode.dis.insights.kafka;
 
 import com.salescode.dis.insights.dto.FileUpdateRequestDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.JobEntity;
-import com.salescode.dis.insights.events.FileUpdateEvent;
 import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.service.JobService;
 import com.salescode.dis.insights.service.RedisService;

@@ -1,4 +1,4 @@
-package com.salescode.dis.insights.config;
+package com.salescode.dis.insights.kafka;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;

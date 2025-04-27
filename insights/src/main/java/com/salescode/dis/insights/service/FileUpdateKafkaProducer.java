@@ -1,6 +1,6 @@
 package com.salescode.dis.insights.service;
 
-import com.salescode.dis.insights.events.FileUpdateEvent;
+import com.salescode.dis.insights.kafka.FileUpdateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

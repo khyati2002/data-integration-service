@@ -8,7 +8,7 @@ import com.salescode.dis.insights.dto.UpdateRequestResponseDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.TimeAwareEntity;
 import com.salescode.dis.insights.exception.error.ApiError;
-import com.salescode.dis.insights.events.FileUpdateEvent;
+import com.salescode.dis.insights.kafka.FileUpdateEvent;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.service.FileUpdateKafkaProducer;
