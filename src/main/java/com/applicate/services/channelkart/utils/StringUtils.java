@@ -16,6 +16,14 @@ public class StringUtils {
         }
         return false;
     }
+    public static boolean isEmpty(String value) {
+        return value == null || value.isEmpty();
+    }
+    public static boolean isValidString(String value) {
+        return !isEmpty(value) && !value.equals("null") && !value.equals("\"\"") && !value.equalsIgnoreCase("undefined");
+    }
+
+
 
     public static String format(final String str, Object... values) {
         synchronized (str.intern()) {

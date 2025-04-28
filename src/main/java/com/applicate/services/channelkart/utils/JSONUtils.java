@@ -5,8 +5,12 @@
  */
 package com.applicate.services.channelkart.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import org.apache.commons.beanutils.ConversionException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.DeserializationFeature;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.MapperFeature;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,6 +40,7 @@ public class JSONUtils {
      * The Constant OBJECT_MAPPER.
      */
     private static ObjectMapper OBJECT_MAPPER;
+    protected TypeFactory _typeFactory;
 
     static {
         get();
@@ -57,6 +62,11 @@ public class JSONUtils {
 
     public static ObjectMapper getObjectMapper() {
         return get();
+    }
+    protected final void _assertNotNull(String paramName, Object src) {
+        if (src == null) {
+            throw new IllegalArgumentException(String.format("argument \"%s\" is null", paramName));
+        }
     }
 
     public static JsonNode mergeJsonNodes(JsonNode source, JsonNode destination) throws IOException {
@@ -81,4 +91,13 @@ public class JSONUtils {
     public static <T> T convert(Object node, TypeReference<List<Map<String, String>>> typeReference) {
         return (T) OBJECT_MAPPER.convertValue(node, typeReference);
     }
+
+    public static <T> T parse(String data, TypeReference<T> typeReference) {
+        try {
+            return OBJECT_MAPPER.readValue(data, typeReference);
+        } catch (
+				 org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException e) {
+            throw new ConversionException(e);
+        }
+	}
 }
