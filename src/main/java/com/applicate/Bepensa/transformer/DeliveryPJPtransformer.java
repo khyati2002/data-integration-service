@@ -77,18 +77,43 @@ public class DeliveryPJPtransformer extends AbstractTransformer<Map<String, Obje
 
     private Map<String, Object> createResponseMap(Map<String, Object> inputMap, LocalDateTime date) {
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("beat", inputMap.get("idruta") != null ? inputMap.get("idruta").toString() : "");
-        responseMap.put("loginId", inputMap.get("codemp") != null ? inputMap.get("codemp").toString() : "");
-        responseMap.put("outletCode", inputMap.get("Customer_Code") != null ? inputMap.get("Customer_Code").toString() : "");
-        responseMap.put("type", inputMap.get("visit_type") != null ? inputMap.get("visit_type").toString() : "");
+
+        String beat = inputMap.get("idruta") != null ? inputMap.get("idruta").toString() : "";
+        String loginId = inputMap.get("codemp") != null ? inputMap.get("codemp").toString() : "";
+        String outletCode = inputMap.get("Customer_Code") != null ? inputMap.get("Customer_Code").toString() : "";
+        String type = inputMap.get("visit_type") != null ? inputMap.get("visit_type").toString() : "";
+
+
+        responseMap.put("beat", beat);
+        responseMap.put("loginId", loginId);
+        responseMap.put("outletCode", outletCode);
+        responseMap.put("type", type);
         responseMap.put("supplierId", inputMap.get("branch_code") != null ? inputMap.get("branch_code").toString() : "");
         responseMap.put("month", date.getMonth().name());
         responseMap.put("year", String.valueOf(date.getYear()));
         responseMap.put("activeStatus", inputMap.get("activo") != null ? addStatus(inputMap.get("activo").toString()) : "");
         responseMap.put("pjpPlan", inputMap.get("day") != null ? inputMap.get("day").toString() : "");
+
+
         date = date.withHour(0).withMinute(0).withSecond(0).withNano(0);
         responseMap.put("pjpDate", Date.from(date.atZone(ZoneId.systemDefault()).toInstant()));
+
+
+        String formattedDate = formatDateForId(date);
+        String id = outletCode + "-" + loginId + "-" + formattedDate + "-" + type + "-" + beat;
+        responseMap.put("id", id);
+
         return responseMap;
+    }
+
+
+    private String formatDateForId(LocalDateTime date) {
+        String dayOfWeek = date.getDayOfWeek().name().substring(0, 3).toLowerCase(); // e.g., tue
+        String month = date.getMonth().name().substring(0, 3).toLowerCase();         // e.g., may
+        String dayOfMonth = String.format("%02d", date.getDayOfMonth());             // e.g., 13
+        String time = String.format("%02d:%02d:%02d", date.getHour(), date.getMinute(), date.getSecond()); // 00:00:00
+        int year = date.getYear();
+        return dayOfWeek + "-" + month + "-" + dayOfMonth + "-" + time + "-utc-" + year;
     }
 
     public static String addStatus(String status) {
