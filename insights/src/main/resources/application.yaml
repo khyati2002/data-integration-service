@@ -18,13 +18,13 @@ spring:
     activate:
       on-profile: dev
 
+  devtools:
+    add-properties: true
+
   # Development-specific settings
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate.format_sql: true
 
   datasource:
     url: jdbc:postgresql://localhost:5432/dis_insights
@@ -46,9 +46,9 @@ spring:
       on-profile: postgres
 
   # PostgreSQL Database-specific properties for persistent database
-  jpa:
-    # Dialect for PostgreSQL
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#  jpa:
+#    # Dialect for PostgreSQL
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 ---
 
@@ -75,18 +75,22 @@ spring:
     activate:
       on-profile: debug
 
+  jpa:
+    show-sql: true     
+    properties:
+      hibernate.format_sql: true
+
 # Logging level for DEBUG
 logging:
   level:
     com.salescode: DEBUG
     org.springframework: DEBUG  # Set Spring framework logs to DEBUG level
     org.hibernate.SQL: DEBUG    # Log SQL queries at DEBUG level
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # Trace parameter binding for SQL
+    org.hibernate.type: TRACE   # Trace parameter binding for SQL
+    org.hibernate.orm.jdbc.bind: TRACE # Trace parameter binding for SQL hibernate
+    org.hibernate.orm.jdbc.extract: TRACE # Trace result binding for SQL hibernate
     org.springframework.web: DEBUG  # Set web-related logs to DEBUG level
-
     org.springframework.transaction: DEBUG
-    org.springframework.kafka.transaction: DEBUG
-    org.springframework.kafka.producer: DEBUG
     org.springframework.kafka.core: DEBUG
 
 ---

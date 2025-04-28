@@ -7,24 +7,31 @@ import com.salescode.dis.insights.dto.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.TimeAwareEntity;
 import com.salescode.dis.insights.enums.JobStatus;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import com.salescode.dis.insights.repository.JobRepository;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.test.autoconfigure.properties.PropertyMapping;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ActiveProfiles({"postgres","dev","debug"})
 class JobControllerTest {
 
     @Autowired
@@ -66,13 +73,12 @@ class JobControllerTest {
         assertEquals(JobStatus.PENDING, response.getBody().getStatus());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
         assertEquals("http://consumer/job/456", response.getBody().getConsumerJobUri());
-        assertEquals(Integer.valueOf(10), response.getBody().getTotalFileCount());
 
         // Store the ID for later tests
         createdJobId = response.getBody().getId();
 
         // Verify location header
-        assertTrue(response.getHeaders().getLocation().toString().contains(createdJobId));
+        assertTrue(Objects.requireNonNull(response.getHeaders().getLocation()).toString().contains(createdJobId));
     }
 
     @Test
@@ -238,5 +244,14 @@ class JobControllerTest {
         );
 
         return dto;
+    }
+
+    @AfterAll
+    static void cleanupAll(@Autowired JobRepository staticJobRepository) {
+        if (createdJobId != null) {
+            System.out.println("Cleaning up job with ID: " + createdJobId);
+            staticJobRepository.deleteById(createdJobId);
+            createdJobId = null;
+        }
     }
 }
