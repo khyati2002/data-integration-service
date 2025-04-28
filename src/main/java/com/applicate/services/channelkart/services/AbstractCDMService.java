@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -108,10 +109,10 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
     public void fillCommonAttributes(T cdmObject){
 
         if(cdmObject.getCreationTime() == null){
-            cdmObject.setCreationTime(LocalDateTime.now());
+            cdmObject.setCreationTime(LocalDateTime.now(ZoneOffset.UTC));
         }
 
-        cdmObject.setLastModifiedTime(LocalDateTime.now());
+        cdmObject.setLastModifiedTime(LocalDateTime.now(ZoneOffset.UTC));
 
         if (cdmObject.getCreatedBy() == null) {
             cdmObject.setCreatedBy(SecurityContextUtils.getPrincipal());
