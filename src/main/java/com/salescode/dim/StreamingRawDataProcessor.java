@@ -13,6 +13,7 @@ import com.salescode.dim.etl.transformation.service.TransformerInfoRegistry;
 import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
+import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -54,7 +55,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
     @Override
     public void open(Configuration parameters) throws Exception {
 
-        System.setProperty("sun.net.maxDatagramSockets","2048");
+        System.setProperty("sun.net.maxDatagramSockets","4096");
         super.open(parameters);
         initializeResources();
     }
@@ -131,8 +132,27 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                     );
                     resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                 } else {
-                    streamingRawData.setStatus("Processed");
-                    resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, dataset))); // Handle success case
+                    streamingRawData.setStatus("Success");
+                    if(entityUtils.getEntityClass(streamingRawData.getTransformerInfo().get(0).getEntityName()).getSimpleName().equals(OutletDetails.class.getSimpleName())) {
+                        PreProcessOperationResult res = preProcessPipelineService.preProcessPipeline(dataset.values().stream()
+                                .flatMap(Set::stream)
+                                .findFirst()
+                                .orElse(null), "");
+                        if (res.getStatus().equals(PreProcessOperationResult.Status.FAILURE)) {
+                            streamingRawData.setStatus("Failure");
+                            streamingRawData.setResponses(
+                                    errorList.stream()
+                                            .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
+                                            .collect(Collectors.toList())
+                            );
+                            resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
+                        }
+                    }
+
+                    if(streamingRawData.getStatus().equals("Success")){
+                            resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, dataset)));
+                    }
+                    // Handle success case
                 }
             } catch (Exception e) {
                 logger.error("Processing failed", e);

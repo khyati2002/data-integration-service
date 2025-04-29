@@ -2,10 +2,12 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.models.enums.RoleName;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.salescode.dim.JooqDatabaseBatchSink;
+import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
@@ -120,7 +122,22 @@ public class UserService extends AbstractCDMService<User> {
                 user.setNormalizedHierarchy(getNormalizedHierarchy(user.getHierarchy()));
                 // Find existing hierarchies in the database
                 List<HierarchyMetadata> existingHierarchies = hierarchyMetadataService.findByHierarchyIn(hierarchyStr);
+                List<HierarchyMetadata> hierarchiesToUpdate = new ArrayList<>();
+                for (HierarchyMetadata existingHierarchy : existingHierarchies) {
+                    if (Objects.equals(existingHierarchy.getLocationHierarchy(), user.getLocationHierarchy()) && existingHierarchy.getActiveStatus() == user.getActiveStatus()) {
 
+                    }
+                    else {
+                        if (!Objects.equals(existingHierarchy.getLocationHierarchy(), user.getLocationHierarchy())) {
+                            existingHierarchy.setLocationHierarchy(user.getLocationHierarchy());
+                        }
+                        if (existingHierarchy.getActiveStatus() != user.getActiveStatus()) {
+                            existingHierarchy.setActiveStatus(user.getActiveStatus());
+                            existingHierarchy.setActiveStatusReason(user.getActiveStatusReason());
+                        }
+                        hierarchiesToUpdate.add(existingHierarchy);
+                    }
+                }
                 // Determine which hierarchies need to be created
                 Set<String> existingHierarchyStrings = existingHierarchies.stream()
                         .map(HierarchyMetadata::getHierarchy)
@@ -133,7 +150,7 @@ public class UserService extends AbstractCDMService<User> {
                             HierarchyMetadata hm = new HierarchyMetadata();
                             hm.setId(UUID.randomUUID().toString());
                             hm.setHierarchy(hStr);
-
+                            hm.setActiveStatus(user.getActiveStatus());
                             // Set immediate parent as the comma-separated list of ALL hierarchies
                             String immediateParent = hierarchyStr.stream()
                                     .collect(Collectors.joining(","));
@@ -144,11 +161,18 @@ public class UserService extends AbstractCDMService<User> {
                                             user.getLocationHierarchy() :
                                             null
                             );
-                       //     hm.setChanged((byte) 1);
+                           hm.setChanged((byte) 1);
                             return hm;
                         })
                         .collect(Collectors.toList());
 
+                if (!hierarchiesToUpdate.isEmpty()) {
+                    getDslContext().batchUpdate(
+                           hierarchiesToUpdate.stream()
+                                    .map(hierarchyMetadata -> getDslContext().newRecord(CK_HIERARCHY_METADATA, hierarchyMetadata)) // Convert to jOOQ Records
+                                    .collect(Collectors.toList())
+                    ).execute();
+                }
                 // Combine existing and new hierarchies
                 List<HierarchyMetadata> allHierarchies = new ArrayList<>(existingHierarchies);
                 allHierarchies.addAll(newHierarchies);
@@ -211,7 +235,10 @@ public class UserService extends AbstractCDMService<User> {
             if (user.getPassword() == null) {
                 user.setPassword(DEFAULT_ENCODED_PASSWORD);
             }
-            user.setBlocked(false);
+
+            if(user.getBlocked()==null || !user.getBlocked()) {
+                user.setBlocked(false);
+            }
         }
     }
 
@@ -258,13 +285,22 @@ public class UserService extends AbstractCDMService<User> {
             fillAttributes(user,User.of(savedList.get(user.getLoginid())));
             fillCommonAttributes(user);
             fillUserDetails(userList);
+            new AttributeUpdateOverrideManager().overrideAttributes(user,savedList.get(user.getLoginid()));
+            if (savedList.get(user.getLoginid()) != null){
+                if(savedList.get(user.getLoginid()).getPassword() != null){
+                    user.setPassword(savedList.get(user.getLoginid()).getPassword());
+                }
+            }
+            if (savedList.get(user.getLoginid()) != null && User.of(savedList.get(user.getLoginid())).getVerified()) {
+                user.setVerified(true);
+            }
             super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
                 preSaveEnrichment(user);
                 user.setVersion(0);
                 user.setId(UUID.randomUUID().toString());
                 user.setOperationPerformed(ActionType.INSERT);
-              //  user.setChanged((byte) 1);
+                user.setChanged((byte) 0);
                 itemsToInsert.add(user);
 
             } else {
@@ -275,12 +311,12 @@ public class UserService extends AbstractCDMService<User> {
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
                     user.setChanges(CdmDiffUtil.getChanges(user,savedUser));
                     user.setOperationPerformed(ActionType.UPDATE);
-                   // user.setChanged((byte) 1);
+                    user.setChanged((byte) 1);
                     itemsToUpdate.add(user);
                 } else {
                     user.setId(savedList.get(user.getLoginid()).getId());
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
-                  //  user.setChanged((byte) 1);
+                    user.setChanged((byte) 1);
                 }
             }
         }
@@ -313,6 +349,7 @@ public class UserService extends AbstractCDMService<User> {
                             .collect(Collectors.toList())
             ).execute();
         }
+        CacheManager.getInstance().evictAll("dataintegration-user");
         if(!saveItemsList.get(0).isEmpty() || !saveItemsList.get(1).isEmpty()){
             postBatchSave(userList);
         }
