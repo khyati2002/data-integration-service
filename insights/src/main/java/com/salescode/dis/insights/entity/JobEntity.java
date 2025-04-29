@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "integration_job")
+@Table(name = "integration_job", indexes = {
+    // Index based on analysis of GET /api/{lob}/master/jobs and GET /api/{lob}/master/{master_name}/jobs
+    @Index(name = "idx_job_lob_master", columnList = "lob, master, start_time desc"),
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,7 +44,7 @@ public class JobEntity extends TimeAwareEntity {
     @Override
     protected void onCreate() {
         super.onCreate();
-        if(this.status == null) {
+        if (this.status == null) {
             this.status = JobStatus.PENDING;
         }
     }
