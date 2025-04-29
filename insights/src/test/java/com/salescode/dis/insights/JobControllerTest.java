@@ -73,6 +73,16 @@ class JobControllerTest {
         assertEquals(JobStatus.PENDING, response.getBody().getStatus());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
         assertEquals("http://consumer/job/456", response.getBody().getConsumerJobUri());
+        assertEquals(Integer.valueOf(0), response.getBody().getTotalFileCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getCompletedFiles());
+        assertEquals(Integer.valueOf(0), response.getBody().getFailedFiles());
+
+        // Time-related assertions
+        assertNotNull(response.getBody().getCreationTime(), "Creation time should not be null");
+        assertNotNull(response.getBody().getLastModifiedTime(), "Last modified time should not be null");
+        assertNotNull(response.getBody().getStartTime(), "Start time should not be null");
+        // End time should be null for a newly created job
+        assertNull(response.getBody().getEndTime(), "End time should be null for a new job");
 
         // Store the ID for later tests
         createdJobId = response.getBody().getId();
@@ -99,6 +109,19 @@ class JobControllerTest {
         assertEquals(createdJobId, response.getBody().getId());
         assertEquals(MASTER, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
+        assertEquals(JobStatus.PENDING, response.getBody().getStatus());
+        assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
+        assertEquals("http://consumer/job/456", response.getBody().getConsumerJobUri());
+        assertEquals(Integer.valueOf(0), response.getBody().getTotalFileCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getCompletedFiles());
+        assertEquals(Integer.valueOf(0), response.getBody().getFailedFiles());
+
+        // Time-related assertions
+        assertNotNull(response.getBody().getCreationTime(), "Creation time should not be null");
+        assertNotNull(response.getBody().getLastModifiedTime(), "Last modified time should not be null");
+        assertNotNull(response.getBody().getStartTime(), "Start time should not be null");
+        // End time should be null for a newly created job
+        assertNull(response.getBody().getEndTime(), "End time should be null for a new job");
     }
 
     @Test
@@ -121,6 +144,20 @@ class JobControllerTest {
         assertNotNull(response.getBody());
         assertEquals(JobStatus.PENDING, response.getBody().getStatus());
         assertEquals(createdJobId, response.getBody().getId());
+        assertEquals(MASTER, response.getBody().getMaster());
+        assertEquals(LOB, response.getBody().getLob());
+        assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
+        assertEquals("http://consumer/job/456", response.getBody().getConsumerJobUri());
+        assertEquals(Integer.valueOf(0), response.getBody().getTotalFileCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getCompletedFiles());
+        assertEquals(Integer.valueOf(0), response.getBody().getFailedFiles());
+
+        // Time-related assertions
+        assertNotNull(response.getBody().getCreationTime(), "Creation time should not be null");
+        assertNotNull(response.getBody().getLastModifiedTime(), "Last modified time should not be null");
+        assertNotNull(response.getBody().getStartTime(), "Start time should not be null");
+        // End time should be null as the job is not completed
+        assertNull(response.getBody().getEndTime(), "End time should be null for a job that is not completed");
     }
 
     @Test
@@ -227,7 +264,24 @@ class JobControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(JobStatus.COMPLETED, response.getBody().getStatus());
+        assertEquals(createdJobId, response.getBody().getId());
+        assertEquals(MASTER, response.getBody().getMaster());
+        assertEquals(LOB, response.getBody().getLob());
+        assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
+        assertEquals("http://consumer/job/456", response.getBody().getConsumerJobUri());
+        assertEquals(Integer.valueOf(0), response.getBody().getTotalFileCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getCompletedFiles());
+        assertEquals(Integer.valueOf(0), response.getBody().getFailedFiles());
+
+        // Time-related assertions
+        assertNotNull(response.getBody().getCreationTime(), "Creation time should not be null");
+        assertNotNull(response.getBody().getLastModifiedTime(), "Last modified time should not be null");
+        assertNotNull(response.getBody().getStartTime(), "Start time should not be null");
         assertNotNull(response.getBody().getEndTime(), "End time should be set when job is completed");
+
+        // Verify that endTime is after startTime
+        assertTrue(response.getBody().getEndTime().isAfter(response.getBody().getStartTime()), 
+                "End time should be after start time");
     }
 
     // Helper method to create sample request data

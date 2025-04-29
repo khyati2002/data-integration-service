@@ -37,7 +37,7 @@ public abstract class CommonEntity {
     @Builder.Default
     private Instant lastModifiedTime = Instant.now();
 
-    @Column(name = "lob", length = 50, nullable = false)
+    @Column(name = "lob", length = 50, nullable = false, updatable = false)
     private String lob;
 
     @Type(JsonBinaryType.class)

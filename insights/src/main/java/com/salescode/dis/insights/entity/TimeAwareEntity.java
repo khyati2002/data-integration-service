@@ -26,9 +26,8 @@ public abstract class TimeAwareEntity extends CommonEntity {
     @Builder.Default
     private Instant startTime = Instant.now();
 
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_time", nullable = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = YYYY_MM_DD_HH_MM_SS, timezone = "UTC")
-    @Builder.Default
-    private Instant endTime = Instant.now();
+    private Instant endTime;
 
 }

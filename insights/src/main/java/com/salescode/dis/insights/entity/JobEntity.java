@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
 @SuperBuilder
 public class JobEntity extends TimeAwareEntity {
 
+    @Column(nullable = false, updatable = false)
     private String master;
 
     @Enumerated(EnumType.STRING)
@@ -46,6 +48,14 @@ public class JobEntity extends TimeAwareEntity {
         super.onCreate();
         if (this.status == null) {
             this.status = JobStatus.PENDING;
+        }
+    }
+
+    @Override
+    protected void onUpdate() {
+        super.onUpdate();
+        if(this.status == JobStatus.COMPLETED){
+            setEndTime(Instant.now());
         }
     }
 }
