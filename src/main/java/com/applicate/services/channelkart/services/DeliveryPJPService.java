@@ -1,19 +1,30 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.JSONUtils;
 
 import com.salescode.dim.jooq.generated.tables.pojos.DeliveryPjp;
+import com.salescode.dim.jooq.generated.tables.records.CkDeliveryPjpRecord;
+import com.salescode.dim.jooq.generated.tables.records.CkOutletDetailsRecord;
+import com.salescode.dim.jooq.impl.OutletDetails;
+import com.salescode.dim.jooq.impl.User;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.salescode.dim.jooq.generated.Tables.*;
 
 public class DeliveryPJPService extends AbstractCDMService<DeliveryPjp> {
     private static final String DAY_TAG = "day";
     private static final String FREQUENCY_TAG = "frequency";
+
+    private static final Logger LOG = LoggerFactory.getLogger(DeliveryPJPService.class);
 
     public void addDayAndFrequency(DeliveryPjp pjp) {
 
@@ -32,6 +43,80 @@ public class DeliveryPJPService extends AbstractCDMService<DeliveryPjp> {
         pjp.setDayAndFrequency(JSONUtils.getObjectMapper().createArrayNode().add(dayAndFrequency));
         pjp.setMonth(currDate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH).toLowerCase());
         pjp.setYear(currDate.get(Calendar.YEAR) + "");
+    }
+
+
+    public List<List<DeliveryPjp>> getItemsToSaveList(List<DeliveryPjp> deliveryPjpList){
+        List<List<DeliveryPjp>> result = new ArrayList<>();
+        List<String> ids = deliveryPjpList.stream()
+                .map(DeliveryPjp::getId)
+                .collect(Collectors.toList());
+
+        Map<String, DeliveryPjp> savedList = getDslContext()
+                .selectFrom(CK_DELIVERY_PJP)
+                .where(CK_DELIVERY_PJP.ID.in(ids))
+                .fetch()
+                .intoMap(CK_DELIVERY_PJP.ID, record -> record.into(com.salescode.dim.jooq.generated.tables.pojos.DeliveryPjp.class));
+        List<DeliveryPjp> itemsToInsert = new ArrayList<>();
+        List<DeliveryPjp> itemsToUpdate = new ArrayList<>();
+        for (DeliveryPjp pjp : deliveryPjpList) {
+            fillAttributes(pjp,savedList.get(pjp.getId()));
+            fillCommonAttributes(pjp);
+            super.addHash(pjp);
+            if (savedList.get(pjp.getId()) == null) {
+                pjp.setVersion(0);
+                pjp.setId(UUID.randomUUID().toString());
+                pjp.setChanged((byte) 1);
+                itemsToInsert.add(pjp);
+                pjp.setOperationPerformed(ActionType.INSERT);
+            } else {
+                DeliveryPjp existingPJP = savedList.get(pjp.getId());
+                pjp.setId(existingPJP.getId());
+                pjp.setVersion(existingPJP.getVersion() + 1);
+                String pjphash = pjp.getHash();
+                String existingHash = existingPJP.getHash();
+
+                if (!Objects.equals(pjp.getHash(), existingPJP.getHash())) {
+                    pjp.setChanges(CdmDiffUtil.getChanges(pjp,existingPJP));
+                    pjp.setOperationPerformed(ActionType.UPDATE);
+                    pjp.setChanged((byte) 1);
+
+                    itemsToUpdate.add(pjp);
+                }
+            }
+        }
+        result.add(itemsToInsert);
+        result.add(itemsToUpdate);
+        return result;
+    }
+
+
+
+    public Collection<DeliveryPjp> batchSave(Collection<DeliveryPjp> deliveryPJPList){
+        LOG.info("Size of list is "  + deliveryPJPList.size());
+        List<DeliveryPjp> deliverypjplist = new ArrayList<>(deliveryPJPList);
+        LOG.info("Pre Batch Save Called with size " + deliverypjplist.size());
+        List<List<DeliveryPjp>> saveItemsList = getItemsToSaveList(deliverypjplist);
+        if (!saveItemsList.get(0).isEmpty()) {
+            getDslContext().batchInsert(
+                    saveItemsList.get(0).stream()
+                            .map(pjp -> getDslContext().newRecord(CK_DELIVERY_PJP, pjp))
+                            .collect(Collectors.toList())
+            ).execute();
+        }
+        if (!saveItemsList.get(1).isEmpty()) {
+            getDslContext().batchUpdate(
+                    saveItemsList.get(1).stream()
+                            .map(pjp -> {
+                                CkDeliveryPjpRecord record = getDslContext().newRecord(CK_DELIVERY_PJP, pjp);
+                                record.changed(CK_DELIVERY_PJP.ID, false); // Avoid updating primary key
+                                return record;
+                            })
+                            .collect(Collectors.toList())
+            ).execute();
+        }
+        LOG.info("Batch save successful");
+        return deliverypjplist;
     }
 
 }
