@@ -1,62 +1,120 @@
 package com.salescode.dis.insights.kafka;
 
+
 import com.salescode.dis.insights.dto.FileUpdateRequestDto;
-import com.salescode.dis.insights.entity.FileEntity;
-import com.salescode.dis.insights.entity.JobEntity;
+import com.salescode.dis.insights.dto.FileProgressRequest;
+
 import com.salescode.dis.insights.service.FileService;
-import com.salescode.dis.insights.service.JobService;
-import com.salescode.dis.insights.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
+@EnableKafka
 public class FileUpdateEventListener {
+
     private final FileService fileService;
-
-    @Autowired
-    private RedisService redisService;
-
-    @Autowired
-    private JobService jobService;
 
     @Autowired
     public FileUpdateEventListener(FileService fileService) {
         this.fileService = fileService;
     }
 
-    @KafkaListener(topics = "file-updates", groupId = "file-update-processor")
-    public void consumeFileUpdateEvent(FileUpdateEvent event) {
+    @KafkaListener(topics = "file-updates", groupId = "file-update-processor",containerFactory = "kafkaListenerContainerFactory")
+    public void consumeFileUpdateEvents(List<FileUpdateEvent> events) {
+        if (events == null || events.isEmpty()) {
+            return;
+        }
 
-        FileUpdateRequestDto req = event.getUpdateRequest();
-        String fileId = event.getFileId();
-        if(event.getFileId() == null) {
-             fileId = redisService.getFileIdAndRefreshTtl(event.getLob(), event.getMasterName());
+        Map<String, FileUpdateEvent> aggregatedUpdatesProgress = new HashMap<>();
+        for (FileUpdateEvent event : events) {
+            String fileId = event.getFileId();
+            FileUpdateRequestDto req = event.getUpdateRequest();
 
-            if (fileId == null) {
-                if (jobService.getJob(req.getJobId()) == null) {
-                    JobEntity entity = new JobEntity();
-                    entity.setId(req.getJobId());
-                    entity.setLob(event.getLob());
-                    entity.setMaster(event.getMasterName());
-                    JobEntity saved = jobService.createJob(entity);
-                    req.setJobId(saved.getId());
+            FileUpdateEvent agg = aggregatedUpdatesProgress.get(fileId);
+            if (agg == null) {
+                agg = new FileUpdateEvent();
+
+                FileUpdateRequestDto updateRequest = new FileUpdateRequestDto();
+                FileProgressRequest progressRequest = new FileProgressRequest();
+
+                // Set all counts to 0
+                progressRequest.setConsumerSuccessCount(0);
+                progressRequest.setConsumerFailCount(0);
+                progressRequest.setPublishedSuccessCount(0);
+                progressRequest.setPublishedFailCount(0);
+                progressRequest.setServerFailCount(0);
+                progressRequest.setLogicalFailCount(0);
+                updateRequest.setProgress(progressRequest);
+
+                agg.setUpdateRequest(updateRequest);
+
+                aggregatedUpdatesProgress.put(fileId, agg);
+            }
+
+            if (req.getProgress() != null) {
+                  if(req.getProgress().getConsumerSuccessCount() != null) {
+                      agg.getUpdateRequest().getProgress().setConsumerSuccessCount(
+                              agg.getUpdateRequest().getProgress().getConsumerSuccessCount() + req.getProgress()
+                                      .getConsumerSuccessCount()
+                      );
+                  }
+                if(req.getProgress().getConsumerFailCount() != null) {
+                    agg.getUpdateRequest().getProgress().setConsumerFailCount(
+                            agg.getUpdateRequest().getProgress().getConsumerFailCount() + req.getProgress()
+                                    .getConsumerFailCount()
+                    );
+                }
+                if(req.getProgress().getPublishedSuccessCount() != null) {
+                    agg.getUpdateRequest().getProgress().setPublishedSuccessCount(
+                            agg.getUpdateRequest().getProgress().getPublishedSuccessCount() + req.getProgress()
+                                    .getPublishedSuccessCount()
+                    );
+                }
+                if(req.getProgress().getPublishedFailCount()!= null) {
+                    agg.getUpdateRequest().getProgress().setPublishedFailCount(
+                            agg.getUpdateRequest().getProgress().getPublishedFailCount() + req.getProgress()
+                                    .getPublishedFailCount()
+                    );
+                }
+                if(req.getProgress().getServerFailCount() != null) {
+                    agg.getUpdateRequest().getProgress().setServerFailCount(
+                            agg.getUpdateRequest().getProgress().getServerFailCount() + req.getProgress()
+                                    .getServerFailCount()
+                    );
+                }
+                if(req.getProgress().getLogicalFailCount() != null) {
+                    agg.getUpdateRequest().getProgress().setLogicalFailCount(
+                            agg.getUpdateRequest().getProgress().getLogicalFailCount() + req.getProgress()
+                                    .getLogicalFailCount()
+                    );
                 }
 
-                FileEntity fileEntity = new FileEntity();
-                fileEntity.setLob(event.getLob());
-                FileEntity savedFileEntity = fileService.register(req.getJobId(), fileEntity);
-                fileId = savedFileEntity.getId();
-                redisService.saveFileId(event.getLob(),event.getMasterName(), fileId, 10);
             }
+            agg.setFileId(fileId);
+            agg.setLob(event.getLob());
+            agg.getUpdateRequest().setJobId(req.getJobId());
+            agg.setMasterName(event.getMasterName());
+
+            aggregatedUpdatesProgress.put(fileId, agg);
         }
 
-        if (req.isProgressUpdate()) {
-            fileService.updateProgress(fileId, req.getProgress());
+        for (Map.Entry<String, FileUpdateEvent> entry : aggregatedUpdatesProgress.entrySet()) {
+            String fileId = entry.getKey();
+            FileUpdateEvent agg = entry.getValue();
+
+            fileService.updateProgress(fileId, agg.getUpdateRequest().getProgress(), agg.getUpdateRequest().getJobId(), agg.getLob(), agg.getMasterName());
         }
-        if (req.isStatusUpdate()) {
-            fileService.updateStatus(fileId, req.getStatus().getConsumedStatus(),
-                    req.getStatus().getPublishedStatus());
+
+        for(FileUpdateEvent event : events) {
+            if(event.getUpdateRequest().getStatus() != null) {
+                fileService.updateStatus(event.getFileId(),event.getUpdateRequest().getStatus().getConsumedStatus(), event.getUpdateRequest().getStatus().getPublishedStatus());
+            }
         }
     }
 }

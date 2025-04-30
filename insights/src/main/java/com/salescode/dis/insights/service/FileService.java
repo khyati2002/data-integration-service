@@ -19,6 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.Instant;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -28,6 +31,9 @@ public class FileService {
     private final JobRepository jobRepo;
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private JobService jobService;
 
     public FileEntity register(String jobId, FileEntity file) {
         JobEntity job = jobRepo.findById(jobId).orElseThrow(() -> new ResourceNotFoundException("Job not found: " + jobId));
@@ -47,13 +53,46 @@ public class FileService {
         return file;
     }
 
+    public FileEntity registerOnUpdate(String jobId, FileEntity file,String master) {
+        JobEntity job = jobRepo.findById(jobId).orElse(null);
+        if(job == null){
+            JobEntity jobEntity = new JobEntity();
+            jobEntity.setId(jobId);
+            jobEntity.setLob(file.getLob());
+            jobEntity.setMaster(master);
+            job = jobService.createJob(jobEntity);
+        }
+        file.setJob(job);
+        file.setConsumedStatus(FileStatus.PENDING);
+        file.setPublishedStatus(FileStatus.PENDING);
+
+        FileEntity savedFile = fileRepo.save(file);
+        job.getFiles().add(savedFile);
+        job.setTotalFileCount(job.getFiles().size());
+        jobRepo.save(job);
+
+        log.info("Registered file {} under job {}", file.getId(), jobId);
+        return file;
+    }
+
     @Transactional(readOnly = true)
     public FileEntity get(String fileId) {
         return fileRepo.findById(fileId).orElseThrow(() -> new ResourceNotFoundException("File not found: " + fileId));
     }
 
-    public FileEntity updateProgress(String fileId, FileProgressRequest progress) {
-        FileEntity file = get(fileId);
+    @Transactional(readOnly = true)
+    public FileEntity getOrReturnNull(String fileId) {
+        return fileRepo.findById(fileId).orElse(null);
+    }
+
+    public FileEntity updateProgress(String fileId, FileProgressRequest progress,String jobId, String lob,String master) {
+        FileEntity file = getOrReturnNull(fileId);
+        if(file == null){
+            FileEntity fileEntity = new FileEntity();
+            fileEntity.setId(fileId);
+            fileEntity.setLob(lob);
+            file = registerOnUpdate(jobId,fileEntity,master);
+        }
         if(progress.getConsumerSuccessCount()!=null) {
             file.setConsumedSuccessCount(file.getConsumedSuccessCount() + progress.getConsumerSuccessCount());
         }
@@ -66,9 +105,16 @@ public class FileService {
         if(progress.getPublishedFailCount()!=null) {
             file.setPublishedFailCount(file.getPublishedFailCount() + progress.getPublishedFailCount());
         }
+        if(progress.getServerFailCount()!=null){
+            file.setServerFailCount(file.getServerFailCount() + progress.getServerFailCount());
+        }
+        if(progress.getLogicalFailCount()!=null){
+            file.setLogicalFailCount(file.getLogicalFailCount() + progress.getLogicalFailCount());
+        }
 
         if(progress.getConsumerSuccessCount()!=null && progress.getConsumerFailCount()!=null && progress.getConsumerSuccessCount() + progress.getConsumerFailCount() == file.getTotalCount() ){
             file.setConsumedStatus(FileStatus.COMPLETED);
+            file.setEndTime(Instant.now());
         }
         if(progress.getPublishedSuccessCount()!=null && progress.getPublishedFailCount()!=null && progress.getPublishedSuccessCount() + progress.getPublishedFailCount() == file.getTotalCount() ){
             file.setPublishedStatus(FileStatus.COMPLETED);

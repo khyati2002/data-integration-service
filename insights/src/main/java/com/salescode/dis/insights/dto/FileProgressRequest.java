@@ -9,4 +9,6 @@ public class FileProgressRequest {
     @Min(0) private Integer consumerFailCount;
     @Min(0) private Integer publishedSuccessCount;
     @Min(0) private Integer publishedFailCount;
+    @Min(0) private Integer serverFailCount;
+    @Min(0) private Integer logicalFailCount;
 }
