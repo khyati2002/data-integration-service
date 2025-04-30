@@ -27,7 +27,7 @@ public class JobService {
 
     @Transactional(readOnly = true)
     public JobEntity getJob(String id) {
-        return jobRepo.findById(id).orElse(null);
+        return jobRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
     }
 
     @Transactional

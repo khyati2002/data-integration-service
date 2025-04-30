@@ -54,7 +54,7 @@ public class JobEntity extends TimeAwareEntity {
     @Override
     protected void onUpdate() {
         super.onUpdate();
-        if(this.status == JobStatus.COMPLETED){
+        if(this.status == JobStatus.COMPLETED || this.status == JobStatus.FAILED){
             setEndTime(Instant.now());
         }
     }
