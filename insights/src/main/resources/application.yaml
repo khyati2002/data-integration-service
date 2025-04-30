@@ -12,7 +12,7 @@ server:
 
 ---
 
-# Configuration for 'dev' profile (common dev properties, no database configuration)
+# Configuration for 'dev' profile
 spring:
   config:
     activate:
@@ -36,6 +36,17 @@ spring:
 
 cache:
   redisUrl: redis://localhost:6379
+
+---
+
+# Configuration for 'uat' profile
+spring:
+  config:
+    activate:
+      on-profile: uat
+
+  kafka:
+    bootstrap-servers: 164.52.202.184:9092
 
 ---
 
