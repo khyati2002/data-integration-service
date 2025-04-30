@@ -15,7 +15,7 @@ accountId=$(aws sts get-caller-identity --profile "$profile" --query "Account" -
 echo "AWS Account ID: $accountId"
 
 # Fetch the latest image tag from ECR using variables
-latest_version=$(aws ecr describe-images --repository-name "$repo_name" --region "$region" --profile "$profile" --query "imageDetails | sort_by(@, &imagePushedAt) | [0].imageTags[0]" --output text)
+latest_version=$(aws ecr describe-images --repository-name "$repo_name" --region "$region" --profile "$profile" --query "sort_by(imageDetails, &imagePushedAt)[-1].imageTags[0]" --output text)
 echo "Latest version from ECR: $latest_version"
 
 # Check if the latest version is empty or doesn't match the expected format
