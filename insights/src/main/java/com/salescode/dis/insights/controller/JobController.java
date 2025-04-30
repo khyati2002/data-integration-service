@@ -116,7 +116,7 @@ public class JobController {
     )
     @GetMapping("/{master_name}/job/{id}")
     public ResponseEntity<JobEntityResponseDto> getJob(@PathVariable String lob, @PathVariable("master_name") String master, @PathVariable String id) {
-        JobEntity job = Optional.ofNullable(jobService.getJob(id)).orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
+        JobEntity job = jobService.getJob(id);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
     }
