@@ -27,21 +27,16 @@ import java.time.Instant;
 @Slf4j
 @Transactional
 public class FileService {
+
     private final FileRepository fileRepo;
     private final JobRepository jobRepo;
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Autowired
-    private JobService jobService;
+    private final JobService jobService;
 
     public FileEntity register(String jobId, FileEntity file) {
-        JobEntity job = jobRepo.findById(jobId).orElseThrow(() -> new ResourceNotFoundException("Job not found: " + jobId));
+        JobEntity job = jobService.getJob(jobId);
         file.setJob(job);
-        file.setConsumedStatus(FileStatus.PENDING);
-        file.setPublishedStatus(FileStatus.PENDING);
         if (file.getId() !=null && fileRepo.existsById(file.getId())) {
-            throw new RuntimeException("File with ID " + file.getId() + " already exists");
+            throw new IllegalArgumentException("File with ID " + file.getId() + " already exists");
         }
         else {
             FileEntity savedFile = fileRepo.save(file);
