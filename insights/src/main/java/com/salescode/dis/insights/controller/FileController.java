@@ -12,15 +12,12 @@ import com.salescode.dis.insights.kafka.FileUpdateEvent;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.service.FileUpdateKafkaProducer;
-import com.salescode.dis.insights.service.JobService;
-import com.salescode.dis.insights.service.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
@@ -42,15 +40,7 @@ public class FileController {
 
     private final FileService fileService;
     private final FileEntityMapper fileEntityMapper;
-
-    @Autowired
-    private JobService jobService;
-
-    @Autowired
-    private FileUpdateKafkaProducer fileUpdateKafkaProducer;
-
-    @Autowired
-    private RedisService redisService;
+    private final FileUpdateKafkaProducer fileUpdateKafkaProducer;
 
     @Operation(summary = "Register a new file", description = "Registers a new file entity for the job.")
     @ApiResponse(responseCode = "201", description = "File created successfully", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
@@ -58,7 +48,7 @@ public class FileController {
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @PostMapping("/job/{jobId}/unit")
     public ResponseEntity<FileEntityResponseDto> registerFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @Validated @RequestBody FileEntityRequestDto req, UriComponentsBuilder uriBuilder) {
-        FileEntity toSave = fileEntityMapper.toEntity(req,lob);
+        FileEntity toSave = fileEntityMapper.toEntity(req, lob);
         FileEntity saved = fileService.register(jobId, toSave);
         FileEntityResponseDto resp = fileEntityMapper.toDto(saved);
         URI uri = uriBuilder.path("/api/{lob}/master/{masterName}/job/{jobId}/unit/{id}")
@@ -85,7 +75,7 @@ public class FileController {
     @ApiResponse(responseCode = "400", description = "Invalid update request", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
-    @PutMapping("unit/{fileId}/update")
+    @PutMapping("/unit/{fileId}/update")
     public ResponseEntity<UpdateRequestResponseDto> updateFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String fileId, @Validated @RequestBody FileUpdateRequestDto req) {
         // Validate the file exists first
         if (!fileService.fileExists(fileId)) {
@@ -122,7 +112,7 @@ public class FileController {
     @ApiResponse(responseCode = "400", description = "Invalid update request", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
-    @PutMapping("unit/update")
+    @PutMapping("/unit/update")
     public ResponseEntity<UpdateRequestResponseDto> updateFileWithoutId(@PathVariable String lob, @PathVariable("master_name") String masterName, @Validated @RequestBody FileUpdateRequestDto req) {
         //Redis-check
 
