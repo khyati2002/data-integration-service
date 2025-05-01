@@ -51,13 +51,20 @@ public class FileEntity extends TimeAwareEntity {
     private JobEntity job;
 
     @Override
+    protected void onCreate() {
+        super.onCreate();
+        this.setConsumedStatus(FileStatus.PENDING);
+        this.setPublishedStatus(FileStatus.PENDING);
+    }
+
+    @Override
     protected void onUpdate() {
         super.onUpdate();
-        if(this.publishedStatus == FileStatus.COMPLETED){
+        if(this.publishedStatus == FileStatus.COMPLETED || this.publishedStatus == FileStatus.FAILED){
             setEndTime(Instant.now());
             setPublisherThroughput((this.publishedSuccessCount + this.getPublishedFailCount()) / (this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()));
         }
-        if(this.consumedStatus == FileStatus.COMPLETED){
+        if(this.consumedStatus == FileStatus.COMPLETED || this.consumedStatus == FileStatus.FAILED){
             setEndTime(Instant.now());
             setConsumerThroughput((this.consumedSuccessCount + this.getConsumedFailCount()) / (this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()));
         }
