@@ -148,15 +148,15 @@ public class IntegrationSummaryService {
                                     jobData.put("published_fail_count", getSafeInt(record, "published_fail_count"));
                                     jobData.put("status",record.get("status"));
                                     jobData.put("master_name",record.get("master"));
-//                                    Instant instant = (Instant) record.get("start_time");
-//                                    ZonedDateTime localDateTime = instant.atZone(ZoneId.systemDefault());
-//                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS z");
-//
-//                                    Instant instantEND =  (Instant)record.get("end_time");
-//                                    ZonedDateTime localDateTimeEnd = instant.atZone(ZoneId.systemDefault());
-//                                    DateTimeFormatter formatterEnd = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS z");
-//                                    jobData.put("startTime", (String) localDateTime.format(formatter));
-//                                    jobData.put("endTime", (String) localDateTimeEnd.format(formatterEnd));
+                                    Instant instant = (Instant) record.get("start_time");
+                                    ZonedDateTime localDateTime = instant.atZone(ZoneId.systemDefault());
+                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS z");
+
+                                    Instant instantEND =  (Instant)record.get("end_time");
+                                    ZonedDateTime localDateTimeEnd = instant.atZone(ZoneId.systemDefault());
+                                    DateTimeFormatter formatterEnd = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS z");
+                                    jobData.put("startTime", (String) localDateTime.format(formatter));
+                                    jobData.put("endTime", (String) localDateTimeEnd.format(formatterEnd));
                                     return jobData;
                                 },
                                 (existing, replacement) -> {
