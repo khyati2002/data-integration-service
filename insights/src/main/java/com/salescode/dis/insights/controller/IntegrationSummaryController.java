@@ -4,15 +4,14 @@ import com.salescode.dis.insights.dto.LobSummaryDTO;
 import com.salescode.dis.insights.service.IntegrationSummaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequestMapping("/api")
 public class IntegrationSummaryController {
@@ -65,6 +64,38 @@ public class IntegrationSummaryController {
 
         List<LobSummaryDTO> summary = integrationSummaryService.getIntegrationSummary(lobs, jobFilters, fileFilters);
         return ResponseEntity.ok(summary);
+    }
+
+    @GetMapping("/lob-summary")
+    public ResponseEntity<Object> getLobSummary(
+            @RequestParam(required = false) List<String> lob) {
+        if (lob != null && lob.size() == 1) {
+            lob = Collections.singletonList(lob.get(0));
+        }
+        return ResponseEntity.ok(integrationSummaryService.getLobSummary(lob));
+    }
+
+    @GetMapping("/lob-summary-only")
+    public ResponseEntity<Object> getLobSummaryOnly(
+            @RequestParam(required = false) List<String> lob) {
+        // If lob is null or contains one element, we convert it to a list
+        if (lob != null && lob.size() == 1) {
+            lob = Collections.singletonList(lob.get(0));
+        }
+        return ResponseEntity.ok(integrationSummaryService.getOnlyLobDetails(lob));
+    }
+
+
+    private Map<String, String> extractJobFilters(Map<String, String> allParams) {
+        Map<String, String> jobFilters = new HashMap<>();
+        for (Map.Entry<String, String> entry : allParams.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (isJobField(key)) {
+                jobFilters.put(key, value);
+            }
+        }
+        return jobFilters;
     }
 
     private boolean isJobField(String fieldName) {

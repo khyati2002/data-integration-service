@@ -28,5 +28,7 @@ public class JobEntityResponseDtoWithFiles implements Serializable {
     Integer totalFileCount;
     Integer completedFiles;
     Integer failedFiles;
+    Integer publishedAverageThroughput;
+    Integer consumedAverageThroughput;
     List<FileEntityResponseDto> files;
 }
