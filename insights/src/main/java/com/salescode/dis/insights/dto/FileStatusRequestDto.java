@@ -1,7 +1,7 @@
 package com.salescode.dis.insights.dto;
 
 import com.salescode.dis.insights.enums.FileStatus;
-import com.salescode.dis.insights.enums.JobStatus;
+import jakarta.validation.constraints.AssertTrue;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,14 +10,11 @@ import lombok.Setter;
 public class FileStatusRequestDto {
 
     private FileStatus consumedStatus;
-
     private FileStatus publishedStatus;
 
-    public boolean hasConsumedStatus() {
-        return consumedStatus != null;
+    @AssertTrue(message = "At least one of consumedStatus or publishedStatus must be set")
+    public boolean isAtLeastOneStatusSet() {
+        return consumedStatus != null || publishedStatus != null;
     }
 
-    public boolean hasPublishedStatus() {
-        return publishedStatus != null;
-    }
-}
+} 

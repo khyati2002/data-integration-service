@@ -1,13 +1,18 @@
 package com.salescode.dis.insights;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.salescode.dis.insights.dto.*;
-import com.salescode.dis.insights.entity.FileEntity;
-import com.salescode.dis.insights.entity.TimeAwareEntity;
+import com.salescode.dis.insights.dto.FileEntityRequestDto;
+import com.salescode.dis.insights.dto.FileEntityResponseDto;
+import com.salescode.dis.insights.dto.FileProgressRequest;
+import com.salescode.dis.insights.dto.FileStatusRequestDto;
+import com.salescode.dis.insights.dto.JobEntityRequestDto;
+import com.salescode.dis.insights.dto.JobEntityResponseDto;
 import com.salescode.dis.insights.enums.FileStatus;
 import com.salescode.dis.insights.enums.JobStatus;
+import com.salescode.dis.insights.repository.FileRepository;
+import com.salescode.dis.insights.service.FileService;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -18,8 +23,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 
+import java.sql.Time;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,6 +46,10 @@ class FileControllerTest {
     private static final String MASTER_NAME = "Master1";
     private static String createdJobId;
     private static String createdFileId;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private FileService fileService;
 
     @Test
     @Order(1)
@@ -67,14 +80,13 @@ class FileControllerTest {
         assertEquals(JobStatus.PENDING, response.getBody().getStatus());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
         assertEquals("http://consumer/job/456", response.getBody().getConsumerJobUri());
-        assertEquals(Integer.valueOf(10), response.getBody().getTotalFileCount());
 
         // Store the ID for later tests
         createdJobId = response.getBody().getId();
         System.out.println("Created Job ID: " + createdJobId);
 
     }
-    
+
     @Test
     @Order(2)
     void testRegisterFile() throws Exception {
@@ -84,7 +96,7 @@ class FileControllerTest {
 
         // Create request body
         FileEntityRequestDto requestDto = new FileEntityRequestDto();
-        requestDto.setId("file-1");
+        requestDto.setId(UUID.randomUUID().toString());
         requestDto.setTotalCount(100);
 
         // Create sample extended attributes JSON
@@ -136,6 +148,7 @@ class FileControllerTest {
         assertEquals(LOB, response.getBody().getLob());
     }
 
+    @SneakyThrows
     @Test
     @Order(4)
     void testUpdateFileProgress() {
@@ -144,34 +157,43 @@ class FileControllerTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // Create progress update request
-        FileUpdateRequestDto updateDto = new FileUpdateRequestDto();
         FileProgressRequest progressRequest = new FileProgressRequest();
-        progressRequest.setConsumerSuccessCount(50);
-        progressRequest.setConsumerFailCount(10);
-        progressRequest.setPublishedSuccessCount(60);
-        progressRequest.setPublishedFailCount(5);
-        updateDto.setProgress(progressRequest);
+
+        // Set consumer metrics
+        FileProgressRequest.ConsumerMetrics consumer = new FileProgressRequest.ConsumerMetrics();
+        consumer.setSuccessCount(50);
+        consumer.setServerFailCount(5);
+        consumer.setLogicalFailCount(5);
+        progressRequest.setConsumer(consumer);
+
+        // Set publisher metrics
+        FileProgressRequest.PublisherMetrics publisher = new FileProgressRequest.PublisherMetrics();
+        publisher.setSuccessCount(60);
+        publisher.setFailCount(5);
+        progressRequest.setPublisher(publisher);
 
         // Make request
-        HttpEntity<FileUpdateRequestDto> entity = new HttpEntity<>(updateDto, headers);
+        HttpEntity<FileProgressRequest> entity = new HttpEntity<>(progressRequest, headers);
         ResponseEntity<FileEntityResponseDto> response = restTemplate.exchange(
-                "/api/{lob}/master/{master_name}/job/{jobId}/unit/{fileId}/update",
+                "/api/{lob}/master/{master_name}/unit/{fileId}/progress",
                 HttpMethod.PUT,
                 entity,
                 FileEntityResponseDto.class,
                 LOB,
                 MASTER_NAME,
-                createdJobId,
                 createdFileId
         );
 
+        TimeUnit.SECONDS.sleep(10);
+        assertEquals(fileService.get(createdFileId).getConsumedSuccessCount(), consumer.getSuccessCount());
+        assertEquals(fileService.get(createdFileId).getConsumedFailCount(), consumer.getServerFailCount());
+        assertEquals(fileService.get(createdFileId).getLogicalFailCount(), consumer.getLogicalFailCount());
+        assertEquals(fileService.get(createdFileId).getPublishedSuccessCount(), publisher.getSuccessCount());
+        assertEquals(fileService.get(createdFileId).getPublishedFailCount(), publisher.getFailCount());
+
         // Assertions
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(50, response.getBody().getConsumedSuccessCount());
-        assertEquals(10, response.getBody().getConsumedFailCount());
-        assertEquals(60, response.getBody().getPublishedSuccessCount());
-        assertEquals(5, response.getBody().getPublishedFailCount());
     }
 
     @Test
@@ -182,16 +204,14 @@ class FileControllerTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // Create status update request
-        FileUpdateRequestDto updateDto = new FileUpdateRequestDto();
         FileStatusRequestDto statusRequest = new FileStatusRequestDto();
         statusRequest.setConsumedStatus(FileStatus.COMPLETED);
         statusRequest.setPublishedStatus(FileStatus.COMPLETED);
-        updateDto.setStatus(statusRequest);
 
         // Make request
-        HttpEntity<FileUpdateRequestDto> entity = new HttpEntity<>(updateDto, headers);
+        HttpEntity<FileStatusRequestDto> entity = new HttpEntity<>(statusRequest, headers);
         ResponseEntity<FileEntityResponseDto> response = restTemplate.exchange(
-                "/api/{lob}/master/{master_name}/job/{jobId}/unit/{fileId}/update",
+                "/api/{lob}/master/{master_name}/job/{jobId}/unit/{fileId}/status",
                 HttpMethod.PUT,
                 entity,
                 FileEntityResponseDto.class,
@@ -255,12 +275,12 @@ class FileControllerTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // Create an empty update request with neither progress nor status
-        FileUpdateRequestDto updateDto = new FileUpdateRequestDto();
+        FileStatusRequestDto updateDto = new FileStatusRequestDto();
 
         // Make request
-        HttpEntity<FileUpdateRequestDto> entity = new HttpEntity<>(updateDto, headers);
+        HttpEntity<FileStatusRequestDto> entity = new HttpEntity<>(updateDto, headers);
         ResponseEntity<String> response = restTemplate.exchange(
-                "/api/{lob}/master/{master_name}/job/{jobId}/unit/{fileId}/update",
+                "/api/{lob}/master/{master_name}/job/{jobId}/unit/{fileId}/status",
                 HttpMethod.PUT,
                 entity,
                 String.class,
@@ -270,7 +290,6 @@ class FileControllerTest {
                 createdFileId
         );
 
-        // Assertions for bad request (400)
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 

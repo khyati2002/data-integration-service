@@ -2,6 +2,7 @@
 package com.salescode.dis.insights.service;
 
 import com.salescode.dis.insights.dto.FileProgressRequest;
+import com.salescode.dis.insights.dto.FileStatusRequestDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.FileStatus;
@@ -9,18 +10,14 @@ import com.salescode.dis.insights.enums.JobStatus;
 import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.repository.JobRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Duration;
-import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -35,10 +32,9 @@ public class FileService {
     public FileEntity register(String jobId, FileEntity file) {
         JobEntity job = jobService.getJob(jobId);
         file.setJob(job);
-        if (file.getId() !=null && fileRepo.existsById(file.getId())) {
+        if (file.getId() != null && fileRepo.existsById(file.getId())) {
             throw new IllegalArgumentException("File with ID " + file.getId() + " already exists");
-        }
-        else {
+        } else {
             FileEntity savedFile = fileRepo.save(file);
             job.getFiles().add(savedFile);
             job.setTotalFileCount(job.getFiles().size());
@@ -48,25 +44,20 @@ public class FileService {
         return file;
     }
 
-    public FileEntity registerOnUpdate(String jobId, FileEntity file,String master) {
-        JobEntity job = jobRepo.findById(jobId).orElse(null);
-        if(job == null){
+    public FileEntity registerOnUpdate(String jobId, FileEntity file, String master) {
+        JobEntity job = jobRepo.findById(jobId).orElseGet(() -> {
             JobEntity jobEntity = new JobEntity();
             jobEntity.setId(jobId);
             jobEntity.setLob(file.getLob());
             jobEntity.setMaster(master);
-            job = jobService.createJob(jobEntity);
-        }
+            return jobService.createJob(jobEntity);
+        });
         file.setJob(job);
-        file.setConsumedStatus(FileStatus.PENDING);
-        file.setPublishedStatus(FileStatus.PENDING);
-
         FileEntity savedFile = fileRepo.save(file);
         job.getFiles().add(savedFile);
         job.setTotalFileCount(job.getFiles().size());
         jobRepo.save(job);
-
-        log.info("Registered file {} under job {}", file.getId(), jobId);
+        log.info("Registered new file {} under job {}", file.getId(), jobId);
         return file;
     }
 
@@ -80,50 +71,47 @@ public class FileService {
         return fileRepo.findById(fileId).orElse(null);
     }
 
-    public FileEntity updateProgress(String fileId, FileProgressRequest progress,String jobId, String lob,String master) {
+
+
+    public void updateProgress(String fileId, FileProgressRequest progress, String jobId, String lob, String masterName) {
+        // todo fix for concurrent updates on multiple consumers
         FileEntity file = getOrReturnNull(fileId);
-        if(file == null){
+        if (file == null) {
             FileEntity fileEntity = new FileEntity();
             fileEntity.setId(fileId);
             fileEntity.setLob(lob);
-            file = registerOnUpdate(jobId,fileEntity,master);
-        }
-        if(progress.getConsumerSuccessCount()!=null) {
-            file.setConsumedSuccessCount(file.getConsumedSuccessCount() + progress.getConsumerSuccessCount());
-        }
-        if(progress.getConsumerFailCount()!=null) {
-            file.setConsumedFailCount(file.getConsumedFailCount() + progress.getConsumerFailCount());
-        }
-        if(progress.getPublishedSuccessCount()!=null) {
-            file.setPublishedSuccessCount(file.getPublishedSuccessCount() + progress.getPublishedSuccessCount());
-        }
-        if(progress.getPublishedFailCount()!=null) {
-            file.setPublishedFailCount(file.getPublishedFailCount() + progress.getPublishedFailCount());
-        }
-        if(progress.getServerFailCount()!=null){
-            file.setServerFailCount(file.getServerFailCount() + progress.getServerFailCount());
-        }
-        if(progress.getLogicalFailCount()!=null){
-            file.setLogicalFailCount(file.getLogicalFailCount() + progress.getLogicalFailCount());
+            fileEntity.setIsApiBased(true);
+            file = registerOnUpdate(jobId, fileEntity, masterName);
         }
 
-        if(progress.getConsumerSuccessCount()!=null && progress.getConsumerFailCount()!=null && progress.getConsumerSuccessCount() + progress.getConsumerFailCount() == file.getTotalCount() ){
-            file.setConsumedStatus(FileStatus.COMPLETED);
-            file.setEndTime(Instant.now());
+        if (progress.getConsumer() != null) {
+            file.setConsumedSuccessCount(file.getConsumedSuccessCount() + progress.getConsumer().getSuccessCount());
+            file.setServerFailCount(file.getServerFailCount() + progress.getConsumer().getServerFailCount());
+            file.setLogicalFailCount(file.getLogicalFailCount() + progress.getConsumer().getLogicalFailCount());
+            file.setConsumedFailCount(file.getServerFailCount() + file.getLogicalFailCount());
         }
-        if(progress.getPublishedSuccessCount()!=null && progress.getPublishedFailCount()!=null && progress.getPublishedSuccessCount() + progress.getPublishedFailCount() == file.getTotalCount() ){
-            file.setPublishedStatus(FileStatus.COMPLETED);
+
+        if (progress.getPublisher() != null) {
+            file.setPublishedSuccessCount(file.getPublishedSuccessCount() + progress.getPublisher().getSuccessCount());
+            file.setPublishedFailCount(file.getPublishedFailCount() + progress.getPublisher().getFailCount());
+            if(file.getIsApiBased()){
+                file.setTotalCount(file.getPublishedSuccessCount() + file.getPublishedFailCount());
+            }
         }
+
+        fileRepo.save(file);
         log.info("File {} progress updated", fileId);
-        recalcJobMetrics(file.getJob());
-        return fileRepo.save(file);
     }
 
-    public FileEntity updateStatus(String fileId, FileStatus consumedStatus, FileStatus publishedStatus) {
-        FileEntity file = get(fileId);
-        file.setConsumedStatus(consumedStatus);
-        file.setPublishedStatus(publishedStatus);
-        log.info("File {} status -> {}", fileId, consumedStatus + "  " + publishedStatus);
+    public FileEntity updateStatus(String fileId, FileStatusRequestDto status) {
+        FileEntity file = getOrReturnNull(fileId);
+        if (status.getConsumedStatus() != null) {
+            file.setConsumedStatus(status.getConsumedStatus());
+        }
+        if (status.getPublishedStatus() != null) {
+            file.setPublishedStatus(status.getPublishedStatus());
+        }
+        log.info("File {} status updated to consumed: {}, published: {}",fileId, status.getConsumedStatus(), status.getPublishedStatus());
         recalcJobMetrics(file.getJob());
         return fileRepo.save(file);
     }
@@ -133,9 +121,15 @@ public class FileService {
         return fileRepo.findByJobId(jobId, pageable);
     }
 
-    private void recalcJobMetrics(JobEntity job) {
-        long completed = job.getFiles().stream().filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED && f.getPublishedStatus() == FileStatus.COMPLETED).count();
-        long failed = job.getFiles().stream().filter(f -> f.getConsumedStatus() == FileStatus.FAILED && f.getPublishedStatus() == FileStatus.FAILED).count();
+    public void recalcJobMetrics(JobEntity job) {
+        long completed = job.getFiles()
+                .stream()
+                .filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED && f.getPublishedStatus() == FileStatus.COMPLETED)
+                .count();
+        long failed = job.getFiles()
+                .stream()
+                .filter(f -> f.getConsumedStatus() == FileStatus.FAILED && f.getPublishedStatus() == FileStatus.FAILED)
+                .count();
         job.setCompletedFiles((int) completed);
         job.setFailedFiles((int) failed);
         if (completed + failed == job.getTotalFileCount()) {
