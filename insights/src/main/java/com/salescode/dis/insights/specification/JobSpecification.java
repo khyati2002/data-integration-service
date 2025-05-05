@@ -15,7 +15,7 @@ import jakarta.persistence.criteria.Predicate;
 public class JobSpecification {
 
     public static Specification<JobEntity> getJobWithFileSpecification(
-            List<String> lobs,
+            List<String> lob,
             Map<String, String> jobFilters,
             Map<String, String> fileFilters
     ) {
@@ -24,8 +24,8 @@ public class JobSpecification {
 
             List<Predicate> predicates = new ArrayList<>();
 
-            if (lobs != null && !lobs.isEmpty()) {
-                predicates.add(root.get("lob").in(lobs));
+            if (lob != null && !lob.isEmpty()) {
+                predicates.add(root.get("lob").in(lob));
             }
 
             if (jobFilters != null && !jobFilters.isEmpty()) {

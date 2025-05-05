@@ -5,10 +5,57 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-public interface JobRepository extends JpaRepository<JobEntity, String> , JpaSpecificationExecutor<JobEntity> {
+import java.util.List;
+import java.util.Map;
+
+public interface JobRepository extends JpaRepository<JobEntity, String>,
+        JpaSpecificationExecutor<JobEntity>,
+        JobSummaryCustomRepository {
 
     Page<JobEntity> getJobEntitiesByLob(String lob, Pageable pageable);
 
     Page<JobEntity> getJobEntitiesByLobAndMaster(String lob, String master, Pageable pageable);
+
+    @Query(
+            value = "SELECT igj.status, igj.master, igj.start_time,igj.end_time,igj.id AS job_id, igf.id AS file_id, igj.lob, igj.status, " +
+                    "igf.consumed_fail_count, igf.consumed_success_count, igf.total_count " +
+                    "FROM integration_job igj " +
+                    "LEFT JOIN integration_file igf ON igj.id = igf.job_id ",
+            nativeQuery = true)
+    List<Map<String, Object>> getLobSummary(@Param("lob") List<String> lob);
+
+    @Query(
+            value = "SELECT igj.status, igj.master, igj.start_time,igj.end_time,igj.id AS job_id, igf.id AS file_id, igj.lob, igj.status, " +
+                    "igf.consumed_fail_count, igf.consumed_success_count, igf.total_count " +
+                    "FROM integration_job igj " +
+                    "LEFT JOIN integration_file igf ON igj.id = igf.job_id ",
+            nativeQuery = true)
+    List<Map<String, Object>> getLobSummaryAll();
+
+    @Query(
+            value = """
+        SELECT\s
+            lob,
+            COUNT(*) AS total,
+            COUNT(DISTINCT master) AS distinct_master_count,
+            SUM(CASE WHEN status = 'COMPLETED' THEN 1 ELSE 0 END) AS COMPLETED,
+            SUM(CASE WHEN status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING,
+            SUM(CASE WHEN status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED
+        FROM integration_job
+        GROUP BY lob
+       \s""",
+            nativeQuery = true
+    )
+    List<Map<String,Object>> getLobDetailsAll();
+
+    @Query("SELECT j.lob AS lob, COUNT(j) AS total, COUNT(DISTINCT j.master) AS distinct_master_count, " +
+            "SUM(CASE WHEN j.status = 'COMPLETED' THEN 1 ELSE 0 END) AS COMPLETED, " +
+            "SUM(CASE WHEN j.status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING, " +
+            "SUM(CASE WHEN j.status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED " +
+            "FROM JobEntity j WHERE j.lob IN :lob GROUP BY j.lob")
+    List<Map<String, Object>> getLobDetails(@Param("lob") List<String> lob);
+
 }
