@@ -66,6 +66,9 @@ public class FileEntity extends TimeAwareEntity {
         }
         if(this.consumedStatus == FileStatus.COMPLETED || this.consumedStatus == FileStatus.FAILED){
             setEndTime(Instant.now());
+            if((this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()) == 0){
+                return;
+            }
             setConsumerThroughput((this.consumedSuccessCount + this.getConsumedFailCount()) / (this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()));
         }
     }

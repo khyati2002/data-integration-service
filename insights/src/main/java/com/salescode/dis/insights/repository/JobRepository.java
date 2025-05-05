@@ -19,21 +19,30 @@ public interface JobRepository extends JpaRepository<JobEntity, String>,
 
     Page<JobEntity> getJobEntitiesByLobAndMaster(String lob, String master, Pageable pageable);
 
-    @Query(
-            value = "SELECT igj.status, igj.master, igj.start_time,igj.end_time,igj.id AS job_id, igf.id AS file_id, igj.lob, igj.status, " +
-                    "igf.consumed_fail_count, igf.consumed_success_count, igf.total_count " +
-                    "FROM integration_job igj " +
-                    "LEFT JOIN integration_file igf ON igj.id = igf.job_id ",
+    @Query(value = "SELECT igj.status, igj.master, igj.start_time, igj.end_time, igj.id AS job_id, " +
+            "igf.id AS file_id, igj.lob, igf.published_success_count, igf.published_fail_count, " +
+            "igf.consumed_fail_count, igf.consumed_success_count, igf.total_count, " +
+            "igf.publisher_throughput, igf.consumer_throughput, igf.server_fail_count, igf.logical_fail_count " +
+            "FROM integration_job igj " +
+            "LEFT JOIN integration_file igf ON igj.id = igf.job_id " +
+            "WHERE (COALESCE(:lob) IS NULL OR igj.lob IN (:lob)) " +
+            "AND (COALESCE(:status) IS NULL OR igj.status IN (:status)) " +
+            "AND (COALESCE(:master) IS NULL OR igj.master IN (:master))",
             nativeQuery = true)
-    List<Map<String, Object>> getLobSummary(@Param("lob") List<String> lob);
+    List<Map<String, Object>> getLobSummary(
+            @Param("lob") List<String> lob,
+            @Param("status") List<String> status,
+            @Param("master") List<String> master);
 
-    @Query(
-            value = "SELECT igj.status, igj.master, igj.start_time,igj.end_time,igj.id AS job_id, igf.id AS file_id, igj.lob, igj.status, " +
-                    "igf.consumed_fail_count, igf.consumed_success_count, igf.total_count " +
-                    "FROM integration_job igj " +
-                    "LEFT JOIN integration_file igf ON igj.id = igf.job_id ",
-            nativeQuery = true)
-    List<Map<String, Object>> getLobSummaryAll();
+
+
+//    @Query(
+//            value = "SELECT igj.status, igj.master, igj.start_time,igj.end_time,igj.id AS job_id, igf.id AS file_id, igj.lob, igj.status, " +
+//                    "igf.consumed_fail_count, igf.consumed_success_count, igf.published_success_count,igf.published_fail_count,igf.total_count, igf.publisher_throughput,igf.consumer_throughput, igf.server_fail_count,igf.logical_fail_count " +
+//                    "FROM integration_job igj " +
+//                    "LEFT JOIN integration_file igf ON igj.id = igf.job_id ",
+//            nativeQuery = true)
+//    List<Map<String, Object>> getLobSummaryAll();
 
     @Query(
             value = """
