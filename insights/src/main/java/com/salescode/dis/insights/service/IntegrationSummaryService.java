@@ -34,16 +34,6 @@ public class IntegrationSummaryService {
         this.jobRepository = jobRepository;
     }
 
-    public Map<String, Map<String, Object>> getLobSummary(List<String> lobs, Map<String, String> jobFilters) {
-        List<Map<String, Object>> rawList = jobRepository.getFilteredLobSummary(lobs, jobFilters);
-        return groupByJob(rawList);
-    }
-
-    public Map<String, Map<String, Object>> getOnlyLobDetails(List<String> lobs, Map<String, String> jobFilters) {
-        List<Map<String, Object>> rawList = jobRepository.getFilteredLobDetails(lobs, jobFilters);
-        return groupByLob(rawList);
-    }
-
     private Map<String, Map<String, Object>> groupByLob(List<Map<String, Object>> rows) {
         Map<String, Map<String, Object>> grouped = new HashMap<>();
         for (Map<String, Object> row : rows) {

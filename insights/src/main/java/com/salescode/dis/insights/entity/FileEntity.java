@@ -1,7 +1,6 @@
 package com.salescode.dis.insights.entity;
 
 import com.salescode.dis.insights.enums.FileStatus;
-import com.salescode.dis.insights.enums.JobStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -50,24 +49,35 @@ public class FileEntity extends TimeAwareEntity {
     @JoinColumn(name = "job_id", nullable = false)
     private JobEntity job;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean isApiBased = false;
+
     @Override
     protected void onCreate() {
         super.onCreate();
-        this.setConsumedStatus(FileStatus.PENDING);
-        this.setPublishedStatus(FileStatus.PENDING);
+        if (this.consumedStatus == null) {
+            this.consumedStatus = FileStatus.PENDING;
+        }
+        if (this.publishedStatus == null) {
+            this.publishedStatus = FileStatus.PENDING;
+        }
     }
 
     @Override
     protected void onUpdate() {
         super.onUpdate();
-        if(this.publishedStatus == FileStatus.COMPLETED || this.publishedStatus == FileStatus.FAILED){
+        if (this.publishedStatus == FileStatus.COMPLETED || this.publishedStatus == FileStatus.FAILED) {
             setEndTime(Instant.now());
+            if (getStartTime().toEpochMilli() == getEndTime().toEpochMilli()) {
+                setPublisherThroughput((long) (this.publishedSuccessCount + this.getPublishedFailCount()));
+            }
             setPublisherThroughput((this.publishedSuccessCount + this.getPublishedFailCount()) / (this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()));
         }
-        if(this.consumedStatus == FileStatus.COMPLETED || this.consumedStatus == FileStatus.FAILED){
+        if (this.consumedStatus == FileStatus.COMPLETED || this.consumedStatus == FileStatus.FAILED) {
             setEndTime(Instant.now());
-            if((this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()) == 0){
-                return;
+            if (getStartTime().toEpochMilli() == getEndTime().toEpochMilli()) {
+                setConsumerThroughput((long) (this.consumedSuccessCount + this.getConsumedFailCount()));
             }
             setConsumerThroughput((this.consumedSuccessCount + this.getConsumedFailCount()) / (this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()));
         }
