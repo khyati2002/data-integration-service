@@ -106,6 +106,8 @@ public class IntegrationSummaryService {
             resp = jobRepository.getLobDetails(lobList); // returns List<Map<String, Object>>
         }
 
+        Map<String, Map<String, Object>> lobSummary = (Map<String, Map<String, Object>>) getLobSummary(lobList,new ArrayList<>(),new ArrayList<>());
+
         Map<String, Map<String, Object>> result = new HashMap<>();
 
         for (Map<String, Object> row : resp) {
@@ -121,6 +123,30 @@ public class IntegrationSummaryService {
             detailsMap.put("FAILED", failed);
             detailsMap.put("DISTINCT_MASTERS", distinctMasters);
 
+            // Calculate average throughput per LOB and put inside details
+            Map<String, Object> jobsMap = lobSummary.get(lob);
+            if (jobsMap != null) {
+                double totalConsumerThroughput = 0.0;
+                double totalPublisherThroughput = 0.0;
+                int jobCount = 0;
+
+                for (Map.Entry<String, Object> jobEntry : jobsMap.entrySet()) {
+                    Map<String, Object> jobData = (Map<String, Object>) jobEntry.getValue();
+
+                    totalConsumerThroughput += getSafeDouble(jobData, "avg_consumer_throughput");
+                    totalPublisherThroughput += getSafeDouble(jobData, "avg_publisher_throughput");
+                    jobCount++;
+                }
+
+                if (jobCount > 0) {
+                    detailsMap.put("consumed_throughput", totalConsumerThroughput / jobCount);
+                    detailsMap.put("published_throughput", totalPublisherThroughput / jobCount);
+                } else {
+                    detailsMap.put("consumed_throughput", 0.0);
+                    detailsMap.put("published_throughput", 0.0);
+                }
+            }
+
             Map<String, Object> lobMap = new HashMap<>();
             lobMap.put("details", detailsMap);
 
@@ -130,62 +156,16 @@ public class IntegrationSummaryService {
         return result;
     }
 
-    public Object accumulateLobSummary(List<Map<String, Object>>  resp) {
-        Map<String, Map<String, Object>> aggregatedData = resp.stream()
-                .collect(Collectors.groupingBy(
-                        record -> (String) record.get("lob"), // Group by lob
-                        Collectors.toMap(
-                                record -> (String) record.get("job_id"), // Key by job_id
-                                record -> {
-                                    Map<String, Object> jobData = new HashMap<>();
 
-                                    // Null check before accessing Number values
-                                    jobData.put("consumed_fail_count", getSafeInt(record, "consumed_fail_count"));
-                                    jobData.put("consumed_success_count", getSafeInt(record, "consumed_success_count"));
-                                    jobData.put("total_count", getSafeInt(record, "total_count"));
-                                    jobData.put("server_fail_count", getSafeInt(record, "server_fail_count"));
-                                    jobData.put("logical_fail_count", getSafeInt(record, "logical_fail_count"));
-                                    jobData.put("published_fail_count", getSafeInt(record, "published_fail_count"));
-                                    jobData.put("status",record.get("status"));
-                                    jobData.put("master_name",record.get("master"));
-                                    Instant instant = (Instant) record.get("start_time");
-                                    ZonedDateTime localDateTime = instant.atZone(ZoneId.systemDefault());
-                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS z");
+    public Object getLobSummary(List<String> lobList,List<String> status,List<String> master) {
+        List<Map<String, Object>> resp;
 
-                                    Instant instantEND =  (Instant)record.get("end_time");
-                                    ZonedDateTime localDateTimeEnd = instant.atZone(ZoneId.systemDefault());
-                                    DateTimeFormatter formatterEnd = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS z");
-                                    jobData.put("startTime", (String) localDateTime.format(formatter));
-                                    jobData.put("endTime", (String) localDateTimeEnd.format(formatterEnd));
-                                    return jobData;
-                                },
-                                (existing, replacement) -> {
-                                    Map<String, Object> existingMap = (Map<String, Object>) existing;
-                                    Map<String, Object> replacementMap = (Map<String, Object>) replacement;
+//        if (lobList == null || lobList.isEmpty()) {
+//            resp = jobRepository.getLobSummaryAll();
+//        } else {
+            resp = jobRepository.getLobSummary(lobList,status,master);
 
-                                    // Aggregate values with null safety
-                                    existingMap.put("consumed_fail_count", aggregateSafeInt(existingMap, replacementMap, "consumed_fail_count"));
-                                    existingMap.put("consumed_success_count", aggregateSafeInt(existingMap, replacementMap, "consumed_success_count"));
-                                    existingMap.put("total_count", aggregateSafeInt(existingMap, replacementMap, "total_count"));
-                                    existingMap.put("server_fail_count", aggregateSafeInt(existingMap, replacementMap, "server_fail_count"));
-                                    existingMap.put("logical_fail_count", aggregateSafeInt(existingMap, replacementMap, "logical_fail_count"));
-                                    existingMap.put("published_fail_count", aggregateSafeInt(existingMap, replacementMap, "published_fail_count"));
-                                    return existingMap;
-                                }
-                        )
-                ));
-
-        return aggregatedData; // Return the aggregated data
-    }
-
-    public Object getLobSummary(List<String> lobList){
-        List<Map<String, Object>>  resp;
-
-        if(lobList == null || lobList.isEmpty()){
-            resp = jobRepository.getLobSummaryAll();
-        } else {
-            resp =  jobRepository.getLobSummary(lobList);
-        }
+     //   }
 
         // Using Stream API to aggregate data
         Map<String, Map<String, Object>> aggregatedData = resp.stream()
@@ -196,43 +176,85 @@ public class IntegrationSummaryService {
                                 record -> {
                                     Map<String, Object> jobData = new HashMap<>();
 
-                                    // Null check before accessing Number values
                                     jobData.put("consumed_fail_count", getSafeInt(record, "consumed_fail_count"));
                                     jobData.put("consumed_success_count", getSafeInt(record, "consumed_success_count"));
+                                    jobData.put("published_success_count", getSafeInt(record, "published_success_count"));
                                     jobData.put("total_count", getSafeInt(record, "total_count"));
                                     jobData.put("server_fail_count", getSafeInt(record, "server_fail_count"));
                                     jobData.put("logical_fail_count", getSafeInt(record, "logical_fail_count"));
                                     jobData.put("published_fail_count", getSafeInt(record, "published_fail_count"));
-                                    jobData.put("status",record.get("status"));
-                                    jobData.put("master_name",record.get("master"));
-                                    Instant instant = (Instant) record.get("start_time");
-                                    ZonedDateTime localDateTime = instant.atZone(ZoneId.systemDefault());
-                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS z");
+                                    jobData.put("status", record.get("status"));
+                                    jobData.put("master_name", record.get("master"));
 
-                                    Instant instantEND =  (Instant)record.get("end_time");
-                                    ZonedDateTime localDateTimeEnd = instant.atZone(ZoneId.systemDefault());
-                                    DateTimeFormatter formatterEnd = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS z");
-                                    jobData.put("startTime", (String) localDateTime.format(formatter));
-                                    jobData.put("endTime", (String) localDateTimeEnd.format(formatterEnd));
+                                    Instant startTime = (Instant) record.get("start_time");
+                                    Instant endTime = (Instant) record.get("end_time");
+
+                                    jobData.put("startTime", startTime != null ? startTime.toString() : null);
+                                    jobData.put("endTime", endTime != null ? endTime.toString() : null);
+
+                                    // Add throughput tracking
+                                    jobData.put("consumer_throughput_sum", getSafeDouble(record, "consumer_throughput"));
+                                    jobData.put("publisher_throughput_sum", getSafeDouble(record, "publisher_throughput"));
+                                    jobData.put("throughput_count", 1); // count each record
+
                                     return jobData;
                                 },
                                 (existing, replacement) -> {
                                     Map<String, Object> existingMap = (Map<String, Object>) existing;
                                     Map<String, Object> replacementMap = (Map<String, Object>) replacement;
 
-                                    // Aggregate values with null safety
                                     existingMap.put("consumed_fail_count", aggregateSafeInt(existingMap, replacementMap, "consumed_fail_count"));
                                     existingMap.put("consumed_success_count", aggregateSafeInt(existingMap, replacementMap, "consumed_success_count"));
+                                    existingMap.put("published_success_count", aggregateSafeInt(existingMap, replacementMap, "published_success_count"));
                                     existingMap.put("total_count", aggregateSafeInt(existingMap, replacementMap, "total_count"));
                                     existingMap.put("server_fail_count", aggregateSafeInt(existingMap, replacementMap, "server_fail_count"));
                                     existingMap.put("logical_fail_count", aggregateSafeInt(existingMap, replacementMap, "logical_fail_count"));
                                     existingMap.put("published_fail_count", aggregateSafeInt(existingMap, replacementMap, "published_fail_count"));
+
+                                    existingMap.put("consumer_throughput_sum", aggregateSafeDouble(existingMap, replacementMap, "consumer_throughput_sum"));
+                                    existingMap.put("publisher_throughput_sum", aggregateSafeDouble(existingMap, replacementMap, "publisher_throughput_sum"));
+
+                                    int count1 = (int) existingMap.getOrDefault("throughput_count", 0);
+                                    int count2 = (int) replacementMap.getOrDefault("throughput_count", 0);
+                                    existingMap.put("throughput_count", count1 + count2);
+
                                     return existingMap;
                                 }
                         )
                 ));
 
-        return aggregatedData; // Return the aggregated data
+        // After aggregation, compute average throughput per job
+        aggregatedData.forEach((lob, jobMap) -> {
+            for (Map.Entry<String, Object> entry : jobMap.entrySet()) {
+                if (entry.getValue() instanceof Map) {
+                    Map<String, Object> jobData = (Map<String, Object>) entry.getValue();
+                    double consumerSum = getSafeDouble(jobData, "consumer_throughput_sum");
+                    double publisherSum = getSafeDouble(jobData, "publisher_throughput_sum");
+                    int count = (int) jobData.getOrDefault("throughput_count", 1);
+
+                    jobData.put("avg_consumer_throughput", count > 0 ? consumerSum / count : 0.0);
+                    jobData.put("avg_publisher_throughput", count > 0 ? publisherSum / count : 0.0);
+
+                    // Remove intermediate sum and count if not needed
+                    jobData.remove("consumer_throughput_sum");
+                    jobData.remove("publisher_throughput_sum");
+                    jobData.remove("throughput_count");
+                }
+            }
+        });
+
+        return aggregatedData;
+    }
+
+    private double getSafeDouble(Map<String, Object> record, String key) {
+        Object val = record.get(key);
+        return (val instanceof Number) ? ((Number) val).doubleValue() : 0.0;
+    }
+
+    private double aggregateSafeDouble(Map<String, Object> existing, Map<String, Object> incoming, String key) {
+        double existingVal = getSafeDouble(existing, key);
+        double incomingVal = getSafeDouble(incoming, key);
+        return existingVal + incomingVal;
     }
 
     // Helper method to safely get an integer value from the map

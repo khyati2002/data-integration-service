@@ -67,11 +67,17 @@ public class IntegrationSummaryController {
 
     @GetMapping("/lob-summary")
     public ResponseEntity<Object> getLobSummary(
-            @RequestParam(required = false) List<String> lob) {
+            @RequestParam(required = false) List<String> lob,@RequestParam(required = false) List<String> status,@RequestParam(required = false) List<String> master) {
         if (lob != null && lob.size() == 1) {
             lob = Collections.singletonList(lob.get(0));
         }
-        return ResponseEntity.ok(integrationSummaryService.getLobSummary(lob));
+        if(status!=null && status.size()==1){
+            status = Collections.singletonList(status.get(0));
+        }
+        if(master!=null && master.size()==1){
+            master = Collections.singletonList(master.get(0));
+        }
+        return ResponseEntity.ok(integrationSummaryService.getLobSummary(lob,status,master));
     }
 
     @GetMapping("/lob-summary-only")
