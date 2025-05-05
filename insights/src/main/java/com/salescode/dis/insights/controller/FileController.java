@@ -27,7 +27,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequestMapping("/api/{lob}/master/{master_name}")
 @RequiredArgsConstructor

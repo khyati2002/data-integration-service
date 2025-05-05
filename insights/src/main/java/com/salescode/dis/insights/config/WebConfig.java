@@ -1,23 +1,28 @@
 package com.salescode.dis.insights.config;
 
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig {
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        System.out.println("CORS config applied");
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**") // matches your endpoints
-                        .allowedOrigins("http://localhost:5174") // your frontend origin
-                        .allowedMethods("*") // allows GET, POST, PUT, DELETE, etc.
-                        .allowedHeaders("*"); // allows all headers
-            }
-        };
+@EnableWebMvc
+public class WebConfig implements WebMvcConfigurer {
+
+    // Keep the default value as "*"
+    @Value("${cors.allowed-origins:*}")
+    private String[] allowedOrigins;
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // Start building the CORS registration for the /api/** path
+        CorsRegistration registration = registry.addMapping("/api/**")
+                // Always set allowedOrigins based on the @Value injection (defaults to "*")
+                .allowedOrigins(allowedOrigins)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH") // Specify allowed methods
+                .allowedHeaders("*") // Allow all headers
+                .maxAge(3600); // Cache preflight response for 1 hour
     }
 }
