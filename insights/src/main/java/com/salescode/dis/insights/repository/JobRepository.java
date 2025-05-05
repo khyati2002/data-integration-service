@@ -11,9 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Map;
 
-public interface JobRepository extends JpaRepository<JobEntity, String>,
-        JpaSpecificationExecutor<JobEntity>,
-        JobSummaryCustomRepository {
+public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpecificationExecutor<JobEntity> {
 
     Page<JobEntity> getJobEntitiesByLob(String lob, Pageable pageable);
 

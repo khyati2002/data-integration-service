@@ -122,6 +122,23 @@ class FileControllerTest {
         // Store the ID for later tests
         createdFileId = response.getBody().getId();
 
+
+        // Make request using the ID from the create test
+        ResponseEntity<JobEntityResponseDto> jobResponse = restTemplate.getForEntity(
+                "/api/{lob}/master/{master_name}/job/{id}",
+                JobEntityResponseDto.class,
+                LOB,
+                MASTER_NAME,
+                createdJobId
+        );
+
+        // Assertions
+        assertEquals(HttpStatus.OK, jobResponse.getStatusCode());
+        assertNotNull(jobResponse.getBody());
+        assertEquals(createdJobId, jobResponse.getBody().getId());
+        assertEquals(MASTER_NAME, jobResponse.getBody().getMaster());
+        assertEquals(LOB, jobResponse.getBody().getLob());
+        assertEquals(JobStatus.PENDING, jobResponse.getBody().getStatus());
     }
 
     @Test

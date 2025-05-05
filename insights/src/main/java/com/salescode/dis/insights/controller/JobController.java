@@ -5,7 +5,6 @@ import com.salescode.dis.insights.dto.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.entity.TimeAwareEntity;
 import com.salescode.dis.insights.enums.JobStatus;
-import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
 import com.salescode.dis.insights.service.JobService;
@@ -28,7 +27,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/{lob}/master")
@@ -81,6 +79,10 @@ public class JobController {
         return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(dto);
     }
 
+
+
+
+
     @Operation(
         summary = "Get job details",
         description = """
@@ -121,6 +123,10 @@ public class JobController {
         return ResponseEntity.ok(dto);
     }
 
+
+
+
+
     @Operation(
         summary = "Update job status",
         description = """
@@ -141,24 +147,24 @@ public class JobController {
         }
     )
     @ApiResponse(
-        responseCode = "200",
-        description = "Status update request accepted and procesed successfully",
-        content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
+            responseCode = "200",
+            description = "Status update request accepted and procesed successfully",
+            content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
     )
     @ApiResponse(
-        responseCode = "400",
-        description = "Invalid status value provided",
-        content = @Content(schema = @Schema(implementation = ApiError.class))
+            responseCode = "400",
+            description = "Invalid status value provided",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @ApiResponse(
-        responseCode = "404",
-        description = "Job not found with the specified ID",
-        content = @Content(schema = @Schema(implementation = ApiError.class))
+            responseCode = "404",
+            description = "Job not found with the specified ID",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @ApiResponse(
-        responseCode = "500",
-        description = "Internal server error occurred while processing status update",
-        content = @Content(schema = @Schema(implementation = ApiError.class))
+            responseCode = "500",
+            description = "Internal server error occurred while processing status update",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @PutMapping("/{master_name}/job/{id}/status/{status}")
     public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable("master_name") String master, @PathVariable String id, @PathVariable String status) {
@@ -167,8 +173,12 @@ public class JobController {
         return ResponseEntity.ok(dto);
     }
 
+
+
+
+
     @Operation(
-        summary = "List all jobs",
+        summary = "List all jobs for a specific lob",
         description = """
             Retrieves a paginated list of all jobs for a specific line of business.
             
@@ -204,6 +214,10 @@ public class JobController {
                 .getContent();
         return ResponseEntity.ok(content);
     }
+
+
+
+
 
     @Operation(
         summary = "List jobs by master",
