@@ -27,7 +27,7 @@ spring:
       ddl-auto: update
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/dis_insights
+    url: jdbc:postgresql://localhost:5433/dis_insights
     username: postgres
     password: postgres
 
@@ -121,7 +121,7 @@ spring:
     consumer:
       properties:
         spring.json.trusted.packages: com.salescode.dis.insights.kafka
-        spring.json.default.type: com.salescode.dis.insights.kafka.FileUpdateEvent
+        spring.json.default.type: com.salescode.dis.insights.kafka.FileProgressEvent
         spring.json.use.type.headers: false
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
