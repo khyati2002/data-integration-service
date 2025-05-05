@@ -78,7 +78,7 @@ public class FileStatusSchedulerTest {
     @Test
     void testUpdateApiBasedFileStatus_WithMatchingCounts_ShouldMarkAsCompleted() {
         // Arrange
-        when(fileRepository.findApiBasedFilesModifiedSince(any(Instant.class), eq(FileStatus.PENDING)))
+        when(fileRepository.findStaleApiBasedPendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
                 .thenReturn(List.of(fileWithMatchingCounts));
 
         // Act
@@ -94,7 +94,7 @@ public class FileStatusSchedulerTest {
     @Test
     void testUpdateApiBasedFileStatus_WithNonMatchingCounts_ShouldMarkAsFailed() {
         // Arrange
-        when(fileRepository.findApiBasedFilesModifiedSince(any(Instant.class), eq(FileStatus.PENDING)))
+        when(fileRepository.findStaleApiBasedPendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
                 .thenReturn(List.of(fileWithNonMatchingCounts));
 
         // Act
@@ -110,7 +110,7 @@ public class FileStatusSchedulerTest {
     @Test
     void testUpdateApiBasedFileStatus_WithMultipleFiles_ShouldProcessAll() {
         // Arrange
-        when(fileRepository.findApiBasedFilesModifiedSince(any(Instant.class), eq(FileStatus.PENDING)))
+        when(fileRepository.findStaleApiBasedPendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
                 .thenReturn(Arrays.asList(fileWithMatchingCounts, fileWithNonMatchingCounts));
 
         // Act
@@ -123,7 +123,7 @@ public class FileStatusSchedulerTest {
     @Test
     void testUpdateApiBasedFileStatus_WithNoFiles_ShouldNotCallFileService() {
         // Arrange
-        when(fileRepository.findApiBasedFilesModifiedSince(any(Instant.class), eq(FileStatus.PENDING)))
+        when(fileRepository.findStaleApiBasedPendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
                 .thenReturn(List.of());
 
         // Act

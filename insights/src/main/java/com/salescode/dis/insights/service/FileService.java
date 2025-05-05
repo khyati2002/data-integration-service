@@ -58,7 +58,7 @@ public class FileService {
         job.setTotalFileCount(job.getFiles().size());
         jobRepo.save(job);
         log.info("Registered new file {} under job {}", file.getId(), jobId);
-        return file;
+        return savedFile;
     }
 
     @Transactional(readOnly = true)
@@ -88,14 +88,16 @@ public class FileService {
             file.setConsumedSuccessCount(file.getConsumedSuccessCount() + progress.getConsumer().getSuccessCount());
             file.setServerFailCount(file.getServerFailCount() + progress.getConsumer().getServerFailCount());
             file.setLogicalFailCount(file.getLogicalFailCount() + progress.getConsumer().getLogicalFailCount());
-            file.setConsumedFailCount(file.getServerFailCount() + file.getLogicalFailCount());
+            file.setConsumedFailCount(
+                file.getConsumedFailCount() + progress.getConsumer().getServerFailCount() + progress.getConsumer().getLogicalFailCount()
+            );
         }
 
         if (progress.getPublisher() != null) {
             file.setPublishedSuccessCount(file.getPublishedSuccessCount() + progress.getPublisher().getSuccessCount());
             file.setPublishedFailCount(file.getPublishedFailCount() + progress.getPublisher().getFailCount());
             if(file.getIsApiBased()){
-                file.setTotalCount(file.getPublishedSuccessCount() + file.getPublishedFailCount());
+                file.setTotalCount(file.getTotalCount() + progress.getPublisher().getSuccessCount() + progress.getPublisher().getFailCount());
             }
         }
 

@@ -14,6 +14,14 @@ import java.util.List;
 public interface FileRepository extends JpaRepository<FileEntity, String> {
     Page<FileEntity> findByJobId(String jobId, Pageable pageable);
 
-    @Query("SELECT f FROM FileEntity f WHERE f.isApiBased = true AND f.lastModifiedTime > :cutoffTime AND (f.consumedStatus = :status OR f.publishedStatus = :status)")
-    List<FileEntity> findApiBasedFilesModifiedSince(@Param("cutoffTime") Instant cutoffTime, @Param("status") FileStatus status);
+    @Query("SELECT f FROM FileEntity f " +
+            "WHERE f.isApiBased = true " +
+            "  AND (f.consumedStatus = :status OR f.publishedStatus = :status) " +
+            "  AND f.lastModifiedTime < :staleCutoffTime " +
+            "  AND f.lastModifiedTime >= :tooOldCutoffTime")
+    List<FileEntity> findStaleApiBasedPendingFiles(
+            @Param("staleCutoffTime") Instant staleCutoffTime,
+            @Param("tooOldCutoffTime") Instant tooOldCutoffTime,
+            @Param("status") FileStatus status
+    );
 }

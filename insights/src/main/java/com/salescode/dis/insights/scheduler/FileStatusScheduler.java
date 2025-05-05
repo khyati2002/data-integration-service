@@ -7,6 +7,7 @@ import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,17 +21,34 @@ import java.util.List;
 @Slf4j
 public class FileStatusScheduler {
 
+    // Define constants for time window
+    @Value("${file-status-scheduler.stale-threshold-seconds:600}")
+    public int STALE_THRESHOLD_SECONDS;
+
+    @Value("${file-status-scheduler.too-old-threshold-seconds:900}")
+    public int TOO_OLD_THRESHOLD_SECONDS;
+
     private final FileRepository fileRepository;
     private final FileService fileService;
 
-    @Scheduled(fixedRate = 60000) // Run every 1 minute (60000 ms)
+    @Scheduled(fixedRateString = "${file-status-scheduler.rate-millis:60000}") // Run every 1 minute (60000 ms)
     @Transactional
     public void updateApiBasedFileStatus() {
         log.info("Starting scheduled update of API-based file statuses");
 
-        // Find API-based files modified in the last 10 minutes with PENDING status
-        Instant cutoffTime = Instant.now().minus(10, ChronoUnit.MINUTES);
-        List<FileEntity> pendingFiles = fileRepository.findApiBasedFilesModifiedSince(cutoffTime, FileStatus.PENDING);
+        // Define the time window for staleness
+        Instant staleCutoffTime = Instant.now().minus(STALE_THRESHOLD_SECONDS, ChronoUnit.SECONDS); // e.g., 10 mins ago
+        Instant tooOldCutoffTime = Instant.now().minus(TOO_OLD_THRESHOLD_SECONDS, ChronoUnit.SECONDS); // e.g., 15 mins ago
+
+        // Find API-based files that are PENDING and haven't been modified in the 10-15 min window
+        List<FileEntity> pendingFiles = fileRepository.findStaleApiBasedPendingFiles(staleCutoffTime, tooOldCutoffTime, FileStatus.PENDING);
+
+        if (pendingFiles.isEmpty()) {
+            log.info("No stale API-based files found in the {}-{} minute window.", STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
+            return;
+        }
+
+        log.warn("Found {} potentially stale API-based files (PENDING, modified between {}-{} mins ago). Marking as FAILED.", pendingFiles.size(), STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
 
         log.info("Found {} API-based files with PENDING status modified in the last 10 minutes", pendingFiles.size());
 

@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -28,7 +31,9 @@ public class FileProgressEventListener {
       In case of file, since it's already mapped to jobId, therefore in event jobId will be null.
       While on the other hand, In case of api, since we cannot register job beforehand, jobId should be sent inside event to create job if not there
      */
-    @KafkaListener(topics = "file-progress-updates", groupId = "file-progress-processor", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "file-progress-updates", groupId = "file-progress-processor", batch = "true", properties = {
+            ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=100"
+    })
     public void consumeProgressEvents(List<FileProgressEvent> events) {
         if (events == null || events.isEmpty()) {
             log.debug("Received empty or null event list. Skipping.");

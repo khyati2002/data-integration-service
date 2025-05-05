@@ -2,30 +2,24 @@ package com.salescode.dis.insights;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.salescode.dis.insights.dto.FileEntityRequestDto;
-import com.salescode.dis.insights.dto.FileEntityResponseDto;
-import com.salescode.dis.insights.dto.FileProgressRequest;
-import com.salescode.dis.insights.dto.FileStatusRequestDto;
-import com.salescode.dis.insights.dto.JobEntityRequestDto;
-import com.salescode.dis.insights.dto.JobEntityResponseDto;
+import com.salescode.dis.insights.dto.*;
+import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.enums.FileStatus;
 import com.salescode.dis.insights.enums.JobStatus;
 import com.salescode.dis.insights.repository.FileRepository;
+import com.salescode.dis.insights.repository.JobRepository;
 import com.salescode.dis.insights.service.FileService;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.awaitility.Awaitility;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
 
-import java.sql.Time;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -33,23 +27,25 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ActiveProfiles({"postgres", "dev", "debug"})
 class FileControllerTest {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private static final String LOB = "Retail";
     private static final String MASTER_NAME = "Master1";
     private static String createdJobId;
     private static String createdFileId;
     @Autowired
+    private TestRestTemplate restTemplate;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
     private FileRepository fileRepository;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private JobRepository jobRepository;
 
     @Test
     @Order(1)
@@ -184,7 +180,14 @@ class FileControllerTest {
                 createdFileId
         );
 
-        TimeUnit.SECONDS.sleep(10);
+        Awaitility.await()
+                .atMost(10, TimeUnit.SECONDS)
+                .pollInterval(1, TimeUnit.SECONDS)
+                .until(() -> {
+                    FileEntity file = fileService.get(createdFileId);
+                    return file.getConsumedSuccessCount() != null;
+                });
+
         assertEquals(fileService.get(createdFileId).getConsumedSuccessCount(), consumer.getSuccessCount());
         assertEquals(fileService.get(createdFileId).getConsumedFailCount(), consumer.getServerFailCount());
         assertEquals(fileService.get(createdFileId).getLogicalFailCount(), consumer.getLogicalFailCount());
@@ -308,4 +311,21 @@ class FileControllerTest {
 
         return dto;
     }
+
+    @AfterAll
+    void cleanUpAllCreatedEntities() {
+        if (createdFileId != null) {
+            try {
+                fileRepository.deleteById(createdFileId);
+            } catch (Exception ignored) {
+            }
+        }
+        if (createdJobId != null) {
+            try {
+                jobRepository.deleteById(createdJobId);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
 }

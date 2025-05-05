@@ -117,6 +117,7 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: 1
     consumer:
       properties:
         spring.json.trusted.packages: com.salescode.dis.insights.kafka

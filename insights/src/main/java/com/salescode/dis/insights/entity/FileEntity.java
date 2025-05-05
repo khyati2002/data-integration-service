@@ -56,23 +56,27 @@ public class FileEntity extends TimeAwareEntity {
     @Override
     protected void onCreate() {
         super.onCreate();
-        this.setConsumedStatus(FileStatus.PENDING);
-        this.setPublishedStatus(FileStatus.PENDING);
+        if (this.consumedStatus == null) {
+            this.consumedStatus = FileStatus.PENDING;
+        }
+        if (this.publishedStatus == null) {
+            this.publishedStatus = FileStatus.PENDING;
+        }
     }
 
     @Override
     protected void onUpdate() {
         super.onUpdate();
-        if(this.publishedStatus == FileStatus.COMPLETED || this.publishedStatus == FileStatus.FAILED){
+        if (this.publishedStatus == FileStatus.COMPLETED || this.publishedStatus == FileStatus.FAILED) {
             setEndTime(Instant.now());
-            if(getStartTime().toEpochMilli() == getEndTime().toEpochMilli()){
+            if (getStartTime().toEpochMilli() == getEndTime().toEpochMilli()) {
                 setPublisherThroughput((long) (this.publishedSuccessCount + this.getPublishedFailCount()));
             }
             setPublisherThroughput((this.publishedSuccessCount + this.getPublishedFailCount()) / (this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()));
         }
-        if(this.consumedStatus == FileStatus.COMPLETED || this.consumedStatus == FileStatus.FAILED){
+        if (this.consumedStatus == FileStatus.COMPLETED || this.consumedStatus == FileStatus.FAILED) {
             setEndTime(Instant.now());
-            if(getStartTime().toEpochMilli() == getEndTime().toEpochMilli()){
+            if (getStartTime().toEpochMilli() == getEndTime().toEpochMilli()) {
                 setConsumerThroughput((long) (this.consumedSuccessCount + this.getConsumedFailCount()));
             }
             setConsumerThroughput((this.consumedSuccessCount + this.getConsumedFailCount()) / (this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()));

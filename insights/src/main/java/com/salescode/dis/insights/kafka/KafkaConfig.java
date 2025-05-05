@@ -19,7 +19,7 @@ public class KafkaConfig {
     @Bean
     public NewTopic fileUpdatesTopic() {
         // Creates the topic if it doesn't exist, with 5 partitions and replication factor of 1
-        return TopicBuilder.name("file-updates")
+        return TopicBuilder.name("file-progress-updates")
                 .partitions(5)
                 .replicas(1)
                 .build();
