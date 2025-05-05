@@ -22,7 +22,7 @@ import java.util.List;
 public class FileStatusScheduler {
 
     // Define constants for time window
-    @Value("${file-status-scheduler.stale-threshold-seconds:600}")
+    @Value("${file-status-scheduler.stale-threshold-seconds:60}")
     public int STALE_THRESHOLD_SECONDS;
 
     @Value("${file-status-scheduler.too-old-threshold-seconds:900}")
@@ -31,7 +31,7 @@ public class FileStatusScheduler {
     private final FileRepository fileRepository;
     private final FileService fileService;
 
-    @Scheduled(fixedRateString = "${file-status-scheduler.rate-millis:60000}") // Run every 1 minute (60000 ms)
+    @Scheduled(fixedRateString = "${file-status-scheduler.rate-millis:10000}") // Run every 1 minute (60000 ms)
     @Transactional
     public void updateApiBasedFileStatus() {
         log.info("Starting scheduled update of API-based file statuses");

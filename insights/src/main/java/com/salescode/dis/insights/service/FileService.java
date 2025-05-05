@@ -134,7 +134,7 @@ public class FileService {
                 .count();
         job.setCompletedFiles((int) completed);
         job.setFailedFiles((int) failed);
-        if (completed!=0 && completed + failed == job.getTotalFileCount()) {
+        if ((completed!=0  || failed!=0) && completed + failed == job.getTotalFileCount()) {
             job.setStatus(failed > 0 ? JobStatus.FAILED : JobStatus.COMPLETED);
         }
         jobRepo.save(job);
