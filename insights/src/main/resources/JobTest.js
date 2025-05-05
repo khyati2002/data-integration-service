@@ -1,4 +1,5 @@
 // K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=html-report.html k6 run src/main/resources/JobTest.js
+// http://localhost:5665/ui/?endpoint=/
 
 import http from 'k6/http';
 import { check, group, sleep } from 'k6';
