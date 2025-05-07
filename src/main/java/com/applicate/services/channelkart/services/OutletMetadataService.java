@@ -1,6 +1,7 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.salescode.dim.jooq.generated.tables.pojos.OutletMetadata;
 import com.salescode.dim.jooq.generated.tables.records.CkOutletMetadataRecord;
 import org.slf4j.Logger;
@@ -51,8 +52,9 @@ public class OutletMetadataService extends AbstractCDMService<OutletMetadata> {
 	public Collection<OutletMetadata> batchSave(Collection<OutletMetadata> outletMetadataList) {
 		LOG.info("Size of list is " + outletMetadataList.size());
 		List<OutletMetadata> outletMetadata = new ArrayList<>(outletMetadataList);
-
 		List<List<OutletMetadata>> saveItemsList = getItemsToSaveList(outletMetadata);
+		saveItemsList.get(0).forEach(outlet -> outlet.setActiveStatus(ActiveStatus.ACTIVE));
+		saveItemsList.get(1).forEach(outlet -> outlet.setActiveStatus(ActiveStatus.ACTIVE));
 		if (!saveItemsList.get(0).isEmpty()) {
 			getDslContext().batchInsert(saveItemsList.get(0).stream().map(outlet -> getDslContext().newRecord(CK_OUTLET_METADATA, outlet)).collect(Collectors.toList())).execute();
 		}
