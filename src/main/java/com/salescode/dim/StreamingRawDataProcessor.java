@@ -16,6 +16,7 @@ import com.salescode.dim.etl.transformation.service.TransformerInfoRegistry;
 import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
+import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.zaxxer.hikari.HikariDataSource;
