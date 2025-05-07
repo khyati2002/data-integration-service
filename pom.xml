@@ -316,6 +316,24 @@ under the License.
 
         <plugins>
 
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.basedir}/src/main/resources/META-INF/git.properties</generateGitPropertiesFilename>
+                </configuration>
+            </plugin>
+
+
             <!-- Load external properties -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -330,6 +348,7 @@ under the License.
                         <configuration>
                             <files>
                                 <file>src/main/resources/application.properties</file>
+                                <file>src/main/resources/jenkins_application.properties</file>
                             </files>
                         </configuration>
                     </execution>
@@ -361,8 +380,8 @@ under the License.
                     </jdbc>
                     <generator>
                         <database>
-<!--                            <outputSchemaToDefault>true</outputSchemaToDefault>-->
-<!--                            <inputCatalog>${input.schema}</inputCatalog>-->
+                            <!--                            <outputSchemaToDefault>true</outputSchemaToDefault>-->
+                            <!--                            <inputCatalog>${input.schema}</inputCatalog>-->
 
                             <!-- Using MySQL dialect -->
                             <name>org.jooq.meta.mysql.MySQLDatabase</name>
@@ -544,5 +563,7 @@ under the License.
 
             </plugins>
         </pluginManagement>
+
+
     </build>
 </project>
