@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +27,17 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
             "LEFT JOIN integration_file igf ON igj.id = igf.job_id " +
             "WHERE (COALESCE(:lob) IS NULL OR igj.lob IN (:lob)) " +
             "AND (COALESCE(:status) IS NULL OR igj.status IN (:status)) " +
-            "AND (COALESCE(:master) IS NULL OR igj.master IN (:master))",
+            "AND (COALESCE(:master) IS NULL OR igj.master IN (:master)) " +
+            "AND (COALESCE(:startTime) IS NULL OR igj.last_modified_time >= :startTime) " +
+            "AND (COALESCE(:endTime) IS NULL OR igj.last_modified_time <= :endTime)",
             nativeQuery = true)
     List<Map<String, Object>> getLobSummary(
             @Param("lob") List<String> lob,
             @Param("status") List<String> status,
-            @Param("master") List<String> master);
+            @Param("master") List<String> master,
+            @Param("startTime") Timestamp startTime,
+            @Param("endTime") Timestamp endTime);
+
 
 
 
@@ -42,27 +49,23 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
 //            nativeQuery = true)
 //    List<Map<String, Object>> getLobSummaryAll();
 
-    @Query(
-            value = """
-        SELECT\s
-            lob,
-            COUNT(*) AS total,
-            COUNT(DISTINCT master) AS distinct_master_count,
-            SUM(CASE WHEN status = 'COMPLETED' THEN 1 ELSE 0 END) AS COMPLETED,
-            SUM(CASE WHEN status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING,
-            SUM(CASE WHEN status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED
-        FROM integration_job
-        GROUP BY lob
-       \s""",
-            nativeQuery = true
-    )
+    @Query("SELECT j.lob AS lob, COUNT(j) AS total, COUNT(DISTINCT j.master) AS distinct_master_count, " +
+            "SUM(CASE WHEN j.status = 'COMPLETED' THEN 1 ELSE 0 END) AS COMPLETED, " +
+            "SUM(CASE WHEN j.status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING, " +
+            "SUM(CASE WHEN j.status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED " +
+            "FROM JobEntity j " +
+            "GROUP BY j.lob")
     List<Map<String,Object>> getLobDetailsAll();
 
     @Query("SELECT j.lob AS lob, COUNT(j) AS total, COUNT(DISTINCT j.master) AS distinct_master_count, " +
             "SUM(CASE WHEN j.status = 'COMPLETED' THEN 1 ELSE 0 END) AS COMPLETED, " +
             "SUM(CASE WHEN j.status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING, " +
             "SUM(CASE WHEN j.status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED " +
-            "FROM JobEntity j WHERE j.lob IN :lob GROUP BY j.lob")
-    List<Map<String, Object>> getLobDetails(@Param("lob") List<String> lob);
+            "FROM JobEntity j " +
+            "WHERE j.lob IN :lob " +
+            "GROUP BY j.lob")
+    List<Map<String, Object>> getLobDetails(
+            @Param("lob") List<String> lob
+    );
 
 }

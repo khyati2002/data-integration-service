@@ -11,14 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,12 +92,13 @@ public class IntegrationSummaryService {
         List<Map<String, Object>> resp;
 
         if (lobList == null || lobList.isEmpty()) {
-            resp = jobRepository.getLobDetailsAll(); // returns List<Map<String, Object>>
+            resp = jobRepository.getLobDetailsAll(); // optionally modify to support date filter
         } else {
-            resp = jobRepository.getLobDetails(lobList); // returns List<Map<String, Object>>
+            resp = jobRepository.getLobDetails(lobList); // optionally modify to support date filter
         }
 
-        Map<String, Map<String, Object>> lobSummary = (Map<String, Map<String, Object>>) getLobSummary(lobList,new ArrayList<>(),new ArrayList<>());
+        Map<String, Map<String, Object>> lobSummary = (Map<String, Map<String, Object>>)
+                getLobSummary(lobList, Collections.emptyList(), Collections.emptyList(),null,null);
 
         Map<String, Map<String, Object>> result = new HashMap<>();
 
@@ -128,13 +130,8 @@ public class IntegrationSummaryService {
                     jobCount++;
                 }
 
-                if (jobCount > 0) {
-                    detailsMap.put("consumed_throughput", totalConsumerThroughput / jobCount);
-                    detailsMap.put("published_throughput", totalPublisherThroughput / jobCount);
-                } else {
-                    detailsMap.put("consumed_throughput", 0.0);
-                    detailsMap.put("published_throughput", 0.0);
-                }
+                detailsMap.put("consumed_throughput", jobCount > 0 ? totalConsumerThroughput / jobCount : 0.0);
+                detailsMap.put("published_throughput", jobCount > 0 ? totalPublisherThroughput / jobCount : 0.0);
             }
 
             Map<String, Object> lobMap = new HashMap<>();
@@ -147,15 +144,15 @@ public class IntegrationSummaryService {
     }
 
 
-    public Object getLobSummary(List<String> lobList,List<String> status,List<String> master) {
+    public Object getLobSummary(List<String> lobList, List<String> status, List<String> master,LocalDateTime startTime,LocalDateTime endTime) {
         List<Map<String, Object>> resp;
 
-//        if (lobList == null || lobList.isEmpty()) {
-//            resp = jobRepository.getLobSummaryAll();
-//        } else {
-            resp = jobRepository.getLobSummary(lobList,status,master);
+        // Ensure the startDate and endDate are converted to Timestamp if they are not null
+        Timestamp startTimestamp = (startTime != null) ? Timestamp.valueOf(startTime) : null;
+        Timestamp endTimestamp = (endTime != null) ? Timestamp.valueOf(endTime) : null;
 
-     //   }
+        // Call the repository method
+        resp = jobRepository.getLobSummary(lobList, status, master,startTimestamp,endTimestamp);
 
         // Using Stream API to aggregate data
         Map<String, Map<String, Object>> aggregatedData = resp.stream()
@@ -176,11 +173,11 @@ public class IntegrationSummaryService {
                                     jobData.put("status", record.get("status"));
                                     jobData.put("master_name", record.get("master"));
 
-                                    Instant startTime = (Instant) record.get("start_time");
-                                    Instant endTime = (Instant) record.get("end_time");
+                                    Instant startTime_job = (Instant) record.get("start_time");
+                                    Instant endTime_job = (Instant) record.get("end_time");
 
-                                    jobData.put("startTime", startTime != null ? startTime.toString() : null);
-                                    jobData.put("endTime", endTime != null ? endTime.toString() : null);
+                                    jobData.put("startTime", startTime_job != null ? startTime_job.toString() : null);
+                                    jobData.put("endTime", endTime_job != null ? endTime_job.toString() : null);
 
                                     // Add throughput tracking
                                     jobData.put("consumer_throughput_sum", getSafeDouble(record, "consumer_throughput"));
@@ -222,8 +219,11 @@ public class IntegrationSummaryService {
                     double publisherSum = getSafeDouble(jobData, "publisher_throughput_sum");
                     int count = (int) jobData.getOrDefault("throughput_count", 1);
 
-                    jobData.put("avg_consumer_throughput", count > 0 ? consumerSum / count : 0.0);
-                    jobData.put("avg_publisher_throughput", count > 0 ? publisherSum / count : 0.0);
+                    jobData.put("avg_consumer_throughput",
+                            count > 0 ? BigDecimal.valueOf(consumerSum / count).setScale(2, RoundingMode.HALF_UP).doubleValue() : 0.0);
+
+                    jobData.put("avg_publisher_throughput",
+                            count > 0 ? BigDecimal.valueOf(publisherSum / count).setScale(2, RoundingMode.HALF_UP).doubleValue() : 0.0);
 
                     // Remove intermediate sum and count if not needed
                     jobData.remove("consumer_throughput_sum");
@@ -235,6 +235,7 @@ public class IntegrationSummaryService {
 
         return aggregatedData;
     }
+
 
     private double getSafeDouble(Map<String, Object> record, String key) {
         Object val = record.get(key);

@@ -3,9 +3,11 @@ package com.salescode.dis.insights.controller;
 import com.salescode.dis.insights.dto.LobSummaryDTO;
 import com.salescode.dis.insights.service.IntegrationSummaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +69,8 @@ public class IntegrationSummaryController {
 
     @GetMapping("/lob-summary")
     public ResponseEntity<Object> getLobSummary(
-            @RequestParam(required = false) List<String> lob,@RequestParam(required = false) List<String> status,@RequestParam(required = false) List<String> master) {
+            @RequestParam(required = false) List<String> lob,@RequestParam(required = false) List<String> status,@RequestParam(required = false) List<String> master,@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
         if (lob != null && lob.size() == 1) {
             lob = Collections.singletonList(lob.get(0));
         }
@@ -77,7 +80,7 @@ public class IntegrationSummaryController {
         if(master!=null && master.size()==1){
             master = Collections.singletonList(master.get(0));
         }
-        return ResponseEntity.ok(integrationSummaryService.getLobSummary(lob,status,master));
+        return ResponseEntity.ok(integrationSummaryService.getLobSummary(lob,status,master,startTime,endTime));
     }
 
     @GetMapping("/lob-summary-only")

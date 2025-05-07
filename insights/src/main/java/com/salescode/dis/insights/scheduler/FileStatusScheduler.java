@@ -31,7 +31,7 @@ public class FileStatusScheduler {
     private final FileRepository fileRepository;
     private final FileService fileService;
 
-    @Scheduled(fixedRateString = "${file-status-scheduler.rate-millis:10000}") // Run every 1 minute (60000 ms)
+    @Scheduled(fixedRateString = "${file-status-scheduler.rate-millis:60000}") // Run every 1 minute (60000 ms)
     @Transactional
     public void updateApiBasedFileStatus() {
         log.info("Starting scheduled update of API-based file statuses");
