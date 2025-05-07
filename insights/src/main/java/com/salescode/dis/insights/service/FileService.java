@@ -115,7 +115,8 @@ public class FileService {
         }
         log.info("File {} status updated to consumed: {}, published: {}",fileId, status.getConsumedStatus(), status.getPublishedStatus());
         recalcJobMetrics(file.getJob());
-        return fileRepo.save(file);
+//        return fileRepo.save(file);
+        return file;
     }
 
     @Transactional(readOnly = true)

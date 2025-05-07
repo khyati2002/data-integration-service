@@ -36,8 +36,8 @@ public class FileEntity extends TimeAwareEntity {
     @Builder.Default
     private Integer logicalFailCount = 0;
 
-    private Long publisherThroughput; // - total records / time (at completion - success or failure) - calculate on api call
-    private Long consumerThroughput; // - total records / time (at completion - success or failure) - calculate on api call
+    private Double publisherThroughput; // - total records / time (at completion - success or failure) - calculate on api call
+    private Double consumerThroughput; // - total records / time (at completion - success or failure) - calculate on api call
 
     @Enumerated(EnumType.STRING)
     private FileStatus publishedStatus;
@@ -68,18 +68,23 @@ public class FileEntity extends TimeAwareEntity {
     protected void onUpdate() {
         super.onUpdate();
         if (this.publishedStatus == FileStatus.COMPLETED || this.publishedStatus == FileStatus.FAILED) {
-            setEndTime(Instant.now());
-            if (getStartTime().toEpochMilli() == getEndTime().toEpochMilli()) {
-                setPublisherThroughput((long) (this.publishedSuccessCount + this.getPublishedFailCount()));
-            }
-            setPublisherThroughput((this.publishedSuccessCount + this.getPublishedFailCount()) / (this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()));
+                setEndTime(Instant.now());
+                double timeTaken = this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond();
+                double totalPublished = this.publishedSuccessCount + this.getPublishedFailCount();
+                if (getStartTime().toEpochMilli() == getEndTime().toEpochMilli()) {
+                    setPublisherThroughput(totalPublished);
+                }
+                setPublisherThroughput(totalPublished / timeTaken);
         }
         if (this.consumedStatus == FileStatus.COMPLETED || this.consumedStatus == FileStatus.FAILED) {
-            setEndTime(Instant.now());
-            if (getStartTime().toEpochMilli() == getEndTime().toEpochMilli()) {
-                setConsumerThroughput((long) (this.consumedSuccessCount + this.getConsumedFailCount()));
-            }
-            setConsumerThroughput((this.consumedSuccessCount + this.getConsumedFailCount()) / (this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond()));
+                setEndTime(Instant.now());
+                double timeTaken = this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond();
+                double totalConsumed = this.consumedSuccessCount + this.getConsumedFailCount();
+                if (getStartTime().toEpochMilli() == getEndTime().toEpochMilli()) {
+                    setConsumerThroughput(totalConsumed);
+                }
+                setConsumerThroughput(totalConsumed / timeTaken);
         }
+
     }
 }
