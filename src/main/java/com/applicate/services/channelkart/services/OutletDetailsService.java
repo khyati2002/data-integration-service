@@ -254,7 +254,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     public Collection<OutletDetails> batchSave(Collection<OutletDetails> outletDetailsList){
         LOG.info("Size of list is "  + outletDetailsList.size());
         List<OutletDetails> outletDetails = new ArrayList<>(outletDetailsList);
-        LOG.info("Pre Batch Save Called with size " + outletDetails.size());
+        //LOG.info("Pre Batch Save Called with size " + outletDetails.size());
         Map<String,User> savedUserList = preBatchSave(outletDetails);
         List<List<OutletDetails>> saveItemsList = getItemsToSaveList(outletDetails);
         if (!saveItemsList.get(0).isEmpty()) {

@@ -98,7 +98,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 
         @Override
         public void write(Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>> value, Context context) throws IOException {
-            LOG.info("Write method called with value: {}", value);
+          //  LOG.info("Write method called with value: {}", value);
             try {
                 batchBuffer.add(value);
                 long currentTime = System.currentTimeMillis();
@@ -113,7 +113,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 
         @Override
         public void flush(boolean endOfInput) throws IOException {
-            LOG.info("Flushing {} records into sink...", batchBuffer.size());
+          //  LOG.info("Flushing {} records into sink...", batchBuffer.size());
             if (!batchBuffer.isEmpty()) {
                 try {
                     Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> consolidatedModels = new HashMap<>();
@@ -136,7 +136,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             service.batchSave(entry.getValue());
                             if(!entry.getKey().getSimpleName().equals(User.class.getSimpleName())) {
                                 for (CommonDataModel model : entry.getValue()) {
-                                    LOG.info("Operation performed is " + model.getOperationPerformed());
+                                 //   LOG.info("Operation performed is " + model.getOperationPerformed());
                                     if (model.getOperationPerformed() != null && !model.getChanges().isEmpty()) {
                                         StreamingRawData rawData = modelToRawDataMap.get(model);
                                         eventPublisher.publishEventAsync(
@@ -152,7 +152,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             }
                //            saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
                         } catch (Exception batchEx) {
-                            LOG.error("Batch save failed. Falling back to individual saves.");
+                 //           LOG.error("Batch save failed. Falling back to individual saves.");
                             for (CommonDataModel model : entry.getValue()) {
                                 try {
                                     service.batchSave(List.of(model));
@@ -212,7 +212,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 //            if (connection != null) {
 //                connection.close();
 //            }
-            LOG.info("Closed connection successfully");
+ //           LOG.info("Closed connection successfully");
         }
     }
 }

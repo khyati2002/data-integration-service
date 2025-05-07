@@ -161,7 +161,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                     // Handle success case
                 }
             } catch (Exception e) {
-                logger.error("Processing failed", e);
+             //   logger.error("Processing failed", e);
                 streamingRawData.setStatus("Failure");
                 resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap())));
             }
@@ -178,7 +178,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
             List<CommonDataModel> transformedData = dataTransformationService.transformData(transformerId, entityClass, streamingRawData.getFeatures()
                     .get(0));
             long pstartTransform = System.currentTimeMillis();
-            logger.info("Time to transform single record {}", pstartTransform - pstart);
+          //  logger.info("Time to transform single record {}", pstartTransform - pstart);
             for (CommonDataModel cdm : transformedData) {
                 PreProcessOperationResult preProcessOperationResult = preProcessPipelineService.preProcessPipeline(cdm, transformerInfo.getPreprocessValidationExcludeGroup());
 
@@ -190,10 +190,10 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 }
             }
         } catch (DataTransformationService.TransformationException e) {
-            logger.info("Transformation Exception ", e);
+          //  logger.info("Transformation Exception ", e);
             errorList.add(TRANSFORMATION_ERROR + e.getMessage());
         } catch (Exception e) {
-            logger.info("Transformation Exception ", e);
+           // logger.info("Transformation Exception ", e);
             errorList.add("Unexpected error: " + e.getMessage());
         }
     }
