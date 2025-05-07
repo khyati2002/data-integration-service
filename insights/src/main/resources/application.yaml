@@ -27,7 +27,7 @@ spring:
       ddl-auto: update
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/dis_insights
+    url: jdbc:postgresql://localhost:5432/dis_insights
     username: postgres
     password: postgres
 
