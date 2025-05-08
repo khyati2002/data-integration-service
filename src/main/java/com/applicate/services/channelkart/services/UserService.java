@@ -145,7 +145,7 @@ public class UserService extends AbstractCDMService<User> {
                                             user.getLocationHierarchy() :
                                             null
                             );
-                       //     hm.setChanged((byte) 1);
+                            hm.setChanged((byte) 1);
                             return hm;
                         })
                         .collect(Collectors.toList());
@@ -277,7 +277,7 @@ public class UserService extends AbstractCDMService<User> {
                 user.setVersion(0);
                 user.setId(UUID.randomUUID().toString());
                 user.setOperationPerformed(ActionType.INSERT);
-              //  user.setChanged((byte) 1);
+                user.setChanged((byte) 1);
                 itemsToInsert.add(user);
 
             } else {
@@ -288,12 +288,12 @@ public class UserService extends AbstractCDMService<User> {
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
                     user.setChanges(CdmDiffUtil.getChanges(user,savedUser));
                     user.setOperationPerformed(ActionType.UPDATE);
-                   // user.setChanged((byte) 1);
+                    user.setChanged((byte) 1);
                     itemsToUpdate.add(user);
                 } else {
                     user.setId(savedList.get(user.getLoginid()).getId());
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
-                  //  user.setChanged((byte) 1);
+                    user.setChanged((byte) 1);
                 }
             }
         }
@@ -320,7 +320,7 @@ public class UserService extends AbstractCDMService<User> {
                     saveItemsList.get(1).stream()
                             .map(user -> {
                                 CkUserRecord record = getDslContext().newRecord(CK_USER, user);
-                                record.changed(CK_USER.ID, false); // Avoid updating primary key
+                              //  record.changed(CK_USER.ID, false); // Avoid updating primary key
                                 return record;
                             })
                             .collect(Collectors.toList())

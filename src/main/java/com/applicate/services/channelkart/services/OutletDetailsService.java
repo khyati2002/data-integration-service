@@ -224,7 +224,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             if (savedList.get(outlet.getOutletcode()) == null) {
                 outlet.setVersion(0);
                 outlet.setId(UUID.randomUUID().toString());
-             //   outlet.setChanged((byte) 1);
+                outlet.setChanged((byte) 1);
                 itemsToInsert.add(outlet);
                 outlet.setOperationPerformed(ActionType.INSERT);
             } else {
@@ -238,7 +238,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 if (!Objects.equals(outlet.getHash(), existingOutlet.getHash())) {
                     outlet.setChanges(CdmDiffUtil.getChanges(outlet,existingOutlet));
                     outlet.setOperationPerformed(ActionType.UPDATE);
-//                    outlet.setChanged((byte) 1);
+                    outlet.setChanged((byte) 1);
                     itemsToUpdate.add(outlet);
                 }
             }
@@ -269,7 +269,6 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                     saveItemsList.get(1).stream()
                             .map(outlet -> {
                                 CkOutletDetailsRecord record = getDslContext().newRecord(CK_OUTLET_DETAILS, outlet);
-                                record.changed(CK_USER.ID, false); // Avoid updating primary key
                                 return record;
                             })
                             .collect(Collectors.toList())
