@@ -2,6 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.models.enums.RoleName;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
@@ -63,10 +64,10 @@ public class UserService extends AbstractCDMService<User> {
         com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
-       if(user == null){
-           return null;
-       }
-      return User.of(user);
+        if(user == null){
+            return null;
+        }
+        return User.of(user);
     }
 
 
@@ -121,7 +122,22 @@ public class UserService extends AbstractCDMService<User> {
                 user.setNormalizedHierarchy(getNormalizedHierarchy(user.getHierarchy()));
                 // Find existing hierarchies in the database
                 List<HierarchyMetadata> existingHierarchies = hierarchyMetadataService.findByHierarchyIn(hierarchyStr);
+                List<HierarchyMetadata> hierarchiesToUpdate = new ArrayList<>();
+                for (HierarchyMetadata existingHierarchy : existingHierarchies) {
+                    if (Objects.equals(existingHierarchy.getLocationHierarchy(), user.getLocationHierarchy()) && existingHierarchy.getActiveStatus() == user.getActiveStatus()) {
 
+                    }
+                    else {
+                        if (!Objects.equals(existingHierarchy.getLocationHierarchy(), user.getLocationHierarchy())) {
+                            existingHierarchy.setLocationHierarchy(user.getLocationHierarchy());
+                        }
+                        if (existingHierarchy.getActiveStatus() != user.getActiveStatus()) {
+                            existingHierarchy.setActiveStatus(user.getActiveStatus());
+                            existingHierarchy.setActiveStatusReason(user.getActiveStatusReason());
+                        }
+                        hierarchiesToUpdate.add(existingHierarchy);
+                    }
+                }
                 // Determine which hierarchies need to be created
                 Set<String> existingHierarchyStrings = existingHierarchies.stream()
                         .map(HierarchyMetadata::getHierarchy)
@@ -134,7 +150,7 @@ public class UserService extends AbstractCDMService<User> {
                             HierarchyMetadata hm = new HierarchyMetadata();
                             hm.setId(UUID.randomUUID().toString());
                             hm.setHierarchy(hStr);
-
+                            hm.setActiveStatus(user.getActiveStatus());
                             // Set immediate parent as the comma-separated list of ALL hierarchies
                             String immediateParent = hierarchyStr.stream()
                                     .collect(Collectors.joining(","));
@@ -150,6 +166,13 @@ public class UserService extends AbstractCDMService<User> {
                         })
                         .collect(Collectors.toList());
 
+                if (!hierarchiesToUpdate.isEmpty()) {
+                    getDslContext().batchUpdate(
+                            hierarchiesToUpdate.stream()
+                                    .map(hierarchyMetadata -> getDslContext().newRecord(CK_HIERARCHY_METADATA, hierarchyMetadata)) // Convert to jOOQ Records
+                                    .collect(Collectors.toList())
+                    ).execute();
+                }
                 // Combine existing and new hierarchies
                 List<HierarchyMetadata> allHierarchies = new ArrayList<>(existingHierarchies);
                 allHierarchies.addAll(newHierarchies);
@@ -277,7 +300,7 @@ public class UserService extends AbstractCDMService<User> {
                 user.setVersion(0);
                 user.setId(UUID.randomUUID().toString());
                 user.setOperationPerformed(ActionType.INSERT);
-                user.setChanged((byte) 1);
+                user.setChanged((byte) 0);
                 itemsToInsert.add(user);
 
             } else {
@@ -320,7 +343,7 @@ public class UserService extends AbstractCDMService<User> {
                     saveItemsList.get(1).stream()
                             .map(user -> {
                                 CkUserRecord record = getDslContext().newRecord(CK_USER, user);
-                              //  record.changed(CK_USER.ID, false); // Avoid updating primary key
+                                record.changed(CK_USER.ID, false); // Avoid updating primary key
                                 return record;
                             })
                             .collect(Collectors.toList())
@@ -437,7 +460,7 @@ public class UserService extends AbstractCDMService<User> {
         try {
             return normalizedHierarchy.replaceAll(exludedCharactors, "");
         } catch (Exception e) {
-          //  logger.error("Exception happend while removing special charactors {} in normalized hierarchy {}",exludedCharactors,normalizedHierarchy);
+            //  logger.error("Exception happend while removing special charactors {} in normalized hierarchy {}",exludedCharactors,normalizedHierarchy);
             return normalizedHierarchy;
         }
     }
