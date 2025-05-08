@@ -10,6 +10,7 @@ import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
 import com.salescode.dim.jooq.impl.User;
+import com.salescode.dim.kafka.InsightsPublisher;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.salescode.dim.utils.EventListenerDTO;
 import com.zaxxer.hikari.HikariDataSource;
@@ -54,7 +55,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 
     public JooqDatabaseBatchSink(Properties dbProperties) {
         this.properties = dbProperties;
-        this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "5"));
+        this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "100"));
         this.batchIntervalMs = Long.parseLong(dbProperties.getProperty("batch.interval.ms", "20000"));
     }
 
@@ -75,34 +76,13 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         private final int batchSize;
         private final long batchIntervalMs;
         private final String topicName;
+        private final String insightsTopicName;
         public static EventPublisher eventPublisher;
+        public static InsightsPublisher insightsPublisher;
         private long lastBatchTime;
         private transient ServiceLocator serviceLocator;
-        private final Map<String, FileProgress> fileProgressMap;
         private final String baseUrl;
         private final ObjectMapper objectMapper;
-
-        // Add this inner class to track progress
-        private static class FileProgress {
-            private int successCount;
-            private int failCount;
-
-            public void incrementSuccess() {
-                successCount++;
-            }
-
-            public void incrementFail() {
-                failCount++;
-            }
-
-            public int getSuccessCount() {
-                return successCount;
-            }
-
-            public int getFailCount() {
-                return failCount;
-            }
-        }
 
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
             System.setProperty("sun.net.maxDatagramSockets","4096");
@@ -116,7 +96,6 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             CacheManager.getInstance(properties);
             this.serviceLocator = ServiceLocator.getInstance(dslContext);
             serviceLocator.registerSubClasses();
-            this.fileProgressMap = new ConcurrentHashMap<>();
             this.baseUrl = properties.getProperty("api.base.url");
             this.objectMapper = new ObjectMapper();
 
@@ -125,8 +104,16 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             kafkaProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
             kafkaProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EventListenerDTOSerializer.class.getName());
             kafkaProps.put(ProducerConfig.ACKS_CONFIG, "1");
+
+            Properties kafkaInsightsProps = new Properties();
+            kafkaInsightsProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
+            kafkaInsightsProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+            kafkaInsightsProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, FileProgressEventSerializer.class.getName());
+            kafkaInsightsProps.put(ProducerConfig.ACKS_CONFIG, "1");
             this.topicName = DataStreamJob.getLobEventTopic(properties);
+            this.insightsTopicName = properties.getProperty("publishConsumedMetrics.topic");
             this.eventPublisher = new EventPublisher(kafkaProps, topicName, mailboxExecutor);
+            this.insightsPublisher = new InsightsPublisher(kafkaInsightsProps, insightsTopicName, mailboxExecutor);
         }
 
         public static EventPublisher getEventPublisher(){
@@ -138,10 +125,6 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             LOG.info("Write method called with value: {}", value);
             try {
                 String fileId = value.f0.getFileId();
-                if (fileId != null && !fileId.isEmpty()) {
-                    // Initialize progress tracker for this fileId if not exists
-                    fileProgressMap.putIfAbsent(fileId, new FileProgress());
-                }
                 batchBuffer.add(value);
                 long currentTime = System.currentTimeMillis();
                 if (batchBuffer.size() >= batchSize) {
@@ -176,14 +159,11 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                         CommonDataModelService service = ServiceLocator.lookup(entry.getKey());
                         try {
                             service.batchSave(entry.getValue());
-                            if(!entry.getKey().getSimpleName().equals(User.class.getSimpleName())) {
+
                                 for (CommonDataModel model : entry.getValue()) {
                                     LOG.info("Operation performed is " + model.getOperationPerformed());
                                     StreamingRawData rawData = modelToRawDataMap.get(model);
                                     String fileId = rawData.getFileId();
-                                    if (fileId != null && !fileId.isEmpty()) {
-                                        fileProgressMap.get(fileId).incrementSuccess();
-                                    }
                                     if (model.getOperationPerformed() != null && !model.getChanges().isEmpty()) {
                                         eventPublisher.publishEventAsync(
                                                 rawData.getRequestId(),
@@ -195,8 +175,21 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                         );
                                     }
                                 }
-                            }
+
                             saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
+                            for (CommonDataModel model : entry.getValue()) {
+                                StreamingRawData rawData = modelToRawDataMap.get(model);
+                                insightsPublisher.publishEventAsync(
+                                        rawData.getRequestId(),
+                                        rawData.getFileId(),
+                                        rawData.getGroupId(),
+                                        rawData.getLob(),
+                                        entry.getKey().getSimpleName(),
+                                        "",
+                                        1,
+                                        0
+                                );
+                            }
                         } catch (Exception batchEx) {
                             LOG.error("Batch save failed. Falling back to individual saves.");
                             for (CommonDataModel model : entry.getValue()) {
@@ -204,10 +197,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     service.batchSave(List.of(model));
                                     StreamingRawData rawData = modelToRawDataMap.get(model);
                                     String fileId = rawData.getFileId();
-                                    // Track success
-                                    if (fileId != null && !fileId.isEmpty()) {
-                                        fileProgressMap.get(fileId).incrementSuccess();
-                                    }
+
                                     if (model.getOperationPerformed() != null) {
                                         eventPublisher.publishEventAsync(
                                                 rawData.getRequestId(),
@@ -219,28 +209,35 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                         );
                                     }
                                     saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
+                                    insightsPublisher.publishEventAsync(
+                                            rawData.getRequestId(),
+                                            rawData.getFileId(),
+                                            rawData.getGroupId(),
+                                            rawData.getLob(),
+                                            entry.getKey().getSimpleName(),
+                                            "",
+                                            1,
+                                            0
+                                    );
                                 } catch (Exception individualEx) {
                                     StreamingRawData rawData = modelToRawDataMap.get(model);
                                     String fileId = rawData.getFileId();
-                                    if (fileId != null && !fileId.isEmpty()) {
-                                        fileProgressMap.get(fileId).incrementFail();
-                                    }
                                     saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
+                                    insightsPublisher.publishEventAsync(
+                                            rawData.getRequestId(),
+                                            rawData.getFileId(),
+                                            rawData.getGroupId(),
+                                            rawData.getLob(),
+                                            entry.getKey().getSimpleName(),
+                                            individualEx.getMessage(),
+                                            0,
+                                            1
+                                    );
                                 }
                             }
                         }
                     }
 
-                    for (String fileId : fileProgressMap.keySet()) {
-                        updateFileProgress(
-                                fileId,
-                                "OutletDetails",
-                                getLobFromBatch(batchBuffer),
-                                getJobIdFromBatch(batchBuffer)
-                        );
-                    }
-
-                    fileProgressMap.clear();
                     batchBuffer.clear();
                 } catch (Exception e) {
                     throw new IOException("Batch processing failed", e);
@@ -280,92 +277,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 //                connection.close();
 //            }
             LOG.info("Closed connection successfully");
-        }
 
-        private String getEntityTypeFromBatch(Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> consolidatedModels) {
-            // Get the first entity type from the batch
-            if (!consolidatedModels.isEmpty()) {
-                return consolidatedModels.keySet().iterator().next().getSimpleName().toLowerCase();
-            }
-            return "unknown";
-        }
-
-        private String getLobFromBatch(List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> buffer) {
-            if (!buffer.isEmpty()) {
-                return buffer.get(0).f0.getLob();
-            }
-            return "unknown";
-        }
-
-        private String getJobIdFromBatch(List<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> buffer) {
-            if (!buffer.isEmpty()) {
-                return buffer.get(0).f0.getGroupId();
-            }
-            return "unknown";
-        }
-
-        private void updateFileProgress(String fileId, String entity, String lob, String jobId) {
-            if (fileId == null || fileId.isEmpty()) {
-                LOG.warn("Skipping update for empty fileId");
-                return;
-            }
-
-            FileProgress progress = fileProgressMap.get(fileId);
-            if (progress == null) {
-                LOG.warn("No progress data found for fileId: {}", fileId);
-                return;
-            }
-
-            try {
-                // Construct the URL
-                String url = String.format("%s/api/%s/master/%s/job/%s/unit/%s/update",
-                        "http://localhost:8081", lob, entity, jobId, fileId);
-
-                // Prepare the request body
-                Map<String, Object> requestBody = new HashMap<>();
-                Map<String, Object> progressMap = new HashMap<>();
-                progressMap.put("consumerSuccessCount", progress.getSuccessCount());
-                progressMap.put("consumerFailCount", progress.getFailCount());
-                requestBody.put("progress", progressMap);
-
-                String jsonBody = objectMapper.writeValueAsString(requestBody);
-
-                // Make the HTTP request
-                URL apiUrl = new URL(url);
-                HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
-                connection.setRequestMethod("PUT");
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setDoOutput(true);
-
-                try (OutputStream os = connection.getOutputStream()) {
-                    byte[] input = jsonBody.getBytes("utf-8");
-                    os.write(input, 0, input.length);
-                }
-
-                int responseCode = connection.getResponseCode();
-                if (responseCode >= 200 && responseCode < 300) {
-                    LOG.info("Successfully updated progress for fileId: {}, Success: {}, Fail: {}",
-                            fileId, progress.getSuccessCount(), progress.getFailCount());
-                } if (responseCode >= 200 && responseCode < 300) {
-                    LOG.info("Successfully updated progress...");
-                } else {
-                    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
-                        String responseLine;
-                        StringBuilder response = new StringBuilder();
-                        while ((responseLine = br.readLine()) != null) {
-                            response.append(responseLine.trim());
-                        }
-                        LOG.error("Failed to update progress for fileId: {}, response code: {}, message: {}",
-                                fileId, responseCode, response.toString());
-                    }
-                }
-
-
-                connection.disconnect();
-
-            } catch (Exception e) {
-                LOG.error("Error updating file progress for fileId: " + fileId, e);
-            }
         }
     }
 }

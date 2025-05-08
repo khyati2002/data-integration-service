@@ -14,6 +14,7 @@ import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.jooq.impl.OutletDetails;
+import com.salescode.dim.kafka.FileProgressEvent;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -26,6 +27,9 @@ import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.functions.async.ResultFuture;
 import org.apache.flink.streaming.api.functions.async.RichAsyncFunction;
 import org.apache.flink.util.Collector;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +37,8 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.salescode.dim.kafka.FileProgressEvent.createInsightsConsumerDto;
 
 public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawData, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
     private static final long serialVersionUID = -3351413046175753755L;
@@ -44,7 +50,8 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
     private transient EntityUtils entityUtils;
     private transient DataTransformationService dataTransformationService;
     private transient PreProcessPipelineService preProcessPipelineService;
-
+    private transient String topicName;
+    private KafkaProducer<String, FileProgressEvent> producer;
     Logger logger = LoggerFactory.getLogger(StreamingRawDataProcessor.class);
 
     public StreamingRawDataProcessor(Properties commonProperties) {
@@ -57,6 +64,13 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
 
         System.setProperty("sun.net.maxDatagramSockets","4096");
         super.open(parameters);
+        Properties kafkaInsightsProps = new Properties();
+        kafkaInsightsProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
+        kafkaInsightsProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+        kafkaInsightsProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, FileProgressEventSerializer.class.getName());
+        kafkaInsightsProps.put(ProducerConfig.ACKS_CONFIG, "1");
+
+        producer = new KafkaProducer<>(kafkaInsightsProps);
         initializeResources();
     }
 
@@ -94,6 +108,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         ServiceLocator serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
 
+        topicName = properties.getProperty("publishConsumedMetrics.topic");
 
     }
 
@@ -130,6 +145,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                     .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
                                     .collect(Collectors.toList())
                     );
+                    sendToKafka(streamingRawData);
                     resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                 } else {
                     streamingRawData.setStatus("Success");
@@ -145,6 +161,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                             .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
                                             .collect(Collectors.toList())
                             );
+                            sendToKafka(streamingRawData);
                             resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                         }
                     }
@@ -162,6 +179,23 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         });
     }
 
+    private void sendToKafka(StreamingRawData streamingRawData) {
+        try {
+            String topic = topicName;
+            FileProgressEvent message =  createInsightsConsumerDto(streamingRawData.getRequestId(),streamingRawData.getFileId(),streamingRawData.getGroupId(),streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0).getEntityName(),streamingRawData.getResponses().toString(),0,1);// Create a message based on streamingRawData and dataset
+
+            ProducerRecord<String, FileProgressEvent> record = new ProducerRecord<>(topic, streamingRawData.getFileId(), message);
+            producer.send(record, (metadata, exception) -> {
+                if (exception != null) {
+                    logger.error("Error sending data to Kafka insights", exception);
+                } else {
+                    logger.info("Successfully sent data to Kafka insights. Offset: " + metadata.offset());
+                }
+            });
+        } catch (Exception e) {
+            logger.error("Error while sending to Kafka", e);
+        }
+    }
 
     private void processTransformer(StreamingRawData streamingRawData, TransformerInfo transformerInfo, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset, List<String> errorList) {
         String transformerId = transformerInfo.getTransformerId();
