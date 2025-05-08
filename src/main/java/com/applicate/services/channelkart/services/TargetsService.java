@@ -3,14 +3,12 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
+import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
-import com.salescode.dim.etl.validation.service.DataValidationService;
-import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
-import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.jooq.generated.tables.records.CkTargetsRecord;
 import com.salescode.dim.jooq.impl.TargetResults;
 import com.salescode.dim.jooq.impl.Targets;
@@ -54,9 +52,8 @@ public class TargetsService extends AbstractCDMService<Targets> {
         List<Targets> preparedTargets = new ArrayList<>();
 
         targets.forEach(target -> {
-            if (target.getTargetcondition() == null) {
-                target.setTargetcondition(0d);
-            }
+            if (target.getTargetcondition() == null)   target.setTargetcondition(0d);
+            if (target.getId() == null)   target.setId(new IdGenerator(target.getClass().getSimpleName()).getId(target));
             try {
                 if (target.getVersion() == null) {
                     preparedTargets.addAll(prepareTargets(target));
@@ -65,7 +62,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                         target.getTargetResults().forEach(entry -> {
                             populateUserAndOutlet(entry);
                             entry.setTargetId(target.getTargetId());
-                            if (entry.getId() == null) entry.setId(target.getId());
+                            if (entry.getId() == null) entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));;
                             if (entry.getAchieved() == null) entry.setAchieved(0d);
                         });
                     }
@@ -144,7 +141,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                 TargetResults tempObj = targets.getTargetResults().get(0);
                 if (tempObj.getAchieved() != 0) {
 //                    tempObj.setTarget(targets);
-                    if (tempObj.getId() == null) tempObj.setTargetId(targets.getTargetId());
+                    if (tempObj.getTargetId() == null) tempObj.setTargetId(targets.getTargetId());
                     if (tempObj.getId() == null) tempObj.setId(targets.getId());
                     setUserInfo(tempObj);
                     String outlet = tempObj.getOutletCode();
@@ -180,7 +177,11 @@ public class TargetsService extends AbstractCDMService<Targets> {
         if (!saveItemsList.get(0).isEmpty()) {
             getDslContext().batchInsert(
                     saveItemsList.get(0).stream()
-                            .map(target -> getDslContext().newRecord(CK_TARGETS, target)) // Convert to jOOQ Records
+                            .map(target -> {
+                                CkTargetsRecord targetsRecord = getDslContext().newRecord(CK_TARGETS, target);
+                                targetsRecord.setChanged((byte) 0);
+                                return targetsRecord;
+                            }) // Convert to jOOQ Records
                             .collect(Collectors.toList())).execute();
         }
         if (!saveItemsList.get(1).isEmpty()) {
@@ -188,6 +189,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                     saveItemsList.get(1).stream()
                             .map(target -> {
                                 CkTargetsRecord targetsRecord = getDslContext().newRecord(CK_TARGETS, target);
+                                targetsRecord.setChanged((byte) 1);
                                 targetsRecord.changed(CK_TARGETS.ID, false); // Avoid updating primary key
                                 return targetsRecord;
                             })

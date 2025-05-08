@@ -9,12 +9,14 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
+import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.jooq.generated.tables.records.CkTargetResultsRecord;
+import com.salescode.dim.jooq.generated.tables.records.CkTargetsRecord;
 import com.salescode.dim.jooq.impl.TargetResults;
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
@@ -22,6 +24,7 @@ import com.salescode.dim.scanner.ExternalRegistryScanner;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.salescode.dim.jooq.generated.Tables.CK_TARGETS;
 import static com.salescode.dim.jooq.generated.Tables.CK_TARGET_RESULTS;
 
 public class TargetResultsService extends AbstractCDMService<TargetResults> {
@@ -43,15 +46,15 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
     @Override
     public Collection<TargetResults> batchSave(Collection<TargetResults> targets) {
         List<TargetResults> targetsList = preBatchSave(targets);
-        return  batchSave(targetsList);
-    }
-
-    public List<TargetResults> batchSave(List<TargetResults> targets) {
-        List<List<TargetResults>> saveItemsList = getItemsToSaveList(targets);
+        List<List<TargetResults>> saveItemsList = getItemsToSaveList(targetsList);
         if (!saveItemsList.get(0).isEmpty()) {
             getDslContext().batchInsert(
                     saveItemsList.get(0).stream()
-                            .map(target -> getDslContext().newRecord(CK_TARGET_RESULTS, target)) // Convert to jOOQ Records
+                            .map(target -> {
+                                CkTargetResultsRecord targetsRecord = getDslContext().newRecord(CK_TARGET_RESULTS, target);
+                                targetsRecord.setChanged((byte) 0);
+                                return targetsRecord;
+                            }) // Convert to jOOQ Records
                             .collect(Collectors.toList())).execute();
         }
         if (!saveItemsList.get(1).isEmpty()) {
@@ -59,6 +62,7 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
                     saveItemsList.get(1).stream()
                             .map(target -> {
                                 CkTargetResultsRecord targetsRecord = getDslContext().newRecord(CK_TARGET_RESULTS, target);
+                                targetsRecord.setChanged((byte) 1);
                                 targetsRecord.changed(CK_TARGET_RESULTS.ID, false); // Avoid updating primary key
                                 return targetsRecord;
                             })
@@ -109,6 +113,7 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
     public List<TargetResults> preBatchSave(Collection<TargetResults> targets) {
         List<TargetResults> preparedTargets = new ArrayList<>();
         targets.forEach(entry -> {
+            if (entry.getId() == null)   entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));
             populateUserAndOutlet(entry);
             preparedTargets.add(entry);
         });
