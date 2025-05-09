@@ -13,6 +13,8 @@ import java.time.Instant;
 @Value
 public class FileEntityResponseDto implements Serializable {
     String id;
+    String fileId;
+    String master;
     Instant creationTime;
     Instant lastModifiedTime;
     String lob;

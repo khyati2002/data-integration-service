@@ -51,6 +51,8 @@ public class FileStatusSchedulerTest {
         // Create a file with matching counts (should be marked as COMPLETED)
         fileWithMatchingCounts = new FileEntity();
         fileWithMatchingCounts.setId("file-matching");
+        fileWithMatchingCounts.setMaster("master_name");
+        fileWithMatchingCounts.setFileId("file_matching_123");
         fileWithMatchingCounts.setIsApiBased(true);
         fileWithMatchingCounts.setTotalCount(0); // Total count is always 0
         fileWithMatchingCounts.setConsumedSuccessCount(10);
@@ -64,6 +66,8 @@ public class FileStatusSchedulerTest {
         // Create a file with non-matching counts (should be marked as FAILED)
         fileWithNonMatchingCounts = new FileEntity();
         fileWithNonMatchingCounts.setId("file-non-matching");
+        fileWithNonMatchingCounts.setMaster("master_name");
+        fileWithNonMatchingCounts.setFileId("file_non_matching_123");
         fileWithNonMatchingCounts.setIsApiBased(true);
         fileWithNonMatchingCounts.setTotalCount(0); // Total count is always 0
         fileWithNonMatchingCounts.setConsumedSuccessCount(5);
@@ -85,7 +89,7 @@ public class FileStatusSchedulerTest {
         fileStatusScheduler.updateApiBasedFileStatus();
 
         // Assert
-        verify(fileService).updateStatus(eq("file-matching"), statusRequestCaptor.capture());
+        verify(fileService).updateStatus(eq("file_matching_123"),eq("master_name"), statusRequestCaptor.capture());
         FileStatusRequestDto capturedRequest = statusRequestCaptor.getValue();
         assertEquals(FileStatus.COMPLETED, capturedRequest.getConsumedStatus());
         assertEquals(FileStatus.COMPLETED, capturedRequest.getPublishedStatus());
@@ -101,7 +105,7 @@ public class FileStatusSchedulerTest {
         fileStatusScheduler.updateApiBasedFileStatus();
 
         // Assert
-        verify(fileService).updateStatus(eq("file-non-matching"), statusRequestCaptor.capture());
+        verify(fileService).updateStatus(eq("file_non_matching_123"),eq("master_name"),statusRequestCaptor.capture());
         FileStatusRequestDto capturedRequest = statusRequestCaptor.getValue();
         assertEquals(FileStatus.FAILED, capturedRequest.getConsumedStatus());
         assertEquals(FileStatus.FAILED, capturedRequest.getPublishedStatus());
@@ -117,7 +121,7 @@ public class FileStatusSchedulerTest {
         fileStatusScheduler.updateApiBasedFileStatus();
 
         // Assert
-        verify(fileService, times(2)).updateStatus(any(), any());
+        verify(fileService, times(2)).updateStatus(any(), any(),any());
     }
 
     @Test
@@ -130,6 +134,6 @@ public class FileStatusSchedulerTest {
         fileStatusScheduler.updateApiBasedFileStatus();
 
         // Assert
-        verify(fileService, never()).updateStatus(any(), any());
+        verify(fileService, never()).updateStatus(any(),any(), any());
     }
 }

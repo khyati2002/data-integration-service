@@ -152,7 +152,7 @@ public class IntegrationSummaryService {
         Timestamp endTimestamp = (endTime != null) ? Timestamp.valueOf(endTime) : null;
 
         // Call the repository method
-        resp = jobRepository.getLobSummary(lobList, status, master,startTimestamp,endTimestamp);
+        resp = jobRepository.getLobSummary(lobList, status, startTimestamp,endTimestamp);
 
         // Using Stream API to aggregate data
         Map<String, Map<String, Object>> aggregatedData = resp.stream()

@@ -8,13 +8,21 @@ import lombok.experimental.SuperBuilder;
 import java.time.Instant;
 
 @Entity
-@Table(name = "integration_file")
+@Table(name = "integration_file",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"fileId", "master"}))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 public class FileEntity extends TimeAwareEntity {
+
+    @Column(nullable = false)
+    private String fileId;
+
+    @Column(nullable = false, updatable = false)
+    private String master;
+
     @Builder.Default
     private Integer totalCount = 0;
 

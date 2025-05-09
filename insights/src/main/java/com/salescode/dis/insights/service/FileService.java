@@ -12,6 +12,7 @@ import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.repository.JobRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.protocol.types.Field;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,10 +50,11 @@ public class FileService {
             JobEntity jobEntity = new JobEntity();
             jobEntity.setId(jobId);
             jobEntity.setLob(file.getLob());
-            jobEntity.setMaster(master);
+    //        jobEntity.setMaster(master);
             return jobService.createJob(jobEntity);
         });
         file.setJob(job);
+        file.setMaster(master);
         FileEntity savedFile = fileRepo.save(file);
         job.getFiles().add(savedFile);
         job.setTotalFileCount(job.getFiles().size());
@@ -62,23 +64,23 @@ public class FileService {
     }
 
     @Transactional(readOnly = true)
-    public FileEntity get(String fileId) {
-        return fileRepo.findById(fileId).orElseThrow(() -> new ResourceNotFoundException("File not found: " + fileId));
+    public FileEntity get(String fileId, String master) {
+        return fileRepo.findByFileIdAndMaster(fileId,master).orElseThrow(() -> new ResourceNotFoundException("File not found: " + fileId));
     }
 
     @Transactional(readOnly = true)
-    public FileEntity getOrReturnNull(String fileId) {
-        return fileRepo.findById(fileId).orElse(null);
+    public FileEntity getOrReturnNull(String fileId, String master) {
+        return fileRepo.findByFileIdAndMaster(fileId,master).orElse(null);
     }
 
 
 
     public void updateProgress(String fileId, FileProgressRequest progress, String jobId, String lob, String masterName) {
         // todo fix for concurrent updates on multiple consumers
-        FileEntity file = getOrReturnNull(fileId);
+        FileEntity file = getOrReturnNull(fileId,masterName);
         if (file == null) {
             FileEntity fileEntity = new FileEntity();
-            fileEntity.setId(fileId);
+            fileEntity.setFileId(fileId);
             fileEntity.setLob(lob);
             fileEntity.setIsApiBased(true);
             file = registerOnUpdate(jobId, fileEntity, masterName);
@@ -105,8 +107,8 @@ public class FileService {
         log.info("File {} progress updated", fileId);
     }
 
-    public FileEntity updateStatus(String fileId, FileStatusRequestDto status) {
-        FileEntity file = getOrReturnNull(fileId);
+    public FileEntity updateStatus(String fileId, String masterName, FileStatusRequestDto status) {
+        FileEntity file = getOrReturnNull(fileId,masterName);
         if (status.getConsumedStatus() != null) {
             file.setConsumedStatus(status.getConsumedStatus());
         }
@@ -142,7 +144,7 @@ public class FileService {
         log.info("Job {} metrics recalculated", job.getId());
     }
 
-    public boolean fileExists(String fileId) {
-        return fileRepo.existsById(fileId);
+    public boolean fileExists(String fileId, String masterName) {
+        return fileRepo.existsByFileIdAndMaster(fileId,masterName);
     }
 }

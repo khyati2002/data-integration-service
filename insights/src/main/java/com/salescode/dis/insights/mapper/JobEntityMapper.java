@@ -20,10 +20,9 @@ public interface JobEntityMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     JobEntity partialUpdate(JobEntityResponseDto jobEntityResponseDto, @MappingTarget JobEntity jobEntity);
 
-    default JobEntity toEntity(JobEntityRequestDto jobEntityRequestDto, String lob, String master) {
+    default JobEntity toEntity(JobEntityRequestDto jobEntityRequestDto, String lob) {
         JobEntity entity = toEntity(jobEntityRequestDto);
         entity.setLob(lob);
-        entity.setMaster(master);
         return entity;
     }
 }

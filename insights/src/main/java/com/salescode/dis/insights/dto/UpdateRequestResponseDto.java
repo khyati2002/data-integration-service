@@ -10,4 +10,5 @@ public class UpdateRequestResponseDto {
     private String status;
     private String message;
     private String fileId;
+    private String master;
 }

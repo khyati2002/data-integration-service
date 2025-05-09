@@ -60,10 +60,10 @@ public class FileProgressControllerIntegrationTest {
         // Create a job first
         JobEntityRequestDto jobRequest = createSampleJobRequest();
         ResponseEntity<JobEntityResponseDto> jobResponse = restTemplate.postForEntity(
-                "/api/{lob}/master/{master_name}/job",
+                "/api/{lob}/job",
                 new HttpEntity<>(jobRequest, headers),
                 JobEntityResponseDto.class,
-                lob, masterName
+                lob
         );
 
         assertEquals(HttpStatus.CREATED, jobResponse.getStatusCode());
@@ -72,7 +72,7 @@ public class FileProgressControllerIntegrationTest {
 
         // Create a file
         FileEntityRequestDto fileRequest = new FileEntityRequestDto();
-        fileRequest.setId("file-" + UUID.randomUUID());
+        fileRequest.setFileId("file-" + UUID.randomUUID());
         fileRequest.setTotalCount(100);
         
         ObjectNode extendedAttrs = objectMapper.createObjectNode();
@@ -89,7 +89,7 @@ public class FileProgressControllerIntegrationTest {
 
         assertEquals(HttpStatus.CREATED, fileResponse.getStatusCode());
         assertNotNull(fileResponse.getBody());
-        fileId = fileResponse.getBody().getId();
+        fileId = fileResponse.getBody().getFileId();
     }
 
     @Test
@@ -124,7 +124,7 @@ public class FileProgressControllerIntegrationTest {
                 .atMost(30, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
                 .until(() -> {
-                    FileEntity file = fileService.get(fileId);
+                    FileEntity file = fileService.get(fileId,masterName);
                     return file.getConsumedSuccessCount() != null && file.getConsumedSuccessCount() == 10;
                 });
 
@@ -158,7 +158,7 @@ public class FileProgressControllerIntegrationTest {
                 .atMost(10, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
                 .until(() -> {
-                    FileEntity file = fileService.get(fileId);
+                    FileEntity file = fileService.get(fileId,masterName);
                     return file.getConsumedSuccessCount() != null && 
                            file.getConsumedSuccessCount() == 30 && // 10 + 20
                            file.getServerFailCount() != null && 

@@ -49,18 +49,16 @@ class JobControllerTest {
         // Make request
         HttpEntity<JobEntityRequestDto> entity = new HttpEntity<>(requestDto, headers);
         ResponseEntity<JobEntityResponseDto> response = restTemplate.postForEntity(
-                "/api/{lob}/master/{master_name}/job",
+                "/api/{lob}/job",
                 entity,
                 JobEntityResponseDto.class,
-                LOB,
-                MASTER
+                LOB
         );
 
         // Assertions
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertNotNull(response.getBody().getId());
-        assertEquals(MASTER, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
         assertEquals(JobStatus.PENDING, response.getBody().getStatus());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
@@ -88,10 +86,9 @@ class JobControllerTest {
     void testGetJob() {
         // Make request using the ID from the create test
         ResponseEntity<JobEntityResponseDto> response = restTemplate.getForEntity(
-                "/api/{lob}/master/{master_name}/job/{id}",
+                "/api/{lob}/job/{id}",
                 JobEntityResponseDto.class,
                 LOB,
-                MASTER,
                 createdJobId
         );
 
@@ -99,7 +96,7 @@ class JobControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(createdJobId, response.getBody().getId());
-        assertEquals(MASTER, response.getBody().getMaster());
+     //   assertEquals(MASTER, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
         assertEquals(JobStatus.PENDING, response.getBody().getStatus());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
@@ -121,12 +118,11 @@ class JobControllerTest {
     void testUpdateStatus() {
         // Make request to update status to RUNNING
         ResponseEntity<JobEntityResponseDto> response = restTemplate.exchange(
-                "/api/{lob}/master/{master_name}/job/{id}/status/{status}",
+                "/api/{lob}/job/{id}/status/{status}",
                 HttpMethod.PUT,
                 null,
                 JobEntityResponseDto.class,
                 LOB,
-                MASTER,
                 createdJobId,
                 "PENDING"
         );
@@ -136,7 +132,7 @@ class JobControllerTest {
         assertNotNull(response.getBody());
         assertEquals(JobStatus.PENDING, response.getBody().getStatus());
         assertEquals(createdJobId, response.getBody().getId());
-        assertEquals(MASTER, response.getBody().getMaster());
+    //    assertEquals(MASTER, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
         assertEquals("http://consumer/job/456", response.getBody().getConsumerJobUri());
@@ -156,7 +152,7 @@ class JobControllerTest {
     @Order(4)
     void testGetJobs() {
         // Build URI with query parameters
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/api/{lob}/master/jobs");
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/api/{lob}/jobs");
 
         // Make request
         ResponseEntity<List<JobEntityResponseDto>> response = restTemplate.exchange(
@@ -175,29 +171,29 @@ class JobControllerTest {
         assertTrue(foundCreatedJob, "Should find the job we created earlier");
     }
 
-    @Test
-    @Order(5)
-    void testGetJobsByMaster() {
-        // Build URI with query parameters and pagination
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/api/{lob}/master/{master_name}/jobs");
-
-        // Make request
-        ResponseEntity<List<JobEntityResponseDto>> response = restTemplate.exchange(
-                builder.buildAndExpand(LOB, MASTER).toUriString(),
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<JobEntityResponseDto>>() {}
-        );
-
-
-        // Assertions
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertFalse(response.getBody().isEmpty());
-        boolean foundCreatedJob = response.getBody().stream()
-                .anyMatch(job -> job.getId().equals(createdJobId));
-        assertTrue(foundCreatedJob, "Should find the job we created earlier");
-    }
+//    @Test
+//    @Order(5)
+//    void testGetJobsByMaster() {
+//        // Build URI with query parameters and pagination
+//        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/api/{lob}/master/{master_name}/jobs");
+//
+//        // Make request
+//        ResponseEntity<List<JobEntityResponseDto>> response = restTemplate.exchange(
+//                builder.buildAndExpand(LOB, MASTER).toUriString(),
+//                HttpMethod.GET,
+//                null,
+//                new ParameterizedTypeReference<List<JobEntityResponseDto>>() {}
+//        );
+//
+//
+//        // Assertions
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertNotNull(response.getBody());
+//        assertFalse(response.getBody().isEmpty());
+//        boolean foundCreatedJob = response.getBody().stream()
+//                .anyMatch(job -> job.getId().equals(createdJobId));
+//        assertTrue(foundCreatedJob, "Should find the job we created earlier");
+//    }
 
 
     @Test
@@ -205,12 +201,11 @@ class JobControllerTest {
     void testGetJob_NotFound() {
         // Make request with a non-existent job ID
         ResponseEntity<String> response = restTemplate.exchange(
-                "/api/{lob}/master/{master_name}/job/{id}",
+                "/api/{lob}/job/{id}",
                 HttpMethod.GET,
                 null,
                 String.class,
                 LOB,
-                MASTER,
                 "nonexistent-job-id-123456789"
         );
 
@@ -223,12 +218,11 @@ class JobControllerTest {
     void testUpdateStatus_InvalidStatus() {
         // Make request with an invalid status value
         ResponseEntity<String> response = restTemplate.exchange(
-                "/api/{lob}/master/{master_name}/job/{id}/status/{status}",
+                "/api/{lob}/job/{id}/status/{status}",
                 HttpMethod.PUT,
                 null,
                 String.class,
                 LOB,
-                MASTER,
                 createdJobId,
                 "INVALID_STATUS"
         );
@@ -242,12 +236,11 @@ class JobControllerTest {
     void testCompleteJobLifecycle() {
         // Update to COMPLETED status
         ResponseEntity<JobEntityResponseDto> response = restTemplate.exchange(
-                "/api/{lob}/master/{master_name}/job/{id}/status/{status}",
+                "/api/{lob}/job/{id}/status/{status}",
                 HttpMethod.PUT,
                 null,
                 JobEntityResponseDto.class,
                 LOB,
-                MASTER,
                 createdJobId,
                 "COMPLETED"
         );
@@ -257,7 +250,7 @@ class JobControllerTest {
         assertNotNull(response.getBody());
         assertEquals(JobStatus.COMPLETED, response.getBody().getStatus());
         assertEquals(createdJobId, response.getBody().getId());
-        assertEquals(MASTER, response.getBody().getMaster());
+     //   assertEquals(MASTER, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
         assertEquals("http://consumer/job/456", response.getBody().getConsumerJobUri());

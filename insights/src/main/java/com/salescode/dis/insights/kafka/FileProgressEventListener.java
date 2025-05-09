@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,15 +20,11 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FileProgressEventListener {
 
-    private static final String FAILURE_TOPIC = "file-progress-updates-failed"; // Define failure topic name
+    private static final String FAILURE_TOPIC = "file-progress-updates-failed";
 
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
 
-    /*
-      In case of file, since it's already mapped to jobId, therefore in event jobId will be null.
-      While on the other hand, In case of api, since we cannot register job beforehand, jobId should be sent inside event to create job if not there
-     */
     @KafkaListener(topics = "file-progress-updates", groupId = "file-progress-processor", batch = "true", properties = {
             ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=100"
     })
@@ -39,22 +33,26 @@ public class FileProgressEventListener {
             log.debug("Received empty or null event list. Skipping.");
             return;
         }
+
         log.info("Received {} events to process.", events.size());
 
         Map<String, AggregationWrapper> aggregationMap = new HashMap<>();
 
         events.forEach(event -> {
             try {
-                if (event == null || event.getFileId() == null) {
-                    log.warn("Skipping invalid event (null or missing fileId): {}", event);
+                if (event == null || event.getFileId() == null || event.getMasterName() == null) {
+                    log.warn("Skipping invalid event (null or missing fileId or masterName): {}", event);
                     return;
                 }
 
                 String fileId = event.getFileId();
+                String masterName = event.getMasterName();
+                String key = fileId + ":" + masterName;
+
                 FileProgressRequest progress = event.getProgress();
 
                 if (progress != null) {
-                    AggregationWrapper wrapper = aggregationMap.computeIfAbsent(fileId, k -> {
+                    AggregationWrapper wrapper = aggregationMap.computeIfAbsent(key, k -> {
                         FileProgressEvent newAggregatedEvent = new FileProgressEvent();
                         FileProgressRequest newProgress = FileProgressRequest.createNewInstance();
                         newAggregatedEvent.setProgress(newProgress);
@@ -62,10 +60,7 @@ public class FileProgressEventListener {
                         return new AggregationWrapper(newAggregatedEvent, new ArrayList<>());
                     });
 
-                    // Add the current original event to the wrapper's list
                     wrapper.addOriginalEvent(event);
-
-                    // Aggregate progress into the wrapper's aggregatedEvent
                     aggregateProgress(wrapper.getAggregatedEvent(), event);
 
                 } else {
@@ -73,9 +68,7 @@ public class FileProgressEventListener {
                 }
 
             } catch (Exception e) {
-                // Catch any exception during individual event processing/aggregation
                 log.error("Failed to process individual event before aggregation: FileId={}, Event={}", (event != null ? event.getFileId() : "unknown"), event, e);
-                // Send the original failed event to the failure topic
                 sendToFailureTopic(event, "Individual event processing failed: " + e.getMessage());
             }
         });
@@ -96,7 +89,6 @@ public class FileProgressEventListener {
         if (existing.getConsumer() == null) existing.setConsumer(new FileProgressRequest.ConsumerMetrics());
         if (existing.getPublisher() == null) existing.setPublisher(new FileProgressRequest.PublisherMetrics());
 
-        // Aggregate if incoming metrics are present
         if (incoming.getConsumer() != null) {
             aggregateMetrics(existing.getConsumer(), incoming.getConsumer());
         }
@@ -106,76 +98,65 @@ public class FileProgressEventListener {
     }
 
     private void aggregateMetrics(FileProgressRequest.ConsumerMetrics existing, FileProgressRequest.ConsumerMetrics incoming) {
-        if (existing == null || incoming == null) {
-            log.warn("Skipping consumer metrics aggregation due to null object(s). Existing: {}, Incoming: {}", existing, incoming);
-            return;
-        }
         existing.setSuccessCount(safeSum(existing.getSuccessCount(), incoming.getSuccessCount()));
         existing.setServerFailCount(safeSum(existing.getServerFailCount(), incoming.getServerFailCount()));
         existing.setLogicalFailCount(safeSum(existing.getLogicalFailCount(), incoming.getLogicalFailCount()));
     }
 
     private void aggregateMetrics(FileProgressRequest.PublisherMetrics existing, FileProgressRequest.PublisherMetrics incoming) {
-        if (existing == null || incoming == null) {
-            log.warn("Skipping publisher metrics aggregation due to null object(s). Existing: {}, Incoming: {}", existing, incoming);
-            return;
-        }
         existing.setSuccessCount(safeSum(existing.getSuccessCount(), incoming.getSuccessCount()));
         existing.setFailCount(safeSum(existing.getFailCount(), incoming.getFailCount()));
     }
 
     private void enrichEventMetadata(FileProgressEvent aggregatedEvent, FileProgressEvent event) {
-        if (aggregatedEvent == null || event == null) {
-            log.warn("Skipping metadata enrichment due to null event(s). Aggregated: {}, Event: {}", aggregatedEvent, event);
-            return;
-        }
-
         aggregatedEvent.setFileId(event.getFileId());
-        // Keep first non-null value encountered for metadata fields
         if (aggregatedEvent.getLob() == null) aggregatedEvent.setLob(event.getLob());
         if (aggregatedEvent.getJobId() == null) aggregatedEvent.setJobId(event.getJobId());
         if (aggregatedEvent.getMasterName() == null) aggregatedEvent.setMasterName(event.getMasterName());
-
-        aggregatedEvent.setErrorMessage(null); // Reset error message on aggregated event
+        aggregatedEvent.setErrorMessage(null);
     }
 
-    // Modified to accept the map of wrappers and handle failures by sending original events
     private void processAggregatedUpdates(Map<String, AggregationWrapper> aggregationMap) {
-        aggregationMap.forEach((fileId, wrapper) -> {
+        aggregationMap.forEach((key, wrapper) -> {
             if (wrapper == null) {
-                log.error("Encountered null wrapper in aggregationMap for fileId: {}. Skipping.", fileId);
-                return; // Skip this entry
+                log.error("Encountered null wrapper in aggregationMap for key: {}. Skipping.", key);
+                return;
             }
+
             FileProgressEvent aggregatedEvent = wrapper.getAggregatedEvent();
             List<FileProgressEvent> originalEvents = wrapper.getOriginalEventsInBatch();
 
             try {
                 if (aggregatedEvent == null || aggregatedEvent.getProgress() == null) {
-                    log.error("Skipping update for fileId {} due to null aggregated event or progress within wrapper. Sending original events to failure topic.", fileId);
-                    sendOriginalsToFailureTopic(originalEvents, "Aggregated event or progress was null before final update", fileId);
+                    log.error("Skipping update for key {} due to null aggregated event or progress. Sending original events to failure topic.", key);
+                    sendOriginalsToFailureTopic(originalEvents, "Aggregated event or progress was null", key);
                     return;
                 }
 
-                fileService.updateProgress(fileId, aggregatedEvent.getProgress(), aggregatedEvent.getJobId(), aggregatedEvent.getLob(), aggregatedEvent.getMasterName());
-                log.debug("Progress updated successfully for file: {}", fileId);
+                fileService.updateProgress(
+                        aggregatedEvent.getFileId(),
+                        aggregatedEvent.getProgress(),
+                        aggregatedEvent.getJobId(),
+                        aggregatedEvent.getLob(),
+                        aggregatedEvent.getMasterName()
+                );
+                log.debug("Progress updated successfully for key: {}", key);
 
             } catch (Exception e) {
-                log.error("Failed to update aggregated progress for file: {}. Sending original events to failure topic.", fileId, e);
-                sendOriginalsToFailureTopic(originalEvents, "Aggregated update failed: " + e.getMessage(), fileId);
+                log.error("Failed to update aggregated progress for key: {}. Sending original events to failure topic.", key, e);
+                sendOriginalsToFailureTopic(originalEvents, "Aggregated update failed: " + e.getMessage(), key);
             }
         });
     }
 
-    // Helper method to send a list of original events to the failure topic
-    private void sendOriginalsToFailureTopic(List<FileProgressEvent> originalEvents, String errorMessage, String fileIdForKey) {
+    private void sendOriginalsToFailureTopic(List<FileProgressEvent> originalEvents, String errorMessage, String key) {
         if (originalEvents == null || originalEvents.isEmpty()) {
-            log.warn("No original events provided to send to failure topic for fileId: {} due to error: {}", fileIdForKey, errorMessage);
+            log.warn("No original events to send to failure topic for key: {} due to error: {}", key, errorMessage);
             return;
         }
-        log.info("Sending {} original events to failure topic for fileId {} due to error: {}", originalEvents.size(), fileIdForKey, errorMessage);
-        originalEvents.forEach(originalEvent -> {
-            sendToFailureTopic(originalEvent, errorMessage);
-        });
+
+        log.info("Sending {} original events to failure topic for key {} due to error: {}", originalEvents.size(), key, errorMessage);
+        originalEvents.forEach(event -> sendToFailureTopic(event, errorMessage));
     }
 
     private void sendToFailureTopic(FileProgressEvent eventToSend, String errorMessage) {
@@ -183,8 +164,8 @@ public class FileProgressEventListener {
             log.error("Cannot send null event to failure topic. Error message was: {}", errorMessage);
             return;
         }
-        try {
 
+        try {
             String finalErrorMessage = errorMessage;
             if (eventToSend.getErrorMessage() != null && !eventToSend.getErrorMessage().isEmpty()) {
                 finalErrorMessage = eventToSend.getErrorMessage() + " | Additionally: " + errorMessage;
@@ -196,14 +177,13 @@ public class FileProgressEventListener {
             log.info("Sent event to topic '{}' with key '{}'. Reason: {}", FAILURE_TOPIC, key, finalErrorMessage);
 
         } catch (Exception sendEx) {
-            log.error("CRITICAL: Failed to send event to failure topic '{}' for FileId: {}. Original Error: {}. Send Error:", FAILURE_TOPIC, eventToSend.getFileId(), errorMessage, sendEx);
+            log.error("CRITICAL: Failed to send event to failure topic '{}' for FileId: {}. Original Error: {}. Send Error:",
+                    FAILURE_TOPIC, eventToSend.getFileId(), errorMessage, sendEx);
         }
     }
 
     private Integer safeSum(Integer a, Integer b) {
-        int valA = Optional.ofNullable(a).orElse(0);
-        int valB = Optional.ofNullable(b).orElse(0);
-        return valA + valB;
+        return Optional.ofNullable(a).orElse(0) + Optional.ofNullable(b).orElse(0);
     }
 
     @Getter
@@ -216,5 +196,4 @@ public class FileProgressEventListener {
             this.originalEventsInBatch.add(event);
         }
     }
-
 }

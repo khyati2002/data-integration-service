@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public interface FileRepository extends JpaRepository<FileEntity, String> {
     Page<FileEntity> findByJobId(String jobId, Pageable pageable);
@@ -24,4 +25,8 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
             @Param("tooOldCutoffTime") Instant tooOldCutoffTime,
             @Param("status") FileStatus status
     );
+
+    Optional<FileEntity> findByFileIdAndMaster(String fileId, String master);
+
+    boolean existsByFileIdAndMaster(String fileId, String master);
 }

@@ -19,7 +19,6 @@ public class JobEntityResponseDto implements Serializable {
     JsonNode extendedAttributes;
     Instant startTime;
     Instant endTime;
-    String master;
     JobStatus status;
     String publisherJobUri;
     String consumerJobUri;

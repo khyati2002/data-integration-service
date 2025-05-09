@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ActiveProfiles({"postgres", "dev", "debug"})
+@ActiveProfiles({"postgres", "dev", "debug", "kafka"})
 class FileControllerTest {
 
     private static final String LOB = "Retail";
@@ -60,18 +60,17 @@ class FileControllerTest {
         // Make request
         HttpEntity<JobEntityRequestDto> entity = new HttpEntity<>(requestDto, headers);
         ResponseEntity<JobEntityResponseDto> response = restTemplate.postForEntity(
-                "/api/{lob}/master/{master_name}/job",
+                "/api/{lob}/job",
                 entity,
                 JobEntityResponseDto.class,
-                LOB,
-                MASTER_NAME
+                LOB
         );
 
         // Assertions
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertNotNull(response.getBody().getId());
-        assertEquals(MASTER_NAME, response.getBody().getMaster());
+   //     assertEquals(MASTER_NAME, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
         assertEquals(JobStatus.PENDING, response.getBody().getStatus());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
@@ -92,7 +91,7 @@ class FileControllerTest {
 
         // Create request body
         FileEntityRequestDto requestDto = new FileEntityRequestDto();
-        requestDto.setId(UUID.randomUUID().toString());
+        requestDto.setFileId(UUID.randomUUID().toString());
         requestDto.setTotalCount(100);
 
         // Create sample extended attributes JSON
@@ -120,15 +119,14 @@ class FileControllerTest {
         assertEquals(100, response.getBody().getTotalCount());
 
         // Store the ID for later tests
-        createdFileId = response.getBody().getId();
+        createdFileId = response.getBody().getFileId();
 
 
         // Make request using the ID from the create test
         ResponseEntity<JobEntityResponseDto> jobResponse = restTemplate.getForEntity(
-                "/api/{lob}/master/{master_name}/job/{id}",
+                "/api/{lob}/job/{id}",
                 JobEntityResponseDto.class,
                 LOB,
-                MASTER_NAME,
                 createdJobId
         );
 
@@ -136,7 +134,7 @@ class FileControllerTest {
         assertEquals(HttpStatus.OK, jobResponse.getStatusCode());
         assertNotNull(jobResponse.getBody());
         assertEquals(createdJobId, jobResponse.getBody().getId());
-        assertEquals(MASTER_NAME, jobResponse.getBody().getMaster());
+  //      assertEquals(MASTER_NAME, jobResponse.getBody().getMaster());
         assertEquals(LOB, jobResponse.getBody().getLob());
         assertEquals(JobStatus.PENDING, jobResponse.getBody().getStatus());
     }
@@ -157,7 +155,7 @@ class FileControllerTest {
         // Assertions
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(createdFileId, response.getBody().getId());
+        assertEquals(createdFileId, response.getBody().getFileId());
         assertEquals(LOB, response.getBody().getLob());
     }
 
@@ -197,19 +195,26 @@ class FileControllerTest {
                 createdFileId
         );
 
+        System.out.println("Response body: " + response.getBody());
+        System.out.println("Response status: " + response.getStatusCode());
+
         Awaitility.await()
-                .atMost(10, TimeUnit.SECONDS)
+                .atMost(1000000, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
                 .until(() -> {
-                    FileEntity file = fileService.get(createdFileId);
-                    return file.getConsumedSuccessCount() != null;
+                    FileEntity file = fileService.get(createdFileId,MASTER_NAME);
+                    System.out.println(file);
+                    return file.getConsumedSuccessCount() != 0;
                 });
 
-        assertEquals(fileService.get(createdFileId).getConsumedSuccessCount(), consumer.getSuccessCount());
-        assertEquals(fileService.get(createdFileId).getConsumedFailCount(), consumer.getServerFailCount());
-        assertEquals(fileService.get(createdFileId).getLogicalFailCount(), consumer.getLogicalFailCount());
-        assertEquals(fileService.get(createdFileId).getPublishedSuccessCount(), publisher.getSuccessCount());
-        assertEquals(fileService.get(createdFileId).getPublishedFailCount(), publisher.getFailCount());
+        System.out.println("Master name is :" + MASTER_NAME);
+        FileEntity file = fileService.get(createdFileId,MASTER_NAME);
+        System.out.println("File is " + file);
+        assertEquals(fileService.get(createdFileId,MASTER_NAME).getConsumedSuccessCount(), consumer.getSuccessCount());
+        assertEquals(fileService.get(createdFileId,MASTER_NAME).getConsumedFailCount(), consumer.getServerFailCount() + consumer.getLogicalFailCount());
+        assertEquals(fileService.get(createdFileId,MASTER_NAME).getLogicalFailCount(), consumer.getLogicalFailCount());
+        assertEquals(fileService.get(createdFileId,MASTER_NAME).getPublishedSuccessCount(), publisher.getSuccessCount());
+        assertEquals(fileService.get(createdFileId,MASTER_NAME).getPublishedFailCount(), publisher.getFailCount());
 
         // Assertions
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());

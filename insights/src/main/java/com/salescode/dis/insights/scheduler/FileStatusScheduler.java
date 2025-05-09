@@ -100,7 +100,7 @@ public class FileStatusScheduler {
             statusRequest.setConsumedStatus(consumedStatus);
             statusRequest.setPublishedStatus(publishedStatus);
 
-            fileService.updateStatus(file.getId(), statusRequest);
+            fileService.updateStatus(file.getFileId(), file.getMaster(),statusRequest);
             log.info("Updated file {} status using FileService", file.getId());
         }
     }

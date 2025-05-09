@@ -17,9 +17,9 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
 
     Page<JobEntity> getJobEntitiesByLob(String lob, Pageable pageable);
 
-    Page<JobEntity> getJobEntitiesByLobAndMaster(String lob, String master, Pageable pageable);
+  //  Page<JobEntity> getJobEntitiesByLobAndMaster(String lob, Pageable pageable);
 
-    @Query(value = "SELECT igj.status, igj.master, igj.start_time, igj.end_time, igj.id AS job_id, " +
+    @Query(value = "SELECT igj.status, igf.master, igj.start_time, igj.end_time, igj.id AS job_id, " +
             "igf.id AS file_id, igj.lob, igf.published_success_count, igf.published_fail_count, " +
             "igf.consumed_fail_count, igf.consumed_success_count, igf.total_count, " +
             "igf.publisher_throughput, igf.consumer_throughput, igf.server_fail_count, igf.logical_fail_count " +
@@ -27,14 +27,12 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
             "LEFT JOIN integration_file igf ON igj.id = igf.job_id " +
             "WHERE (COALESCE(:lob) IS NULL OR igj.lob IN (:lob)) " +
             "AND (COALESCE(:status) IS NULL OR igj.status IN (:status)) " +
-            "AND (COALESCE(:master) IS NULL OR igj.master IN (:master)) " +
             "AND (COALESCE(:startTime) IS NULL OR igj.last_modified_time >= :startTime) " +
             "AND (COALESCE(:endTime) IS NULL OR igj.last_modified_time <= :endTime)",
             nativeQuery = true)
     List<Map<String, Object>> getLobSummary(
             @Param("lob") List<String> lob,
             @Param("status") List<String> status,
-            @Param("master") List<String> master,
             @Param("startTime") Timestamp startTime,
             @Param("endTime") Timestamp endTime);
 
@@ -49,7 +47,7 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
 //            nativeQuery = true)
 //    List<Map<String, Object>> getLobSummaryAll();
 
-    @Query("SELECT j.lob AS lob, COUNT(j) AS total, COUNT(DISTINCT j.master) AS distinct_master_count, " +
+    @Query("SELECT j.lob AS lob, COUNT(j) AS total, " +
             "SUM(CASE WHEN j.status = 'COMPLETED' THEN 1 ELSE 0 END) AS COMPLETED, " +
             "SUM(CASE WHEN j.status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING, " +
             "SUM(CASE WHEN j.status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED " +
@@ -57,7 +55,7 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
             "GROUP BY j.lob")
     List<Map<String,Object>> getLobDetailsAll();
 
-    @Query("SELECT j.lob AS lob, COUNT(j) AS total, COUNT(DISTINCT j.master) AS distinct_master_count, " +
+    @Query("SELECT j.lob AS lob, COUNT(j) AS total, " +
             "SUM(CASE WHEN j.status = 'COMPLETED' THEN 1 ELSE 0 END) AS COMPLETED, " +
             "SUM(CASE WHEN j.status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING, " +
             "SUM(CASE WHEN j.status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED " +

@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "integration_job", indexes = {
     // Index based on analysis of GET /api/{lob}/master/jobs and GET /api/{lob}/master/{master_name}/jobs
-    @Index(name = "idx_job_lob_master", columnList = "lob, master, start_time desc"),
+    @Index(name = "idx_job_lob_master", columnList = "lob, start_time desc"),
 })
 @Getter
 @Setter
@@ -21,8 +21,6 @@ import java.util.List;
 @SuperBuilder
 public class JobEntity extends TimeAwareEntity {
 
-    @Column(nullable = false, updatable = false)
-    private String master;
 
     @Enumerated(EnumType.STRING)
     private JobStatus status;

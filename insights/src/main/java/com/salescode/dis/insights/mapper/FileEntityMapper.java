@@ -17,9 +17,10 @@ public interface FileEntityMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     FileEntity partialUpdate(FileEntityRequestDto fileEntityDto, @MappingTarget FileEntity fileEntity);
 
-    default FileEntity toEntity(FileEntityRequestDto fileEntityRequestDto, String lob) {
+    default FileEntity toEntity(FileEntityRequestDto fileEntityRequestDto, String lob, String master) {
         FileEntity entity = toEntity(fileEntityRequestDto);
         entity.setLob(lob);
+        entity.setMaster(master);
         return entity;
     }
 }
