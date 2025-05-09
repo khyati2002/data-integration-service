@@ -169,7 +169,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     }
                         //            saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
                                 } catch (Exception individualEx) {
-                         //           saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
+                                saveIntegrationHistory(model, "FAILURE", "Save failed: " + Arrays.toString(individualEx.getStackTrace()));
                                 }
                             }
                         }
@@ -184,6 +184,8 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         private void saveIntegrationHistory(CommonDataModel model, String status, String message) {
             CkIntegrationHistoryRecord record = new CkIntegrationHistoryRecord();
             record.setId(UUID.randomUUID().toString());
+            record.setEntityName(model.getClass().getSimpleName());
+            record.setRequestId(model.getReqId());
             record.setStatus(status);
             record.setDescription(message);
             record.setTimestamp(Instant.now().toEpochMilli());
