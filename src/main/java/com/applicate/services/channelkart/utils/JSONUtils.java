@@ -10,6 +10,8 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.Deseriali
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.MapperFeature;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ArrayNode;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -76,6 +78,17 @@ public class JSONUtils {
             }
         }
         return destinationNode;
+    }
+    public static ArrayNode convertToArrayNode(JsonNode jsonNode) {
+        ArrayNode arrayNode;
+        if (jsonNode.isArray()) {
+            // If it's already an ArrayNode, cast and return
+            return (ArrayNode) jsonNode;
+        } else {
+            // Create a new ArrayNode and add the current JsonNode
+            arrayNode = JsonNodeFactory.instance.arrayNode().add(jsonNode);
+            return arrayNode;
+        }
     }
 
     public static <T> T convert(Object node, TypeReference<List<Map<String, String>>> typeReference) {
