@@ -46,8 +46,4 @@ public class JobService {
         return jobRepo.getJobEntitiesByLob(lob, pageable);
     }
 
-//    @Transactional(readOnly = true)
-//    public Page<JobEntity> getAllJobsByLobAndMaster(String lob, String master, Pageable pageable) {
-//        return jobRepo.getJobEntitiesByLobAndMaster(lob, master, pageable);
-//    }
 }
