@@ -177,7 +177,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
     private void saveIntegrationHistory(StreamingRawData model, String status, String message) {
         CkIntegrationHistoryRecord record = new CkIntegrationHistoryRecord();
         record.setId(UUID.randomUUID().toString());
-        record.setEntityName(model.getClass().getSimpleName());
+        record.setEntityName(model.getTransformerInfo().get(0).getEntityName());
         record.setRequestId(model.getRequestId());
         record.setStatus(status);
         record.setDescription(message);
