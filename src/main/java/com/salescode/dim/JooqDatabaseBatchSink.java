@@ -45,7 +45,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 
     public JooqDatabaseBatchSink(Properties dbProperties) {
         this.properties = dbProperties;
-        this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "100"));
+        this.batchSize = Integer.parseInt(dbProperties.getProperty("batch.size", "1"));
         this.batchIntervalMs = Long.parseLong(dbProperties.getProperty("batch.interval.ms", "20000"));
     }
 
@@ -169,7 +169,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     }
                         //            saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
                                 } catch (Exception individualEx) {
-                                saveIntegrationHistory(model, "FAILURE", "Save failed: " + Arrays.toString(individualEx.getStackTrace()));
+                                saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
                                 }
                             }
                         }

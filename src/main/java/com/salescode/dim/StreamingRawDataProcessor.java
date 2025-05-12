@@ -135,7 +135,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
 
                 if (!errorList.isEmpty()) {
                     streamingRawData.setStatus("Failure");
-                    saveIntegrationHistory(streamingRawData, "FAILURE", "Save failed: " + errorList.toString());
+                    saveIntegrationHistory(streamingRawData, "FAILURE", "Save failed: " + errorList);
                     streamingRawData.setResponses(
                             errorList.stream()
                                     .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
@@ -151,7 +151,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                 .orElse(null), "");
                         if (res.getStatus().equals(PreProcessOperationResult.Status.FAILURE)) {
                             streamingRawData.setStatus("Failure");
-                            saveIntegrationHistory(streamingRawData, "FAILURE", "Save failed: " + errorList.toString());
+                            saveIntegrationHistory(streamingRawData, "FAILURE", "Save failed: " + errorList);
                             streamingRawData.setResponses(
                                     errorList.stream()
                                             .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
