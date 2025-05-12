@@ -1,7 +1,5 @@
 package com.salescode.dis.insights.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salescode.dis.insights.dto.FileProgressRequest;
 import com.salescode.dis.insights.dto.UpdateRequestResponseDto;
 import com.salescode.dis.insights.kafka.FileProgressEvent;
@@ -37,7 +35,7 @@ public class FileProgressController {
             @PathVariable String fileId,
             @Validated @RequestBody FileProgressRequest progress) {
 
-        if (!fileService.fileExists(fileId,masterName)) {
+        if (!fileService.fileExists(fileId, masterName)) {
             return ResponseEntity.notFound().build();
         }
 
@@ -51,7 +49,7 @@ public class FileProgressController {
         event.setJobId(null);
         // job is already mapped to a file, hence not required to send
 
-        kafkaTemplate.send("file-progress-updates",fileId, event);
+        kafkaTemplate.send("file-progress-updates", fileId, event);
 
         UpdateRequestResponseDto response = new UpdateRequestResponseDto();
         response.setRequestId(event.getEventId());

@@ -7,6 +7,8 @@ import lombok.Data;
 public class FileProgressRequest {
     private ConsumerMetrics consumer;
     private PublisherMetrics publisher;
+    @Min(0)
+    private Long processingTimeMs = 0L;
 
     @Data
     public static class ConsumerMetrics {
@@ -18,6 +20,9 @@ public class FileProgressRequest {
 
         @Min(0)
         private Integer logicalFailCount = 0;
+
+        @Min(0)
+        private Integer retryCount = 0;
 
         public Integer getTotalFailCount() {
             return (serverFailCount != null ? serverFailCount : 0) + 

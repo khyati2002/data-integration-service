@@ -41,7 +41,7 @@ public class FileController {
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @PostMapping("/job/{jobId}/unit")
     public ResponseEntity<FileEntityResponseDto> registerFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @Validated @RequestBody FileEntityRequestDto req, UriComponentsBuilder uriBuilder) {
-        FileEntity toSave = fileEntityMapper.toEntity(req, lob,masterName);
+        FileEntity toSave = fileEntityMapper.toEntity(req, lob, masterName);
         FileEntity saved = fileService.register(jobId, toSave);
         FileEntityResponseDto resp = fileEntityMapper.toDto(saved);
         URI uri = uriBuilder.path("/api/{lob}/master/{masterName}/job/{jobId}/unit/{id}")
@@ -55,8 +55,8 @@ public class FileController {
     @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @GetMapping("/job/{jobId}/unit/{fileId}")
-    public ResponseEntity<FileEntityResponseDto> getile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String fileId) {
-        FileEntity file = fileService.get(fileId,masterName);
+    public ResponseEntity<FileEntityResponseDto> getFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String fileId) {
+        FileEntity file = fileService.get(fileId, masterName);
         FileEntityResponseDto resp = fileEntityMapper.toDto(file);
         return ResponseEntity.ok(resp);
     }
@@ -76,8 +76,8 @@ public class FileController {
     @ApiResponse(responseCode = "200", description = "Status updated successfully", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
     @ApiResponse(responseCode = "404", description = "File not found")
     @PutMapping("/job/{jobId}/unit/{fileId}/status")
-    public ResponseEntity<FileEntityResponseDto> updateFileStatus(@PathVariable String lob, @PathVariable("master_name") String masterName,@PathVariable String jobId, @PathVariable String fileId, @Validated @RequestBody FileStatusRequestDto status) {
-        if (!fileService.fileExists(fileId,masterName)) {
+    public ResponseEntity<FileEntityResponseDto> updateFileStatus(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @PathVariable String fileId, @Validated @RequestBody FileStatusRequestDto status) {
+        if (!fileService.fileExists(fileId, masterName)) {
             return ResponseEntity.notFound().build();
         }
         FileEntity updatedFile = fileService.updateStatus(fileId, masterName, status);
