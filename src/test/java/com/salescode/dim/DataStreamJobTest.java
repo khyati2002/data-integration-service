@@ -5,6 +5,7 @@ import com.applicate.services.channelkart.utils.JSONUtils;
 import lombok.SneakyThrows;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -13,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A custom sink that collects all elements into a static list for assertions.
@@ -36,64 +38,65 @@ public class DataStreamJobTest {
 
 
     public static String rawStreamingData = "{\n" +
-            "    \"groupId\": \"%(groupId)\",\n" +
-            "    \"lob\": \"mondelezckinduat\",\n" +
+            "    \"requestId\": \"8a318b6b-95ca-49ff-8310-d90ec102827a\",\n" +
+            "    \"groupId\": \"2025-05-02\",\n" +
+            "    \"lob\": \"cktestitcloyalty\",\n" +
+            "    \"loginId\": \"integration_user\",\n" +
+            "    \"batchNumber\": 0,\n" +
             "    \"transformerInfo\": [\n" +
             "        {\n" +
+            "            \"skipPreprocessing\": false,\n" +
+            "            \"skipPersist\": false,\n" +
             "            \"entityName\": \"OutletDetails\",\n" +
-            "            \"operationType\": \"insert\",\n" +
-            "            \"transformerId\": \"unnati_csp_outlet_master_mdm\"\n" +
+            "            \"transformerId\": \"unnati_csp_outlet_master_mdm1\",\n" +
+            "            \"preprocessValidationExcludeGroup\": \"outlet_validation_exclude\",\n" +
+            "            \"messageLevelHash\": null,\n" +
+            "            \"messageHashSupported\": false,\n" +
+            "            \"messageLevelKey\": null,\n" +
+            "            \"cachedArtifact\": null,\n" +
+            "            \"operationType\": \"insert\"\n" +
             "        }\n" +
             "    ],\n" +
-            "    \"topicName\": \"flink-test\",\n" +
-            "    \"preserveOnFailure\": true,\n" +
-            "    \"features\": [\n" +
-            "        {\n" +
-            "            \"UID\": \"C20220005809717\",\n" +
-            "            \"CREATIONDATE\": \"2024-06-10 04:08:01.873\",\n" +
-            "            \"PICKUPDATE\": null,\n" +
-            "            \"DISTRICT\": \"EDIS\",\n" +
-            "            \"Branch\": \"EVIZ\",\n" +
-            "            \"CUSTName\": \"VISHAKA PALOUR\",\n" +
-            "            \"OwnerName\": \"VISHAKA PALOUR\",\n" +
-            "            \"ChannelType\": \"Retail\",\n" +
-            "            \"OutletType\": \"Convenience Outlet\",\n" +
-            "            \"LoyaltyType\": \"Retail Others\",\n" +
-            "            \"FoodsTier\": null,\n" +
-            "            \"PCPTier\": null,\n" +
-            "            \"CustAddress\": \"KARANAM GARI JN\",\n" +
-            "            \"CustState\": null,\n" +
-            "            \"CustCity\": null,\n" +
-            "            \"PIN\": null,\n" +
-            "            \"Mobile\": null,\n" +
-            "            \"BirthDate\": null,\n" +
-            "            \"Anniversary\": null,\n" +
-            "            \"PCPSubType\": null,\n" +
-            "            \"FCFoodsSubType\": null,\n" +
-            "            \"ITCProducts\": \"Y\",\n" +
-            "            \"GiftVoucher\": \"Y\",\n" +
-            "            \"OutletLat\": null,\n" +
-            "            \"OutletLong\": null,\n" +
-            "            \"CustOrder\": \"Y\",\n" +
-            "            \"CustLoyalty\": \"N\",\n" +
-            "            \"AutoRedemption\": \"Y\",\n" +
-            "            \"Active\": \"Y\",\n" +
-            "            \"TYPE\": \"non loyalty\",\n" +
-            "            \"OutletName\": \"VISHAKA PALOUR\",\n" +
-            "            \"supplierMapping\": [\n" +
-            "                {\n" +
-            "                    \"CustID\": \"UK029\",\n" +
-            "                    \"SIFYID\": \"VI3493CIS722UK029\",\n" +
-            "                    \"WDDest\": \"VI3493\",\n" +
-            "                    \"UID\": \"C20220005809717\",\n" +
-            "                    \"RCSID\": \"181204899725\",\n" +
-            "                    \"WDName\": \"SRI DEVAKI LOGISTICS\"\n" +
-            "                }\n" +
-            "            ]\n" +
-            "        }\n" +
+            "    \"features\":  [{\n" +
+            "    \"UID\": \"EGAU-SL-54327\",\n" +
+            "    \"CREATIONDATE\": \"1746770380797\",\n" +
+            "    \"DISTRICT\": \"EDIS\",\n" +
+            "    \"Branch\": \"EGAU\",\n" +
+            "    \"CUSTName\": \"BABUL STORES\",\n" +
+            "    \"OwnerName\": \"BABUL STORES\",\n" +
+            "    \"ChannelType\": \"Rural Wholesale\",\n" +
+            "    \"OutletType\": \"Dual (FMCG + Tobacco)\",\n" +
+            "    \"LoyaltyType\": \"SWD Others\",\n" +
+            "    \"OutletLat\": \"26.424693999999999\",\n" +
+            "    \"OutletLong\": \"90.973511000000002\",\n" +
+            "    \"TYPE\": \"LOYALTY\",\n" +
+            "    \"OutletName\": \"BABUL STORES\",\n" +
+            "    \"supplierMapping\": [\n" +
+            "      {\n" +
+            "        \"CustID\": \"C651/20-21\",\n" +
+            "        \"SIFYID\": \"GA2799DMM333C651/20-21\",\n" +
+            "        \"WDDest\": \"GA2799\",\n" +
+            "        \"UID\": \"EGAU-SL-54327\",\n" +
+            "        \"RCSID\": \"181203463573\",\n" +
+            "        \"WDName\": \"HARISH TRADING CO\"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"CustID\": \"C651/20-21\",\n" +
+            "        \"SIFYID\": \"NG2949DMM333C651/20-21\",\n" +
+            "        \"WDDest\": \"NG2949\",\n" +
+            "        \"UID\": \"EGAU-SL-54327\",\n" +
+            "        \"RCSID\": \"181203463573\",\n" +
+            "        \"WDName\": \"HARISH TRADING COOOOOO\"\n" +
+            "      }\n" +
             "    ]\n" +
+            "  }\n" +
+            "    ],\n" +
+            "    \"appId\": \"integration\",\n" +
+            "    \"retryCount\": 0,\n" +
+            "    \"preserveOnFailure\": true,\n" +
+            "    \"ignoreS3Log\": false,\n" +
+            "    \"topicName\": \"unnati-dataintegration\"\n" +
             "}";
-
     @Test
     public void testDataStreamJobWithFewObjects() throws Exception {
         // Clear previously collected values (if any)
@@ -115,15 +118,13 @@ public class DataStreamJobTest {
         // Prepare dummy commonProperties (if needed by StreamingRawDataProcessor)
         Map<String, Properties> stringPropertiesMap = PropertyLoader.loadApplicationProperties(null);
 
-        // Apply the process function (simulate the job's pipeline)
-//        SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = source
-//                // If you had windowing or aggregation, adjust accordingly.
-//                .process(new StreamingRawDataProcessor(stringPropertiesMap.get("Common")))
-//                .name("Test Process Function");
-//
-//        // Add a sink to collect output data
-//        processedStream.addSink(new CollectSink<>());
+        SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = AsyncDataStream.unorderedWait(
+                source.rebalance().flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
+                new StreamingRawDataProcessor(stringPropertiesMap.get("Common")),  // Async Processing
+                5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
+        ).process(new ProcessRecordStatus());
 
+        processedStream.sinkTo(new JooqDatabaseBatchSink(stringPropertiesMap.get("Common"))).name("Database Success Sink");
         // Execute the pipeline
         env.execute("DataStreamJob Test");
 

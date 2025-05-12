@@ -17,6 +17,7 @@ import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
+import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.zaxxer.hikari.HikariDataSource;
@@ -35,8 +36,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.salescode.dim.jooq.generated.tables.CkIntegrationHistory.CK_INTEGRATION_HISTORY;
 
 public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawData, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
     private static final long serialVersionUID = -3351413046175753755L;
@@ -131,6 +135,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
 
                 if (!errorList.isEmpty()) {
                     streamingRawData.setStatus("Failure");
+                    saveIntegrationHistory(streamingRawData, "FAILURE", "Save failed: " + errorList.toString());
                     streamingRawData.setResponses(
                             errorList.stream()
                                     .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
@@ -146,6 +151,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                 .orElse(null), "");
                         if (res.getStatus().equals(PreProcessOperationResult.Status.FAILURE)) {
                             streamingRawData.setStatus("Failure");
+                            saveIntegrationHistory(streamingRawData, "FAILURE", "Save failed: " + errorList.toString());
                             streamingRawData.setResponses(
                                     errorList.stream()
                                             .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
@@ -166,6 +172,17 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap())));
             }
         });
+    }
+
+    private void saveIntegrationHistory(StreamingRawData model, String status, String message) {
+        CkIntegrationHistoryRecord record = new CkIntegrationHistoryRecord();
+        record.setId(UUID.randomUUID().toString());
+        record.setEntityName(model.getClass().getSimpleName());
+        record.setRequestId(model.getRequestId());
+        record.setStatus(status);
+        record.setDescription(message);
+        record.setTimestamp(Instant.now().toEpochMilli());
+        dslContext.insertInto(CK_INTEGRATION_HISTORY).set(record).execute();
     }
 
 
