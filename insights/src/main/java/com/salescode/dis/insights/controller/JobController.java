@@ -14,8 +14,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -37,6 +38,8 @@ public class JobController {
 
     private final JobService jobService;
     private final JobEntityMapper jobEntityMapper;
+
+
 
     @Operation(
         summary = "Create a new job",
@@ -69,7 +72,6 @@ public class JobController {
     )
     @PostMapping("/job")
     public ResponseEntity<JobEntityResponseDto> createJob(@PathVariable String lob, @Validated @RequestBody JobEntityRequestDto req, UriComponentsBuilder uriBuilder) {
-    //    JobEntity entity = jobEntityMapper.toEntity(req, lob,master);
         JobEntity entity = jobEntityMapper.toEntity(req, lob);
         JobEntity job = jobService.createJob(entity);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
@@ -78,6 +80,8 @@ public class JobController {
                 .toUri();
         return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(dto);
     }
+
+
 
 
     @Operation(
@@ -122,7 +126,6 @@ public class JobController {
 
 
 
-
     @Operation(
         summary = "Update job status",
         description = """
@@ -162,11 +165,14 @@ public class JobController {
             content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @PutMapping("/job/{id}/status/{status}")
-    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable String id, @PathVariable String status) {
-        JobEntity job = jobService.updateStatus(id, JobStatus.valueOf(status));
+    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable String id, @PathVariable @NotBlank JobStatus status) {
+        JobEntity job = jobService.updateStatus(id, status);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
     }
+
+
+
 
     @Operation(
         summary = "List all jobs for a specific lob",
@@ -198,51 +204,11 @@ public class JobController {
         content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @GetMapping(path = "/jobs")
-    public ResponseEntity<List<JobEntityResponseDto>> getJobs(@PathVariable String lob, Pageable pageable) {
+    public ResponseEntity<Page<JobEntity>> getJobs(@PathVariable String lob, Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.ASC, TimeAwareEntity.START_TIME)));
-        List<JobEntityResponseDto> content = jobService.getAllJobsByLob(lob, pageRequest)
-                .map(jobEntityMapper::toDto)
-                .getContent();
+        Page<JobEntity> content = jobService.getAllJobsByLob(lob, pageRequest);
         return ResponseEntity.ok(content);
     }
 
-
-
-
-
-//    @Operation(
-//        summary = "List jobs by master",
-//        description = """
-//            Retrieves a paginated list of jobs for a specific master within a line of business.
-//
-//            Similar to the list all jobs endpoint, but filtered by master name.
-//            Supports the same pagination and sorting parameters.
-//            """,
-//        parameters = {
-//            @Parameter(name = "lob", description = "Line of Business"),
-//            @Parameter(name = "master_name", description = "Name of the master"),
-//            @Parameter(name = "page", description = "Page number (0-based)"),
-//            @Parameter(name = "size", description = "Number of items per page"),
-//            @Parameter(name = "sort", description = "Sort criteria (e.g., startTime,asc)")
-//        }
-//    )
-//    @ApiResponse(
-//        responseCode = "200",
-//        description = "List of jobs for the specified master retrieved successfully",
-//        content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
-//    )
-//    @ApiResponse(
-//        responseCode = "500",
-//        description = "Internal server error occurred while retrieving job list",
-//        content = @Content(schema = @Schema(implementation = ApiError.class))
-//    )
-//    @GetMapping(path = "/{master_name}/jobs")
-//    public ResponseEntity<List<JobEntityResponseDto>> getJobsByMaster(@PathVariable String lob, @PathVariable("master_name") String master, Pageable pageable) {
-//        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.DESC, TimeAwareEntity.START_TIME)));
-//        List<JobEntityResponseDto> content = jobService.getAllJobsByLobAndMaster(lob, master, pageRequest)
-//                .map(jobEntityMapper::toDto)
-//                .getContent();
-//        return ResponseEntity.ok(content);
-//    }
 
 }
