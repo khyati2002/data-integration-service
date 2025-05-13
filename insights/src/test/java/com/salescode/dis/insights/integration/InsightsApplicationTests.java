@@ -18,7 +18,6 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -121,7 +120,7 @@ class InsightsApplicationTests {
         System.out.println("Waiting for Kafka events to be processed...");
         Awaitility.await().atMost(Duration.ofSeconds(30)).pollInterval(Duration.ofSeconds(5)).untilAsserted(() -> {
             // Check FileEntity state
-            FileEntity file = fileService.getOrReturnNull(TEST_FILE_ID,TEST_MASTER_NAME);
+            FileEntity file = fileService.get(TEST_FILE_ID,TEST_MASTER_NAME);
             assertNotNull(file, "FileEntity should exist");
             assertTrue(file.getConsumedSuccessCount() >= EXPECTED_CONSUME_SUCCESS && file.getPublishedSuccessCount() >= EXPECTED_PUBLISH_SUCCESS, "File counts should reach expected values. Found Consumed=" + file.getConsumedSuccessCount() + ", Published=" + file.getPublishedSuccessCount());
             // Check JobEntity state
@@ -220,11 +219,11 @@ class InsightsApplicationTests {
         System.out.println("Waiting for Kafka events to be processed for multiple files...");
         Awaitility.await().atMost(Duration.ofSeconds(300)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
             // Check FileEntity states
-            FileEntity file1 = fileService.getOrReturnNull(TEST_FILE_ID_1,TEST_MASTER_NAME);
+            FileEntity file1 = fileService.get(TEST_FILE_ID_1,TEST_MASTER_NAME);
             assertNotNull(file1, "FileEntity 1 should exist");
             assertTrue(file1.getConsumedSuccessCount() >= EXPECTED_CONSUME_SUCCESS_PER_FILE && file1.getPublishedSuccessCount() >= EXPECTED_PUBLISH_SUCCESS_PER_FILE, "File 1 counts should reach expected values. Found Consumed=" + file1.getConsumedSuccessCount() + ", Published=" + file1.getPublishedSuccessCount());
 
-            FileEntity file2 = fileService.getOrReturnNull(TEST_FILE_ID_2,TEST_MASTER_NAME);
+            FileEntity file2 = fileService.get(TEST_FILE_ID_2,TEST_MASTER_NAME);
             assertNotNull(file2, "FileEntity 2 should exist");
             assertTrue(file2.getConsumedSuccessCount() >= EXPECTED_CONSUME_SUCCESS_PER_FILE && file2.getPublishedSuccessCount() >= EXPECTED_PUBLISH_SUCCESS_PER_FILE, "File 2 counts should reach expected values. Found Consumed=" + file2.getConsumedSuccessCount() + ", Published=" + file2.getPublishedSuccessCount());
 

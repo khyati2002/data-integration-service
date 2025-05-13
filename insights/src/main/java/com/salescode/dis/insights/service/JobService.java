@@ -11,21 +11,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class JobService {
 
     private final JobRepository jobRepo;
 
-    @Transactional
-    public JobEntity createJob(JobEntity req) {
-        JobEntity saved = jobRepo.save(req);
-        log.info("Created job {}", saved.getId());
-        return saved;
+    public JobEntity saveJob(JobEntity req) {
+        return jobRepo.save(req);
     }
 
     @Transactional(readOnly = true)
@@ -33,7 +30,6 @@ public class JobService {
         return jobRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
     }
 
-    @Transactional
     public JobEntity updateStatus(String id, JobStatus status) {
         JobEntity job = getJob(id);
         job.setStatus(status);
@@ -46,4 +42,13 @@ public class JobService {
         return jobRepo.getJobEntitiesByLob(lob, pageable);
     }
 
+    JobEntity createJobIfNotExists(String jobId, String lob){
+        Optional<JobEntity> job = jobRepo.findById(jobId);
+        return job.orElseGet(()->{
+            JobEntity jobEntity = new JobEntity();
+            jobEntity.setId(jobId);
+            jobEntity.setLob(lob);
+            return saveJob(jobEntity);
+        });
+    }
 }

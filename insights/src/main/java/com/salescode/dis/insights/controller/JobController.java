@@ -73,7 +73,7 @@ public class JobController {
     @PostMapping("/job")
     public ResponseEntity<JobEntityResponseDto> createJob(@PathVariable String lob, @Validated @RequestBody JobEntityRequestDto req, UriComponentsBuilder uriBuilder) {
         JobEntity entity = jobEntityMapper.toEntity(req, lob);
-        JobEntity job = jobService.createJob(entity);
+        JobEntity job = jobService.saveJob(entity);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         URI uri = uriBuilder.path("/api/{lob}/job/{id}")
                 .buildAndExpand(lob, job.getId())
@@ -204,9 +204,9 @@ public class JobController {
         content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @GetMapping(path = "/jobs")
-    public ResponseEntity<Page<JobEntity>> getJobs(@PathVariable String lob, Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.ASC, TimeAwareEntity.START_TIME)));
-        Page<JobEntity> content = jobService.getAllJobsByLob(lob, pageRequest);
+    public ResponseEntity<Page<JobEntityResponseDto>> getJobs(@PathVariable String lob, Pageable pageable) {
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.DESC, TimeAwareEntity.START_TIME)));
+        Page<JobEntityResponseDto> content = jobService.getAllJobsByLob(lob, pageRequest).map(jobEntityMapper::toDto);
         return ResponseEntity.ok(content);
     }
 

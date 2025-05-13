@@ -28,8 +28,8 @@ public class FileEntityResponseDto implements Serializable {
     Integer consumedFailCount;
     Integer serverFailCount;
     Integer logicalFailCount;
-    Integer publisherThroughput;
-    Integer consumerThroughput;
+    Double publisherThroughput;
+    Double consumerThroughput;
     FileStatus publishedStatus;
     FileStatus consumedStatus;
 

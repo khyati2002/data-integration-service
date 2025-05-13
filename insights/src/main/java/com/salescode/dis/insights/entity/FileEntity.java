@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.util.function.DoubleConsumer;
 
 @Entity
 @Table(name = "integration_file",
@@ -44,7 +46,10 @@ public class FileEntity extends TimeAwareEntity {
     @Builder.Default
     private Integer logicalFailCount = 0;
 
+    @Column(precision = 10, scale = 2)
     private Double publisherThroughput; // - total records / time (at completion - success or failure) - calculate on api call
+
+    @Column(precision = 10, scale = 2)
     private Double consumerThroughput; // - total records / time (at completion - success or failure) - calculate on api call
 
     @Enumerated(EnumType.STRING)
@@ -70,29 +75,26 @@ public class FileEntity extends TimeAwareEntity {
         if (this.publishedStatus == null) {
             this.publishedStatus = FileStatus.PENDING;
         }
+        if(this.fileId == null){
+            this.fileId = this.getId();
+        }
     }
 
     @Override
     protected void onUpdate() {
         super.onUpdate();
-        if (this.publishedStatus == FileStatus.COMPLETED || this.publishedStatus == FileStatus.FAILED) {
-                setEndTime(Instant.now());
-                double timeTaken = this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond();
-                double totalPublished = this.publishedSuccessCount + this.getPublishedFailCount();
-                if (getStartTime().toEpochMilli() == getEndTime().toEpochMilli()) {
-                    setPublisherThroughput(totalPublished);
-                }
-                setPublisherThroughput(totalPublished / timeTaken);
+        long elapsedSeconds = Math.max(Duration.between(getStartTime(), getLastModifiedTime()).getSeconds(), 1);
+        updateThroughputIfFinal(publishedStatus, publishedSuccessCount + publishedFailCount, elapsedSeconds, this::setPublisherThroughput);
+        updateThroughputIfFinal(consumedStatus, consumedSuccessCount + consumedFailCount, elapsedSeconds, this::setConsumerThroughput);
+        if(this.publishedStatus == FileStatus.COMPLETED && this.consumedStatus == FileStatus.COMPLETED){
+            setEndTime(Instant.now());
         }
-        if (this.consumedStatus == FileStatus.COMPLETED || this.consumedStatus == FileStatus.FAILED) {
-                setEndTime(Instant.now());
-                double timeTaken = this.getEndTime().getEpochSecond() - this.getStartTime().getEpochSecond();
-                double totalConsumed = this.consumedSuccessCount + this.getConsumedFailCount();
-                if (getStartTime().toEpochMilli() == getEndTime().toEpochMilli()) {
-                    setConsumerThroughput(totalConsumed);
-                }
-                setConsumerThroughput(totalConsumed / timeTaken);
-        }
+    }
 
+    private void updateThroughputIfFinal(FileStatus status, int totalCount, long elapsedSeconds, DoubleConsumer setter) {
+        if (status == FileStatus.COMPLETED || status == FileStatus.FAILED) {
+            double throughput = (double) totalCount / elapsedSeconds;
+            setter.accept(throughput);
+        }
     }
 }
