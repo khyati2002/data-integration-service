@@ -146,6 +146,7 @@ public class IntegrationSummaryService {
                                 record -> {
                                     Map<String, Object> jobData = new HashMap<>();
 
+                                    // Your existing counts...
                                     jobData.put("consumed_fail_count", getSafeInt(record, "consumed_fail_count"));
                                     jobData.put("consumed_success_count", getSafeInt(record, "consumed_success_count"));
                                     jobData.put("published_success_count", getSafeInt(record, "published_success_count"));
@@ -157,14 +158,20 @@ public class IntegrationSummaryService {
 
                                     Instant startTime_job = (Instant) record.get("start_time");
                                     Instant endTime_job = (Instant) record.get("end_time");
-
                                     jobData.put("startTime", startTime_job != null ? startTime_job.toString() : null);
                                     jobData.put("endTime", endTime_job != null ? endTime_job.toString() : null);
 
-                                    // Add throughput tracking
                                     jobData.put("consumer_throughput_sum", getSafeDouble(record, "consumer_throughput"));
                                     jobData.put("publisher_throughput_sum", getSafeDouble(record, "publisher_throughput"));
-                                    jobData.put("throughput_count", 1); // count each record
+                                    jobData.put("throughput_count", 1);
+
+                                    // NEW: Add master to a list
+                                    Set<Object> masters = new HashSet<>();
+                                    Object master = record.get("master");
+                                    if (master != null) {
+                                        masters.add(master);
+                                    }
+                                    jobData.put("masters", masters);
 
                                     return jobData;
                                 },
@@ -172,6 +179,7 @@ public class IntegrationSummaryService {
                                     Map<String, Object> existingMap = (Map<String, Object>) existing;
                                     Map<String, Object> replacementMap = (Map<String, Object>) replacement;
 
+                                    // Sum counts
                                     existingMap.put("consumed_fail_count", aggregateSafeInt(existingMap, replacementMap, "consumed_fail_count"));
                                     existingMap.put("consumed_success_count", aggregateSafeInt(existingMap, replacementMap, "consumed_success_count"));
                                     existingMap.put("published_success_count", aggregateSafeInt(existingMap, replacementMap, "published_success_count"));
@@ -186,6 +194,12 @@ public class IntegrationSummaryService {
                                     int count1 = (int) existingMap.getOrDefault("throughput_count", 0);
                                     int count2 = (int) replacementMap.getOrDefault("throughput_count", 0);
                                     existingMap.put("throughput_count", count1 + count2);
+
+                                    Set<Object> existingMasters = new HashSet<>((Collection<?>) existingMap.getOrDefault("masters", new HashSet<>()));
+                                    Set<Object> newMasters = new HashSet<>((Collection<?>) replacementMap.getOrDefault("masters", new HashSet<>()));
+                                    existingMasters.addAll(newMasters);
+                                    existingMap.put("master", existingMasters);
+                                    existingMap.remove("masters");
 
                                     return existingMap;
                                 }
