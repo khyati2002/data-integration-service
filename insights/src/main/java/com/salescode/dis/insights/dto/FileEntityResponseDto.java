@@ -15,8 +15,6 @@ public class FileEntityResponseDto implements Serializable {
     String id;
     String fileId;
     String master;
-    Long maxProcessingTime;
-    Long minProcessingTime;
     Instant creationTime;
     Instant lastModifiedTime;
     String lob;
@@ -30,6 +28,9 @@ public class FileEntityResponseDto implements Serializable {
     Integer consumedFailCount;
     Integer serverFailCount;
     Integer logicalFailCount;
+    Integer retryCount;
+    Long maxProcessingTimeMs;
+    Long minProcessingTimeMs;
     Double publisherThroughput;
     Double consumerThroughput;
     FileStatus publishedStatus;

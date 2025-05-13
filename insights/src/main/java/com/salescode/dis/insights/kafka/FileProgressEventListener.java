@@ -25,6 +25,10 @@ public class FileProgressEventListener {
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
 
+    /**
+      In case of file, since it's already mapped to jobId, therefore in event jobId will be null.
+      While on the other hand, In case of api, since we cannot register job beforehand, jobId should be sent inside event to create job if not there
+     */
     @KafkaListener(topics = "file-progress-updates", groupId = "file-progress-processor", batch = "true", properties = {
             ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=100"
     })
@@ -33,7 +37,6 @@ public class FileProgressEventListener {
             log.debug("Received empty or null event list. Skipping.");
             return;
         }
-
         log.info("Received {} events to process.", events.size());
 
         Map<String, AggregationWrapper> aggregationMap = new HashMap<>();
@@ -66,7 +69,6 @@ public class FileProgressEventListener {
                 } else {
                     log.warn("Skipping event for fileId {} due to null progress data: {}", fileId, event);
                 }
-
             } catch (Exception e) {
                 log.error("Failed to process individual event before aggregation: FileId={}, Event={}", (event != null ? event.getFileId() : "unknown"), event, e);
                 sendToFailureTopic(event, "Individual event processing failed: " + e.getMessage());
@@ -98,23 +100,36 @@ public class FileProgressEventListener {
     }
 
     private void aggregateMetrics(FileProgressRequest.ConsumerMetrics existing, FileProgressRequest.ConsumerMetrics incoming) {
+        if (existing == null || incoming == null) {
+            log.warn("Skipping consumer metrics aggregation due to null object(s). Existing: {}, Incoming: {}", existing, incoming);
+            return;
+        }
         existing.setSuccessCount(safeSum(existing.getSuccessCount(), incoming.getSuccessCount()));
         existing.setServerFailCount(safeSum(existing.getServerFailCount(), incoming.getServerFailCount()));
         existing.setLogicalFailCount(safeSum(existing.getLogicalFailCount(), incoming.getLogicalFailCount()));
-        existing.setLogicalFailCount(safeSum(existing.getRetryCount(), incoming.getRetryCount()));
+        existing.setRetryCount(safeSum(existing.getRetryCount(), incoming.getRetryCount()));
     }
 
     private void aggregateMetrics(FileProgressRequest.PublisherMetrics existing, FileProgressRequest.PublisherMetrics incoming) {
+        if (existing == null || incoming == null) {
+            log.warn("Skipping publisher metrics aggregation due to null object(s). Existing: {}, Incoming: {}", existing, incoming);
+            return;
+        }
         existing.setSuccessCount(safeSum(existing.getSuccessCount(), incoming.getSuccessCount()));
         existing.setFailCount(safeSum(existing.getFailCount(), incoming.getFailCount()));
     }
 
     private void enrichEventMetadata(FileProgressEvent aggregatedEvent, FileProgressEvent event) {
+        if (aggregatedEvent == null || event == null) {
+            log.warn("Skipping metadata enrichment due to null event(s). Aggregated: {}, Event: {}", aggregatedEvent, event);
+            return;
+        }
         aggregatedEvent.setFileId(event.getFileId());
+        // Keep first non-null value encountered for metadata fields
         if (aggregatedEvent.getLob() == null) aggregatedEvent.setLob(event.getLob());
         if (aggregatedEvent.getJobId() == null) aggregatedEvent.setJobId(event.getJobId());
         if (aggregatedEvent.getMasterName() == null) aggregatedEvent.setMasterName(event.getMasterName());
-        aggregatedEvent.setErrorMessage(null);
+        aggregatedEvent.setErrorMessage(null); // Reset error message on aggregated event
     }
 
     private void processAggregatedUpdates(Map<String, AggregationWrapper> aggregationMap) {
