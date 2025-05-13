@@ -165,7 +165,7 @@ public class JobController {
             content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @PutMapping("/job/{id}/status/{status}")
-    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable String id, @PathVariable @NotBlank JobStatus status) {
+    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable String id, @PathVariable JobStatus status) {
         JobEntity job = jobService.updateStatus(id, status);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);

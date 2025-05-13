@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ActiveProfiles({"postgres", "dev", "debug", "kafka"})
+@ActiveProfiles({"postgres", "dev", "debug", "kafka", "test"})
 class FileControllerTest {
 
     private static final String LOB = "Retail";

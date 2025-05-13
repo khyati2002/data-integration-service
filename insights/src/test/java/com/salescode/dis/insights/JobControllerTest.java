@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.dis.insights.dto.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.JobEntityResponseDto;
 import com.salescode.dis.insights.enums.JobStatus;
+import com.salescode.dis.insights.mapper.pagination.RestPageImpl;
 import com.salescode.dis.insights.repository.JobRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ActiveProfiles({"postgres","dev","debug"})
+@ActiveProfiles({"postgres","dev","debug","test"})
 class JobControllerTest {
 
     @Autowired
@@ -144,7 +144,6 @@ class JobControllerTest {
         assertNotNull(response.getBody().getCreationTime(), "Creation time should not be null");
         assertNotNull(response.getBody().getLastModifiedTime(), "Last modified time should not be null");
         assertNotNull(response.getBody().getStartTime(), "Start time should not be null");
-        // End time should be null as the job is not completed
         assertNull(response.getBody().getEndTime(), "End time should be null for a job that is not completed");
     }
 
@@ -155,11 +154,11 @@ class JobControllerTest {
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/api/{lob}/jobs");
 
         // Make request
-        ResponseEntity<List<JobEntityResponseDto>> response = restTemplate.exchange(
+        ResponseEntity<RestPageImpl<JobEntityResponseDto>> response = restTemplate.exchange(
                 builder.buildAndExpand(LOB).toUriString(),
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<JobEntityResponseDto>>() {}
+                new ParameterizedTypeReference<RestPageImpl<JobEntityResponseDto>>() {}
         );
 
         // Assertions
@@ -171,33 +170,9 @@ class JobControllerTest {
         assertTrue(foundCreatedJob, "Should find the job we created earlier");
     }
 
-//    @Test
-//    @Order(5)
-//    void testGetJobsByMaster() {
-//        // Build URI with query parameters and pagination
-//        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/api/{lob}/master/{master_name}/jobs");
-//
-//        // Make request
-//        ResponseEntity<List<JobEntityResponseDto>> response = restTemplate.exchange(
-//                builder.buildAndExpand(LOB, MASTER).toUriString(),
-//                HttpMethod.GET,
-//                null,
-//                new ParameterizedTypeReference<List<JobEntityResponseDto>>() {}
-//        );
-//
-//
-//        // Assertions
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertNotNull(response.getBody());
-//        assertFalse(response.getBody().isEmpty());
-//        boolean foundCreatedJob = response.getBody().stream()
-//                .anyMatch(job -> job.getId().equals(createdJobId));
-//        assertTrue(foundCreatedJob, "Should find the job we created earlier");
-//    }
-
 
     @Test
-    @Order(7)
+    @Order(5)
     void testGetJob_NotFound() {
         // Make request with a non-existent job ID
         ResponseEntity<String> response = restTemplate.exchange(
@@ -214,7 +189,7 @@ class JobControllerTest {
     }
 
     @Test
-    @Order(8)
+    @Order(6)
     void testUpdateStatus_InvalidStatus() {
         // Make request with an invalid status value
         ResponseEntity<String> response = restTemplate.exchange(
@@ -232,7 +207,7 @@ class JobControllerTest {
     }
 
     @Test
-    @Order(9)
+    @Order(7)
     void testCompleteJobLifecycle() {
         // Update to COMPLETED status
         ResponseEntity<JobEntityResponseDto> response = restTemplate.exchange(

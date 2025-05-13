@@ -5,6 +5,7 @@ import com.salescode.dis.insights.enums.FileStatus;
 import lombok.Value;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 
 /**
@@ -31,8 +32,8 @@ public class FileEntityResponseDto implements Serializable {
     Integer retryCount;
     Long maxProcessingTimeMs;
     Long minProcessingTimeMs;
-    Double publisherThroughput;
-    Double consumerThroughput;
+    BigDecimal publisherThroughput;
+    BigDecimal consumerThroughput;
     FileStatus publishedStatus;
     FileStatus consumedStatus;
 
