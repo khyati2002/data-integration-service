@@ -169,7 +169,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     }
                         //            saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
                                 } catch (Exception individualEx) {
-                                saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
+                                saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getCause());
                                 }
                             }
                         }

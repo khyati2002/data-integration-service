@@ -167,7 +167,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                     // Handle success case
                 }
             } catch (Exception e) {
-             //   logger.error("Processing failed", e);
+                logger.error("Processing failed", e);
                 streamingRawData.setStatus("Failure");
                 resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap())));
             }
