@@ -2,6 +2,7 @@ package com.salescode.dis.insights.controller;
 
 import com.salescode.dis.insights.dto.FileProgressRequest;
 import com.salescode.dis.insights.dto.UpdateRequestResponseDto;
+import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.kafka.FileProgressEvent;
 import com.salescode.dis.insights.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,14 +36,12 @@ public class FileProgressController {
             @PathVariable String fileId,
             @Validated @RequestBody FileProgressRequest progress) {
 
-        if (!fileService.fileExists(fileId, masterName)) {
-            return ResponseEntity.notFound().build();
-        }
+        FileEntity fileEntity = fileService.get(fileId, masterName);
 
         FileProgressEvent event = new FileProgressEvent();
         String eventId = UUID.randomUUID().toString();
         event.setEventId(eventId);
-        event.setFileId(fileId);
+        event.setFileId(fileEntity.getFileId());
         event.setLob(lob);
         event.setMasterName(masterName);
         event.setProgress(progress);
@@ -56,7 +55,7 @@ public class FileProgressController {
         response.setStatus("ACCEPTED");
         response.setMessage("Progress update has been queued");
         response.setFileId(fileId);
-
+        response.setMaster(masterName);
         return ResponseEntity.accepted().body(response);
     }
 } 

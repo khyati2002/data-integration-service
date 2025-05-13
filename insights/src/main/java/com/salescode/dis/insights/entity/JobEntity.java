@@ -54,5 +54,6 @@ public class JobEntity extends TimeAwareEntity {
         if(this.status == JobStatus.COMPLETED || this.status == JobStatus.FAILED){
             setEndTime(Instant.now());
         }
+        this.totalFileCount = files.size();
     }
 }

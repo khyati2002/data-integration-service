@@ -77,9 +77,6 @@ public class FileController {
     @ApiResponse(responseCode = "404", description = "File not found")
     @PutMapping("/master/{master_name}/job/{jobId}/unit/{fileId}/status")
     public ResponseEntity<FileEntityResponseDto> updateFileStatus(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @PathVariable String fileId, @Validated @RequestBody FileStatusRequestDto status) {
-        if (!fileService.fileExists(fileId, masterName)) {
-            return ResponseEntity.notFound().build();
-        }
         FileEntity updatedFile = fileService.updateStatus(fileId, masterName, status);
         FileEntityResponseDto response = fileEntityMapper.toDto(updatedFile);
         return ResponseEntity.ok(response);

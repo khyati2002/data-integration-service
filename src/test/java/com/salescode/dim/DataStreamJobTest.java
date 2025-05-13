@@ -1,16 +1,23 @@
 package com.salescode.dim;
 
-import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.utils.JSONUtils;
-import lombok.SneakyThrows;
 import org.apache.commons.text.StringSubstitutor;
-import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.connector.source.util.ratelimit.RateLimiterStrategy;
+import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.RestOptions;
+import org.apache.flink.connector.datagen.source.DataGeneratorSource;
+import org.apache.flink.connector.datagen.source.GeneratorFunction;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
-import org.junit.Assert;
+import org.apache.flink.util.Collector;
 import org.junit.Test;
+
 
 import java.util.*;
 
@@ -34,119 +41,70 @@ class CollectSink<T> implements SinkFunction<T> {
 
 public class DataStreamJobTest {
 
-
-    public static String rawStreamingData = "{\n" +
-            "    \"groupId\": \"%(groupId)\",\n" +
-            "    \"lob\": \"mondelezckinduat\",\n" +
-            "    \"transformerInfo\": [\n" +
-            "        {\n" +
-            "            \"entityName\": \"OutletDetails\",\n" +
-            "            \"operationType\": \"insert\",\n" +
-            "            \"transformerId\": \"unnati_csp_outlet_master_mdm\"\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"topicName\": \"flink-test\",\n" +
-            "    \"preserveOnFailure\": true,\n" +
-            "    \"features\": [\n" +
-            "        {\n" +
-            "            \"UID\": \"C20220005809717\",\n" +
-            "            \"CREATIONDATE\": \"2024-06-10 04:08:01.873\",\n" +
-            "            \"PICKUPDATE\": null,\n" +
-            "            \"DISTRICT\": \"EDIS\",\n" +
-            "            \"Branch\": \"EVIZ\",\n" +
-            "            \"CUSTName\": \"VISHAKA PALOUR\",\n" +
-            "            \"OwnerName\": \"VISHAKA PALOUR\",\n" +
-            "            \"ChannelType\": \"Retail\",\n" +
-            "            \"OutletType\": \"Convenience Outlet\",\n" +
-            "            \"LoyaltyType\": \"Retail Others\",\n" +
-            "            \"FoodsTier\": null,\n" +
-            "            \"PCPTier\": null,\n" +
-            "            \"CustAddress\": \"KARANAM GARI JN\",\n" +
-            "            \"CustState\": null,\n" +
-            "            \"CustCity\": null,\n" +
-            "            \"PIN\": null,\n" +
-            "            \"Mobile\": null,\n" +
-            "            \"BirthDate\": null,\n" +
-            "            \"Anniversary\": null,\n" +
-            "            \"PCPSubType\": null,\n" +
-            "            \"FCFoodsSubType\": null,\n" +
-            "            \"ITCProducts\": \"Y\",\n" +
-            "            \"GiftVoucher\": \"Y\",\n" +
-            "            \"OutletLat\": null,\n" +
-            "            \"OutletLong\": null,\n" +
-            "            \"CustOrder\": \"Y\",\n" +
-            "            \"CustLoyalty\": \"N\",\n" +
-            "            \"AutoRedemption\": \"Y\",\n" +
-            "            \"Active\": \"Y\",\n" +
-            "            \"TYPE\": \"non loyalty\",\n" +
-            "            \"OutletName\": \"VISHAKA PALOUR\",\n" +
-            "            \"supplierMapping\": [\n" +
-            "                {\n" +
-            "                    \"CustID\": \"UK029\",\n" +
-            "                    \"SIFYID\": \"VI3493CIS722UK029\",\n" +
-            "                    \"WDDest\": \"VI3493\",\n" +
-            "                    \"UID\": \"C20220005809717\",\n" +
-            "                    \"RCSID\": \"181204899725\",\n" +
-            "                    \"WDName\": \"SRI DEVAKI LOGISTICS\"\n" +
-            "                }\n" +
-            "            ]\n" +
-            "        }\n" +
-            "    ]\n" +
-            "}";
-
     @Test
     public void testDataStreamJobWithFewObjects() throws Exception {
-        // Clear previously collected values (if any)
         CollectSink.clear();
 
-        // Set up a local Flink streaming environment
-        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1); // Simplify testing with one parallel instance
+        Configuration configuration = Configuration.fromMap(Map.of(RestOptions.PORT.key(), "8000"));
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(configuration);
 
-        // Create a few sample StreamingRawData objects
-        StreamingRawData data1 = createStreamingDataObject(Map.of("groupId", "req-1"));
-        StreamingRawData data2 = createStreamingDataObject(Map.of("groupId", "req-2"));
-        StreamingRawData data3 = createStreamingDataObject(Map.of("groupId", "req-3"));
+        env.setParallelism(8);
 
-        // Create a source from the sample data
-        DataStream<StreamingRawData> source = env.fromData(data1, data2, data3);
 
-        // For testing, we bypass Kafka and directly use the processor.
-        // Prepare dummy commonProperties (if needed by StreamingRawDataProcessor)
-        Map<String, Properties> stringPropertiesMap = PropertyLoader.loadApplicationProperties(null);
+        List<String> entities = List.of("OutletDetails", "User", "Product");
 
-        // Apply the process function (simulate the job's pipeline)
-//        SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = source
-//                // If you had windowing or aggregation, adjust accordingly.
-//                .process(new StreamingRawDataProcessor(stringPropertiesMap.get("Common")))
-//                .name("Test Process Function");
+        GeneratorFunction<Long, JsonNode> generatorFunction = index -> {
+            int i = index.intValue() % entities.size();
+            return JSONUtils.getObjectMapper()
+                    .readTree(StringSubstitutor.replace("{\n" +
+                            "    \"groupId\": \"%(groupId)\",\n" +
+                            "    \"entityName\": \"%(entityName)\"\n" +
+                            "}", Map.of("groupId", "req-" + i, "entityName", entities.get(i)), "%(", ")"));
+        };
+
+        DataGeneratorSource<JsonNode> outDataGeneratorSource = new DataGeneratorSource<>(
+                generatorFunction,
+                Long.MAX_VALUE,
+                RateLimiterStrategy.perSecond(3),
+                TypeInformation.of(JsonNode.class)
+        );
+
+        DataStream<JsonNode> source = env.fromSource(outDataGeneratorSource, WatermarkStrategy.noWatermarks(), "Source").setParallelism(1);
+
+        var window = source.keyBy(new KeySelector<JsonNode, String>() {
+                    @Override
+                    public String getKey(JsonNode streamingRawData) throws Exception {
+                        return streamingRawData.get("entityName").asText().hashCode()+"";
+                    }
+                }).countWindow(3)
+                .aggregate(new ListAggregator<>())
+                .setParallelism(3)
+
 //
-//        // Add a sink to collect output data
-//        processedStream.addSink(new CollectSink<>());
+//        var process = window.process(new ProcessWindowFunction<JsonNode, List<JsonNode>, String, TimeWindow>() {
+//            @Override
+//            public void process(String s, ProcessWindowFunction<JsonNode, List<JsonNode>, String, TimeWindow>.Context context, Iterable<JsonNode> elements, Collector<List<JsonNode>> out) throws Exception {
+//                List<JsonNode> list = new ArrayList<>();
+//                elements.forEach(list::add);
+//                System.out.println("Window processed for key: " + s + " with " + list.size() + " elements " + list);
+//                out.collect(list);
+//            }
+//        })
+                .process(new ProcessFunction<List<JsonNode>, JsonNode>() {
+                    @Override
+                    public void processElement(List<JsonNode> value, ProcessFunction<List<JsonNode>, JsonNode>.Context ctx, Collector<JsonNode> out) throws Exception {
+                        System.out.println("Processed key: " + "size : " + value.size() + " elements in a batch : " + value);
+                        value.forEach(out::collect);
+                    }
+                }).setParallelism(6);
 
+        window.addSink(new CollectSink<>()).setParallelism(2);
+
+        env.disableOperatorChaining();
         // Execute the pipeline
         env.execute("DataStreamJob Test");
 
-        // Assert that all elements have been processed (order may not be guaranteed)
-        List<Object> results = CollectSink.values;
-        Assert.assertEquals("Expected 3 elements to be processed", 3, results.size());
-        // Further assertions can be made here based on expected processing logic
-        for (Object obj : results) {
-            System.out.println(obj);
-            Assert.assertTrue("Result should be an instance of StreamingRawData", obj instanceof StreamingRawData);
-            StreamingRawData streamingRawData = (StreamingRawData) obj;
-        }
     }
 
-    @SneakyThrows
-    private StreamingRawData createStreamingDataObject(Map<String, String> map) {
-        return JSONUtils.getObjectMapper()
-                        .readValue(StringSubstitutor.replace(rawStreamingData, map, "%(", ")"), StreamingRawData.class);
-    }
-
-    @Test
-    public void testSRD() throws Exception {
-        createStreamingDataObject(Map.of("groupId", "req-1"));
-    }
 
 }
