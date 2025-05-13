@@ -34,6 +34,7 @@ public class FileService {
         file.setJob(job);
         FileEntity savedFile = fileRepo.save(file);
         job.getFiles().add(savedFile);
+        job.setTotalFileCount(job.getFiles().size());
         log.info("Registered file {} under job {}", file.getId(), jobId);
         return savedFile;
     }

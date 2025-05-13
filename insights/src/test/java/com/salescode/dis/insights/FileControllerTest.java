@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.dis.insights.dto.*;
 import com.salescode.dis.insights.entity.FileEntity;
+import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.FileStatus;
 import com.salescode.dis.insights.enums.JobStatus;
+import com.salescode.dis.insights.mapper.pagination.RestPageImpl;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.repository.JobRepository;
 import com.salescode.dis.insights.service.FileService;
@@ -18,9 +20,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -70,7 +70,7 @@ class FileControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertNotNull(response.getBody().getId());
-   //     assertEquals(MASTER_NAME, response.getBody().getMaster());
+        //     assertEquals(MASTER_NAME, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
         assertEquals(JobStatus.PENDING, response.getBody().getStatus());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
@@ -115,8 +115,41 @@ class FileControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertNotNull(response.getBody().getId());
+        assertNotNull(response.getBody().getFileId());
+        assertEquals(MASTER_NAME, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
         assertEquals(100, response.getBody().getTotalCount());
+        assertEquals(extendedAttrs, response.getBody().getExtendedAttributes());
+
+        // Count related assertions
+        assertEquals(Integer.valueOf(0), response.getBody().getPublishedSuccessCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getPublishedFailCount());
+
+        assertEquals(Integer.valueOf(0), response.getBody().getConsumedSuccessCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getConsumedFailCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getLogicalFailCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getServerFailCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getRetryCount());
+
+        assertNull(response.getBody()
+                .getMaxProcessingTimeMs(), "Max processing time should be null at start, will be set by progress");
+        assertNull(response.getBody()
+                .getMinProcessingTimeMs(), "Min processing time should be null at start, will be set by progress");
+
+        assertNull(response.getBody()
+                .getConsumerThroughput(), "Consumer throughput is updated when file is marked success or failed");
+        assertNull(response.getBody()
+                .getPublisherThroughput(), "Publisher throughput is updated when file is marked success or failed");
+
+        assertEquals(FileStatus.PENDING, response.getBody().getConsumedStatus());
+        assertEquals(FileStatus.PENDING, response.getBody().getPublishedStatus());
+
+        // Time-related assertions
+        assertNotNull(response.getBody().getCreationTime(), "Creation time should not be null");
+        assertNotNull(response.getBody().getLastModifiedTime(), "Last modified time should not be null");
+        assertNotNull(response.getBody().getStartTime(), "Start time should not be null");
+        // End time should be null for a newly created job
+        assertNull(response.getBody().getEndTime(), "End time should be null for a new file");
 
         // Store the ID for later tests
         createdFileId = response.getBody().getFileId();
@@ -134,9 +167,9 @@ class FileControllerTest {
         assertEquals(HttpStatus.OK, jobResponse.getStatusCode());
         assertNotNull(jobResponse.getBody());
         assertEquals(createdJobId, jobResponse.getBody().getId());
-  //      assertEquals(MASTER_NAME, jobResponse.getBody().getMaster());
         assertEquals(LOB, jobResponse.getBody().getLob());
         assertEquals(JobStatus.PENDING, jobResponse.getBody().getStatus());
+        assertEquals(Integer.valueOf(1), jobResponse.getBody().getTotalFileCount());
     }
 
     @Test
@@ -157,6 +190,43 @@ class FileControllerTest {
         assertNotNull(response.getBody());
         assertEquals(createdFileId, response.getBody().getFileId());
         assertEquals(LOB, response.getBody().getLob());
+
+        assertNotNull(response.getBody());
+        assertNotNull(response.getBody().getId());
+        assertNotNull(response.getBody().getFileId());
+        assertEquals(MASTER_NAME, response.getBody().getMaster());
+        assertEquals(LOB, response.getBody().getLob());
+        assertEquals(100, response.getBody().getTotalCount());
+
+        // Count related assertions
+        assertEquals(Integer.valueOf(0), response.getBody().getPublishedSuccessCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getPublishedFailCount());
+
+        assertEquals(Integer.valueOf(0), response.getBody().getConsumedSuccessCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getConsumedFailCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getLogicalFailCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getServerFailCount());
+        assertEquals(Integer.valueOf(0), response.getBody().getRetryCount());
+
+        assertNull(response.getBody()
+                .getMaxProcessingTimeMs(), "Max processing time should be null at start, will be set by progress");
+        assertNull(response.getBody()
+                .getMinProcessingTimeMs(), "Min processing time should be null at start, will be set by progress");
+
+        assertNull(response.getBody()
+                .getConsumerThroughput(), "Consumer throughput is updated when file is marked success or failed");
+        assertNull(response.getBody()
+                .getPublisherThroughput(), "Publisher throughput is updated when file is marked success or failed");
+
+        assertEquals(FileStatus.PENDING, response.getBody().getConsumedStatus());
+        assertEquals(FileStatus.PENDING, response.getBody().getPublishedStatus());
+
+        // Time-related assertions
+        assertNotNull(response.getBody().getCreationTime(), "Creation time should not be null");
+        assertNotNull(response.getBody().getLastModifiedTime(), "Last modified time should not be null");
+        assertNotNull(response.getBody().getStartTime(), "Start time should not be null");
+        // End time should be null for a newly created job
+        assertNull(response.getBody().getEndTime(), "End time should be null for a new file");
     }
 
     @SneakyThrows
@@ -175,6 +245,7 @@ class FileControllerTest {
         consumer.setSuccessCount(50);
         consumer.setServerFailCount(5);
         consumer.setLogicalFailCount(5);
+        consumer.setRetryCount(5);
         progressRequest.setConsumer(consumer);
 
         // Set publisher metrics
@@ -202,19 +273,20 @@ class FileControllerTest {
                 .atMost(1000000, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
                 .until(() -> {
-                    FileEntity file = fileService.get(createdFileId,MASTER_NAME);
+                    FileEntity file = fileService.get(createdFileId, MASTER_NAME);
                     System.out.println(file);
                     return file.getConsumedSuccessCount() != 0;
                 });
 
         System.out.println("Master name is :" + MASTER_NAME);
-        FileEntity file = fileService.get(createdFileId,MASTER_NAME);
+        FileEntity file = fileService.get(createdFileId, MASTER_NAME);
         System.out.println("File is " + file);
-        assertEquals(fileService.get(createdFileId,MASTER_NAME).getConsumedSuccessCount(), consumer.getSuccessCount());
-        assertEquals(fileService.get(createdFileId,MASTER_NAME).getConsumedFailCount(), consumer.getServerFailCount() + consumer.getLogicalFailCount());
-        assertEquals(fileService.get(createdFileId,MASTER_NAME).getLogicalFailCount(), consumer.getLogicalFailCount());
-        assertEquals(fileService.get(createdFileId,MASTER_NAME).getPublishedSuccessCount(), publisher.getSuccessCount());
-        assertEquals(fileService.get(createdFileId,MASTER_NAME).getPublishedFailCount(), publisher.getFailCount());
+        assertEquals(file.getConsumedSuccessCount(), consumer.getSuccessCount());
+        assertEquals(file.getConsumedFailCount(), consumer.getServerFailCount() + consumer.getLogicalFailCount());
+        assertEquals(file.getLogicalFailCount(), consumer.getLogicalFailCount());
+        assertEquals(file.getRetryCount(), consumer.getRetryCount());
+        assertEquals(file.getPublishedSuccessCount(), publisher.getSuccessCount());
+        assertEquals(file.getPublishedFailCount(), publisher.getFailCount());
 
         // Assertions
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
@@ -251,26 +323,31 @@ class FileControllerTest {
         assertNotNull(response.getBody());
         assertEquals(FileStatus.COMPLETED, response.getBody().getConsumedStatus());
         assertEquals(FileStatus.COMPLETED, response.getBody().getPublishedStatus());
+
+        JobEntity job = jobRepository.findById(createdJobId).orElseGet(null);
+        assertNotNull(job);
+        assertEquals(1, job.getCompletedFiles());
+        assertEquals(0, job.getFailedFiles());
+        assertEquals(JobStatus.COMPLETED, job.getStatus());
     }
 
     @Test
     @Order(6)
     void testListFilesByJob() {
-        // Build URI with query parameters and pagination
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/api/{lob}/master/{master_name}/job/{jobId}/unit");
-
         // Make request
-        ResponseEntity<List<FileEntityResponseDto>> response = restTemplate.exchange(
-                builder.buildAndExpand(LOB, MASTER_NAME, createdJobId).toUriString(),
+        ResponseEntity<RestPageImpl<FileEntityResponseDto>> response = restTemplate.exchange(
+                "/api/{lob}/job/{jobId}/unit",
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<FileEntityResponseDto>>() {}
+                new ParameterizedTypeReference<>() {},
+                LOB, createdJobId
         );
 
         // Assertions
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().size() > 0);
+        assertEquals(1,response.getBody().getTotalElements());
+        assertFalse(response.getBody().getContent().isEmpty());
     }
 
     @Test

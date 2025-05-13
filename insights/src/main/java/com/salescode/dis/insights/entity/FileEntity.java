@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Consumer;
@@ -102,7 +103,7 @@ public class FileEntity extends TimeAwareEntity {
 
     private void updateThroughputIfFinal(FileStatus status, int totalCount, long elapsedSeconds, Consumer<BigDecimal> setter) {
         if (status == FileStatus.COMPLETED || status == FileStatus.FAILED) {
-            BigDecimal throughput = BigDecimal.valueOf(totalCount).divide(BigDecimal.valueOf(elapsedSeconds));
+            BigDecimal throughput = BigDecimal.valueOf(totalCount).divide(BigDecimal.valueOf(elapsedSeconds), new MathContext(2));
             setter.accept(throughput);
         }
     }
