@@ -65,29 +65,6 @@ public class IntegrationSummaryService {
         return grouped;
     }
 
-
-
-    public List<LobSummaryDTO> getIntegrationSummary(
-            List<String> lobs,
-            Map<String, String> jobFilters,
-            Map<String, String> fileFilters
-    ) {
-        Specification<JobEntity> spec = JobSpecification.getJobWithFileSpecification(
-                lobs, jobFilters, fileFilters
-        );
-
-        List<JobEntity> jobs = jobRepository.findAll(spec);
-
-        // Group by LOB
-        Map<String, List<JobEntityResponseDtoWithFiles>> groupedByLob = jobs.stream()
-                .map(job ->jobEntityMapper.toJobWithFilesDto(job))
-                .collect(Collectors.groupingBy(JobEntityResponseDtoWithFiles::getLob)); // here you might want to group by "LOB" instead of jobName?
-
-        return groupedByLob.entrySet().stream()
-                .map(entry -> new LobSummaryDTO(entry.getKey(), entry.getValue()))
-                .toList();
-    }
-
     public Object getOnlyLobDetails(List<String> lobList) {
         List<Map<String, Object>> resp;
 
@@ -98,7 +75,7 @@ public class IntegrationSummaryService {
         }
 
         Map<String, Map<String, Object>> lobSummary = (Map<String, Map<String, Object>>)
-                getLobSummary(lobList, Collections.emptyList(), Collections.emptyList(),null,null);
+                getLobSummary(lobList, Collections.emptyList(), null,null);
 
         Map<String, Map<String, Object>> result = new HashMap<>();
 
@@ -107,13 +84,11 @@ public class IntegrationSummaryService {
             int completed = ((Number) row.get("COMPLETED")).intValue();
             int inProgress = ((Number) row.get("PENDING")).intValue();
             int failed = ((Number) row.get("FAILED")).intValue();
-            int distinctMasters = ((Number) row.get("distinct_master_count")).intValue();
 
             Map<String, Object> detailsMap = new HashMap<>();
             detailsMap.put("COMPLETED", completed);
             detailsMap.put("PENDING", inProgress);
             detailsMap.put("FAILED", failed);
-            detailsMap.put("DISTINCT_MASTERS", distinctMasters);
 
             // Calculate average throughput per LOB and put inside details
             Map<String, Object> jobsMap = lobSummary.get(lob);
@@ -130,8 +105,16 @@ public class IntegrationSummaryService {
                     jobCount++;
                 }
 
-                detailsMap.put("consumed_throughput", jobCount > 0 ? totalConsumerThroughput / jobCount : 0.0);
-                detailsMap.put("published_throughput", jobCount > 0 ? totalPublisherThroughput / jobCount : 0.0);
+                double consumerAvg = jobCount > 0 ? totalConsumerThroughput / jobCount : 0.0;
+                double publisherAvg = jobCount > 0 ? totalPublisherThroughput / jobCount : 0.0;
+
+                detailsMap.put("consumed_throughput", Double.isFinite(consumerAvg)
+                        ? BigDecimal.valueOf(consumerAvg).setScale(2, RoundingMode.HALF_UP).doubleValue()
+                        : 0.0);
+
+                detailsMap.put("published_throughput", Double.isFinite(publisherAvg)
+                        ? BigDecimal.valueOf(publisherAvg).setScale(2, RoundingMode.HALF_UP).doubleValue()
+                        : 0.0);
             }
 
             Map<String, Object> lobMap = new HashMap<>();
@@ -144,7 +127,7 @@ public class IntegrationSummaryService {
     }
 
 
-    public Object getLobSummary(List<String> lobList, List<String> status, List<String> master,LocalDateTime startTime,LocalDateTime endTime) {
+    public Object getLobSummary(List<String> lobList, List<String> status,LocalDateTime startTime,LocalDateTime endTime) {
         List<Map<String, Object>> resp;
 
         // Ensure the startDate and endDate are converted to Timestamp if they are not null
@@ -171,7 +154,6 @@ public class IntegrationSummaryService {
                                     jobData.put("logical_fail_count", getSafeInt(record, "logical_fail_count"));
                                     jobData.put("published_fail_count", getSafeInt(record, "published_fail_count"));
                                     jobData.put("status", record.get("status"));
-                                    jobData.put("master_name", record.get("master"));
 
                                     Instant startTime_job = (Instant) record.get("start_time");
                                     Instant endTime_job = (Instant) record.get("end_time");
@@ -219,11 +201,20 @@ public class IntegrationSummaryService {
                     double publisherSum = getSafeDouble(jobData, "publisher_throughput_sum");
                     int count = (int) jobData.getOrDefault("throughput_count", 1);
 
-                    jobData.put("avg_consumer_throughput",
-                            count > 0 ? BigDecimal.valueOf(consumerSum / count).setScale(2, RoundingMode.HALF_UP).doubleValue() : 0.0);
+                    double avgConsumer = (count > 0) ? (consumerSum / count) : 0.0;
+                    if (Double.isFinite(avgConsumer)) {
+                        jobData.put("avg_consumer_throughput", BigDecimal.valueOf(avgConsumer).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                    } else {
+                        jobData.put("avg_consumer_throughput", 0.0);
+                    }
 
-                    jobData.put("avg_publisher_throughput",
-                            count > 0 ? BigDecimal.valueOf(publisherSum / count).setScale(2, RoundingMode.HALF_UP).doubleValue() : 0.0);
+                    double avgPublisher = (count > 0) ? (publisherSum / count) : 0.0;
+                    if (Double.isFinite(avgPublisher)) {
+                        jobData.put("avg_publisher_throughput", BigDecimal.valueOf(avgPublisher).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                    } else {
+                        jobData.put("avg_publisher_throughput", 0.0);
+                    }
+
 
                     // Remove intermediate sum and count if not needed
                     jobData.remove("consumer_throughput_sum");
@@ -237,10 +228,21 @@ public class IntegrationSummaryService {
     }
 
 
-    private double getSafeDouble(Map<String, Object> record, String key) {
-        Object val = record.get(key);
-        return (val instanceof Number) ? ((Number) val).doubleValue() : 0.0;
+    private double getSafeDouble(Map<String, Object> map, String key) {
+        Object value = map.get(key);
+        if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        }
+        if (value instanceof String) {
+            try {
+                return Double.parseDouble((String) value);
+            } catch (NumberFormatException e) {
+                return 0.0; // Or log the issue and return default
+            }
+        }
+        return 0.0;
     }
+
 
     private double aggregateSafeDouble(Map<String, Object> existing, Map<String, Object> incoming, String key) {
         double existingVal = getSafeDouble(existing, key);

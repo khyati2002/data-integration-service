@@ -61,6 +61,10 @@ public class FileEntity extends TimeAwareEntity {
     @Column(nullable = false)
     private Boolean isApiBased = false;
 
+    private Long max_processing_time;
+
+    private Long min_processing_time;
+
     @Override
     protected void onCreate() {
         super.onCreate();

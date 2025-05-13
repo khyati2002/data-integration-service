@@ -18,7 +18,7 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
     Page<JobEntity> getJobEntitiesByLob(String lob, Pageable pageable);
 
     @Query(value = "SELECT igj.status, igf.master, igj.start_time, igj.end_time, igj.id AS job_id, " +
-            "igf.id AS file_id, igj.lob, igf.published_success_count, igf.published_fail_count, " +
+            "igf.file_id AS file_id, igj.lob, igf.published_success_count, igf.published_fail_count, " +
             "igf.consumed_fail_count, igf.consumed_success_count, igf.total_count, " +
             "igf.publisher_throughput, igf.consumer_throughput, igf.server_fail_count, igf.logical_fail_count " +
             "FROM integration_job igj " +

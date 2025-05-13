@@ -24,52 +24,52 @@ public class IntegrationSummaryController {
         this.integrationSummaryService = integrationSummaryService;
     }
 
-    @GetMapping("/integration-summary")
-    public ResponseEntity<List<LobSummaryDTO>> getIntegrationSummary(
-            @RequestParam(required = false) List<String> lobs,
-            @RequestParam(required = false) Map<String, String> commonFilters,
-            @RequestParam Map<String, String> allRequestParams
-    ) {
-        Map<String, String> jobFilters = new HashMap<>();
-        Map<String, String> fileFilters = new HashMap<>();
-
-        // Process common filters for jobs and files
-        if (commonFilters != null) {
-            for (Map.Entry<String, String> entry : commonFilters.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-
-                if (key.startsWith("job.")) {
-                    // Apply the filter to job
-                    jobFilters.put(key.substring(4), value); // Remove 'job.' prefix
-                } else if (key.startsWith("file.")) {
-                    // Apply the filter to file
-                    fileFilters.put(key.substring(5), value); // Remove 'file.' prefix
-                }
-            }
-        }
-
-        // Handle specific filters (e.g., lobs)
-        for (Map.Entry<String, String> entry : allRequestParams.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-            if ("lobs".equals(key)) continue; // already handled separately
-
-            if (isJobField(key)) {
-                jobFilters.put(key, value);
-            } else if (isFileField(key)) {
-                fileFilters.put(key, value);
-            }
-        }
-
-        List<LobSummaryDTO> summary = integrationSummaryService.getIntegrationSummary(lobs, jobFilters, fileFilters);
-        return ResponseEntity.ok(summary);
-    }
+//    @GetMapping("/integration-summary")
+//    public ResponseEntity<List<LobSummaryDTO>> getIntegrationSummary(
+//            @RequestParam(required = false) List<String> lobs,
+//            @RequestParam(required = false) Map<String, String> commonFilters,
+//            @RequestParam Map<String, String> allRequestParams
+//    ) {
+//        Map<String, String> jobFilters = new HashMap<>();
+//        Map<String, String> fileFilters = new HashMap<>();
+//
+//        // Process common filters for jobs and files
+//        if (commonFilters != null) {
+//            for (Map.Entry<String, String> entry : commonFilters.entrySet()) {
+//                String key = entry.getKey();
+//                String value = entry.getValue();
+//
+//                if (key.startsWith("job.")) {
+//                    // Apply the filter to job
+//                    jobFilters.put(key.substring(4), value); // Remove 'job.' prefix
+//                } else if (key.startsWith("file.")) {
+//                    // Apply the filter to file
+//                    fileFilters.put(key.substring(5), value); // Remove 'file.' prefix
+//                }
+//            }
+//        }
+//
+//        // Handle specific filters (e.g., lobs)
+//        for (Map.Entry<String, String> entry : allRequestParams.entrySet()) {
+//            String key = entry.getKey();
+//            String value = entry.getValue();
+//
+//            if ("lobs".equals(key)) continue; // already handled separately
+//
+//            if (isJobField(key)) {
+//                jobFilters.put(key, value);
+//            } else if (isFileField(key)) {
+//                fileFilters.put(key, value);
+//            }
+//        }
+//
+//        List<LobSummaryDTO> summary = integrationSummaryService.getIntegrationSummary(lobs, jobFilters, fileFilters);
+//        return ResponseEntity.ok(summary);
+//    }
 
     @GetMapping("/lob-summary")
     public ResponseEntity<Object> getLobSummary(
-            @RequestParam(required = false) List<String> lob,@RequestParam(required = false) List<String> status,@RequestParam(required = false) List<String> master,@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam(required = false) List<String> lob,@RequestParam(required = false) List<String> status,@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
         if (lob != null && lob.size() == 1) {
             lob = Collections.singletonList(lob.get(0));
@@ -77,10 +77,7 @@ public class IntegrationSummaryController {
         if(status!=null && status.size()==1){
             status = Collections.singletonList(status.get(0));
         }
-        if(master!=null && master.size()==1){
-            master = Collections.singletonList(master.get(0));
-        }
-        return ResponseEntity.ok(integrationSummaryService.getLobSummary(lob,status,master,startTime,endTime));
+        return ResponseEntity.ok(integrationSummaryService.getLobSummary(lob,status,startTime,endTime));
     }
 
     @GetMapping("/lob-summary-only")

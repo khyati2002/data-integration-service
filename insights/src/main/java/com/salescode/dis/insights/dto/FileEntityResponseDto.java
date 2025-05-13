@@ -15,6 +15,8 @@ public class FileEntityResponseDto implements Serializable {
     String id;
     String fileId;
     String master;
+    Long max_processing_time;
+    Long min_processing_time;
     Instant creationTime;
     Instant lastModifiedTime;
     String lob;

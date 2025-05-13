@@ -103,6 +103,18 @@ public class FileService {
             }
         }
 
+        file.setMax_processing_time(
+                file.getMax_processing_time() == null
+                        ? progress.getProcessingTimeMs()
+                        : Math.max(file.getMax_processing_time(), progress.getProcessingTimeMs())
+        );
+
+        file.setMin_processing_time(
+                file.getMin_processing_time() == null
+                        ? progress.getProcessingTimeMs()
+                        : Math.min(file.getMin_processing_time(), progress.getProcessingTimeMs())
+        );
+
         fileRepo.save(file);
         log.info("File {} progress updated", fileId);
     }
