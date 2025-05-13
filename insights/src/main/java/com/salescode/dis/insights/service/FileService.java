@@ -28,13 +28,12 @@ public class FileService {
     private final FileRepository fileRepo;
     private final JobService jobService;
 
-    public FileEntity register(String jobId, FileEntity file) {
+    public FileEntity createFile(String jobId, FileEntity file) {
         checkFileIdAlreadyExistsByMasterIfSent(file);
         JobEntity job = jobService.getJob(jobId);
         file.setJob(job);
         FileEntity savedFile = fileRepo.save(file);
         job.getFiles().add(savedFile);
-        jobService.saveJob(job);
         log.info("Registered file {} under job {}", file.getId(), jobId);
         return savedFile;
     }
@@ -81,8 +80,10 @@ public class FileService {
             }
         });
 
-        file.setMinProcessingTimeMs(file.getMinProcessingTimeMs() == null ? progress.getProcessingTimeMs() : Math.max(file.getMinProcessingTimeMs(), progress.getProcessingTimeMs()));
-        file.setMaxProcessingTimeMs(file.getMaxProcessingTimeMs() == null ? progress.getProcessingTimeMs() : Math.min(file.getMaxProcessingTimeMs(), progress.getProcessingTimeMs()));
+        if (progress.getProcessingTimeMs() != null) {
+            file.setMinProcessingTimeMs(file.getMinProcessingTimeMs() == null ? progress.getProcessingTimeMs() : Math.max(file.getMinProcessingTimeMs(), progress.getProcessingTimeMs()));
+            file.setMaxProcessingTimeMs(file.getMaxProcessingTimeMs() == null ? progress.getProcessingTimeMs() : Math.min(file.getMaxProcessingTimeMs(), progress.getProcessingTimeMs()));
+        }
 
         fileRepo.save(file);
         log.info("File {} progress updated", fileId);
@@ -127,6 +128,6 @@ public class FileService {
         }
         log.info("Job {} metrics recalculated", job.getId());
     }
-    
+
 
 }

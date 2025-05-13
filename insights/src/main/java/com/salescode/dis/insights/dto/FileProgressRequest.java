@@ -7,8 +7,8 @@ import lombok.Data;
 public class FileProgressRequest {
     private ConsumerMetrics consumer;
     private PublisherMetrics publisher;
-    @Min(0)
-    private Long processingTimeMs = 0L;
+
+    private Long processingTimeMs;
 
     @Data
     public static class ConsumerMetrics {

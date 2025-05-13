@@ -5,6 +5,7 @@ import com.salescode.dis.insights.enums.FileStatus;
 import lombok.Value;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 
 /**
@@ -15,8 +16,6 @@ public class FileEntityResponseDto implements Serializable {
     String id;
     String fileId;
     String master;
-    Long maxProcessingTime;
-    Long minProcessingTime;
     Instant creationTime;
     Instant lastModifiedTime;
     String lob;
@@ -30,8 +29,11 @@ public class FileEntityResponseDto implements Serializable {
     Integer consumedFailCount;
     Integer serverFailCount;
     Integer logicalFailCount;
-    Double publisherThroughput;
-    Double consumerThroughput;
+    Integer retryCount;
+    Long maxProcessingTimeMs;
+    Long minProcessingTimeMs;
+    BigDecimal publisherThroughput;
+    BigDecimal consumerThroughput;
     FileStatus publishedStatus;
     FileStatus consumedStatus;
 

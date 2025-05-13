@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 
 @Entity
@@ -50,10 +52,10 @@ public class FileEntity extends TimeAwareEntity {
     private Integer retryCount = 0;
 
     @Column(precision = 10, scale = 2)
-    private Double publisherThroughput; // - total records / time (at completion - success or failure) - calculate on api call
+    private BigDecimal publisherThroughput; // - total records / time (at completion - success or failure) - calculate on api call
 
     @Column(precision = 10, scale = 2)
-    private Double consumerThroughput; // - total records / time (at completion - success or failure) - calculate on api call
+    private BigDecimal consumerThroughput; // - total records / time (at completion - success or failure) - calculate on api call
 
     @Enumerated(EnumType.STRING)
     private FileStatus publishedStatus;
@@ -98,9 +100,9 @@ public class FileEntity extends TimeAwareEntity {
         }
     }
 
-    private void updateThroughputIfFinal(FileStatus status, int totalCount, long elapsedSeconds, DoubleConsumer setter) {
+    private void updateThroughputIfFinal(FileStatus status, int totalCount, long elapsedSeconds, Consumer<BigDecimal> setter) {
         if (status == FileStatus.COMPLETED || status == FileStatus.FAILED) {
-            double throughput = (double) totalCount / elapsedSeconds;
+            BigDecimal throughput = BigDecimal.valueOf(totalCount).divide(BigDecimal.valueOf(elapsedSeconds));
             setter.accept(throughput);
         }
     }
