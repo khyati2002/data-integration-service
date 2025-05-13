@@ -46,6 +46,9 @@ public class FileEntity extends TimeAwareEntity {
     @Builder.Default
     private Integer logicalFailCount = 0;
 
+    @Builder.Default
+    private Integer retryCount = 0;
+
     @Column(precision = 10, scale = 2)
     private Double publisherThroughput; // - total records / time (at completion - success or failure) - calculate on api call
 
@@ -66,9 +69,9 @@ public class FileEntity extends TimeAwareEntity {
     @Column(nullable = false)
     private Boolean isApiBased = false;
 
-    private Long minProcessingTime;
+    private Long minProcessingTimeMs;
 
-    private Long maxProcessingTime;
+    private Long maxProcessingTimeMs;
 
     @Override
     protected void onCreate() {

@@ -101,6 +101,7 @@ public class FileProgressEventListener {
         existing.setSuccessCount(safeSum(existing.getSuccessCount(), incoming.getSuccessCount()));
         existing.setServerFailCount(safeSum(existing.getServerFailCount(), incoming.getServerFailCount()));
         existing.setLogicalFailCount(safeSum(existing.getLogicalFailCount(), incoming.getLogicalFailCount()));
+        existing.setLogicalFailCount(safeSum(existing.getRetryCount(), incoming.getRetryCount()));
     }
 
     private void aggregateMetrics(FileProgressRequest.PublisherMetrics existing, FileProgressRequest.PublisherMetrics incoming) {

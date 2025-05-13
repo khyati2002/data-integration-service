@@ -70,6 +70,7 @@ public class FileService {
             file.setServerFailCount(file.getServerFailCount() + consumer.getServerFailCount());
             file.setLogicalFailCount(file.getLogicalFailCount() + consumer.getLogicalFailCount());
             file.setConsumedFailCount(file.getConsumedFailCount() + consumer.getServerFailCount() + consumer.getLogicalFailCount());
+            file.setRetryCount(file.getRetryCount() + consumer.getRetryCount());
         });
 
         Optional.ofNullable(progress.getPublisher()).ifPresent(publisher -> {
@@ -80,8 +81,8 @@ public class FileService {
             }
         });
 
-        file.setMinProcessingTime(file.getMinProcessingTime() == null ? progress.getProcessingTimeMs() : Math.max(file.getMinProcessingTime(), progress.getProcessingTimeMs()));
-        file.setMaxProcessingTime(file.getMaxProcessingTime() == null ? progress.getProcessingTimeMs() : Math.min(file.getMaxProcessingTime(), progress.getProcessingTimeMs()));
+        file.setMinProcessingTimeMs(file.getMinProcessingTimeMs() == null ? progress.getProcessingTimeMs() : Math.max(file.getMinProcessingTimeMs(), progress.getProcessingTimeMs()));
+        file.setMaxProcessingTimeMs(file.getMaxProcessingTimeMs() == null ? progress.getProcessingTimeMs() : Math.min(file.getMaxProcessingTimeMs(), progress.getProcessingTimeMs()));
 
         fileRepo.save(file);
         log.info("File {} progress updated", fileId);
