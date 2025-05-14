@@ -49,9 +49,11 @@ public class UserParentService extends AbstractCDMService<UserParent> {
                 up.setParent(hm.getParent());
                 up.setChanged((byte) 1);
                 if (up.getUserloginid().equalsIgnoreCase(up.getParent())) {
-                    throw new RuntimeException("User can't be mapped to itself. Found a record for user  mapped to itself. Please verify the data once.");
+             //       throw new RuntimeException("User can't be mapped to itself. Found a record for user  mapped to itself. Please verify the data once.");
                 }
-                userParentList.add(up);
+                else {
+                    userParentList.add(up);
+                }
             }
         }
         return userParentList;
