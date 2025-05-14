@@ -1,5 +1,8 @@
 package com.salescode.dis.insights.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import java.util.Map;
@@ -43,7 +46,6 @@ public class DeploymentInformation {
             commitId = deploymentInfo.get("git.commit.id.full");
             tag = deploymentInfo.get("git.closest.tag.name");
             branch = deploymentInfo.get("git.branch");
-
         }
     }
 }

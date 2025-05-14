@@ -30,10 +30,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles({"postgres", "dev", "debug", "kafka", "test"})
-class FileControllerTest {
+class FileControllerWithOutGivenFileIdTest {
 
     private static final String LOB = "Retail";
     private static final String MASTER_NAME = "Master1";
+    public static final String FILE_ID = UUID.randomUUID().toString();
     private static String createdJobId;
     private static String createdFileId;
     @Autowired
@@ -70,7 +71,6 @@ class FileControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertNotNull(response.getBody().getId());
-        //     assertEquals(MASTER_NAME, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
         assertEquals(JobStatus.PENDING, response.getBody().getStatus());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
@@ -91,7 +91,8 @@ class FileControllerTest {
 
         // Create request body
         FileEntityRequestDto requestDto = new FileEntityRequestDto();
-        requestDto.setFileId(UUID.randomUUID().toString());
+
+        //        requestDto.setFileId(FILE_ID);
         requestDto.setTotalCount(100);
 
         // Create sample extended attributes JSON
@@ -116,6 +117,9 @@ class FileControllerTest {
         assertNotNull(response.getBody());
         assertNotNull(response.getBody().getId());
         assertNotNull(response.getBody().getFileId());
+
+//        assertEquals(FILE_ID,response.getBody().getFileId());
+
         assertEquals(MASTER_NAME, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
         assertEquals(100, response.getBody().getTotalCount());

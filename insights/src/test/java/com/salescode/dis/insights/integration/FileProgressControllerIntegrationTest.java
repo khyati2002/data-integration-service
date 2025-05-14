@@ -101,6 +101,7 @@ public class FileProgressControllerIntegrationTest {
         consumer1.setSuccessCount(10);
         consumer1.setServerFailCount(2);
         consumer1.setLogicalFailCount(1);
+        consumer1.setRetryCount(5);
         progressRequest1.setConsumer(consumer1);
         
         FileProgressRequest.PublisherMetrics publisher1 = new FileProgressRequest.PublisherMetrics();
@@ -135,6 +136,7 @@ public class FileProgressControllerIntegrationTest {
         consumer2.setSuccessCount(20);
         consumer2.setServerFailCount(3);
         consumer2.setLogicalFailCount(2);
+        consumer2.setRetryCount(5);
         progressRequest2.setConsumer(consumer2);
         
         FileProgressRequest.PublisherMetrics publisher2 = new FileProgressRequest.PublisherMetrics();
