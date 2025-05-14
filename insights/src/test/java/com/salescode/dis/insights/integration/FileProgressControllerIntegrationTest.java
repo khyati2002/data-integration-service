@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.*;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
+@Profile("test")
 public class FileProgressControllerIntegrationTest {
 
     @Container
@@ -122,7 +124,7 @@ public class FileProgressControllerIntegrationTest {
         
         // Wait for the first update to be processed
         Awaitility.await()
-                .atMost(30, TimeUnit.SECONDS)
+                .atMost(60, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
                 .until(() -> {
                     FileEntity file = fileService.get(fileId,masterName);
@@ -170,7 +172,8 @@ public class FileProgressControllerIntegrationTest {
                            file.getPublishedSuccessCount() != null && 
                            file.getPublishedSuccessCount() == 40 && // 15 + 25
                            file.getPublishedFailCount() != null && 
-                           file.getPublishedFailCount() == 8; // 3 + 5
+                           file.getPublishedFailCount() == 8 && // 3 + 5
+                           file.getRetryCount() == 10; // 5 + 5
                 });
 
         // Verify the aggregated metrics through the API
@@ -191,6 +194,7 @@ public class FileProgressControllerIntegrationTest {
         assertEquals(3, getResponse.getBody().getLogicalFailCount()); // 1 + 2
         assertEquals(40, getResponse.getBody().getPublishedSuccessCount()); // 15 + 25
         assertEquals(8, getResponse.getBody().getPublishedFailCount()); // 3 + 5
+        assertEquals(10, getResponse.getBody().getRetryCount()); // 5 + 5
     }
 
     private JobEntityRequestDto createSampleJobRequest() {

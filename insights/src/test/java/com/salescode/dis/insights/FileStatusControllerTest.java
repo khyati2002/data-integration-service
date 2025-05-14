@@ -1,9 +1,8 @@
-package com.salescode.dis.insights.integration;
+package com.salescode.dis.insights;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.dis.insights.dto.*;
-import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.enums.FileStatus;
 import com.salescode.dis.insights.service.FileService;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +17,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FileStatusControllerIntegrationTest {
+public class FileStatusControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -81,8 +80,8 @@ public class FileStatusControllerIntegrationTest {
         FileStatusRequestDto statusRequest = new FileStatusRequestDto();
         statusRequest.setConsumedStatus(FileStatus.COMPLETED);
         statusRequest.setPublishedStatus(FileStatus.COMPLETED);
-//
-//        // Send status update request
+
+        // Send status update request
         ResponseEntity<FileEntityResponseDto> updateResponse = restTemplate.exchange(
                 "/api/{lob}/master/{master_name}/job/{jobId}/unit/{fileId}/status",
                 HttpMethod.PUT,
@@ -90,17 +89,6 @@ public class FileStatusControllerIntegrationTest {
                 FileEntityResponseDto.class,
                 lob, masterName, jobId, fileId
         );
-//
-//        // Verify the response
-//        assertEquals(HttpStatus.OK, updateResponse.getStatusCode());
-//        assertNotNull(updateResponse.getBody());
-//        assertEquals(FileStatus.COMPLETED, updateResponse.getBody().getConsumedStatus());
-//        assertEquals(FileStatus.COMPLETED, updateResponse.getBody().getPublishedStatus());
-//
-//        // Verify the file status was updated in the database
-//        FileEntity file = fileService.get(fileId,masterName);
-//        assertEquals(FileStatus.COMPLETED, file.getConsumedStatus());
-//        assertEquals(FileStatus.COMPLETED, file.getPublishedStatus());
 
         // Verify the file status can be retrieved via the API
         ResponseEntity<FileEntityResponseDto> getResponse = restTemplate.exchange(

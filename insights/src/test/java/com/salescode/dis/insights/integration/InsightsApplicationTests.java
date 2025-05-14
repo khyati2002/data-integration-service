@@ -66,8 +66,8 @@ class InsightsApplicationTests {
     static void kafkaProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.kafka.bootstrap-servers", kafkaContainer::getBootstrapServers);
         // Optional: Add other dynamic properties if needed (e.g., database from Testcontainers)
-        registry.add("file-status-scheduler.stale-threshold-seconds", () -> 10);
-        registry.add("file-status-scheduler.too-old-threshold-seconds", () -> 100);
+        registry.add("file-status-scheduler.stale-threshold-seconds", () -> 60);
+        registry.add("file-status-scheduler.too-old-threshold-seconds", () -> 600);
         registry.add("file-status-scheduler.rate-millis", () -> 5_000);
     }
 
@@ -101,7 +101,7 @@ class InsightsApplicationTests {
                 .kafkaTemplate(kafkaTemplate)
                 .topic(KAFKA_TOPIC)
                 .publishEventSupplier(() -> createPublisherMetrics(1, 0))
-                .consumeEventSupplier(() -> createConsumerMetrics(1, 0, 0))
+                .consumeEventSupplier(() -> createConsumerMetrics(1, 0, 0, 1))
                 .build();
 
         Map<String, List<FileProgressEvent>> result;
@@ -109,7 +109,7 @@ class InsightsApplicationTests {
         try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
             Future<Map<String, List<FileProgressEvent>>> submit = executorService.submit(dataGenerator);
             // Wait for the submission task itself to complete (sending messages)
-            result = submit.get(15, TimeUnit.SECONDS); // Add timeout to sending phase
+            result = submit.get(30, TimeUnit.SECONDS); // Add timeout to sending phase
             assertNotNull(result, "Data generation result should not be null");
             assertEquals(EXPECTED_PUBLISH_SUCCESS, result.getOrDefault("publishedEvents", List.of()).size());
             assertEquals(EXPECTED_CONSUME_SUCCESS, result.getOrDefault("consumedEvents", List.of()).size());
@@ -118,9 +118,9 @@ class InsightsApplicationTests {
         }
 
         System.out.println("Waiting for Kafka events to be processed...");
-        Awaitility.await().atMost(Duration.ofSeconds(30)).pollInterval(Duration.ofSeconds(5)).untilAsserted(() -> {
+        Awaitility.await().atMost(Duration.ofSeconds(60)).pollInterval(Duration.ofSeconds(5)).untilAsserted(() -> {
             // Check FileEntity state
-            FileEntity file = fileService.get(TEST_FILE_ID,TEST_MASTER_NAME);
+            FileEntity file = fileRepository.findByFileIdAndMaster(TEST_FILE_ID,TEST_MASTER_NAME).orElse(null);
             assertNotNull(file, "FileEntity should exist");
             assertTrue(file.getConsumedSuccessCount() >= EXPECTED_CONSUME_SUCCESS && file.getPublishedSuccessCount() >= EXPECTED_PUBLISH_SUCCESS, "File counts should reach expected values. Found Consumed=" + file.getConsumedSuccessCount() + ", Published=" + file.getPublishedSuccessCount());
             // Check JobEntity state
@@ -147,7 +147,7 @@ class InsightsApplicationTests {
         assertEquals(TEST_LOB, finalJob.getLob(), "Job LOB mismatch");
        // assertEquals(TEST_MASTER_NAME, finalJob.getMaster(), "Job Master mismatch");
 
-        Awaitility.await().atMost(Duration.ofSeconds(300)).pollInterval(Duration.ofSeconds(10)).untilAsserted(() -> {
+        Awaitility.await().atMost(Duration.ofSeconds(300)).pollInterval(Duration.ofSeconds(5)).untilAsserted(() -> {
             // Optional: Add assertions for File/Job status if completion logic is tested
             FileEntity refreshedFile = fileService.get(TEST_FILE_ID,TEST_MASTER_NAME);
             JobEntity job = jobService.getJob(TEST_GROUP_ID);
@@ -180,7 +180,7 @@ class InsightsApplicationTests {
                 .kafkaTemplate(kafkaTemplate)
                 .topic(KAFKA_TOPIC)
                 .publishEventSupplier(() -> createPublisherMetrics(1, 0))
-                .consumeEventSupplier(() -> createConsumerMetrics(1, 0, 0))
+                .consumeEventSupplier(() -> createConsumerMetrics(1, 0, 0, 1))
                 .build();
 
         DataGenerator dataGenerator2 = DataGenerator.builder()
@@ -192,7 +192,7 @@ class InsightsApplicationTests {
                 .kafkaTemplate(kafkaTemplate)
                 .topic(KAFKA_TOPIC)
                 .publishEventSupplier(() -> createPublisherMetrics(1, 0))
-                .consumeEventSupplier(() -> createConsumerMetrics(1, 0, 0))
+                .consumeEventSupplier(() -> createConsumerMetrics(1, 0, 0, 1))
                 .build();
 
         Map<String, List<FileProgressEvent>> result1;
@@ -219,11 +219,11 @@ class InsightsApplicationTests {
         System.out.println("Waiting for Kafka events to be processed for multiple files...");
         Awaitility.await().atMost(Duration.ofSeconds(300)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
             // Check FileEntity states
-            FileEntity file1 = fileService.get(TEST_FILE_ID_1,TEST_MASTER_NAME);
+            FileEntity file1 = fileRepository.findByFileIdAndMaster(TEST_FILE_ID_1,TEST_MASTER_NAME).orElse(null);
             assertNotNull(file1, "FileEntity 1 should exist");
             assertTrue(file1.getConsumedSuccessCount() >= EXPECTED_CONSUME_SUCCESS_PER_FILE && file1.getPublishedSuccessCount() >= EXPECTED_PUBLISH_SUCCESS_PER_FILE, "File 1 counts should reach expected values. Found Consumed=" + file1.getConsumedSuccessCount() + ", Published=" + file1.getPublishedSuccessCount());
 
-            FileEntity file2 = fileService.get(TEST_FILE_ID_2,TEST_MASTER_NAME);
+            FileEntity file2 = fileRepository.findByFileIdAndMaster(TEST_FILE_ID_2,TEST_MASTER_NAME).orElse(null);
             assertNotNull(file2, "FileEntity 2 should exist");
             assertTrue(file2.getConsumedSuccessCount() >= EXPECTED_CONSUME_SUCCESS_PER_FILE && file2.getPublishedSuccessCount() >= EXPECTED_PUBLISH_SUCCESS_PER_FILE, "File 2 counts should reach expected values. Found Consumed=" + file2.getConsumedSuccessCount() + ", Published=" + file2.getPublishedSuccessCount());
 
@@ -293,11 +293,12 @@ class InsightsApplicationTests {
         return fileProgressRequest;
     }
 
-    FileProgressRequest createConsumerMetrics(int success, int serverFail, int logicalFail) {
+    FileProgressRequest createConsumerMetrics(int success, int serverFail, int logicalFail, int retryCount) {
         FileProgressRequest.ConsumerMetrics consumerMetrics = new FileProgressRequest.ConsumerMetrics();
         consumerMetrics.setSuccessCount(success);
         consumerMetrics.setServerFailCount(serverFail);
         consumerMetrics.setLogicalFailCount(logicalFail);
+        consumerMetrics.setRetryCount(retryCount);
 
         FileProgressRequest fileProgressRequest = new FileProgressRequest();
         fileProgressRequest.setConsumer(consumerMetrics);

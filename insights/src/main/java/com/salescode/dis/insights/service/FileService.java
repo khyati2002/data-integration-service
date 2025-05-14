@@ -96,6 +96,7 @@ public class FileService {
         file.setMaster(master);
         FileEntity savedFile = fileRepo.save(file);
         job.getFiles().add(savedFile);
+        job.setTotalFileCount(job.getFiles().size());
         log.info("Registered new file {} under job {}", file.getId(), jobId);
         return savedFile;
     }
