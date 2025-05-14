@@ -207,10 +207,12 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 }
             }
         } catch (DataTransformationService.TransformationException e) {
-          //  logger.info("Transformation Exception ", e);
+            logger.error("Transformation Exception ", e);
+            logger.error("Transformation Exception ", e.getStackTrace());
             errorList.add(TRANSFORMATION_ERROR + e.getMessage());
         } catch (Exception e) {
-           // logger.info("Transformation Exception ", e);
+            logger.error("Transformation Exception ", e);
+            logger.error("Transformation Exception ", e.getStackTrace());
             errorList.add("Unexpected error: " + e.getMessage());
         }
     }

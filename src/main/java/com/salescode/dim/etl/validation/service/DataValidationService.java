@@ -122,6 +122,8 @@ public class DataValidationService {
             validation.setValidationRule(validationRule);
             return validation.apply(cdm);
         } catch (Exception e) {
+            log.error("Validation {} failed", validationRule.getImplementation(), e);
+            log.error("Validation {} failed", validationRule.getImplementation(), e.getStackTrace());
             return new OperationResult.StepResult(OperationResult.Status.ERROR, ERROR_MESSAGE + String.format("Implementation '%s' failed: %s", implementationName, e.getMessage()));
         } finally {
             long p2 = System.nanoTime();

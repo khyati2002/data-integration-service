@@ -2,12 +2,15 @@ package com.salescode.dim.etl.enrichment.service;
 
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.salescode.dim.StreamingRawDataProcessor;
 import com.salescode.dim.etl.EnrichmentResult;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.OperationResult.StepResult;
 import com.salescode.dim.etl.enrichment.AbstractEnrichment;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.jooq.generated.tables.pojos.EnrichmentInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,6 +27,8 @@ public class DataEnrichmentService {
 
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
     private final ETLRegistry etlRegistry;
+
+    Logger logger = LoggerFactory.getLogger(DataEnrichmentService.class);
 
     /**
      * Creates a new DataEnrichmentService with the required dependencies.
@@ -93,6 +98,8 @@ public class DataEnrichmentService {
                     resultantModels = enrichedModels;
                 }
             } catch (Exception e) {
+                logger.error("Error during enrichment: {}", e);
+                logger.error("Error during enrichment: {}", e.getStackTrace());
                 allResults.add(new StepResult(OperationResult.Status.ERROR, ERROR_MESSAGE + e.getMessage()));
             }
         }
