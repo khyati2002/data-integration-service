@@ -126,8 +126,7 @@ public class IntegrationSummaryService {
         return result;
     }
 
-
-    public Object getLobSummary(List<String> lobList, List<String> status,LocalDateTime startTime,LocalDateTime endTime) {
+    public Object getLobSummary(List<String> lobList, List<String> status, LocalDateTime startTime, LocalDateTime endTime) {
         List<Map<String, Object>> resp;
 
         // Ensure the startDate and endDate are converted to Timestamp if they are not null
@@ -135,10 +134,10 @@ public class IntegrationSummaryService {
         Timestamp endTimestamp = (endTime != null) ? Timestamp.valueOf(endTime) : null;
 
         // Call the repository method
-        resp = jobRepository.getLobSummary(lobList, status, startTimestamp,endTimestamp);
+        resp = jobRepository.getLobSummary(lobList, status, startTimestamp, endTimestamp);
 
         // Using Stream API to aggregate data
-        Map<String, Map<String, Object>> aggregatedData = resp.stream()
+        Map<String, Map<String, Map<String, Object>>> aggregatedData = resp.stream()
                 .collect(Collectors.groupingBy(
                         record -> (String) record.get("lob"), // Group by lob
                         Collectors.toMap(
@@ -165,13 +164,13 @@ public class IntegrationSummaryService {
                                     jobData.put("publisher_throughput_sum", getSafeDouble(record, "publisher_throughput"));
                                     jobData.put("throughput_count", 1);
 
-                                    // NEW: Add master to a list
-                                    Set<Object> masters = new HashSet<>();
+                                    // NEW: Add master to a list (initially)
+                                    List<Object> masters = new ArrayList<>();
                                     Object master = record.get("master");
                                     if (master != null) {
                                         masters.add(master);
                                     }
-                                    jobData.put("masters", masters);
+                                    jobData.put("master", masters); // Store as a list
 
                                     return jobData;
                                 },
@@ -195,11 +194,10 @@ public class IntegrationSummaryService {
                                     int count2 = (int) replacementMap.getOrDefault("throughput_count", 0);
                                     existingMap.put("throughput_count", count1 + count2);
 
-                                    Set<Object> existingMasters = new HashSet<>((Collection<?>) existingMap.getOrDefault("masters", new HashSet<>()));
-                                    Set<Object> newMasters = new HashSet<>((Collection<?>) replacementMap.getOrDefault("masters", new HashSet<>()));
-                                    existingMasters.addAll(newMasters);
-                                    existingMap.put("master", existingMasters);
-                                    existingMap.remove("masters");
+                                    // Combine masters using a Set to avoid duplicates
+                                    Set<Object> combinedMasters = new HashSet<>((List<Object>) existingMap.getOrDefault("master", new ArrayList<>()));
+                                    combinedMasters.addAll((List<Object>) replacementMap.getOrDefault("master", new ArrayList<>()));
+                                    existingMap.put("master", new ArrayList<>(combinedMasters)); // Convert back to a List
 
                                     return existingMap;
                                 }
@@ -208,33 +206,30 @@ public class IntegrationSummaryService {
 
         // After aggregation, compute average throughput per job
         aggregatedData.forEach((lob, jobMap) -> {
-            for (Map.Entry<String, Object> entry : jobMap.entrySet()) {
-                if (entry.getValue() instanceof Map) {
-                    Map<String, Object> jobData = (Map<String, Object>) entry.getValue();
-                    double consumerSum = getSafeDouble(jobData, "consumer_throughput_sum");
-                    double publisherSum = getSafeDouble(jobData, "publisher_throughput_sum");
-                    int count = (int) jobData.getOrDefault("throughput_count", 1);
+            for (Map.Entry<String, Map<String, Object>> entry : jobMap.entrySet()) {
+                Map<String, Object> jobData = entry.getValue();
+                double consumerSum = getSafeDouble(jobData, "consumer_throughput_sum");
+                double publisherSum = getSafeDouble(jobData, "publisher_throughput_sum");
+                int count = (int) jobData.getOrDefault("throughput_count", 1);
 
-                    double avgConsumer = (count > 0) ? (consumerSum / count) : 0.0;
-                    if (Double.isFinite(avgConsumer)) {
-                        jobData.put("avg_consumer_throughput", BigDecimal.valueOf(avgConsumer).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                    } else {
-                        jobData.put("avg_consumer_throughput", 0.0);
-                    }
-
-                    double avgPublisher = (count > 0) ? (publisherSum / count) : 0.0;
-                    if (Double.isFinite(avgPublisher)) {
-                        jobData.put("avg_publisher_throughput", BigDecimal.valueOf(avgPublisher).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                    } else {
-                        jobData.put("avg_publisher_throughput", 0.0);
-                    }
-
-
-                    // Remove intermediate sum and count if not needed
-                    jobData.remove("consumer_throughput_sum");
-                    jobData.remove("publisher_throughput_sum");
-                    jobData.remove("throughput_count");
+                double avgConsumer = (count > 0) ? (consumerSum / count) : 0.0;
+                if (Double.isFinite(avgConsumer)) {
+                    jobData.put("avg_consumer_throughput", BigDecimal.valueOf(avgConsumer).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                } else {
+                    jobData.put("avg_consumer_throughput", 0.0);
                 }
+
+                double avgPublisher = (count > 0) ? (publisherSum / count) : 0.0;
+                if (Double.isFinite(avgPublisher)) {
+                    jobData.put("avg_publisher_throughput", BigDecimal.valueOf(avgPublisher).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                } else {
+                    jobData.put("avg_publisher_throughput", 0.0);
+                }
+
+                // Remove intermediate sum and count if not needed
+                jobData.remove("consumer_throughput_sum");
+                jobData.remove("publisher_throughput_sum");
+                jobData.remove("throughput_count");
             }
         });
 
