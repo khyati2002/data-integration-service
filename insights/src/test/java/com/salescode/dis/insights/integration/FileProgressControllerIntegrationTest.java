@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.dis.insights.dto.*;
 import com.salescode.dis.insights.entity.FileEntity;
-import com.salescode.dis.insights.enums.FileStatus;
 import com.salescode.dis.insights.service.FileService;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.http.*;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -34,9 +36,15 @@ public class FileProgressControllerIntegrationTest {
     @Container
     static KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:latest"));
 
+    @Container
+    static PostgreSQLContainer postgres = new PostgreSQLContainer(DockerImageName.parse("postgres:16-alpine"));
+
     @DynamicPropertySource
     static void kafkaProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.kafka.bootstrap-servers", kafkaContainer::getBootstrapServers);
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
     }
 
     @Autowired
@@ -53,6 +61,16 @@ public class FileProgressControllerIntegrationTest {
     private final String lob = "test-lob";
     private final String masterName = "test-master";
     private HttpHeaders headers;
+
+    @BeforeAll
+    static void beforeAll() {
+        postgres.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        postgres.stop();
+    }
 
     @BeforeEach
     void setUp() {
@@ -98,6 +116,7 @@ public class FileProgressControllerIntegrationTest {
     void testMultipleProgressUpdatesAreAggregated() {
         // First progress update
         FileProgressRequest progressRequest1 = new FileProgressRequest();
+        progressRequest1.setProcessingTimeMs(1000L);
         
         FileProgressRequest.ConsumerMetrics consumer1 = new FileProgressRequest.ConsumerMetrics();
         consumer1.setSuccessCount(10);
@@ -133,6 +152,7 @@ public class FileProgressControllerIntegrationTest {
 
         // Second progress update with different values
         FileProgressRequest progressRequest2 = new FileProgressRequest();
+        progressRequest2.setProcessingTimeMs(200L);
         
         FileProgressRequest.ConsumerMetrics consumer2 = new FileProgressRequest.ConsumerMetrics();
         consumer2.setSuccessCount(20);
@@ -195,6 +215,9 @@ public class FileProgressControllerIntegrationTest {
         assertEquals(40, getResponse.getBody().getPublishedSuccessCount()); // 15 + 25
         assertEquals(8, getResponse.getBody().getPublishedFailCount()); // 3 + 5
         assertEquals(10, getResponse.getBody().getRetryCount()); // 5 + 5
+
+        assertEquals(200, getResponse.getBody().getMinProcessingTimeMs());
+        assertEquals(1000, getResponse.getBody().getMaxProcessingTimeMs());
     }
 
     private JobEntityRequestDto createSampleJobRequest() {

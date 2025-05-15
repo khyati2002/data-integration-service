@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
 
@@ -9,6 +10,12 @@ public class FileProgressRequest {
     private PublisherMetrics publisher;
 
     private Long processingTimeMs;
+
+    @JsonIgnore
+    private transient Long minProcessingTimeMs;
+
+    @JsonIgnore
+    private transient Long maxProcessingTimeMs;
 
     @Data
     public static class ConsumerMetrics {

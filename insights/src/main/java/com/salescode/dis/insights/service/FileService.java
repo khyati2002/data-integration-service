@@ -81,10 +81,8 @@ public class FileService {
             }
         });
 
-        if (progress.getProcessingTimeMs() != null) {
-            file.setMinProcessingTimeMs(file.getMinProcessingTimeMs() == null ? progress.getProcessingTimeMs() : Math.max(file.getMinProcessingTimeMs(), progress.getProcessingTimeMs()));
-            file.setMaxProcessingTimeMs(file.getMaxProcessingTimeMs() == null ? progress.getProcessingTimeMs() : Math.min(file.getMaxProcessingTimeMs(), progress.getProcessingTimeMs()));
-        }
+        if (progress.getMinProcessingTimeMs() != null) file.setMinProcessingTimeMs(file.getMinProcessingTimeMs() == null ? progress.getMinProcessingTimeMs() : Math.min(file.getMinProcessingTimeMs(), progress.getMinProcessingTimeMs()));
+        if(progress.getMaxProcessingTimeMs() != null) file.setMaxProcessingTimeMs(file.getMaxProcessingTimeMs() == null ? progress.getMaxProcessingTimeMs() : Math.max(file.getMaxProcessingTimeMs(), progress.getMaxProcessingTimeMs()));
 
         fileRepo.save(file);
         log.info("File {} progress updated", fileId);

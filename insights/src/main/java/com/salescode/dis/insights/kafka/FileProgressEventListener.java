@@ -97,6 +97,10 @@ public class FileProgressEventListener {
         if (incoming.getPublisher() != null) {
             aggregateMetrics(existing.getPublisher(), incoming.getPublisher());
         }
+        if (incoming.getProcessingTimeMs() != null){
+            existing.setMinProcessingTimeMs(existing.getMinProcessingTimeMs() == null ? incoming.getProcessingTimeMs() : Math.min(existing.getMinProcessingTimeMs(), incoming.getProcessingTimeMs()));
+            existing.setMaxProcessingTimeMs(existing.getMaxProcessingTimeMs() == null ? incoming.getProcessingTimeMs() : Math.max(existing.getMaxProcessingTimeMs(), incoming.getProcessingTimeMs()));
+        }
     }
 
     private void aggregateMetrics(FileProgressRequest.ConsumerMetrics existing, FileProgressRequest.ConsumerMetrics incoming) {
