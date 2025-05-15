@@ -17,26 +17,37 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class JoltTransformer extends AbstractTransformer<Map<String, Object>, Object> {
 
-    protected Map<String, Chainr> templateCompilationCache = new ConcurrentHashMap<>();
+	protected Map<String, Chainr> templateCompilationCache = new ConcurrentHashMap<>();
 
-    @Override
-    @SneakyThrows
-    public Object transform(Map<String, Object> stringObjectMap) {
-        TransformerInfo transformerInfo = this.getTransformerInfo();
-        String code = transformerInfo.getCode().data();
-        final ArrayNode codeNode = JSONUtils.getObjectMapper().readValue(code, ArrayNode.class);
-        if (codeNode != null && stringObjectMap != null) {
-            try {
-                Chainr chainr = templateCompilationCache.computeIfAbsent(transformerInfo.getId(), (r) -> Chainr.fromSpec(JsonUtils.jsonToObject(String.valueOf(codeNode))));
-                Object transformedOutput = chainr.transform(stringObjectMap);
-                String prettyJsonString = JsonUtils.toJsonString(transformedOutput);
-                return JSONUtils.getObjectMapper().readValue(prettyJsonString, new TypeReference<HashMap<String, Object>>() {});
-            } catch (Exception ex) {
-                log.error("Jolt Transformer Exception", ex);
-            }
-            return null;
-        } else {
-            throw new NullPointerException("Either jolt specification/input json found null");
-        }
-    }
+	@Override
+	@SneakyThrows
+	public Object transform(Map<String, Object> stringObjectMap) {
+		TransformerInfo transformerInfo = this.getTransformerInfo();
+		String code = transformerInfo.getCode().data();
+		final ArrayNode codeNode = JSONUtils.getObjectMapper().readValue(code, ArrayNode.class);
+		if (codeNode != null && stringObjectMap != null) {
+			try {
+				Chainr chainr = templateCompilationCache.computeIfAbsent(transformerInfo.getId(), (r) -> Chainr.fromSpec(JsonUtils.jsonToObject(String.valueOf(codeNode))));
+				Object transformedOutput = chainr.transform(stringObjectMap);
+				String prettyJsonString = JsonUtils.toJsonString(transformedOutput);
+				Map<String, Object> transformedData = JSONUtils.getObjectMapper().readValue(prettyJsonString, new TypeReference<HashMap<String, Object>>() {
+				});
+
+				if (transformedData.containsKey("location")) {
+					Object location = transformedData.get("location");
+					log.error("Location found: {}", location);
+				} else {
+					log.error("Location not found in transformed data.");
+				}
+				return JSONUtils.getObjectMapper().readValue(prettyJsonString, new TypeReference<HashMap<String, Object>>() {
+				});
+
+			} catch (Exception ex) {
+				log.error("Jolt Transformer Exception", ex);
+			}
+			return null;
+		} else {
+			throw new NullPointerException("Either jolt specification/input json found null");
+		}
+	}
 }
