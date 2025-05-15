@@ -55,11 +55,13 @@ public class OutletMetadataService extends AbstractCDMService<OutletMetadata> {
 		List<List<OutletMetadata>> saveItemsList = getItemsToSaveList(outletMetadata);
 		saveItemsList.get(0).forEach(outlet -> {
 			outlet.setActiveStatus(ActiveStatus.ACTIVE);
+			outlet.setChanged(Boolean.TRUE);
 			outlet.setChanged(true);
 		});
 
 		saveItemsList.get(1).forEach(outlet -> {
 			outlet.setActiveStatus(ActiveStatus.ACTIVE);
+			outlet.setChanged(Boolean.TRUE);
 			outlet.setChanged(true);
 		});
 		if (!saveItemsList.get(0).isEmpty()) {
