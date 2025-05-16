@@ -55,13 +55,28 @@ public class DataTransformationService implements Serializable {
             return convertToCommonDataModelList(input, entityClass);
         }
 
-        try {
-            Object transformedData = applyTransformer(transformerId, input);
-            return convertToCommonDataModelList(transformedData, entityClass);
-        } catch (Exception e) {
-            throw new TransformationException("Failed to transform data with transformer ID: " + transformerId, e);
+        int maxRetries = 2;
+        int attempt = 0;
+        Exception lastException = null;
+
+        while (attempt < maxRetries) {
+            try {
+                Object transformedData = applyTransformer(transformerId, input);
+                return convertToCommonDataModelList(transformedData, entityClass);
+            } catch (Exception e) {
+                lastException = e;
+                attempt++;
+                if (attempt < maxRetries) {
+                    // Optional: add some logging or a short delay
+                    System.out.println("Retrying transformation attempt " + (attempt + 1));
+                }
+            }
         }
+
+        // After retries exhausted
+        throw new TransformationException("Failed to transform data with transformer ID: " + transformerId + " after " + maxRetries + " attempts", lastException);
     }
+
 
     /**
      * Transforms the given input data using a specified transformer.

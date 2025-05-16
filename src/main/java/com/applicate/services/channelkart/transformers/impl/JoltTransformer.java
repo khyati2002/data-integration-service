@@ -33,12 +33,12 @@ public class JoltTransformer extends AbstractTransformer<Map<String, Object>, Ob
 				Map<String, Object> transformedData = JSONUtils.getObjectMapper().readValue(prettyJsonString, new TypeReference<HashMap<String, Object>>() {
 				});
 
-				if (transformedData.containsKey("location")) {
+				if (transformerInfo.getType().equals("OutletMetadata") && transformedData.containsKey("location")) {
 					Object location = transformedData.get("location");
-//					log.error("Using transformer spec for ID {}: {}", transformerInfo.getId(), codeNode.toString());
-//					log.error("Transformer info for record: {} | Info: {}", prettyJsonString, transformerInfo);
-//					log.error("Location found: {}", location);
-//					log.error("Data received is: {}", transformedData);
+					log.error("Using transformer spec for ID {}: {}", transformerInfo.getId(), codeNode.toString());
+					log.error("Transformer info for record: {} | Info: {}", prettyJsonString, transformerInfo);
+					log.error("Location found: {}", location);
+					log.error("Data received is: {}", transformedData);
 				} else {
 				//	log.error("Location not found in transformed data.");
 				}
