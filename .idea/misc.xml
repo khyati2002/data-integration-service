@@ -8,11 +8,13 @@
         <option value="$PROJECT_DIR$/insights/pom.xml" />
         <option value="$PROJECT_DIR$/bundle/pom.xml" />
         <option value="$PROJECT_DIR$/jooq/pom.xml" />
+        <option value="$PROJECT_DIR$/insights-common/pom.xml" />
+        <option value="$PROJECT_DIR$/insights-sdk/pom.xml" />
       </list>
     </option>
   </component>
   <component name="PWA">
     <option name="wasEnabledAtLeastOnce" value="true" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="corretto-11" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="corretto-21" project-jdk-type="JavaSDK" />
 </project>
