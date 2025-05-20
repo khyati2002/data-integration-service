@@ -51,7 +51,7 @@ public class JobEntity extends TimeAwareEntity {
     @Override
     protected void onUpdate() {
         super.onUpdate();
-        if(this.status == JobStatus.COMPLETED || this.status == JobStatus.FAILED){
+        if(this.status == JobStatus.COMPLETED_SUCCESSFULLY || this.status == JobStatus.COMPLETED_WITH_FAILURES || this.status == JobStatus.FAILED){
             setEndTime(Instant.now());
         }
         this.totalFileCount = files.size();

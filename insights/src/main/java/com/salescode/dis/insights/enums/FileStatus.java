@@ -1,5 +1,5 @@
 package com.salescode.dis.insights.enums;
 
 public enum FileStatus {
-    PENDING, RUNNING, COMPLETED, FAILED
+    PENDING, FAILED, COMPLETED_SUCCESSFULLY, COMPLETED_WITH_FAILURES
 }

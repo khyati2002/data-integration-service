@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,8 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
     List<Map<String, Object>> getLobSummary(
             @Param("lob") List<String> lob,
             @Param("status") List<String> status,
-            @Param("startTime") Timestamp startTime,
-            @Param("endTime") Timestamp endTime);
+            @Param("startTime") Instant startTime,
+            @Param("endTime") Instant endTime);
 
 
 
@@ -50,18 +51,27 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
             "SUM(CASE WHEN j.status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING, " +
             "SUM(CASE WHEN j.status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED " +
             "FROM JobEntity j " +
+            "WHERE j.lastModifiedTime BETWEEN :startTime AND :endTime " +
             "GROUP BY j.lob")
-    List<Map<String,Object>> getLobDetailsAll();
+    List<Map<String, Object>> getLobDetailsAll(
+            @Param("startTime") Instant startTime,
+            @Param("endTime") Instant endTime
+    );
+
+
 
     @Query("SELECT j.lob AS lob, COUNT(j) AS total, " +
             "SUM(CASE WHEN j.status = 'COMPLETED' THEN 1 ELSE 0 END) AS COMPLETED, " +
             "SUM(CASE WHEN j.status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING, " +
             "SUM(CASE WHEN j.status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED " +
             "FROM JobEntity j " +
-            "WHERE j.lob IN :lob " +
+            "WHERE j.lob IN :lob AND j.lastModifiedTime BETWEEN :startTime AND :endTime " +
             "GROUP BY j.lob")
     List<Map<String, Object>> getLobDetails(
-            @Param("lob") List<String> lob
+            @Param("lob") List<String> lob,
+            @Param("startTime") Instant startTime,
+            @Param("endTime") Instant endTime
     );
+
 
 }

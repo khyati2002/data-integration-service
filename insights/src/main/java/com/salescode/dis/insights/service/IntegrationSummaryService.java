@@ -65,17 +65,19 @@ public class IntegrationSummaryService {
         return grouped;
     }
 
-    public Object getOnlyLobDetails(List<String> lobList) {
-        List<Map<String, Object>> resp;
 
+    public Object getOnlyLobDetails(List<String> lobList, String startTime, String endTime) {
+        List<Map<String, Object>> resp;
+        Instant startInstant = Instant.parse(startTime);
+        Instant endInstant = Instant.parse(endTime);
         if (lobList == null || lobList.isEmpty()) {
-            resp = jobRepository.getLobDetailsAll(); // optionally modify to support date filter
+            resp = jobRepository.getLobDetailsAll(startInstant, endInstant); // optionally modify to support date filter
         } else {
-            resp = jobRepository.getLobDetails(lobList); // optionally modify to support date filter
+            resp = jobRepository.getLobDetails(lobList, startInstant, endInstant); // optionally modify to support date filter
         }
 
         Map<String, Map<String, Object>> lobSummary = (Map<String, Map<String, Object>>)
-                getLobSummary(lobList, Collections.emptyList(), null,null);
+                getLobSummary(lobList, Collections.emptyList(), startTime, endTime);
 
         Map<String, Map<String, Object>> result = new HashMap<>();
 
@@ -90,6 +92,14 @@ public class IntegrationSummaryService {
             detailsMap.put("PENDING", inProgress);
             detailsMap.put("FAILED", failed);
 
+            // Initialize aggregated counts
+            int totalCount = 0;
+            int publishedSuccessCount = 0;
+            int publishedFailCount = 0;
+            int consumedSuccessCount = 0;
+            int serverFailureCount = 0;
+            int logicalFailureCount = 0;
+
             // Calculate average throughput per LOB and put inside details
             Map<String, Object> jobsMap = lobSummary.get(lob);
             if (jobsMap != null) {
@@ -97,11 +107,21 @@ public class IntegrationSummaryService {
                 double totalPublisherThroughput = 0.0;
                 int jobCount = 0;
 
+                // Aggregate additional metrics
                 for (Map.Entry<String, Object> jobEntry : jobsMap.entrySet()) {
                     Map<String, Object> jobData = (Map<String, Object>) jobEntry.getValue();
 
                     totalConsumerThroughput += getSafeDouble(jobData, "avg_consumer_throughput");
                     totalPublisherThroughput += getSafeDouble(jobData, "avg_publisher_throughput");
+
+                    // Aggregate the requested metrics
+                    totalCount += getSafeInt(jobData, "total_count");
+                    publishedSuccessCount += getSafeInt(jobData, "published_success_count");
+                    publishedFailCount += getSafeInt(jobData, "published_fail_count");
+                    consumedSuccessCount += getSafeInt(jobData, "consumed_success_count");
+                    serverFailureCount += getSafeInt(jobData, "server_failure_count");
+                    logicalFailureCount += getSafeInt(jobData, "logical_failure_count");
+
                     jobCount++;
                 }
 
@@ -115,6 +135,14 @@ public class IntegrationSummaryService {
                 detailsMap.put("published_throughput", Double.isFinite(publisherAvg)
                         ? BigDecimal.valueOf(publisherAvg).setScale(2, RoundingMode.HALF_UP).doubleValue()
                         : 0.0);
+
+                // Add aggregated counts to the details map
+                detailsMap.put("total_count", totalCount);
+                detailsMap.put("published_success_count", publishedSuccessCount);
+                detailsMap.put("published_fail_count", publishedFailCount);
+                detailsMap.put("consumed_success_count", consumedSuccessCount);
+                detailsMap.put("server_failure_count", serverFailureCount);
+                detailsMap.put("logical_failure_count", logicalFailureCount);
             }
 
             Map<String, Object> lobMap = new HashMap<>();
@@ -126,15 +154,13 @@ public class IntegrationSummaryService {
         return result;
     }
 
-    public Object getLobSummary(List<String> lobList, List<String> status, LocalDateTime startTime, LocalDateTime endTime) {
+    public Object getLobSummary(List<String> lobList, List<String> status, String startTime, String endTime) {
         List<Map<String, Object>> resp;
 
-        // Ensure the startDate and endDate are converted to Timestamp if they are not null
-        Timestamp startTimestamp = (startTime != null) ? Timestamp.valueOf(startTime) : null;
-        Timestamp endTimestamp = (endTime != null) ? Timestamp.valueOf(endTime) : null;
-
-        // Call the repository method
-        resp = jobRepository.getLobSummary(lobList, status, startTimestamp, endTimestamp);
+        Instant startInstant = Instant.parse(startTime);
+        Instant endInstant = Instant.parse(endTime);
+        // Call the repository method directly with the ISO string
+        resp = jobRepository.getLobSummary(lobList, status, startInstant, endInstant);
 
         // Using Stream API to aggregate data
         Map<String, Map<String, Map<String, Object>>> aggregatedData = resp.stream()
@@ -154,11 +180,15 @@ public class IntegrationSummaryService {
                                     jobData.put("logical_fail_count", getSafeInt(record, "logical_fail_count"));
                                     jobData.put("published_fail_count", getSafeInt(record, "published_fail_count"));
                                     jobData.put("status", record.get("status"));
+                                    jobData.put("lob",record.get("lob"));
+                                    // Directly use the ISO string from the record
+                                    Instant startTimeValue = (Instant) record.get("start_time");
+                                    Instant endTimeValue = (Instant) record.get("end_time");
 
-                                    Instant startTime_job = (Instant) record.get("start_time");
-                                    Instant endTime_job = (Instant) record.get("end_time");
-                                    jobData.put("startTime", startTime_job != null ? startTime_job.toString() : null);
-                                    jobData.put("endTime", endTime_job != null ? endTime_job.toString() : null);
+                                    jobData.put("startTime", startTimeValue != null ? startTimeValue.toString() : null);
+                                    jobData.put("endTime", endTimeValue != null ? endTimeValue.toString() : null);
+
+
 
                                     jobData.put("consumer_throughput_sum", getSafeDouble(record, "consumer_throughput"));
                                     jobData.put("publisher_throughput_sum", getSafeDouble(record, "publisher_throughput"));
@@ -235,7 +265,6 @@ public class IntegrationSummaryService {
 
         return aggregatedData;
     }
-
 
     private double getSafeDouble(Map<String, Object> map, String key) {
         Object value = map.get(key);

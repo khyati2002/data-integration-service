@@ -16,6 +16,7 @@ public class LobSummaryDTO {
     private Integer successJobCount = 0;
     private Integer inProgressJobCount = 0;
     private Integer failedJobCount = 0;
+    private transient Integer completedWithFailureCount;
     private Integer publishedAverageThroughput;
     private Integer consumedAverageThroughput;
     private List<JobEntityResponseDtoWithFiles> jobs;
@@ -34,9 +35,13 @@ public class LobSummaryDTO {
                 uniqueMasters.add(job.getMaster());
             }
 
-            if (Objects.equals(job.getStatus(), JobStatus.COMPLETED)){
+            if (Objects.equals(job.getStatus(), JobStatus.COMPLETED_SUCCESSFULLY) || Objects.equals(job.getStatus(), JobStatus.COMPLETED_WITH_FAILURES)){
                 this.successJobCount++;
-            } else if (Objects.equals(job.getStatus(), JobStatus.PENDING)){
+            }
+            if(Objects.equals(job.getStatus(),JobStatus.COMPLETED_WITH_FAILURES)){
+                this.completedWithFailureCount++;
+            }
+            else if (Objects.equals(job.getStatus(), JobStatus.PENDING)){
                 this.inProgressJobCount++;
             } else {
                 this.failedJobCount++;
@@ -60,9 +65,12 @@ public class LobSummaryDTO {
         this.publishedAverageThroughput = publishedCount == 0 ? 0 : totalPublishedThroughput / publishedCount;
         this.consumedAverageThroughput = consumedCount == 0 ? 0 : totalConsumedThroughput / consumedCount;
         this.masterCount = uniqueMasters.size();
-        if (jobs.size() == successJobCount) {
-            this.status = JobStatus.COMPLETED;
-        } else if (jobs.size() == failedJobCount) {
+        if (jobs.size() == successJobCount && completedWithFailureCount == 0) {
+            this.status = JobStatus.COMPLETED_SUCCESSFULLY;
+        }
+        else if(jobs.size() == successJobCount){
+            this.status = JobStatus.COMPLETED_WITH_FAILURES;
+        }else if (jobs.size() == failedJobCount) {
             this.status = JobStatus.FAILED;
         } else {
             this.status = JobStatus.PENDING;

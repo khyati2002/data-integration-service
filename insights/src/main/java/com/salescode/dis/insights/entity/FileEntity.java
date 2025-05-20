@@ -96,13 +96,13 @@ public class FileEntity extends TimeAwareEntity {
         long elapsedSeconds = Math.max(Duration.between(getStartTime(), getLastModifiedTime()).getSeconds(), 1);
         updateThroughputIfFinal(publishedStatus, publishedSuccessCount + publishedFailCount, elapsedSeconds, this::setPublisherThroughput);
         updateThroughputIfFinal(consumedStatus, consumedSuccessCount + consumedFailCount, elapsedSeconds, this::setConsumerThroughput);
-        if(this.publishedStatus == FileStatus.COMPLETED && this.consumedStatus == FileStatus.COMPLETED){
+        if((this.publishedStatus == FileStatus.COMPLETED_SUCCESSFULLY || this.publishedStatus == FileStatus.COMPLETED_WITH_FAILURES) && (this.consumedStatus == FileStatus.COMPLETED_SUCCESSFULLY || this.consumedStatus == FileStatus.COMPLETED_WITH_FAILURES)){
             setEndTime(Instant.now());
         }
     }
 
     private void updateThroughputIfFinal(FileStatus status, int totalCount, long elapsedSeconds, Consumer<BigDecimal> setter) {
-        if (status == FileStatus.COMPLETED || status == FileStatus.FAILED) {
+        if (status == FileStatus.COMPLETED_SUCCESSFULLY || status == FileStatus.COMPLETED_WITH_FAILURES || status == FileStatus.FAILED) {
             BigDecimal throughput = BigDecimal.valueOf(totalCount).divide(BigDecimal.valueOf(elapsedSeconds), new MathContext(2));
             setter.accept(throughput);
         }

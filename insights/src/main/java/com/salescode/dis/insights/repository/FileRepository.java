@@ -13,7 +13,22 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FileRepository extends JpaRepository<FileEntity, String> {
-    Page<FileEntity> findByJobId(String jobId, Pageable pageable);
+
+    @Query(value = "SELECT * FROM integration_file f " +
+            "WHERE f.job_id = :jobId " +
+            "AND (:startTime IS NULL OR f.last_modified_time >= CAST(:startTime AS TIMESTAMP)) " +
+            "AND (:endTime IS NULL OR f.last_modified_time <= CAST(:endTime AS TIMESTAMP)) " +
+            "ORDER BY f.last_modified_time DESC",
+            nativeQuery = true)
+    Page<FileEntity> findFilesByJobId(
+            @Param("jobId") String jobId,
+            @Param("startTime") String startTime,  // <- change to String
+            @Param("endTime") String endTime,      // <- change to String
+            Pageable pageable
+    );
+
+
+
 
     @Query("SELECT f FROM FileEntity f " +
             "WHERE f.isApiBased = true " +

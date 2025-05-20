@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -52,8 +53,8 @@ public class FileService {
     }
 
     @Transactional(readOnly = true)
-    public Page<FileEntity> listByJob(String jobId, Pageable pageable) {
-        return fileRepo.findByJobId(jobId, pageable);
+    public Page<FileEntity> listByJob(String jobId, String startTime, String endTime, Pageable pageable) {
+        return fileRepo.findFilesByJobId(jobId,startTime,endTime,pageable);
     }
 
     public void updateProgress(String fileId, FileProgressRequest progress, String jobId, String lob, String masterName) {
@@ -113,10 +114,17 @@ public class FileService {
     }
 
     protected void recalcJobMetrics(JobEntity job) {
-        long completed = job.getFiles()
+        long completedSuccess = job.getFiles()
                 .stream()
-                .filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED && f.getPublishedStatus() == FileStatus.COMPLETED)
+                .filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED_SUCCESSFULLY && f.getPublishedStatus() == FileStatus.COMPLETED_SUCCESSFULLY)
                 .count();
+
+        long completedWithFailures = job.getFiles()
+                .stream()
+                .filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED_WITH_FAILURES && f.getPublishedStatus() == FileStatus.COMPLETED_WITH_FAILURES)
+                .count();
+
+        long completed = completedSuccess + completedWithFailures;
         long failed = job.getFiles()
                 .stream()
                 .filter(f -> f.getConsumedStatus() == FileStatus.FAILED && f.getPublishedStatus() == FileStatus.FAILED)
@@ -124,7 +132,7 @@ public class FileService {
         job.setCompletedFiles((int) completed);
         job.setFailedFiles((int) failed);
         if ((completed != 0 || failed != 0) && completed + failed == job.getTotalFileCount()) {
-            job.setStatus(failed > 0 ? JobStatus.FAILED : JobStatus.COMPLETED);
+            job.setStatus(failed > 0 ? JobStatus.FAILED : (completedWithFailures > 0 ? JobStatus.COMPLETED_WITH_FAILURES : JobStatus.COMPLETED_SUCCESSFULLY));
         }
         log.info("Job {} metrics recalculated", job.getId());
     }

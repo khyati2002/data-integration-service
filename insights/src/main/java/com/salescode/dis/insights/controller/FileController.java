@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -60,15 +62,42 @@ public class FileController {
         return ResponseEntity.ok(resp);
     }
 
-    @Operation(summary = "Get all files for a specific job", description = "Retrieve a paginated list of all files associated with a specific job.")
-    @ApiResponse(responseCode = "200", description = "List of files for the job", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
-    @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
+
+    @Operation(
+            summary = "Get all files for a specific job",
+            description = "Retrieve a paginated list of all files associated with a specific job, optionally filtered by start and end time."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "List of files for the job",
+            content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class))
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Unexpected error",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
     @GetMapping("/job/{jobId}/unit")
-    public ResponseEntity<Page<FileEntityResponseDto>> listByJob(@PathVariable String lob, @PathVariable String jobId, Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.DESC, TimeAwareEntity.START_TIME)));
-        Page<FileEntityResponseDto> pageRes = fileService.listByJob(jobId, pageRequest).map(fileEntityMapper::toDto);
+    public ResponseEntity<Page<FileEntityResponseDto>> listByJob(
+            @PathVariable String lob,
+            @PathVariable String jobId,
+            @RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime,
+            Pageable pageable
+    ) {
+
+        PageRequest pageRequest = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
+
+        Page<FileEntityResponseDto> pageRes = fileService
+                .listByJob(jobId, startTime, endTime, pageRequest)
+                .map(fileEntityMapper::toDto);
+
         return ResponseEntity.ok(pageRes);
     }
+
 
     @Operation(summary = "Update file status", description = "Updates the status of a file")
     @ApiResponse(responseCode = "200", description = "Status updated successfully", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))

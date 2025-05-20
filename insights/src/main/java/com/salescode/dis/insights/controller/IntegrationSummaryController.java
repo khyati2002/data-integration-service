@@ -69,8 +69,8 @@ public class IntegrationSummaryController {
 
     @GetMapping("/lob-summary")
     public ResponseEntity<Object> getLobSummary(
-            @RequestParam(required = false) List<String> lob,@RequestParam(required = false) List<String> status,@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
+            @RequestParam(required = false) List<String> lob,@RequestParam(required = false) List<String> status,@RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime) {
         if (lob != null && lob.size() == 1) {
             lob = Collections.singletonList(lob.get(0));
         }
@@ -82,12 +82,14 @@ public class IntegrationSummaryController {
 
     @GetMapping("/lob-summary-only")
     public ResponseEntity<Object> getLobSummaryOnly(
-            @RequestParam(required = false) List<String> lob) {
+            @RequestParam(required = false) List<String> lob,
+            @RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime) {
         // If lob is null or contains one element, we convert it to a list
         if (lob != null && lob.size() == 1) {
             lob = Collections.singletonList(lob.get(0));
         }
-        return ResponseEntity.ok(integrationSummaryService.getOnlyLobDetails(lob));
+        return ResponseEntity.ok(integrationSummaryService.getOnlyLobDetails(lob, startTime, endTime));
     }
 
 
