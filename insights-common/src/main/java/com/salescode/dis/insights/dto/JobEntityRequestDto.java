@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-import com.salescode.dis.insights.enums.JobStatus;
 import lombok.Value;
 
 /**
