@@ -176,8 +176,8 @@ public class IntegrationSummaryService {
                                     jobData.put("consumed_success_count", getSafeInt(record, "consumed_success_count"));
                                     jobData.put("published_success_count", getSafeInt(record, "published_success_count"));
                                     jobData.put("total_count", getSafeInt(record, "total_count"));
-                                    jobData.put("server_fail_count", getSafeInt(record, "server_fail_count"));
-                                    jobData.put("logical_fail_count", getSafeInt(record, "logical_fail_count"));
+                                    jobData.put("server_failure_count", getSafeInt(record, "server_fail_count"));
+                                    jobData.put("logical_failure_count", getSafeInt(record, "logical_fail_count"));
                                     jobData.put("published_fail_count", getSafeInt(record, "published_fail_count"));
                                     jobData.put("status", record.get("status"));
                                     jobData.put("lob",record.get("lob"));
@@ -213,8 +213,8 @@ public class IntegrationSummaryService {
                                     existingMap.put("consumed_success_count", aggregateSafeInt(existingMap, replacementMap, "consumed_success_count"));
                                     existingMap.put("published_success_count", aggregateSafeInt(existingMap, replacementMap, "published_success_count"));
                                     existingMap.put("total_count", aggregateSafeInt(existingMap, replacementMap, "total_count"));
-                                    existingMap.put("server_fail_count", aggregateSafeInt(existingMap, replacementMap, "server_fail_count"));
-                                    existingMap.put("logical_fail_count", aggregateSafeInt(existingMap, replacementMap, "logical_fail_count"));
+                                    existingMap.put("server_failure_count", aggregateSafeInt(existingMap, replacementMap, "server_failure_count"));
+                                    existingMap.put("logical_failure_count", aggregateSafeInt(existingMap, replacementMap, "logical_failure_count"));
                                     existingMap.put("published_fail_count", aggregateSafeInt(existingMap, replacementMap, "published_fail_count"));
 
                                     existingMap.put("consumer_throughput_sum", aggregateSafeDouble(existingMap, replacementMap, "consumer_throughput_sum"));
