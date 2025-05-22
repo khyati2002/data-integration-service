@@ -1,14 +1,14 @@
 package com.salescode.dis.insights.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FileEntityRequestDto implements Serializable {
     String fileId;
     JsonNode extendedAttributes;

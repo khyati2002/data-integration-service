@@ -2,9 +2,13 @@ package com.salescode.dis.insights.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FileProgressRequest {
     private ConsumerMetrics consumer;
     private PublisherMetrics publisher;

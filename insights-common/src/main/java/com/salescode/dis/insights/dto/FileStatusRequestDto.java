@@ -2,11 +2,11 @@ package com.salescode.dis.insights.dto;
 
 import com.salescode.dis.insights.enums.FileStatus;
 import jakarta.validation.constraints.AssertTrue;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FileStatusRequestDto {
 
     private FileStatus consumedStatus;

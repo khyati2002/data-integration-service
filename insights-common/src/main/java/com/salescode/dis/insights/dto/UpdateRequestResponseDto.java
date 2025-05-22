@@ -1,10 +1,10 @@
 package com.salescode.dis.insights.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateRequestResponseDto {
     private String requestId;
     private String status;
