@@ -91,11 +91,11 @@ public class FileStatusScheduler {
             int totalPublished = file.getPublishedSuccessCount() + file.getPublishedFailCount();
             if (totalPublished > 0) {
                 if (totalPublished == totalConsumed) {
-                    if(file.getConsumedFailCount() == 0 && file.getPublishedFailCount()==0) {
-                        consumedStatus = FileStatus.COMPLETED_SUCCESSFULLY;
+                    if(file.getPublishedFailCount()==0) {
+                        publishedStatus = FileStatus.COMPLETED_SUCCESSFULLY;
                     }
-                    else if(file.getConsumedFailCount() > 0){
-                        consumedStatus = FileStatus.COMPLETED_WITH_FAILURES;
+                    else if(file.getPublishedFailCount() > 0){
+                        publishedStatus = FileStatus.COMPLETED_WITH_FAILURES;
                     }
                     log.info("Will update file {} published status to COMPLETED", file.getId());
                 } else {
