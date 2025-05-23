@@ -39,4 +39,33 @@ public class StringUtils {
             return output;
         }
     }
+    /**
+     * Replace characters.
+     *
+     * @param data the data
+     * @param regex the regex
+     * @param replaceWith the replace with
+     * @return the string
+     */
+    public static String replaceCharacters(String data,String regex, String replaceWith){
+        if(isValidString(data)){
+            return data.replaceAll(regex,replaceWith);
+        }
+        return data;
+    }
+
+    /**
+     * Checks if is valid string.
+     *
+     * @param value the value
+     * @return true, if is valid string
+     */
+    public static boolean isValidString(String value) {
+        return !isEmpty(value) && !value.equals("null") && !value.equals("\"\"") && !value.equalsIgnoreCase("undefined");
+    }
+    public static boolean isEmpty(String value) {
+        return value == null || value.isEmpty();
+    }
+
+
 }
