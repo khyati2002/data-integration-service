@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class JobEntityRequestDto implements Serializable {
     JsonNode extendedAttributes;
     String publisherJobUri;

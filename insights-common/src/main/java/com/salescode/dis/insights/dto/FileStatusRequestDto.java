@@ -7,6 +7,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class FileStatusRequestDto {
 
     private FileStatus consumedStatus;

@@ -9,8 +9,9 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class FileEntityRequestDto implements Serializable {
     String fileId;
     JsonNode extendedAttributes;
-    Integer totalCount;
+    Long totalCount;
 }
