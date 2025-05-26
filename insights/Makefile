@@ -1,6 +1,9 @@
 # Build the Docker image
 build-image:
-	mvn clean install -f ../insights-common/pom.xml -DskipTests
+	mvn clean install -f ../insights-common/pom.xml -DskipTests -e
+	mvn clean install -f ../insights-common/pom.xml -DskipTests -Psb3 -e
+	mvn clean install -f ../insights-sdk/pom.xml -DskipTests -e
+	mvn clean install -f ../insights-sdk/pom.xml -DskipTests  -Psb3 -e
 	mvn clean install -DskipTests
 	docker buildx build --progress plain --platform "linux/amd64" --provenance=false -t dis-insights .
 
