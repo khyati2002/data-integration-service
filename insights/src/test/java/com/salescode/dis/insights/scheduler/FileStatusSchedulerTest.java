@@ -54,11 +54,11 @@ public class FileStatusSchedulerTest {
         fileWithMatchingCounts.setMaster("master_name");
         fileWithMatchingCounts.setFileId("file_matching_123");
         fileWithMatchingCounts.setIsApiBased(true);
-        fileWithMatchingCounts.setTotalCount(0); // Total count is always 0
-        fileWithMatchingCounts.setConsumedSuccessCount(10);
-        fileWithMatchingCounts.setConsumedFailCount(0);
-        fileWithMatchingCounts.setPublishedSuccessCount(10);
-        fileWithMatchingCounts.setPublishedFailCount(0);
+        fileWithMatchingCounts.setTotalCount(0L); // Total count is always 0
+        fileWithMatchingCounts.setConsumedSuccessCount(10L);
+        fileWithMatchingCounts.setConsumedFailCount(0L);
+        fileWithMatchingCounts.setPublishedSuccessCount(10L);
+        fileWithMatchingCounts.setPublishedFailCount(0L);
         fileWithMatchingCounts.setConsumedStatus(FileStatus.PENDING);
         fileWithMatchingCounts.setPublishedStatus(FileStatus.PENDING);
         fileWithMatchingCounts.setJob(new JobEntity());
@@ -69,11 +69,11 @@ public class FileStatusSchedulerTest {
         fileWithNonMatchingCounts.setMaster("master_name");
         fileWithNonMatchingCounts.setFileId("file_non_matching_123");
         fileWithNonMatchingCounts.setIsApiBased(true);
-        fileWithNonMatchingCounts.setTotalCount(0); // Total count is always 0
-        fileWithNonMatchingCounts.setConsumedSuccessCount(5);
-        fileWithNonMatchingCounts.setConsumedFailCount(2);
-        fileWithNonMatchingCounts.setPublishedSuccessCount(4); // Different from consumed count
-        fileWithNonMatchingCounts.setPublishedFailCount(1);
+        fileWithNonMatchingCounts.setTotalCount(0L); // Total count is always 0
+        fileWithNonMatchingCounts.setConsumedSuccessCount(5L);
+        fileWithNonMatchingCounts.setConsumedFailCount(2L);
+        fileWithNonMatchingCounts.setPublishedSuccessCount(4L); // Different from consumed count
+        fileWithNonMatchingCounts.setPublishedFailCount(1L);
         fileWithNonMatchingCounts.setConsumedStatus(FileStatus.PENDING);
         fileWithNonMatchingCounts.setPublishedStatus(FileStatus.PENDING);
         fileWithNonMatchingCounts.setJob(new JobEntity());

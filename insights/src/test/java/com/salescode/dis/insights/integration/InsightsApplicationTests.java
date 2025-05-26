@@ -284,7 +284,7 @@ class InsightsApplicationTests {
 
 
     // Helper methods to create metrics DTOs (unchanged)
-    FileProgressRequest createPublisherMetrics(int success, int failure) {
+    FileProgressRequest createPublisherMetrics(long success, long failure) {
         FileProgressRequest.PublisherMetrics publisherMetrics = new FileProgressRequest.PublisherMetrics();
         publisherMetrics.setSuccessCount(success);
         publisherMetrics.setFailCount(failure);
@@ -293,7 +293,7 @@ class InsightsApplicationTests {
         return fileProgressRequest;
     }
 
-    FileProgressRequest createConsumerMetrics(int success, int serverFail, int logicalFail, int retryCount) {
+    FileProgressRequest createConsumerMetrics(long success, long serverFail, long logicalFail, long retryCount) {
         FileProgressRequest.ConsumerMetrics consumerMetrics = new FileProgressRequest.ConsumerMetrics();
         consumerMetrics.setSuccessCount(success);
         consumerMetrics.setServerFailCount(serverFail);

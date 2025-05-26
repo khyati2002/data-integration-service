@@ -93,7 +93,7 @@ class FileControllerWithOutGivenFileIdTest {
         FileEntityRequestDto requestDto = new FileEntityRequestDto();
 
         //        requestDto.setFileId(FILE_ID);
-        requestDto.setTotalCount(100);
+        requestDto.setTotalCount(100L);
 
         // Create sample extended attributes JSON
         ObjectNode extendedAttrs = objectMapper.createObjectNode();
@@ -246,16 +246,16 @@ class FileControllerWithOutGivenFileIdTest {
 
         // Set consumer metrics
         FileProgressRequest.ConsumerMetrics consumer = new FileProgressRequest.ConsumerMetrics();
-        consumer.setSuccessCount(50);
-        consumer.setServerFailCount(5);
-        consumer.setLogicalFailCount(5);
-        consumer.setRetryCount(5);
+        consumer.setSuccessCount(50L);
+        consumer.setServerFailCount(5L);
+        consumer.setLogicalFailCount(5L);
+        consumer.setRetryCount(5L);
         progressRequest.setConsumer(consumer);
 
         // Set publisher metrics
         FileProgressRequest.PublisherMetrics publisher = new FileProgressRequest.PublisherMetrics();
-        publisher.setSuccessCount(60);
-        publisher.setFailCount(5);
+        publisher.setSuccessCount(60L);
+        publisher.setFailCount(5L);
         progressRequest.setPublisher(publisher);
 
         // Make request

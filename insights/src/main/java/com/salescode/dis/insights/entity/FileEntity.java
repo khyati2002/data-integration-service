@@ -29,28 +29,28 @@ public class FileEntity extends TimeAwareEntity {
     private String master;
 
     @Builder.Default
-    private Integer totalCount = 0;
+    private Long totalCount = 0L;
 
     @Builder.Default
-    private Integer publishedSuccessCount = 0;
+    private Long publishedSuccessCount = 0L;
 
     @Builder.Default
-    private Integer publishedFailCount = 0;
+    private Long publishedFailCount = 0L;
 
     @Builder.Default
-    private Integer consumedSuccessCount = 0;
+    private Long consumedSuccessCount = 0L;
 
     @Builder.Default
-    private Integer consumedFailCount = 0;
+    private Long consumedFailCount = 0L;
 
     @Builder.Default
-    private Integer serverFailCount = 0;
+    private Long serverFailCount = 0L;
 
     @Builder.Default
-    private Integer logicalFailCount = 0;
+    private Long logicalFailCount = 0L;
 
     @Builder.Default
-    private Integer retryCount = 0;
+    private Long retryCount = 0L;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal publisherThroughput; // - total records / time (at completion - success or failure) - calculate on api call
@@ -101,7 +101,7 @@ public class FileEntity extends TimeAwareEntity {
         }
     }
 
-    private void updateThroughputIfFinal(FileStatus status, int totalCount, long elapsedSeconds, Consumer<BigDecimal> setter) {
+    private void updateThroughputIfFinal(FileStatus status, Long totalCount, Long elapsedSeconds, Consumer<BigDecimal> setter) {
         if (status == FileStatus.COMPLETED || status == FileStatus.FAILED) {
             BigDecimal throughput = BigDecimal.valueOf(totalCount).divide(BigDecimal.valueOf(elapsedSeconds), new MathContext(2));
             setter.accept(throughput);

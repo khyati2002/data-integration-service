@@ -94,7 +94,7 @@ public class FileProgressControllerIntegrationTest {
         // Create a file
         FileEntityRequestDto fileRequest = new FileEntityRequestDto();
         fileRequest.setFileId("file-" + UUID.randomUUID());
-        fileRequest.setTotalCount(100);
+        fileRequest.setTotalCount(100L);
         
         ObjectNode extendedAttrs = objectMapper.createObjectNode();
         extendedAttrs.put("source", "test");
@@ -120,15 +120,15 @@ public class FileProgressControllerIntegrationTest {
         progressRequest1.setProcessingTimeMs(1000L);
         
         FileProgressRequest.ConsumerMetrics consumer1 = new FileProgressRequest.ConsumerMetrics();
-        consumer1.setSuccessCount(10);
-        consumer1.setServerFailCount(2);
-        consumer1.setLogicalFailCount(1);
-        consumer1.setRetryCount(5);
+        consumer1.setSuccessCount(10L);
+        consumer1.setServerFailCount(2L);
+        consumer1.setLogicalFailCount(1L);
+        consumer1.setRetryCount(5L);
         progressRequest1.setConsumer(consumer1);
         
         FileProgressRequest.PublisherMetrics publisher1 = new FileProgressRequest.PublisherMetrics();
-        publisher1.setSuccessCount(15);
-        publisher1.setFailCount(3);
+        publisher1.setSuccessCount(15L);
+        publisher1.setFailCount(3L);
         progressRequest1.setPublisher(publisher1);
 
         // Send first progress update
@@ -156,15 +156,15 @@ public class FileProgressControllerIntegrationTest {
         progressRequest2.setProcessingTimeMs(200L);
         
         FileProgressRequest.ConsumerMetrics consumer2 = new FileProgressRequest.ConsumerMetrics();
-        consumer2.setSuccessCount(20);
-        consumer2.setServerFailCount(3);
-        consumer2.setLogicalFailCount(2);
-        consumer2.setRetryCount(5);
+        consumer2.setSuccessCount(20L);
+        consumer2.setServerFailCount(3L);
+        consumer2.setLogicalFailCount(2L);
+        consumer2.setRetryCount(5L);
         progressRequest2.setConsumer(consumer2);
         
         FileProgressRequest.PublisherMetrics publisher2 = new FileProgressRequest.PublisherMetrics();
-        publisher2.setSuccessCount(25);
-        publisher2.setFailCount(5);
+        publisher2.setSuccessCount(25L);
+        publisher2.setFailCount(5L);
         progressRequest2.setPublisher(publisher2);
 
         // Send second progress update

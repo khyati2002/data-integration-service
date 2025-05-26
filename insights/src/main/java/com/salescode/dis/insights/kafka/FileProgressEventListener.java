@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -18,6 +19,7 @@ import java.util.*;
 @EnableKafka
 @Slf4j
 @RequiredArgsConstructor
+@Profile("kafka")
 public class FileProgressEventListener {
 
     private static final String FAILURE_TOPIC = "file-progress-updates-failed";
@@ -202,8 +204,8 @@ public class FileProgressEventListener {
         }
     }
 
-    private Integer safeSum(Integer a, Integer b) {
-        return Optional.ofNullable(a).orElse(0) + Optional.ofNullable(b).orElse(0);
+    private Long safeSum(Long a, Long b) {
+        return Optional.ofNullable(a).orElse(0L) + Optional.ofNullable(b).orElse(0L);
     }
 
     @Getter
