@@ -2,8 +2,8 @@ package com.salescode.dis.insights.enums;
 
 public enum JobStatus {
     PENDING,
-    PRE_PROCESSED,
     RUNNING,
+    PUBLISHED,
     COMPLETED,
     FAILED,
     ABORTED

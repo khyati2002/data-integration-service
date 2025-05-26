@@ -13,7 +13,7 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class JobEntityResponseDto implements Serializable {
     String id;
     Instant creationTime;

@@ -1,13 +1,14 @@
 package com.salescode.dis.insights.dto;
 
 import com.salescode.dis.insights.enums.FileStatus;
-import jakarta.validation.constraints.AssertTrue;
 import lombok.*;
+
+import javax.validation.constraints.AssertTrue;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class FileStatusRequestDto {
 
     private FileStatus consumedStatus;

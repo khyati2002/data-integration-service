@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class FileEntityRequestDto implements Serializable {
     String fileId;
     JsonNode extendedAttributes;

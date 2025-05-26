@@ -1,16 +1,17 @@
 package com.salescode.dis.insights.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true, builderMethodName = "createNewInstance")
 public class FileProgressRequest {
     private ConsumerMetrics consumer;
     private PublisherMetrics publisher;
@@ -33,7 +34,7 @@ public class FileProgressRequest {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @Builder
+    @Builder(toBuilder = true)
     public static class ConsumerMetrics {
         @Min(0)
         private Long successCount = 0L;
@@ -55,7 +56,7 @@ public class FileProgressRequest {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @Builder
+    @Builder(toBuilder = true)
     public static class PublisherMetrics {
         @Min(0)
         private Long successCount = 0L;

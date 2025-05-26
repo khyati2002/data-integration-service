@@ -14,7 +14,7 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class FileEntityResponseDto implements Serializable {
     String id;
     String fileId;
