@@ -291,9 +291,9 @@ public class UserService extends AbstractCDMService<User> {
                     user.setPassword(savedList.get(user.getLoginid()).getPassword());
                 }
             }
-            if (savedList.get(user.getLoginid()) != null && User.of(savedList.get(user.getLoginid())).getVerified()) {
-                user.setVerified(true);
-            }
+//            if (savedList.get(user.getLoginid()) != null && User.of(savedList.get(user.getLoginid())).getVerified()) {
+//                user.setVerified(true);
+//            }
             super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
                 preSaveEnrichment(user);
