@@ -116,12 +116,12 @@ public class FileService {
     protected void recalcJobMetrics(JobEntity job) {
         long completedSuccess = job.getFiles()
                 .stream()
-                .filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED_SUCCESSFULLY && f.getPublishedStatus() == FileStatus.COMPLETED_SUCCESSFULLY)
+                .filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED_SUCCESSFULLY)
                 .count();
 
         long completedWithFailures = job.getFiles()
                 .stream()
-                .filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED_WITH_FAILURES && f.getPublishedStatus() == FileStatus.COMPLETED_WITH_FAILURES)
+                .filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED_WITH_FAILURES)
                 .count();
 
         long completed = completedSuccess + completedWithFailures;
