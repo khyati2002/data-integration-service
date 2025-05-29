@@ -66,8 +66,8 @@ public class FileStatusScheduler {
 
         // Check if consumed status is PENDING and update if needed
         if (file.getConsumedStatus() == FileStatus.PENDING) {
-            int totalConsumed = file.getConsumedSuccessCount() + file.getConsumedFailCount();
-            int totalPublished = file.getPublishedSuccessCount() + file.getPublishedFailCount();
+            long totalConsumed = file.getConsumedSuccessCount() + file.getConsumedFailCount();
+            long totalPublished = file.getPublishedSuccessCount() + file.getPublishedFailCount();
             if (totalConsumed > 0) {
                 if (totalConsumed == totalPublished) {
                     if(file.getConsumedFailCount() == 0 && file.getPublishedFailCount()==0) {
@@ -87,8 +87,8 @@ public class FileStatusScheduler {
 
         // Check if published status is PENDING and update if needed
         if (file.getPublishedStatus() == FileStatus.PENDING) {
-            int totalConsumed = file.getConsumedSuccessCount() + file.getConsumedFailCount();
-            int totalPublished = file.getPublishedSuccessCount() + file.getPublishedFailCount();
+            long totalConsumed = file.getConsumedSuccessCount() + file.getConsumedFailCount();
+            long totalPublished = file.getPublishedSuccessCount() + file.getPublishedFailCount();
             if (totalPublished > 0) {
                 if (totalPublished == totalConsumed) {
                     if(file.getPublishedFailCount()==0) {

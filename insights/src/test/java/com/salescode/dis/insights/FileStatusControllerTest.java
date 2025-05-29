@@ -55,7 +55,7 @@ public class FileStatusControllerTest {
         // Create a file
         FileEntityRequestDto fileRequest = new FileEntityRequestDto();
         fileRequest.setFileId("file-" + UUID.randomUUID());
-        fileRequest.setTotalCount(100);
+        fileRequest.setTotalCount(100L);
 
         ObjectNode extendedAttrs = objectMapper.createObjectNode();
         extendedAttrs.put("source", "test");

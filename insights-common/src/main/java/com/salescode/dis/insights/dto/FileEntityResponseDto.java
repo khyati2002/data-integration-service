@@ -2,7 +2,7 @@ package com.salescode.dis.insights.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.dis.insights.enums.FileStatus;
-import lombok.Value;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,7 +11,10 @@ import java.time.Instant;
 /**
  * DTO for {@link com.salescode.dis.insights.entity.FileEntity}
  */
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
 public class FileEntityResponseDto implements Serializable {
     String id;
     String fileId;
@@ -22,14 +25,14 @@ public class FileEntityResponseDto implements Serializable {
     JsonNode extendedAttributes;
     Instant startTime;
     Instant endTime;
-    Integer totalCount;
-    Integer publishedSuccessCount;
-    Integer publishedFailCount;
-    Integer consumedSuccessCount;
-    Integer consumedFailCount;
-    Integer serverFailCount;
-    Integer logicalFailCount;
-    Integer retryCount;
+    Long totalCount;
+    Long publishedSuccessCount;
+    Long publishedFailCount;
+    Long consumedSuccessCount;
+    Long consumedFailCount;
+    Long serverFailCount;
+    Long logicalFailCount;
+    Long retryCount;
     Long maxProcessingTimeMs;
     Long minProcessingTimeMs;
     BigDecimal publisherThroughput;

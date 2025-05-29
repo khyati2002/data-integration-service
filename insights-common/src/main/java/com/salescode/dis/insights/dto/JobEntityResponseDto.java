@@ -2,7 +2,7 @@ package com.salescode.dis.insights.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.dis.insights.enums.JobStatus;
-import lombok.Value;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -10,7 +10,10 @@ import java.time.Instant;
 /**
  * DTO for {@link com.salescode.dis.insights.entity.JobEntity}
  */
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
 public class JobEntityResponseDto implements Serializable {
     String id;
     Instant creationTime;

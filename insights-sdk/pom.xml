@@ -1,48 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
+        <!-- Base on a recent, stable Spring Boot 2.x version -->
         <version>2.5.0</version>
-        <relativePath/>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
-
     <groupId>com.salescode.dis</groupId>
-    <artifactId>insights-common</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>insights-sdk</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>insights-sdk</name>
+    <description>Insights SDK for interacting with the insights service</description>
 
     <properties>
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.30</lombok.version>
+        <insights-common.version>1.0-SNAPSHOT</insights-common.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
+
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
+            <groupId>com.salescode.dis</groupId>
+            <artifactId>insights-common</artifactId>
+            <version>${insights-common.version}</version>
+            <!-- Classifier will be handled by profile for sb3 version -->
         </dependency>
+
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -51,6 +55,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <!-- Version inherited from Spring Boot parent (2.7.18) -->
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -76,17 +81,26 @@
             </activation>
             <properties>
                 <artifact.classifier>sb3</artifact.classifier>
-                <transformed.output.directory>${project.build.directory}</transformed.output.directory>
+                <transformed.output.directory.sdk>${project.build.directory}</transformed.output.directory.sdk>
+                <!-- This property tells the SDK to depend on the jakarta-classified common lib -->
+                <insights-common.classifier>sb3</insights-common.classifier>
             </properties>
+
             <dependencies>
-                <!-- This dependency is for context if any compilation specific to this profile happened.
-                     For bytecode transformation, it's less directly used by the compiler for the main flow. -->
+                <!-- Depend on the Jakarta-transformed common module when this profile is active -->
                 <dependency>
-                    <groupId>jakarta.validation</groupId>
-                    <artifactId>jakarta.validation-api</artifactId>
-                    <!-- Version would be managed by an SB3 parent if used, or specify if needed -->
+                    <groupId>com.salescode.dis</groupId>
+                    <artifactId>insights-common</artifactId>
+                    <version>${insights-common.version}</version>
+                    <classifier>${insights-common.classifier}</classifier>
                 </dependency>
+                <!--
+                    No need to add jakarta.validation-api here directly for the SDK,
+                    as insights-common (jakarta classified) will bring its (transformed) validation needs.
+                    The SDK itself doesn't directly use validation annotations.
+                -->
             </dependencies>
+
             <build>
                 <plugins>
                     <plugin>
@@ -95,7 +109,7 @@
                         <version>0.5.0</version>
                         <executions>
                             <execution>
-                                <id>jakarta-transform-common</id>
+                                <id>jakarta-transform-sdk</id>
                                 <goals>
                                     <goal>transform</goal>
                                 </goals>
@@ -104,9 +118,7 @@
                         </executions>
                         <configuration>
                             <!-- Input artifact: defaults to the main project artifact -->
-                            <!-- Output to a specific subdirectory -->
-                            <outputDirectory>${transformed.output.directory}</outputDirectory>
-                            <classifier>sb3</classifier>
+                            <outputDirectory>${transformed.output.directory.sdk}</outputDirectory>
                             <overwrite>true</overwrite>
                             <rules>
                                 <jakartaDefaults>true</jakartaDefaults>
@@ -121,40 +133,40 @@
                         </dependencies>
                     </plugin>
 
-                    <!-- Copy the transformed JAR from the temp dir and rename it with the classifier -->
+                    <!-- Copy the transformed SDK JAR and rename it with the classifier -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>3.1.0</version> <!-- Use a recent version -->
+                        <version>3.1.0</version>
                         <executions>
                             <execution>
-                                <id>copy-rename-transformed-common-jar</id>
-                                <phase>package</phase> <!-- Run after transformer -->
+                                <id>copy-rename-transformed-sdk-jar</id>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <!-- Ensure the source directory exists before copying -->
-                                        <copy file="${transformed.output.directory}/${project.build.finalName}.jar"
+                                        <mkdir dir="${transformed.output.directory.sdk}"/>
+                                        <copy file="${transformed.output.directory.sdk}/${project.build.finalName}.jar"
                                               tofile="${project.build.directory}/${project.artifactId}-${project.version}-${artifact.classifier}.jar"
                                               overwrite="true"
-                                              failonerror="true"/> <!-- Fail if the source transformed file is not found -->
+                                              failonerror="true"/>
                                     </target>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
 
-                    <!-- Attach the correctly named classified JAR -->
+                    <!-- Attach the correctly named classified SDK JAR -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
                         <version>3.5.0</version>
                         <executions>
                             <execution>
-                                <id>attach-jakarta-artifact-common</id>
-                                <phase>package</phase> <!-- Run after copy-rename -->
+                                <id>attach-jakarta-sdk-artifact</id>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>attach-artifact</goal>
                                 </goals>

@@ -37,6 +37,9 @@ spring:
 cache:
   redisUrl: redis://localhost:6379
 
+application:
+  environment: dev
+
 ---
 
 # Configuration for 'uat' profile
@@ -47,6 +50,9 @@ spring:
 
   kafka:
     bootstrap-servers: 164.52.202.184:9092
+
+application:
+  environment: uat
 
 ---
 

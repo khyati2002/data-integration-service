@@ -9,7 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="bundle" />
         <module name="jooq" />
-        <module name="insights-sdk" />
       </profile>
       <profile name="Annotation profile for insights" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -42,6 +41,15 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
         <module name="insights-common" />
+      </profile>
+      <profile name="Annotation profile for insights-sdk" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+        </processorPath>
+        <module name="insights-sdk" />
       </profile>
     </annotationProcessing>
   </component>
