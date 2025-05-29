@@ -68,8 +68,8 @@ public class IntegrationSummaryService {
 
     public Object getOnlyLobDetails(List<String> lobList, String startTime, String endTime) {
         List<Map<String, Object>> resp;
-        Instant startInstant = Instant.parse(startTime);
-        Instant endInstant = Instant.parse(endTime);
+        Instant startInstant = startTime==null ? null : Instant.parse(startTime);
+        Instant endInstant = endTime==null ? null : Instant.parse(endTime);
         if (lobList == null || lobList.isEmpty()) {
             resp = jobRepository.getLobDetailsAll(startInstant, endInstant); // optionally modify to support date filter
         } else {
@@ -157,8 +157,8 @@ public class IntegrationSummaryService {
     public Object getLobSummary(List<String> lobList, List<String> status, String startTime, String endTime) {
         List<Map<String, Object>> resp;
 
-        Instant startInstant = Instant.parse(startTime);
-        Instant endInstant = Instant.parse(endTime);
+        Instant startInstant = startTime==null ? null : Instant.parse(startTime);
+        Instant endInstant = endTime==null ? null : Instant.parse(endTime);
         // Call the repository method directly with the ISO string
         resp = jobRepository.getLobSummary(lobList, status, startInstant, endInstant);
 
