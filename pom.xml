@@ -399,6 +399,11 @@ under the License.
                                     <converter>com.salescode.dim.jooq.JsonNodeConverter</converter>
                                     <includeExpression>(.*attributes)|domain_values|ck_generic_object\.payload|ck_targets\.product_value|ck_targets\.outlet_value|ck_targets\.user_value|ck_scheme_calculation\.slab_info</includeExpression>
                                 </forcedType>
+                                <forcedType>
+                                    <userType>java.lang.Float</userType>
+                                    <converter>com.salescode.dim.jooq.DoubleToFloatConverter</converter>
+                                    <includeExpression>ck_target_results\.achieved</includeExpression>
+                                </forcedType>
                             </forcedTypes>
                         </database>
                         <generate>

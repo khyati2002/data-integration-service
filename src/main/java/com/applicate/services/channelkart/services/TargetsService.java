@@ -63,7 +63,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                             populateUserAndOutlet(entry);
                             entry.setTargetId(target.getTargetId());
                             if (entry.getId() == null) entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));;
-                            if (entry.getAchieved() == null) entry.setAchieved(0d);
+                            if (entry.getAchieved() == null) entry.setAchieved(0F);
                         });
                     }
                     preparedTargets.add(target);
