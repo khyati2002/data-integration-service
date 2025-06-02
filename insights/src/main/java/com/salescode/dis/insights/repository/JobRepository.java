@@ -47,7 +47,7 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
 //    List<Map<String, Object>> getLobSummaryAll();
 
     @Query("SELECT j.lob AS lob, COUNT(j) AS total, " +
-            "SUM(CASE WHEN j.status = 'COMPLETED' THEN 1 ELSE 0 END) AS COMPLETED, " +
+            "SUM(CASE WHEN j.status = 'COMPLETED_SUCCESSFULLY' OR j.status = 'COMPLETED_WITH_FAILURES' THEN 1 ELSE 0 END) AS COMPLETED, "+
             "SUM(CASE WHEN j.status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING, " +
             "SUM(CASE WHEN j.status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED " +
             "FROM JobEntity j " +
@@ -61,7 +61,7 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
 
 
     @Query("SELECT j.lob AS lob, COUNT(j) AS total, " +
-            "SUM(CASE WHEN j.status = 'COMPLETED' THEN 1 ELSE 0 END) AS COMPLETED, " +
+            "SUM(CASE WHEN j.status = 'COMPLETED_SUCCESSFULLY' OR j.status = 'COMPLETED_WITH_FAILURES' THEN 1 ELSE 0 END) AS COMPLETED, " +
             "SUM(CASE WHEN j.status = 'PENDING' THEN 1 ELSE 0 END) AS PENDING, " +
             "SUM(CASE WHEN j.status = 'FAILED' THEN 1 ELSE 0 END) AS FAILED " +
             "FROM JobEntity j " +
