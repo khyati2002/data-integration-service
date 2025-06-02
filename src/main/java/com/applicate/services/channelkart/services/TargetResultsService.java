@@ -116,7 +116,7 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
         List<TargetResults> preparedTargets = new ArrayList<>();
         targets.forEach(entry -> {
             if (entry.getId() == null)
-                entry.setTargetId(entry.getTargetId());
+                entry.setId(entry.getTargetId());
             populateUserAndOutlet(entry);
             preparedTargets.add(entry);
         });
