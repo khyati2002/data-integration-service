@@ -53,7 +53,9 @@ public class TargetsService extends AbstractCDMService<Targets> {
 
         targets.forEach(target -> {
             if (target.getTargetcondition() == null)   target.setTargetcondition(0d);
-            if (target.getId() == null)   target.setId(new IdGenerator(target.getClass().getSimpleName()).getId(target));
+            if (target.getId() == null)
+                target.setTargetId(target.getTargetId());
+
             try {
                 if (target.getVersion() == null) {
                     preparedTargets.addAll(prepareTargets(target));
@@ -62,7 +64,8 @@ public class TargetsService extends AbstractCDMService<Targets> {
                         target.getTargetResults().forEach(entry -> {
                             populateUserAndOutlet(entry);
                             entry.setTargetId(target.getTargetId());
-                            if (entry.getId() == null) entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));;
+                            if (entry.getId() == null)
+                                entry.setTargetId(target.getTargetId());
                             if (entry.getAchieved() == null) entry.setAchieved(0F);
                         });
                     }
@@ -139,6 +142,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
         targetsM.forEach(tr -> {
             if (targets.getTargetResults() != null) {
                 TargetResults tempObj = targets.getTargetResults().get(0);
+                tempObj.setId(targets.getTargetId());
                 if (tempObj.getAchieved() != 0) {
 //                    tempObj.setTarget(targets);
                     if (tempObj.getTargetId() == null) tempObj.setTargetId(targets.getTargetId());

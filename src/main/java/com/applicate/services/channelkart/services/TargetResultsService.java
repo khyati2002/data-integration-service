@@ -53,6 +53,7 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
                             .map(target -> {
                                 CkTargetResultsRecord targetsRecord = getDslContext().newRecord(CK_TARGET_RESULTS, target);
                                 targetsRecord.setChanged((byte) 0);
+                                targetsRecord.setId(targetsRecord.getTargetId());
                                 return targetsRecord;
                             }) // Convert to jOOQ Records
                             .collect(Collectors.toList())).execute();
@@ -63,6 +64,7 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
                             .map(target -> {
                                 CkTargetResultsRecord targetsRecord = getDslContext().newRecord(CK_TARGET_RESULTS, target);
                                 targetsRecord.setChanged((byte) 1);
+                                targetsRecord.setId(targetsRecord.getTargetId());
                                 targetsRecord.changed(CK_TARGET_RESULTS.ID, false); // Avoid updating primary key
                                 return targetsRecord;
                             })
@@ -113,7 +115,8 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
     public List<TargetResults> preBatchSave(Collection<TargetResults> targets) {
         List<TargetResults> preparedTargets = new ArrayList<>();
         targets.forEach(entry -> {
-            if (entry.getId() == null)   entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));
+            if (entry.getId() == null)
+                entry.setTargetId(entry.getTargetId());
             populateUserAndOutlet(entry);
             preparedTargets.add(entry);
         });
