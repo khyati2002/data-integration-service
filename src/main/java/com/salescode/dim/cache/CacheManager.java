@@ -27,6 +27,9 @@ public class CacheManager {
     private static RedissonClient redissonClient;
     private final Map<String, RMapCache<String, Object>> caches = new ConcurrentHashMap<>();
 
+    public static RedissonClient getRedissonClient() {
+        return redissonClient;
+    }
 
     private Codec getCodec(){
         return new ByteArrayCodec(){

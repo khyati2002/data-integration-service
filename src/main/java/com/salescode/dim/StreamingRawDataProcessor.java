@@ -5,6 +5,7 @@ import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.salescode.dim.cache.CacheManager;
+import com.salescode.dim.cache.RedisIdleEvictionManager;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.kafka.FileProgressEvent.createInsightsConsumerDto;
@@ -132,7 +134,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 long start = System.currentTimeMillis();
                 Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>(); // Data storage
                 List<String> errorList = new ArrayList<>(); // Error tracking
-
+                sendToKafka(streamingRawData);
                 // Processing each transformer in the streaming data
                 for (TransformerInfo transformerInfo : streamingRawData.getTransformerInfo()) {
                     processTransformer(streamingRawData, transformerInfo, dataset, errorList);
@@ -182,6 +184,11 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
     private void sendToKafka(StreamingRawData streamingRawData) {
         try {
             String topic = topicName;
+            long idleEvictionTTL = Long.parseLong(properties.getProperty("INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES"));
+            if(streamingRawData.getFileId()==null){
+                streamingRawData.setFileId(RedisIdleEvictionManager.getInstance().getOrCreateFileId(streamingRawData.getLob(),streamingRawData.getTransformerInfo().getFirst()
+                        .getEntityName(), "fileId", idleEvictionTTL, TimeUnit.MINUTES));
+            }
             FileProgressEvent message =  createInsightsConsumerDto(streamingRawData.getRequestId(),streamingRawData.getFileId(),streamingRawData.getGroupId(),streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0).getEntityName(),streamingRawData.getResponses().toString(),0,1);// Create a message based on streamingRawData and dataset
 
             ProducerRecord<String, FileProgressEvent> record = new ProducerRecord<>(topic, streamingRawData.getFileId(), message);
