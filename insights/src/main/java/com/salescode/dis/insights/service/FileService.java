@@ -53,8 +53,8 @@ public class FileService {
     }
 
     @Transactional(readOnly = true)
-    public Page<FileEntity> listByJob(String jobId, String startTime, String endTime, Pageable pageable) {
-        return fileRepo.findFilesByJobId(jobId,startTime,endTime,pageable);
+    public Page<FileEntity> listByJobAndLob(String jobId, String lob,String startTime, String endTime, Pageable pageable) {
+        return fileRepo.findFilesByJobId(jobId,lob,startTime,endTime,pageable);
     }
 
     public void updateProgress(String fileId, FileProgressRequest progress, String jobId, String lob, String masterName) {
@@ -82,7 +82,7 @@ public class FileService {
             }
         });
 
-        if (progress.getMinProcessingTimeMs() != null) file.setMinProcessingTimeMs(file.getMinProcessingTimeMs() == null ? progress.getMinProcessingTimeMs() : Math.min(file.getMinProcessingTimeMs(), progress.getMinProcessingTimeMs()));
+        if(progress.getMinProcessingTimeMs() != null) file.setMinProcessingTimeMs(file.getMinProcessingTimeMs() == null ? progress.getMinProcessingTimeMs() : Math.min(file.getMinProcessingTimeMs(), progress.getMinProcessingTimeMs()));
         if(progress.getMaxProcessingTimeMs() != null) file.setMaxProcessingTimeMs(file.getMaxProcessingTimeMs() == null ? progress.getMaxProcessingTimeMs() : Math.max(file.getMaxProcessingTimeMs(), progress.getMaxProcessingTimeMs()));
 
         fileRepo.save(file);

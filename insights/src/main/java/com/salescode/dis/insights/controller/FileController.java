@@ -92,7 +92,7 @@ public class FileController {
         );
 
         Page<FileEntityResponseDto> pageRes = fileService
-                .listByJob(jobId, startTime, endTime, pageRequest)
+                .listByJobAndLob(jobId, lob,startTime, endTime, pageRequest)
                 .map(fileEntityMapper::toDto);
 
         return ResponseEntity.ok(pageRes);

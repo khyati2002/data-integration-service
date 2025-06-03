@@ -16,18 +16,18 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
 
     @Query(value = "SELECT * FROM integration_file f " +
             "WHERE f.job_id = :jobId " +
+            "AND f.lob = :lob " +
             "AND (:startTime IS NULL OR f.last_modified_time >= CAST(:startTime AS TIMESTAMP)) " +
             "AND (:endTime IS NULL OR f.last_modified_time <= CAST(:endTime AS TIMESTAMP)) " +
             "ORDER BY f.last_modified_time DESC",
             nativeQuery = true)
     Page<FileEntity> findFilesByJobId(
             @Param("jobId") String jobId,
-            @Param("startTime") String startTime,  // <- change to String
-            @Param("endTime") String endTime,      // <- change to String
+            @Param("lob") String lob,
+            @Param("startTime") String startTime,
+            @Param("endTime") String endTime,
             Pageable pageable
     );
-
-
 
 
     @Query("SELECT f FROM FileEntity f " +

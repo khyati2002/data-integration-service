@@ -10,17 +10,16 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.util.concurrent.TimeUnit;
-
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class PropertyService {
 
-
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-    private final Cache<String, Boolean> lobFeatureCache;
+
+    private final Cache<String, Boolean> lobFeatureCache; // key = lob:env
+    private final Cache<String, String> lobToEnvCache;       // key = lob, value = env
 
     private final String TOKEN = "hardcoded_token";
 
@@ -28,19 +27,28 @@ public class PropertyService {
         this.restTemplate = builder.build();
         this.objectMapper = new ObjectMapper();
 
-        // Configure Caffeine cache with optional expiry or size limits
         this.lobFeatureCache = Caffeine.newBuilder()
+                .maximumSize(1000)
+                .build();
+
+        this.lobToEnvCache = Caffeine.newBuilder()
                 .maximumSize(1000)
                 .build();
     }
 
-    public void fetchAndCacheFeaturesForEnv(String env) {
-        String baseUrl;
-        switch (env.toLowerCase()) {
-            case "dev" -> baseUrl = "https://dev.salescode.ai";
-            case "uat" -> baseUrl = "https://uat.salescode.ai";
+    public String getBaseUrl(String env){
+        String baseUrl = switch (env.toLowerCase()) {
+            case "dev" -> "https://dev.salescode.ai";
+            case "uat" -> "https://uat.salescode.ai";
+            case "demo" -> "https://demo.salescode.ai";
+            case "prod" -> "https://prod.salescode.ai";
             default -> throw new IllegalArgumentException("Invalid environment: " + env);
-        }
+        };
+      return baseUrl;
+    }
+
+    public void fetchAndCacheFeaturesForEnv(String env) {
+        String baseUrl = getBaseUrl(env);
 
         String healthCheckUrl = baseUrl + "/hckeck";
         try {
@@ -51,12 +59,13 @@ public class PropertyService {
             if (lobNames.isArray()) {
                 for (JsonNode lobNode : lobNames) {
                     String lob = lobNode.asText();
+                    lobToEnvCache.put(lob, env); // Cache lob -> env
                     fetchAndCacheFeatureForLob(baseUrl, lob);
                 }
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch LOBs from health check: " + e.getMessage(), e);
+            throw new RuntimeException("Failed to fetch LOBs from health check for env=" + env + ": " + e.getMessage(), e);
         }
     }
 
@@ -83,7 +92,7 @@ public class PropertyService {
                     if ("enable.insights.integration".equals(feature.path("name").asText())) {
                         String value = feature.path("value").asText();
                         boolean enabled = Boolean.parseBoolean(value);
-                        lobFeatureCache.put(lob, enabled);
+                        lobFeatureCache.put(lob , enabled);
                         break;
                     }
                 }
@@ -94,19 +103,24 @@ public class PropertyService {
         }
     }
 
-    // Evict a specific LOB from the cache
-    public void evictLobFromCache(String lob) {
-        lobFeatureCache.invalidate(lob);
-    }
-
-    // Clear the entire cache
-    public void clearAllCache() {
-        lobFeatureCache.invalidateAll();
-    }
-
-
     public Boolean isInsightsEnabled(String lob) {
         Boolean enabled = lobFeatureCache.getIfPresent(lob);
+        if(enabled!=null){
+            String env = lobToEnvCache.getIfPresent(lob);
+        }
         return enabled != null && enabled;
+    }
+
+    public void evictLobFromCache(String lob) {
+        String env = lobToEnvCache.getIfPresent(lob);
+        if (env != null) {
+            lobFeatureCache.invalidate(lob);
+        }
+        lobToEnvCache.invalidate(lob);
+    }
+
+    public void clearAllCache() {
+        lobFeatureCache.invalidateAll();
+        lobToEnvCache.invalidateAll();
     }
 }
