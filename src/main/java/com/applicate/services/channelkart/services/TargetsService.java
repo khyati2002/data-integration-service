@@ -54,7 +54,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
         targets.forEach(target -> {
             if (target.getTargetcondition() == null)   target.setTargetcondition(0d);
             if (target.getId() == null)
-                target.setId(target.getTargetId());
+                target.setTargetId(target.getTargetId());
 
             try {
                 if (target.getVersion() == null) {
@@ -65,7 +65,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                             populateUserAndOutlet(entry);
                             entry.setTargetId(target.getTargetId());
                             if (entry.getId() == null)
-                                entry.setId(target.getTargetId());
+                                entry.setTargetId(target.getTargetId());
                             if (entry.getAchieved() == null) entry.setAchieved(0F);
                         });
                     }
