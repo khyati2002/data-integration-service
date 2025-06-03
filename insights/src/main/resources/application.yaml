@@ -1,0 +1,135 @@
+# Define the active profiles, default is dev,h2 or dev,postgres depending on the environment.
+spring:
+  application:
+    name: insights
+
+  # Set the active profiles, default to dev,h2,debug
+  profiles:
+    active: postgres,dev,info,kafka  # Active profiles to be loaded together
+
+server:
+  port: 8081
+
+---
+
+# Configuration for 'dev' profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  devtools:
+    add-properties: true
+
+  # Development-specific settings
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dis_insights
+    username: postgres
+    password: postgres
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+cache:
+  redisUrl: redis://localhost:6379
+
+application:
+  environment: dev
+
+---
+
+# Configuration for 'uat' profile
+spring:
+  config:
+    activate:
+      on-profile: uat
+
+  kafka:
+    bootstrap-servers: 164.52.202.184:9092
+
+application:
+  environment: uat
+
+---
+
+# Configuration for 'postgres' profile (PostgreSQL-specific properties for persistent DB)
+spring:
+  config:
+    activate:
+      on-profile: postgres
+
+  # PostgreSQL Database-specific properties for persistent database
+#  jpa:
+#    # Dialect for PostgreSQL
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+---
+
+# Configuration for 'info' profile (INFO-level logging)
+spring:
+  config:
+    activate:
+      on-profile: info
+
+# Logging level for INFO
+logging:
+  level:
+    com.salescode: INFO
+    org.springframework: INFO   # Set Spring framework logs to INFO level
+    org.hibernate.SQL: INFO     # Log SQL queries at INFO level
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO  # Log parameter binding at INFO level
+    org.springframework.web: INFO  # Set web-related logs to INFO level
+
+---
+
+# Configuration for 'debug' profile (DEBUG-level logging)
+spring:
+  config:
+    activate:
+      on-profile: debug
+
+  jpa:
+    show-sql: true     
+    properties:
+      hibernate.format_sql: true
+
+# Logging level for DEBUG
+logging:
+  level:
+    com.salescode: DEBUG
+    org.springframework: DEBUG  # Set Spring framework logs to DEBUG level
+    org.hibernate.SQL: DEBUG    # Log SQL queries at DEBUG level
+    org.hibernate.type: TRACE   # Trace parameter binding for SQL
+    org.hibernate.orm.jdbc.bind: TRACE # Trace parameter binding for SQL hibernate
+    org.hibernate.orm.jdbc.extract: TRACE # Trace result binding for SQL hibernate
+    org.springframework.web: DEBUG  # Set web-related logs to DEBUG level
+    org.springframework.transaction: DEBUG
+    org.springframework.kafka.core: DEBUG
+
+---
+
+# Configuration for 'kafka' profile
+
+spring:
+  config:
+    activate:
+      on-profile: kafka
+
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: 1
+    consumer:
+      properties:
+        spring.json.trusted.packages: com.salescode.dis.insights.kafka
+        spring.json.value.default.type: com.salescode.dis.insights.kafka.FileProgressEvent
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+
+

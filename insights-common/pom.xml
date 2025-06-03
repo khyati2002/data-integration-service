@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.0</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.salescode.dis</groupId>
+    <artifactId>insights-common</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <java.version>11</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <lombok.version>1.18.30</lombok.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>sb3</id>
+            <activation>
+                <property>
+                    <name>sb3</name>
+                </property>
+            </activation>
+            <properties>
+                <artifact.classifier>sb3</artifact.classifier>
+                <transformed.output.directory>${project.build.directory}</transformed.output.directory>
+            </properties>
+            <dependencies>
+                <!-- This dependency is for context if any compilation specific to this profile happened.
+                     For bytecode transformation, it's less directly used by the compiler for the main flow. -->
+                <dependency>
+                    <groupId>jakarta.validation</groupId>
+                    <artifactId>jakarta.validation-api</artifactId>
+                    <!-- Version would be managed by an SB3 parent if used, or specify if needed -->
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eclipse.transformer</groupId>
+                        <artifactId>transformer-maven-plugin</artifactId>
+                        <version>0.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>jakarta-transform-common</id>
+                                <goals>
+                                    <goal>transform</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!-- Input artifact: defaults to the main project artifact -->
+                            <!-- Output to a specific subdirectory -->
+                            <outputDirectory>${transformed.output.directory}</outputDirectory>
+                            <classifier>sb3</classifier>
+                            <overwrite>true</overwrite>
+                            <rules>
+                                <jakartaDefaults>true</jakartaDefaults>
+                            </rules>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.eclipse.transformer</groupId>
+                                <artifactId>org.eclipse.transformer.jakarta</artifactId>
+                                <version>0.5.0</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+
+                    <!-- Copy the transformed JAR from the temp dir and rename it with the classifier -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version> <!-- Use a recent version -->
+                        <executions>
+                            <execution>
+                                <id>copy-rename-transformed-common-jar</id>
+                                <phase>package</phase> <!-- Run after transformer -->
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <!-- Ensure the source directory exists before copying -->
+                                        <copy file="${transformed.output.directory}/${project.build.finalName}.jar"
+                                              tofile="${project.build.directory}/${project.artifactId}-${project.version}-${artifact.classifier}.jar"
+                                              overwrite="true"
+                                              failonerror="true"/> <!-- Fail if the source transformed file is not found -->
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Attach the correctly named classified JAR -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>3.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-jakarta-artifact-common</id>
+                                <phase>package</phase> <!-- Run after copy-rename -->
+                                <goals>
+                                    <goal>attach-artifact</goal>
+                                </goals>
+                                <configuration>
+                                    <artifacts>
+                                        <artifact>
+                                            <file>${project.build.directory}/${project.artifactId}-${project.version}-${artifact.classifier}.jar</file>
+                                            <type>jar</type>
+                                            <classifier>${artifact.classifier}</classifier>
+                                        </artifact>
+                                    </artifacts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
