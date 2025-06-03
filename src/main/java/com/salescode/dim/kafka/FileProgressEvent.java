@@ -33,6 +33,21 @@ public class FileProgressEvent implements Serializable {
         return event;
     }
 
+    public static FileProgressEvent createInsightsPublisherDto(String eventId, String fileId, String jobId, String lob, String master, String errorMessage, Integer publishedSuccess, Integer publishedFailure) {
+        FileProgressEvent event = new FileProgressEvent();
+        event.setEventId(eventId);
+        event.setFileId(fileId);
+        event.setJobId(jobId);
+        event.setLob(lob);
+        event.setMasterName(master);
+        event.setErrorMessage(errorMessage);
+        FileProgressRequest progress = FileProgressRequest.createNewInstance();
+        progress.getPublisher().setSuccessCount(publishedSuccess);
+        progress.getPublisher().setFailCount(publishedFailure);
+        event.setProgress(progress);
+        return event;
+    }
+
 
     @Getter
     @Setter
