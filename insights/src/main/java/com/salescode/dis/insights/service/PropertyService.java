@@ -36,6 +36,10 @@ public class PropertyService {
                 .build();
     }
 
+    public String getEnvFromLob(String lob) {
+        return lobToEnvCache.getIfPresent(lob);
+    }
+
     public String getBaseUrl(String env){
         String baseUrl = switch (env.toLowerCase()) {
             case "dev" -> "https://dev.salescode.ai";

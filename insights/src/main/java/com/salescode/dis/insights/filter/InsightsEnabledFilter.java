@@ -51,7 +51,8 @@ public class InsightsEnabledFilter extends OncePerRequestFilter {
                 // Try fetching and caching if not present
                 try {
                     // Default to 'dev' if env not passed; you may extract env from headers if needed
-                    String baseUrl = "https://dev.salescode.ai";
+                    String env = propertyService.getEnvFromLob(lob);
+                    String baseUrl = "https://" + env + ".salescode.ai";
                     propertyService.fetchAndCacheFeatureForLob(baseUrl, lob);
                     enabled = propertyService.isInsightsEnabled(lob);
                 } catch (Exception e) {
