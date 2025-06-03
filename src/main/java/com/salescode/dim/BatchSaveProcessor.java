@@ -128,7 +128,7 @@ public class BatchSaveProcessor extends ProcessAllWindowFunction<Tuple2<Streamin
                 service.batchSave(allModels);
                 LOG.info("ListAggregator aggregated size is   : " + value.size());
                 LOG.info("Batch save success");
-                saveBatchIntegrationHistory(allModels, "SUCCESS", "Consolidated batch save successful");
+//                saveBatchIntegrationHistory(allModels, "SUCCESS", "Consolidated batch save successful");
 
                 // Collect DTOs for each model
                 for (CommonDataModel model : allModels) {
@@ -154,7 +154,7 @@ public class BatchSaveProcessor extends ProcessAllWindowFunction<Tuple2<Streamin
                 for (CommonDataModel model : allModels) {
                     try {
                         service.save(model);
-                        saveIntegrationHistory(model, "SUCCESS", "Individual save successful after batch failure");
+//                        saveIntegrationHistory(model, "SUCCESS", "Individual save successful after batch failure");
 
                         if (model.getOperationPerformed() != null) {
                             StreamingRawData rawData = modelToRawDataMap.get(model);
@@ -169,7 +169,7 @@ public class BatchSaveProcessor extends ProcessAllWindowFunction<Tuple2<Streamin
                             out.collect(dto);
                         }
                     } catch (Exception individualEx) {
-                        saveIntegrationHistory(model, "FAILURE", "Both batch and individual save failed: " + individualEx.getMessage());
+//                        saveIntegrationHistory(model, "FAILURE", "Both batch and individual save failed: " + individualEx.getMessage());
                     }
                 }
             }

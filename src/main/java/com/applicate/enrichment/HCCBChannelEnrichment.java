@@ -1,12 +1,16 @@
 package com.applicate.enrichment;
 import com.applicate.services.channelkart.services.GenericObjectService;
+import com.applicate.services.channelkart.services.ProductDetailsService;
 import com.applicate.services.channelkart.utils.NullUtils;
 import com.salescode.dim.etl.EnrichmentResult;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.AbstractEnrichment;
 import com.salescode.dim.jooq.generated.tables.pojos.GenericObject;
+import com.salescode.dim.jooq.generated.tables.pojos.Productdetails;
 import com.salescode.dim.jooq.generated.tables.pojos.SchemeOutletBifurcations;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.salescode.dim.jooq.impl.SchemeDefination;
@@ -22,7 +26,7 @@ This class enriches the data into channel column from the mapping present in gen
 public class HCCBChannelEnrichment extends AbstractEnrichment<SchemeDefination> {
 
     private static GenericObjectService genericObjectService;
-
+    private static ProductDetailsService productDetailsService;
     public HCCBChannelEnrichment() {
         genericObjectService = new GenericObjectService();
     }
@@ -51,6 +55,7 @@ public class HCCBChannelEnrichment extends AbstractEnrichment<SchemeDefination> 
                     }
                 }
             }
+            enrichItemSchemeDescription(cdm);
             logger.info("Time taken for channel enrichment : {}", System.currentTimeMillis() - currentTime);
         }catch (Exception ex){
             throw new RuntimeException("Exception in channel enrichment {}", ex);
@@ -60,5 +65,23 @@ public class HCCBChannelEnrichment extends AbstractEnrichment<SchemeDefination> 
 
     private boolean checkIfEmpty(List<SchemeOutletBifurcations> allOutletBifurcationDetails) {
         return NullUtils.isNotNull(allOutletBifurcationDetails) && !allOutletBifurcationDetails.isEmpty();
+    }
+
+    private void enrichItemSchemeDescription(SchemeDefination cdm) {
+        if(cdm.getSchemeType().contains("item") && ObjectUtils.isNotEmpty(cdm.getSchemeCalculation().get(0).getSchemeDiscountedProductcode())){
+            Productdetails pd = productDetailsService.findByBatchCode(cdm.getSchemeCalculation().get(0).getSchemeDiscountedProductcode());
+            String name = pd.getSkuDescription();
+            String newDes= cdm.getSchemeDescription() + " (" + name +")";
+            cdm.setSchemeDescription(newDes);
+            updateSlabDescription(cdm.getSchemeCalculation().get(0).getSlabInfo(),name);
+        }
+    }
+
+    private void updateSlabDescription(JsonNode slabInfo, String name) {
+        for (JsonNode node : slabInfo) {
+            String newDes = node.get("schemeDescription").asText() + " (" + name +")";
+            ObjectNode objectNode = (ObjectNode) node;
+            objectNode.put("schemeDescription", newDes);
+        }
     }
 }

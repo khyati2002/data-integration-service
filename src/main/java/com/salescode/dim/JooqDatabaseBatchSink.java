@@ -142,7 +142,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     );
                                 }
                             }
-                            saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
+//                            saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
                         } catch (Exception batchEx) {
                             LOG.error("Batch save failed. Falling back to individual saves.");
                             for (CommonDataModel model : entry.getValue()) {
@@ -159,9 +159,9 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                                 model.getId()
                                         );
                                     }
-                                    saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
+//                                    saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
                                 } catch (Exception individualEx) {
-                                    saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
+//                                    saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
                                 }
                             }
                         }
