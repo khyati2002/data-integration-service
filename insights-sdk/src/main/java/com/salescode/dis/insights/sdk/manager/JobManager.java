@@ -53,8 +53,7 @@ public class JobManager {
                 throw new RestClientException(errorMessage);
             }
         } catch (RestClientException e) {
-            String errorMessage = String.format("Error during job creation for LOB '%s'. URL: %s", lob, JOB_CREATE_URL);
-            log.error(errorMessage, e);
+            log.error("Error during job creation for LOB '{}'. URL: {}, ExceptionMsg {}", lob, JOB_CREATE_URL, e.getMessage());
             throw e;
         }
     }
@@ -74,8 +73,7 @@ public class JobManager {
                 throw new RestClientException(errorMessage);
             }
         } catch (RestClientException e) {
-            String errorMessage = String.format("Error during get job for LOB '%s', Job ID '%s'. URL: %s", lob, jobId, JOB_GET_BY_ID_URL);
-            log.error(errorMessage, e);
+            log.error("Error during get job for LOB '{}', Job ID '{}'. URL: {}, ExceptionMsg {}", lob, jobId, JOB_GET_BY_ID_URL, e.getMessage());
             throw e;
         }
     }
@@ -100,8 +98,7 @@ public class JobManager {
                 throw new RestClientException(errorMessage);
             }
         } catch (RestClientException e) {
-            String errorMessage = String.format("Error during job status update for LOB '%s', Job ID '%s', Status '%s'. URL: %s", lob, jobId, status, JOB_STATUS_UPDATE_URL);
-            log.error(errorMessage, e);
+            log.error("Error during job status update for LOB '{}', Job ID '{}', Status '{}'. URL: {}, ExceptionMsg {}", lob, jobId, status, JOB_STATUS_UPDATE_URL, e.getMessage());
             throw e;
         }
     }

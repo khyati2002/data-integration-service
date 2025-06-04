@@ -59,7 +59,7 @@ public class InsightsManager {
             log.debug("Job creation successful, updated internal state.");
             return createdJob;
         } catch (RestClientException e) {
-            log.error("Failed to create job via InsightsManager for LOB: {}", lob, e);
+            log.error("Failed to create job via InsightsManager for LOB: {}, ExceptionMsg: {}", lob, e.getMessage());
             throw e; // Re-throw the exception from the manager
         }
     }
@@ -77,7 +77,7 @@ public class InsightsManager {
             log.debug("Job status update successful, updated internal state.");
             return updatedJob;
         } catch (RestClientException e) {
-            log.error("Failed to update job status via InsightsManager for Job ID: {}", jobId, e);
+            log.error("Failed to update job status via InsightsManager for Job ID: {}, ExceptionMsg: {}", jobId, e.getMessage());
             throw e; // Re-throw the exception from the manager
         }
     }
@@ -94,12 +94,11 @@ public class InsightsManager {
         try {
             log.debug("Calling FileManager to create file with ID: {} for Job ID: {}", fileRequest.getFileId(), jobId);
             FileEntityResponseDto createdFile = this.fileManager.createFile(lob, masterName, jobId, fileRequest);
-            // Assuming fileManager.createFile throws if response is invalid or fileId is null
             addFileEntityResponse(createdFile.getFileId(), createdFile);
             log.debug("File creation successful, added to internal map.");
             return createdFile;
         } catch (RestClientException e) {
-            log.error("Failed to create file via InsightsManager for File ID: {}", fileRequest.getFileId(), e);
+            log.error("Failed to create file via InsightsManager for File ID: {}, ExceptionMsg: {}", fileRequest.getFileId(), e.getMessage());
             throw e; // Re-throw the exception from the manager
         }
     }
@@ -113,12 +112,11 @@ public class InsightsManager {
         try {
             log.debug("Calling FileManager to create file with ID: {} for Job ID: {}", fileRequest.getFileId(), jobId);
             FileEntityResponseDto createdFile = this.fileManager.createFile(lob, masterName, jobId, fileRequest);
-            // Assuming fileManager.createFile throws if response is invalid or fileId is null
             addFileEntityResponse(identifier, createdFile);
             log.debug("File creation successful, added to internal map.");
             return createdFile;
         } catch (RestClientException e) {
-            log.error("Failed to create file via InsightsManager for File ID: {}", fileRequest.getFileId(), e);
+            log.error("Failed to create file via InsightsManager for File ID: {}, ExceptionMsg: {}", fileRequest.getFileId(), e.getMessage());
             throw e; // Re-throw the exception from the manager
         }
     }
@@ -132,13 +130,14 @@ public class InsightsManager {
 
         try {
             log.debug("Calling FileManager to update status for file ID: {}", fileId);
+            fileId = Optional.ofNullable(getFileEntityResponse(fileId)).map(FileEntityResponseDto::getFileId).orElse(fileId);
             FileEntityResponseDto updatedFile = this.fileManager.updateFileStatus(
                     lob, masterName, jobId, fileId, statusRequest);
             addFileEntityResponse(updatedFile.getFileId(), updatedFile);
             log.debug("File status update successful, updated internal map.");
             return updatedFile;
         } catch (RestClientException e) {
-            log.error("Failed to update file status via InsightsManager for File ID: {}", fileId, e);
+            log.error("Failed to update file status via InsightsManager for File ID: {}, ExceptionMsg: {}", fileId, e.getMessage());
             throw e; // Re-throw the exception from the manager
         }
     }
@@ -151,18 +150,19 @@ public class InsightsManager {
 
         try {
             log.debug("Calling FileManager to update progress for file ID: {}", fileId);
+            fileId = Optional.ofNullable(getFileEntityResponse(fileId)).map(FileEntityResponseDto::getFileId).orElse(fileId);
             UpdateRequestResponseDto updateResponse = this.fileManager.updateFileProgress(
                     lob, masterName, fileId, progressPayload);
             // Storing the response if it has a request ID, for potential tracking.
             if (updateResponse != null && updateResponse.getRequestId() != null) {
-                addUpdateRequestResponse(updateResponse.getRequestId(), updateResponse);
+//                addUpdateRequestResponse(updateResponse.getRequestId(), updateResponse);
                 log.debug("File progress update successful, added update response to internal map.");
             } else {
                 log.debug("File progress update successful, but no request ID in response.");
             }
             return updateResponse;
         } catch (RestClientException e) {
-            log.error("Failed to update file progress via InsightsManager for File ID: {}", fileId, e);
+            log.error("Failed to update file progress via InsightsManager for File ID: {}, ExceptionMsg: {}", fileId, e.getMessage());
             throw e; // Re-throw the exception from the manager
         }
     }
