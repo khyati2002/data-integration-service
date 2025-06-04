@@ -29,8 +29,17 @@
 	<properties>
 		<java.version>21</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-		<insights-common.version>1.0-SNAPSHOT</insights-common.version>
+		<insights-common.version>0.0.1-SNAPSHOT</insights-common.version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>salescode-dis-insights</id>
+			<name>salescode-dis-insights</name>
+			<url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

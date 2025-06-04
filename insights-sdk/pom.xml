@@ -19,8 +19,16 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.30</lombok.version>
-        <insights-common.version>1.0-SNAPSHOT</insights-common.version>
+        <insights-common.version>0.0.1-SNAPSHOT</insights-common.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>salescode-dis-insights</id>
+            <name>salescode-dis-insights</name>
+            <url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -40,6 +48,7 @@
             <groupId>com.salescode.dis</groupId>
             <artifactId>insights-common</artifactId>
             <version>${insights-common.version}</version>
+            <scope>compile</scope>
             <!-- Classifier will be handled by profile for sb3 version -->
         </dependency>
 
@@ -234,4 +243,13 @@
             </build>
         </profile>
     </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>salescode-dis-insights</id>
+            <name>salescode-dis-insights</name>
+            <url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
+        </repository>
+    </distributionManagement>
+
 </project>

@@ -13,7 +13,7 @@
 
     <groupId>com.salescode.dis</groupId>
     <artifactId>insights-common</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
 
     <properties>
         <java.version>11</java.version>
@@ -196,4 +196,12 @@
             </build>
         </profile>
     </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>salescode-dis-insights</id>
+            <name>salescode-dis-insights</name>
+            <url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
+        </repository>
+    </distributionManagement>
 </project>

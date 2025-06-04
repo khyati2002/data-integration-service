@@ -121,6 +121,11 @@
       </makefile>
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Application.FlinkTestCaseWithSimpleSource" />
+      <item itemvalue="JUnit.DataStreamJobTest.testDataStreamJobWithFewObjects" />
+      <item itemvalue="Makefile Target.init" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.DataStreamJobTest.testDataStreamJobWithFewObjects" />
