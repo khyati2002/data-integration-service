@@ -38,6 +38,7 @@ public class JobEntity extends TimeAwareEntity {
     private Integer failedFiles = 0;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<FileEntity> files = new ArrayList<>();
 
     @Override

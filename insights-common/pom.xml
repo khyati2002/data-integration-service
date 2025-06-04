@@ -90,6 +90,28 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>3.4.1</version> <!-- Use a recent version -->
+                        <executions>
+                            <execution>
+                                <id>enforce-java</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireJavaVersion>
+                                            <!-- Enforce JDK 11 or newer for Maven execution -->
+                                            <version>[11,)</version>
+                                        </requireJavaVersion>
+                                    </rules>
+                                    <fail>true</fail> <!-- Fail the build if rules are not met -->
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.eclipse.transformer</groupId>
                         <artifactId>transformer-maven-plugin</artifactId>
                         <version>0.5.0</version>
@@ -106,7 +128,6 @@
                             <!-- Input artifact: defaults to the main project artifact -->
                             <!-- Output to a specific subdirectory -->
                             <outputDirectory>${transformed.output.directory}</outputDirectory>
-                            <classifier>sb3</classifier>
                             <overwrite>true</overwrite>
                             <rules>
                                 <jakartaDefaults>true</jakartaDefaults>
@@ -122,31 +143,32 @@
                     </plugin>
 
                     <!-- Copy the transformed JAR from the temp dir and rename it with the classifier -->
-                    <plugin>
+                    <!--<plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>3.1.0</version> <!-- Use a recent version -->
+                        <version>3.1.0</version> &lt;!&ndash; Use a recent version &ndash;&gt;
                         <executions>
                             <execution>
                                 <id>copy-rename-transformed-common-jar</id>
-                                <phase>package</phase> <!-- Run after transformer -->
+                                <phase>package</phase> &lt;!&ndash; Run after transformer &ndash;&gt;
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <!-- Ensure the source directory exists before copying -->
+                                        &lt;!&ndash; Ensure the source directory exists before copying &ndash;&gt;
                                         <copy file="${transformed.output.directory}/${project.build.finalName}.jar"
                                               tofile="${project.build.directory}/${project.artifactId}-${project.version}-${artifact.classifier}.jar"
                                               overwrite="true"
-                                              failonerror="true"/> <!-- Fail if the source transformed file is not found -->
+                                              failonerror="true"/> &lt;!&ndash; Fail if the source transformed file is not found &ndash;&gt;
                                     </target>
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
+                    </plugin>-->
 
                     <!-- Attach the correctly named classified JAR -->
+                    <!-- Attaches the JAR with the '-sb3' classifier to the project, making it available for installation/deployment. -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
@@ -161,7 +183,7 @@
                                 <configuration>
                                     <artifacts>
                                         <artifact>
-                                            <file>${project.build.directory}/${project.artifactId}-${project.version}-${artifact.classifier}.jar</file>
+                                            <file>${project.build.directory}/${project.build.finalName}.jar</file>
                                             <type>jar</type>
                                             <classifier>${artifact.classifier}</classifier>
                                         </artifact>

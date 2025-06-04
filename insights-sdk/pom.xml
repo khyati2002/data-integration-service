@@ -94,15 +94,32 @@
                     <version>${insights-common.version}</version>
                     <classifier>${insights-common.classifier}</classifier>
                 </dependency>
-                <!--
-                    No need to add jakarta.validation-api here directly for the SDK,
-                    as insights-common (jakarta classified) will bring its (transformed) validation needs.
-                    The SDK itself doesn't directly use validation annotations.
-                -->
             </dependencies>
 
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>3.4.1</version> <!-- Use a recent version -->
+                        <executions>
+                            <execution>
+                                <id>enforce-java</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireJavaVersion>
+                                            <!-- Enforce JDK 11 or newer for Maven execution -->
+                                            <version>[11,)</version>
+                                        </requireJavaVersion>
+                                    </rules>
+                                    <fail>true</fail> <!-- Fail the build if rules are not met -->
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.eclipse.transformer</groupId>
                         <artifactId>transformer-maven-plugin</artifactId>
@@ -134,7 +151,7 @@
                     </plugin>
 
                     <!-- Copy the transformed SDK JAR and rename it with the classifier -->
-                    <plugin>
+                    <!--<plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <version>3.1.0</version>
@@ -156,9 +173,10 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
+                    </plugin>-->
 
                     <!-- Attach the correctly named classified SDK JAR -->
+                    <!-- Attaches the JAR with the '-sb3' classifier to the project, making it available for installation/deployment. -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
@@ -173,7 +191,7 @@
                                 <configuration>
                                     <artifacts>
                                         <artifact>
-                                            <file>${project.build.directory}/${project.artifactId}-${project.version}-${artifact.classifier}.jar</file>
+                                            <file>${project.build.directory}/${project.build.finalName}.jar</file>
                                             <type>jar</type>
                                             <classifier>${artifact.classifier}</classifier>
                                         </artifact>

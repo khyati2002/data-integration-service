@@ -4,8 +4,7 @@ build-image:
 	mvn clean install -f ../insights-common/pom.xml -DskipTests -Psb3 -e
 	mvn clean install -f ../insights-sdk/pom.xml -DskipTests -e
 	mvn clean install -f ../insights-sdk/pom.xml -DskipTests  -Psb3 -e
-	mvn clean install -DskipTests
-	docker buildx build --progress plain --platform "linux/amd64" --provenance=false -t dis-insights .
+	JAVA_HOME=$(/usr/libexec/java_home -v 21) mvn clean install -DskipTests -e -X
 
 # Execute the push_image.sh script to push the image with the updated version
 image-push: build-image
