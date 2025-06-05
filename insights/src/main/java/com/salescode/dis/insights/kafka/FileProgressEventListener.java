@@ -31,7 +31,7 @@ public class FileProgressEventListener {
       In case of file, since it's already mapped to jobId, therefore in event jobId will be null.
       While on the other hand, In case of api, since we cannot register job beforehand, jobId should be sent inside event to create job if not there
      */
-    @KafkaListener(topics = "file-progress-updates", groupId = "file-progress-processor", batch = "true", properties = {
+    @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
             ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=100"
     })
     public void consumeProgressEvents(List<FileProgressEvent> events) {

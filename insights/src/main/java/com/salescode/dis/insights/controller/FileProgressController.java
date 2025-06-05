@@ -11,6 +11,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.internals.Topic;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +31,9 @@ public class FileProgressController {
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
 
+    @Value("${file.progress.update.topic:file-progress-updates}")
+    private String fileUpdatesTopic;
+
     @Operation(summary = "Update file progress", description = "Updates the progress metrics for a file")
     @ApiResponse(responseCode = "202", description = "Progress update accepted", content = @Content(schema = @Schema(implementation = UpdateRequestResponseDto.class)))
     @ApiResponse(responseCode = "404", description = "File not found")
@@ -34,7 +42,8 @@ public class FileProgressController {
             @PathVariable String lob,
             @PathVariable("master_name") String masterName,
             @PathVariable String fileId,
-            @Validated @RequestBody FileProgressRequest progress) {
+            @Validated @RequestBody FileProgressRequest progress
+    ) {
 
         FileEntity fileEntity = fileService.get(fileId, masterName);
 
@@ -48,7 +57,7 @@ public class FileProgressController {
         event.setJobId(null);
         // job is already mapped to a file, hence not required to send
 
-        kafkaTemplate.send("file-progress-updates", fileId, event);
+        kafkaTemplate.send(fileUpdatesTopic, fileId, event);
 
         UpdateRequestResponseDto response = new UpdateRequestResponseDto();
         response.setRequestId(event.getEventId());
