@@ -22,6 +22,11 @@ public class InsightsEnabledFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        if(request.getRequestURI().contains("/hckeck"))
+        {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String path = request.getRequestURI(); // e.g., /api/jobs/run?lob=retail
 
         // Allow requests to property-related endpoints without filtering
