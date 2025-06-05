@@ -1,27 +1,20 @@
 package com.salescode.dis.insights.kafka;
 
 import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.TopicBuilder;
-import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
-
-import java.util.Map;
 
 @Configuration
 @Profile("kafka")
 public class KafkaConfig {
 
     @Bean
-    public NewTopic fileUpdatesTopic() {
+    public NewTopic fileUpdatesTopic(@Value("${file.progress.update.topic:file-progress-updates}") String fileUpdatesTopicName) {
         // Creates the topic if it doesn't exist, with 5 partitions and replication factor of 1
-        return TopicBuilder.name("file-progress-updates")
+        return TopicBuilder.name(fileUpdatesTopicName)
                 .partitions(5)
                 .replicas(1)
                 .build();

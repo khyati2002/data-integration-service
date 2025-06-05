@@ -39,5 +39,6 @@ public class FileEntityResponseDto implements Serializable {
     BigDecimal consumerThroughput;
     FileStatus publishedStatus;
     FileStatus consumedStatus;
+    Boolean isApiBased;
 
 }
