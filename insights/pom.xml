@@ -29,8 +29,17 @@
 	<properties>
 		<java.version>21</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-		<insights-common.version>1.0-SNAPSHOT</insights-common.version>
+		<insights-common.version>0.0.1-SNAPSHOT</insights-common.version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>salescode-dis-insights</id>
+			<name>salescode-dis-insights</name>
+			<url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -168,6 +177,7 @@
 			<groupId>com.salescode.dis</groupId>
 			<artifactId>insights-common</artifactId>
 			<version>${insights-common.version}</version>
+			<classifier>sb3</classifier>
 		</dependency>
 	</dependencies>
 
@@ -175,10 +185,32 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.4.1</version> <!-- Use a recent version -->
+				<executions>
+					<execution>
+						<id>enforce-java</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireJavaVersion>
+									<!-- Enforce JDK 21 or newer for Maven execution -->
+									<version>[21,)</version>
+								</requireJavaVersion>
+							</rules>
+							<fail>true</fail> <!-- Fail the build if rules are not met -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>21</source>
-					<target>21</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>

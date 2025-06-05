@@ -54,8 +54,7 @@ public class FileManager {
                 throw new RestClientException(errorMessage);
             }
         } catch (RestClientException e) {
-            String errorMessage = String.format("Error during file creation for LOB '%s', Master '%s', Job ID '%s', File ID '%s'. URL: %s", lob, masterName, jobId, fileRequest.getFileId(), FILE_CREATE_URL);
-            log.error(errorMessage, e);
+            log.error("Error during file creation for LOB '{}', Master '{}', Job ID '{}', File ID '{}'. URL: {}, ExceptionMsg {}", lob, masterName, jobId, fileRequest.getFileId(), FILE_CREATE_URL, e.getMessage());
             throw e;
         }
     }
@@ -74,8 +73,7 @@ public class FileManager {
                 throw new RestClientException(errorMessage);
             }
         } catch (RestClientException e) {
-            String errorMessage = String.format("Error during get file for LOB '%s', Master '%s', Job ID '%s', File ID '%s'. URL: %s", lob, masterName, jobId, fileId, FILE_GET_URL);
-            log.error(errorMessage, e);
+            log.error("Error during get file for LOB '{}', Master '{}', Job ID '{}', File ID '{}'. URL: {}, ExceptionMsg {}", lob, masterName, jobId, fileId, FILE_GET_URL, e.getMessage());
             throw e;
         }
     }
@@ -96,8 +94,7 @@ public class FileManager {
                 throw new RestClientException(errorMessage);
             }
         } catch (RestClientException e) {
-            String errorMessage = String.format("Error during file status update for LOB '%s', Master '%s', Job ID '%s', File ID '%s'. URL: %s", lob, masterName, jobId, fileId, FILE_STATUS_UPDATE_URL);
-            log.error(errorMessage, e);
+            log.error("Error during file status update for LOB '{}', Master '{}', Job ID '{}', File ID '{}'. URL: {}, ExceptionMsg {}", lob, masterName, jobId, fileId, FILE_STATUS_UPDATE_URL, e.getMessage());
             throw e;
         }
     }
@@ -118,8 +115,7 @@ public class FileManager {
                 throw new RestClientException(errorMessage);
             }
         } catch (RestClientException e) {
-            String errorMessage = String.format("Error during file progress update for LOB '%s', Master '%s', File ID '%s'. URL: %s", lob, masterName, fileId, FILE_PROGRESS_UPDATE_URL);
-            log.error(errorMessage, e);
+            log.error("Error during file progress update for LOB '{}', Master '{}', File ID '{}'. URL: {}, ExceptionMsg {}", lob, masterName, fileId, FILE_PROGRESS_UPDATE_URL, e.getMessage());
             throw e;
         }
     }

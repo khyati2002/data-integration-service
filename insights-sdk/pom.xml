@@ -19,8 +19,16 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.30</lombok.version>
-        <insights-common.version>1.0-SNAPSHOT</insights-common.version>
+        <insights-common.version>0.0.1-SNAPSHOT</insights-common.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>salescode-dis-insights</id>
+            <name>salescode-dis-insights</name>
+            <url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -40,6 +48,7 @@
             <groupId>com.salescode.dis</groupId>
             <artifactId>insights-common</artifactId>
             <version>${insights-common.version}</version>
+            <scope>compile</scope>
             <!-- Classifier will be handled by profile for sb3 version -->
         </dependency>
 
@@ -68,6 +77,36 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
+            <!-- Add Maven Shade Plugin for creating Uber JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <!-- Keep the original JAR as the main artifact -->
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -94,15 +133,32 @@
                     <version>${insights-common.version}</version>
                     <classifier>${insights-common.classifier}</classifier>
                 </dependency>
-                <!--
-                    No need to add jakarta.validation-api here directly for the SDK,
-                    as insights-common (jakarta classified) will bring its (transformed) validation needs.
-                    The SDK itself doesn't directly use validation annotations.
-                -->
             </dependencies>
 
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>3.4.1</version> <!-- Use a recent version -->
+                        <executions>
+                            <execution>
+                                <id>enforce-java</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireJavaVersion>
+                                            <!-- Enforce JDK 11 or newer for Maven execution -->
+                                            <version>[11,)</version>
+                                        </requireJavaVersion>
+                                    </rules>
+                                    <fail>true</fail> <!-- Fail the build if rules are not met -->
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.eclipse.transformer</groupId>
                         <artifactId>transformer-maven-plugin</artifactId>
@@ -134,7 +190,7 @@
                     </plugin>
 
                     <!-- Copy the transformed SDK JAR and rename it with the classifier -->
-                    <plugin>
+                    <!--<plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <version>3.1.0</version>
@@ -156,9 +212,10 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
+                    </plugin>-->
 
                     <!-- Attach the correctly named classified SDK JAR -->
+                    <!-- Attaches the JAR with the '-sb3' classifier to the project, making it available for installation/deployment. -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
@@ -173,7 +230,7 @@
                                 <configuration>
                                     <artifacts>
                                         <artifact>
-                                            <file>${project.build.directory}/${project.artifactId}-${project.version}-${artifact.classifier}.jar</file>
+                                            <file>${project.build.directory}/${project.build.finalName}.jar</file>
                                             <type>jar</type>
                                             <classifier>${artifact.classifier}</classifier>
                                         </artifact>
@@ -186,4 +243,13 @@
             </build>
         </profile>
     </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>salescode-dis-insights</id>
+            <name>salescode-dis-insights</name>
+            <url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
+        </repository>
+    </distributionManagement>
+
 </project>
