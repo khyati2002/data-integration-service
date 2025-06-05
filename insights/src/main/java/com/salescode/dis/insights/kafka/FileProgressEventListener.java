@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -34,7 +35,7 @@ public class FileProgressEventListener {
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
             ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=100"
     })
-    public void consumeProgressEvents(List<FileProgressEvent> events) {
+    public void consumeProgressEvents(@Payload List<FileProgressEvent> events) {
         if (events == null || events.isEmpty()) {
             log.debug("Received empty or null event list. Skipping.");
             return;

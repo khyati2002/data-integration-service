@@ -1,6 +1,5 @@
 cleanInstall:
-	mvn clean install -f pom.xml -s ../settings.xml -DskipTests -e
-	mvn clean install -f pom.xml -s ../settings.xml -DskipTests -Psb3 -e
+	mvn clean install -f pom.xml -s ../settings.xml -DskipTests -Psb3 -e -X
 
 setVersion:
 	@if [ -z "$(version)" ]; then \
