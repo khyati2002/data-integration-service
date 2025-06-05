@@ -23,7 +23,7 @@ public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpec
             "igf.consumed_fail_count, igf.consumed_success_count, igf.total_count, " +
             "igf.publisher_throughput, igf.consumer_throughput, igf.server_fail_count, igf.logical_fail_count " +
             "FROM integration_job igj " +
-            "LEFT JOIN integration_file igf ON igj.id = igf.job_id " +
+            "LEFT JOIN integration_file igf ON igj.id = igf.job_id AND igj.lob = igf.lob " +
             "WHERE (COALESCE(:lob) IS NULL OR igj.lob IN (:lob)) " +
             "AND (COALESCE(:status) IS NULL OR igj.status IN (:status)) " +
             "AND (COALESCE(:startTime) IS NULL OR igj.last_modified_time >= :startTime) " +

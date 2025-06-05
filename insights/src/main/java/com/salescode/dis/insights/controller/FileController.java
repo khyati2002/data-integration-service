@@ -25,8 +25,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
+import java.util.Base64;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -77,7 +79,7 @@ public class FileController {
             description = "Unexpected error",
             content = @Content(schema = @Schema(implementation = ApiError.class))
     )
-    @GetMapping("/job/{jobId}/unit")
+    @GetMapping("/job/{jobId:.*}/unit")
     public ResponseEntity<Page<FileEntityResponseDto>> listByJob(
             @PathVariable String lob,
             @PathVariable String jobId,
@@ -86,13 +88,18 @@ public class FileController {
             Pageable pageable
     ) {
 
+        String actualJobId = new String(
+                Base64.getUrlDecoder().decode(jobId),
+                StandardCharsets.UTF_8
+        );
+
         PageRequest pageRequest = PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize()
         );
 
         Page<FileEntityResponseDto> pageRes = fileService
-                .listByJobAndLob(jobId, lob,startTime, endTime, pageRequest)
+                .listByJobAndLob(actualJobId, lob,startTime, endTime, pageRequest)
                 .map(fileEntityMapper::toDto);
 
         return ResponseEntity.ok(pageRes);
