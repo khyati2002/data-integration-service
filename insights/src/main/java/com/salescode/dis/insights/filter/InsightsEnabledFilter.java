@@ -48,7 +48,7 @@ public class InsightsEnabledFilter extends OncePerRequestFilter {
         }
 
 
-            if (lob != null) {
+        if (lob != null) {
             Boolean enabled = propertyService.isInsightsEnabled(lob);
 
             if (enabled == null) {

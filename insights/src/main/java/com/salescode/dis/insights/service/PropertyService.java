@@ -120,7 +120,10 @@ public class PropertyService {
         if (env != null) {
             lobFeatureCache.invalidate(lob);
         }
-        lobToEnvCache.invalidate(lob);
+    }
+
+    public void clearAllPropertycache(){
+        lobFeatureCache.invalidateAll();
     }
 
     public void clearAllCache() {

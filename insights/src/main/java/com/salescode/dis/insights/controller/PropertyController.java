@@ -46,4 +46,10 @@ public class PropertyController {
         propertyService.clearAllCache();
         return ResponseEntity.ok("All LOB feature cache cleared.");
     }
+
+    @DeleteMapping("/cache/property")
+    public ResponseEntity<String> clearAllCacheProperty() {
+        propertyService.clearAllPropertycache();
+        return ResponseEntity.ok("All LOB feature cache cleared.");
+    }
 }
