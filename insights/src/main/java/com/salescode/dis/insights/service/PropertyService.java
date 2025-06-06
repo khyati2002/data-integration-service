@@ -22,7 +22,6 @@ public class PropertyService {
     private final Cache<String, String> lobToEnvCache;       // key = lob, value = env
 
     private final String TOKEN = "hardcoded_token";
-
     public PropertyService(RestTemplateBuilder builder) {
         this.restTemplate = builder.build();
         this.objectMapper = new ObjectMapper();
@@ -112,7 +111,7 @@ public class PropertyService {
         if(enabled!=null){
             String env = lobToEnvCache.getIfPresent(lob);
         }
-        return enabled != null && enabled;
+        return enabled;
     }
 
     public void evictLobFromCache(String lob) {
