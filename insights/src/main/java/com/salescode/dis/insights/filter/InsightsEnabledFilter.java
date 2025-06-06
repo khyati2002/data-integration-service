@@ -22,8 +22,7 @@ public class InsightsEnabledFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        if(request.getRequestURI().contains("/hckeck"))
-        {
+        if(!request.getRequestURI().startsWith("/api")) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -54,6 +54,31 @@ spring:
 application:
   environment: uat
 
+app:
+  active-environments:
+    - dev
+    - uat
+---
+
+# Configuration for 'demo' profile
+spring:
+  config:
+    activate:
+      on-profile: demo
+
+  kafka:
+    bootstrap-servers: 164.52.202.184:9092
+
+application:
+  environment: demo
+
+app:
+  active-environments:
+    - dev
+    - uat
+    - demo
+    - prod
+
 ---
 
 # Configuration for 'postgres' profile (PostgreSQL-specific properties for persistent DB)
