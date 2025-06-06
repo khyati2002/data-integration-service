@@ -22,7 +22,7 @@ public class InsightsEnabledFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        if(!request.getRequestURI().startsWith("/api")) {
+        if(!request.getRequestURI().startsWith("/api/") || !request.getRequestURI().contains("master") || !request.getRequestURI().contains("job")) {
             filterChain.doFilter(request, response);
             return;
         }
