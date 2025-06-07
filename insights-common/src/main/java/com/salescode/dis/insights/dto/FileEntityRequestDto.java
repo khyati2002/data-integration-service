@@ -25,7 +25,7 @@ public class FileEntityRequestDto implements Serializable {
     @AssertTrue(message = "Either set the total, or if its api based then total count should not be set, it will be calculated from progress")
     public boolean hasTotalCount() {
         Boolean isApiBased = Optional.ofNullable(this.isApiBased).orElse(false);
-        return (!isApiBased && totalCount != null) || (isApiBased && totalCount == null);
+        return (!isApiBased && totalCount != null) || (isApiBased && (totalCount == null || totalCount <= 0));
     }
 
 }
