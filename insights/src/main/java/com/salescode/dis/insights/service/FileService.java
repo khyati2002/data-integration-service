@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
+import com.salescode.dis.insights.enums.IntegrationMode;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +62,7 @@ public class FileService {
             FileEntity apiBasedFileEntity = new FileEntity();
             apiBasedFileEntity.setFileId(fileId);
             apiBasedFileEntity.setLob(lob);
-            apiBasedFileEntity.setIsApiBased(true);
+            apiBasedFileEntity.setModeOfIntegration(IntegrationMode.API);
             return createJobIfNotExists(jobId, apiBasedFileEntity, masterName);
         });
 
@@ -76,7 +77,7 @@ public class FileService {
         Optional.ofNullable(progress.getPublisher()).ifPresent(publisher -> {
             file.setPublishedSuccessCount(file.getPublishedSuccessCount() + publisher.getSuccessCount());
             file.setPublishedFailCount(file.getPublishedFailCount() + publisher.getFailCount());
-            if (file.getIsApiBased()) {
+            if (file.getModeOfIntegration().equals(IntegrationMode.API)) {
                 file.setTotalCount(file.getTotalCount() + publisher.getSuccessCount() + publisher.getFailCount());
             }
         });

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.AssertTrue;
 import java.io.Serializable;
 import java.util.Optional;
+import com.salescode.dis.insights.enums.IntegrationMode;
 
 @Data
 @AllArgsConstructor
@@ -20,12 +21,12 @@ public class FileEntityRequestDto implements Serializable {
     @Builder.Default
     Long totalCount = 0L;
     @Builder.Default
-    Boolean isApiBased = Boolean.FALSE;
+    IntegrationMode modeOfIntegration = IntegrationMode.FILE;
 
-    @AssertTrue(message = "Either set the total, or if its api based then total count should not be set, it will be calculated from progress")
+    @AssertTrue(message = "Either set the total, or if its API based then total count should not be set, it will be calculated from progress")
     public boolean hasTotalCount() {
-        Boolean isApiBased = Optional.ofNullable(this.isApiBased).orElse(false);
-        return (!isApiBased && totalCount != null) || (isApiBased && (totalCount == null || totalCount <= 0));
+        boolean isFileBased = Optional.ofNullable(this.modeOfIntegration).orElse(IntegrationMode.FILE).equals(IntegrationMode.FILE);
+        return (isFileBased && totalCount != null) || (!isFileBased && (totalCount == null || totalCount <= 0));
     }
 
 }

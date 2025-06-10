@@ -2,6 +2,7 @@ package com.salescode.dis.insights.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.dis.insights.enums.FileStatus;
+import com.salescode.dis.insights.enums.IntegrationMode;
 import lombok.*;
 
 import java.io.Serializable;
@@ -39,6 +40,5 @@ public class FileEntityResponseDto implements Serializable {
     BigDecimal consumerThroughput;
     FileStatus publishedStatus;
     FileStatus consumedStatus;
-    Boolean isApiBased;
-
+    IntegrationMode modeOfIntegration;
 }

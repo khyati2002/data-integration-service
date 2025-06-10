@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
+import com.salescode.dis.insights.enums.IntegrationMode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -53,7 +54,7 @@ public class FileStatusSchedulerTest {
         fileWithMatchingCounts.setId("file-matching");
         fileWithMatchingCounts.setMaster("master_name");
         fileWithMatchingCounts.setFileId("file_matching_123");
-        fileWithMatchingCounts.setIsApiBased(true);
+        fileWithMatchingCounts.setModeOfIntegration(IntegrationMode.API);
         fileWithMatchingCounts.setTotalCount(0L); // Total count is always 0
         fileWithMatchingCounts.setConsumedSuccessCount(10L);
         fileWithMatchingCounts.setConsumedFailCount(0L);
@@ -68,7 +69,7 @@ public class FileStatusSchedulerTest {
         fileWithNonMatchingCounts.setId("file-non-matching");
         fileWithNonMatchingCounts.setMaster("master_name");
         fileWithNonMatchingCounts.setFileId("file_non_matching_123");
-        fileWithNonMatchingCounts.setIsApiBased(true);
+        fileWithNonMatchingCounts.setModeOfIntegration(IntegrationMode.API);
         fileWithNonMatchingCounts.setTotalCount(0L); // Total count is always 0
         fileWithNonMatchingCounts.setConsumedSuccessCount(5L);
         fileWithNonMatchingCounts.setConsumedFailCount(2L);
@@ -80,13 +81,13 @@ public class FileStatusSchedulerTest {
     }
 
     @Test
-    void testUpdateApiBasedFileStatus_WithMatchingCounts_ShouldMarkAsCompleted() {
+    void testUpdateAllFileStatus_WithMatchingCounts_ShouldMarkAsCompleted() {
         // Arrange
-        when(fileRepository.findStaleApiBasedPendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
+        when(fileRepository.findAllStalePendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
                 .thenReturn(List.of(fileWithMatchingCounts));
 
         // Act
-        fileStatusScheduler.updateApiBasedFileStatus();
+        fileStatusScheduler.updateAllFileStatus();
 
         // Assert
         verify(fileService).updateStatus(eq("file_matching_123"),eq("master_name"), statusRequestCaptor.capture());
@@ -96,13 +97,13 @@ public class FileStatusSchedulerTest {
     }
 
     @Test
-    void testUpdateApiBasedFileStatus_WithNonMatchingCounts_ShouldMarkAsFailed() {
+    void testUpdateAllFileStatus_WithNonMatchingCounts_ShouldMarkAsFailed() {
         // Arrange
-        when(fileRepository.findStaleApiBasedPendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
+        when(fileRepository.findAllStalePendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
                 .thenReturn(List.of(fileWithNonMatchingCounts));
 
         // Act
-        fileStatusScheduler.updateApiBasedFileStatus();
+        fileStatusScheduler.updateAllFileStatus();
 
         // Assert
         verify(fileService).updateStatus(eq("file_non_matching_123"),eq("master_name"),statusRequestCaptor.capture());
@@ -112,26 +113,26 @@ public class FileStatusSchedulerTest {
     }
 
     @Test
-    void testUpdateApiBasedFileStatus_WithMultipleFiles_ShouldProcessAll() {
+    void testUpdateAllFileStatus_WithMultipleFiles_ShouldProcessAll() {
         // Arrange
-        when(fileRepository.findStaleApiBasedPendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
+        when(fileRepository.findAllStalePendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
                 .thenReturn(Arrays.asList(fileWithMatchingCounts, fileWithNonMatchingCounts));
 
         // Act
-        fileStatusScheduler.updateApiBasedFileStatus();
+        fileStatusScheduler.updateAllFileStatus();
 
         // Assert
         verify(fileService, times(2)).updateStatus(any(), any(),any());
     }
 
     @Test
-    void testUpdateApiBasedFileStatus_WithNoFiles_ShouldNotCallFileService() {
+    void testUpdateAllFileStatus_WithNoFiles_ShouldNotCallFileService() {
         // Arrange
-        when(fileRepository.findStaleApiBasedPendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
+        when(fileRepository.findAllStalePendingFiles(any(Instant.class), any(Instant.class), eq(FileStatus.PENDING)))
                 .thenReturn(List.of());
 
         // Act
-        fileStatusScheduler.updateApiBasedFileStatus();
+        fileStatusScheduler.updateAllFileStatus();
 
         // Assert
         verify(fileService, never()).updateStatus(any(),any(), any());

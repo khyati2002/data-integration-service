@@ -35,24 +35,25 @@ public class FileStatusScheduler {
 
     @Scheduled(fixedRateString = "${file-status-scheduler.rate-millis:60000}") // Run every 1 minute (60000 ms)
     @Transactional
-    public void updateApiBasedFileStatus() {
-        log.info("Starting scheduled update of API-based file statuses");
+    public void updateAllFileStatus() {
+        log.info("Starting scheduled update of all file statuses");
 
         // Define the time window for staleness
         Instant staleCutoffTime = Instant.now().minus(STALE_THRESHOLD_SECONDS, ChronoUnit.SECONDS); // e.g., 10 mins ago
         Instant tooOldCutoffTime = Instant.now().minus(TOO_OLD_THRESHOLD_SECONDS, ChronoUnit.SECONDS); // e.g., 15 mins ago
 
-        // Find API-based files that are PENDING and haven't been modified in the 10-15 min window
-        List<FileEntity> pendingFiles = fileRepository.findStaleApiBasedPendingFiles(staleCutoffTime, tooOldCutoffTime, FileStatus.PENDING);
+        // Find all files that are PENDING and haven't been modified in the 10-15 min window
+        // todo remove the check on status as PENDING
+        List<FileEntity> pendingFiles = fileRepository.findAllStalePendingFiles(staleCutoffTime, tooOldCutoffTime, FileStatus.PENDING);
 
         if (pendingFiles.isEmpty()) {
-            log.info("No stale API-based files found in the {}-{} minute window.", STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
+            log.info("No stale files found in the {}-{} minute window.", STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
             return;
         }
 
-        log.warn("Found {} potentially stale API-based files (PENDING, modified between {}-{} mins ago). Marking as FAILED.", pendingFiles.size(), STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
+        log.warn("Found {} potentially stale files (PENDING, modified between {}-{} mins ago). Marking as FAILED.", pendingFiles.size(), STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
 
-        log.info("Found {} API-based files with PENDING status modified in the last 10 minutes", pendingFiles.size());
+        log.info("Found {} files with PENDING status modified in the last 10 minutes", pendingFiles.size());
 
         for (FileEntity file : pendingFiles) {
             updateFileStatus(file);
