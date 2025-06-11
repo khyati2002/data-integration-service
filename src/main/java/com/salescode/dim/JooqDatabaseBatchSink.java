@@ -27,10 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.flink.api.java.tuple.Tuple2;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -147,6 +144,12 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             }
         }
 
+        public static String getStackTraceAsString(Throwable throwable) {
+            StringWriter sw = new StringWriter();
+            throwable.printStackTrace(new PrintWriter(sw));
+            return sw.toString();
+        }
+
         @Override
         public void flush(boolean endOfInput) throws IOException {
             LOG.info("Flushing {} records into sink...", batchBuffer.size());
@@ -219,7 +222,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                                 model.getId()
                                         );
                                     }
-                                    saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
+ //                                   saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
                                     insightsPublisher.publishEventAsync(
                                             rawData.getRequestId(),
                                             rawData.getFileId(),
@@ -234,7 +237,11 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     LOG.error("Individual Exception for {}", model.getId(), individualEx);
                                     StreamingRawData rawData = modelToRawDataMap.get(model);
                                     String fileId = rawData.getFileId();
-                                    saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
+                                    String fullStackTrace = getStackTraceAsString(individualEx); // See utility method below
+                                    String truncatedStackTrace = fullStackTrace.length() > 1000
+                                            ? fullStackTrace.substring(0, 1000)
+                                            : fullStackTrace;
+                                    saveIntegrationHistory(model, "FAILURE", "Save failed: " + (individualEx.getMessage() != null ? individualEx.getMessage() : "") + truncatedStackTrace);
                                     if(rawData.getResponses() == null){
                                         rawData.setResponses(new ArrayList<>());
                                     }
