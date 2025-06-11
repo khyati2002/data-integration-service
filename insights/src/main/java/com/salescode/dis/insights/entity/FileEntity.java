@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import com.salescode.dis.insights.enums.IntegrationMode;
@@ -77,6 +79,10 @@ public class FileEntity extends TimeAwareEntity {
     private Long minProcessingTimeMs;
 
     private Long maxProcessingTimeMs;
+
+    @OneToMany(mappedBy = "file", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<IntegrationStageProgress> stageProgress = new ArrayList<>();
 
     @Override
     protected void onCreate() {
