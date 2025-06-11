@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
+import com.salescode.dis.insights.enums.IntegrationMode;
 
 @Entity
 @Table(name = "integration_file",
@@ -70,7 +71,8 @@ public class FileEntity extends TimeAwareEntity {
 
     @Builder.Default
     @Column(nullable = false)
-    private Boolean isApiBased = false;
+    @Enumerated(EnumType.STRING)
+    private IntegrationMode modeOfIntegration = IntegrationMode.FILE;
 
     private Long minProcessingTimeMs;
 
