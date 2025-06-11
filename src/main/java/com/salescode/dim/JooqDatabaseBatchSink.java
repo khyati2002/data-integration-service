@@ -10,6 +10,7 @@ import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
 import com.salescode.dim.jooq.impl.User;
+import com.salescode.dim.kafka.FailurePublisher;
 import com.salescode.dim.kafka.InsightsPublisher;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.salescode.dim.utils.EventListenerDTO;
@@ -76,9 +77,11 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         private final int batchSize;
         private final long batchIntervalMs;
         private final String topicName;
+        private final String failureTopicName;
         private final String insightsTopicName;
         public static EventPublisher eventPublisher;
         public static InsightsPublisher insightsPublisher;
+        public static FailurePublisher failurePublisher;
         private long lastBatchTime;
         private transient ServiceLocator serviceLocator;
         private final String baseUrl;
@@ -105,15 +108,23 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             kafkaProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EventListenerDTOSerializer.class.getName());
             kafkaProps.put(ProducerConfig.ACKS_CONFIG, "1");
 
+            Properties kafkaFailureTopicProps = new Properties();
+            kafkaFailureTopicProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
+            kafkaFailureTopicProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+            kafkaFailureTopicProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StreamingRawDataSerializer.class.getName());
+            kafkaFailureTopicProps.put(ProducerConfig.ACKS_CONFIG, "1");
+
             Properties kafkaInsightsProps = new Properties();
             kafkaInsightsProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
             kafkaInsightsProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
             kafkaInsightsProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, FileProgressEventSerializer.class.getName());
             kafkaInsightsProps.put(ProducerConfig.ACKS_CONFIG, "1");
             this.topicName = DataStreamJob.getLobEventTopic(properties);
+            this.failureTopicName = DataStreamJob.getLobFailureTopic(properties);
             this.insightsTopicName = properties.getProperty("publishConsumedMetrics.topic");
             this.eventPublisher = new EventPublisher(kafkaProps, topicName, mailboxExecutor);
             this.insightsPublisher = new InsightsPublisher(kafkaInsightsProps, insightsTopicName, mailboxExecutor);
+            this.failurePublisher = new FailurePublisher(kafkaFailureTopicProps, failureTopicName, mailboxExecutor);
         }
 
         public static EventPublisher getEventPublisher(){
@@ -224,6 +235,16 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     StreamingRawData rawData = modelToRawDataMap.get(model);
                                     String fileId = rawData.getFileId();
                                     saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
+                                    if(rawData.getResponses() == null){
+                                        rawData.setResponses(new ArrayList<>());
+                                    }
+                                    rawData.getResponses().add(new StreamingRawData.Response(
+                                            "FAILURE",
+                                            "Save failed: " + individualEx.getMessage()));
+
+                                    failurePublisher.publishEventAsync(
+                                            rawData
+                                    );
                                     insightsPublisher.publishEventAsync(
                                             rawData.getRequestId(),
                                             rawData.getFileId(),
