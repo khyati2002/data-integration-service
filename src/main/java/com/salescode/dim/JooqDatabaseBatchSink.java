@@ -176,7 +176,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     }
                                 }
 
-                            saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
+                            //saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
                             for (CommonDataModel model : entry.getValue()) {
                                 StreamingRawData rawData = modelToRawDataMap.get(model);
                                 insightsPublisher.publishEventAsync(
@@ -191,7 +191,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                 );
                             }
                         } catch (Exception batchEx) {
-                            LOG.error("Batch save failed. Falling back to individual saves.");
+                            LOG.error("Batch save failed. Falling back to individual saves.", batchEx);
                             for (CommonDataModel model : entry.getValue()) {
                                 try {
                                     service.batchSave(List.of(model));
@@ -220,6 +220,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                             0
                                     );
                                 } catch (Exception individualEx) {
+                                    LOG.error("Individual Exception for {}", model.getId(), individualEx);
                                     StreamingRawData rawData = modelToRawDataMap.get(model);
                                     String fileId = rawData.getFileId();
                                     saveIntegrationHistory(model, "FAILURE", "Save failed: " + individualEx.getMessage());
