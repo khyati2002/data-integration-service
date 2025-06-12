@@ -20,7 +20,6 @@ package com.salescode.dim;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dim.cache.CacheEvictionFunction;
-import com.salescode.dim.jooq.generated.tables.pojos.User;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;

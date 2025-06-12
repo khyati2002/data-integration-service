@@ -6,6 +6,7 @@ import com.applicate.services.channelkart.utils.JSONUtils;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.etl.transformation.AbstractTransformer;
 import com.salescode.dim.jooq.generated.tables.pojos.TransformerInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +17,7 @@ import java.util.*;
 /**
  * A lightweight data transformation service that:
  */
+@Slf4j
 public class DataTransformationService implements Serializable {
 
     private static final long serialVersionUID = -569164891930010577L;
@@ -53,13 +55,28 @@ public class DataTransformationService implements Serializable {
             return convertToCommonDataModelList(input, entityClass);
         }
 
-        try {
-            Object transformedData = applyTransformer(transformerId, input);
-            return convertToCommonDataModelList(transformedData, entityClass);
-        } catch (Exception e) {
-            throw new TransformationException("Failed to transform data with transformer ID: " + transformerId, e);
+        int maxRetries = 2;
+        int attempt = 0;
+        Exception lastException = null;
+
+        while (attempt < maxRetries) {
+            try {
+                Object transformedData = applyTransformer(transformerId, input);
+                return convertToCommonDataModelList(transformedData, entityClass);
+            } catch (Exception e) {
+                lastException = e;
+                attempt++;
+                if (attempt < maxRetries) {
+                    // Optional: add some logging or a short delay
+                    System.out.println("Retrying transformation attempt " + (attempt + 1));
+                }
+            }
         }
+
+        // After retries exhausted
+        throw new TransformationException("Failed to transform data with transformer ID: " + transformerId + " after " + maxRetries + " attempts", lastException);
     }
+
 
     /**
      * Transforms the given input data using a specified transformer.
@@ -207,7 +224,15 @@ public class DataTransformationService implements Serializable {
         }
 
         // Otherwise convert using object mapper
-        return objectMapper.convertValue(data, entityClass);
+        try{
+           T obj =  objectMapper.convertValue(data, entityClass);
+           return obj;
+        }
+        catch (Exception e) {
+            log.error("Issue converting data to {} with data: {}", entityClass.getName(), data, e);
+            throw new TransformationException("Issue converting data to " + entityClass.getName() + data, e);
+        }
+
     }
 
     /**

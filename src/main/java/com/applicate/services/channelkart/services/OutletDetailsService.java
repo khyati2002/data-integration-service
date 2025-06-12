@@ -91,7 +91,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                         .except(CK_OUTLET_DETAILS.COORDINATE))
                 .from(CK_OUTLET_DETAILS).where(CK_OUTLET_DETAILS.OUTLETCODE.eq(outletcode))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class);
-       return OutletDetails.of(outletDetails);
+        return OutletDetails.of(outletDetails);
     }
 
     private List<User> preProcessUser(List<User> userList) {
@@ -133,17 +133,17 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
 
     public void setOutletSupplier(OutletDetails outletDetails)  {
-            List<String> supplierList = supplierInfoService.findSuppliers(outletDetails);
-            ObjectNode extendedAttributes = (ObjectNode) outletDetails.getExtendedAttributes();
-            if (extendedAttributes == null) {
-                extendedAttributes = JSONUtils.getObjectMapper().createObjectNode();
-            }
-            try {
-                extendedAttributes.putRawValue("supplier", new RawValue(JSONUtils.getObjectMapper().writeValueAsString(supplierList)));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-            outletDetails.setExtendedAttributes(extendedAttributes);
+        List<String> supplierList = supplierInfoService.findSuppliers(outletDetails);
+        ObjectNode extendedAttributes = (ObjectNode) outletDetails.getExtendedAttributes();
+        if (extendedAttributes == null) {
+            extendedAttributes = JSONUtils.getObjectMapper().createObjectNode();
+        }
+        try {
+            extendedAttributes.putRawValue("supplier", new RawValue(JSONUtils.getObjectMapper().writeValueAsString(supplierList)));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        outletDetails.setExtendedAttributes(extendedAttributes);
 
     }
 
@@ -269,7 +269,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                     saveItemsList.get(1).stream()
                             .map(outlet -> {
                                 CkOutletDetailsRecord record = getDslContext().newRecord(CK_OUTLET_DETAILS, outlet);
-                                record.changed(CK_USER.ID, false); // Avoid updating primary key
+      //                          record.changed(CK_USER.ID, false); // Avoid updating primary key
                                 return record;
                             })
                             .collect(Collectors.toList())

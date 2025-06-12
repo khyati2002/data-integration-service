@@ -1,10 +1,14 @@
 package com.salescode.dim;
 
+import com.applicate.services.channelkart.client.properties.PropertyRegistry;
+import com.applicate.services.channelkart.client.properties.PropertyService;
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.salescode.dim.cache.CacheManager;
+import com.salescode.dim.cache.RedisIdleEvictionManager;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
@@ -13,7 +17,10 @@ import com.salescode.dim.etl.transformation.service.TransformerInfoRegistry;
 import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
+import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
+import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
 import com.salescode.dim.jooq.impl.OutletDetails;
+import com.salescode.dim.kafka.FileProgressEvent;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -26,13 +33,23 @@ import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.functions.async.ResultFuture;
 import org.apache.flink.streaming.api.functions.async.RichAsyncFunction;
 import org.apache.flink.util.Collector;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.salescode.dim.kafka.FileProgressEvent.createInsightsConsumerDto;
+import static com.salescode.dim.kafka.FileProgressEvent.createInsightsPublisherDto;
+
+import static com.salescode.dim.jooq.generated.tables.CkIntegrationHistory.CK_INTEGRATION_HISTORY;
 
 public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawData, Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> {
     private static final long serialVersionUID = -3351413046175753755L;
@@ -44,7 +61,8 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
     private transient EntityUtils entityUtils;
     private transient DataTransformationService dataTransformationService;
     private transient PreProcessPipelineService preProcessPipelineService;
-
+    private transient String topicName;
+    private KafkaProducer<String, FileProgressEvent> producer;
     Logger logger = LoggerFactory.getLogger(StreamingRawDataProcessor.class);
 
     public StreamingRawDataProcessor(Properties commonProperties) {
@@ -57,6 +75,13 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
 
         System.setProperty("sun.net.maxDatagramSockets","4096");
         super.open(parameters);
+        Properties kafkaInsightsProps = new Properties();
+        kafkaInsightsProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
+        kafkaInsightsProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+        kafkaInsightsProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, FileProgressEventSerializer.class.getName());
+        kafkaInsightsProps.put(ProducerConfig.ACKS_CONFIG, "1");
+
+        producer = new KafkaProducer<>(kafkaInsightsProps);
         initializeResources();
     }
 
@@ -94,6 +119,9 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         ServiceLocator serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
 
+        topicName = properties.getProperty("publishConsumedMetrics.topic");
+        PropertyService propertyService = new PropertyService((MetaDataService) ServiceLocator.lookup(Metadata.class));
+        PropertyRegistry.getInstance(propertyService);
 
     }
 
@@ -117,7 +145,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 long start = System.currentTimeMillis();
                 Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>(); // Data storage
                 List<String> errorList = new ArrayList<>(); // Error tracking
-
+                sendToKafkaPublisherUpdate(streamingRawData);
                 // Processing each transformer in the streaming data
                 for (TransformerInfo transformerInfo : streamingRawData.getTransformerInfo()) {
                     processTransformer(streamingRawData, transformerInfo, dataset, errorList);
@@ -125,11 +153,13 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
 
                 if (!errorList.isEmpty()) {
                     streamingRawData.setStatus("Failure");
+                    saveIntegrationHistory(streamingRawData, "FAILURE", "Save failed: " + errorList);
                     streamingRawData.setResponses(
                             errorList.stream()
                                     .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
                                     .collect(Collectors.toList())
                     );
+                    sendToKafkaConsumerUpdate(streamingRawData,0,1);
                     resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                 } else {
                     streamingRawData.setStatus("Success");
@@ -140,17 +170,19 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                 .orElse(null), "");
                         if (res.getStatus().equals(PreProcessOperationResult.Status.FAILURE)) {
                             streamingRawData.setStatus("Failure");
+                            saveIntegrationHistory(streamingRawData, "FAILURE", "Save failed: " + errorList);
                             streamingRawData.setResponses(
                                     errorList.stream()
                                             .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
                                             .collect(Collectors.toList())
                             );
+                            sendToKafkaConsumerUpdate(streamingRawData,0,1);
                             resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                         }
                     }
 
                     if(streamingRawData.getStatus().equals("Success")){
-                            resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, dataset)));
+                        resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, dataset)));
                     }
                     // Handle success case
                 }
@@ -160,6 +192,59 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap())));
             }
         });
+    }
+    private void sendToKafkaPublisherUpdate(StreamingRawData streamingRawData) {
+        try {
+            String topic = topicName;
+            long idleEvictionTTL = Long.parseLong(properties.getProperty("INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES"));
+            if(streamingRawData.getFileId()==null){
+                streamingRawData.setFileId(RedisIdleEvictionManager.getInstance().getOrCreateFileId(streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0).getEntityName(), "fileId", idleEvictionTTL, TimeUnit.MINUTES));
+            }
+            FileProgressEvent message =  createInsightsPublisherDto(streamingRawData.getRequestId(),streamingRawData.getFileId(),streamingRawData.getGroupId(),streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0).getEntityName(),"",1,0);// Create a message based on streamingRawData and dataset
+
+            ProducerRecord<String, FileProgressEvent> record = new ProducerRecord<>(topic, streamingRawData.getFileId(), message);
+            producer.send(record, (metadata, exception) -> {
+                if (exception != null) {
+                    logger.error("Error sending data to Kafka insights", exception);
+                } else {
+                    logger.info("Successfully sent data to Kafka insights. Offset: " + metadata.offset());
+                }
+            });
+        } catch (Exception e) {
+            logger.error("Error while sending to Kafka", e);
+        }
+    }
+    private void sendToKafkaConsumerUpdate(StreamingRawData streamingRawData, Integer consumedSuccess, Integer consumedFailed) {
+        try {
+            String topic = topicName;
+            long idleEvictionTTL = Long.parseLong(properties.getProperty("INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES"));
+            if(streamingRawData.getFileId()==null){
+                streamingRawData.setFileId(RedisIdleEvictionManager.getInstance().getOrCreateFileId(streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0)
+                        .getEntityName(), "fileId", idleEvictionTTL, TimeUnit.MINUTES));
+            }
+            FileProgressEvent message =  createInsightsConsumerDto(streamingRawData.getRequestId(),streamingRawData.getFileId(),streamingRawData.getGroupId(),streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0).getEntityName(),streamingRawData.getResponses().toString(),consumedSuccess,consumedFailed);// Create a message based on streamingRawData and dataset
+
+            ProducerRecord<String, FileProgressEvent> record = new ProducerRecord<>(topic, streamingRawData.getFileId(), message);
+            producer.send(record, (metadata, exception) -> {
+                if (exception != null) {
+                    logger.error("Error sending data to Kafka insights", exception);
+                } else {
+                    logger.info("Successfully sent data to Kafka insights. Offset: " + metadata.offset());
+                }
+            });
+        } catch (Exception e) {
+            logger.error("Error while sending to Kafka", e);
+        }
+    }
+    private void saveIntegrationHistory(StreamingRawData model, String status, String message) {
+        CkIntegrationHistoryRecord record = new CkIntegrationHistoryRecord();
+        record.setId(UUID.randomUUID().toString());
+        record.setEntityName(model.getTransformerInfo().get(0).getEntityName());
+        record.setRequestId(model.getRequestId());
+        record.setStatus(status);
+        record.setDescription(message);
+        record.setTimestamp(Instant.now().toEpochMilli());
+        dslContext.insertInto(CK_INTEGRATION_HISTORY).set(record).execute();
     }
 
 
@@ -184,10 +269,12 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 }
             }
         } catch (DataTransformationService.TransformationException e) {
-            logger.info("Transformation Exception ", e);
+            logger.error("Transformation Exception ", e);
+            logger.error("Transformation Exception ", e.getStackTrace());
             errorList.add(TRANSFORMATION_ERROR + e.getMessage());
         } catch (Exception e) {
-            logger.info("Transformation Exception ", e);
+            logger.error("Transformation Exception ", e);
+            logger.error("Transformation Exception ", e.getStackTrace());
             errorList.add("Unexpected error: " + e.getMessage());
         }
     }

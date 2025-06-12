@@ -64,10 +64,10 @@ public class UserService extends AbstractCDMService<User> {
         com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
-       if(user == null){
-           return null;
-       }
-      return User.of(user);
+        if(user == null){
+            return null;
+        }
+        return User.of(user);
     }
 
 
@@ -161,14 +161,14 @@ public class UserService extends AbstractCDMService<User> {
                                             user.getLocationHierarchy() :
                                             null
                             );
-                           hm.setChanged((byte) 1);
+                            hm.setChanged((byte) 1);
                             return hm;
                         })
                         .collect(Collectors.toList());
 
                 if (!hierarchiesToUpdate.isEmpty()) {
                     getDslContext().batchUpdate(
-                           hierarchiesToUpdate.stream()
+                            hierarchiesToUpdate.stream()
                                     .map(hierarchyMetadata -> getDslContext().newRecord(CK_HIERARCHY_METADATA, hierarchyMetadata)) // Convert to jOOQ Records
                                     .collect(Collectors.toList())
                     ).execute();
@@ -460,7 +460,7 @@ public class UserService extends AbstractCDMService<User> {
         try {
             return normalizedHierarchy.replaceAll(exludedCharactors, "");
         } catch (Exception e) {
-          //  logger.error("Exception happend while removing special charactors {} in normalized hierarchy {}",exludedCharactors,normalizedHierarchy);
+            //  logger.error("Exception happend while removing special charactors {} in normalized hierarchy {}",exludedCharactors,normalizedHierarchy);
             return normalizedHierarchy;
         }
     }
