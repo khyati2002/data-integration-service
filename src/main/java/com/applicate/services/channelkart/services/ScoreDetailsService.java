@@ -1,8 +1,10 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.repository.MetaDataRepository;
 import com.applicate.services.channelkart.repository.RedeemActivityRepository;
+import com.applicate.services.channelkart.utils.IdGenerator;
 import com.applicate.services.channelkart.utils.StringUtils;
 import com.salescode.dim.jooq.generated.tables.records.CkScoreDetailsRecord;
 import com.salescode.dim.jooq.impl.ScoreDetails;
@@ -33,7 +35,12 @@ public class ScoreDetailsService extends AbstractCDMService<ScoreDetails> {
 
 	public List<List<ScoreDetails>> getDataToSaveList(List<ScoreDetails> scoreDetailsList) {
 		List<List<ScoreDetails>> result = new ArrayList<>();
-
+		for(ScoreDetails scoreDetails: scoreDetailsList){
+			scoreDetails.setId(new IdGenerator(scoreDetails.getClass().getSimpleName()).getId(scoreDetails));
+			scoreDetails.setCurrentVolumn(0d);
+			scoreDetails.setChanged((byte)1);
+			scoreDetails.setActiveStatus(ActiveStatus.ACTIVE);
+		}
 		if (scoreDetailsList == null || scoreDetailsList.isEmpty()) {
 			result.add(new ArrayList<>());
 			result.add(new ArrayList<>());
