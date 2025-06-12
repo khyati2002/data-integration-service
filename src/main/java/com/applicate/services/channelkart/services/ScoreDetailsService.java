@@ -4,13 +4,15 @@ import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.repository.MetaDataRepository;
 import com.applicate.services.channelkart.repository.RedeemActivityRepository;
 import com.applicate.services.channelkart.utils.StringUtils;
-import com.salescode.dim.jooq.generated.tables.pojos.ScoreDetails;
 import com.salescode.dim.jooq.generated.tables.records.CkScoreDetailsRecord;
+import com.salescode.dim.jooq.impl.ScoreDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,7 +81,6 @@ public class ScoreDetailsService extends AbstractCDMService<ScoreDetails> {
 		}
 		return false;
 	}
-
 
 	@Override
 	public Collection<ScoreDetails> batchSave(Collection<ScoreDetails> scoreDetailsList) {
