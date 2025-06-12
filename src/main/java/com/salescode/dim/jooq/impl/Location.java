@@ -11,9 +11,19 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Location extends com.salescode.dim.jooq.generated.tables.pojos.Location implements Serializable {
 
+    private String locationHierarchy;
+
+    public String getLocationHierarchy() {
+        return locationHierarchy;
+    }
+
+    public void setLocationHierarchy(String locationHierarchy) {
+        this.locationHierarchy = locationHierarchy;
+    }
     public Location(){
         super();
     }
+
 
     public Location(com.salescode.dim.jooq.generated.tables.pojos.Location location) {
         super(location);
