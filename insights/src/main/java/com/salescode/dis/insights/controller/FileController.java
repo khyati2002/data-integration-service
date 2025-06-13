@@ -70,15 +70,4 @@ public class FileController {
         return ResponseEntity.ok(pageRes);
     }
 
-    @Operation(summary = "Update file progress with granular stage metrics", description = "Updates the progress of a file based on specific stages.")
-    @ApiResponse(responseCode = "200", description = "File progress updated successfully")
-    @ApiResponse(responseCode = "404", description = "File not found")
-    @PutMapping("/master/{master_name}/unit/{fileId}/progress")
-    public ResponseEntity<Void> updateFileProgress(
-            @PathVariable("master_name") String masterName,
-            @PathVariable String fileId,
-            @Validated @RequestBody FileProgressRequest progress) {
-        fileService.updateProgress(fileId, masterName, progress);
-        return ResponseEntity.ok().build();
-    }
 }
