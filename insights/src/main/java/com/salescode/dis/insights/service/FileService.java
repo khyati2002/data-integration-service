@@ -75,26 +75,33 @@ public class FileService {
         return fileRepo.findByJobId(jobId, pageable);
     }
 
-    public void updateProgress(String fileId, String masterName, FileProgressRequest progress) {
-        FileEntity file = get(fileId, masterName);
-        ModeOfIntegration mode = file.getModeOfIntegration();
-        if (mode == null) {
-            // If modeOfIntegration is not set in the file, default to API_BASED
-            mode = ModeOfIntegration.API_BASED;
-            file.setModeOfIntegration(mode);
+    public void updateProgress(String fileId, String masterName, String jobId, String lob, FileProgressRequest progress) {
+        FileEntity file = fileRepo.findByFileIdAndMaster(fileId, masterName).orElse(null);
+
+        // Determine mode of integration: from existing file or default to API_BASED if not found
+        ModeOfIntegration mode = null;
+        if (file != null) {
+            mode = file.getModeOfIntegration();
         }
+
+        if (mode == null) {
+            mode = ModeOfIntegration.API_BASED; // Default if file doesn't exist or mode is null
+        }
+
         ModeOfIntegration finalMode = mode;
-        IFileOperationStrategy strategy = Optional.ofNullable(operationStrategyMap.get(mode))
+        IFileOperationStrategy strategy = Optional.ofNullable(operationStrategyMap.get(finalMode))
                 .orElseThrow(() -> new IllegalArgumentException("No strategy found for mode of integration: " + finalMode));
 
-        // Validate stageName against the registry
+        // Validate stageName against the registry for the determined mode
         String stageName = progress.getStageName();
-        boolean validStage = stageRegistry.getStagesForMode(mode).stream()
+        boolean validStage = stageRegistry.getStagesForMode(finalMode).stream()
                 .anyMatch(info -> info.getStageName().equals(stageName));
         if (!validStage) {
-            throw new IllegalArgumentException("Invalid stage for " + mode + " integration: " + stageName);
+            throw new IllegalArgumentException("Invalid stage for " + finalMode + " integration: " + stageName);
         }
-        strategy.updateFileProgress(file, stageName, progress.getSuccessCount(), progress.getFailureCount(), progress.getMinProcessingTimeMs(), progress.getMaxProcessingTimeMs());
+
+        // Pass the fetched file (which can be null) and all other relevant information to the strategy
+        strategy.updateFileProgress(file, fileId, masterName, jobId, lob, progress);
     }
 
 

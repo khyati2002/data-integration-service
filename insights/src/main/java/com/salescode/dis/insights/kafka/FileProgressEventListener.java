@@ -53,11 +53,17 @@ public class FileProgressEventListener {
 
                 String fileId = event.getFileId();
                 String masterName = event.getMasterName();
-                String key = fileId + ":" + masterName;
-
                 FileProgressRequest progress = event.getProgress();
 
                 if (progress != null) {
+                    String stageName = progress.getStageName();
+                    if (stageName == null) {
+                        log.warn("Skipping event for fileId {} due to null stageName in progress data: {}", fileId, event);
+                        sendToFailureTopic(event, "Stage name is null in progress data");
+                        return;
+                    }
+                    String key = fileId + ":" + masterName + ":" + stageName;
+
                     AggregationWrapper wrapper = aggregationMap.computeIfAbsent(key, k -> {
                         FileProgressEvent newAggregatedEvent = new FileProgressEvent();
                         FileProgressRequest newProgress = FileProgressRequest.createNewInstance();
@@ -147,6 +153,8 @@ public class FileProgressEventListener {
                 fileService.updateProgress(
                         aggregatedEvent.getFileId(),
                         aggregatedEvent.getMasterName(),
+                        aggregatedEvent.getJobId(),
+                        aggregatedEvent.getLob(),
                         aggregatedEvent.getProgress()
                 );
                 log.debug("Progress updated successfully for key: {}", key);
