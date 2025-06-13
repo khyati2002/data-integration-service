@@ -2,11 +2,13 @@ package com.salescode.dis.insights.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.dis.insights.enums.FileStatus;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 /**
  * DTO for {@link com.salescode.dis.insights.entity.FileEntity}
@@ -26,19 +28,8 @@ public class FileEntityResponseDto implements Serializable {
     Instant startTime;
     Instant endTime;
     Long totalCount;
-    Long publishedSuccessCount;
-    Long publishedFailCount;
-    Long consumedSuccessCount;
-    Long consumedFailCount;
-    Long serverFailCount;
-    Long logicalFailCount;
-    Long retryCount;
-    Long maxProcessingTimeMs;
+    ModeOfIntegration modeOfIntegration;
+    List<FileStageMetricsDto> stageMetrics;
     Long minProcessingTimeMs;
-    BigDecimal publisherThroughput;
-    BigDecimal consumerThroughput;
-    FileStatus publishedStatus;
-    FileStatus consumedStatus;
-    Boolean isApiBased;
-
+    Long maxProcessingTimeMs;
 }

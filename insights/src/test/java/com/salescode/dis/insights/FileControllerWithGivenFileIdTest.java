@@ -143,8 +143,8 @@ class FileControllerWithGivenFileIdTest {
         assertNull(response.getBody()
                 .getPublisherThroughput(), "Publisher throughput is updated when file is marked success or failed");
 
-        assertEquals(FileStatus.PENDING, response.getBody().getConsumedStatus());
-        assertEquals(FileStatus.PENDING, response.getBody().getPublishedStatus());
+//        assertEquals(FileStatus.PENDING, response.getBody().getConsumedStatus());
+//        assertEquals(FileStatus.PENDING, response.getBody().getPublishedStatus());
 
         // Time-related assertions
         assertNotNull(response.getBody().getCreationTime(), "Creation time should not be null");
@@ -220,8 +220,8 @@ class FileControllerWithGivenFileIdTest {
         assertNull(response.getBody()
                 .getPublisherThroughput(), "Publisher throughput is updated when file is marked success or failed");
 
-        assertEquals(FileStatus.PENDING, response.getBody().getConsumedStatus());
-        assertEquals(FileStatus.PENDING, response.getBody().getPublishedStatus());
+//        assertEquals(FileStatus.PENDING, response.getBody().getConsumedStatus());
+//        assertEquals(FileStatus.PENDING, response.getBody().getPublishedStatus());
 
         // Time-related assertions
         assertNotNull(response.getBody().getCreationTime(), "Creation time should not be null");
@@ -304,8 +304,8 @@ class FileControllerWithGivenFileIdTest {
 
         // Create status update request
         FileStatusRequestDto statusRequest = new FileStatusRequestDto();
-        statusRequest.setConsumedStatus(FileStatus.COMPLETED);
-        statusRequest.setPublishedStatus(FileStatus.COMPLETED);
+//        statusRequest.setConsumedStatus(FileStatus.COMPLETED);
+//        statusRequest.setPublishedStatus(FileStatus.COMPLETED);
 
         // Make request
         HttpEntity<FileStatusRequestDto> entity = new HttpEntity<>(statusRequest, headers);
@@ -323,8 +323,8 @@ class FileControllerWithGivenFileIdTest {
         // Assertions
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(FileStatus.COMPLETED, response.getBody().getConsumedStatus());
-        assertEquals(FileStatus.COMPLETED, response.getBody().getPublishedStatus());
+//        assertEquals(FileStatus.COMPLETED, response.getBody().getConsumedStatus());
+//        assertEquals(FileStatus.COMPLETED, response.getBody().getPublishedStatus());
 
         JobEntity job = jobRepository.findById(createdJobId).orElseGet(null);
         assertNotNull(job);

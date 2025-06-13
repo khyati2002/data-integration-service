@@ -2,7 +2,7 @@ package com.salescode.dis.insights.controller;
 
 import com.salescode.dis.insights.dto.FileEntityRequestDto;
 import com.salescode.dis.insights.dto.FileEntityResponseDto;
-import com.salescode.dis.insights.dto.FileStatusRequestDto;
+import com.salescode.dis.insights.dto.FileProgressRequest;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.TimeAwareEntity;
 import com.salescode.dis.insights.exception.error.ApiError;
@@ -70,13 +70,15 @@ public class FileController {
         return ResponseEntity.ok(pageRes);
     }
 
-    @Operation(summary = "Update file status", description = "Updates the status of a file")
-    @ApiResponse(responseCode = "200", description = "Status updated successfully", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
+    @Operation(summary = "Update file progress with granular stage metrics", description = "Updates the progress of a file based on specific stages.")
+    @ApiResponse(responseCode = "200", description = "File progress updated successfully")
     @ApiResponse(responseCode = "404", description = "File not found")
-    @PutMapping("/master/{master_name}/job/{jobId}/unit/{fileId}/status")
-    public ResponseEntity<FileEntityResponseDto> updateFileStatus(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @PathVariable String fileId, @Validated @RequestBody FileStatusRequestDto status) {
-        FileEntity updatedFile = fileService.updateStatus(fileId, masterName, status);
-        FileEntityResponseDto response = fileEntityMapper.toDto(updatedFile);
-        return ResponseEntity.ok(response);
+    @PutMapping("/master/{master_name}/unit/{fileId}/progress")
+    public ResponseEntity<Void> updateFileProgress(
+            @PathVariable("master_name") String masterName,
+            @PathVariable String fileId,
+            @Validated @RequestBody FileProgressRequest progress) {
+        fileService.updateProgress(fileId, masterName, progress);
+        return ResponseEntity.ok().build();
     }
 }

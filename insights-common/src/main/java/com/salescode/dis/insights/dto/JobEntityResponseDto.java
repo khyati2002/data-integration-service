@@ -26,6 +26,4 @@ public class JobEntityResponseDto implements Serializable {
     String publisherJobUri;
     String consumerJobUri;
     Integer totalFileCount;
-    Integer completedFiles;
-    Integer failedFiles;
 }

@@ -1,6 +1,6 @@
 package com.salescode.dis.insights.entity;
 
-import com.salescode.dis.insights.enums.FileStatus;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 
@@ -31,46 +33,17 @@ public class FileEntity extends TimeAwareEntity {
     @Builder.Default
     private Long totalCount = 0L;
 
-    @Builder.Default
-    private Long publishedSuccessCount = 0L;
-
-    @Builder.Default
-    private Long publishedFailCount = 0L;
-
-    @Builder.Default
-    private Long consumedSuccessCount = 0L;
-
-    @Builder.Default
-    private Long consumedFailCount = 0L;
-
-    @Builder.Default
-    private Long serverFailCount = 0L;
-
-    @Builder.Default
-    private Long logicalFailCount = 0L;
-
-    @Builder.Default
-    private Long retryCount = 0L;
-
-    @Column(precision = 10, scale = 2)
-    private BigDecimal publisherThroughput; // - total records / time (at completion - success or failure) - calculate on api call
-
-    @Column(precision = 10, scale = 2)
-    private BigDecimal consumerThroughput; // - total records / time (at completion - success or failure) - calculate on api call
-
+    @Column(nullable = false, name = "mode_of_integration")
     @Enumerated(EnumType.STRING)
-    private FileStatus publishedStatus;
-
-    @Enumerated(EnumType.STRING)
-    private FileStatus consumedStatus;
+    private ModeOfIntegration modeOfIntegration;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id", nullable = false)
     private JobEntity job;
 
+    @OneToMany(mappedBy = "file", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
-    @Column(nullable = false)
-    private Boolean isApiBased = false;
+    private List<FileStageMetrics> fileStageMetrics = new ArrayList<>();
 
     private Long minProcessingTimeMs;
 
@@ -79,12 +52,6 @@ public class FileEntity extends TimeAwareEntity {
     @Override
     protected void onCreate() {
         super.onCreate();
-        if (this.consumedStatus == null) {
-            this.consumedStatus = FileStatus.PENDING;
-        }
-        if (this.publishedStatus == null) {
-            this.publishedStatus = FileStatus.PENDING;
-        }
         if(this.fileId == null){
             this.fileId = this.getId();
         }
@@ -93,18 +60,7 @@ public class FileEntity extends TimeAwareEntity {
     @Override
     protected void onUpdate() {
         super.onUpdate();
-        long elapsedSeconds = Math.max(Duration.between(getStartTime(), getLastModifiedTime()).getSeconds(), 1);
-        updateThroughputIfFinal(publishedStatus, publishedSuccessCount + publishedFailCount, elapsedSeconds, this::setPublisherThroughput);
-        updateThroughputIfFinal(consumedStatus, consumedSuccessCount + consumedFailCount, elapsedSeconds, this::setConsumerThroughput);
-        if(this.publishedStatus == FileStatus.COMPLETED && this.consumedStatus == FileStatus.COMPLETED){
-            setEndTime(Instant.now());
-        }
-    }
-
-    private void updateThroughputIfFinal(FileStatus status, Long totalCount, Long elapsedSeconds, Consumer<BigDecimal> setter) {
-        if (status == FileStatus.COMPLETED || status == FileStatus.FAILED) {
-            BigDecimal throughput = BigDecimal.valueOf(totalCount).divide(BigDecimal.valueOf(elapsedSeconds), new MathContext(2));
-            setter.accept(throughput);
-        }
+        // The throughput calculation and status updates will now be handled by individual stage metrics
+        // and potentially by a higher-level service that aggregates stage data.
     }
 }

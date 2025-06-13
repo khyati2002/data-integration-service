@@ -2,13 +2,16 @@
 package com.salescode.dis.insights.service;
 
 import com.salescode.dis.insights.dto.FileProgressRequest;
-import com.salescode.dis.insights.dto.FileStatusRequestDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.JobEntity;
-import com.salescode.dis.insights.enums.FileStatus;
-import com.salescode.dis.insights.enums.JobStatus;
+import com.salescode.dis.insights.enums.ApiBasedStages;
+import com.salescode.dis.insights.enums.FileBasedStages;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.repository.FileRepository;
+import com.salescode.dis.insights.service.strategy.IFileOperationStrategy;
+import com.salescode.dis.insights.service.StageRegistry;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,8 +19,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,16 +35,27 @@ public class FileService {
 
     private final FileRepository fileRepo;
     private final JobService jobService;
+    private final List<IFileOperationStrategy> fileOperationStrategies;
+    private final StageRegistry stageRegistry;
+
+    private Map<ModeOfIntegration, IFileOperationStrategy> operationStrategyMap;
+
+    @PostConstruct
+    public void init() {
+        operationStrategyMap = fileOperationStrategies.stream()
+                .collect(Collectors.toMap(IFileOperationStrategy::getModeOfIntegration, Function.identity(),
+                        (existing, replacement) -> existing, // handle duplicates if any, keep the existing one
+                        () -> new EnumMap<>(ModeOfIntegration.class)));
+    }
 
     public FileEntity createFile(String jobId, FileEntity file) {
         checkFileIdAlreadyExistsByMasterIfSent(file);
-        JobEntity job = jobService.getJob(jobId);
-        file.setJob(job);
-        FileEntity savedFile = fileRepo.save(file);
-        job.getFiles().add(savedFile);
-        job.setTotalFileCount(job.getFiles().size());
-        log.info("Registered file {} under job {}", file.getId(), jobId);
-        return savedFile;
+        if (file.getModeOfIntegration() == null) {
+            file.setModeOfIntegration(ModeOfIntegration.API_BASED); // Default if not provided
+        }
+        IFileOperationStrategy strategy = Optional.ofNullable(operationStrategyMap.get(file.getModeOfIntegration()))
+                .orElseThrow(() -> new IllegalArgumentException("No strategy found for mode of integration: " + file.getModeOfIntegration()));
+        return strategy.createFile(file);
     }
 
     private void checkFileIdAlreadyExistsByMasterIfSent(FileEntity file) {
@@ -56,77 +75,26 @@ public class FileService {
         return fileRepo.findByJobId(jobId, pageable);
     }
 
-    public void updateProgress(String fileId, FileProgressRequest progress, String jobId, String lob, String masterName) {
-        FileEntity file = fileRepo.findByFileIdAndMaster(fileId, masterName).orElseGet(() -> {
-            FileEntity apiBasedFileEntity = new FileEntity();
-            apiBasedFileEntity.setFileId(fileId);
-            apiBasedFileEntity.setLob(lob);
-            apiBasedFileEntity.setIsApiBased(true);
-            return createJobIfNotExists(jobId, apiBasedFileEntity, masterName);
-        });
-
-        Optional.ofNullable(progress.getConsumer()).ifPresent(consumer -> {
-            file.setConsumedSuccessCount(file.getConsumedSuccessCount() + consumer.getSuccessCount());
-            file.setServerFailCount(file.getServerFailCount() + consumer.getServerFailCount());
-            file.setLogicalFailCount(file.getLogicalFailCount() + consumer.getLogicalFailCount());
-            file.setConsumedFailCount(file.getConsumedFailCount() + consumer.getServerFailCount() + consumer.getLogicalFailCount());
-            file.setRetryCount(file.getRetryCount() + consumer.getRetryCount());
-        });
-
-        Optional.ofNullable(progress.getPublisher()).ifPresent(publisher -> {
-            file.setPublishedSuccessCount(file.getPublishedSuccessCount() + publisher.getSuccessCount());
-            file.setPublishedFailCount(file.getPublishedFailCount() + publisher.getFailCount());
-            if (file.getIsApiBased()) {
-                file.setTotalCount(file.getTotalCount() + publisher.getSuccessCount() + publisher.getFailCount());
-            }
-        });
-
-        if (progress.getMinProcessingTimeMs() != null) file.setMinProcessingTimeMs(file.getMinProcessingTimeMs() == null ? progress.getMinProcessingTimeMs() : Math.min(file.getMinProcessingTimeMs(), progress.getMinProcessingTimeMs()));
-        if(progress.getMaxProcessingTimeMs() != null) file.setMaxProcessingTimeMs(file.getMaxProcessingTimeMs() == null ? progress.getMaxProcessingTimeMs() : Math.max(file.getMaxProcessingTimeMs(), progress.getMaxProcessingTimeMs()));
-
-        fileRepo.save(file);
-        log.info("File {} progress updated", fileId);
-    }
-
-    protected FileEntity createJobIfNotExists(String jobId, FileEntity file, String master) {
-        JobEntity job = jobService.createJobIfNotExists(jobId, file.getLob());
-        file.setJob(job);
-        file.setMaster(master);
-        FileEntity savedFile = fileRepo.save(file);
-        job.getFiles().add(savedFile);
-        job.setTotalFileCount(job.getFiles().size());
-        log.info("Registered new file {} under job {}", file.getId(), jobId);
-        return savedFile;
-    }
-
-    public FileEntity updateStatus(String fileId, String masterName, FileStatusRequestDto status) {
+    public void updateProgress(String fileId, String masterName, FileProgressRequest progress) {
         FileEntity file = get(fileId, masterName);
-        if (status.getConsumedStatus() != null) {
-            file.setConsumedStatus(status.getConsumedStatus());
+        ModeOfIntegration mode = file.getModeOfIntegration();
+        if (mode == null) {
+            // If modeOfIntegration is not set in the file, default to API_BASED
+            mode = ModeOfIntegration.API_BASED;
+            file.setModeOfIntegration(mode);
         }
-        if (status.getPublishedStatus() != null) {
-            file.setPublishedStatus(status.getPublishedStatus());
-        }
-        log.info("File {} status updated to consumed: {}, published: {}", fileId, status.getConsumedStatus(), status.getPublishedStatus());
-        recalcJobMetrics(file.getJob());
-        return fileRepo.save(file);
-    }
+        ModeOfIntegration finalMode = mode;
+        IFileOperationStrategy strategy = Optional.ofNullable(operationStrategyMap.get(mode))
+                .orElseThrow(() -> new IllegalArgumentException("No strategy found for mode of integration: " + finalMode));
 
-    protected void recalcJobMetrics(JobEntity job) {
-        long completed = job.getFiles()
-                .stream()
-                .filter(f -> f.getConsumedStatus() == FileStatus.COMPLETED && f.getPublishedStatus() == FileStatus.COMPLETED)
-                .count();
-        long failed = job.getFiles()
-                .stream()
-                .filter(f -> f.getConsumedStatus() == FileStatus.FAILED && f.getPublishedStatus() == FileStatus.FAILED)
-                .count();
-        job.setCompletedFiles((int) completed);
-        job.setFailedFiles((int) failed);
-        if ((completed != 0 || failed != 0) && completed + failed == job.getTotalFileCount()) {
-            job.setStatus(failed > 0 ? JobStatus.FAILED : JobStatus.COMPLETED);
+        // Validate stageName against the registry
+        String stageName = progress.getStageName();
+        boolean validStage = stageRegistry.getStagesForMode(mode).stream()
+                .anyMatch(info -> info.getStageName().equals(stageName));
+        if (!validStage) {
+            throw new IllegalArgumentException("Invalid stage for " + mode + " integration: " + stageName);
         }
-        log.info("Job {} metrics recalculated", job.getId());
+        strategy.updateFileProgress(file, stageName, progress.getSuccessCount(), progress.getFailureCount(), progress.getMinProcessingTimeMs(), progress.getMaxProcessingTimeMs());
     }
 
 

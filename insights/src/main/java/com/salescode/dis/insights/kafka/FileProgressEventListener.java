@@ -91,39 +91,27 @@ public class FileProgressEventListener {
         FileProgressRequest existing = aggregatedEvent.getProgress();
         FileProgressRequest incoming = event.getProgress();
 
-        if (existing.getConsumer() == null) existing.setConsumer(new FileProgressRequest.ConsumerMetrics());
-        if (existing.getPublisher() == null) existing.setPublisher(new FileProgressRequest.PublisherMetrics());
-
-        if (incoming.getConsumer() != null) {
-            aggregateMetrics(existing.getConsumer(), incoming.getConsumer());
-        }
-        if (incoming.getPublisher() != null) {
-            aggregateMetrics(existing.getPublisher(), incoming.getPublisher());
-        }
-        if (incoming.getProcessingTimeMs() != null){
-            existing.setMinProcessingTimeMs(existing.getMinProcessingTimeMs() == null ? incoming.getProcessingTimeMs() : Math.min(existing.getMinProcessingTimeMs(), incoming.getProcessingTimeMs()));
-            existing.setMaxProcessingTimeMs(existing.getMaxProcessingTimeMs() == null ? incoming.getProcessingTimeMs() : Math.max(existing.getMaxProcessingTimeMs(), incoming.getProcessingTimeMs()));
-        }
-    }
-
-    private void aggregateMetrics(FileProgressRequest.ConsumerMetrics existing, FileProgressRequest.ConsumerMetrics incoming) {
-        if (existing == null || incoming == null) {
-            log.warn("Skipping consumer metrics aggregation due to null object(s). Existing: {}, Incoming: {}", existing, incoming);
-            return;
-        }
+        // Aggregate successCount and failureCount
         existing.setSuccessCount(safeSum(existing.getSuccessCount(), incoming.getSuccessCount()));
-        existing.setServerFailCount(safeSum(existing.getServerFailCount(), incoming.getServerFailCount()));
-        existing.setLogicalFailCount(safeSum(existing.getLogicalFailCount(), incoming.getLogicalFailCount()));
-        existing.setRetryCount(safeSum(existing.getRetryCount(), incoming.getRetryCount()));
-    }
+        existing.setFailureCount(safeSum(existing.getFailureCount(), incoming.getFailureCount()));
 
-    private void aggregateMetrics(FileProgressRequest.PublisherMetrics existing, FileProgressRequest.PublisherMetrics incoming) {
-        if (existing == null || incoming == null) {
-            log.warn("Skipping publisher metrics aggregation due to null object(s). Existing: {}, Incoming: {}", existing, incoming);
-            return;
+        // Aggregate minProcessingTimeMs
+        if (incoming.getMinProcessingTimeMs() != null) {
+            existing.setMinProcessingTimeMs(existing.getMinProcessingTimeMs() == null ?
+                    incoming.getMinProcessingTimeMs() : Math.min(existing.getMinProcessingTimeMs(), incoming.getMinProcessingTimeMs()));
         }
-        existing.setSuccessCount(safeSum(existing.getSuccessCount(), incoming.getSuccessCount()));
-        existing.setFailCount(safeSum(existing.getFailCount(), incoming.getFailCount()));
+        // Aggregate maxProcessingTimeMs
+        if (incoming.getMaxProcessingTimeMs() != null) {
+            existing.setMaxProcessingTimeMs(existing.getMaxProcessingTimeMs() == null ?
+                    incoming.getMaxProcessingTimeMs() : Math.max(existing.getMaxProcessingTimeMs(), incoming.getMaxProcessingTimeMs()));
+        }
+
+        // The stageName and modeOfIntegration should be consistent across aggregated events for the same file.
+        // We will assume the first one encountered is the canonical one, or ideally, these should be verified
+        // before aggregation if they can vary. For simplicity, we'll just set them if not already set.
+        if (existing.getStageName() == null) {
+            existing.setStageName(incoming.getStageName());
+        }
     }
 
     private void enrichEventMetadata(FileProgressEvent aggregatedEvent, FileProgressEvent event) {
@@ -158,10 +146,8 @@ public class FileProgressEventListener {
 
                 fileService.updateProgress(
                         aggregatedEvent.getFileId(),
-                        aggregatedEvent.getProgress(),
-                        aggregatedEvent.getJobId(),
-                        aggregatedEvent.getLob(),
-                        aggregatedEvent.getMasterName()
+                        aggregatedEvent.getMasterName(),
+                        aggregatedEvent.getProgress()
                 );
                 log.debug("Progress updated successfully for key: {}", key);
 

@@ -42,7 +42,7 @@ public class JobService {
         return jobRepo.getJobEntitiesByLob(lob, pageable);
     }
 
-    JobEntity createJobIfNotExists(String jobId, String lob){
+    public JobEntity createJobIfNotExists(String jobId, String lob){
         Optional<JobEntity> job = jobRepo.findById(jobId);
         return job.orElseGet(()->{
             JobEntity jobEntity = new JobEntity();

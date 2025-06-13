@@ -1,7 +1,6 @@
 package com.salescode.dis.insights.repository;
 
 import com.salescode.dis.insights.entity.FileEntity;
-import com.salescode.dis.insights.enums.FileStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,17 +13,6 @@ import java.util.Optional;
 
 public interface FileRepository extends JpaRepository<FileEntity, String> {
     Page<FileEntity> findByJobId(String jobId, Pageable pageable);
-
-    @Query("SELECT f FROM FileEntity f " +
-            "WHERE f.isApiBased = true " +
-            "  AND (f.consumedStatus = :status OR f.publishedStatus = :status) " +
-            "  AND f.lastModifiedTime < :staleCutoffTime " +
-            "  AND f.lastModifiedTime >= :tooOldCutoffTime")
-    List<FileEntity> findStaleApiBasedPendingFiles(
-            @Param("staleCutoffTime") Instant staleCutoffTime,
-            @Param("tooOldCutoffTime") Instant tooOldCutoffTime,
-            @Param("status") FileStatus status
-    );
 
     Optional<FileEntity> findByFileIdAndMaster(String fileId, String master);
 
