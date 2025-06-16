@@ -1,9 +1,9 @@
 package com.salescode.dis.insights.controller;
 
-import com.salescode.dis.insights.dto.JobEntityRequestDto;
-import com.salescode.dis.insights.dto.JobEntityResponseDto;
+import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
+import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.JobEntity;
-import com.salescode.dis.insights.entity.TimeAwareEntity;
+import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.enums.JobStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,9 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -38,7 +34,6 @@ public class JobController {
 
     private final JobService jobService;
     private final JobEntityMapper jobEntityMapper;
-
 
 
     @Operation(
@@ -71,14 +66,11 @@ public class JobController {
         content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @PostMapping("/job")
-    public ResponseEntity<JobEntityResponseDto> createJob(@PathVariable String lob, @Validated @RequestBody JobEntityRequestDto req, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<JobEntityResponseDto> createJob(@PathVariable String lob, @Validated @RequestBody JobEntityRequestDto req) {
         JobEntity entity = jobEntityMapper.toEntity(req, lob);
         JobEntity job = jobService.saveJob(entity);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
-        URI uri = uriBuilder.path("/api/{lob}/job/{id}")
-                .buildAndExpand(lob, job.getId())
-                .toUri();
-        return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
 
@@ -119,7 +111,7 @@ public class JobController {
     @GetMapping("/job/{id}")
     public ResponseEntity<JobEntityResponseDto> getJob(@PathVariable String lob, @PathVariable String id) {
         JobEntity job = jobService.getJob(id);
-        JobEntityResponseDto dto = jobEntityMapper.toDto(job);
+        JobEntityResponseDto dto = jobEntityMapper.toDto( job);
         return ResponseEntity.ok(dto);
     }
 
@@ -128,16 +120,7 @@ public class JobController {
 
     @Operation(
         summary = "Update job status",
-        description = """
-            Updates the status of an existing job.
-            
-            Valid status values are:
-            - PENDING: Initial state when job is created
-            - RUNNING: Job is currently being processed
-            - COMPLETED: Job has finished successfully
-            - FAILED: Job has failed during processing
-            - CANCELLED: Job was cancelled before completion
-            """,
+        description = "Updates the status of an existing job.",
         parameters = {
             @Parameter(name = "lob", description = "Line of Business"),
             @Parameter(name = "id", description = "Unique identifier of the job"),
@@ -146,7 +129,7 @@ public class JobController {
     )
     @ApiResponse(
             responseCode = "200",
-            description = "Status update request accepted and procesed successfully",
+            description = "Status update request accepted and processed successfully",
             content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
     )
     @ApiResponse(

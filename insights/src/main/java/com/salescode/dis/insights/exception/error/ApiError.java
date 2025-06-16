@@ -7,7 +7,7 @@ import lombok.Value;
 
 import java.time.Instant;
 
-import static com.salescode.dis.insights.entity.CommonEntity.YYYY_MM_DD_HH_MM_SS;
+import static com.salescode.dis.insights.entity.mapped.CommonEntity.YYYY_MM_DD_HH_MM_SS;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder

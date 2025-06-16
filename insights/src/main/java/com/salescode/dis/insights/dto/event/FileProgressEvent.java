@@ -1,12 +1,10 @@
-package com.salescode.dis.insights.kafka;
+package com.salescode.dis.insights.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.salescode.dis.insights.dto.FileProgressRequest;
+import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)

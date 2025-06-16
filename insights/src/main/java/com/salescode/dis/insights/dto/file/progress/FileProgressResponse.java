@@ -1,4 +1,4 @@
-package com.salescode.dis.insights.dto;
+package com.salescode.dis.insights.dto.file.progress;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class UpdateRequestResponseDto {
+public class FileProgressResponse {
     private String requestId;
     private String status;
     private String message;

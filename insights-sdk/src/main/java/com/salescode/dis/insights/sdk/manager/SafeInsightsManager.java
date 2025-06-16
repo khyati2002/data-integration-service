@@ -1,6 +1,5 @@
 package com.salescode.dis.insights.sdk.manager;
 
-import com.salescode.dis.insights.dto.*;
 import com.salescode.dis.insights.enums.JobStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClientException;

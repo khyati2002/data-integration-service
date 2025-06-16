@@ -1,4 +1,4 @@
-package com.salescode.dis.insights.entity;
+package com.salescode.dis.insights.entity.mapped;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Access;

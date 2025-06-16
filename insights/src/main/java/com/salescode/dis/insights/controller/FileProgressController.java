@@ -1,9 +1,9 @@
 package com.salescode.dis.insights.controller;
 
-import com.salescode.dis.insights.dto.FileProgressRequest;
-import com.salescode.dis.insights.dto.UpdateRequestResponseDto;
+import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
+import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
 import com.salescode.dis.insights.entity.FileEntity;
-import com.salescode.dis.insights.kafka.FileProgressEvent;
+import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import com.salescode.dis.insights.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,10 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.common.internals.Topic;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -35,10 +31,10 @@ public class FileProgressController {
     private String fileUpdatesTopic;
 
     @Operation(summary = "Update file progress", description = "Updates the progress metrics for a file")
-    @ApiResponse(responseCode = "202", description = "Progress update accepted", content = @Content(schema = @Schema(implementation = UpdateRequestResponseDto.class)))
+    @ApiResponse(responseCode = "202", description = "Progress update accepted", content = @Content(schema = @Schema(implementation = FileProgressResponse.class)))
     @ApiResponse(responseCode = "404", description = "File not found")
     @PutMapping("/unit/{fileId}/progress")
-    public ResponseEntity<UpdateRequestResponseDto> updateFileProgress(
+    public ResponseEntity<FileProgressResponse> updateFileProgress(
             @PathVariable String lob,
             @PathVariable("master_name") String masterName,
             @PathVariable String fileId,
@@ -59,7 +55,7 @@ public class FileProgressController {
 
         kafkaTemplate.send(fileUpdatesTopic, fileId, event);
 
-        UpdateRequestResponseDto response = new UpdateRequestResponseDto();
+        FileProgressResponse response = new FileProgressResponse();
         response.setRequestId(event.getEventId());
         response.setStatus("ACCEPTED");
         response.setMessage("Progress update has been queued");

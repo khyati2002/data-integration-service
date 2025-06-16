@@ -1,4 +1,4 @@
-package com.salescode.dis.insights.dto;
+package com.salescode.dis.insights.dto.job;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.dis.insights.enums.JobStatus;
@@ -25,5 +25,4 @@ public class JobEntityResponseDto implements Serializable {
     JobStatus status;
     String publisherJobUri;
     String consumerJobUri;
-    Integer totalFileCount;
 }

@@ -1,6 +1,6 @@
 package com.salescode.dis.insights.mapper;
 
-import com.salescode.dis.insights.dto.FileStageMetricsDto;
+import com.salescode.dis.insights.dto.file.stage.FileStageMetricsDto;
 import com.salescode.dis.insights.entity.FileStageMetrics;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

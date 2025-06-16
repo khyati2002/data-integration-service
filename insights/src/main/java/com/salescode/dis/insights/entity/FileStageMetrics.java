@@ -1,5 +1,7 @@
 package com.salescode.dis.insights.entity;
 
+import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
+import com.salescode.dis.insights.enums.ProgressStage;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -8,7 +10,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "file_stage_metrics",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"file_id", "stage_name"}))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"file_id", "stage_type"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,10 +31,10 @@ public class FileStageMetrics extends TimeAwareEntity {
     @Column(precision = 10, scale = 2)
     private BigDecimal throughput;
 
-    private Long minProcessingTimeMs;
+    private Integer minProcessingTimeMs;
 
-    private Long maxProcessingTimeMs;
+    private Integer maxProcessingTimeMs;
 
-    @Column(nullable = false, name = "stage_name")
-    private String stageName;
+    @Enumerated(EnumType.STRING)
+    private ProgressStage stageType;
 } 

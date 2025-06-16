@@ -1,5 +1,5 @@
 // CommonEntity.java
-package com.salescode.dis.insights.entity;
+package com.salescode.dis.insights.entity.mapped;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;

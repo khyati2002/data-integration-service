@@ -1,7 +1,7 @@
 package com.salescode.dis.insights.mapper;
 
-import com.salescode.dis.insights.dto.FileEntityRequestDto;
-import com.salescode.dis.insights.dto.FileEntityResponseDto;
+import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
+import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import org.mapstruct.*;
 
@@ -11,9 +11,6 @@ public interface FileEntityMapper {
 
     @Mapping(source = "fileStageMetrics", target = "stageMetrics")
     FileEntityResponseDto toDto(FileEntity fileEntity);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    FileEntity partialUpdate(FileEntityRequestDto fileEntityDto, @MappingTarget FileEntity fileEntity);
 
     default FileEntity toEntity(FileEntityRequestDto fileEntityRequestDto, String lob, String master) {
         FileEntity entity = toEntity(fileEntityRequestDto);

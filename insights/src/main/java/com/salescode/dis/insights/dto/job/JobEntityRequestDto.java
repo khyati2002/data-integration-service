@@ -1,4 +1,4 @@
-package com.salescode.dis.insights.dto;
+package com.salescode.dis.insights.dto.job;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;

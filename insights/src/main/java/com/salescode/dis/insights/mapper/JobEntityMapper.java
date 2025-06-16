@@ -1,7 +1,7 @@
 package com.salescode.dis.insights.mapper;
 
-import com.salescode.dis.insights.dto.JobEntityRequestDto;
-import com.salescode.dis.insights.dto.JobEntityResponseDto;
+import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
+import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.JobEntity;
 import org.mapstruct.*;
 

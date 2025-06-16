@@ -1,12 +1,11 @@
-package com.salescode.dis.insights.dto;
+package com.salescode.dis.insights.dto.file;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salescode.dis.insights.enums.FileStatus;
+import com.salescode.dis.insights.dto.file.stage.FileStageMetricsDto;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import lombok.*;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -30,6 +29,4 @@ public class FileEntityResponseDto implements Serializable {
     Long totalCount;
     ModeOfIntegration modeOfIntegration;
     List<FileStageMetricsDto> stageMetrics;
-    Long minProcessingTimeMs;
-    Long maxProcessingTimeMs;
 }

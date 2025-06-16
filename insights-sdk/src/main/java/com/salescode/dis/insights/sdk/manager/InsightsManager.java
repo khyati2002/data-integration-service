@@ -1,6 +1,5 @@
 package com.salescode.dis.insights.sdk.manager;
 
-import com.salescode.dis.insights.dto.*;
 import com.salescode.dis.insights.enums.JobStatus;
 import com.salescode.dis.insights.sdk.InsightsEnv;
 import lombok.Getter;

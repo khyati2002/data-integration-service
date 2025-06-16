@@ -1,10 +1,9 @@
 package com.salescode.dis.insights.controller;
 
-import com.salescode.dis.insights.dto.FileEntityRequestDto;
-import com.salescode.dis.insights.dto.FileEntityResponseDto;
-import com.salescode.dis.insights.dto.FileProgressRequest;
+import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
+import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.entity.FileEntity;
-import com.salescode.dis.insights.entity.TimeAwareEntity;
+import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.service.FileService;
@@ -22,9 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -39,14 +35,11 @@ public class FileController {
     @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @PostMapping("/master/{master_name}/job/{jobId}/unit")
-    public ResponseEntity<FileEntityResponseDto> registerFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @Validated @RequestBody FileEntityRequestDto req, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<FileEntityResponseDto> registerFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @Validated @RequestBody FileEntityRequestDto req) {
         FileEntity toSave = fileEntityMapper.toEntity(req, lob, masterName);
         FileEntity saved = fileService.createFile(jobId, toSave);
         FileEntityResponseDto resp = fileEntityMapper.toDto(saved);
-        URI uri = uriBuilder.path("/api/{lob}/master/{masterName}/job/{jobId}/unit/{id}")
-                .buildAndExpand(lob, masterName, jobId, saved.getId())
-                .toUri();
-        return ResponseEntity.status(HttpStatus.CREATED).location(uri).body(resp);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 
     @Operation(summary = "Get a specific file by ID", description = "Fetch a file by its unique ID.")
@@ -54,7 +47,7 @@ public class FileController {
     @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @GetMapping("/master/{master_name}/job/{jobId}/unit/{fileId}")
-    public ResponseEntity<FileEntityResponseDto> getFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String fileId) {
+    public ResponseEntity<FileEntityResponseDto> getFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @PathVariable String fileId) {
         FileEntity file = fileService.get(fileId, masterName);
         FileEntityResponseDto resp = fileEntityMapper.toDto(file);
         return ResponseEntity.ok(resp);

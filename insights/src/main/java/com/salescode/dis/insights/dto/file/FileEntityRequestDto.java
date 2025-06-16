@@ -1,4 +1,4 @@
-package com.salescode.dis.insights.dto;
+package com.salescode.dis.insights.dto.file;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.dis.insights.enums.ModeOfIntegration;

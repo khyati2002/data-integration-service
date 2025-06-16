@@ -18,6 +18,12 @@ public class RestExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArg(ResourceNotFoundException ex) {
+        ApiError apiError = ApiError.builder().message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult().getAllErrors().getFirst().getDefaultMessage();

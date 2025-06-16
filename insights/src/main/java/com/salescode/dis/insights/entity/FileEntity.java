@@ -1,22 +1,17 @@
 package com.salescode.dis.insights.entity;
 
+import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
+import io.reactivex.rxjava3.internal.util.LinkedArrayList;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.DoubleConsumer;
 
 @Entity
-@Table(name = "integration_file",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"fileId", "master"}))
+@Table(name = "integration_file", uniqueConstraints = @UniqueConstraint(columnNames = {"fileId", "master"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -45,14 +40,10 @@ public class FileEntity extends TimeAwareEntity {
     @Builder.Default
     private List<FileStageMetrics> fileStageMetrics = new ArrayList<>();
 
-    private Long minProcessingTimeMs;
-
-    private Long maxProcessingTimeMs;
-
     @Override
     protected void onCreate() {
         super.onCreate();
-        if(this.fileId == null){
+        if (this.fileId == null) {
             this.fileId = this.getId();
         }
     }
