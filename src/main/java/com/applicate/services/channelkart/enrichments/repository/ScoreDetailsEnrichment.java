@@ -1,4 +1,4 @@
-package com.applicate.services.channelkart.enrichments;
+package com.applicate.services.channelkart.enrichments.repository;
 
 import com.applicate.services.channelkart.services.OutletDetailsService;
 import com.applicate.services.channelkart.services.ServiceLocator;
