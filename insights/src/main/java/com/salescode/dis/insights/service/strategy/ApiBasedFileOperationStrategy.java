@@ -3,10 +3,9 @@ package com.salescode.dis.insights.service.strategy;
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.JobEntity;
-import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
+import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.repository.FileRepository;
-import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.service.FileOperationsHelperService;
 import com.salescode.dis.insights.service.JobService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
+
+import static com.salescode.dis.insights.enums.ProgressStage.*;
 
 @Component
 @RequiredArgsConstructor
@@ -42,20 +43,13 @@ public class ApiBasedFileOperationStrategy implements IFileOperationStrategy {
             log.info("File not found for fileId: {}, master: {}. Creating new file and job if not exists.", fileId, masterName);
             // Create a new file along with the job if not exists
             JobEntity job = jobService.createJobIfNotExists(jobId, lob);
-
             file = new FileEntity();
             file.setFileId(fileId);
             file.setMaster(masterName);
             file.setLob(lob);
-            file.setJob(job);
             file.setModeOfIntegration(ModeOfIntegration.CK_API); // Always API_BASED for this strategy
-
-            // Persist the newly created file entity
-            file = fileRepository.save(file);
-            job.getFiles().add(file); // Ensure job's file list is updated for totalFileCount on next job update
-            log.info("Created new file entity (id: {}) for fileId: {}, master: {} under job: {}", file.getId(), fileId, masterName, jobId);
+            fileOperationsHelperService.saveFileEntity(file, job, this);
         }
-
         fileOperationsHelperService.updateMetrics(file, progress);
         log.info("API_BASED file {} progress updated for stage {}", file.getFileId(), progress.getStageName());
     }
@@ -67,6 +61,6 @@ public class ApiBasedFileOperationStrategy implements IFileOperationStrategy {
 
     @Override
     public Set<ProgressStage> getSupportedStages() {
-        return Set.of();
+        return Set.of(QUEUE, PROCESS, SAVE);
     }
 } 

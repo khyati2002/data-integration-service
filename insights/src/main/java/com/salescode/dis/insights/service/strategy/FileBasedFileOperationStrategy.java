@@ -51,6 +51,6 @@ public class FileBasedFileOperationStrategy implements IFileOperationStrategy {
 
     @Override
     public Set<ProgressStage> getSupportedStages() {
-        return Set.of(READ, QUEUE, PUBLISH, PROCESS, SAVE);
+        return Set.of(READ, PUBLISH, QUEUE, PROCESS, SAVE);
     }
 } 

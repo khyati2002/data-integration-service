@@ -30,7 +30,7 @@ public class FileProgressEventListener {
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
-            ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=100"
+            ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=1000"
     })
     public void consumeProgressEvents(@Payload List<FileProgressEvent> events) {
         if (events == null || events.isEmpty()) {
