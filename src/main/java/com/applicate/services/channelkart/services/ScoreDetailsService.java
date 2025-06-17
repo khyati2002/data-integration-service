@@ -2,19 +2,17 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
-import com.applicate.services.channelkart.repository.MetaDataRepository;
 import com.applicate.services.channelkart.repository.RedeemActivityRepository;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.applicate.services.channelkart.utils.StringUtils;
-import com.salescode.dim.jooq.generated.tables.records.CkScoreDetailsRecord;
 import com.salescode.dim.jooq.impl.ScoreDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+
 import java.util.Collection;
-import java.util.Date;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,13 +47,13 @@ public class ScoreDetailsService extends AbstractCDMService<ScoreDetails> {
 
 		List<String> scoreId = scoreDetailsList.stream().map(ScoreDetails::getId).collect(Collectors.toList());
 
-		Map<String, ScoreDetails> savedList = getDslContext().selectFrom(CK_SCORE_DETAILS).where(CK_SCORE_DETAILS.PROGRAM_NUMBER.in(scoreId)).fetch().intoMap(CK_SCORE_DETAILS.ID, record -> record.into(ScoreDetails.class));
+		Map<String, com.salescode.dim.jooq.generated.tables.pojos.ScoreDetails> savedList = getDslContext().selectFrom(CK_SCORE_DETAILS).where(CK_SCORE_DETAILS.PROGRAM_NUMBER.in(scoreId)).fetch().intoMap(CK_SCORE_DETAILS.ID, record -> record.into(com.salescode.dim.jooq.generated.tables.pojos.ScoreDetails.class));
 
 		List<ScoreDetails> itemsToInsert = new ArrayList<>();
 		List<ScoreDetails> itemsToUpdate = new ArrayList<>();
 
 		for (ScoreDetails outlet : scoreDetailsList) {
-			fillAttributes(outlet, savedList.get(outlet.getId()));
+			fillAttributes(outlet, ScoreDetails.of(savedList.get(outlet.getId())));
 			fillCommonAttributes(outlet);
 
 			if (savedList.get(outlet.getId()) == null) {
@@ -63,7 +61,7 @@ public class ScoreDetailsService extends AbstractCDMService<ScoreDetails> {
 				outlet.setOperationPerformed(ActionType.INSERT);
 				itemsToInsert.add(outlet);
 			} else {
-				ScoreDetails existingOutlet = savedList.get(outlet.getId());
+				ScoreDetails existingOutlet = ScoreDetails.of(savedList.get(outlet.getId()));
 				outlet.setVersion(existingOutlet.getVersion() + 1);
 				outlet.setOperationPerformed(ActionType.UPDATE);
 				itemsToUpdate.add(outlet);
