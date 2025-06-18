@@ -1,15 +1,19 @@
 package com.salescode.dis.insights.entity;
 
+import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import io.reactivex.rxjava3.internal.util.LinkedArrayList;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Entity
 @Table(name = "integration_file", uniqueConstraints = @UniqueConstraint(columnNames = {"fileId", "master"}))
 @Getter
@@ -28,7 +32,7 @@ public class FileEntity extends TimeAwareEntity {
     @Builder.Default
     private Long totalCount = 0L;
 
-    @Column(nullable = false, name = "mode_of_integration")
+    @Column(nullable = false, updatable = false, name = "mode")
     @Enumerated(EnumType.STRING)
     private ModeOfIntegration modeOfIntegration;
 
@@ -40,12 +44,13 @@ public class FileEntity extends TimeAwareEntity {
     @Builder.Default
     private List<FileStageMetrics> fileStageMetrics = new ArrayList<>();
 
+    /** calculated based on progress of stages*/
+    @Builder.Default
+    private ProgressStatus status = ProgressStatus.PENDING;
+
     @Override
     protected void onCreate() {
         super.onCreate();
-        if (this.fileId == null) {
-            this.fileId = this.getId();
-        }
     }
 
     @Override

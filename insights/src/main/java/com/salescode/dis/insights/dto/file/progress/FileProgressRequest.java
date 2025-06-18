@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.AssertTrue;
 import java.io.Serializable;
 
 @Data
@@ -17,10 +15,9 @@ import java.io.Serializable;
 public class FileProgressRequest implements Serializable {
 
     ProgressStage stageName;
-    @Builder.Default
-    Long successCount = 0L;
-    @Builder.Default
-    Long failureCount = 0L;
+    @Builder.Default Long successCount = 0L;
+    @Builder.Default Long serverFailureCount = 0L;
+    @Builder.Default Long logicalFailureCount = 0L;
     Integer minProcessingTimeMs;
     Integer maxProcessingTimeMs;
 

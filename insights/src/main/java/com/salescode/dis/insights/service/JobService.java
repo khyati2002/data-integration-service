@@ -1,7 +1,8 @@
 package com.salescode.dis.insights.service;
 
 import com.salescode.dis.insights.entity.JobEntity;
-import com.salescode.dis.insights.enums.JobStatus;
+import com.salescode.dis.insights.enums.ProgressStatus;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.repository.JobRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,24 +31,25 @@ public class JobService {
         return jobRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
     }
 
-    public JobEntity updateStatus(String id, JobStatus status) {
+/*    public JobEntity updateStatus(String id, ProgressStatus status) {
         JobEntity job = getJob(id);
         job.setStatus(status);
         log.info("Job {} status -> {}", id, status);
         return job;
-    }
+    }*/
 
     @Transactional(readOnly = true)
     public Page<JobEntity> getAllJobsByLob(String lob, Pageable pageable) {
         return jobRepo.getJobEntitiesByLob(lob, pageable);
     }
 
-    public JobEntity createJobIfNotExists(String jobId, String lob){
+    public JobEntity createJobIfNotExists(String jobId, String lob, ModeOfIntegration modeOfIntegration) {
         Optional<JobEntity> job = jobRepo.findById(jobId);
         return job.orElseGet(()->{
             JobEntity jobEntity = new JobEntity();
             jobEntity.setId(jobId);
             jobEntity.setLob(lob);
+            jobEntity.setModeOfIntegration(modeOfIntegration);
             return saveJob(jobEntity);
         });
     }

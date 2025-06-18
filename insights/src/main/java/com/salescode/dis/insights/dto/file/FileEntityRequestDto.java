@@ -2,6 +2,7 @@ package com.salescode.dis.insights.dto.file;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +15,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class FileEntityRequestDto implements Serializable {
-    String fileId;
+    @NotNull String fileId;
     JsonNode extendedAttributes;
-    @Builder.Default
-    Long totalCount = 0L;
-    ModeOfIntegration modeOfIntegration;
+    @NotNull @Builder.Default Long totalCount = 0L;
+    @NotNull ModeOfIntegration modeOfIntegration;
 }

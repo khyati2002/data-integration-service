@@ -1,10 +1,10 @@
 package com.salescode.dis.insights.enums;
 
-public enum JobStatus {
+public enum ProgressStatus {
     PENDING,
     RUNNING,
-    PUBLISHED,
-    COMPLETED,
+    COMPLETED_SUCCESSFULLY,
+    COMPLETED_UNSUCCESSFULLY,
     FAILED,
     ABORTED
 }

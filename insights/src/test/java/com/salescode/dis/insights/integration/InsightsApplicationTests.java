@@ -4,17 +4,15 @@ import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.entity.JobEntity;
-import com.salescode.dis.insights.enums.JobStatus;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
+import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.repository.JobRepository;
 import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.service.JobService;
 import lombok.Builder;
 import lombok.Data;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.NewTopic;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,16 +22,12 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
-import com.salescode.dis.insights.enums.ProgressStage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -169,7 +163,7 @@ class InsightsApplicationTests {
 
         Awaitility.await().atMost(Duration.ofSeconds(300)).pollInterval(Duration.ofSeconds(5)).untilAsserted(() -> {
             JobEntity job = jobService.getJob(TEST_GROUP_ID);
-            assertEquals(JobStatus.COMPLETED, job.getStatus());
+            assertEquals(ProgressStatus.COMPLETED, job.getStatus());
         });
 
         fileRepository.deleteById(TEST_FILE_ID);
@@ -307,7 +301,7 @@ class InsightsApplicationTests {
 
         Awaitility.await().atMost(Duration.ofSeconds(300)).pollInterval(Duration.ofSeconds(5)).untilAsserted(() -> {
             JobEntity job = jobService.getJob(TEST_GROUP_ID);
-            assertEquals(JobStatus.COMPLETED, job.getStatus());
+            assertEquals(ProgressStatus.COMPLETED, job.getStatus());
         });
 
         fileRepository.deleteById(TEST_FILE_ID_1);
@@ -330,7 +324,7 @@ class InsightsApplicationTests {
     // Helper method to assert stage metrics
     private void assertStageMetrics(FileEntity file, ProgressStage stage, long expectedSuccess, long expectedFailure, Integer expectedMinTime, Integer expectedMaxTime) {
         Optional<FileStageMetrics> metrics = file.getFileStageMetrics().stream()
-                .filter(m -> stage.equals(m.getStageType()))
+                .filter(m -> stage.equals(m.getProgressStage()))
                 .findFirst();
         assertTrue(metrics.isPresent(), String.format("Stage %s metrics not found", stage.name()));
         assertEquals(expectedSuccess, metrics.get().getSuccessCount(), String.format("Stage %s success count mismatch", stage.name()));

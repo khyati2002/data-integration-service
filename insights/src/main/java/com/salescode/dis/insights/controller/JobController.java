@@ -4,7 +4,7 @@ import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
-import com.salescode.dis.insights.enums.JobStatus;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
 import com.salescode.dis.insights.service.JobService;
@@ -118,7 +118,7 @@ public class JobController {
 
 
 
-    @Operation(
+/*    @Operation(
         summary = "Update job status",
         description = "Updates the status of an existing job.",
         parameters = {
@@ -148,11 +148,11 @@ public class JobController {
             content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @PutMapping("/job/{id}/status/{status}")
-    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable String id, @PathVariable JobStatus status) {
+    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable String id, @PathVariable ProgressStatus status) {
         JobEntity job = jobService.updateStatus(id, status);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
-    }
+    }*/
 
 
 

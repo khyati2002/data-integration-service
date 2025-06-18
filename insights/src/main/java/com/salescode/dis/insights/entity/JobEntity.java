@@ -1,7 +1,8 @@
 package com.salescode.dis.insights.entity;
 
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
-import com.salescode.dis.insights.enums.JobStatus;
+import com.salescode.dis.insights.enums.ProgressStatus;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -21,13 +22,17 @@ import java.util.List;
 @SuperBuilder
 public class JobEntity extends TimeAwareEntity {
 
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private JobStatus status = JobStatus.PENDING;
-
     private String publisherJobUri;
 
     private String consumerJobUri;
+
+    @Column(nullable = false, updatable = false, name = "mode")
+    @Enumerated(EnumType.STRING)
+    private ModeOfIntegration modeOfIntegration;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private ProgressStatus status = ProgressStatus.PENDING;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
@@ -36,7 +41,7 @@ public class JobEntity extends TimeAwareEntity {
     @Override
     protected void onUpdate() {
         super.onUpdate();
-        if(this.status == JobStatus.COMPLETED || this.status == JobStatus.FAILED){
+        if(this.status == ProgressStatus.COMPLETED_SUCCESSFULLY || status == ProgressStatus.COMPLETED_UNSUCCESSFULLY || this.status == ProgressStatus.FAILED){
             setEndTime(Instant.now());
         }
     }

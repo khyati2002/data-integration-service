@@ -19,8 +19,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -51,7 +49,7 @@ public class FileOperationsHelperService {
     }
 
     @Transactional
-    public void updateMetrics(FileEntity file, FileProgressRequest progress) {
+    public FileStageMetrics updateMetrics(FileEntity file, FileProgressRequest progress) {
 
         ProgressStage stageName = progress.getStageName();
 
@@ -62,7 +60,8 @@ public class FileOperationsHelperService {
                 .orElseThrow(() -> new IllegalArgumentException("No metrics found for stage: " + stageName));
 
         metrics.setSuccessCount(metrics.getSuccessCount() + progress.getSuccessCount());
-        metrics.setFailureCount(metrics.getFailureCount() + progress.getFailureCount());
+        metrics.setServerFailureCount(metrics.getServerFailureCount() + progress.getServerFailureCount());
+        metrics.setLogicalFailureCount(metrics.getLogicalFailureCount() + progress.getLogicalFailureCount());
 
         if (progress.getMinProcessingTimeMs() != null) {
             metrics.setMinProcessingTimeMs(Optional.ofNullable(metrics.getMinProcessingTimeMs())
@@ -75,7 +74,8 @@ public class FileOperationsHelperService {
                     .orElse(progress.getMaxProcessingTimeMs()));
         }
 
-        long totalRecordsForStage = metrics.getSuccessCount() + metrics.getFailureCount();
+        long totalRecordsForStage = metrics.getSuccessCount() + metrics.getServerFailureCount() + metrics.getLogicalFailureCount();
+
         if (metrics.getStartTime() != null) {
             long elapsedSeconds = Math.max(Duration.between(metrics.getStartTime(), Instant.now()).getSeconds(), 1);
             if (totalRecordsForStage > 0) {
@@ -84,7 +84,10 @@ public class FileOperationsHelperService {
             }
         }
 
-        fileStageMetricsRepository.save(metrics);
-        log.info("File {} progress updated for stage {}", file.getFileId(), stageName);
+
+
+        return fileStageMetricsRepository.save(metrics);
     }
+
+
 }

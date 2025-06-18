@@ -14,7 +14,8 @@ public class FileStageMetricsDto implements Serializable {
     String id;
     ProgressStage stageType;
     Long successCount;
-    Long failureCount;
+    Long serverFailureCount;
+    Long logicalFailureCount;
     BigDecimal throughput;
     Integer minProcessingTimeMs;
     Integer maxProcessingTimeMs;

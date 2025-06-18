@@ -44,9 +44,6 @@ public class FileService {
 
     public FileEntity createFile(String jobId, FileEntity file) {
         checkFileIdAlreadyExistsByMasterIfSent(file);
-        if (file.getModeOfIntegration() == null) {
-            file.setModeOfIntegration(ModeOfIntegration.CK_API); // Default if not provided
-        }
         IFileOperationStrategy strategy = getFileOperationStrategy(file.getModeOfIntegration());
         return strategy.createFile(file, jobId);
     }
@@ -71,7 +68,7 @@ public class FileService {
     @Transactional
     public void updateProgress(String fileId, String masterName, String jobId, String lob, FileProgressRequest progress) {
         FileEntity file = fileRepo.findByFileIdAndMaster(fileId, masterName).orElse(null);
-        ModeOfIntegration mode = (file != null) ? file.getModeOfIntegration() : ModeOfIntegration.CK_API;
+        ModeOfIntegration mode = (file != null) ? file.getModeOfIntegration() : ModeOfIntegration.CK_API_CLIENT;
         IFileOperationStrategy strategy = getFileOperationStrategy(mode);
         strategy.updateFileProgress(file, fileId, masterName, jobId, lob, progress);
     }

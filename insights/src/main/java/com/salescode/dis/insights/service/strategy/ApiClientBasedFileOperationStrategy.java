@@ -6,7 +6,6 @@ import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
-import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.service.FileOperationsHelperService;
 import com.salescode.dis.insights.service.JobService;
 import com.salescode.dis.insights.validation.ValidationService;
@@ -22,7 +21,7 @@ import static com.salescode.dis.insights.enums.ProgressStage.*;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ApiBasedFileOperationStrategy implements IFileOperationStrategy {
+public class ApiClientBasedFileOperationStrategy implements IFileOperationStrategy {
 
     private final JobService jobService;
     private final FileOperationsHelperService fileOperationsHelperService;
@@ -31,30 +30,39 @@ public class ApiBasedFileOperationStrategy implements IFileOperationStrategy {
     @Override
     @Transactional
     public FileEntity createFile(FileEntity fileEntity, String jobId) {
-        JobEntity job = jobService.getJob(jobId);
-        validationService.validate(job, fileEntity);
-        FileEntity savedFile = fileOperationsHelperService.saveFileEntity(fileEntity, job, this);
-        log.info("Registered file {} under job {} for API_BASED integration", savedFile.getId(), job.getId());
-        return savedFile;
+        throw new UnsupportedOperationException("Not supported for client based api integrations");
     }
 
     @Override
     @Transactional
     public void updateFileProgress(FileEntity fileEntity, String fileId, String masterName, String jobId, String lob, FileProgressRequest progress) {
-        FileStageMetrics fileStageMetrics = fileOperationsHelperService.updateMetrics(fileEntity, progress);
-        if(getSupportedStages().getFirst().equals(fileStageMetrics.getStageType())){
-            fileEntity.setTotalCount(fileStageMetrics.getTotal());
+        FileEntity file = fileEntity;
+        if (file == null) {
+            log.info("File not found for fileId: {}, master: {}. Creating new file and job if not exists.", fileId, masterName);
+            // Create a new file along with the job if not exists
+            JobEntity job = jobService.createJobIfNotExists(jobId, lob, getModeOfIntegration());
+            file = new FileEntity();
+            file.setFileId(fileId);
+            file.setMaster(masterName);
+            file.setLob(lob);
+            file.setModeOfIntegration(getModeOfIntegration());
+            validationService.validate(job, file);
+            file = fileOperationsHelperService.saveFileEntity(file, job, this);
         }
-        log.info("API_BASED file {} progress updated for stage {}", fileEntity.getFileId(), progress.getStageName());
+        FileStageMetrics fileStageMetrics = fileOperationsHelperService.updateMetrics(file, progress);
+        if (getSupportedStages().getFirst().equals(fileStageMetrics.getStageType())) {
+            file.setTotalCount(fileStageMetrics.getTotal());
+        }
+        log.info("API_BASED file {} progress updated for stage {}", file.getFileId(), progress.getStageName());
     }
 
     @Override
     public ModeOfIntegration getModeOfIntegration() {
-        return ModeOfIntegration.CK_API;
+        return ModeOfIntegration.CK_API_CLIENT;
     }
 
     @Override
     public List<ProgressStage> getSupportedStages() {
-        return List.of(READ, PUBLISH, QUEUE, PROCESS, SAVE);
+        return List.of(QUEUE, PROCESS, SAVE);
     }
-} 
+}

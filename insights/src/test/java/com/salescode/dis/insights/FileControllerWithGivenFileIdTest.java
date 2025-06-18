@@ -7,10 +7,8 @@ import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
-import com.salescode.dis.insights.entity.FileEntity;
-import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.entity.JobEntity;
-import com.salescode.dis.insights.enums.JobStatus;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.mapper.pagination.RestPageImpl;
@@ -28,7 +26,6 @@ import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -85,7 +82,7 @@ class FileControllerWithGivenFileIdTest {
         assertNotNull(response.getBody().getId());
         //     assertEquals(MASTER_NAME, response.getBody().getMaster());
         assertEquals(LOB, response.getBody().getLob());
-        assertEquals(JobStatus.PENDING, response.getBody().getStatus());
+        assertEquals(ProgressStatus.PENDING, response.getBody().getStatus());
         assertEquals("http://publisher/job/123", response.getBody().getPublisherJobUri());
         assertEquals("http://consumer/job/456", response.getBody().getConsumerJobUri());
 
@@ -161,7 +158,7 @@ class FileControllerWithGivenFileIdTest {
         assertNotNull(jobResponse.getBody());
         assertEquals(createdJobId, jobResponse.getBody().getId());
         assertEquals(LOB, jobResponse.getBody().getLob());
-        assertEquals(JobStatus.PENDING, jobResponse.getBody().getStatus());
+        assertEquals(ProgressStatus.PENDING, jobResponse.getBody().getStatus());
 //        assertEquals(Integer.valueOf(1), jobResponse.getBody().getTotalFileCount());
     }
 
@@ -270,7 +267,7 @@ class FileControllerWithGivenFileIdTest {
                     );
 
                     return Objects.requireNonNull(response1.getBody()).getStageMetrics().stream()
-                            .anyMatch(metrics -> stageName.equals(metrics.getStageType()) && metrics.getSuccessCount() == successCount);
+                            .anyMatch(metrics -> stageName.equals(metrics.getProgressStage()) && metrics.getSuccessCount() == successCount);
                 });
 
         ResponseEntity<FileEntityResponseDto> response1 = restTemplate.getForEntity(
@@ -283,7 +280,7 @@ class FileControllerWithGivenFileIdTest {
         );
         FileEntityResponseDto file = response1.getBody();
         Objects.requireNonNull(file).getStageMetrics().stream()
-                .filter(metrics -> stageName.equals(metrics.getStageType()))
+                .filter(metrics -> stageName.equals(metrics.getProgressStage()))
                 .findFirst()
                 .ifPresentOrElse(metrics -> {
                     assertEquals(successCount, metrics.getSuccessCount());

@@ -32,7 +32,8 @@ public class AggregationWrapper {
         FileProgressRequest incoming = source.getProgress();
 
         existing.setSuccessCount(safeSum(existing.getSuccessCount(), incoming.getSuccessCount()));
-        existing.setFailureCount(safeSum(existing.getFailureCount(), incoming.getFailureCount()));
+        existing.setServerFailureCount(safeSum(existing.getServerFailureCount(), incoming.getServerFailureCount()));
+        existing.setLogicalFailureCount(safeSum(existing.getLogicalFailureCount(), incoming.getLogicalFailureCount()));
         existing.setMinProcessingTimeMs(min(existing.getMinProcessingTimeMs(), incoming.getMinProcessingTimeMs()));
         existing.setMaxProcessingTimeMs(max(existing.getMaxProcessingTimeMs(), incoming.getMaxProcessingTimeMs()));
         if (existing.getStageName() == null) existing.setStageName(incoming.getStageName());
