@@ -3,6 +3,7 @@ package com.salescode.dis.insights.service;
 
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.entity.FileEntity;
+import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.repository.FileRepository;
@@ -74,4 +75,9 @@ public class FileService {
     }
 
 
+    public void existsByFileIdAndMaster(String fileId, String masterName) {
+        if(!fileRepo.existsByFileIdAndMaster(fileId,masterName)){
+            throw new ResourceNotFoundException("File not found: " + fileId);
+        }
+    }
 }

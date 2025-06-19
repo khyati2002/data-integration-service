@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Builder(toBuilder = true)
 public class FileProgressRequest implements Serializable {
 
-    ProgressStage stageName;
+    ProgressStage stageType;
     @Builder.Default Long successCount = 0L;
     @Builder.Default Long serverFailureCount = 0L;
     @Builder.Default Long logicalFailureCount = 0L;

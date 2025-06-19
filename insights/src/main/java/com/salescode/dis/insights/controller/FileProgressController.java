@@ -4,6 +4,7 @@ import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
+import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,6 +27,7 @@ import java.util.UUID;
 public class FileProgressController {
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
+    private final FileRepository fileRepository;
 
     @Value("${file.progress.update.topic:file-progress-updates}")
     private String fileUpdatesTopic;
@@ -41,12 +43,12 @@ public class FileProgressController {
             @Validated @RequestBody FileProgressRequest progress
     ) {
 
-        FileEntity fileEntity = fileService.get(fileId, masterName);
+        fileService.existsByFileIdAndMaster(fileId, masterName);
 
         FileProgressEvent event = new FileProgressEvent();
         String eventId = UUID.randomUUID().toString();
         event.setEventId(eventId);
-        event.setFileId(fileEntity.getFileId());
+        event.setFileId(fileId);
         event.setLob(lob);
         event.setMasterName(masterName);
         event.setProgress(progress);

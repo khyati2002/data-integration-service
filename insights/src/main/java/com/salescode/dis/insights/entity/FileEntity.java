@@ -46,6 +46,7 @@ public class FileEntity extends TimeAwareEntity {
 
     /** calculated based on progress of stages*/
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     private ProgressStatus status = ProgressStatus.PENDING;
 
     @Override

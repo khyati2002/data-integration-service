@@ -35,7 +35,7 @@ public class ApiClientBasedFileOperationStrategy implements IFileOperationStrate
 
     @Override
     @Transactional
-    public void updateFileProgress(FileEntity fileEntity, String fileId, String masterName, String jobId, String lob, FileProgressRequest progress) {
+    public FileStageMetrics updateFileProgress(FileEntity fileEntity, String fileId, String masterName, String jobId, String lob, FileProgressRequest progress) {
         FileEntity file = fileEntity;
         if (file == null) {
             log.info("File not found for fileId: {}, master: {}. Creating new file and job if not exists.", fileId, masterName);
@@ -53,7 +53,8 @@ public class ApiClientBasedFileOperationStrategy implements IFileOperationStrate
         if (getSupportedStages().getFirst().equals(fileStageMetrics.getStageType())) {
             file.setTotalCount(fileStageMetrics.getTotal());
         }
-        log.info("API_BASED file {} progress updated for stage {}", file.getFileId(), progress.getStageName());
+        log.info("API_BASED file {} progress updated for stage {}", file.getFileId(), progress.getStageType());
+        return fileStageMetrics;
     }
 
     @Override

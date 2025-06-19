@@ -36,7 +36,7 @@ public class AggregationWrapper {
         existing.setLogicalFailureCount(safeSum(existing.getLogicalFailureCount(), incoming.getLogicalFailureCount()));
         existing.setMinProcessingTimeMs(min(existing.getMinProcessingTimeMs(), incoming.getMinProcessingTimeMs()));
         existing.setMaxProcessingTimeMs(max(existing.getMaxProcessingTimeMs(), incoming.getMaxProcessingTimeMs()));
-        if (existing.getStageName() == null) existing.setStageName(incoming.getStageName());
+        if (existing.getStageType() == null) existing.setStageType(incoming.getStageType());
 
         if (aggregatedEvent.getLob() == null) aggregatedEvent.setLob(source.getLob());
         if (aggregatedEvent.getJobId() == null) aggregatedEvent.setJobId(source.getJobId());

@@ -6,7 +6,6 @@ import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
-import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.service.FileOperationsHelperService;
 import com.salescode.dis.insights.service.JobService;
 import com.salescode.dis.insights.validation.ValidationService;
@@ -40,12 +39,13 @@ public class ApiBasedFileOperationStrategy implements IFileOperationStrategy {
 
     @Override
     @Transactional
-    public void updateFileProgress(FileEntity fileEntity, String fileId, String masterName, String jobId, String lob, FileProgressRequest progress) {
+    public FileStageMetrics updateFileProgress(FileEntity fileEntity, String fileId, String masterName, String jobId, String lob, FileProgressRequest progress) {
         FileStageMetrics fileStageMetrics = fileOperationsHelperService.updateMetrics(fileEntity, progress);
         if(getSupportedStages().getFirst().equals(fileStageMetrics.getStageType())){
             fileEntity.setTotalCount(fileStageMetrics.getTotal());
         }
-        log.info("API_BASED file {} progress updated for stage {}", fileEntity.getFileId(), progress.getStageName());
+        log.info("API_BASED file {} progress updated for stage {}", fileEntity.getFileId(), progress.getStageType());
+        return fileStageMetrics;
     }
 
     @Override

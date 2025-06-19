@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ActiveProfiles({"postgres", "dev", "info", "kafka", "test"})
+@ActiveProfiles({"postgres", "dev", "debug", "kafka", "test"})
 @Transactional
 class FileControllerWithGivenFileIdTest {
 
@@ -213,28 +213,29 @@ class FileControllerWithGivenFileIdTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // Test progress update for READ stage
-        updateAndAssertFileProgressForStage(headers, READ, 10L, 1L, 5, 50);
+        updateAndAssertFileProgressForStage(headers, READ, 10L, 1L, 0L, 5, 50);
 
         // Test progress update for PUBLISH stage
-        updateAndAssertFileProgressForStage(headers, PUBLISH, 60L, 5L, 10, 100);
+        updateAndAssertFileProgressForStage(headers, PUBLISH, 60L, 5L, 2L, 10, 100);
 
         // Test progress update for QUEUE stage
-        updateAndAssertFileProgressForStage(headers, QUEUE, 20L, 2L, 15, 70);
+        updateAndAssertFileProgressForStage(headers, QUEUE, 20L, 2L, 1L, 15, 70);
 
         // Test progress update for PROCESS stage
-        updateAndAssertFileProgressForStage(headers, PROCESS, 50L, 10L, 20, 120);
+        updateAndAssertFileProgressForStage(headers, PROCESS, 50L, 10L, 3L, 20, 120);
 
-        // Test progress update for SAVE stage
-        updateAndAssertFileProgressForStage(headers, SAVE, 90L, 0L, 25, 150);
+        // Test progress update for SAVE stage - ensures file is completed
+        updateAndAssertFileProgressForStage(headers, SAVE, 100L, 0L, 0L, 25, 150);
     }
 
     @SneakyThrows
     protected void updateAndAssertFileProgressForStage(HttpHeaders headers, ProgressStage stageName, Long successCount,
-                                                       Long failureCount, int minProcessingTime, int maxProcessingTime) {
+                                                       Long serverFailureCount, Long logicalFailureCount, int minProcessingTime, int maxProcessingTime) {
         FileProgressRequest progressRequest = new FileProgressRequest();
-        progressRequest.setStageName(stageName);
+        progressRequest.setStageType(stageName);
         progressRequest.setSuccessCount(successCount);
-        progressRequest.setFailureCount(failureCount);
+        progressRequest.setServerFailureCount(serverFailureCount);
+        progressRequest.setLogicalFailureCount(logicalFailureCount);
         progressRequest.setMinProcessingTimeMs(minProcessingTime);
         progressRequest.setMaxProcessingTimeMs(maxProcessingTime);
 
@@ -267,7 +268,7 @@ class FileControllerWithGivenFileIdTest {
                     );
 
                     return Objects.requireNonNull(response1.getBody()).getStageMetrics().stream()
-                            .anyMatch(metrics -> stageName.equals(metrics.getProgressStage()) && metrics.getSuccessCount() == successCount);
+                            .anyMatch(metrics -> stageName.equals(metrics.getStageType()) && Objects.equals(metrics.getSuccessCount(), successCount));
                 });
 
         ResponseEntity<FileEntityResponseDto> response1 = restTemplate.getForEntity(
@@ -280,11 +281,11 @@ class FileControllerWithGivenFileIdTest {
         );
         FileEntityResponseDto file = response1.getBody();
         Objects.requireNonNull(file).getStageMetrics().stream()
-                .filter(metrics -> stageName.equals(metrics.getProgressStage()))
+                .filter(metrics -> stageName.equals(metrics.getStageType()))
                 .findFirst()
                 .ifPresentOrElse(metrics -> {
                     assertEquals(successCount, metrics.getSuccessCount());
-                    assertEquals(failureCount, metrics.getFailureCount());
+                    assertEquals(serverFailureCount + logicalFailureCount, metrics.getServerFailureCount() + metrics.getLogicalFailureCount());
                     assertEquals(minProcessingTime, metrics.getMinProcessingTimeMs());
                     assertEquals(maxProcessingTime, metrics.getMaxProcessingTimeMs());
                 }, () -> fail(stageName + " stage metrics not found"));
@@ -403,7 +404,8 @@ class FileControllerWithGivenFileIdTest {
         JobEntityRequestDto dto = new JobEntityRequestDto(
                 extendedAttrs,
                 "http://publisher/job/123",
-                "http://consumer/job/456"
+                "http://consumer/job/456",
+                ModeOfIntegration.CK_FILE
         );
 
         return dto;

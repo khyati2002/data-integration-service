@@ -30,7 +30,7 @@ public class FileProgressEventListener {
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
-            ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=1000"
+            ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000"
     })
     public void consumeProgressEvents(@Payload List<FileProgressEvent> events) {
         if (events == null || events.isEmpty()) {
@@ -79,12 +79,12 @@ public class FileProgressEventListener {
         if (event.getFileId() == null) return Optional.of("FileId is null");
         if (event.getMasterName() == null) return Optional.of("MasterName is null");
         if (event.getProgress() == null) return Optional.of("Progress is null");
-        if (event.getProgress().getStageName() == null) return Optional.of("StageName is null");
+        if (event.getProgress().getStageType() == null) return Optional.of("StageName is null");
         return Optional.empty();
     }
 
     private String buildKey(FileProgressEvent event) {
-        return event.getFileId() + ":" + event.getMasterName() + ":" + event.getProgress().getStageName();
+        return event.getFileId() + ":" + event.getMasterName() + ":" + event.getProgress().getStageType();
     }
 
     private void sendToFailureTopic(FileProgressEvent event, String errorMessage) {

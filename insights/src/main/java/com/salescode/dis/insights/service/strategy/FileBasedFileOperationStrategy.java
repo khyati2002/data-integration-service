@@ -6,7 +6,6 @@ import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
-import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.service.FileOperationsHelperService;
 import com.salescode.dis.insights.service.JobService;
 import com.salescode.dis.insights.validation.ValidationService;
@@ -40,10 +39,21 @@ public class FileBasedFileOperationStrategy implements IFileOperationStrategy {
 
     @Override
     @Transactional
-    public void updateFileProgress(FileEntity fileEntity, String fileId, String masterName, String jobId, String lob, FileProgressRequest progress) {
+    public FileStageMetrics updateFileProgress(FileEntity fileEntity, String fileId, String masterName, String jobId, String lob, FileProgressRequest progress) {
         FileStageMetrics fileStageMetrics = fileOperationsHelperService.updateMetrics(fileEntity, progress);
-        log.info("FILE_BASED file {} progress updated for stage {}", fileEntity.getFileId(), progress.getStageName());
+        log.info("FILE_BASED file {} progress updated for stage {}", fileEntity.getFileId(), progress.getStageType());
         updateStatus(fileEntity, fileStageMetrics);
+        return fileStageMetrics;
+    }
+
+    @Transactional
+    public void updateStatus(FileEntity file, FileStageMetrics fileStageMetrics) {
+        if(file.getTotalCount() != 0 && fileStageMetrics.getTotal().compareTo(file.getTotalCount()) ==0 ){
+            fileStageMetrics.setProgressStatus(fileStageMetrics.getCurrentStatus());
+        }
+        if(getSupportedStages().getLast().equals(fileStageMetrics.getStageType())){
+            file.setStatus(fileStageMetrics.getCurrentStatus());
+        }
     }
 
     @Override
@@ -54,15 +64,5 @@ public class FileBasedFileOperationStrategy implements IFileOperationStrategy {
     @Override
     public List<ProgressStage> getSupportedStages() {
         return List.of(READ, PUBLISH, QUEUE, PROCESS, SAVE);
-    }
-
-    @Transactional
-    public void updateStatus(FileEntity file, FileStageMetrics fileStageMetrics) {
-        if(file.getTotalCount() != 0 && fileStageMetrics.getTotal().compareTo(file.getTotalCount()) >=0 ){
-            fileStageMetrics.setProgressStatus(fileStageMetrics.getCurrentStatus());
-        }
-        if(getSupportedStages().getLast().equals(fileStageMetrics.getStageType())){
-            file.setStatus(fileStageMetrics.getCurrentStatus());
-        }
     }
 }

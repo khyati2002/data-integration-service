@@ -37,8 +37,10 @@ public class FileOperationsHelperService {
                 .stream()
                 .sorted()
                 .map(stage -> FileStageMetrics.builder()
+                        .job(job)
                         .file(savedFile)
                         .lob(savedFile.getLob())
+                        .master(fileEntity.getMaster())
                         .stageType(stage)
                         .build())
                 .map(build -> (FileStageMetrics) fileStageMetricsRepository.save(build))
@@ -51,12 +53,13 @@ public class FileOperationsHelperService {
     @Transactional
     public FileStageMetrics updateMetrics(FileEntity file, FileProgressRequest progress) {
 
-        ProgressStage stageName = progress.getStageName();
+        ProgressStage stageName = progress.getStageType();
 
-        FileStageMetrics metrics = file.getFileStageMetrics()
-                .stream()
-                .filter(m -> m.getStageType().equals(stageName))
-                .findFirst()
+        FileStageMetrics metrics = fileStageMetricsRepository.findByFileAndStageType(file, stageName)
+//        FileStageMetrics metrics = file.getFileStageMetrics()
+//                .stream()
+//                .filter(m -> m.getStageType().equals(stageName))
+//                .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No metrics found for stage: " + stageName));
 
         metrics.setSuccessCount(metrics.getSuccessCount() + progress.getSuccessCount());

@@ -173,12 +173,12 @@
 			<artifactId>jackson-datatype-jsr310</artifactId> <!-- For Java 8 Date/Time -->
 		</dependency>
 
-		<dependency>
-			<groupId>com.salescode.dis</groupId>
-			<artifactId>insights-common</artifactId>
-			<version>${insights-common.version}</version>
-			<classifier>sb3</classifier>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.salescode.dis</groupId>-->
+<!--			<artifactId>insights-common</artifactId>-->
+<!--			<version>${insights-common.version}</version>-->
+<!--			<classifier>sb3</classifier>-->
+<!--		</dependency>-->
 	</dependencies>
 
 	<build>
