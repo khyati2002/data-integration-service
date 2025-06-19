@@ -36,7 +36,7 @@ public class ScoreDetailsService extends AbstractCDMService<ScoreDetails> {
 		for(ScoreDetails scoreDetails: scoreDetailsList){
 			scoreDetails.setId(new IdGenerator(scoreDetails.getClass().getSimpleName()).getId(scoreDetails));
 			scoreDetails.setCurrentVolumn(0d);
-			scoreDetails.setChanged((byte)1);
+			scoreDetails.setChanged((Boolean.TRUE);
 			scoreDetails.setActiveStatus(ActiveStatus.ACTIVE);
 		}
 		if (scoreDetailsList == null || scoreDetailsList.isEmpty()) {
