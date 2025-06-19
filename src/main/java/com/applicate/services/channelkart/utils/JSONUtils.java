@@ -59,6 +59,9 @@ public class JSONUtils {
 			OBJECT_MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 			OBJECT_MAPPER.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 			OBJECT_MAPPER.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
+			JavaTimeModule module = new JavaTimeModule();
+			module.addDeserializer(LocalDateTime.class, new CustomLocalDateTimeDeserializer());
+			OBJECT_MAPPER.registerModule(module);
 		}
 		return OBJECT_MAPPER;
 	}

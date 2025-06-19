@@ -1,8 +1,8 @@
 package com.applicate.services.channelkart.converters;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonParser;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.DeserializationContext;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.time.format.DateTimeParseException;
 
 public class CustomLocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
 
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Override
 	public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
@@ -19,7 +19,7 @@ public class CustomLocalDateTimeDeserializer extends JsonDeserializer<LocalDateT
 		if (value == null || value.trim().isEmpty()) return null;
 
 		try {
-			return LocalDateTime.parse(value.trim(), FORMATTER);
+			return LocalDateTime.parse(value.trim(), formatter);
 		} catch (DateTimeParseException e) {
 			throw new IOException("Failed to parse LocalDateTime from '" + value + "'. Expected format: yyyy-MM-dd HH:mm:ss", e);
 		}
