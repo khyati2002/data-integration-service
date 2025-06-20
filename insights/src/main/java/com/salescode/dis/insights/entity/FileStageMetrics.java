@@ -1,6 +1,7 @@
 package com.salescode.dis.insights.entity;
 
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import jakarta.persistence.*;
@@ -71,4 +72,8 @@ public class FileStageMetrics extends TimeAwareEntity {
             return ProgressStatus.FAILED;
         }
     }
-} 
+
+    @Enumerated(EnumType.STRING)
+    ModeOfIntegration modeOfIntegration;
+
+}

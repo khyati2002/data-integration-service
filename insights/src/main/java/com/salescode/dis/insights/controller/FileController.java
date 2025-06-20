@@ -4,6 +4,7 @@ import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
 import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.service.FileService;
@@ -37,6 +38,7 @@ public class FileController {
     @PostMapping("/master/{master_name}/job/{jobId}/unit")
     public ResponseEntity<FileEntityResponseDto> registerFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @Validated @RequestBody FileEntityRequestDto req) {
         FileEntity toSave = fileEntityMapper.toEntity(req, lob, masterName);
+        toSave.setStatus(ProgressStatus.PENDING);
         FileEntity saved = fileService.createFile(jobId, toSave);
         FileEntityResponseDto resp = fileEntityMapper.toDto(saved);
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);

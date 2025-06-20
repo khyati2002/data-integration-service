@@ -42,6 +42,9 @@ public class FileOperationsHelperService {
                         .lob(savedFile.getLob())
                         .master(fileEntity.getMaster())
                         .stageType(stage)
+                        .modeOfIntegration(savedFile.getModeOfIntegration())
+                        .master(savedFile.getMaster())
+                        .job(job)
                         .build())
                 .map(build -> (FileStageMetrics) fileStageMetricsRepository.save(build))
                 .toList();

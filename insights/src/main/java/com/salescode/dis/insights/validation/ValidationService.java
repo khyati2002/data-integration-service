@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 public class ValidationService {
 
     public void validate(JobEntity job, FileEntity file){
-        if(file.getModeOfIntegration() != job.getModeOfIntegration()) {
-            throw new IllegalArgumentException("Mode does not match with the registed job.");
-        }
+//        if(file.getModeOfIntegration() != job.getModeOfIntegration()) {
+//            throw new IllegalArgumentException("Mode does not match with the registed job.");
+//        }
     }
 }

@@ -1,11 +1,15 @@
 package com.salescode.dis.insights.controller;
 
+import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
+import com.salescode.dis.insights.dto.job.JobEntityResponseDtoWithStages;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
+import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
 import com.salescode.dis.insights.service.JobService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +29,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/{lob}")
 @RequiredArgsConstructor
@@ -34,7 +42,7 @@ public class JobController {
 
     private final JobService jobService;
     private final JobEntityMapper jobEntityMapper;
-
+    private final FileEntityMapper fileEntityMapper;
 
     @Operation(
         summary = "Create a new job",
@@ -109,52 +117,61 @@ public class JobController {
         content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @GetMapping("/job/{id}")
-    public ResponseEntity<JobEntityResponseDto> getJob(@PathVariable String lob, @PathVariable String id) {
+    public ResponseEntity<JobEntityResponseDto> getJob( @PathVariable String id) {
         JobEntity job = jobService.getJob(id);
-        JobEntityResponseDto dto = jobEntityMapper.toDto( job);
+        JobEntityResponseDto dto = jobEntityMapper.toDto(job);
+        List<FileEntityResponseDto> fileDtos = new ArrayList<>();
+        if (job != null) {
+            // Force loading of stageMetrics for each file
+            job.getFiles().forEach(file -> {
+                FileEntityResponseDto fileDto = fileEntityMapper.toDto(file);
+                if (file.getFileStageMetrics() != null) {
+                    fileDtos.add(fileDto);
+                    dto.setFiles(fileDtos);
+                }
+            });
+        }
         return ResponseEntity.ok(dto);
     }
 
 
 
 
-/*    @Operation(
-        summary = "Update job status",
-        description = "Updates the status of an existing job.",
-        parameters = {
-            @Parameter(name = "lob", description = "Line of Business"),
-            @Parameter(name = "id", description = "Unique identifier of the job"),
-            @Parameter(name = "status", description = "New status to set for the job")
-        }
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Status update request accepted and processed successfully",
-            content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
-    )
-    @ApiResponse(
-            responseCode = "400",
-            description = "Invalid status value provided",
-            content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
-    @ApiResponse(
-            responseCode = "404",
-            description = "Job not found with the specified ID",
-            content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
-    @ApiResponse(
-            responseCode = "500",
-            description = "Internal server error occurred while processing status update",
-            content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
-    @PutMapping("/job/{id}/status/{status}")
-    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable String id, @PathVariable ProgressStatus status) {
-        JobEntity job = jobService.updateStatus(id, status);
-        JobEntityResponseDto dto = jobEntityMapper.toDto(job);
-        return ResponseEntity.ok(dto);
-    }*/
-
-
+//    @Operation(
+//        summary = "Update job status",
+//        description = "Updates the status of an existing job.",
+//        parameters = {
+//            @Parameter(name = "lob", description = "Line of Business"),
+//            @Parameter(name = "id", description = "Unique identifier of the job"),
+//            @Parameter(name = "status", description = "New status to set for the job")
+//        }
+//    )
+//    @ApiResponse(
+//            responseCode = "200",
+//            description = "Status update request accepted and processed successfully",
+//            content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
+//    )
+//    @ApiResponse(
+//            responseCode = "400",
+//            description = "Invalid status value provided",
+//            content = @Content(schema = @Schema(implementation = ApiError.class))
+//    )
+//    @ApiResponse(
+//            responseCode = "404",
+//            description = "Job not found with the specified ID",
+//            content = @Content(schema = @Schema(implementation = ApiError.class))
+//    )
+//    @ApiResponse(
+//            responseCode = "500",
+//            description = "Internal server error occurred while processing status update",
+//            content = @Content(schema = @Schema(implementation = ApiError.class))
+//    )
+//    @PutMapping("/job/{id}/status/{status}")
+//    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable String id, @PathVariable ProgressStatus status) {
+//        JobEntity job = jobService.updateStatus(id, status);
+//        JobEntityResponseDto dto = jobEntityMapper.toDto(job);
+//        return ResponseEntity.ok(dto);
+//    }
 
 
     @Operation(
@@ -192,6 +209,16 @@ public class JobController {
         Page<JobEntityResponseDto> content = jobService.getAllJobsByLob(lob, pageRequest).map(jobEntityMapper::toDto);
         return ResponseEntity.ok(content);
     }
+
+    @GetMapping(path = "/all-jobs")
+    public ResponseEntity< Object[]> getJobs(@PathVariable String lob) {
+        Object[] content = jobService.getAllJobsGroupedByModeAndMasterForLob(lob);
+        return ResponseEntity.ok(content);
+    }
+
+
+
+
 
 
 }

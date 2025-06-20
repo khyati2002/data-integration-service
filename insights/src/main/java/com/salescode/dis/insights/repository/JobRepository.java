@@ -1,6 +1,7 @@
 package com.salescode.dis.insights.repository;
 
 import com.salescode.dis.insights.entity.JobEntity;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +17,9 @@ import java.util.Map;
 public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpecificationExecutor<JobEntity> {
 
     Page<JobEntity> getJobEntitiesByLob(String lob, Pageable pageable);
+
+    List<JobEntity> findByLob(String lob);
+
+    int countByLobAndStatus(String lob, ProgressStatus status);
 
 }

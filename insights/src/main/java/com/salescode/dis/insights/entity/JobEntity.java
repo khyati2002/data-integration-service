@@ -26,9 +26,9 @@ public class JobEntity extends TimeAwareEntity {
 
     private String consumerJobUri;
 
-    @Column(nullable = false, updatable = false, name = "mode")
-    @Enumerated(EnumType.STRING)
-    private ModeOfIntegration modeOfIntegration;
+//    @Column(nullable = false, updatable = false, name = "mode")
+//    @Enumerated(EnumType.STRING)
+//    private ModeOfIntegration modeOfIntegration;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

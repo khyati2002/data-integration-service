@@ -2,6 +2,7 @@ package com.salescode.dis.insights.mapper;
 
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
+import com.salescode.dis.insights.dto.job.JobEntityResponseDtoWithStages;
 import com.salescode.dis.insights.entity.JobEntity;
 import org.mapstruct.*;
 
@@ -11,6 +12,8 @@ public interface JobEntityMapper {
     JobEntity toEntity(JobEntityRequestDto jobEntityRequestDto);
 
     JobEntityResponseDto toDto(JobEntity jobEntity);
+
+    JobEntityResponseDtoWithStages toDtoWithStages(JobEntity jobEntity);
 
     default JobEntity toEntity(JobEntityRequestDto jobEntityRequestDto, String lob) {
         JobEntity entity = toEntity(jobEntityRequestDto);

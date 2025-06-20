@@ -4,6 +4,7 @@ import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import io.reactivex.rxjava3.internal.util.LinkedArrayList;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,10 +30,11 @@ public class FileEntity extends TimeAwareEntity {
     @Column(nullable = false, updatable = false)
     private String master;
 
+
     @Builder.Default
     private Long totalCount = 0L;
 
-    @Column(nullable = false, updatable = false, name = "mode")
+    @Column(nullable = false, name = "mode_of_integration")
     @Enumerated(EnumType.STRING)
     private ModeOfIntegration modeOfIntegration;
 
@@ -52,6 +54,9 @@ public class FileEntity extends TimeAwareEntity {
     @Override
     protected void onCreate() {
         super.onCreate();
+        if (this.fileId == null) {
+            this.fileId = this.getId();
+        }
     }
 
     @Override
