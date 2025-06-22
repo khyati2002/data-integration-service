@@ -30,7 +30,8 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		for (GenericEntity loginId : genericEntityList) {
 			fillAttributes(loginId, savedList.get(loginId.getId()));
 			fillCommonAttributes(loginId);
-			if (loginId.getId() == null)   loginId.setId(new IdGenerator(loginId.getClass().getSimpleName()).getId(loginId));
+			if (loginId.getId() == null)
+				loginId.setId(new IdGenerator(loginId.getClass().getSimpleName()).getId(loginId));
 
 			if (savedList.get(loginId.getId()) == null) {
 				itemsToInsert.add(loginId);
@@ -59,14 +60,14 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 			loginId.setActiveStatus(ActiveStatus.ACTIVE);
 			loginId.setRangeKey(0L);
 			loginId.setTimestamp(new Date().toInstant().toEpochMilli());
-			loginId.setChanged((byte)1);
+			loginId.setChanged(Boolean.TRUE);
 		});
 
 		saveItemsList.get(1).forEach(loginId -> {
 			loginId.setActiveStatus(ActiveStatus.ACTIVE);
 			loginId.setRangeKey(0L);
 			loginId.setTimestamp(new Date().toInstant().toEpochMilli());
-			loginId.setChanged((byte)1);
+			loginId.setChanged(Boolean.TRUE);
 
 		});
 		if (!saveItemsList.get(0).isEmpty()) {
