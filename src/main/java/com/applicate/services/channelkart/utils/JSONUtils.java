@@ -6,8 +6,11 @@
 package com.applicate.services.channelkart.utils;
 
 import com.applicate.services.channelkart.converters.CustomLocalDateTimeDeserializer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.commons.beanutils.ConversionException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.DeserializationFeature;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.MapperFeature;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,76 +35,87 @@ import java.util.stream.StreamSupport;
  */
 public class JSONUtils {
 
-    public static final TypeReference<Map<String, String>> STRING_VALUE_MAP_REFERENCE = new TypeReference<>() {
-    };
-    public static final TypeReference<Map<String, Object>> OBJECT_VALUE_MAP_REFERENCE = new TypeReference<>() {
-    };
-    private static final TypeReference<List<String>> LIST_STRING_REFERENCE = new TypeReference<>() {
-    };
-    /**
-     * The Constant OBJECT_MAPPER.
-     */
-    private static ObjectMapper OBJECT_MAPPER;
+	public static final TypeReference<Map<String, String>> STRING_VALUE_MAP_REFERENCE = new TypeReference<>() {
+	};
+	public static final TypeReference<Map<String, Object>> OBJECT_VALUE_MAP_REFERENCE = new TypeReference<>() {
+	};
+	private static final TypeReference<List<String>> LIST_STRING_REFERENCE = new TypeReference<>() {
+	};
+	/**
+	 * The Constant OBJECT_MAPPER.
+	 */
+	private static ObjectMapper OBJECT_MAPPER;
 
-    static {
-        get();
-    }
+	static {
+		get();
+	}
 
-    private JSONUtils() {
-    }
+	private JSONUtils() {
+	}
 
-    private static ObjectMapper get() {
-        if (OBJECT_MAPPER == null) {
-            OBJECT_MAPPER = new ObjectMapper();
-            OBJECT_MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-            OBJECT_MAPPER.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-            OBJECT_MAPPER.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
-            JavaTimeModule module = new JavaTimeModule();
-            module.addDeserializer(LocalDateTime.class, new CustomLocalDateTimeDeserializer());
-            OBJECT_MAPPER.registerModule(module);
-        }
-        return OBJECT_MAPPER;
-    }
+	private static ObjectMapper get() {
+		if (OBJECT_MAPPER == null) {
+			OBJECT_MAPPER = new ObjectMapper();
+			OBJECT_MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+			OBJECT_MAPPER.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+			OBJECT_MAPPER.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
+			JavaTimeModule module = new JavaTimeModule();
+			module.addDeserializer(LocalDateTime.class, new CustomLocalDateTimeDeserializer());
+			OBJECT_MAPPER.registerModule(module);
+		}
+		return OBJECT_MAPPER;
+	}
 
-    public static ObjectMapper getObjectMapper() {
-        return get();
-    }
+	public static ObjectMapper getObjectMapper() {
+		return get();
+	}
 
-    public static JsonNode mergeJsonNodes(JsonNode source, JsonNode destination) throws IOException {
-        ObjectNode destinationNode = destination.deepCopy();
-        Iterator<String> fieldNames = source.fieldNames();
-        while (fieldNames.hasNext()) {
-            String fieldName = fieldNames.next();
-            JsonNode jsonNode = destinationNode.get(fieldName);
-            if (jsonNode != null && jsonNode.isObject()) {
-                JsonNode value = mergeJsonNodes(source.get(fieldName), jsonNode);
-                destinationNode.set(fieldName, value);
-            } else {
-                if (destinationNode instanceof ObjectNode) {
-                    JsonNode value = source.get(fieldName);
-                    destinationNode.set(fieldName, value);
-                }
-            }
-        }
-        return destinationNode;
-    }
-    public static ArrayNode convertToArrayNode(JsonNode jsonNode) {
-        ArrayNode arrayNode;
-        if (jsonNode.isArray()) {
-            // If it's already an ArrayNode, cast and return
-            return (ArrayNode) jsonNode;
-        } else {
-            // Create a new ArrayNode and add the current JsonNode
-            arrayNode = JsonNodeFactory.instance.arrayNode().add(jsonNode);
-            return arrayNode;
-        }
-    }
+	public static JsonNode mergeJsonNodes(JsonNode source, JsonNode destination) throws IOException {
+		ObjectNode destinationNode = destination.deepCopy();
+		Iterator<String> fieldNames = source.fieldNames();
+		while (fieldNames.hasNext()) {
+			String fieldName = fieldNames.next();
+			JsonNode jsonNode = destinationNode.get(fieldName);
+			if (jsonNode != null && jsonNode.isObject()) {
+				JsonNode value = mergeJsonNodes(source.get(fieldName), jsonNode);
+				destinationNode.set(fieldName, value);
+			} else {
+				if (destinationNode instanceof ObjectNode) {
+					JsonNode value = source.get(fieldName);
+					destinationNode.set(fieldName, value);
+				}
+			}
+		}
+		return destinationNode;
+	}
 
-    public static <T> T convert(Object node, TypeReference<List<Map<String, String>>> typeReference) {
-        return (T) OBJECT_MAPPER.convertValue(node, typeReference);
-    }
+	public static ArrayNode convertToArrayNode(JsonNode jsonNode) {
+		ArrayNode arrayNode;
+		if (jsonNode.isArray()) {
+			// If it's already an ArrayNode, cast and return
+			return (ArrayNode) jsonNode;
+		} else {
+			// Create a new ArrayNode and add the current JsonNode
+			arrayNode = JsonNodeFactory.instance.arrayNode().add(jsonNode);
+			return arrayNode;
+		}
+	}
 
-    public static Stream<JsonNode> stream(JsonNode nodes) {
-        return StreamSupport.stream(nodes.spliterator(), false);
-    }
+	public static <T> T parse(String data, Class<T> tClass) {
+		try {
+			return OBJECT_MAPPER.readValue(data, tClass);
+		} catch (JsonMappingException e) {
+			throw new RuntimeException(e);
+		} catch (org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static <T> T convert(Object node, TypeReference<List<Map<String, String>>> typeReference) {
+		return (T) OBJECT_MAPPER.convertValue(node, typeReference);
+	}
+
+	public static Stream<JsonNode> stream(JsonNode nodes) {
+		return StreamSupport.stream(nodes.spliterator(), false);
+	}
 }
