@@ -27,6 +27,10 @@ public class MetaDataService extends AbstractCDMService<Metadata> {
 	public Metadata fetchByValueFromDB(String domainName,String domainType) {
 		return this.metaDataRepository.findByDomainNameAndDomainType(domainName, domainType).orElse(null);
 	}
+	public Metadata fetchByValue(String domainName, String domainType, boolean cached) {
+
+		return this.fetchByValueFromDB(domainName, domainType);
+	}
 
 	public Metadata fetchByValue(String domainName,String domainType) {
 		return fetchByValueFromDB(domainName,domainType);
