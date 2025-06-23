@@ -1,11 +1,10 @@
-package com.salescode.dis.insights.dto;
+package com.salescode.dis.insights.dto.file.stage;
 
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor

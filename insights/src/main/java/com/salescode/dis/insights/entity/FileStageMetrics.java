@@ -55,6 +55,10 @@ public class FileStageMetrics extends TimeAwareEntity {
     @Builder.Default
     private ProgressStatus progressStatus = ProgressStatus.PENDING;
 
+    @Column(nullable = false, updatable = false, name = "mode")
+    @Enumerated(EnumType.STRING)
+    private ModeOfIntegration modeOfIntegration;
+
     public Long getTotal() {
         return successCount + logicalFailureCount + serverFailureCount;
     }
@@ -72,8 +76,5 @@ public class FileStageMetrics extends TimeAwareEntity {
             return ProgressStatus.FAILED;
         }
     }
-
-    @Enumerated(EnumType.STRING)
-    ModeOfIntegration modeOfIntegration;
 
 }

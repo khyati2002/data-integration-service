@@ -29,7 +29,5 @@ public class JobEntityResponseDto implements Serializable {
     Instant endTime;
     String publisherJobUri;
     String consumerJobUri;
-    ModeOfIntegration modeOfIntegration;
     ProgressStatus status;
-    List<FileEntityResponseDto> files;
 }

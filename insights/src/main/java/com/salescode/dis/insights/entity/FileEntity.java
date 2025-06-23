@@ -34,7 +34,8 @@ public class FileEntity extends TimeAwareEntity {
     @Builder.Default
     private Long totalCount = 0L;
 
-    @Column(nullable = false, name = "mode_of_integration")
+
+    @Column(nullable = false, updatable = false, name = "mode")
     @Enumerated(EnumType.STRING)
     private ModeOfIntegration modeOfIntegration;
 
@@ -57,6 +58,7 @@ public class FileEntity extends TimeAwareEntity {
         if (this.fileId == null) {
             this.fileId = this.getId();
         }
+        this.setStatus(ProgressStatus.PENDING);
     }
 
     @Override

@@ -18,5 +18,4 @@ public class JobEntityRequestDto implements Serializable {
     JsonNode extendedAttributes;
     String publisherJobUri;
     String consumerJobUri;
-//    @NotNull ModeOfIntegration modeOfIntegration;
 }

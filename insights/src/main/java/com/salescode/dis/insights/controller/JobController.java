@@ -11,6 +11,7 @@ import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
+import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.service.JobService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,11 +25,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +43,7 @@ import java.util.Map;
 @Slf4j
 @Tag(name = "Job Management", description = "APIs for managing integration jobs")
 public class JobController {
+    private final FileStageMetricsRepository fileStageMetricsRepository;
 
     private final JobService jobService;
     private final JobEntityMapper jobEntityMapper;
@@ -120,17 +125,6 @@ public class JobController {
     public ResponseEntity<JobEntityResponseDto> getJob( @PathVariable String id) {
         JobEntity job = jobService.getJob(id);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
-        List<FileEntityResponseDto> fileDtos = new ArrayList<>();
-        if (job != null) {
-            // Force loading of stageMetrics for each file
-            job.getFiles().forEach(file -> {
-                FileEntityResponseDto fileDto = fileEntityMapper.toDto(file);
-                if (file.getFileStageMetrics() != null) {
-                    fileDtos.add(fileDto);
-                    dto.setFiles(fileDtos);
-                }
-            });
-        }
         return ResponseEntity.ok(dto);
     }
 
@@ -203,21 +197,25 @@ public class JobController {
         description = "Internal server error occurred while retrieving job list",
         content = @Content(schema = @Schema(implementation = ApiError.class))
     )
+
+
     @GetMapping(path = "/jobs")
-    public ResponseEntity<Page<JobEntityResponseDto>> getJobs(@PathVariable String lob, Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.DESC, TimeAwareEntity.START_TIME)));
-        Page<JobEntityResponseDto> content = jobService.getAllJobsByLob(lob, pageRequest).map(jobEntityMapper::toDto);
-        return ResponseEntity.ok(content);
+    public ResponseEntity<List<JobEntityResponseDtoWithStages>> getJobs(
+            @PathVariable String lob,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+
+        // Set default values if not provided (last 24 hours)
+        if (startDate == null) {
+            startDate = LocalDateTime.now().minusDays(1);
+        }
+        if (endDate == null) {
+            endDate = LocalDateTime.now();
+        }
+
+        List<JobEntityResponseDtoWithStages> result = jobService.getJobsWithAggregatedStages(lob, startDate, endDate);
+        return ResponseEntity.ok(result);
     }
-
-    @GetMapping(path = "/all-jobs")
-    public ResponseEntity< Object[]> getJobs(@PathVariable String lob) {
-        Object[] content = jobService.getAllJobsGroupedByModeAndMasterForLob(lob);
-        return ResponseEntity.ok(content);
-    }
-
-
-
 
 
 

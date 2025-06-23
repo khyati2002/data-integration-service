@@ -6,7 +6,7 @@ import com.salescode.dis.insights.dto.job.JobEntityResponseDtoWithStages;
 import com.salescode.dis.insights.entity.JobEntity;
 import org.mapstruct.*;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING,  uses = {FileEntityMapper.class})
 public interface JobEntityMapper {
 
     JobEntity toEntity(JobEntityRequestDto jobEntityRequestDto);

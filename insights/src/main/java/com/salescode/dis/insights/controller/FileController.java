@@ -38,7 +38,6 @@ public class FileController {
     @PostMapping("/master/{master_name}/job/{jobId}/unit")
     public ResponseEntity<FileEntityResponseDto> registerFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @Validated @RequestBody FileEntityRequestDto req) {
         FileEntity toSave = fileEntityMapper.toEntity(req, lob, masterName);
-        toSave.setStatus(ProgressStatus.PENDING);
         FileEntity saved = fileService.createFile(jobId, toSave);
         FileEntityResponseDto resp = fileEntityMapper.toDto(saved);
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);

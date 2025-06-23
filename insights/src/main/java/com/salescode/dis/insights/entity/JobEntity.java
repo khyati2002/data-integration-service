@@ -25,11 +25,7 @@ public class JobEntity extends TimeAwareEntity {
     private String publisherJobUri;
 
     private String consumerJobUri;
-
-//    @Column(nullable = false, updatable = false, name = "mode")
-//    @Enumerated(EnumType.STRING)
-//    private ModeOfIntegration modeOfIntegration;
-
+    
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private ProgressStatus status = ProgressStatus.PENDING;
