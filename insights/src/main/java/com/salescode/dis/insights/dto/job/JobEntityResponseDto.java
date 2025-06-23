@@ -30,4 +30,5 @@ public class JobEntityResponseDto implements Serializable {
     String publisherJobUri;
     String consumerJobUri;
     ProgressStatus status;
+    List<FileEntityResponseDto> files;
 }

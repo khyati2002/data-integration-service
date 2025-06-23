@@ -126,8 +126,8 @@ spring:
       acks: 1
     consumer:
       properties:
-        spring.json.trusted.packages: com.salescode.dis.insights.kafka
-        spring.json.value.default.type: com.salescode.dis.insights.kafka.FileProgressEvent
+        spring.json.trusted.packages: com.salescode.dis.insights.dto.event
+        spring.json.value.default.type: com.salescode.dis.insights.dto.event.FileProgressEvent
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
