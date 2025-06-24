@@ -3,6 +3,7 @@ package com.salescode.dis.insights.service;
 import com.salescode.dis.insights.dto.job.JobStageAccumulatedData;
 import com.salescode.dis.insights.dto.file.stage.AccumulatedStageDataDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDtoWithStages;
+import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
@@ -46,12 +47,13 @@ public class JobService {
         return jobRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
     }
 
-//    public JobEntity updateStatus(String id, JobStatus status) {
+//    public JobEntity updateStatus(String id, ProgressStatus status) {
 //        JobEntity job = getJob(id);
 //        job.setStatus(status);
 //        log.info("Job {} status -> {}", id, status);
 //        return job;
 //    }
+    
 
     @Transactional(readOnly = true)
     public Page<JobEntity> getAllJobsByLob(String lob, Pageable pageable) {
@@ -86,7 +88,8 @@ public class JobService {
                             .filter(result -> result.getStageType() != null)
                             .map(result -> AccumulatedStageDataDto.builder()
                                     .stageType((result.getStageType()))
-                                    .totalSuccessCount(result.getTotalSuccessCount() != null ? result.getTotalSuccessCount().longValue() : 0L)
+                                    .totalSuccessCount(result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L)
+                                    .totalFailureCount((result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L) + (result.getLogicalFailureCount()!=null ? result.getLogicalFailureCount() : 0L))
                                     .build())
                             .collect(Collectors.toList());
 

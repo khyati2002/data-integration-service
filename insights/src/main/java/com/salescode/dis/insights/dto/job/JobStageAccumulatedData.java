@@ -25,13 +25,14 @@ public class JobStageAccumulatedData {
     private String consumerJobUri;
     private ProgressStage stageType;
     private Long totalSuccessCount;
-
+    private Long serverFailureCount;
+    private Long logicalFailureCount;
 
     public JobStageAccumulatedData(
             String jobId, Instant creationTime, Instant lastModifiedTime, String lob,
             String extendedAttributesJson,
             Instant startTime, Instant endTime, ProgressStatus status,String publisherJobUri,
-            String consumerJobUri, ProgressStage stageType, Long totalSuccessCount) { // Use Number for counts to be safe
+            String consumerJobUri, ProgressStage stageType, Long totalSuccessCount, Long serverFailureCount, Long logicalFailureCount) { // Use Number for counts to be safe
         this.jobId = jobId;
         this.creationTime = creationTime;
         this.lastModifiedTime = lastModifiedTime;
@@ -43,6 +44,8 @@ public class JobStageAccumulatedData {
         this.consumerJobUri = consumerJobUri;
         this.stageType = stageType;
         this.totalSuccessCount = totalSuccessCount != null ? totalSuccessCount : 0L;
+        this.serverFailureCount = serverFailureCount != null ? serverFailureCount : 0L;
+        this.logicalFailureCount = logicalFailureCount != null ? logicalFailureCount : 0L;
 
         if (extendedAttributesJson != null) {
             try {
