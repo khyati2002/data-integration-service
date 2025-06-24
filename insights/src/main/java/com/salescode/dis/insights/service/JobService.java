@@ -53,7 +53,20 @@ public class JobService {
 //        log.info("Job {} status -> {}", id, status);
 //        return job;
 //    }
-    
+
+    public void recalcStatus(JobEntity job) {
+        if (job.getFiles() == null) return;
+
+        Map<ProgressStatus, Long> statusCountMap = job.getFiles().stream()
+                .collect(Collectors.groupingBy(FileEntity::getStatus, Collectors.counting()));
+
+        if(statusCountMap.containsKey(ProgressStatus.PENDING)) job.setStatus(ProgressStatus.PENDING);
+        else if(statusCountMap.containsKey(ProgressStatus.FAILED)) job.setStatus(ProgressStatus.FAILED);
+        else if(statusCountMap.containsKey(ProgressStatus.COMPLETED_UNSUCCESSFULLY)) job.setStatus(ProgressStatus.COMPLETED_UNSUCCESSFULLY);
+        else{
+            job.setStatus(ProgressStatus.COMPLETED_SUCCESSFULLY);
+        }
+    }
 
     @Transactional(readOnly = true)
     public Page<JobEntity> getAllJobsByLob(String lob, Pageable pageable) {
@@ -82,7 +95,13 @@ public class JobService {
         return resultsByJobId.entrySet().stream()
                 .map(entry -> {
                     List<JobStageAccumulatedData> jobResults = entry.getValue();
-                    JobStageAccumulatedData firstResult = jobResults.get(0); // Job-level data from any projection
+                    JobStageAccumulatedData firstResult = jobResults.get(0);
+
+                    List<String> uniqueMastersForJob = jobResults.stream()
+                            .map(JobStageAccumulatedData::getMaster) // Get the 'master' for each stage
+                            .filter(master -> master != null && !master.trim().isEmpty()) // Filter out null or empty masters
+                            .distinct() // Ensure uniqueness (similar to collecting to a Set and then to a List)
+                            .collect(Collectors.toList()); // Collect into a List
 
                     List<AccumulatedStageDataDto> stages = jobResults.stream()
                             .filter(result -> result.getStageType() != null)
@@ -95,6 +114,7 @@ public class JobService {
 
                     return JobEntityResponseDtoWithStages.builder()
                             .id(firstResult.getJobId())
+                            .masters(uniqueMastersForJob)
                             .creationTime(firstResult.getCreationTime())
                             .lastModifiedTime(firstResult.getLastModifiedTime())
                             .lob(firstResult.getLob())

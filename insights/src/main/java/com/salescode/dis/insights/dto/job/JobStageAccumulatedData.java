@@ -8,12 +8,14 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Getter
 public class JobStageAccumulatedData {
 
     private String jobId;
+    String master;
     private Instant creationTime;
     private Instant lastModifiedTime;
     private String lob;
@@ -29,11 +31,12 @@ public class JobStageAccumulatedData {
     private Long logicalFailureCount;
 
     public JobStageAccumulatedData(
-            String jobId, Instant creationTime, Instant lastModifiedTime, String lob,
+            String jobId, String master, Instant creationTime, Instant lastModifiedTime, String lob,
             String extendedAttributesJson,
             Instant startTime, Instant endTime, ProgressStatus status,String publisherJobUri,
             String consumerJobUri, ProgressStage stageType, Long totalSuccessCount, Long serverFailureCount, Long logicalFailureCount) { // Use Number for counts to be safe
         this.jobId = jobId;
+        this.master = master;
         this.creationTime = creationTime;
         this.lastModifiedTime = lastModifiedTime;
         this.lob = lob;

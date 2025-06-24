@@ -5,6 +5,7 @@ import com.salescode.dis.insights.dto.LobSummaryDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.enums.ProgressStage;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -44,18 +45,28 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
                                                                            @Param("endDate") Instant endDate);
 
     @Query("SELECT new com.salescode.dis.insights.dto.job.JobStageAccumulatedData(" +
-            "j.id, j.creationTime, j.lastModifiedTime, j.lob," +
+            "j.id, s.master, j.creationTime, j.lastModifiedTime, j.lob," +
             "CAST(j.extendedAttributes AS string), " +
             "j.startTime, j.endTime, j.status ," +
             "j.publisherJobUri, j.consumerJobUri, " +
-            "s.stageType, CAST(COALESCE(SUM(s.successCount), 0) AS long)) " +
+            "s.stageType, CAST(COALESCE(SUM(s.successCount), 0) AS long),CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long))" +
             "FROM JobEntity j JOIN FileStageMetrics s ON j.id = s.job.id " +
             "WHERE j.lob = :lob AND j.lastModifiedTime BETWEEN :startDate AND :endDate " +
             "GROUP BY j.id, j.creationTime, j.lastModifiedTime, j.lob, j.startTime, j.endTime, j.status, " +
-            "j.publisherJobUri, j.consumerJobUri, s.stageType")
+            "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master")
     List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLob(@Param("lob") String lob,    @Param("startDate") Instant startDate,
                                                                     @Param("endDate") Instant endDate);
 
 
+    @Query("SELECT s FROM FileStageMetrics s " +
+            "WHERE  s.modeOfIntegration = com.salescode.dis.insights.enums.ModeOfIntegration.CK_API_CLIENT" +
+            "  AND s.progressStatus = :status " +
+            "  AND s.lastModifiedTime < :staleCutoffTime " +
+            "  AND s.lastModifiedTime >= :tooOldCutoffTime")
+    List<FileStageMetrics> findStaleApiClientBasedPendingFiles(
+            @Param("staleCutoffTime") Instant staleCutoffTime,
+            @Param("tooOldCutoffTime") Instant tooOldCutoffTime,
+            @Param("status") ProgressStatus status
+    );
 
 }
