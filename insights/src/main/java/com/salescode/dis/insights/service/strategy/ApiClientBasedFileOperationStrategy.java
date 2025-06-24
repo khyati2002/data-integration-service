@@ -25,7 +25,6 @@ public class ApiClientBasedFileOperationStrategy implements IFileOperationStrate
 
     private final JobService jobService;
     private final FileOperationsHelperService fileOperationsHelperService;
-    private final ValidationService validationService;
 
     @Override
     @Transactional
@@ -46,7 +45,6 @@ public class ApiClientBasedFileOperationStrategy implements IFileOperationStrate
             file.setMaster(masterName);
             file.setLob(lob);
             file.setModeOfIntegration(getModeOfIntegration());
-            validationService.validate(file, progress);
             file = fileOperationsHelperService.saveFileEntity(file, job, this);
         }
         FileStageMetrics fileStageMetrics = fileOperationsHelperService.updateMetrics(file, progress);
