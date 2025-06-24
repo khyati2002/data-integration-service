@@ -8,7 +8,6 @@ import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.service.FileOperationsHelperService;
 import com.salescode.dis.insights.service.JobService;
-import com.salescode.dis.insights.validation.ValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,13 +24,11 @@ public class ApiBasedFileOperationStrategy implements IFileOperationStrategy {
 
     private final JobService jobService;
     private final FileOperationsHelperService fileOperationsHelperService;
-    private final ValidationService validationService;
 
     @Override
     @Transactional
     public FileEntity createFile(FileEntity fileEntity, String jobId) {
         JobEntity job = jobService.getJob(jobId);
-        validationService.validate(job, fileEntity);
         FileEntity savedFile = fileOperationsHelperService.saveFileEntity(fileEntity, job, this);
         log.info("Registered file {} under job {} for API_BASED integration", savedFile.getId(), job.getId());
         return savedFile;

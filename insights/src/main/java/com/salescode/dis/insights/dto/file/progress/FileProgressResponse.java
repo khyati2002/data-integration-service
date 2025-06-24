@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.dto.file.progress;
 
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import lombok.*;
 
 @Data
@@ -12,4 +13,5 @@ public class FileProgressResponse {
     private String message;
     private String fileId;
     private String master;
+    private ModeOfIntegration modeOfIntegration;
 }

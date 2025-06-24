@@ -1,10 +1,9 @@
 package com.salescode.dis.insights.dto.file.progress;
 
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -20,5 +19,5 @@ public class FileProgressRequest implements Serializable {
     @Builder.Default Long logicalFailureCount = 0L;
     Integer minProcessingTimeMs;
     Integer maxProcessingTimeMs;
-
+    @NotNull ModeOfIntegration modeOfIntegration;
 }

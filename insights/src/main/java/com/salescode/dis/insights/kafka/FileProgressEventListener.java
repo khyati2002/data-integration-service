@@ -1,7 +1,9 @@
 package com.salescode.dis.insights.kafka;
 
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
+import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.service.FileService;
+import com.salescode.dis.insights.validation.ValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -28,6 +30,7 @@ public class FileProgressEventListener {
 
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
+    private final ValidationService validationService;
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
             ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000"
@@ -80,6 +83,8 @@ public class FileProgressEventListener {
         if (event.getMasterName() == null) return Optional.of("MasterName is null");
         if (event.getProgress() == null) return Optional.of("Progress is null");
         if (event.getProgress().getStageType() == null) return Optional.of("StageName is null");
+        FileEntity file = fileService.get(event.getFileId(), event.getMasterName());
+        validationService.validate(file, event.getProgress());
         return Optional.empty();
     }
 

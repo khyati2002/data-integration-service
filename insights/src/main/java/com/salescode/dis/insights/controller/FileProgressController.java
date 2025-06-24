@@ -6,6 +6,7 @@ import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.service.FileService;
+import com.salescode.dis.insights.validation.ValidationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,7 +29,7 @@ public class FileProgressController {
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
     private final FileRepository fileRepository;
-
+    private final ValidationService validationService;
     @Value("${file.progress.update.topic:file-progress-updates}")
     private String fileUpdatesTopic;
 
@@ -43,8 +44,8 @@ public class FileProgressController {
             @Validated @RequestBody FileProgressRequest progress
     ) {
 
-        fileService.existsByFileIdAndMaster(fileId, masterName);
-
+        FileEntity file = fileService.get(fileId,masterName);
+        validationService.validate(file,progress);
         FileProgressEvent event = new FileProgressEvent();
         String eventId = UUID.randomUUID().toString();
         event.setEventId(eventId);
@@ -63,6 +64,7 @@ public class FileProgressController {
         response.setMessage("Progress update has been queued");
         response.setFileId(fileId);
         response.setMaster(masterName);
+        response.setModeOfIntegration(progress.getModeOfIntegration());
         return ResponseEntity.accepted().body(response);
     }
 } 

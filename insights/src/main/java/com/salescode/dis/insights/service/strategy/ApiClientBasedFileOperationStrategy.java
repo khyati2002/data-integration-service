@@ -46,7 +46,7 @@ public class ApiClientBasedFileOperationStrategy implements IFileOperationStrate
             file.setMaster(masterName);
             file.setLob(lob);
             file.setModeOfIntegration(getModeOfIntegration());
-            validationService.validate(job, file);
+            validationService.validate(file, progress);
             file = fileOperationsHelperService.saveFileEntity(file, job, this);
         }
         FileStageMetrics fileStageMetrics = fileOperationsHelperService.updateMetrics(file, progress);
