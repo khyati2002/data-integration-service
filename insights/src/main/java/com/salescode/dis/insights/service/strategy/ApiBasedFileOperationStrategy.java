@@ -42,7 +42,18 @@ public class ApiBasedFileOperationStrategy implements IFileOperationStrategy {
             fileEntity.setTotalCount(fileStageMetrics.getTotal());
         }
         log.info("API_BASED file {} progress updated for stage {}", fileEntity.getFileId(), progress.getStageType());
+        updateStatus(fileEntity, fileStageMetrics);
         return fileStageMetrics;
+    }
+
+    @Transactional
+    public void updateStatus(FileEntity file, FileStageMetrics fileStageMetrics) {
+        if(file.getTotalCount() != 0 && fileStageMetrics.getTotal().compareTo(file.getTotalCount()) ==0 ){
+            fileStageMetrics.setProgressStatus(fileStageMetrics.getCurrentStatus());
+        }
+        if(getSupportedStages().getLast().equals(fileStageMetrics.getStageType())){
+            file.setStatus(fileStageMetrics.getCurrentStatus());
+        }
     }
 
     @Override

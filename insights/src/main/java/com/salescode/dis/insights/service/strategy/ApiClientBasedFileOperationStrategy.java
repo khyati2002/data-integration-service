@@ -6,7 +6,9 @@ import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.service.FileOperationsHelperService;
+import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.service.JobService;
 import com.salescode.dis.insights.validation.ValidationService;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +46,7 @@ public class ApiClientBasedFileOperationStrategy implements IFileOperationStrate
             file.setFileId(fileId);
             file.setMaster(masterName);
             file.setLob(lob);
-            file.setModeOfIntegration(getModeOfIntegration());
+            file.setModeOfIntegration(progress.getModeOfIntegration());
             file = fileOperationsHelperService.saveFileEntity(file, job, this);
         }
         FileStageMetrics fileStageMetrics = fileOperationsHelperService.updateMetrics(file, progress);
@@ -53,6 +55,20 @@ public class ApiClientBasedFileOperationStrategy implements IFileOperationStrate
         }
         log.info("API_BASED file {} progress updated for stage {}", file.getFileId(), progress.getStageType());
         return fileStageMetrics;
+    }
+
+    @Transactional
+    public void updateStatus(FileStageMetrics fileStageMetrics) {
+        FileEntity file = fileStageMetrics.getFile();
+        if(fileStageMetrics.getTotal() != 0 && fileStageMetrics.getTotal().compareTo(file.getTotalCount()) == 0 ){
+            fileStageMetrics.setProgressStatus(fileStageMetrics.getCurrentStatus());
+            if(getSupportedStages().getLast().equals(fileStageMetrics.getStageType())){
+                file.setStatus(fileStageMetrics.getCurrentStatus());
+            }
+        }
+        else{
+            fileStageMetrics.setProgressStatus(ProgressStatus.FAILED);
+        }
     }
 
     @Override

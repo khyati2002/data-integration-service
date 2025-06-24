@@ -83,8 +83,6 @@ public class FileProgressEventListener {
         if (event.getMasterName() == null) return Optional.of("MasterName is null");
         if (event.getProgress() == null) return Optional.of("Progress is null");
         if (event.getProgress().getStageType() == null) return Optional.of("StageName is null");
-        FileEntity file = fileService.get(event.getFileId(), event.getMasterName());
-        validationService.validate(file, event.getProgress());
         return Optional.empty();
     }
 
