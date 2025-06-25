@@ -15,13 +15,29 @@ public class CustomLocalDateTimeDeserializer extends JsonDeserializer<LocalDateT
 
 	@Override
 	public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-		String value = p.getText();
-		if (value == null || value.trim().isEmpty()) return null;
+
+		String raw = p.getText();
+
+		if (raw == null || raw.trim().isEmpty()) return null;
+
+
+		// Clean the weird value: "2025-03-07 00:00:00T00:00:00Z"
+
+		// Take only the part before the 'T' if it exists
+
+		String cleaned = raw.contains("T") ? raw.substring(0, raw.indexOf("T")) : raw;
+
 
 		try {
-			return LocalDateTime.parse(value.trim(), formatter);
+
+			return LocalDateTime.parse(cleaned.trim(), formatter);
+
 		} catch (DateTimeParseException e) {
-			throw new IOException("Failed to parse LocalDateTime from '" + value + "'. Expected format: yyyy-MM-dd HH:mm:ss", e);
+
+			throw new IOException("Unable to parse LocalDateTime from: " + raw, e);
+
 		}
+
 	}
+
 }
