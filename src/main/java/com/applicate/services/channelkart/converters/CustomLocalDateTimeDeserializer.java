@@ -20,6 +20,7 @@ public class CustomLocalDateTimeDeserializer extends JsonDeserializer<LocalDateT
 
 		if (raw == null || raw.trim().isEmpty()) return null;
 
+
 		// Clean the weird value: "2025-03-07 00:00:00T00:00:00Z"
 		// Take only the part before the 'T' if it exists
 
