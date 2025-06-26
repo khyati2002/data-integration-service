@@ -17,11 +17,6 @@ public class StringUtils {
 		return false;
 	}
 
-
-	public static boolean isValidString(String value) {
-		return !isEmpty(value) && !value.equals("null") && !value.equals("\"\"") && !value.equalsIgnoreCase("undefined");
-	}
-
 	public static boolean isNotEmpty(String value) {
 		return !isEmpty(value);
 	}
