@@ -88,6 +88,7 @@ public class JSONUtils {
 		}
 		return destinationNode;
 	}
+
 	public static ArrayNode convertToArrayNode(JsonNode jsonNode) {
 		ArrayNode arrayNode;
 		if (jsonNode.isArray()) {
@@ -99,10 +100,11 @@ public class JSONUtils {
 			return arrayNode;
 		}
 	}
+
 	public static <T> T parse(String data, Class<T> tClass) {
 		try {
 			return OBJECT_MAPPER.readValue(data, tClass);
-		}  catch (JsonMappingException e) {
+		} catch (JsonMappingException e) {
 			throw new RuntimeException(e);
 		} catch (org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException e) {
 			throw new RuntimeException(e);

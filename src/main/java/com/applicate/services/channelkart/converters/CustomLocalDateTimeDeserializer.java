@@ -22,11 +22,9 @@ public class CustomLocalDateTimeDeserializer extends JsonDeserializer<LocalDateT
 
 
 		// Clean the weird value: "2025-03-07 00:00:00T00:00:00Z"
-
 		// Take only the part before the 'T' if it exists
 
 		String cleaned = raw.contains("T") ? raw.substring(0, raw.indexOf("T")) : raw;
-
 
 		try {
 
