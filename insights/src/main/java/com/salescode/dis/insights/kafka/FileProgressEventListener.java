@@ -33,9 +33,12 @@ public class FileProgressEventListener {
     private final ValidationService validationService;
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
+            ConsumerConfig.FETCH_MIN_BYTES_CONFIG + "=1",
+            ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG + "=1",
             ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000"
     })
-    public void consumeProgressEvents(@Payload List<FileProgressEvent> events) {
+    public void consumeProgressEvents(@Payload List<FileProgressEvent> events) throws InterruptedException {
+        Thread.sleep(2000);
         if (events == null || events.isEmpty()) {
             log.debug("Received empty or null event list. Skipping.");
             return;
