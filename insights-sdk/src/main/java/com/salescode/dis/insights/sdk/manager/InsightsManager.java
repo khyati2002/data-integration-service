@@ -1,6 +1,10 @@
 package com.salescode.dis.insights.sdk.manager;
-
-import com.salescode.dis.insights.enums.JobStatus;
+import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
+import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
+import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
+import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
+import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
+import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.sdk.InsightsEnv;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +29,7 @@ public class InsightsManager {
     @Getter
     private final String baseURL;
     private final Map<String, FileEntityResponseDto> fileEntityResponseDtoMap = new ConcurrentHashMap<>();
-    private final Map<String, UpdateRequestResponseDto> updateRequestResponseDtoMap = new ConcurrentHashMap<>();
-
+    private final Map<String, FileProgressResponse> updateRequestResponseDtoMap = new ConcurrentHashMap<>();
     public Optional<JobEntityResponseDto> getJobEntityResponseDto() {
         return Optional.ofNullable(jobEntityResponseDto);
     }
@@ -52,7 +55,7 @@ public class InsightsManager {
 
         try {
             log.debug("Calling JobManager to create job for LOB: {}", lob);
-            JobEntityResponseDto createdJob = this.jobManager.createJob(lob, jobRequest);
+            JobEntityResponseDto createdJob = this.jobManager.createJob(lob,jobRequest);
             // Assuming jobManager.createJob throws an exception if 'createdJob' or its ID is null/invalid
             this.setJobEntityResponseDto(createdJob);
             log.debug("Job creation successful, updated internal state.");
@@ -63,23 +66,6 @@ public class InsightsManager {
         }
     }
 
-    public JobEntityResponseDto updateJobStatus(String lob, String jobId, JobStatus status) {
-        Objects.requireNonNull(lob, "LOB cannot be null for updateJobStatus");
-        Objects.requireNonNull(jobId, "JobId cannot be null for updateJobStatus");
-        Objects.requireNonNull(status, "JobStatus cannot be null for updateJobStatus");
-
-        try {
-            log.debug("Calling JobManager to update status for job ID: {} to {}", jobId, status);
-            JobEntityResponseDto updatedJob = this.jobManager.updateJobById(lob, jobId, status);
-            // Assuming jobManager.updateJobById throws an exception if 'updatedJob' or its ID is null/invalid
-            this.setJobEntityResponseDto(updatedJob);
-            log.debug("Job status update successful, updated internal state.");
-            return updatedJob;
-        } catch (RestClientException e) {
-            log.error("Failed to update job status via InsightsManager for Job ID: {}, ExceptionMsg: {}", jobId, e.getMessage());
-            throw e; // Re-throw the exception from the manager
-        }
-    }
 
     // --- File Operations ---
 
@@ -120,28 +106,9 @@ public class InsightsManager {
         }
     }
 
-    public FileEntityResponseDto updateFileStatus(String lob, String masterName, String jobId, String fileId, FileStatusRequestDto statusRequest) {
-        Objects.requireNonNull(lob, "LOB cannot be null for updateFileStatus");
-        Objects.requireNonNull(masterName, "MasterName cannot be null for updateFileStatus");
-        Objects.requireNonNull(jobId, "JobId cannot be null for updateFileStatus");
-        Objects.requireNonNull(fileId, "FileId cannot be null for updateFileStatus");
-        Objects.requireNonNull(statusRequest, "FileStatusRequestDto cannot be null for updateFileStatus");
 
-        try {
-            log.debug("Calling FileManager to update status for file ID: {}", fileId);
-            fileId = Optional.ofNullable(getFileEntityResponse(fileId)).map(FileEntityResponseDto::getFileId).orElse(fileId);
-            FileEntityResponseDto updatedFile = this.fileManager.updateFileStatus(
-                    lob, masterName, jobId, fileId, statusRequest);
-            addFileEntityResponse(updatedFile.getFileId(), updatedFile);
-            log.debug("File status update successful, updated internal map.");
-            return updatedFile;
-        } catch (RestClientException e) {
-            log.error("Failed to update file status via InsightsManager for File ID: {}, ExceptionMsg: {}", fileId, e.getMessage());
-            throw e; // Re-throw the exception from the manager
-        }
-    }
 
-    public UpdateRequestResponseDto updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {
+    public FileProgressResponse updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {
         Objects.requireNonNull(lob, "LOB cannot be null for updateFileProgress");
         Objects.requireNonNull(masterName, "MasterName cannot be null for updateFileProgress");
         Objects.requireNonNull(fileId, "FileId cannot be null for updateFileProgress");
@@ -150,11 +117,11 @@ public class InsightsManager {
         try {
             log.debug("Calling FileManager to update progress for file ID: {}", fileId);
             fileId = Optional.ofNullable(getFileEntityResponse(fileId)).map(FileEntityResponseDto::getFileId).orElse(fileId);
-            UpdateRequestResponseDto updateResponse = this.fileManager.updateFileProgress(
+            FileProgressResponse updateResponse = this.fileManager.updateFileProgress(
                     lob, masterName, fileId, progressPayload);
             // Storing the response if it has a request ID, for potential tracking.
             if (updateResponse != null && updateResponse.getRequestId() != null) {
-//                addUpdateRequestResponse(updateResponse.getRequestId(), updateResponse);
+               addUpdateRequestResponse(updateResponse.getRequestId(), updateResponse);
                 log.debug("File progress update successful, added update response to internal map.");
             } else {
                 log.debug("File progress update successful, but no request ID in response.");
@@ -167,16 +134,17 @@ public class InsightsManager {
     }
 
 
+
     // --- Helper methods ---
 
-    public void addUpdateRequestResponse(String updateRequestId, UpdateRequestResponseDto updateRequestResponseDto) {
+    public void addUpdateRequestResponse(String updateRequestId, FileProgressResponse updateRequestResponseDto) {
         Objects.requireNonNull(updateRequestId, "updateRequestId cannot be null");
         Objects.requireNonNull(updateRequestResponseDto, "updateRequestResponseDto cannot be null");
         updateRequestResponseDtoMap.put(updateRequestId, updateRequestResponseDto);
         log.trace("Added UpdateRequestResponseDto for ID: {}", updateRequestId);
     }
 
-    public UpdateRequestResponseDto getUpdateRequestResponse(String updateRequestId) {
+    public FileProgressResponse getUpdateRequestResponse(String updateRequestId) {
         Objects.requireNonNull(updateRequestId, "updateRequestId cannot be null");
         log.trace("Retrieving UpdateRequestResponseDto for ID: {}", updateRequestId);
         return updateRequestResponseDtoMap.get(updateRequestId);

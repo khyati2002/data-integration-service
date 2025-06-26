@@ -2,9 +2,7 @@ package com.salescode.dis.insights.dto.job;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
-import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.enums.ProgressStatus;
-import com.salescode.dis.insights.enums.ModeOfIntegration;
 import lombok.*;
 
 import java.io.Serializable;

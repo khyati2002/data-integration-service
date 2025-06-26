@@ -29,7 +29,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-		<insights-common.version>0.0.1-SNAPSHOT</insights-common.version>
+		<insights-common.version>0.0.2-SNAPSHOT</insights-common.version>
 	</properties>
 
 	<repositories>
@@ -173,12 +173,12 @@
 			<artifactId>jackson-datatype-jsr310</artifactId> <!-- For Java 8 Date/Time -->
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>com.salescode.dis</groupId>-->
-<!--			<artifactId>insights-common</artifactId>-->
-<!--			<version>${insights-common.version}</version>-->
-<!--			<classifier>sb3</classifier>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.salescode.dis</groupId>
+			<artifactId>insights-common</artifactId>
+			<version>${insights-common.version}</version>
+			<classifier>sb3</classifier>
+		</dependency>
 	</dependencies>
 
 	<build>

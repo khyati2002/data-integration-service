@@ -1,8 +1,8 @@
 package com.salescode.dis.insights.sdk.manager;
 
-import com.salescode.dis.insights.dto.JobEntityRequestDto;
-import com.salescode.dis.insights.dto.JobEntityResponseDto;
-import com.salescode.dis.insights.enums.JobStatus;
+
+import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
+import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.client.RestClientException;
@@ -78,28 +78,4 @@ public class JobManager {
         }
     }
 
-    public JobEntityResponseDto updateJobById(String lob, String jobId, JobStatus status) {
-        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders());
-        try {
-            log.debug("Attempting to update status for job ID: {} to {} for LOB: {}", jobId, status, lob);
-            Map<String, Object> uriVariables = new HashMap<>();
-            uriVariables.put("lob", lob);
-            uriVariables.put("jobId", jobId);
-            uriVariables.put("status", status);
-
-            ResponseEntity<JobEntityResponseDto> response = restTemplate.exchange(JOB_STATUS_UPDATE_URL, HttpMethod.PUT, entity, JobEntityResponseDto.class, uriVariables);
-
-            if (response.getStatusCode().equals(HttpStatus.OK)) {
-                log.info("Job status updated successfully for ID: {} to {}", jobId, status);
-                return response.getBody();
-            } else {
-                String errorMessage = String.format("Job status update failed for LOB '%s', Job ID '%s', Status '%s'. Expected status %s but received %s. URL: %s", lob, jobId, status, HttpStatus.OK, response.getStatusCode(), JOB_STATUS_UPDATE_URL);
-                log.warn(errorMessage);
-                throw new RestClientException(errorMessage);
-            }
-        } catch (RestClientException e) {
-            log.error("Error during job status update for LOB '{}', Job ID '{}', Status '{}'. URL: {}, ExceptionMsg {}", lob, jobId, status, JOB_STATUS_UPDATE_URL, e.getMessage());
-            throw e;
-        }
-    }
 }

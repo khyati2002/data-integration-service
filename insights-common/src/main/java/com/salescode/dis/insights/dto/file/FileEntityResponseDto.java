@@ -3,15 +3,16 @@ package com.salescode.dis.insights.dto.file;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salescode.dis.insights.dto.file.stage.FileStageMetricsDto;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 
-/**
- * DTO for {@link com.salescode.dis.insights.entity.FileEntity}
- */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,10 +1,14 @@
 package com.salescode.dis.insights.dto.file.progress;
 
 import com.salescode.dis.insights.enums.ModeOfIntegration;
-import com.salescode.dis.insights.enums.ProgressStage;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
 
+import com.salescode.dis.insights.enums.ProgressStage;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data

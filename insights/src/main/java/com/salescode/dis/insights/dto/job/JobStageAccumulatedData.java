@@ -2,6 +2,7 @@ package com.salescode.dis.insights.dto.job;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class JobStageAccumulatedData {
 
     private String jobId;
     String master;
+    private ModeOfIntegration modeOfIntegration;
     private Instant creationTime;
     private Instant lastModifiedTime;
     private String lob;
@@ -31,12 +33,13 @@ public class JobStageAccumulatedData {
     private Long logicalFailureCount;
 
     public JobStageAccumulatedData(
-            String jobId, String master, Instant creationTime, Instant lastModifiedTime, String lob,
+            String jobId, String master, ModeOfIntegration modeOfIntegration, Instant creationTime, Instant lastModifiedTime, String lob,
             String extendedAttributesJson,
-            Instant startTime, Instant endTime, ProgressStatus status,String publisherJobUri,
+            Instant startTime, Instant endTime, ProgressStatus status, String publisherJobUri,
             String consumerJobUri, ProgressStage stageType, Long totalSuccessCount, Long serverFailureCount, Long logicalFailureCount) { // Use Number for counts to be safe
         this.jobId = jobId;
         this.master = master;
+        this.modeOfIntegration = modeOfIntegration;
         this.creationTime = creationTime;
         this.lastModifiedTime = lastModifiedTime;
         this.lob = lob;

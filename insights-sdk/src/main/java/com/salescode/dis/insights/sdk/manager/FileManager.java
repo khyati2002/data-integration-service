@@ -1,6 +1,9 @@
 package com.salescode.dis.insights.sdk.manager;
 
-import com.salescode.dis.insights.dto.*;
+import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
+import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
+import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
+import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.client.RestClientException;
@@ -78,34 +81,14 @@ public class FileManager {
         }
     }
 
-    public FileEntityResponseDto updateFileStatus(String lob, String masterName, String jobId, String fileId, FileStatusRequestDto statusRequest) {
-        Objects.requireNonNull(statusRequest, "FileStatusRequestDto cannot be null");
 
-        HttpEntity<FileStatusRequestDto> entity = new HttpEntity<>(statusRequest, getHttpHeaders());
-        try {
-            log.debug("Attempting to update status for file ID: {} for LOB: {}, Master: {}, Job ID: {}", fileId, lob, masterName, jobId);
-            ResponseEntity<FileEntityResponseDto> response = restTemplate.exchange(FILE_STATUS_UPDATE_URL, HttpMethod.PUT, entity, FileEntityResponseDto.class, lob, masterName, jobId, fileId);
-            if (response.getStatusCode().equals(HttpStatus.OK)) {
-                log.info("File status updated successfully for ID: {} to {}", fileId, statusRequest);
-                return response.getBody();
-            } else {
-                String errorMessage = String.format("File status update failed for LOB '%s', Master '%s', Job ID '%s', File ID '%s'. Expected status %s but received %s. URL: %s", lob, masterName, jobId, fileId, HttpStatus.OK, response.getStatusCode(), FILE_STATUS_UPDATE_URL);
-                log.warn(errorMessage);
-                throw new RestClientException(errorMessage);
-            }
-        } catch (RestClientException e) {
-            log.error("Error during file status update for LOB '{}', Master '{}', Job ID '{}', File ID '{}'. URL: {}, ExceptionMsg {}", lob, masterName, jobId, fileId, FILE_STATUS_UPDATE_URL, e.getMessage());
-            throw e;
-        }
-    }
-
-    public UpdateRequestResponseDto updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {
+    public FileProgressResponse updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {
         Objects.requireNonNull(progressPayload, "FileProgressRequest cannot be null");
 
         HttpEntity<FileProgressRequest> entity = new HttpEntity<>(progressPayload, getHttpHeaders());
         try {
             log.debug("Attempting to update progress for file ID: {} for LOB: {}, Master: {}", fileId, lob, masterName);
-            ResponseEntity<UpdateRequestResponseDto> response = restTemplate.exchange(FILE_PROGRESS_UPDATE_URL, HttpMethod.PUT, entity, UpdateRequestResponseDto.class, lob, masterName, fileId);
+            ResponseEntity<FileProgressResponse> response = restTemplate.exchange(FILE_PROGRESS_UPDATE_URL, HttpMethod.PUT, entity, FileProgressResponse.class, lob, masterName, fileId);
             if (response.getStatusCode().is2xxSuccessful()) {
                 log.info("File progress updated successfully for ID: {}", fileId);
                 return response.getBody();

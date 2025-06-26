@@ -18,7 +18,5 @@ public class FileProgressEvent {
     private String masterName;
     private FileProgressRequest progress;
     private long timestamp = System.currentTimeMillis();
-
     private String errorMessage;
-
 }

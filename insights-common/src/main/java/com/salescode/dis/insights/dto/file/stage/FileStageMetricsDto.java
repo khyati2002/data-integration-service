@@ -1,7 +1,10 @@
 package com.salescode.dis.insights.dto.file.stage;
 
 import com.salescode.dis.insights.enums.ProgressStage;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

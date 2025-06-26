@@ -1,4 +1,4 @@
-cleanInstall:
+cleanInstall: setVersion
 	mvn clean install -f pom.xml -s ../settings.xml -DskipTests -Psb3 -e
 
 setVersion:
@@ -9,7 +9,7 @@ setVersion:
 	mvn versions:set -DnewVersion=$(version) -f pom.xml -s ../settings.xml
 	mvn versions:commit -f pom.xml -s ../settings.xml
 
-deploy: cleanInstall setVersion
+deploy: cleanInstall
 	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`
 #	mvn verify -f pom.xml -s ../settings.xml
 #	mvn deploy -f pom.xml -s ../settings.xml
@@ -17,4 +17,4 @@ deploy: cleanInstall setVersion
 	mvn deploy -f pom.xml -s ../settings.xml -Psb3 -Dclassifier=sb3
 
 profile?=default
-version?=0.0.1-SNAPSHOT
+version?=0.0.2-SNAPSHOT

@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.controller;
 
+import com.salescode.dis.insights.dto.AccumulatedJobsAndMasterDto;
 import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
@@ -122,7 +123,7 @@ public class JobController {
         content = @Content(schema = @Schema(implementation = ApiError.class))
     )
     @GetMapping("/job/{id}")
-    public ResponseEntity<JobEntityResponseDto> getJob( @PathVariable String id) {
+    public ResponseEntity<JobEntityResponseDto> getJob(@PathVariable String lob, @PathVariable String id) {
         JobEntity job = jobService.getJob(id);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
@@ -203,7 +204,8 @@ public class JobController {
     public ResponseEntity<List<JobEntityResponseDtoWithStages>> getJobs(
             @PathVariable String lob,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(required = false)  String mode) {
 
         // Set default values if not provided (last 24 hours)
         if (startDate == null) {
@@ -213,9 +215,29 @@ public class JobController {
             endDate = LocalDateTime.now();
         }
 
-        List<JobEntityResponseDtoWithStages> result = jobService.getJobsWithAggregatedStages(lob, startDate, endDate);
+        List<JobEntityResponseDtoWithStages> result = jobService.getJobsWithAggregatedStages(lob, startDate, endDate, mode);
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping(path = "/all-jobs")
+    public ResponseEntity<AccumulatedJobsAndMasterDto> getJobsAndMasters(
+            @PathVariable String lob,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(required = false)  String mode) {
+
+        // Set default values if not provided (last 24 hours)
+        if (startDate == null) {
+            startDate = LocalDateTime.now().minusDays(1);
+        }
+        if (endDate == null) {
+            endDate = LocalDateTime.now();
+        }
+
+        AccumulatedJobsAndMasterDto result = jobService.getJobsWithAggregatedStagesAndMasters(lob, startDate, endDate, mode);
+        return ResponseEntity.ok(result);
+    }
+    
 
 
 

@@ -58,6 +58,9 @@ public class FileEntity extends TimeAwareEntity {
         if (this.fileId == null) {
             this.fileId = this.getId();
         }
+        if(this.modeOfIntegration == null) {
+            this.modeOfIntegration = ModeOfIntegration.CK_API_CLIENT;
+        }
         this.setStatus(ProgressStatus.PENDING);
     }
 

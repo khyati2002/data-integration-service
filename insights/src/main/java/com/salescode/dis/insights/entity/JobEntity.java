@@ -2,7 +2,6 @@ package com.salescode.dis.insights.entity;
 
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.enums.ProgressStatus;
-import com.salescode.dis.insights.enums.ModeOfIntegration;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

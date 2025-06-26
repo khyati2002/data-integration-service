@@ -18,7 +18,8 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class JobEntityResponseDtoWithStages {
     String id;
-   List<String> masters;
+    List<String> masters;
+    ModeOfIntegration modeOfIntegration;
     Instant creationTime;
     Instant lastModifiedTime;
     String lob;

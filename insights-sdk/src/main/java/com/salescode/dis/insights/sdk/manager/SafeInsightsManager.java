@@ -1,6 +1,12 @@
 package com.salescode.dis.insights.sdk.manager;
 
-import com.salescode.dis.insights.enums.JobStatus;
+
+import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
+import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
+import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
+import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
+import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
+import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClientException;
 
@@ -41,17 +47,7 @@ public class SafeInsightsManager {
         }
     }
 
-    public Optional<JobEntityResponseDto> updateJobStatus(String lob, String jobId, JobStatus status) {
-        try {
-            return Optional.ofNullable(insightsManager.updateJobStatus(lob, jobId, status));
-        } catch (RestClientException e) {
-            log.warn("SafeInsightsManager: updateJobStatus operation failed for Job ID '{}'. Returning Optional.empty().", jobId);
-            return Optional.empty();
-        } catch (IllegalArgumentException e) {
-            log.warn("SafeInsightsManager: updateJobStatus operation called with invalid arguments for Job ID '{}'. Returning Optional.empty().", jobId, e);
-            return Optional.empty();
-        }
-    }
+
 
     // --- Safe File Operations ---
 
@@ -79,19 +75,9 @@ public class SafeInsightsManager {
         }
     }
 
-    public Optional<FileEntityResponseDto> updateFileStatus(String lob, String masterName, String jobId, String fileId, FileStatusRequestDto statusRequest) {
-        try {
-            return Optional.ofNullable(insightsManager.updateFileStatus(lob, masterName, jobId, fileId, statusRequest));
-        } catch (RestClientException e) {
-            log.warn("SafeInsightsManager: updateFileStatus operation failed for File ID '{}'. Returning Optional.empty().", fileId);
-            return Optional.empty();
-        } catch (IllegalArgumentException e) {
-            log.warn("SafeInsightsManager: updateFileStatus operation called with invalid arguments for File ID '{}'. Returning Optional.empty().", fileId, e);
-            return Optional.empty();
-        }
-    }
 
-    public Optional<UpdateRequestResponseDto> updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {
+
+    public Optional<FileProgressResponse> updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {
         try {
             return Optional.ofNullable(insightsManager.updateFileProgress(lob, masterName, fileId, progressPayload));
         } catch (RestClientException e) {
