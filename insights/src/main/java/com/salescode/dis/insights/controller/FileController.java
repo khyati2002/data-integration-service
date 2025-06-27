@@ -64,4 +64,23 @@ public class FileController {
         return ResponseEntity.ok(pageRes);
     }
 
+    @Operation(summary = "Set total count for a file", description = "Updates the total count for a specific file.")
+    @ApiResponse(responseCode = "200", description = "Total count updated successfully", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
+    @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid total count value", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @PutMapping("/master/{master_name}/unit/{fileId}")
+    public ResponseEntity<FileEntityResponseDto> setTotalCount(
+            @PathVariable String lob,
+            @PathVariable("master_name") String masterName,
+            @PathVariable String fileId,
+            @RequestParam Long totalCount) {
+
+        log.info("Setting total count {} for file {}  for master {}", totalCount, fileId, masterName);
+
+        FileEntity updatedFile = fileService.setTotalCount(fileId, masterName, totalCount);
+        FileEntityResponseDto resp = fileEntityMapper.toDto(updatedFile);
+        return ResponseEntity.ok(resp);
+    }
+
 }

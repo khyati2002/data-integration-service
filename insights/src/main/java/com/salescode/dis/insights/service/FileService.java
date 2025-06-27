@@ -9,6 +9,7 @@ import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.service.strategy.IFileOperationStrategy;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -79,5 +80,12 @@ public class FileService {
         if(!fileRepo.existsByFileIdAndMaster(fileId,masterName)){
             throw new ResourceNotFoundException("File not found: " + fileId);
         }
+    }
+
+    public FileEntity setTotalCount(String fileId, String masterName, long totalCount){
+        FileEntity file = fileRepo.findByFileIdAndMaster(fileId, masterName)
+                .orElseThrow(() -> new EntityNotFoundException("File entity does not exist with fileId: " + fileId + " and master: " + masterName));
+        file.setTotalCount(totalCount);
+        return file;
     }
 }

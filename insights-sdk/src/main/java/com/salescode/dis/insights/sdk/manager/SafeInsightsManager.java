@@ -47,6 +47,18 @@ public class SafeInsightsManager {
         }
     }
 
+    public Optional<FileEntityResponseDto> updateFileCount(String lob, String masterName, String fileId, Long totalCount) {
+        try {
+            return Optional.ofNullable(insightsManager.updateFileCount(lob, masterName,fileId,totalCount));
+        } catch (RestClientException e) {
+            log.warn("SafeInsightsManager: createJob operation failed for LOB '{}'. Returning Optional.empty().", lob);
+            return Optional.empty();
+        } catch (IllegalArgumentException e) {
+            log.warn("SafeInsightsManager: createJob operation called with invalid arguments for LOB '{}'. Returning Optional.empty().", lob, e);
+            return Optional.empty();
+        }
+    }
+
 
 
     // --- Safe File Operations ---

@@ -53,7 +53,7 @@ public class FileProgressController {
         event.setLob(lob);
         event.setMasterName(masterName);
         event.setProgress(progress);
-        event.setJobId(null);
+        event.setJobId(file.getJob().getId());
         // job is already mapped to a file, hence not required to send
 
         kafkaTemplate.send(fileUpdatesTopic, fileId, event);

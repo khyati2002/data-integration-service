@@ -106,6 +106,22 @@ public class InsightsManager {
         }
     }
 
+    public FileEntityResponseDto updateFileCount(String lob, String masterName, String fileId, Long totalCount){
+        Objects.requireNonNull(lob, "LOB cannot be null for createFile");
+        Objects.requireNonNull(masterName, "MasterName cannot be null for createFile");
+        Objects.requireNonNull(fileId, "FileId cannot be null for createFile");
+        try {
+            log.debug("Calling FileManager to update total with ID: {} ", fileId);
+            FileEntityResponseDto createdFile = this.fileManager.updateCount(lob, masterName, fileId, totalCount);
+            log.debug("Count updated successfully");
+            return createdFile;
+        } catch (RestClientException e) {
+            log.error("Failed to create file via InsightsManager for File ID: {}, ExceptionMsg: {}", fileId, e.getMessage());
+            throw e; // Re-throw the exception from the manager
+        }
+
+    }
+
 
 
     public FileProgressResponse updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {

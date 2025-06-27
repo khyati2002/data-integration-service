@@ -17,6 +17,7 @@ public class FileManager {
     private final String FILE_CREATE_URL;
     private final String FILE_GET_URL;
     private final String FILE_STATUS_UPDATE_URL;
+    private final String FILE_COUNT_UPDATE_URL;
     private final String FILE_PROGRESS_UPDATE_URL;
 
     RestTemplate restTemplate;
@@ -25,6 +26,7 @@ public class FileManager {
         FILE_CREATE_URL = baseURL + "/api/{lob}/master/{masterName}/job/{jobId}/unit";
         FILE_GET_URL = baseURL + "/api/{lob}/master/{masterName}/job/{jobId}/unit/{fileId}";
         FILE_STATUS_UPDATE_URL = baseURL + "/api/{lob}/master/{masterName}/job/{jobId}/unit/{fileId}/status";
+        FILE_COUNT_UPDATE_URL = baseURL + "/api/{lob}/master/{masterName}/unit/{fileId}";
         FILE_PROGRESS_UPDATE_URL = baseURL + "/api/{lob}/master/{masterName}/unit/{fileId}/progress";
     }
 
@@ -80,6 +82,30 @@ public class FileManager {
             throw e;
         }
     }
+
+    public FileEntityResponseDto updateCount(String lob, String masterName, String fileId, Long totalCount) {
+        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders());
+        try {
+            log.debug("Attempting to update count file with ID: {} for LOB: {}, Master: {}, totalCount: {}", fileId, lob, masterName, totalCount);
+            String urlWithParams = FILE_COUNT_UPDATE_URL + "?totalCount=" + totalCount;
+            ResponseEntity<FileEntityResponseDto> response = restTemplate.exchange(urlWithParams, HttpMethod.PUT, entity, FileEntityResponseDto.class, lob, masterName, fileId);
+
+            if (response.getStatusCode().equals(HttpStatus.OK)) {
+                log.info("File count updated successfully with ID: {}, totalCount: {}", fileId, totalCount);
+                return response.getBody();
+            } else {
+                String errorMessage = String.format("Update file count failed for LOB '%s', Master '%s', File ID '%s', totalCount '%s'. Expected status %s but received %s. URL: %s",
+                        lob, masterName, fileId, totalCount, HttpStatus.OK, response.getStatusCode(), urlWithParams);
+                log.warn(errorMessage);
+                throw new RestClientException(errorMessage);
+            }
+        } catch (RestClientException e) {
+            log.error("Error during update file count for LOB '{}', Master '{}', File ID '{}', totalCount '{}'. URL: {}, ExceptionMsg {}",
+                    lob, masterName, fileId, totalCount, FILE_COUNT_UPDATE_URL, e.getMessage());
+            throw e;
+        }
+    }
+
 
 
     public FileProgressResponse updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {

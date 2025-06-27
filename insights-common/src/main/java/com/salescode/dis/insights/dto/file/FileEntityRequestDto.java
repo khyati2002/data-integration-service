@@ -15,10 +15,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class FileEntityRequestDto implements Serializable {
-    @NotNull
-    String fileId;
+    @NotNull String fileId;
     JsonNode extendedAttributes;
-    @NotNull @Builder.Default Long totalCount = 0L;
-    @NotNull
-    ModeOfIntegration modeOfIntegration;
+    @Builder.Default Long totalCount = 0L;
+    @NotNull ModeOfIntegration modeOfIntegration;
 }
