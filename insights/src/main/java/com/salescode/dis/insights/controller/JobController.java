@@ -1,14 +1,10 @@
 package com.salescode.dis.insights.controller;
 
 import com.salescode.dis.insights.dto.AccumulatedJobsAndMasterDto;
-import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDtoWithStages;
 import com.salescode.dis.insights.entity.JobEntity;
-import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
-import com.salescode.dis.insights.enums.ModeOfIntegration;
-import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
@@ -22,21 +18,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -132,41 +121,6 @@ public class JobController {
 
 
 
-//    @Operation(
-//        summary = "Update job status",
-//        description = "Updates the status of an existing job.",
-//        parameters = {
-//            @Parameter(name = "lob", description = "Line of Business"),
-//            @Parameter(name = "id", description = "Unique identifier of the job"),
-//            @Parameter(name = "status", description = "New status to set for the job")
-//        }
-//    )
-//    @ApiResponse(
-//            responseCode = "200",
-//            description = "Status update request accepted and processed successfully",
-//            content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
-//    )
-//    @ApiResponse(
-//            responseCode = "400",
-//            description = "Invalid status value provided",
-//            content = @Content(schema = @Schema(implementation = ApiError.class))
-//    )
-//    @ApiResponse(
-//            responseCode = "404",
-//            description = "Job not found with the specified ID",
-//            content = @Content(schema = @Schema(implementation = ApiError.class))
-//    )
-//    @ApiResponse(
-//            responseCode = "500",
-//            description = "Internal server error occurred while processing status update",
-//            content = @Content(schema = @Schema(implementation = ApiError.class))
-//    )
-//    @PutMapping("/job/{id}/status/{status}")
-//    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String lob, @PathVariable String id, @PathVariable ProgressStatus status) {
-//        JobEntity job = jobService.updateStatus(id, status);
-//        JobEntityResponseDto dto = jobEntityMapper.toDto(job);
-//        return ResponseEntity.ok(dto);
-//    }
 
 
     @Operation(
