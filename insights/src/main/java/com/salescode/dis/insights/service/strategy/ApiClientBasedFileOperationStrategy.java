@@ -62,9 +62,6 @@ public class ApiClientBasedFileOperationStrategy implements IFileOperationStrate
         FileEntity file = fileStageMetrics.getFile();
         if(fileStageMetrics.getTotal() != 0 && fileStageMetrics.getTotal().compareTo(file.getTotalCount()) == 0 ){
             fileStageMetrics.setProgressStatus(fileStageMetrics.getCurrentStatus());
-            if(getSupportedStages().getLast().equals(fileStageMetrics.getStageType())){
-                file.setStatus(fileStageMetrics.getCurrentStatus());
-            }
         }
         else{
             fileStageMetrics.setProgressStatus(ProgressStatus.FAILED);

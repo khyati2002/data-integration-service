@@ -51,9 +51,6 @@ public class ApiBasedFileOperationStrategy implements IFileOperationStrategy {
         if(file.getTotalCount() != 0 && fileStageMetrics.getTotal().compareTo(file.getTotalCount()) ==0 ){
             fileStageMetrics.setProgressStatus(fileStageMetrics.getCurrentStatus());
         }
-        if(getSupportedStages().getLast().equals(fileStageMetrics.getStageType())){
-            file.setStatus(fileStageMetrics.getCurrentStatus());
-        }
     }
 
     @Override
