@@ -2,6 +2,7 @@ package com.salescode.dis.insights.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,8 @@ public class PropertyService {
     private final Cache<String, Boolean> lobFeatureCache; // key = lob:env
     private final Cache<String, String> lobToEnvCache;       // key = lob, value = env
 
-    private final String TOKEN = "hardcoded_token";
+    @Value("${property-service.token}")
+    private String TOKEN;
     public PropertyService(RestTemplateBuilder builder) {
         this.restTemplate = builder.build();
         this.objectMapper = new ObjectMapper();

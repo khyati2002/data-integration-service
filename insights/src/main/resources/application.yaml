@@ -40,6 +40,11 @@ cache:
 application:
   environment: dev
 
+app:
+  active-environments: uat
+
+property-service:
+  token: "your-token-here"
 ---
 
 # Configuration for 'uat' profile
