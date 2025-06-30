@@ -26,7 +26,7 @@ public class FileManager {
         FILE_CREATE_URL = baseURL + "/api/{lob}/master/{masterName}/job/{jobId}/unit";
         FILE_GET_URL = baseURL + "/api/{lob}/master/{masterName}/job/{jobId}/unit/{fileId}";
         FILE_STATUS_UPDATE_URL = baseURL + "/api/{lob}/master/{masterName}/job/{jobId}/unit/{fileId}/status";
-        FILE_COUNT_UPDATE_URL = baseURL + "/api/{lob}/master/{masterName}/unit/{fileId}";
+        FILE_COUNT_UPDATE_URL = baseURL + "/api/{lob}/master/{masterName}/unit/{fileId}/total-count";
         FILE_PROGRESS_UPDATE_URL = baseURL + "/api/{lob}/master/{masterName}/unit/{fileId}/progress";
     }
 
