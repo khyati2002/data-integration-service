@@ -3,6 +3,7 @@ package com.salescode.dis.insights.sdk.manager;
 
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.client.RestClientException;
@@ -74,6 +75,40 @@ public class JobManager {
             }
         } catch (RestClientException e) {
             log.error("Error during get job for LOB '{}', Job ID '{}'. URL: {}, ExceptionMsg {}", lob, jobId, JOB_GET_BY_ID_URL, e.getMessage());
+            throw e;
+        }
+    }
+
+    public JobEntityResponseDto updateJobStatus(String lob, String jobId, ProgressStatus status) {
+        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders());
+        try {
+            log.debug("Attempting to update status of job with ID: {} to {} for LOB: {}", jobId, status, lob);
+
+            ResponseEntity<JobEntityResponseDto> response = restTemplate.exchange(
+                    JOB_STATUS_UPDATE_URL,
+                    HttpMethod.PUT,
+                    entity,
+                    JobEntityResponseDto.class,
+                    lob,
+                    jobId,
+                    status.name()
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                log.info("Job status updated successfully for ID: {}, new status: {}", jobId, status);
+                return response.getBody();
+            } else {
+                String errorMessage = String.format(
+                        "Failed to update job status for LOB '%s', Job ID '%s'. Expected status %s but got %s. URL: %s",
+                        lob, jobId, HttpStatus.OK, response.getStatusCode(), JOB_STATUS_UPDATE_URL
+                );
+                log.warn(errorMessage);
+                throw new RestClientException(errorMessage);
+            }
+
+        } catch (RestClientException e) {
+            log.error("Error updating job status for LOB '{}', Job ID '{}'. URL: {}, Exception: {}",
+                    lob, jobId, JOB_STATUS_UPDATE_URL, e.getMessage());
             throw e;
         }
     }
