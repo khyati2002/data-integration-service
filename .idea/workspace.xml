@@ -5,11 +5,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9571c45-c3b9-4037-ac14-a5877b8e109a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/salescode/dim/StreamingRawDataKryoSerializationTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/data.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/applicate/kgbpl/transformer/KgbplStockTransformer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/git.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/enrichment/OutletDetailsNameEnrichmentITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/enrichment/RetailerItclEnrichment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/enrichment/UserDetailsEnrichmentITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/enrichment/UserDuplicateMobileNumberEnrichmentITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/enrichment/UserEnrichmentItcl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/validation/DuplicateMobileNumberValidatorITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/validation/OutletActiveStatusValidatorITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/validation/OutletDetailsNullValueValidatorITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/validation/OutletDetailsValidatorITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/validation/OutletValidatorITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/validation/SupplierInfoValidatorITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/validation/UserDuplicateMobileNumberValidatorITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/validation/UserImmediateParentValidatorITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/unnati/validation/UserValidatorITCL.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/OutletDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/OutletDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/StockService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/StockService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TargetResultsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TargetResultsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TargetsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TargetsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/UserParentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/UserParentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/salescode/dim/jooq/impl/StockIntegration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/salescode/dim/jooq/impl/StockIntegration.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j2.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/salescode/dim/DataStreamJobTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/salescode/dim/DataStreamJobTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/salescode/dim/StreamingRawDataTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,9 +78,10 @@
     &quot;Application.FlinkTestCaseWithSimpleSource.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.DataStreamJobTest.testDataStreamJobWithFewObjects.executor&quot;: &quot;Debug&quot;,
     &quot;Makefile Target.init.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.dim [clean,install].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dim-save-2&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;stock-integration&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/gauravgupta/Documents/dim/src/test/resources&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -59,7 +89,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
@@ -78,6 +108,7 @@
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="make init" />
+      <command value="mvn clean install" />
     </option>
   </component>
   <component name="RunManager" selected="JUnit.DataStreamJobTest.testDataStreamJobWithFewObjects">
@@ -104,12 +135,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="dis" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
       <module name="dis" />
       <option name="filePath" />
@@ -125,17 +150,8 @@
       <list>
         <item itemvalue="JUnit.DataStreamJobTest.testDataStreamJobWithFewObjects" />
         <item itemvalue="Application.FlinkTestCaseWithSimpleSource" />
-        <item itemvalue="Makefile Target.init" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -165,6 +181,62 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/kgbpl/transformer/KgbplStockTransformer.java</url>
+          <line>15</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/StreamingRawDataProcessor.java</url>
+          <line>68</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/scanner/ExternalRegistryScanner.java</url>
+          <line>45</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/salescode/dim/DataStreamJobTest.java</url>
+          <line>106</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/salescode/dim/DataStreamJobTest.java</url>
+          <line>110</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/salescode/dim/DataStreamJobTest.java</url>
+          <line>112</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/PropertyLoader.java</url>
+          <line>29</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/PropertyLoader.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/PropertyLoader.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/StockService.java</url>
+          <line>21</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

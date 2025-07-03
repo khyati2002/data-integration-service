@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @Data
 public class StockIntegration extends CommonDataModel {
 
+    private String supplier;
+    private String warehouseId;
     private String skuCode;
     private Integer caseQty;
     private Integer pieceQty;

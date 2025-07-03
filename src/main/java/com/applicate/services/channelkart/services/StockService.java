@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
 
 import java.io.IOException;
@@ -20,9 +19,8 @@ public class StockService extends AbstractCDMService<StockIntegration>{
 
     @Override
     public Collection<StockIntegration> batchSave(Collection<StockIntegration> cdmObject) {
-        if (httpClient == null) {
             httpClient = HttpClients.createDefault();
-        }
+
 
         String url = "https://stocks-uat.salescode.ai/hcheck";
         HttpPost request = new HttpPost(url);

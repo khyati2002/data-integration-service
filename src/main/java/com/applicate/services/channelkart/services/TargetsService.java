@@ -179,7 +179,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                     saveItemsList.get(0).stream()
                             .map(target -> {
                                 CkTargetsRecord targetsRecord = getDslContext().newRecord(CK_TARGETS, target);
-                                targetsRecord.setChanged((byte) 0);
+//                                targetsRecord.setChanged((byte) 0);
                                 return targetsRecord;
                             }) // Convert to jOOQ Records
                             .collect(Collectors.toList())).execute();
@@ -189,7 +189,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                     saveItemsList.get(1).stream()
                             .map(target -> {
                                 CkTargetsRecord targetsRecord = getDslContext().newRecord(CK_TARGETS, target);
-                                targetsRecord.setChanged((byte) 1);
+//                                targetsRecord.setChanged((byte) 1);
                                 targetsRecord.changed(CK_TARGETS.ID, false); // Avoid updating primary key
                                 return targetsRecord;
                             })

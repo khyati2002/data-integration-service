@@ -5,6 +5,7 @@ import com.applicate.services.channelkart.utils.JSONUtils;
 import lombok.SneakyThrows;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -38,65 +39,50 @@ public class DataStreamJobTest {
 
 
     public static String rawStreamingData = "{\n" +
-            "    \"requestId\": \"8a318b6b-95ca-49ff-8310-d90ec102827a\",\n" +
-            "    \"groupId\": \"2025-05-02\",\n" +
-            "    \"lob\": \"cktestitcloyalty\",\n" +
-            "    \"loginId\": \"integration_user\",\n" +
-            "    \"batchNumber\": 0,\n" +
-            "    \"transformerInfo\": [\n" +
-            "        {\n" +
-            "            \"skipPreprocessing\": false,\n" +
-            "            \"skipPersist\": false,\n" +
-            "            \"entityName\": \"OutletDetails\",\n" +
-            "            \"transformerId\": \"unnati_csp_outlet_master_mdm1\",\n" +
-            "            \"preprocessValidationExcludeGroup\": \"outlet_validation_exclude\",\n" +
-            "            \"messageLevelHash\": null,\n" +
-            "            \"messageHashSupported\": false,\n" +
-            "            \"messageLevelKey\": null,\n" +
-            "            \"cachedArtifact\": null,\n" +
-            "            \"operationType\": \"insert\"\n" +
+            "\n" +
+            "  \"lob\": \"kgbpluat\",\n" +
+            "  \"loginId\": \"integration_user\",\n" +
+            "  \"batchNumber\": 0,\n" +
+            "  \"transformerInfo\": [\n" +
+            "    {\n" +
+            "      \"skipPreprocessing\": false,\n" +
+            "      \"skipPersist\": false,\n" +
+            "      \"entityName\": \"StockIntegration\",\n" +
+            "      \"transformerId\": \"KgbplStockTransformer\"\n" +
+            "\n" +
+            "    }\n" +
+            "  ],\n" +
+            "  \"features\": [\n" +
+            "     {\n" +
+            "            \"@odata.etag\": \"W/\\\"JzE0NTYzNDU5MDAsNTYzODYyODE5MzswLDA7MzgwMzAzMzcxLDU2Mzc1ODU1ODQn\\\"\",\n" +
+            "            \"dataAreaId\": \"kgpl\",\n" +
+            "            \"ItemId\": \"KO00010750\",\n" +
+            "            \"configId\": \"40\",\n" +
+            "            \"InventLocationId\": \"JAPR001\",\n" +
+            "            \"InventSiteId\": \"JAPR\",\n" +
+            "            \"InventSizeId\": \"\",\n" +
+            "            \"InventStyleId\": \"NONPROMO24\",\n" +
+            "            \"Acx_ActualBatchId\": \"\",\n" +
+            "            \"PdsShelfAdviceDate\": \"1900-01-01T12:00:00Z\",\n" +
+            "            \"AvailPhysical\": 0,\n" +
+            "            \"ItemName\": \"COKE 750 ML (1X24)\",\n" +
+            "            \"InventSerialId\": \"\",\n" +
+            "            \"AcxItemType\": \"FinishedGoods\",\n" +
+            "            \"InventBatchId\": \"\",\n" +
+            "            \"InventColorId\": \"SW\",\n" +
+            "            \"ModifiedDate\": \"2024-08-12T09:17:47Z\",\n" +
+            "            \"PDSInheritedShelfLife\": \"No\",\n" +
+            "            \"expDate\": \"1900-01-01T12:00:00Z\",\n" +
+            "            \"prodDate\": \"1900-01-01T12:00:00Z\"\n" +
             "        }\n" +
-            "    ],\n" +
-            "    \"features\":  [{\n" +
-            "    \"UID\": \"EGAU-SL-54327\",\n" +
-            "    \"CREATIONDATE\": \"1746770380797\",\n" +
-            "    \"DISTRICT\": \"EDIS\",\n" +
-            "    \"Branch\": \"EGAU\",\n" +
-            "    \"CUSTName\": \"BABUL STORES\",\n" +
-            "    \"OwnerName\": \"BABUL STORES\",\n" +
-            "    \"ChannelType\": \"Rural Wholesale\",\n" +
-            "    \"OutletType\": \"Dual (FMCG + Tobacco)\",\n" +
-            "    \"LoyaltyType\": \"SWD Others\",\n" +
-            "    \"OutletLat\": \"26.424693999999999\",\n" +
-            "    \"OutletLong\": \"90.973511000000002\",\n" +
-            "    \"TYPE\": \"LOYALTY\",\n" +
-            "    \"OutletName\": \"BABUL STORES\",\n" +
-            "    \"supplierMapping\": [\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"GA2799DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"GA2799\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING CO\"\n" +
-            "      },\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"NG2949DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"NG2949\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING COOOOOO\"\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }\n" +
-            "    ],\n" +
-            "    \"appId\": \"integration\",\n" +
-            "    \"retryCount\": 0,\n" +
-            "    \"preserveOnFailure\": true,\n" +
-            "    \"ignoreS3Log\": false,\n" +
-            "    \"topicName\": \"unnati-dataintegration\"\n" +
-            "}";
+            "  ],\n" +
+            "  \"appId\": \"integration\",\n" +
+            "  \"retryCount\": 0,\n" +
+            "  \"preserveOnFailure\": true,\n" +
+            "  \"ignoreS3Log\": false,\n" +
+            "  \"topicName\": \"kgbpldemo-dataintegration\"\n" +
+            "}\n";
+
     @Test
     public void testDataStreamJobWithFewObjects() throws Exception {
         // Clear previously collected values (if any)
@@ -108,11 +94,11 @@ public class DataStreamJobTest {
 
         // Create a few sample StreamingRawData objects
         StreamingRawData data1 = createStreamingDataObject(Map.of("groupId", "req-1"));
-        StreamingRawData data2 = createStreamingDataObject(Map.of("groupId", "req-2"));
-        StreamingRawData data3 = createStreamingDataObject(Map.of("groupId", "req-3"));
+//        StreamingRawData data2 = createStreamingDataObject(Map.of("groupId", "req-2"));
+//        StreamingRawData data3 = createStreamingDataObject(Map.of("groupId", "req-3"));
 
         // Create a source from the sample data
-        DataStream<StreamingRawData> source = env.fromData(data1, data2, data3);
+        DataStream<StreamingRawData> source = env.fromData(data1);
 
         // For testing, we bypass Kafka and directly use the processor.
         // Prepare dummy commonProperties (if needed by StreamingRawDataProcessor)
@@ -140,9 +126,9 @@ public class DataStreamJobTest {
     }
 
     @SneakyThrows
-    private StreamingRawData createStreamingDataObject(Map<String, String> map) {
+    private StreamingRawData createStreamingDataObject(Map<String, String> map) throws JsonProcessingException {
         return JSONUtils.getObjectMapper()
-                        .readValue(StringSubstitutor.replace(rawStreamingData, map, "%(", ")"), StreamingRawData.class);
+                .readValue(StringSubstitutor.replace(rawStreamingData, map, "%(", ")"), StreamingRawData.class);
     }
 
     @Test
