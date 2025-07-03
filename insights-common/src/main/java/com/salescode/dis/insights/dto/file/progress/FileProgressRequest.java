@@ -23,5 +23,5 @@ public class FileProgressRequest implements Serializable {
     @Builder.Default Long logicalFailureCount = 0L;
     Integer minProcessingTimeMs;
     Integer maxProcessingTimeMs;
-    @NotNull ModeOfIntegration modeOfIntegration;
+    ModeOfIntegration modeOfIntegration;
 }

@@ -50,6 +50,7 @@ public class AggregationWrapper {
         newEvent.setJobId(source.getJobId());
         newEvent.setLob(source.getLob());
         newEvent.setProgress(new FileProgressRequest());
+        newEvent.getProgress().setModeOfIntegration(source.getProgress().getModeOfIntegration());
         return newEvent;
     }
 

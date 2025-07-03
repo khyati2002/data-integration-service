@@ -70,7 +70,8 @@ public class FileService {
     @Transactional
     public void updateProgress(String fileId, String masterName, String jobId, String lob, FileProgressRequest progress) {
         FileEntity file = fileRepo.findByFileIdAndMaster(fileId, masterName).orElse(null);
-        ModeOfIntegration mode = (file != null) ? file.getModeOfIntegration() : ModeOfIntegration.CK_API_CLIENT;
+        ModeOfIntegration mode = (file != null) ? file.getModeOfIntegration() :
+                (progress.getModeOfIntegration() != null) ? progress.getModeOfIntegration() : ModeOfIntegration.CK_API_CLIENT;
         IFileOperationStrategy strategy = getFileOperationStrategy(mode);
         strategy.updateFileProgress(file, fileId, masterName, jobId, lob, progress);
     }

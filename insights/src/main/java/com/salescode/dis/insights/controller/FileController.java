@@ -23,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
+
 @RestController
 @RequestMapping("/api/{lob}")
 @RequiredArgsConstructor
@@ -49,7 +51,8 @@ public class FileController {
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @GetMapping("/master/{master_name}/job/{jobId}/unit/{fileId}")
     public ResponseEntity<FileEntityResponseDto> getFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @PathVariable String fileId) {
-        FileEntity file = fileService.get(fileId, masterName);
+        String decodedFileId = new String(Base64.getDecoder().decode(fileId));
+        FileEntity file = fileService.get(decodedFileId, masterName);
         FileEntityResponseDto resp = fileEntityMapper.toDto(file);
         return ResponseEntity.ok(resp);
     }

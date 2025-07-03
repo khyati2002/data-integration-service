@@ -26,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -113,7 +114,8 @@ public class JobController {
     )
     @GetMapping("/job/{id}")
     public ResponseEntity<JobEntityResponseDto> getJob(@PathVariable String lob, @PathVariable String id) {
-        JobEntity job = jobService.getJob(id);
+        String decodedJobId = new String(Base64.getDecoder().decode(id));
+        JobEntity job = jobService.getJob(decodedJobId);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
     }
@@ -208,7 +210,6 @@ public class JobController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @RequestParam(required = false)  String mode) {
 
-        // Set default values if not provided (last 24 hours)
         if (startDate == null) {
             startDate = LocalDateTime.now().minusDays(1);
         }
@@ -227,10 +228,10 @@ public class JobController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @RequestParam(required = false)  String mode) {
 
-        // Set default values if not provided (last 24 hours)
         if (startDate == null) {
             startDate = LocalDateTime.now().minusDays(1);
         }
+
         if (endDate == null) {
             endDate = LocalDateTime.now();
         }
