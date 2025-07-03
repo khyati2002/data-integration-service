@@ -69,7 +69,7 @@ public class FileController {
     @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "400", description = "Invalid total count value", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
-    @PutMapping("/master/{master_name}/unit/{fileId}")
+    @PutMapping("/master/{master_name}/unit/{fileId}/total-count")
     public ResponseEntity<FileEntityResponseDto> setTotalCount(
             @PathVariable String lob,
             @PathVariable("master_name") String masterName,

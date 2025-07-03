@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-public interface JobRepository extends JpaRepository<JobEntity, String>, JpaSpecificationExecutor<JobEntity> {
+public interface JobRepository extends JpaRepository<JobEntity, String> {
 
     Page<JobEntity> getJobEntitiesByLob(String lob, Pageable pageable);
 

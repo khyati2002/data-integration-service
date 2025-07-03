@@ -60,6 +60,6 @@ public class ApiBasedFileOperationStrategy implements IFileOperationStrategy {
 
     @Override
     public List<ProgressStage> getSupportedStages() {
-        return List.of(READ, PUBLISH, QUEUE, PROCESS, SAVE);
+        return List.of(PUBLISH, QUEUE, PROCESS, SAVE);
     }
 } 
