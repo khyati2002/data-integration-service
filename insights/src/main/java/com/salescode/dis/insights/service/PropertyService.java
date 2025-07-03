@@ -2,6 +2,8 @@ package com.salescode.dis.insights.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salescode.dis.insights.entity.InsightsMetadata;
+import com.salescode.dis.insights.repository.InsightsMetadataRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
@@ -18,16 +20,24 @@ public class PropertyService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-
+    private InsightsMetadataRepository metadataRepository;
     private final Cache<String, Boolean> lobFeatureCache; // key = lob:env
     private final Cache<String, String> lobToEnvCache;       // key = lob, value = env
 
-    @Value("${property-service.token}")
-    private String TOKEN;
-    public PropertyService(RestTemplateBuilder builder) {
+    private String TOKEN ;
+    private String getToken() {
+        if (TOKEN == null) {
+            TOKEN = metadataRepository.findByKey("token")
+                    .map(InsightsMetadata::getValue)
+                    .orElseThrow(() -> new RuntimeException("Token not found in DB"));
+        }
+        return TOKEN;
+    }
+
+    public PropertyService(RestTemplateBuilder builder, InsightsMetadataRepository insightsMetadataRepository) {
         this.restTemplate = builder.build();
         this.objectMapper = new ObjectMapper();
-
+        this.metadataRepository = insightsMetadataRepository;
         this.lobFeatureCache = Caffeine.newBuilder()
                 .maximumSize(1000)
                 .build();
@@ -42,14 +52,9 @@ public class PropertyService {
     }
 
     public String getBaseUrl(String env){
-        String baseUrl = switch (env.toLowerCase()) {
-            case "dev" -> "https://dev.salescode.ai";
-            case "uat" -> "https://uat.salescode.ai";
-//            case "demo" -> "https://demo.salescode.ai";
-//            case "prod" -> "https://prod.salescode.ai";
-            default -> throw new IllegalArgumentException("Invalid environment: " + env);
-        };
-      return baseUrl;
+        return metadataRepository.findByKey(env)
+                .map(InsightsMetadata::getValue)
+                .orElseThrow(() -> new IllegalArgumentException("Base URL not found for environment: " + env));
     }
 
     public void fetchAndCacheFeaturesForEnv(String env) {
@@ -77,7 +82,7 @@ public class PropertyService {
     public void fetchAndCacheFeatureForLob(String baseUrl, String lob) {
         String propertyUrl = baseUrl + "/v1/properties?name=enable.insights.integration";
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + TOKEN);
+        headers.set("Authorization", "Bearer " + getToken());
         headers.set("lob", lob);
         HttpEntity<String> entity = new HttpEntity<>(headers);
 

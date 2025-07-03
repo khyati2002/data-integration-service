@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 
 @Configuration
-@Profile("!test & !dev")
+@Profile("!test")
 public class PropertyInitializer {
 
     private final PropertyService propertyService;

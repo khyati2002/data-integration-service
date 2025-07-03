@@ -7,6 +7,7 @@ import com.salescode.dis.insights.validation.ValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -26,19 +27,17 @@ import java.util.Optional;
 @Profile("kafka")
 public class FileProgressEventListener {
 
-    private static final String FAILURE_TOPIC = "file-progress-updates-failed";
+    @Value("${file.progress.update.failure.topic:file-progress-updates-failed}")
+    private String FAILURE_TOPIC;
 
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
     private final ValidationService validationService;
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
-            ConsumerConfig.FETCH_MIN_BYTES_CONFIG + "=1",
-            ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG + "=1",
             ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000"
     })
     public void consumeProgressEvents(@Payload List<FileProgressEvent> events) throws InterruptedException {
-        Thread.sleep(2000);
         if (events == null || events.isEmpty()) {
             log.debug("Received empty or null event list. Skipping.");
             return;

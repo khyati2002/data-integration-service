@@ -45,7 +45,6 @@ public class FileProgressController {
     ) {
 
         FileEntity file = fileService.get(fileId,masterName);
-        validationService.validate(file,progress);
         FileProgressEvent event = new FileProgressEvent();
         String eventId = UUID.randomUUID().toString();
         event.setEventId(eventId);
@@ -54,8 +53,6 @@ public class FileProgressController {
         event.setMasterName(masterName);
         event.setProgress(progress);
         event.setJobId(file.getJob().getId());
-        // job is already mapped to a file, hence not required to send
-
         kafkaTemplate.send(fileUpdatesTopic, fileId, event);
 
         FileProgressResponse response = new FileProgressResponse();
