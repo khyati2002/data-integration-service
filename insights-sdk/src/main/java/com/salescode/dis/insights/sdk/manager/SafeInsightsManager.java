@@ -7,6 +7,7 @@ import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClientException;
 
@@ -55,6 +56,18 @@ public class SafeInsightsManager {
             return Optional.empty();
         } catch (IllegalArgumentException e) {
             log.warn("SafeInsightsManager: createJob operation called with invalid arguments for LOB '{}'. Returning Optional.empty().", lob, e);
+            return Optional.empty();
+        }
+    }
+
+    public Optional<JobEntityResponseDto> updateJobStatus(String lob,String jobId, ProgressStatus status) {
+        try {
+            return Optional.ofNullable(insightsManager.updateJobStatus(lob, jobId, status));
+        } catch (RestClientException e) {
+            log.warn("SafeInsightsManager: updateJobStatus operation failed for LOB '{}', Job ID '{}'. Returning Optional.empty().", lob, jobId);
+            return Optional.empty();
+        } catch (IllegalArgumentException e) {
+            log.warn("SafeInsightsManager: updateJobStatus operation called with invalid arguments for LOB '{}', Job ID '{}'. Returning Optional.empty().", lob, jobId, e);
             return Optional.empty();
         }
     }

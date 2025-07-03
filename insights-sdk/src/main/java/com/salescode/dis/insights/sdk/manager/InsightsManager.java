@@ -5,6 +5,7 @@ import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.sdk.InsightsEnv;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,6 +63,23 @@ public class InsightsManager {
             return createdJob;
         } catch (RestClientException e) {
             log.error("Failed to create job via InsightsManager for LOB: {}, ExceptionMsg: {}", lob, e.getMessage());
+            throw e; // Re-throw the exception from the manager
+        }
+    }
+
+    public JobEntityResponseDto updateJobStatus(String lob, String jobId, ProgressStatus status) {
+        Objects.requireNonNull(lob, "LOB cannot be null for updateJobStatus");
+        Objects.requireNonNull(jobId, "Job ID cannot be null for updateJobStatus");
+        Objects.requireNonNull(status, "ProgressStatus cannot be null for updateJobStatus");
+
+        try {
+            log.debug("Calling JobManager to update job status for LOB: {}, Job ID: {}, Status: {}", lob, jobId, status);
+            JobEntityResponseDto updatedJob = this.jobManager.updateJobStatus(lob, jobId, status);
+            log.debug("Job status update successful, updated internal state.");
+            return updatedJob;
+        } catch (RestClientException e) {
+            log.error("Failed to update job status via JobManager for LOB: {}, Job ID: {}, Status: {}, ExceptionMsg: {}",
+                    lob, jobId, status, e.getMessage());
             throw e; // Re-throw the exception from the manager
         }
     }
