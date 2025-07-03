@@ -15,7 +15,7 @@ public class PropertyController {
     }
 
     // GET /api/properties/{env}/{lob}
-    @GetMapping("/{env}/{lob}")
+    @GetMapping("/insights-enabled/{env}/{lob}")
     public ResponseEntity<Boolean> getProperty(@PathVariable String env, @PathVariable String lob) {
         Boolean enabled = propertyService.isInsightsEnabled(lob);
 
@@ -29,8 +29,18 @@ public class PropertyController {
                 return ResponseEntity.internalServerError().build();
             }
         }
-
         return ResponseEntity.ok(enabled);
+    }
+
+
+    @GetMapping("/env/{lob}")
+    public ResponseEntity<String> getEnvironment(@PathVariable String lob) {
+        String environment = propertyService.getEnvFromLob(lob);
+        if (environment != null) {
+            return ResponseEntity.ok(environment);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // DELETE /api/properties/cache/{lob}
