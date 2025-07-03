@@ -2,11 +2,13 @@ package com.salescode.dis.insights.config;
 
 import com.salescode.dis.insights.config.AppProperties;
 import com.salescode.dis.insights.service.PropertyService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 
 @Configuration
+@Profile("!test & !dev")
 public class PropertyInitializer {
 
     private final PropertyService propertyService;

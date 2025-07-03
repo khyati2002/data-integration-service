@@ -50,12 +50,12 @@ public class JobService {
         return jobRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
     }
 
-//    public JobEntity updateStatus(String id, ProgressStatus status) {
-//        JobEntity job = getJob(id);
-//        job.setStatus(status);
-//        log.info("Job {} status -> {}", id, status);
-//        return job;
-//    }
+    public JobEntity updateStatus(String id, ProgressStatus status) {
+        JobEntity job = getJob(id);
+        job.setStatus(status);
+        log.info("Job {} status -> {}", id, status);
+        return job;
+    }
 
     public void recalcStatus(JobEntity job) {
         if (job.getFiles() == null) return;

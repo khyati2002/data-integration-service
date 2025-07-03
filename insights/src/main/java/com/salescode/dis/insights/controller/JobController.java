@@ -5,6 +5,7 @@ import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDtoWithStages;
 import com.salescode.dis.insights.entity.JobEntity;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
@@ -78,7 +79,6 @@ public class JobController {
 
 
 
-
     @Operation(
         summary = "Get job details",
         description = """
@@ -120,6 +120,53 @@ public class JobController {
 
 
 
+    @Operation(
+            summary = "Update job status",
+            description = """
+        Updates the status of a job by its ID.
+
+        The status must be one of the allowed values defined in the ProgressStatus enum.
+        
+        Example values include:
+        - PENDING
+        - RUNNING
+        - COMPLETED_SUCCESSFULLY
+        - COMPLETED_UNSUCCESSFULLY
+        - FAILED
+        - ABORTED
+        """,
+            parameters = {
+                    @Parameter(name = "id", description = "Unique identifier of the job", required = true),
+                    @Parameter(name = "status", description = "New status to be set for the job", required = true,
+                            schema = @Schema(implementation = ProgressStatus.class))
+            }
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Job status updated successfully",
+            content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Invalid status value or bad request",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Job not found with the specified ID",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error occurred while updating job status",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
+    @PutMapping("/job/{id}/status/{status}")
+    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String id,@PathVariable ProgressStatus status){
+        JobEntity job = jobService.updateStatus(id,status);
+        JobEntityResponseDto dto = jobEntityMapper.toDto(job);
+        return ResponseEntity.ok(dto);
+    }
 
 
 

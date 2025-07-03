@@ -13,7 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@Profile("!test")
+@Profile("!test & !dev")
 public class InsightsEnabledFilter extends OncePerRequestFilter {
 
     @Autowired
