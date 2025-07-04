@@ -22,7 +22,7 @@ public class StockService extends AbstractCDMService<StockIntegration>{
             httpClient = HttpClients.createDefault();
 
 
-        String url = "https://stocks-uat.salescode.ai/hcheck";
+        String url = "https://stocks-uat.salescode.ai/bulkStockUpload";
         HttpPost request = new HttpPost(url);
         request.setHeader("Authorization", "Bearer ");
         request.setHeader("lob", SecurityContextUtils.getLob());
