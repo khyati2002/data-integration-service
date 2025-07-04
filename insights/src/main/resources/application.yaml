@@ -41,7 +41,15 @@ application:
   environment: dev
 
 app:
-  active-environments: uat
+  active-environments:
+    - dev
+
+file:
+  progress:
+    update:
+      topic: file-progress-updates
+      failure:
+        topic: file-progress-updates-failed
 
 property-service:
   token: "your-token-here"
@@ -58,6 +66,42 @@ spring:
 
 application:
   environment: uat
+
+app:
+  active-environments:
+    - dev
+    - uat
+
+file:
+  progress:
+    update:
+      topic: file-progress-updates
+      failure:
+        topic: file-progress-updates-failed
+
+---
+
+# Configuration for 'demo' profile
+spring:
+  config:
+    activate:
+      on-profile: demo
+
+
+application:
+  environment: demo
+
+app:
+  active-environments: demo
+
+file:
+  progress:
+    update:
+      topic: file-progress-updates
+      failure:
+        topic: file-progress-updates-failed
+
+
 
 ---
 

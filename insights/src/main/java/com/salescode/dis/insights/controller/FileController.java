@@ -51,7 +51,11 @@ public class FileController {
     @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @GetMapping("/master/{master_name}/job/{jobId}/unit/{fileId}")
     public ResponseEntity<FileEntityResponseDto> getFile(@PathVariable String lob, @PathVariable("master_name") String masterName, @PathVariable String jobId, @PathVariable String fileId) {
-        String decodedFileId = new String(Base64.getDecoder().decode(fileId));
+        String decodedFileId = fileId;
+        try {
+            decodedFileId = new String(Base64.getDecoder().decode(fileId));
+        }
+        catch (Exception e){}
         FileEntity file = fileService.get(decodedFileId, masterName);
         FileEntityResponseDto resp = fileEntityMapper.toDto(file);
         return ResponseEntity.ok(resp);

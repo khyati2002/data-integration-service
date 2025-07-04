@@ -2,9 +2,11 @@ package com.salescode.dis.insights.scheduler;
 
 
 import com.salescode.dis.insights.entity.FileStageMetrics;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.service.strategy.ApiClientBasedFileOperationStrategy;
+import com.salescode.dis.insights.service.strategy.StreamletSyncOperationStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +36,8 @@ public class FileStageStatusScheduler {
 
     private final ApiClientBasedFileOperationStrategy apiClientBasedFileOperationStrategy;
 
+    private final StreamletSyncOperationStrategy streamletSyncOperationStrategy;
+
     @Scheduled(fixedRateString = "${file-status-scheduler.rate-millis:60000}") // Run every 1 minute (60000 ms)
     @Transactional
     public void updateAllFileStatus() {
@@ -43,7 +47,7 @@ public class FileStageStatusScheduler {
         Instant staleCutoffTime = Instant.now().minus(STALE_THRESHOLD_SECONDS, ChronoUnit.SECONDS); // e.g., 10 mins ago
         Instant tooOldCutoffTime = Instant.now().minus(TOO_OLD_THRESHOLD_SECONDS, ChronoUnit.SECONDS); // e.g., 15 mins ago
 
-        List<FileStageMetrics> pendingStages = fileStageMetricsRepository.findStaleApiClientBasedPendingFiles(staleCutoffTime, tooOldCutoffTime, ProgressStatus.PENDING);
+        List<FileStageMetrics> pendingStages = fileStageMetricsRepository.findStalePendingStages(staleCutoffTime, tooOldCutoffTime, ProgressStatus.PENDING);
 
         if (pendingStages.isEmpty()) {
             log.info("No stale files found in the {}-{} minute window.", STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
@@ -55,7 +59,12 @@ public class FileStageStatusScheduler {
         log.info("Found {} stages with PENDING status modified in the last 10 minutes", pendingStages.size());
 
         for (FileStageMetrics stage : pendingStages) {
-            apiClientBasedFileOperationStrategy.updateStatus(stage);
+            if(stage.getModeOfIntegration().equals(ModeOfIntegration.CK_STREAMLET_SYNC)){
+                streamletSyncOperationStrategy.updateStatus(stage);
+            }
+            else {
+                apiClientBasedFileOperationStrategy.updateStatus(stage);
+            }
         }
     }
 

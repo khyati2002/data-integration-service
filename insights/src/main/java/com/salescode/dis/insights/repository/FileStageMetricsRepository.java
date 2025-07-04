@@ -73,11 +73,12 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
 
 
     @Query("SELECT s FROM FileStageMetrics s " +
-            "WHERE  s.modeOfIntegration = com.salescode.dis.insights.enums.ModeOfIntegration.CK_API_CLIENT" +
+            "WHERE (s.modeOfIntegration = com.salescode.dis.insights.enums.ModeOfIntegration.CK_API_CLIENT " +
+            "    OR s.modeOfIntegration = com.salescode.dis.insights.enums.ModeOfIntegration.CK_STREAMLET_SYNC) " +
             "  AND s.progressStatus = :status " +
             "  AND s.lastModifiedTime < :staleCutoffTime " +
             "  AND s.lastModifiedTime >= :tooOldCutoffTime")
-    List<FileStageMetrics> findStaleApiClientBasedPendingFiles(
+    List<FileStageMetrics> findStalePendingStages(
             @Param("staleCutoffTime") Instant staleCutoffTime,
             @Param("tooOldCutoffTime") Instant tooOldCutoffTime,
             @Param("status") ProgressStatus status
