@@ -17,6 +17,8 @@ import org.junit.Test;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static com.salescode.dim.PropertyLoader.mergeProperties;
+
 /**
  * A custom sink that collects all elements into a static list for assertions.
  */
@@ -110,7 +112,9 @@ public class DataStreamJobTest {
                 5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
         ).process(new ProcessRecordStatus());
 
-        processedStream.sinkTo(new JooqDatabaseBatchSink(stringPropertiesMap.get("Common"))).name("Database Success Sink");
+        Properties commonProperties = stringPropertiesMap.getOrDefault("Common", new Properties());
+        Properties inout0Properties = mergeProperties(stringPropertiesMap.get("InOut0"), commonProperties);
+        processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
         // Execute the pipeline
         env.execute("DataStreamJob Test");
 
