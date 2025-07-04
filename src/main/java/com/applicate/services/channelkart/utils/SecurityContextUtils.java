@@ -36,5 +36,9 @@ public class SecurityContextUtils {
         return properties.getProperty("lob");
     }
 
+    public static String getEnv() {
+        return properties.getProperty("env");
+    }
+
 
 }
