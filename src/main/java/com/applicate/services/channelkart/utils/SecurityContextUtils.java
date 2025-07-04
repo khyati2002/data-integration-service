@@ -37,7 +37,11 @@ public class SecurityContextUtils {
     }
 
     public static String getEnv() {
-        return properties.getProperty("env");
+        return properties.getProperty("channelkart.env");
+    }
+
+    public static String getToken() {
+        return properties.getProperty("channelkart.token");
     }
 
 

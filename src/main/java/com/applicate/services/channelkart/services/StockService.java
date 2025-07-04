@@ -22,9 +22,9 @@ public class StockService extends AbstractCDMService<StockIntegration>{
             httpClient = HttpClients.createDefault();
 
 
-        String url = getStockBaseUrl() + "/bulkStockUpload";
+        String url = getStockBaseUrl() + "/consolidatedStock/bulkStockUpload";
         HttpPost request = new HttpPost(url);
-        request.setHeader("Authorization", "Bearer ");
+        request.setHeader("Authorization", SecurityContextUtils.getToken());
         request.setHeader("lob", SecurityContextUtils.getLob());
         try {
             String json = new ObjectMapper().writeValueAsString(cdmObject);
@@ -39,9 +39,9 @@ public class StockService extends AbstractCDMService<StockIntegration>{
     private String getStockBaseUrl() {
         String env = SecurityContextUtils.getEnv();
         switch (env){
-            case "demo": return "https://stock-demo.applicate.com";
-            case "prod": return "https://stock.applicate.com";
-            default: return "https://stock-uat.applicate.com";
+            case "demo": return "https://stocks-demo.salescode.ai";
+            case "prod": return "https://stocks-prod.salescode.ai";
+            default: return "https://stocks-uat.salescode.ai";
         }
     }
 

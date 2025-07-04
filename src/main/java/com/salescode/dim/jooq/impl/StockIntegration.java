@@ -3,6 +3,7 @@ package com.salescode.dim.jooq.impl;
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,10 +14,11 @@ import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true, value = {"id", "changed", "create", "changes", "oldModel", "reqId","operationPerformed", "" ,"version", "activeStatus", "activeStatusReason", "creationTime", "lastModifiedTime", "createdBy", "modifiedBy", "lob", "source", "extendedAttributes", "hash"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class StockIntegration extends CommonDataModel {
+
 
     private String supplier;
     private String warehouseId;

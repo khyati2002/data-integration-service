@@ -2,6 +2,8 @@
   {
     "PropertyGroupId": "Common",
     "PropertyMap": {
+      "channelkart.env": "${channelkart.env}",
+      "channelkart.token": "${channelkart.token}",
       "bootstrap.servers": "${bootstrap.servers}",
       "group.id": "${group.id}",
       "lob": "${lob}",
