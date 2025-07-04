@@ -114,7 +114,10 @@ public class JobController {
     )
     @GetMapping("/job/{id}")
     public ResponseEntity<JobEntityResponseDto> getJob(@PathVariable String lob, @PathVariable String id) {
-        String decodedJobId = new String(Base64.getDecoder().decode(id));
+        String decodedJobId = id;
+        try{
+            decodedJobId = new String(Base64.getDecoder().decode(id));
+        } catch (Exception e) {}
         JobEntity job = jobService.getJob(decodedJobId);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
