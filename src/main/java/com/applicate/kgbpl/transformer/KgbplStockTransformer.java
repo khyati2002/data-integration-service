@@ -46,7 +46,7 @@ public class KgbplStockTransformer extends AbstractTransformer<Map<String, Objec
 
         responseMap.put("skuCode", skuCode);
         responseMap.put("warehouseId", warehouseId);
-        responseMap.put("supplierId", warehouseId);
+        responseMap.put("supplier", warehouseId);
         responseMap.put("batchId", "unassigned");
         responseMap.put("caseQty", caseQty);
         responseMap.put("pieceQty", 0);
@@ -55,7 +55,7 @@ public class KgbplStockTransformer extends AbstractTransformer<Map<String, Objec
         // mfgDate from prodDate
         if (inputMap.get("prodDate") != null) {
             String prodDateStr = inputMap.get("prodDate").toString();
-            responseMap.put("mfgDate", prodDateStr);
+//            responseMap.put("mfgDate", prodDateStr);
 
             // shelfLife = expDate - prodDate
             if (inputMap.get("expDate") != null) {
@@ -64,9 +64,9 @@ public class KgbplStockTransformer extends AbstractTransformer<Map<String, Objec
                     LocalDate prodDate = LocalDate.parse(prodDateStr, formatter);
                     LocalDate expDate = LocalDate.parse(expDateStr, formatter);
                     long shelfLifeDays = ChronoUnit.DAYS.between(prodDate, expDate);
-                    responseMap.put("shelfLife", String.valueOf(shelfLifeDays));
+//                    responseMap.put("shelfLife", String.valueOf(shelfLifeDays));
                 } catch (Exception e) {
-                    responseMap.put("shelfLife", "0"); // fallback
+//                    responseMap.put("shelfLife", "0"); // fallback
                 }
             }
         }

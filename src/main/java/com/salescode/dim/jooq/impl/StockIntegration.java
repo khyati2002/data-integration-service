@@ -2,14 +2,20 @@ package com.salescode.dim.jooq.impl;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class StockIntegration extends CommonDataModel {
 
     private String supplier;
