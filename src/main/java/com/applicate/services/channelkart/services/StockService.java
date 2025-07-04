@@ -5,7 +5,7 @@ import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salescode.dim.jooq.impl.StockIntegration;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
@@ -23,7 +23,7 @@ public class StockService extends AbstractCDMService<StockIntegration>{
 
 
         String url = getStockBaseUrl() + "/consolidatedStock/bulkStockUpload";
-        HttpPost request = new HttpPost(url);
+        HttpPut request = new HttpPut(url);
         request.setHeader("Authorization", SecurityContextUtils.getToken());
         request.setHeader("lob", SecurityContextUtils.getLob());
         try {
