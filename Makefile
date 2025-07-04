@@ -46,3 +46,5 @@ generate-bundle-only: init generate-bundle
 generate-project-jar:
 	mvn clean install -f jooq/pom.xml
 	mvn clean compile install -DskipTests=true
+
+BRANCH ?='kgbpl'
