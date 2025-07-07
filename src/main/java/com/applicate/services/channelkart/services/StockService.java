@@ -3,7 +3,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salescode.dim.jooq.impl.StockIntegration;
+import com.salescode.dim.jooq.impl.Stock;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
@@ -14,11 +14,11 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.IOException;
 import java.util.Collection;
 
-public class StockService extends AbstractCDMService<StockIntegration>{
+public class StockService extends AbstractCDMService<Stock>{
     private transient HttpClient httpClient;
 
     @Override
-    public Collection<StockIntegration> batchSave(Collection<StockIntegration> cdmObject) {
+    public Collection<Stock> batchSave(Collection<Stock> cdmObject) {
             httpClient = HttpClients.createDefault();
 
 

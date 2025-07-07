@@ -49,7 +49,7 @@ public class DataStreamJobTest {
             "    {\n" +
             "      \"skipPreprocessing\": false,\n" +
             "      \"skipPersist\": false,\n" +
-            "      \"entityName\": \"StockIntegration\",\n" +
+            "      \"entityName\": \"Stock\",\n" +
             "      \"transformerId\": \"KgbplStockTransformer\"\n" +
             "\n" +
             "    }\n" +
