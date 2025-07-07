@@ -26,9 +26,15 @@ public class Stock extends CommonDataModel {
     private Integer pieceQty;
     private Integer otherQty;
     private String batchId;
+    private String shelfLife;
+    private String mfgDate;
 
-    public Stock(String skuCode, Integer caseQty, Integer pieceQty, Integer otherQty, String batchId) {
+    public Stock(String skuCode, Integer caseQty, Integer pieceQty, Integer otherQty, String batchId, String supplier, String warehouseId, String shelfLife, String mfgDate) {
         super();
+        this.supplier = supplier;
+        this.warehouseId = warehouseId;
+        this.shelfLife = shelfLife;
+        this.mfgDate = mfgDate;
         this.skuCode = skuCode;
         this.caseQty = caseQty;
         this.pieceQty = pieceQty;
