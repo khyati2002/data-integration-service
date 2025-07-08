@@ -32,7 +32,7 @@ spring:
     password: postgres
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: 164.52.202.184:9092
 
 cache:
   redisUrl: redis://localhost:6379
@@ -47,12 +47,12 @@ app:
 file:
   progress:
     update:
-      topic: file-progress-updates
+      topic: file-progress-updates-test
       failure:
         topic: file-progress-updates-failed
 
 property-service:
-  token: "your-token-here"
+  token: "ckt-GQpr9LQhpd_0cHJcKoVBDGT8Hu8Bbflu-ikLN87wvC0GvxGOv-bO7clbBO3RvnEPn_aibcCzdnxAECr8aftngUJE0rMXQosirYoBvdcaUv3idG_lZ8je_npgg-fc7PD18H-ZBawZANpryCVXGr-LiDJmC5yULsCf2Wp1TJtnDgcYe0p72KiWdGaxcCm2wUH5YjgNxVKIJ4feyt1hAr6NdUgZbESV8af8TypvpbWbz1tFvfEazL_HXEvu9aor3br8WMEQpzH9vFE-xst0G-MV3HjMsmm_eIQjOyWLNc4JT9EmrtK3AOh9ckpIo3rO-T48P4q-XR9I4ilIGDdDJNqpcOrwQqjFTDu3ai20yeQ77XFC81we4GJLG9WDrbTXZQ7vLQOM8FbC6qezdgUfc9jwzo4fpP5bDQwnivjtI5EW1USn8bd6TkLUyJJayMtdSdEgNhj9ERtJ8wnkoOrypZbKPsIADMLpsTRxmOe48esK1uDMLSCCO62C6yd2szCp9YlpD4p8iQG4mRCpl2ZhllNEqKS6DfV0aF2pxJaFNdIawS7hIhtDevGZN9oWlrF6IzpE5Xls_sZvoni1e42m2wE5QQMRS_sKusit8eSM7f_ZN6mORP6KCPzH0gh3OYI0Of45lbVZF5wQbvUV89X1lXbOJFModGX8Yuwnvsc97Fri80zCo2cp9f2mfaxNSk8KSUvR5bAB9SwPxxV3pyqrgxwWYUgRArymO_8-ydj7DYtSmMlsDEpmpo-zrUDGXU_2jRnb6c4MrntfLBxN9cNWDaGYUpZmZIlKQpYT6DD9_ek7acPwxBA_YrZ4TL7A4sHzR4RnteapFb0W3ytUxK-3X782hQEPron9pOzb2IuvtLAIMudAoLj5pPKuDxdvA7jdHDV92xkQvVNO8wkG1nxmGgBZRvM-rV0ChXBOmlMK53ACrCiRICog_fmitRmOU3xcT3tBkC3RM2hC-xU5jcnyk4rr_tZHw_zVGHvRDW9eJNS8aiRgcW6ZJ_sOPD-x7-s3Lo463fmgQecFF5OE7Lx2NkMYXupEw4A1OWZzWO37SnGfqATVeUkJvaV1qoG8t0qWHrgTxaW-aJCy33J_r90fQBvmWC8wE2wZk7NWwfMpCZK-IaVwGoZgEvCAhaorNAirGNZtLez7s1FVpbpw-jEhJquaDuVx9pSFMw6C1xXei-Mru6Euw8qFy-_RxJyW6SPr3qiN7bbNUXfb0Jy85u-bjcmY7a14Fz6sm7aUNF6qESTjV8tvmfpyRQ15WjDRvpb9XZjTSOIiIdGzYkWD3kFFFwjqLQQin3Cljl72SV-AiY1s8TOv0tS_ue9dG6b8CLAcynWsK-CN0F0fY3GX8NN8QE1y9w=="
 ---
 
 # Configuration for 'uat' profile

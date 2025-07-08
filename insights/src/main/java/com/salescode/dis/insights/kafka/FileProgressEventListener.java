@@ -55,8 +55,8 @@ public class FileProgressEventListener {
             Optional<String> validationError = validate(event);
             if (validationError.isPresent()) {
                 String errorMsg = validationError.get();
-                log.warn("Invalid event: {}. Reason: {}", event, errorMsg);
-                sendToFailureTopic(event, errorMsg);
+//                log.warn("Invalid event: {}. Reason: {}", event, errorMsg);
+//                sendToFailureTopic(event, errorMsg);
                 continue;
             }
 

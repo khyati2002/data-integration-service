@@ -50,7 +50,7 @@ public class ApiClientBasedFileOperationStrategy implements IFileOperationStrate
             file = fileOperationsHelperService.saveFileEntity(file, job, this);
         }
         FileStageMetrics fileStageMetrics = fileOperationsHelperService.updateMetrics(file, progress);
-        if (getSupportedStages().getFirst().equals(fileStageMetrics.getStageType())) {
+        if (getSupportedStages().get(0).equals(fileStageMetrics.getStageType())) {
             file.setTotalCount(fileStageMetrics.getTotal());
         }
         log.info("API_BASED file {} progress updated for stage {}", file.getFileId(), progress.getStageType());

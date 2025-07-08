@@ -58,10 +58,11 @@ public class PropertyService {
     }
 
     public void fetchAndCacheFeaturesForEnv(String env) {
-        String baseUrl = getBaseUrl(env);
 
-        String healthCheckUrl = baseUrl + "/hckeck";
         try {
+            String baseUrl = getBaseUrl(env);
+
+            String healthCheckUrl = baseUrl + "/hckeck";
             ResponseEntity<String> response = restTemplate.getForEntity(healthCheckUrl, String.class);
             JsonNode root = objectMapper.readTree(response.getBody());
             JsonNode lobNames = root.path("systemInfo").path("lobNames");
@@ -75,7 +76,7 @@ public class PropertyService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch LOBs from health check for env=" + env + ": " + e.getMessage(), e);
+      //      throw new RuntimeException("Failed to fetch LOBs from health check for env=" + env + ": " + e.getMessage(), e);
         }
     }
 

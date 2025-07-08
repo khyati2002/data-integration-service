@@ -2,7 +2,7 @@
 
 # Common variables
 profile?=default
-version?=0.0.2-SNAPSHOT # Default version, can be overridden
+version?=0.0.3-SNAPSHOT # Default version, can be overridden
 
 # Clean all generated files in all submodules
 clean:
@@ -18,7 +18,7 @@ all: insights-common-cleanInstall insights-sdk-cleanInstall insights-cleanInstal
 
 insights-common-cleanInstall: insights-common-setVersion
 	@echo "Running clean install for insights-common..."
-	mvn clean install -f insights-common/pom.xml -s settings.xml -DskipTests -Psb3 -e -X
+	 JAVA_HOME=$(/usr/libexec/java_home -v 21) mvn clean install -f insights-common/pom.xml -s settings.xml -DskipTests -Psb3 -e -X
 
 insights-common-setVersion:
 	@echo "Setting version for insights-common..."

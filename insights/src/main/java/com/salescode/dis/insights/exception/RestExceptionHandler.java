@@ -26,7 +26,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {
-        String errorMessage = ex.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
+        String errorMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         ApiError apiError = ApiError.builder().message(errorMessage).build();
         return ResponseEntity.badRequest().body(apiError);
     }

@@ -63,7 +63,7 @@ public class FileStatusScheduler {
     }
 
     private void updateFileStatus(FileEntity file) {
-        ProgressStatus lastStageStatus = file.getFileStageMetrics().getLast().getProgressStatus();
+        ProgressStatus lastStageStatus = file.getFileStageMetrics().get(0).getProgressStatus();
         file.setStatus(lastStageStatus);
         jobService.recalcStatus(file.getJob());
         log.info("Updated file status and jobStatus " + file.getId());
