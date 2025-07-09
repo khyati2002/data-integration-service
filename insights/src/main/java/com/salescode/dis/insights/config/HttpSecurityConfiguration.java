@@ -4,6 +4,7 @@ import com.salescode.auth.sdk.filters.cache.NoOpAuthCacheClient;
 import com.salescode.auth.sdk.filters.requests.SalesCodeAuthFilter;
 import com.salescode.auth.sdk.filters.requests.SalesCodeAuthManager;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,6 +12,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @EnableWebSecurity
 @Configuration
@@ -21,16 +27,17 @@ public class HttpSecurityConfiguration {
         return SalesCodeAuthFilter.builder("sample-service")
                 .withDefaultEnvironment("uat")
                 .withCacheClient(new NoOpAuthCacheClient())
-//                .withCacheClient(new NoOpAuthCacheClient())
                 .withLocalCredentials()
                 .withEnvironments("demo", "prod", "dev", "local")
-//                .withRedisConfiguration(RedisConfiguratioation.singleNode("127.0.0.1:6379"))
                 .build();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, SalesCodeAuthManager salesCodeAuthManager) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   SalesCodeAuthManager salesCodeAuthManager,
+                                                   CorsConfigurationSource corsConfigurationSource) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/hckeck", "/status").permitAll()
@@ -44,4 +51,17 @@ public class HttpSecurityConfiguration {
         return authManager.provider();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*")); // You can inject this from properties if needed
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(false); // Set to true if you're using cookies/auth headers
+        configuration.setMaxAge(3600L); // Cache duration for preflight requests
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
+    }
 }
