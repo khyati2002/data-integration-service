@@ -1,6 +1,5 @@
 package com.salescode.dim.jooq.impl;
 
-import com.applicate.services.channelkart.converters.LocationToStringConverter;
 import com.applicate.services.channelkart.services.LocationService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonGetter;
