@@ -75,7 +75,6 @@ public class PropertyService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch LOBs from health check for env=" + env + ": " + e.getMessage(), e);
         }
     }
 
