@@ -50,13 +50,13 @@ public class InsightsManager {
 
     // --- Job Operations ---
 
-    public JobEntityResponseDto createJob(String lob, JobEntityRequestDto jobRequest) {
+    public JobEntityResponseDto createJob(String lob, JobEntityRequestDto jobRequest, String authorizationToken) {
         Objects.requireNonNull(lob, "LOB cannot be null for createJob");
         Objects.requireNonNull(jobRequest, "JobEntityRequestDto cannot be null for createJob");
 
         try {
             log.debug("Calling JobManager to create job for LOB: {}", lob);
-            JobEntityResponseDto createdJob = this.jobManager.createJob(lob,jobRequest);
+            JobEntityResponseDto createdJob = this.jobManager.createJob(lob,jobRequest,authorizationToken);
             // Assuming jobManager.createJob throws an exception if 'createdJob' or its ID is null/invalid
             this.setJobEntityResponseDto(createdJob);
             log.debug("Job creation successful, updated internal state.");
@@ -67,14 +67,14 @@ public class InsightsManager {
         }
     }
 
-    public JobEntityResponseDto updateJobStatus(String lob, String jobId, ProgressStatus status) {
+    public JobEntityResponseDto updateJobStatus(String lob, String jobId, ProgressStatus status, String authorizationToken) {
         Objects.requireNonNull(lob, "LOB cannot be null for updateJobStatus");
         Objects.requireNonNull(jobId, "Job ID cannot be null for updateJobStatus");
         Objects.requireNonNull(status, "ProgressStatus cannot be null for updateJobStatus");
 
         try {
             log.debug("Calling JobManager to update job status for LOB: {}, Job ID: {}, Status: {}", lob, jobId, status);
-            JobEntityResponseDto updatedJob = this.jobManager.updateJobStatus(lob, jobId, status);
+            JobEntityResponseDto updatedJob = this.jobManager.updateJobStatus(lob, jobId, status,authorizationToken);
             log.debug("Job status update successful, updated internal state.");
             return updatedJob;
         } catch (RestClientException e) {
@@ -87,7 +87,7 @@ public class InsightsManager {
 
     // --- File Operations ---
 
-    public FileEntityResponseDto createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest) {
+    public FileEntityResponseDto createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest,String authorizationToken) {
         Objects.requireNonNull(lob, "LOB cannot be null for createFile");
         Objects.requireNonNull(masterName, "MasterName cannot be null for createFile");
         Objects.requireNonNull(jobId, "JobId cannot be null for createFile");
@@ -96,7 +96,7 @@ public class InsightsManager {
 
         try {
             log.debug("Calling FileManager to create file with ID: {} for Job ID: {}", fileRequest.getFileId(), jobId);
-            FileEntityResponseDto createdFile = this.fileManager.createFile(lob, masterName, jobId, fileRequest);
+            FileEntityResponseDto createdFile = this.fileManager.createFile(lob, masterName, jobId, fileRequest,authorizationToken);
             addFileEntityResponse(createdFile.getFileId(), createdFile);
             log.debug("File creation successful, added to internal map.");
             return createdFile;
@@ -106,7 +106,7 @@ public class InsightsManager {
         }
     }
 
-    public FileEntityResponseDto createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest, String identifier) {
+    public FileEntityResponseDto createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest, String identifier, String authorizationToken) {
         Objects.requireNonNull(lob, "LOB cannot be null for createFile");
         Objects.requireNonNull(masterName, "MasterName cannot be null for createFile");
         Objects.requireNonNull(jobId, "JobId cannot be null for createFile");
@@ -114,7 +114,7 @@ public class InsightsManager {
 
         try {
             log.debug("Calling FileManager to create file with ID: {} for Job ID: {}", fileRequest.getFileId(), jobId);
-            FileEntityResponseDto createdFile = this.fileManager.createFile(lob, masterName, jobId, fileRequest);
+            FileEntityResponseDto createdFile = this.fileManager.createFile(lob, masterName, jobId, fileRequest,authorizationToken);
             addFileEntityResponse(identifier, createdFile);
             log.debug("File creation successful, added to internal map.");
             return createdFile;
@@ -124,13 +124,13 @@ public class InsightsManager {
         }
     }
 
-    public FileEntityResponseDto updateFileCount(String lob, String masterName, String fileId, Long totalCount){
+    public FileEntityResponseDto updateFileCount(String lob, String masterName, String fileId, Long totalCount, String authorizationToken){
         Objects.requireNonNull(lob, "LOB cannot be null for createFile");
         Objects.requireNonNull(masterName, "MasterName cannot be null for createFile");
         Objects.requireNonNull(fileId, "FileId cannot be null for createFile");
         try {
             log.debug("Calling FileManager to update total with ID: {} ", fileId);
-            FileEntityResponseDto createdFile = this.fileManager.updateCount(lob, masterName, fileId, totalCount);
+            FileEntityResponseDto createdFile = this.fileManager.updateCount(lob, masterName, fileId, totalCount, authorizationToken);
             log.debug("Count updated successfully");
             return createdFile;
         } catch (RestClientException e) {
@@ -142,7 +142,7 @@ public class InsightsManager {
 
 
 
-    public FileProgressResponse updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {
+    public FileProgressResponse updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload, String authorizationToken) {
         Objects.requireNonNull(lob, "LOB cannot be null for updateFileProgress");
         Objects.requireNonNull(masterName, "MasterName cannot be null for updateFileProgress");
         Objects.requireNonNull(fileId, "FileId cannot be null for updateFileProgress");
@@ -152,7 +152,7 @@ public class InsightsManager {
             log.debug("Calling FileManager to update progress for file ID: {}", fileId);
             fileId = Optional.ofNullable(getFileEntityResponse(fileId)).map(FileEntityResponseDto::getFileId).orElse(fileId);
             FileProgressResponse updateResponse = this.fileManager.updateFileProgress(
-                    lob, masterName, fileId, progressPayload);
+                    lob, masterName, fileId, progressPayload,authorizationToken);
             // Storing the response if it has a request ID, for potential tracking.
             if (updateResponse != null && updateResponse.getRequestId() != null) {
                addUpdateRequestResponse(updateResponse.getRequestId(), updateResponse);

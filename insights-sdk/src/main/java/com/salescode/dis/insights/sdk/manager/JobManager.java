@@ -1,6 +1,5 @@
 package com.salescode.dis.insights.sdk.manager;
 
-
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.enums.ProgressStatus;
@@ -8,9 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 public class JobManager {
@@ -32,14 +28,15 @@ public class JobManager {
         this.restTemplate = restTemplate;
     }
 
-    private static HttpHeaders getHttpHeaders() {
+    private static HttpHeaders getHttpHeaders(String authorizationToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + authorizationToken);
         return headers;
     }
 
-    public JobEntityResponseDto createJob(String lob, JobEntityRequestDto jobRequest) {
-        HttpEntity<JobEntityRequestDto> entity = new HttpEntity<>(jobRequest, getHttpHeaders());
+    public JobEntityResponseDto createJob(String lob, JobEntityRequestDto jobRequest, String authorizationToken) {
+        HttpEntity<JobEntityRequestDto> entity = new HttpEntity<>(jobRequest, getHttpHeaders(authorizationToken));
         try {
             log.debug("Attempting to create job for LOB: {}", lob);
             ResponseEntity<JobEntityResponseDto> response = restTemplate.postForEntity(JOB_CREATE_URL, entity, JobEntityResponseDto.class, lob);
@@ -59,8 +56,8 @@ public class JobManager {
         }
     }
 
-    public JobEntityResponseDto getJobById(String lob, String jobId) {
-        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders());
+    public JobEntityResponseDto getJobById(String lob, String jobId, String authorizationToken) {
+        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders(authorizationToken));
         try {
             log.debug("Attempting to get job with ID: {} for LOB: {}", jobId, lob);
             ResponseEntity<JobEntityResponseDto> response = restTemplate.exchange(JOB_GET_BY_ID_URL, HttpMethod.GET, entity, JobEntityResponseDto.class, lob, jobId);
@@ -79,8 +76,8 @@ public class JobManager {
         }
     }
 
-    public JobEntityResponseDto updateJobStatus(String lob, String jobId, ProgressStatus status) {
-        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders());
+    public JobEntityResponseDto updateJobStatus(String lob, String jobId, ProgressStatus status, String authorizationToken) {
+        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders(authorizationToken));
         try {
             log.debug("Attempting to update status of job with ID: {} to {} for LOB: {}", jobId, status, lob);
 
@@ -112,5 +109,4 @@ public class JobManager {
             throw e;
         }
     }
-
 }
