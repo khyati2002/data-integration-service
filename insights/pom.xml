@@ -196,7 +196,7 @@
 		<dependency>
 			<groupId>com.salescode.auth.sdk</groupId>
 			<artifactId>salescode-auth-sdk</artifactId>
-			<version>1.5.13-SNAPSHOT</version>
+			<version>1.7.4</version>
 		</dependency>
 
 
