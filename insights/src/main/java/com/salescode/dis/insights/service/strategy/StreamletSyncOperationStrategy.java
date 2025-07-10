@@ -52,7 +52,7 @@ public class StreamletSyncOperationStrategy implements IFileOperationStrategy {
             file = fileOperationsHelperService.saveFileEntity(file, job, this);
         }
         FileStageMetrics fileStageMetrics = fileOperationsHelperService.updateMetrics(file, progress);
-        if (getSupportedStages().getFirst().equals(fileStageMetrics.getStageType())) {
+        if (getSupportedStages().get(0).equals(fileStageMetrics.getStageType())) {
             file.setTotalCount(fileStageMetrics.getTotal());
         }
         log.info("STREAMLET_SYNC_BASED file {} progress updated for stage {}", file.getFileId(), progress.getStageType());

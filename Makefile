@@ -60,7 +60,7 @@ insights-sdk-deploy: insights-sdk-cleanInstall
 
 insights-cleanInstall: insights-common-cleanInstall insights-sdk-cleanInstall
 	@echo "Building Docker image for insights..."
-	JAVA_HOME=$(/usr/libexec/java_home -v 21) mvn clean install -f insights/pom.xml -s settings.xml -DskipTests -e -U
+	JAVA_HOME=$(/usr/libexec/java_home -v 17) mvn clean install -f insights/pom.xml -s settings.xml -DskipTests -e -U
 
 insights-image-push: insights-build-image
 	docker buildx build --progress plain --platform "linux/amd64" --provenance=false -t dis-insights .
