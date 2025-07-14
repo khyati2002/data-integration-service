@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StageDto {
-    private String stageName;
+    private String mode;
+    private ProgressStage stageName;
     private String description;
     private String actionToBeTaken;
 }
