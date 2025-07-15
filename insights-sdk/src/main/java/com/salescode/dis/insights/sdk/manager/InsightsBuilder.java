@@ -32,8 +32,7 @@ public class InsightsBuilder {
         try {
             this.env = InsightsEnv.valueOf(env.toUpperCase().trim());
         } catch (IllegalArgumentException ex) {
-            System.err.println("Unknown environment '" + env + "', falling back to default.");
-            return null;
+            throw new IllegalArgumentException("Unknown environment '" + env);
         }
         return this;
     }
