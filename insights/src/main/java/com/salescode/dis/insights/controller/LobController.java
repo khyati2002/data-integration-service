@@ -39,7 +39,7 @@ public class LobController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
 
         LocalDateTime queryEndTime = (endDate != null) ? endDate : LocalDateTime.now();
-        LocalDateTime queryStartTime = (startDate != null) ? startDate : queryEndTime.minusDays(10);
+        LocalDateTime queryStartTime = (startDate != null) ? startDate : queryEndTime.minusDays(1);
 
         Instant startInstant = queryStartTime.atZone(ZoneId.systemDefault()).toInstant();
         Instant endInstant = queryEndTime.atZone(ZoneId.systemDefault()).toInstant();
