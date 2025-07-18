@@ -40,7 +40,7 @@ public class HttpSecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/hckeck", "/status","/api/properties/**").permitAll()
+                        .requestMatchers("/hckeck", "/status").permitAll()
                         .anyRequest().authenticated()
                 );
         return salesCodeAuthManager.build(http);

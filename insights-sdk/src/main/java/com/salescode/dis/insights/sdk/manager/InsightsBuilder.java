@@ -29,11 +29,7 @@ public class InsightsBuilder {
 
     public InsightsBuilder withEnv(final String env) {
         Objects.requireNonNull(env, "Environment string cannot be null");
-        try {
-            this.env = InsightsEnv.valueOf(env.toUpperCase().trim());
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Unknown environment '" + env);
-        }
+        this.env = InsightsEnv.valueOf(env.toUpperCase().trim());
         return this;
     }
 
