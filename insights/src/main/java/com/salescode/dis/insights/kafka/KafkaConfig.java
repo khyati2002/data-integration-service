@@ -12,7 +12,10 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaConfig {
 
     @Bean
-    public NewTopic fileUpdatesTopic(@Value("${file.progress.update.topic:file-progress-updates}") String fileUpdatesTopicName) {
-        return TopicBuilder.name(fileUpdatesTopicName).partitions(5).replicas(1).build();
+    public NewTopic fileUpdatesTopic(
+            @Value("${file.progress.update.topic:file-progress-updates}") String fileUpdatesTopicName,
+            @Value("${kafka.topic.retention.ms:86400000}") String retentionMs
+    ) {
+        return TopicBuilder.name(fileUpdatesTopicName).partitions(5).replicas(1).config("retention.ms", retentionMs).build();
     }
 }
