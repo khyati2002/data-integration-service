@@ -53,7 +53,7 @@ public class ApiClientBasedFileOperationStrategy implements IFileOperationStrate
         if (getSupportedStages().getFirst().equals(fileStageMetrics.getStageType())) {
             file.setTotalCount(fileStageMetrics.getTotal());
         }
-        log.info("API_BASED file {} progress updated for stage {}", file.getFileId(), progress.getStageType());
+        log.info("API_CLIENT_BASED file {} progress updated for stage {}", file.getFileId(), progress.getStageType());
         return fileStageMetrics;
     }
 

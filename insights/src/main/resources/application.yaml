@@ -32,7 +32,7 @@ spring:
     password: postgres
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: 164.52.202.184:9092
 
 cache:
   redisUrl: redis://localhost:6379
@@ -47,9 +47,9 @@ app:
 file:
   progress:
     update:
-      topic: file-progress-updates
+      topic: file-progress-updates-1
       failure:
-        topic: file-progress-updates-failed
+        topic: file-progress-updates-failed-1
 
 property-service:
   token: "your-token-here"
@@ -75,9 +75,9 @@ app:
 file:
   progress:
     update:
-      topic: file-progress-updates
+      topic: file-progress-updates-1
       failure:
-        topic: file-progress-updates-failed
+        topic: file-progress-updates-failed-1
 
 ---
 
@@ -158,6 +158,8 @@ logging:
     org.springframework.web: DEBUG  # Set web-related logs to DEBUG level
     org.springframework.transaction: DEBUG
     org.springframework.kafka.core: DEBUG
+
+
 
 ---
 

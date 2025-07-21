@@ -30,7 +30,7 @@ public class FileProgressController {
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
     private final FileRepository fileRepository;
     private final ValidationService validationService;
-    @Value("${file.progress.update.topic:file-progress-updates}")
+    @Value("${file.progress.update.topic:file-progress-updates-1}")
     private String fileUpdatesTopic;
 
     @Operation(summary = "Update file progress", description = "Updates the progress metrics for a file")

@@ -32,16 +32,6 @@
         <module name="dim" />
         <module name="dis" />
       </profile>
-      <profile name="Annotation profile for insights-common" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
-        </processorPath>
-        <module name="insights-common" />
-      </profile>
       <profile name="Annotation profile for insights-sdk" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -50,12 +40,13 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
         <module name="insights-sdk" />
+        <module name="insights-common" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="insights" options="-parameters" />
+      <module name="insights" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="insights-common" options="-parameters" />
       <module name="insights-sdk" options="-parameters" />
     </option>
