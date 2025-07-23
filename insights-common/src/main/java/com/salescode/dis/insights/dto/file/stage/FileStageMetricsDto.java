@@ -1,6 +1,7 @@
 package com.salescode.dis.insights.dto.file.stage;
 
 import com.salescode.dis.insights.enums.ProgressStage;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class FileStageMetricsDto implements Serializable {
+    ProgressStatus progressStatus;
     String id;
     ProgressStage stageType;
     Long successCount;

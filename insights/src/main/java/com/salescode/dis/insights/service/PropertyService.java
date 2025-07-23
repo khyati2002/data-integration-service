@@ -4,16 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salescode.dis.insights.entity.InsightsMetadata;
 import com.salescode.dis.insights.repository.InsightsMetadataRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-
-import java.util.concurrent.TimeUnit;
-import java.util.*;
 
 @Service
 public class PropertyService {
@@ -75,7 +71,6 @@ public class PropertyService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch LOBs from health check for env=" + env + ": " + e.getMessage(), e);
         }
     }
 
@@ -115,7 +110,7 @@ public class PropertyService {
 
     public Boolean isInsightsEnabled(String lob) {
 
-        lobFeatureCache.put("hccbckinduat", true);
+        lobFeatureCache.put("ckcoeuat", true);
         Boolean enabled = lobFeatureCache.getIfPresent(lob);
         if(enabled!=null){
             String env = lobToEnvCache.getIfPresent(lob);

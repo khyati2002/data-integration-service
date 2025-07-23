@@ -62,6 +62,11 @@ under the License.
             <username>aws</username>
             <password>${env.CODEARTIFACT_AUTH_TOKEN}</password>
         </server>
+        <server>
+            <id>salescode-auth</id>
+            <username>aws</username>
+            <password>${env.CODEARTIFACT_AUTH_TOKEN}</password>
+        </server>
     </servers>
 
     <!-- mirrors
@@ -121,6 +126,18 @@ under the License.
                 <repository>
                     <id>salescode-dis-insights</id>
                     <url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>salescode-auth</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>salescode-auth</id>
+                    <url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/auth/</url>
                 </repository>
             </repositories>
         </profile>

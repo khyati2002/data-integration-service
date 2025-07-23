@@ -35,16 +35,17 @@ public class FileManager {
         this.restTemplate = restTemplate;
     }
 
-    private static HttpHeaders getHttpHeaders() {
+    private static HttpHeaders getHttpHeaders(String authorizationToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + authorizationToken);
         return headers;
     }
 
-    public FileEntityResponseDto createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest) {
+    public FileEntityResponseDto createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest, String authorizationToken) {
         Objects.requireNonNull(fileRequest, "FileEntityRequestDto cannot be null");
 
-        HttpEntity<FileEntityRequestDto> entity = new HttpEntity<>(fileRequest, getHttpHeaders());
+        HttpEntity<FileEntityRequestDto> entity = new HttpEntity<>(fileRequest, getHttpHeaders(authorizationToken));
         try {
             log.debug("Attempting to create file with ID: {} for LOB: {}, Master: {}, Job ID: {}", fileRequest.getFileId(), lob, masterName, jobId);
             ResponseEntity<FileEntityResponseDto> response = restTemplate.postForEntity(FILE_CREATE_URL, entity, FileEntityResponseDto.class, lob, masterName, jobId);
@@ -64,8 +65,8 @@ public class FileManager {
         }
     }
 
-    public FileEntityResponseDto getFile(String lob, String masterName, String jobId, String fileId) {
-        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders());
+    public FileEntityResponseDto getFile(String lob, String masterName, String jobId, String fileId, String authorizationToken) {
+        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders(authorizationToken));
         try {
             log.debug("Attempting to get file with ID: {} for LOB: {}, Master: {}, Job ID: {}", fileId, lob, masterName, jobId);
             ResponseEntity<FileEntityResponseDto> response = restTemplate.exchange(FILE_GET_URL, HttpMethod.GET, entity, FileEntityResponseDto.class, lob, masterName, jobId, fileId);
@@ -83,8 +84,8 @@ public class FileManager {
         }
     }
 
-    public FileEntityResponseDto updateCount(String lob, String masterName, String fileId, Long totalCount) {
-        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders());
+    public FileEntityResponseDto updateCount(String lob, String masterName, String fileId, Long totalCount, String authorizationToken) {
+        HttpEntity<Void> entity = new HttpEntity<>(getHttpHeaders(authorizationToken));
         try {
             log.debug("Attempting to update count file with ID: {} for LOB: {}, Master: {}, totalCount: {}", fileId, lob, masterName, totalCount);
             String urlWithParams = FILE_COUNT_UPDATE_URL + "?totalCount=" + totalCount;
@@ -106,12 +107,10 @@ public class FileManager {
         }
     }
 
-
-
-    public FileProgressResponse updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {
+    public FileProgressResponse updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload, String authorizationToken) {
         Objects.requireNonNull(progressPayload, "FileProgressRequest cannot be null");
 
-        HttpEntity<FileProgressRequest> entity = new HttpEntity<>(progressPayload, getHttpHeaders());
+        HttpEntity<FileProgressRequest> entity = new HttpEntity<>(progressPayload, getHttpHeaders(authorizationToken));
         try {
             log.debug("Attempting to update progress for file ID: {} for LOB: {}, Master: {}", fileId, lob, masterName);
             ResponseEntity<FileProgressResponse> response = restTemplate.exchange(FILE_PROGRESS_UPDATE_URL, HttpMethod.PUT, entity, FileProgressResponse.class, lob, masterName, fileId);

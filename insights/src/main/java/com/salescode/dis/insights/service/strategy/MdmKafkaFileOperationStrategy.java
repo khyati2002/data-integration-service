@@ -31,7 +31,7 @@ public class MdmKafkaFileOperationStrategy implements IFileOperationStrategy {
 
         JobEntity job = jobService.getJob(jobId);
         FileEntity savedFile = fileOperationsHelperService.saveFileEntity(fileEntity, job, this);
-        log.info("Registered file {} under job {} for FILE_BASED integration", savedFile.getId(), job.getId());
+        log.info("Registered file {} under job {} for MDM_KAFKA integration", savedFile.getId(), job.getId());
         return savedFile;
     }
 
@@ -54,6 +54,7 @@ public class MdmKafkaFileOperationStrategy implements IFileOperationStrategy {
     @Override
     public ModeOfIntegration getModeOfIntegration() {
         return ModeOfIntegration.CK_MDM_KAFKA;
+
     }
 
     @Override

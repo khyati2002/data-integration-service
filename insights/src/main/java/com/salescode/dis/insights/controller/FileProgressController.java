@@ -4,6 +4,7 @@ import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.validation.ValidationService;
@@ -19,6 +20,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.UUID;
 
 @RestController
@@ -44,6 +48,12 @@ public class FileProgressController {
             @Validated @RequestBody FileProgressRequest progress
     ) {
 
+      if(progress.getModeOfIntegration()== ModeOfIntegration.CK_MDM_KAFKA) {
+          try {
+              fileId = new String(Base64.getUrlDecoder().decode(fileId), StandardCharsets.UTF_8);
+          } catch (Exception e) {
+          }
+      }
         FileEntity file = fileService.get(fileId,masterName);
         FileProgressEvent event = new FileProgressEvent();
         String eventId = UUID.randomUUID().toString();

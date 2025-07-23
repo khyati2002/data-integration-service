@@ -36,9 +36,9 @@ public class SafeInsightsManager {
         log.info("SafeInsightsManager initialized, wrapping InsightsManager for base URL: {}", insightsManager.getBaseURL());
     }
 
-    public Optional<JobEntityResponseDto> createJob(String lob, JobEntityRequestDto jobRequest) {
+    public Optional<JobEntityResponseDto> createJob(String lob, JobEntityRequestDto jobRequest, String authorizationToken) {
         try {
-            return Optional.ofNullable(insightsManager.createJob(lob, jobRequest));
+            return Optional.ofNullable(insightsManager.createJob(lob, jobRequest, authorizationToken));
         } catch (RestClientException e) {
             log.warn("SafeInsightsManager: createJob operation failed for LOB '{}'. Returning Optional.empty().", lob);
             return Optional.empty();
@@ -48,9 +48,9 @@ public class SafeInsightsManager {
         }
     }
 
-    public Optional<FileEntityResponseDto> updateFileCount(String lob, String masterName, String fileId, Long totalCount) {
+    public Optional<FileEntityResponseDto> updateFileCount(String lob, String masterName, String fileId, Long totalCount,String authorizationToken) {
         try {
-            return Optional.ofNullable(insightsManager.updateFileCount(lob, masterName,fileId,totalCount));
+            return Optional.ofNullable(insightsManager.updateFileCount(lob, masterName,fileId,totalCount,authorizationToken));
         } catch (RestClientException e) {
             log.warn("SafeInsightsManager: createJob operation failed for LOB '{}'. Returning Optional.empty().", lob);
             return Optional.empty();
@@ -60,9 +60,9 @@ public class SafeInsightsManager {
         }
     }
 
-    public Optional<JobEntityResponseDto> updateJobStatus(String lob,String jobId, ProgressStatus status) {
+    public Optional<JobEntityResponseDto> updateJobStatus(String lob,String jobId, ProgressStatus status, String authorizationToken) {
         try {
-            return Optional.ofNullable(insightsManager.updateJobStatus(lob, jobId, status));
+            return Optional.ofNullable(insightsManager.updateJobStatus(lob, jobId, status, authorizationToken));
         } catch (RestClientException e) {
             log.warn("SafeInsightsManager: updateJobStatus operation failed for LOB '{}', Job ID '{}'. Returning Optional.empty().", lob, jobId);
             return Optional.empty();
@@ -76,9 +76,9 @@ public class SafeInsightsManager {
 
     // --- Safe File Operations ---
 
-    public Optional<FileEntityResponseDto> createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest) {
+    public Optional<FileEntityResponseDto> createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest,String authorizationToken) {
         try {
-            return Optional.ofNullable(insightsManager.createFile(lob, masterName, jobId, fileRequest));
+            return Optional.ofNullable(insightsManager.createFile(lob, masterName, jobId, fileRequest, authorizationToken));
         } catch (RestClientException e) {
             log.warn("SafeInsightsManager: createFile operation failed for Job ID '{}', File ID '{}'. Returning Optional.empty().", jobId, fileRequest != null ? fileRequest.getFileId() : "N/A");
             return Optional.empty();
@@ -88,9 +88,9 @@ public class SafeInsightsManager {
         }
     }
 
-    public Optional<FileEntityResponseDto> createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest, String identifier) {
+    public Optional<FileEntityResponseDto> createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest, String identifier,String authorizationToken) {
         try {
-            return Optional.ofNullable(insightsManager.createFile(lob, masterName, jobId, fileRequest, identifier));
+            return Optional.ofNullable(insightsManager.createFile(lob, masterName, jobId, fileRequest, identifier, authorizationToken));
         } catch (RestClientException e) {
             log.warn("SafeInsightsManager: createFile operation failed for Job ID '{}', File ID '{}'. Returning Optional.empty().", jobId, fileRequest != null ? fileRequest.getFileId() : "N/A");
             return Optional.empty();
@@ -102,9 +102,9 @@ public class SafeInsightsManager {
 
 
 
-    public Optional<FileProgressResponse> updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload) {
+    public Optional<FileProgressResponse> updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload, String authorizationToken) {
         try {
-            return Optional.ofNullable(insightsManager.updateFileProgress(lob, masterName, fileId, progressPayload));
+            return Optional.ofNullable(insightsManager.updateFileProgress(lob, masterName, fileId, progressPayload, authorizationToken));
         } catch (RestClientException e) {
             log.warn("SafeInsightsManager: updateFileProgress operation failed for File ID '{}'. Returning Optional.empty().", fileId);
             return Optional.empty();
