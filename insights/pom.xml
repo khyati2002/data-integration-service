@@ -32,7 +32,7 @@
 		<maven.compiler.release>17</maven.compiler.release>
 		<java.version>17</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-		<insights-common.version>0.0.3-SNAPSHOT</insights-common.version>
+		<insights-common.version>0.0.6-SNAPSHOT</insights-common.version>
         <salescode-auth-sdk.version>1.7.3-SNAPSHOT</salescode-auth-sdk.version>
 	</properties>
 

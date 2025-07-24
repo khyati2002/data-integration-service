@@ -67,7 +67,8 @@ public class FileStatusScheduler {
 
     private void updateFileStatus(FileEntity file) {
         IFileOperationStrategy strategy = fileService.getFileOperationStrategy(file.getModeOfIntegration());
-        ProgressStage lastStage = strategy.getSupportedStages().getLast();
+        List<ProgressStage> stages  = strategy.getSupportedStages();
+        ProgressStage lastStage = stages.get(stages.size()-1);
         ProgressStatus lastStageStatus = file.getFileStageMetrics()
                 .stream()
                 .filter(metric -> metric.getStageType() == lastStage)
