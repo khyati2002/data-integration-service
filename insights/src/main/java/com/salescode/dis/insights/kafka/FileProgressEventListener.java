@@ -32,7 +32,6 @@ public class FileProgressEventListener {
 
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
-    private final ValidationService validationService;
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
             ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000"

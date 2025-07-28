@@ -4,22 +4,19 @@ import com.salescode.auth.sdk.filters.cache.NoOpAuthCacheClient;
 import com.salescode.auth.sdk.filters.requests.SalesCodeAuthFilter;
 import com.salescode.auth.sdk.filters.requests.SalesCodeAuthManager;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-
-@EnableWebSecurity
 @Configuration
+@Profile("!test")
+@EnableWebSecurity
 public class HttpSecurityConfiguration {
 
     @Bean
@@ -40,7 +37,7 @@ public class HttpSecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/hckeck", "/status","/api/properties/**").permitAll()
+                        .requestMatchers("/hckeck", "/status","/api/properties/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 );
         return salesCodeAuthManager.build(http);
@@ -51,17 +48,4 @@ public class HttpSecurityConfiguration {
         return authManager.provider();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // You can inject this from properties if needed
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(false); // Set to true if you're using cookies/auth headers
-        configuration.setMaxAge(3600L); // Cache duration for preflight requests
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
-        return source;
-    }
 }

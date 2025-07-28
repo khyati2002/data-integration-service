@@ -1,18 +1,14 @@
-package com.salescode.dis.insights;
+package com.salescode.dis.insights.old;
 
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.salescode.dis.insights.dto.DeploymentInformation;
 import com.salescode.dis.insights.utils.JsonUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

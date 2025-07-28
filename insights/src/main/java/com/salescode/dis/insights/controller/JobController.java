@@ -41,35 +41,10 @@ public class JobController {
     private final JobEntityMapper jobEntityMapper;
     private final FileEntityMapper fileEntityMapper;
 
-    @Operation(
-        summary = "Create a new job",
-        description = """
-            Creates a new integration job.
-            A job represents a unit of work that needs to be processed.
-            
-            The job will be created with a PENDING status by default.
-            The job can be associated with publisher and consumer URIs for tracking purposes.
-            Extended attributes can be provided for additional job metadata.
-            """,
-        parameters = {
-            @Parameter(name = "lob", description = "Line of Business (Client)")
-        }
-    )
-    @ApiResponse(
-        responseCode = "201",
-        description = "Job created successfully",
-        content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
-    )
-    @ApiResponse(
-        responseCode = "400",
-        description = "Invalid request body or missing required fields",
-        content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Internal server error occurred while creating the job",
-        content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
+    @Operation(summary = "Create a new job", parameters = {@Parameter(name = "lob", description = "Line of Business (Client)")})
+    @ApiResponse(responseCode = "201", description = "Job created successfully", content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid request body or missing required fields", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "500", description = "Internal server error occurred while creating the job", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @PostMapping("/job")
     public ResponseEntity<JobEntityResponseDto> createJob(@PathVariable String lob, @Validated @RequestBody JobEntityRequestDto req) {
         JobEntity entity = jobEntityMapper.toEntity(req, lob);
@@ -79,139 +54,43 @@ public class JobController {
     }
 
 
-
-    @Operation(
-        summary = "Get job details",
-        description = """
-            Retrieves detailed information about a specific job by its ID.
-            
-            The response includes:
-            - Job status and progress
-            - Associated publisher and consumer URIs
-            - Creation and modification timestamps
-            - Extended attributes
-            - File counts and completion status
-            """,
-        parameters = {
-            @Parameter(name = "lob", description = "Line of Business"),
-            @Parameter(name = "id", description = "Unique identifier of the job")
-        }
-    )
-    @ApiResponse(
-        responseCode = "200",
-        description = "Job details retrieved successfully",
-        content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
-    )
-    @ApiResponse(
-        responseCode = "404",
-        description = "Job not found with the specified ID",
-        content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Internal server error occurred while retrieving job details",
-        content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
+    @Operation(summary = "Get job details", parameters = {@Parameter(name = "lob", description = "Line of Business"), @Parameter(name = "id", description = "Unique identifier of the job")})
+    @ApiResponse(responseCode = "200", description = "Job details retrieved successfully", content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class)))
+    @ApiResponse(responseCode = "404", description = "Job not found with the specified ID", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "500", description = "Internal server error occurred while retrieving job details", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @GetMapping("/job/{id}")
     public ResponseEntity<JobEntityResponseDto> getJob(@PathVariable String lob, @PathVariable String id) {
         String decodedJobId = id;
-        try{
+        try {
             decodedJobId = new String(Base64.getDecoder().decode(id));
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         JobEntity job = jobService.getJob(decodedJobId);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
     }
 
 
-
-    @Operation(
-            summary = "Update job status",
-            description = """
-        Updates the status of a job by its ID.
-
-        The status must be one of the allowed values defined in the ProgressStatus enum.
-        
-        Example values include:
-        - PENDING
-        - RUNNING
-        - COMPLETED_SUCCESSFULLY
-        - COMPLETED_UNSUCCESSFULLY
-        - FAILED
-        - ABORTED
-        """,
-            parameters = {
-                    @Parameter(name = "id", description = "Unique identifier of the job", required = true),
-                    @Parameter(name = "status", description = "New status to be set for the job", required = true,
-                            schema = @Schema(implementation = ProgressStatus.class))
-            }
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Job status updated successfully",
-            content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
-    )
-    @ApiResponse(
-            responseCode = "400",
-            description = "Invalid status value or bad request",
-            content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
-    @ApiResponse(
-            responseCode = "404",
-            description = "Job not found with the specified ID",
-            content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
-    @ApiResponse(
-            responseCode = "500",
-            description = "Internal server error occurred while updating job status",
-            content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
+    @Operation(summary = "Update job status", parameters = {@Parameter(name = "id", description = "Unique identifier of the job", required = true), @Parameter(name = "status", description = "New status to be set for the job", required = true, schema = @Schema(implementation = ProgressStatus.class))})
+    @ApiResponse(responseCode = "200", description = "Job status updated successfully", content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid status value or bad request", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "404", description = "Job not found with the specified ID", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "500", description = "Internal server error occurred while updating job status", content = @Content(schema = @Schema(implementation = ApiError.class)))
     @PutMapping("/job/{id}/status/{status}")
-    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String id,@PathVariable ProgressStatus status){
-        JobEntity job = jobService.updateStatus(id,status);
+    public ResponseEntity<JobEntityResponseDto> updateStatus(@PathVariable String id, @PathVariable ProgressStatus status) {
+        JobEntity job = jobService.updateStatus(id, status);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         return ResponseEntity.ok(dto);
     }
 
 
-
-    @Operation(
-        summary = "List all jobs for a specific lob",
-        description = """
-            Retrieves a paginated list of all jobs for a specific line of business.
-            
-            The response can be paginated and sorted using standard Spring Data parameters:
-            - page: Page number (0-based)
-            - size: Number of items per page
-            - sort: Field to sort by (e.g., startTime,asc)
-            
-            Results are sorted by start time in ascending order by default.
-            """,
-        parameters = {
-            @Parameter(name = "lob", description = "Line of Business"),
-            @Parameter(name = "page", description = "Page number (0-based)"),
-            @Parameter(name = "size", description = "Number of items per page"),
-            @Parameter(name = "sort", description = "Sort criteria (e.g., startTime,asc)")
-        }
-    )
-    @ApiResponse(
-        responseCode = "200",
-        description = "List of jobs retrieved successfully",
-        content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Internal server error occurred while retrieving job list",
-        content = @Content(schema = @Schema(implementation = ApiError.class))
-    )
+    @Operation(summary = "List all jobs for a specific lob", parameters = {@Parameter(name = "lob", description = "Line of Business"), @Parameter(name = "page", description = "Page number (0-based)"), @Parameter(name = "size", description = "Number of items per page"), @Parameter(name = "sort", description = "Sort criteria (e.g., startTime,asc)")})
+    @ApiResponse(responseCode = "200", description = "List of jobs retrieved successfully", content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class)))
+    @ApiResponse(responseCode = "500", description = "Internal server error occurred while retrieving job list", content = @Content(schema = @Schema(implementation = ApiError.class)))
 
 
     @GetMapping(path = "/jobs")
-    public ResponseEntity<List<JobEntityResponseDtoWithStages>> getJobs(
-            @PathVariable String lob,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-            @RequestParam(required = false)  String mode) {
+    public ResponseEntity<List<JobEntityResponseDtoWithStages>> getJobs(@PathVariable String lob, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate, @RequestParam(required = false) String mode) {
 
         if (startDate == null) {
             startDate = LocalDateTime.now().minusDays(1);
@@ -225,11 +104,7 @@ public class JobController {
     }
 
     @GetMapping(path = "/all-jobs")
-    public ResponseEntity<AccumulatedJobsAndMasterDto> getJobsAndMasters(
-            @PathVariable String lob,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-            @RequestParam(required = false)  String mode) {
+    public ResponseEntity<AccumulatedJobsAndMasterDto> getJobsAndMasters(@PathVariable String lob, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate, @RequestParam(required = false) String mode) {
 
         if (startDate == null) {
             startDate = LocalDateTime.now().minusDays(10);
@@ -242,8 +117,6 @@ public class JobController {
         AccumulatedJobsAndMasterDto result = jobService.getJobsWithAggregatedStagesAndMasters(lob, startDate, endDate, mode);
         return ResponseEntity.ok(result);
     }
-    
-
 
 
 }

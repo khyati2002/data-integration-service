@@ -1,30 +1,36 @@
 # Define the active profiles, default is dev,h2 or dev,postgres depending on the environment.
 spring:
-  application:
-    name: insights
+  application.name: insights
 
   # Set the active profiles, default to dev,h2,debug
   profiles:
     active: postgres,dev,info,kafka  # Active profiles to be loaded together
 
-server:
-  port: 8081
+#  jpa:
+#    defer-datasource-initialization: true
+#
+#  sql.init.mode: always
+
+server.port: 8081
 
 ---
 
 # Configuration for 'dev' profile
 spring:
-  config:
-    activate:
-      on-profile: dev
+  config.activate.on-profile: test
 
-  devtools:
-    add-properties: true
+  autoconfigure.exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+---
+
+# Configuration for 'dev' profile
+spring:
+  config.activate.on-profile: local
+
+  devtools.add-properties: true
 
   # Development-specific settings
-  jpa:
-    hibernate:
-      ddl-auto: update
+  jpa.hibernate.ddl-auto: create
 
   datasource:
     url: jdbc:postgresql://localhost:5432/dis_insights
@@ -34,84 +40,45 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
 
-cache:
-  redisUrl: redis://localhost:6379
-
-application:
-  environment: dev
-
-app:
-  active-environments:
-    - dev
-
-file:
-  progress:
-    update:
-      topic: file-progress-updates
-      failure:
-        topic: file-progress-updates-failed
-
-property-service:
-  token: "your-token-here"
 ---
 
 # Configuration for 'uat' profile
 spring:
-  config:
-    activate:
-      on-profile: uat
+  config.activate.on-profile: dev
 
   kafka:
     bootstrap-servers: 164.52.202.184:9092
 
-application:
-  environment: uat
 
-app:
-  active-environments:
-    - dev
-    - uat
+---
 
-file:
-  progress:
-    update:
-      topic: file-progress-updates
-      failure:
-        topic: file-progress-updates-failed
+# Configuration for 'uat' profile
+spring:
+  config.activate.on-profile: uat
+
+  kafka:
+    bootstrap-servers: 164.52.202.184:9092
+
 
 ---
 
 # Configuration for 'demo' profile
 spring:
-  config:
-    activate:
-      on-profile: demo
+  config.activate.on-profile: demo
 
 
-application:
-  environment: demo
+---
 
-app:
-  active-environments:
-    - demo
-    - prod
-
-file:
-  progress:
-    update:
-      topic: file-progress-updates
-      failure:
-        topic: file-progress-updates-failed
-
+# Configuration for 'prod' profile
+spring:
+  config.activate.on-profile: prod
 
 
 ---
 
 # Configuration for 'postgres' profile (PostgreSQL-specific properties for persistent DB)
 spring:
-  config:
-    activate:
-      on-profile: postgres
+  config.activate.on-profile: postgres
 
   # PostgreSQL Database-specific properties for persistent database
 #  jpa:
@@ -122,9 +89,7 @@ spring:
 
 # Configuration for 'info' profile (INFO-level logging)
 spring:
-  config:
-    activate:
-      on-profile: info
+  config.activate.on-profile: info
 
 # Logging level for INFO
 logging:
@@ -139,9 +104,7 @@ logging:
 
 # Configuration for 'debug' profile (DEBUG-level logging)
 spring:
-  config:
-    activate:
-      on-profile: debug
+  config.activate.on-profile: debug
 
   jpa:
     show-sql: true     

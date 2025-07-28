@@ -29,7 +29,6 @@ public class FileProgressController {
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
     private final FileRepository fileRepository;
-    private final ValidationService validationService;
     @Value("${file.progress.update.topic:file-progress-updates}")
     private String fileUpdatesTopic;
 
