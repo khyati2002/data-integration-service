@@ -1,7 +1,4 @@
 package com.salescode.dim.cache;
-
-
-
 import io.netty.buffer.Unpooled;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,17 +61,25 @@ public class CacheManager {
     }
 
     private CacheManager(Properties properties) {
-        // Initialize Redisson Client
         String redisUrl = properties.getProperty("redisUrl");
         boolean clustered = Boolean.parseBoolean(properties.getProperty("cacheClustered", "false"));
-        int subscriptionConnectionPoolSize= Integer.parseInt(properties.getProperty("subscriptionConnectionPoolSize", "250"));
-        int subscriptionsPerConnection= Integer.parseInt(properties.getProperty("subscriptionsPerConnection", "25"));
-
+        int subscriptionConnectionPoolSize= Integer.parseInt(properties.getProperty("subscriptionConnectionPoolSize", "8"));
+        int subscriptionsPerConnection= Integer.parseInt(properties.getProperty("subscriptionsPerConnection", "4"));
+        int masterConnectionPoolSize= Integer.parseInt(properties.getProperty("masterConnectionPoolSize", "8"));
+        int slaveConnectionPoolSize= Integer.parseInt(properties.getProperty("slaveConnectionPoolSize", "4"));
+        int idleConnectionTimeout= Integer.parseInt(properties.getProperty("idleConnectionTimeout", "180000"));
+        int idleMasterConnectionPoolSize= Integer.parseInt(properties.getProperty("idleMasterConnectionPoolSize", "4"));
+        int idleSlaveConnectionPoolSize= Integer.parseInt(properties.getProperty("idleSlaveConnectionPoolSize", "2"));
         if (StringUtils.isNotBlank(redisUrl)) {
             Config config = new Config().setCodec(getCodec());
             if (clustered) {
                 config.useClusterServers().setTimeout(30000)
                         .setRetryAttempts(5)
+                        .setMasterConnectionPoolSize(masterConnectionPoolSize)
+                        .setSlaveConnectionPoolSize(slaveConnectionPoolSize)
+                        .setIdleConnectionTimeout(idleConnectionTimeout)
+                        .setMasterConnectionMinimumIdleSize(idleMasterConnectionPoolSize)
+                        .setSlaveConnectionMinimumIdleSize(idleSlaveConnectionPoolSize)
                         .setSubscriptionConnectionPoolSize(subscriptionConnectionPoolSize)
                         .setSubscriptionsPerConnection(subscriptionsPerConnection)
                         .addNodeAddress(redisUrl);
@@ -82,6 +87,7 @@ public class CacheManager {
                 config.useSingleServer().
                         setTimeout(30000)
                         .setRetryAttempts(5)
+                        .setConnectionPoolSize(masterConnectionPoolSize)
                         .setSubscriptionConnectionPoolSize(subscriptionConnectionPoolSize)
                         .setSubscriptionsPerConnection(subscriptionsPerConnection)
                         .setAddress(redisUrl);
@@ -163,9 +169,7 @@ public class CacheManager {
         });
     }
 
-    /**
-     * Shutdown Redis client gracefully.
-     */
     public void shutdown() {
         redissonClient.shutdown();
-    }}
+    }
+}
