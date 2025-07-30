@@ -38,8 +38,8 @@ public class DataStreamJobTest {
 
 
     public static String rawStreamingData = "{\n" +
-            "    \"requestId\": \"8a318b6b-95ca-49ff-8310-d90ec102827a\",\n" +
-            "    \"groupId\": \"2025-05-02\",\n" +
+            "    \"requestId\": \"0830608e-4314-4c67-a52e-e718d08d194d\",\n" +
+            "    \"groupId\": \"2025-07-30\",\n" +
             "    \"lob\": \"cktestitcloyalty\",\n" +
             "    \"loginId\": \"integration_user\",\n" +
             "    \"batchNumber\": 0,\n" +
@@ -48,7 +48,7 @@ public class DataStreamJobTest {
             "            \"skipPreprocessing\": false,\n" +
             "            \"skipPersist\": false,\n" +
             "            \"entityName\": \"OutletDetails\",\n" +
-            "            \"transformerId\": \"unnati_csp_outlet_master_mdm1\",\n" +
+            "            \"transformerId\": \"Outlet_Details_Transformer\",\n" +
             "            \"preprocessValidationExcludeGroup\": \"outlet_validation_exclude\",\n" +
             "            \"messageLevelHash\": null,\n" +
             "            \"messageHashSupported\": false,\n" +
@@ -57,45 +57,46 @@ public class DataStreamJobTest {
             "            \"operationType\": \"insert\"\n" +
             "        }\n" +
             "    ],\n" +
-            "    \"features\":  [{\n" +
-            "    \"UID\": \"EGAU-SL-54327\",\n" +
-            "    \"CREATIONDATE\": \"1746770380797\",\n" +
-            "    \"DISTRICT\": \"EDIS\",\n" +
-            "    \"Branch\": \"EGAU\",\n" +
-            "    \"CUSTName\": \"BABUL STORES\",\n" +
-            "    \"OwnerName\": \"BABUL STORES\",\n" +
-            "    \"ChannelType\": \"Rural Wholesale\",\n" +
-            "    \"OutletType\": \"Dual (FMCG + Tobacco)\",\n" +
-            "    \"LoyaltyType\": \"SWD Others\",\n" +
-            "    \"OutletLat\": \"26.424693999999999\",\n" +
-            "    \"OutletLong\": \"90.973511000000002\",\n" +
-            "    \"TYPE\": \"LOYALTY\",\n" +
-            "    \"OutletName\": \"BABUL STORES\",\n" +
-            "    \"supplierMapping\": [\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"GA2799DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"GA2799\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING CO\"\n" +
-            "      },\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"NG2949DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"NG2949\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING COOOOOO\"\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }\n" +
+            "    \"features\": [\n" +
+            "        {\n" +
+            "            \"UID\": \"181203365100\",\n" +
+            "            \"CREATIONDATE\": \"1752904727267\",\n" +
+            "            \"PICKUPDATE\": null,\n" +
+            "            \"DISTRICT\": \"WDIS\",\n" +
+            "            \"Branch\": \"WPUN\",\n" +
+            "            \"CUSTName\": \"AMBAI KIRANA STORES MHSAVE\",\n" +
+            "            \"OwnerName\": \"AMBAI KIRANA STORES MHSAVE\",\n" +
+            "            \"ChannelType\": \"Retail\",\n" +
+            "            \"OutletType\": \"grocery\",\n" +
+            "            \"LoyaltyType\": \"Retail Others\",\n" +
+            "            \"FoodsTier\": null,\n" +
+            "            \"PCPTier\": null,\n" +
+            "            \"CustAddress\": null,\n" +
+            "            \"CustState\": null,\n" +
+            "            \"CustCity\": null,\n" +
+            "            \"PIN\": null,\n" +
+            "            \"Mobile\": null,\n" +
+            "            \"BirthDate\": null,\n" +
+            "            \"Anniversary\": null,\n" +
+            "            \"PCPSubType\": null,\n" +
+            "            \"FCFoodsSubType\": null,\n" +
+            "            \"ITCProducts\": null,\n" +
+            "            \"GiftVoucher\": null,\n" +
+            "            \"OutletLat\": \"12.32\",\n" +
+            "            \"OutletLong\": \"56.76\",\n" +
+            "            \"CustOrder\": null,\n" +
+            "            \"CustLoyalty\": null,\n" +
+            "            \"AutoRedemption\": null,\n" +
+            "            \"Active\": null,\n" +
+            "            \"TYPE\": \"loyalty\",\n" +
+            "            \"OutletName\": \"AMBAI KIRANA STORES MHSAVE\",\n" +
+            "            \"supplierMapping\": \"[{\\\"CustID\\\":\\\"3473 EXP 20-21\\\",\\\"SIFYID\\\":\\\"PU3819ITC3933473 EXP 20-21\\\",\\\"WDDest\\\":\\\"PU3819\\\",\\\"UID\\\":\\\"181203365100\\\",\\\"RCSID\\\":\\\"181203365100\\\",\\\"WDName\\\":\\\"SONAL TRADING COMPANY\\\"},{\\\"CustID\\\":\\\"3473 EXP 20-21\\\",\\\"SIFYID\\\":\\\"PU3819ITC3933473 EXP 20-21\\\",\\\"WDDest\\\":\\\"PU3854\\\",\\\"UID\\\":\\\"181203365100\\\",\\\"RCSID\\\":\\\"181203365100\\\",\\\"WDName\\\":\\\"GAJANAN PANKAR ENTERPRISES\\\"}]\"\n" +
+            "        }\n" +
             "    ],\n" +
             "    \"appId\": \"integration\",\n" +
             "    \"retryCount\": 0,\n" +
             "    \"preserveOnFailure\": true,\n" +
-            "    \"ignoreS3Log\": false,\n" +
-            "    \"topicName\": \"unnati-dataintegration\"\n" +
+            "    \"ignoreS3Log\": false\n" +
             "}";
     @Test
     public void testDataStreamJobWithFewObjects() throws Exception {
@@ -112,7 +113,7 @@ public class DataStreamJobTest {
         StreamingRawData data3 = createStreamingDataObject(Map.of("groupId", "req-3"));
 
         // Create a source from the sample data
-        DataStream<StreamingRawData> source = env.fromData(data1, data2, data3);
+        DataStream<StreamingRawData> source = env.fromData(data1);
 
         // For testing, we bypass Kafka and directly use the processor.
         // Prepare dummy commonProperties (if needed by StreamingRawDataProcessor)
@@ -141,8 +142,7 @@ public class DataStreamJobTest {
 
     @SneakyThrows
     private StreamingRawData createStreamingDataObject(Map<String, String> map) {
-        return JSONUtils.getObjectMapper()
-                        .readValue(StringSubstitutor.replace(rawStreamingData, map, "%(", ")"), StreamingRawData.class);
+        return JSONUtils.getObjectMapper().readValue(StringSubstitutor.replace(rawStreamingData, map, "%(", ")"), StreamingRawData.class);
     }
 
     @Test
