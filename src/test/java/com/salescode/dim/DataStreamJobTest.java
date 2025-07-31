@@ -39,7 +39,7 @@ public class DataStreamJobTest {
 
     public static String rawStreamingData = "{\n" +
             "    \"requestId\": \"0830608e-4314-4c67-a52e-e718d08d194d\",\n" +
-            "    \"groupId\": \"2025-07-30\",\n" +
+            "    \"groupId\": \"2025-07-31\",\n" +
             "    \"lob\": \"cktestitcloyalty\",\n" +
             "    \"loginId\": \"integration_user\",\n" +
             "    \"batchNumber\": 0,\n" +
@@ -59,15 +59,15 @@ public class DataStreamJobTest {
             "    ],\n" +
             "    \"features\": [\n" +
             "        {\n" +
-            "            \"UID\": \"181203365100\",\n" +
-            "            \"CREATIONDATE\": \"1752904727267\",\n" +
+            "            \"UID\": \"WPUNTESTMOHITYADAV\",\n" +
+            "            \"CREATIONDATE\": \"1753768732640\",\n" +
             "            \"PICKUPDATE\": null,\n" +
             "            \"DISTRICT\": \"WDIS\",\n" +
             "            \"Branch\": \"WPUN\",\n" +
-            "            \"CUSTName\": \"AMBAI KIRANA STORES MHSAVE\",\n" +
-            "            \"OwnerName\": \"AMBAI KIRANA STORES MHSAVE\",\n" +
+            "            \"CUSTName\": \"WPUNTESTMohitYadav\",\n" +
+            "            \"OwnerName\": \"WPUNTESTMohitYadav\",\n" +
             "            \"ChannelType\": \"Retail\",\n" +
-            "            \"OutletType\": \"grocery\",\n" +
+            "            \"OutletType\": \"Retail\",\n" +
             "            \"LoyaltyType\": \"Retail Others\",\n" +
             "            \"FoodsTier\": null,\n" +
             "            \"PCPTier\": null,\n" +
@@ -82,15 +82,15 @@ public class DataStreamJobTest {
             "            \"FCFoodsSubType\": null,\n" +
             "            \"ITCProducts\": null,\n" +
             "            \"GiftVoucher\": null,\n" +
-            "            \"OutletLat\": \"12.32\",\n" +
-            "            \"OutletLong\": \"56.76\",\n" +
+            "            \"OutletLat\": \"20.014496999999999\",\n" +
+            "            \"OutletLong\": \"73.756244999999993\",\n" +
             "            \"CustOrder\": null,\n" +
             "            \"CustLoyalty\": null,\n" +
             "            \"AutoRedemption\": null,\n" +
             "            \"Active\": null,\n" +
-            "            \"TYPE\": \"loyalty\",\n" +
-            "            \"OutletName\": \"AMBAI KIRANA STORES MHSAVE\",\n" +
-            "            \"supplierMapping\": \"[{\\\"CustID\\\":\\\"3473 EXP 20-21\\\",\\\"SIFYID\\\":\\\"PU3819ITC3933473 EXP 20-21\\\",\\\"WDDest\\\":\\\"PU3819\\\",\\\"UID\\\":\\\"181203365100\\\",\\\"RCSID\\\":\\\"181203365100\\\",\\\"WDName\\\":\\\"SONAL TRADING COMPANY\\\"},{\\\"CustID\\\":\\\"3473 EXP 20-21\\\",\\\"SIFYID\\\":\\\"PU3819ITC3933473 EXP 20-21\\\",\\\"WDDest\\\":\\\"PU3854\\\",\\\"UID\\\":\\\"181203365100\\\",\\\"RCSID\\\":\\\"181203365100\\\",\\\"WDName\\\":\\\"GAJANAN PANKAR ENTERPRISES\\\"}]\"\n" +
+            "            \"TYPE\": \"non loyalty\",\n" +
+            "            \"OutletName\": \"WPUNTESTMohitYadav\",\n" +
+            "            \"supplierMapping\": \"[{\\\"CustID\\\":\\\"WPUNTESTCUSTIDMohitYadav\\\",\\\"SIFYID\\\":\\\"WPUNTESTSIFYIDMohitYadav\\\",\\\"WDDest\\\":\\\"PU2216\\\",\\\"UID\\\":\\\"WPUNTESTMOHITYADAV\\\",\\\"RCSID\\\":\\\"WPUNTESTRCSMohitYadav\\\",\\\"WDName\\\":\\\"VAISHYA DISTRIBUTORS\\\"},{\\\"CustID\\\":\\\"WPUNTESTCUSTIDMohitYadav\\\",\\\"SIFYID\\\":\\\"WPUNTESTSIFYIDMohitYadav\\\",\\\"WDDest\\\":\\\"PU3854\\\",\\\"UID\\\":\\\"WPUNTESTMOHITYADAV\\\",\\\"RCSID\\\":\\\"WPUNTESTRCSMohitYadav\\\",\\\"WDName\\\":\\\"GAJANAN PANKAR ENTERPRISES\\\"}]\"\n" +
             "        }\n" +
             "    ],\n" +
             "    \"appId\": \"integration\",\n" +

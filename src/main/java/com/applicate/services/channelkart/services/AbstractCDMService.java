@@ -77,7 +77,7 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
                     field.set(target, sourceValue); // Copy value if target is null
                 } else if (field.getName().equals("extendedAttributes") && targetValue instanceof JsonNode && sourceValue instanceof JsonNode) {
                     // Merge JSON fields if both are JsonNode
-                    JsonNode mergedJson = mergeJson((JsonNode) targetValue, (JsonNode) sourceValue);
+                    JsonNode mergedJson = mergeJson((JsonNode) sourceValue, (JsonNode) targetValue);
                     field.set(target, mergedJson);
                 }
 
