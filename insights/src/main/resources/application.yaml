@@ -182,5 +182,17 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
+salescode:
+  observability:
+    enabled: true
+    default-protocol: http
+    global-endpoint: https://pulse.salescode.ai/api/uat
+    global-headers:
+      authorization: Basic <token>
+      stream-name: ${spring.application.name}
+    default-metrics-interval: 30
+    http-metrics:
+      enabled: true
+
 
 

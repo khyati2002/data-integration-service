@@ -19,7 +19,7 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.30</lombok.version>
-        <insights-common.version>0.0.4-SNAPSHOT</insights-common.version>
+        <insights-common.version>0.0.6-SNAPSHOT</insights-common.version>
     </properties>
 
     <repositories>
