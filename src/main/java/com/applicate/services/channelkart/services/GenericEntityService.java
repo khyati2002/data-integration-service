@@ -24,13 +24,15 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		List<List<GenericEntity>> result = new ArrayList<>();
 		List<String> outletCodes = genericEntityList.stream().map(GenericEntity::getId).collect(Collectors.toList());
 
-		Map<String, GenericEntity> savedList = getDslContext().selectFrom(CK_GENERIC_OBJECT).where(CK_GENERIC_OBJECT.ID.in(outletCodes)).fetch().intoMap(CK_GENERIC_OBJECT.ID, record -> record.into(GenericEntity.class));
+		Map<String, GenericEntity> savedList = getDslContext().selectFrom(CK_GENERIC_OBJECT).where(CK_GENERIC_OBJECT.ID.in(outletCodes)).fetch().intoMap(CK_GENERIC_OBJECT.ID, record -> convertToGenericEntity(record));
+
 		List<GenericEntity> itemsToInsert = new ArrayList<>();
 		List<GenericEntity> itemsToUpdate = new ArrayList<>();
 		for (GenericEntity loginId : genericEntityList) {
 			fillAttributes(loginId, savedList.get(loginId.getId()));
 			fillCommonAttributes(loginId);
-			if (loginId.getId() == null)   loginId.setId(new IdGenerator(loginId.getClass().getSimpleName()).getId(loginId));
+			if (loginId.getId() == null)
+				loginId.setId(new IdGenerator(loginId.getClass().getSimpleName()).getId(loginId));
 
 			if (savedList.get(loginId.getId()) == null) {
 				itemsToInsert.add(loginId);
@@ -41,6 +43,7 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 				GenericEntity existingOutlet = savedList.get(loginId.getId());
 				loginId.setOperationPerformed(ActionType.UPDATE);
 				loginId.setRangeKey(0L);
+				loginId.setChanged((byte) 1);
 				loginId.setTimestamp(new Date().toInstant().toEpochMilli());
 				itemsToUpdate.add(loginId);
 			}
@@ -49,6 +52,19 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		result.add(itemsToUpdate);
 		return result;
 	}
+
+	private GenericEntity convertToGenericEntity(CkGenericObjectRecord record) {
+		GenericEntity entity = new GenericEntity();
+		entity.setId(record.getId());
+		entity.setRangeKey(record.getRangeKey());
+		entity.setTimestamp(record.getTimestamp());
+		entity.setChanged((byte) 1);
+		entity.setActiveStatus(record.getActiveStatus());
+
+
+		return entity;
+	}
+
 
 	@Override
 	public Collection<GenericEntity> batchSave(Collection<GenericEntity> genericEntityList) {
@@ -59,14 +75,14 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 			loginId.setActiveStatus(ActiveStatus.ACTIVE);
 			loginId.setRangeKey(0L);
 			loginId.setTimestamp(new Date().toInstant().toEpochMilli());
-			loginId.setChanged((byte)1);
+			loginId.setChanged(Boolean.TRUE);
 		});
 
 		saveItemsList.get(1).forEach(loginId -> {
 			loginId.setActiveStatus(ActiveStatus.ACTIVE);
 			loginId.setRangeKey(0L);
 			loginId.setTimestamp(new Date().toInstant().toEpochMilli());
-			loginId.setChanged((byte)1);
+			loginId.setChanged(Boolean.TRUE);
 
 		});
 		if (!saveItemsList.get(0).isEmpty()) {
