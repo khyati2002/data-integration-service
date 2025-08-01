@@ -2,7 +2,7 @@
 
 # Common variables
 profile?=default
-version?=0.0.9-SNAPSHOT # Default version, can be overridden
+version?=0.0.2-SNAPSHOT # Default version, can be overridden
 
 # Clean all generated files in all submodules
 clean:
@@ -18,7 +18,7 @@ all: insights-common-cleanInstall insights-sdk-cleanInstall insights-cleanInstal
 
 insights-common-cleanInstall: insights-common-setVersion
 	@echo "Running clean install for insights-common..."
-	JAVA_HOME=$(/usr/libexec/java_home -v 17) mvn clean install -f insights-common/pom.xml -s settings.xml -DskipTests -Psb3 -e -X
+	mvn clean install -f insights-common/pom.xml -s settings.xml -DskipTests -Psb3 -e -X
 
 insights-common-setVersion:
 	@echo "Setting version for insights-common..."
@@ -39,7 +39,7 @@ insights-common-deploy: insights-common-cleanInstall
 
 insights-sdk-cleanInstall: insights-sdk-setVersion
 	@echo "Running clean install for insights-sdk..."
-	JAVA_HOME=$(/usr/libexec/java_home -v 17) mvn clean install -f insights-sdk/pom.xml -s settings.xml -DskipTests -Psb3 -e
+	mvn clean install -f insights-sdk/pom.xml -s settings.xml -DskipTests -Psb3 -e
 
 insights-sdk-setVersion:
 	@echo "Setting version for insights-sdk..."
@@ -60,6 +60,7 @@ insights-sdk-deploy: insights-sdk-cleanInstall
 
 insights-cleanInstall: insights-common-cleanInstall insights-sdk-cleanInstall
 	@echo "Building Docker image for insights..."
+	JAVA_HOME=$(/usr/libexec/java_home -v 17) mvn clean install -f insights/pom.xml -s settings.xml -DskipTests -e -U
 
 insights-image-push: insights-build-image
 	docker buildx build --progress plain --platform "linux/amd64" --provenance=false -t dis-insights .

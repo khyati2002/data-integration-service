@@ -39,7 +39,7 @@ public class FileService {
                         () -> new EnumMap<>(ModeOfIntegration.class)));
     }
 
-    private IFileOperationStrategy getFileOperationStrategy(ModeOfIntegration file) {
+    public IFileOperationStrategy getFileOperationStrategy(ModeOfIntegration file) {
         return Optional.ofNullable(operationStrategyMap.get(file))
                 .orElseThrow(() -> new IllegalArgumentException("No strategy found for mode of integration: " + file));
     }

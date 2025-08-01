@@ -92,7 +92,9 @@ application:
   environment: demo
 
 app:
-  active-environments: demo
+  active-environments:
+    - demo
+    - prod
 
 file:
   progress:

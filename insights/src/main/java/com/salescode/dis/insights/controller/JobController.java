@@ -232,7 +232,7 @@ public class JobController {
             @RequestParam(required = false)  String mode) {
 
         if (startDate == null) {
-            startDate = LocalDateTime.now().minusDays(1);
+            startDate = LocalDateTime.now().minusDays(10);
         }
 
         if (endDate == null) {
