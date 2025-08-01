@@ -27,14 +27,14 @@ import java.util.Optional;
 @Profile("kafka")
 public class FileProgressEventListener {
 
-    @Value("${file.progress.update.failure.topic:file-progress-updates-failed-1}")
+    @Value("${file.progress.update.failure.topic:file-progress-updates-failed}")
     private String FAILURE_TOPIC;
 
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
     private final ValidationService validationService;
 
-    @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates-1}", groupId = "file-progress-processor", batch = "true", properties = {
+    @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
             ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000"
     })
     public void consumeProgressEvents(@Payload List<FileProgressEvent> events) throws InterruptedException {

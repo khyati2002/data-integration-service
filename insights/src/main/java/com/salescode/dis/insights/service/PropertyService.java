@@ -109,8 +109,6 @@ public class PropertyService {
     }
 
     public Boolean isInsightsEnabled(String lob) {
-
-        lobFeatureCache.put("ckcoeuat", true);
         Boolean enabled = lobFeatureCache.getIfPresent(lob);
         if(enabled!=null){
             String env = lobToEnvCache.getIfPresent(lob);
