@@ -2,7 +2,7 @@
 
 # Common variables
 profile?=default
-version?=0.0.2-SNAPSHOT # Default version, can be overridden
+version?=0.0.7-SNAPSHOT # Default version, can be overridden
 
 # Clean all generated files in all submodules
 clean:
