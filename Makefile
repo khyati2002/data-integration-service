@@ -14,7 +14,7 @@ MAVEN_UPDATE_SNAPSHOT ?=
 ifeq ($(debug),true)
   MAVEN_DEBUG_FLAGS = -e -X
 else
-  MAVEN_DEBUG_FLAGS = -q
+  MAVEN_DEBUG_FLAGS =
 endif
 
 # =============================
@@ -76,6 +76,7 @@ insights-sdk-setVersion:
 insights-sdk-cleanInstall: insights-sdk-setVersion
 	@echo "Running clean install for insights-sdk..."
 	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text` && \
+	JAVA_HOME=$$(/usr/libexec/java_home -v 11) \
 	mvn clean install -f insights-sdk/pom.xml -s settings.xml -DskipTests -Psb3 $(MAVEN_DEBUG_FLAGS)
 
 insights-sdk-deploy: clean insights-sdk-cleanInstall
@@ -93,8 +94,9 @@ insights-setVersion:
 	  echo "Error: version is not set."; \
 	  exit 1; \
 	fi
-	mvn versions:set -DnewVersion=$(version) -f insights/pom.xml -s settings.xml $(MAVEN_DEBUG_FLAGS)
-	mvn versions:set-property -Dproperty="insights-common.version" -DnewVersion=$(version) -f insights/pom.xml -s settings.xml $(MAVEN_DEBUG_FLAGS)
+	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text` && \
+	mvn versions:set -DnewVersion=$(version) -f insights/pom.xml -s settings.xml $(MAVEN_DEBUG_FLAGS) && \
+	mvn versions:set-property -Dproperty="insights-common.version" -DnewVersion=$(version) -f insights/pom.xml -s settings.xml $(MAVEN_DEBUG_FLAGS) && \
 	mvn versions:commit -f insights/pom.xml -s settings.xml $(MAVEN_DEBUG_FLAGS)
 
 insights-cleanInstall: insights-setVersion
