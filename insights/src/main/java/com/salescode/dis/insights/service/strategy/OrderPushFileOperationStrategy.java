@@ -9,9 +9,6 @@ import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.repository.JobRepository;
-import com.salescode.dis.insights.sdk.InsightsEnv;
-import com.salescode.dis.insights.sdk.manager.InsightsBuilder;
-import com.salescode.dis.insights.sdk.manager.SafeInsightsManager;
 import com.salescode.dis.insights.service.FileOperationsHelperService;
 import com.salescode.dis.insights.service.JobService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +30,6 @@ public class OrderPushFileOperationStrategy implements IFileOperationStrategy {
     private final FileOperationsHelperService fileOperationsHelperService;
     private final JobRepository jobRepository;
 
-    protected SafeInsightsManager insightsManager;
     @Value("${insights.token}")
     private String token;
     private String jobId;
