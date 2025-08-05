@@ -43,6 +43,7 @@ application:
 app:
   active-environments:
     - dev
+    - uat
 
 file:
   progress:
@@ -188,7 +189,7 @@ salescode:
     default-protocol: http
     global-endpoint: https://pulse.salescode.ai/api/uat
     global-headers:
-      authorization: Basic <token>
+      authorization: Basic YWRtaW5Ac2FsZXNjb2RlLmFpOlJ1MG1sOHZ4bzNTZlQxV0k=
       stream-name: ${spring.application.name}
     default-metrics-interval: 30
     http-metrics:
