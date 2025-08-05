@@ -92,7 +92,6 @@ public class CacheManager {
                         setTimeout(30000)
                         .setRetryAttempts(5)
                         .setConnectionPoolSize(masterConnectionPoolSize)
-                        .setConnectionMinimumIdleSize(idleMasterConnectionPoolSize)
                         .setSubscriptionConnectionPoolSize(subscriptionConnectionPoolSize)
                         .setSubscriptionsPerConnection(subscriptionsPerConnection)
                         .setAddress(redisUrl);
