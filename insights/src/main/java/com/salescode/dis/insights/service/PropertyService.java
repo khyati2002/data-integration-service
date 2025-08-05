@@ -4,16 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salescode.dis.insights.entity.InsightsMetadata;
 import com.salescode.dis.insights.repository.InsightsMetadataRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-
-import java.util.concurrent.TimeUnit;
-import java.util.*;
 
 @Service
 public class PropertyService {
