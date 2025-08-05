@@ -5,6 +5,7 @@
 # =============================
 profile    ?= default
 version    ?= 0.0.8-SNAPSHOT
+insights_version ?=
 debug      ?= false
 
 # if you want Maven to update snapshots/releases, invoke with:
@@ -14,7 +15,7 @@ MAVEN_UPDATE_SNAPSHOT ?=
 ifeq ($(debug),true)
   MAVEN_DEBUG_FLAGS = -e -X
 else
-  MAVEN_DEBUG_FLAGS =
+  MAVEN_DEBUG_FLAGS = -q
 endif
 
 # =============================
@@ -95,7 +96,7 @@ insights-setVersion:
 	  exit 1; \
 	fi
 	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text` && \
-	mvn versions:set -DnewVersion=$(version) -f insights/pom.xml -s settings.xml $(MAVEN_DEBUG_FLAGS) && \
+	([ -n "$$insights_version" ] && mvn versions:set -DnewVersion=$$insights_version -f insights/pom.xml -s settings.xml $(MAVEN_DEBUG_FLAGS) || echo "Skipping mvn versions:set as insights-version is empty") && \
 	mvn versions:set-property -Dproperty="insights-common.version" -DnewVersion=$(version) -f insights/pom.xml -s settings.xml $(MAVEN_DEBUG_FLAGS) && \
 	mvn versions:commit -f insights/pom.xml -s settings.xml $(MAVEN_DEBUG_FLAGS)
 

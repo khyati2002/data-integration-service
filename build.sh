@@ -1,16 +1,14 @@
 #!/bin/bash
 
-# Exit if VERSION is not set
-if [[ -z "$VERSION" ]]; then
-  echo "ERROR: VERSION is not set. Please pass it as an environment variable."
-  echo "Usage: VERSION=1.2.3 ./build.sh"
+# Exit if version is not passed as argument
+if [ -z "$1" ]; then
+  echo "ERROR: Version is not provided."
+  echo "Usage: ./build.sh <version>"
   exit 1
 fi
 
-export version=$VERSION
+VERSION=$1
 
 echo "Starting build process with version: $version ..."
-make clean
-make all
-
+insights_version=$VERSION make insights-cleanInstall
 echo "✅ Build completed successfully."
