@@ -68,13 +68,14 @@ public class HCCBChannelEnrichment extends AbstractEnrichment<SchemeDefination> 
     }
 
     private void enrichItemSchemeDescription(SchemeDefination cdm) {
-        if(cdm.getSchemeType().contains("item") && ObjectUtils.isNotEmpty(cdm.getSchemeCalculation().get(0).getSchemeDiscountedProductcode())){
-            Productdetails pd = productDetailsService.findByBatchCode(cdm.getSchemeCalculation().get(0).getSchemeDiscountedProductcode());
-            String name = pd.getSkuDescription();
-            String newDes= cdm.getSchemeDescription() + " (" + name +")";
-            cdm.setSchemeDescription(newDes);
-            updateSlabDescription(cdm.getSchemeCalculation().get(0).getSlabInfo(),name);
-        }
+        if(!cdm.getExtendedAttributes().has("onlyUpdate") && cdm.getSchemeType().contains("item") && ObjectUtils.isNotEmpty(cdm.getSchemeCalculation().get(0).getSchemeDiscountedProductcode())) {
+                Productdetails pd = productDetailsService.findByBatchCode(cdm.getSchemeCalculation().get(0).getSchemeDiscountedProductcode());
+                String name = pd.getSkuDescription();
+                String newDes = cdm.getSchemeDescription() + " (" + name + ")";
+                cdm.setSchemeDescription(newDes);
+                updateSlabDescription(cdm.getSchemeCalculation().get(0).getSlabInfo(), name);
+            }
+
     }
 
     private void updateSlabDescription(JsonNode slabInfo, String name) {

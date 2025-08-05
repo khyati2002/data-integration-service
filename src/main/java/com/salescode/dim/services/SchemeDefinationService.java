@@ -16,6 +16,7 @@ import com.salescode.dim.repository.SchemeDefinationRepoImpl;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.jooq.DSLContext;
 import org.jooq.InsertSetMoreStep;
+import org.jooq.UpdateSetMoreStep;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,11 +145,33 @@ public class SchemeDefinationService extends AbstractCDMService<SchemeDefination
 
     };
 
+
+    private BiFunction<com.salescode.dim.jooq.generated.tables.pojos.SchemeDefination, DSLContext, UpdateSetMoreStep<?>> schemeDefinationEndDateMapper = (ros, dslContext) -> {
+
+        return (UpdateSetMoreStep<CkSchemeDefinationRecord>)
+                dslContext.update(CK_SCHEME_DEFINATION)
+                        .set(CK_SCHEME_DEFINATION.END_DATE, ros.getEndDate().atZone(ZoneId.of("Asia/Kolkata")).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime())
+                        .set(Tables.CK_SCHEME_DEFINATION.ACTIVE_STATUS, ActiveStatus.ACTIVE)
+                        .set(Tables.CK_SCHEME_DEFINATION.CHANGED, true)
+                        .set(CK_SCHEME_DEFINATION.CREATED_BY, "flink job")
+                        .set(Tables.CK_SCHEME_DEFINATION.CREATION_TIME, LocalDateTime.now(ZoneId.of("UTC")))
+                        .set(CK_SCHEME_DEFINATION.EXTENDED_ATTRIBUTES, ros.getExtendedAttributes())
+                        .set(Tables.CK_SCHEME_DEFINATION.LAST_MODIFIED_TIME, LocalDateTime.now(ZoneId.of("UTC")))
+                        .set(Tables.CK_SCHEME_DEFINATION.LOB, ros.getLob())
+                        .set(Tables.CK_SCHEME_DEFINATION.MODIFIED_BY, ros.getModifiedBy())
+                        .where(Tables.CK_SCHEME_DEFINATION.ID.eq(ros.getId()));
+
+    };
+
     public void sdSave(Collection<SchemeDefination> schemeDefinations, DSLContext trxContext) {
+        logger.info("updating the existing record...");
         JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
 
         trxContext.batch(schemeDefinations.stream().map(entity -> {
             entity.setId(idGenerator.getIdWithMetaData(entity, metadata));
+            if(entity.getExtendedAttributes().has("onlyUpdate")){
+                return schemeDefinationEndDateMapper.apply(entity,trxContext);
+            }
             return schemeDefinationBiFunctionMapper.apply(entity, trxContext);
         }).collect(Collectors.toList())).execute();
 //        trxContext.batch(
@@ -169,53 +192,75 @@ public class SchemeDefinationService extends AbstractCDMService<SchemeDefination
     public Collection<SchemeDefination> batchSave(Collection<SchemeDefination> schemes) {
         long currentTime = System.currentTimeMillis();
         logger.info("starting saving schemedefination...");
-        Collection<SchemeDefination> updatedIds = schemes.parallelStream().map(s -> { // excecutor service
-            schemeProductBifurcationService.updateWithIds(s.getSchemeProductBifurcationsList());
-            schemeLocationBifurcationService.updateWithIds(s.getSchemeLocationBifurcationsList());
-            schemeOutletBifurcationService.updateWithIds(s.getSchemeOutletBifurcationsList());
-            schemeCalculationService.updateWithIds(s.getSchemeCalculation().get(0));
-            return s;
-        }).collect(Collectors.toList());
-        List<SchemeProductBifurcations> schemeProductBifurcations = new ArrayList<>();
-        List<SchemeLocationBifurcations> schemeLocationBifurcations = new ArrayList<>();
-        List<SchemeOutletBifurcations> schemeOutletBifurcations = new ArrayList<>();
-        List<SchemeCalculation> schemeCalculation = new ArrayList<>();
-        for (SchemeDefination model : updatedIds) {
-            schemeProductBifurcations.addAll(model.getSchemeProductBifurcationsList());
-            schemeLocationBifurcations.addAll(model.getSchemeLocationBifurcationsList());
-            schemeOutletBifurcations.addAll(model.getSchemeOutletBifurcationsList());
-            schemeCalculation.addAll(model.getSchemeCalculation());
-        }
-        try {
 
+
+        List<SchemeDefination> onlyUpdateSchemes = schemes.stream()
+                .filter(s -> s.getExtendedAttributes().has("onlyUpdate") &&
+                        s.getExtendedAttributes().get("onlyUpdate").asBoolean())
+                .collect(Collectors.toList());
+
+        List<SchemeDefination> normalSchemes = schemes.stream()
+                .filter(s -> !(s.getExtendedAttributes().has("onlyUpdate") &&
+                        s.getExtendedAttributes().get("onlyUpdate").asBoolean()))
+                .collect(Collectors.toList());
+
+        if (!onlyUpdateSchemes.isEmpty()) {
             dsl.transaction(config -> {
                 DSLContext trxContext = DSL.using(config);
-                schemeProductBifurcationService.spbSave(schemeProductBifurcations, trxContext);
-                schemeLocationBifurcationService.slbSave(schemeLocationBifurcations, trxContext);
-                schemeOutletBifurcationService.sobSave(schemeOutletBifurcations, trxContext);
-                schemeCalculationService.scSave(schemeCalculation, trxContext);
-                sdSave(updatedIds, trxContext);
+                sdSave(onlyUpdateSchemes, trxContext);
             });
-            logger.info("Saved scheme defination!");
+            logger.info("End date updated for schemes.");
             logger.info("Time taken for schemeDefination : {}", System.currentTimeMillis() - currentTime);
+        }
 
-
-            return schemes;
-        } catch (Exception e) {
-            for (SchemeDefination s : updatedIds) {
+        if(!normalSchemes.isEmpty()) {
+            Collection<SchemeDefination> updatedIds = normalSchemes.parallelStream().map(s -> { // excecutor service
+                schemeProductBifurcationService.updateWithIds(s.getSchemeProductBifurcationsList());
+                schemeLocationBifurcationService.updateWithIds(s.getSchemeLocationBifurcationsList());
+                schemeOutletBifurcationService.updateWithIds(s.getSchemeOutletBifurcationsList());
+                schemeCalculationService.updateWithIds(s.getSchemeCalculation().get(0));
+                return s;
+            }).collect(Collectors.toList());
+            List<SchemeProductBifurcations> schemeProductBifurcations = new ArrayList<>();
+            List<SchemeLocationBifurcations> schemeLocationBifurcations = new ArrayList<>();
+            List<SchemeOutletBifurcations> schemeOutletBifurcations = new ArrayList<>();
+            List<SchemeCalculation> schemeCalculation = new ArrayList<>();
+            for (SchemeDefination model : updatedIds) {
+                schemeProductBifurcations.addAll(model.getSchemeProductBifurcationsList());
+                schemeLocationBifurcations.addAll(model.getSchemeLocationBifurcationsList());
+                schemeOutletBifurcations.addAll(model.getSchemeOutletBifurcationsList());
+                schemeCalculation.addAll(model.getSchemeCalculation());
+            }
+            try {
 
                 dsl.transaction(config -> {
                     DSLContext trxContext = DSL.using(config);
-                    schemeProductBifurcationService.spbSave(s.getSchemeProductBifurcationsList(), trxContext);
-                    schemeLocationBifurcationService.slbSave(s.getSchemeLocationBifurcationsList(), trxContext);
-                    schemeOutletBifurcationService.sobSave(s.getSchemeOutletBifurcationsList(), trxContext);
-                    schemeCalculationService.scSave(s.getSchemeCalculation(), trxContext);
-                    sdSave(s, trxContext);
+                    schemeProductBifurcationService.spbSave(schemeProductBifurcations, trxContext);
+                    schemeLocationBifurcationService.slbSave(schemeLocationBifurcations, trxContext);
+                    schemeOutletBifurcationService.sobSave(schemeOutletBifurcations, trxContext);
+                    schemeCalculationService.scSave(schemeCalculation, trxContext);
+                    sdSave(updatedIds, trxContext);
                 });
-            }
+                logger.info("Saved scheme defination!");
+                logger.info("Time taken for schemeDefination : {}", System.currentTimeMillis() - currentTime);
 
+            } catch (Exception e) {
+                for (SchemeDefination s : updatedIds) {
+
+                    dsl.transaction(config -> {
+                        DSLContext trxContext = DSL.using(config);
+                        schemeProductBifurcationService.spbSave(s.getSchemeProductBifurcationsList(), trxContext);
+                        schemeLocationBifurcationService.slbSave(s.getSchemeLocationBifurcationsList(), trxContext);
+                        schemeOutletBifurcationService.sobSave(s.getSchemeOutletBifurcationsList(), trxContext);
+                        schemeCalculationService.scSave(s.getSchemeCalculation(), trxContext);
+                        sdSave(s, trxContext);
+                    });
+                }
+            }
         }
-        return updatedIds;
+
+        return schemes;
+
     }
 
 //    private <T> void upsertEntities() {
