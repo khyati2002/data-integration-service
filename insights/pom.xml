@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.salescode.dis</groupId>
 	<artifactId>insights</artifactId>
-	<version>0.0.8-SNAPSHOT</version>
+	<version>0.0.56</version>
 	<name>insights</name>
 	<description>insights</description>
 	<url/>
