@@ -103,8 +103,7 @@ insights-setVersion:
 insights-cleanInstall: insights-setVersion
 	@echo "Running clean install for insights..."
 	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text` && \
-	JAVA_HOME=$$(/usr/libexec/java_home -v 17) \
-	  mvn clean install -f insights/pom.xml -s settings.xml -DskipTests $(MAVEN_DEBUG_FLAGS)
+	mvn clean install -f insights/pom.xml -s settings.xml -DskipTests $(MAVEN_DEBUG_FLAGS)
 
 insights-image-push: clean insights-cleanInstall
 	@echo "Building Docker image for insights..."
