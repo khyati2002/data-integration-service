@@ -307,13 +307,6 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 //            if (connection != null) {
 //                connection.close();
 //            }
-            try {
-                CacheManager.getInstance().shutdown();
-            } catch (IllegalStateException e) {
-                LOG.debug("CacheManager already shutdown", e);
-            } catch (Exception e) {
-                LOG.warn("Error shutting down CacheManager", e);
-            }
             LOG.info("Closed connection successfully");
 
         }
