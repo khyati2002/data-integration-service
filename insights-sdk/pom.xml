@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.salescode.dis</groupId>
     <artifactId>insights-sdk</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.8</version>
     <name>insights-sdk</name>
     <description>Insights SDK for interacting with the insights service</description>
 
@@ -19,7 +19,7 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.30</lombok.version>
-        <insights-common.version>0.0.7-SNAPSHOT</insights-common.version>
+        <insights-common.version>0.0.8</insights-common.version>
     </properties>
 
     <repositories>
