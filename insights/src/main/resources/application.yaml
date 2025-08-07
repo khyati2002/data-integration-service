@@ -182,6 +182,8 @@ spring:
         spring.json.value.default.type: com.salescode.dis.insights.dto.event.FileProgressEvent
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    metrics:
+      cache-expiry-seconds: 10
 
 salescode:
   observability:
