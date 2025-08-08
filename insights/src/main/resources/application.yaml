@@ -43,7 +43,6 @@ application:
 app:
   active-environments:
     - dev
-    - uat
 
 file:
   progress:
