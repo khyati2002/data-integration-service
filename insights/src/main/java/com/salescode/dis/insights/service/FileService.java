@@ -89,4 +89,10 @@ public class FileService {
         file.setTotalCount(totalCount);
         return file;
     }
+
+    public List<ModeOfIntegration> getAllModesOfIntegration() {
+        return fileOperationStrategies.stream()
+                .map(IFileOperationStrategy::getModeOfIntegration)
+                .collect(Collectors.toList());
+    }
 }

@@ -28,12 +28,6 @@ public class OrderPushFileOperationStrategy implements IFileOperationStrategy {
 
     private final JobService jobService;
     private final FileOperationsHelperService fileOperationsHelperService;
-    private final JobRepository jobRepository;
-
-    @Value("${insights.token}")
-    private String token;
-    private String jobId;
-
 
     @Override
     @Transactional
