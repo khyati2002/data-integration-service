@@ -2,6 +2,7 @@ package com.salescode.dis.insights.config;
 
 import ai.salescode.observability.toolkit.api.AuthenticationContext;
 import org.springframework.stereotype.Component;
+import java.util.UUID;
 
 import java.util.Map;
 
@@ -20,11 +21,11 @@ public class ServiceAuthenticationContext implements AuthenticationContext {
 
     @Override
     public String getTraceId() {
-        return "trace-id-12";
+        return UUID.randomUUID().toString();
     }
 
     @Override
     public Map<String, String> getAdditionalAttributes() {
-        return Map.of("region", "us-east-1");
+        return Map.of("region", "ap-south-1");
     }
 }
