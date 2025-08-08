@@ -14,6 +14,7 @@ import java.util.Map;
 public class StatisticsController {
 
     private final KafkaStatsService kafkaService;
+    public static final String INTEGRATION_GROUP_ID_CONFIG = "consumerGroupIntegrations";
 
     @Autowired
     public StatisticsController(KafkaStatsService kafkaService) {
@@ -24,10 +25,11 @@ public class StatisticsController {
     public ResponseEntity<List<TopicStats>> getStatsByEnv(
             @RequestParam("env") String env
     ) {
-        final String consumerGroup = "uat-consumerGroupIntegrations";
+
+        String consumerName = ("prod".equalsIgnoreCase(env)||"prod-egtm".equalsIgnoreCase(env))?INTEGRATION_GROUP_ID_CONFIG:env+"-"+INTEGRATION_GROUP_ID_CONFIG;
 
         List<TopicStats> kafkaTopicMetrics =
-                kafkaService.getTopicsStats(consumerGroup, env);
+                kafkaService.getTopicsStats(consumerName, env);
 
         return ResponseEntity.ok(kafkaTopicMetrics);
     }

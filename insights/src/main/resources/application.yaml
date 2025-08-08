@@ -185,6 +185,14 @@ spring:
     metrics:
       cache-expiry-seconds: 10
 
+---
+
+# observability profile
+spring:
+  config:
+    activate:
+      on-profile: observability
+
 salescode:
   observability:
     enabled: true
