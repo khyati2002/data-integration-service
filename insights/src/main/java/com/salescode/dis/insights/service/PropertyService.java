@@ -11,6 +11,10 @@ import org.springframework.web.client.RestTemplate;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Service
 public class PropertyService {
 
@@ -106,6 +110,15 @@ public class PropertyService {
         } catch (Exception e) {
             System.err.println("Failed to fetch property data for LOB: " + lob + ". Error: " + e.getMessage());
         }
+    }
+
+    public List<String> getLobsForEnv(String env) {
+        return lobToEnvCache
+                .asMap()
+                .entrySet().stream()
+                .filter(e -> env.equals(e.getValue()))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
     public Boolean isInsightsEnabled(String lob) {

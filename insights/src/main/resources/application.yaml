@@ -181,6 +181,28 @@ spring:
         spring.json.value.default.type: com.salescode.dis.insights.dto.event.FileProgressEvent
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    metrics:
+      cache-expiry-seconds: 10
+
+---
+
+# observability profile
+spring:
+  config:
+    activate:
+      on-profile: observability
+
+salescode:
+  observability:
+    enabled: true
+    default-protocol: http
+    global-endpoint: https://pulse.salescode.ai/api/uat
+    global-headers:
+      authorization: Basic YWRtaW5Ac2FsZXNjb2RlLmFpOlJ1MG1sOHZ4bzNTZlQxV0k=
+      stream-name: ${spring.application.name}
+    default-metrics-interval: 30
+    http-metrics:
+      enabled: true
 
 
 
