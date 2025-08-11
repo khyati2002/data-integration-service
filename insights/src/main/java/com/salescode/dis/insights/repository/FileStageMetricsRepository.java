@@ -8,8 +8,10 @@ import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -74,7 +76,8 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
 
     @Query("SELECT s FROM FileStageMetrics s " +
             "WHERE (s.modeOfIntegration = com.salescode.dis.insights.enums.ModeOfIntegration.CK_API_CLIENT " +
-            "    OR s.modeOfIntegration = com.salescode.dis.insights.enums.ModeOfIntegration.CK_STREAMLET_SYNC) " +
+            "       OR s.modeOfIntegration = com.salescode.dis.insights.enums.ModeOfIntegration.CK_STREAMLET_SYNC " +
+            "       OR s.modeOfIntegration = com.salescode.dis.insights.enums.ModeOfIntegration.CK_MDM_KAFKA) " +
             "  AND s.progressStatus = :status " +
             "  AND s.lastModifiedTime < :staleCutoffTime " +
             "  AND s.lastModifiedTime >= :tooOldCutoffTime")
@@ -83,5 +86,10 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
             @Param("tooOldCutoffTime") Instant tooOldCutoffTime,
             @Param("status") ProgressStatus status
     );
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM FileStageMetrics fsm WHERE fsm.lastModifiedTime < :cutoffTime")
+    int deleteByLastModifiedBefore(Instant cutoffTime);
 
 }

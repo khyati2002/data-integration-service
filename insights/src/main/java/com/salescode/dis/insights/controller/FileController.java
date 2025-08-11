@@ -4,7 +4,6 @@ import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
 import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
-import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.service.FileService;
@@ -84,11 +83,39 @@ public class FileController {
             @PathVariable String fileId,
             @RequestParam Long totalCount) {
 
+        fileId = decodeIfBase64(fileId);
         log.info("Setting total count {} for file {}  for master {}", totalCount, fileId, masterName);
 
         FileEntity updatedFile = fileService.setTotalCount(fileId, masterName, totalCount);
         FileEntityResponseDto resp = fileEntityMapper.toDto(updatedFile);
         return ResponseEntity.ok(resp);
     }
+    private String decodeIfBase64(String fileId) {
+        if (fileId == null || fileId.isEmpty()) {
+            return fileId;
+        }
+        // Skip if UUID (with or without hyphens)
+        if (fileId.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$") ||
+                fileId.matches("^[0-9a-fA-F]{32}$")) {
+            return fileId;
+        }
+        // Skip if not Base64 URL-safe pattern
+        if (!fileId.matches("^[A-Za-z0-9_-]+$")) {
+            return fileId;
+        }
+        try {
+            byte[] decodedBytes = Base64.getUrlDecoder().decode(fileId);
+            String decoded = new String(decodedBytes, StandardCharsets.UTF_8);
+            // Only return decoded if printable
+            if (decoded.chars().allMatch(c -> c >= 32 && c < 127)) {
+                return decoded;
+            }
+        } catch (IllegalArgumentException e) {
+            // not valid Base64 — return original
+        }
+        return fileId;
+    }
+
+
 
 }
