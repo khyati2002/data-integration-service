@@ -6,6 +6,7 @@ import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.service.strategy.ApiClientBasedFileOperationStrategy;
+import com.salescode.dis.insights.service.strategy.MdmKafkaFileOperationStrategy;
 import com.salescode.dis.insights.service.strategy.StreamletSyncOperationStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class FileStageStatusScheduler {
     private final ApiClientBasedFileOperationStrategy apiClientBasedFileOperationStrategy;
 
     private final StreamletSyncOperationStrategy streamletSyncOperationStrategy;
+    private final MdmKafkaFileOperationStrategy mdmKafkaFileOperationStrategy;
 
     @Scheduled(fixedRateString = "${file-status-scheduler.rate-millis:60000}") // Run every 1 minute (60000 ms)
     @Transactional
@@ -61,6 +63,9 @@ public class FileStageStatusScheduler {
         for (FileStageMetrics stage : pendingStages) {
             if(stage.getModeOfIntegration().equals(ModeOfIntegration.CK_STREAMLET_SYNC)){
                 streamletSyncOperationStrategy.updateStatus(stage);
+            }
+            else if(stage.getModeOfIntegration().equals(ModeOfIntegration.CK_MDM_KAFKA)){
+               mdmKafkaFileOperationStrategy.updateStatus(stage);
             }
             else {
                 apiClientBasedFileOperationStrategy.updateStatus(stage);
