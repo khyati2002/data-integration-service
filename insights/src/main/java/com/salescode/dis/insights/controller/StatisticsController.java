@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/api")
 public class StatisticsController {
 
     private final KafkaStatsService kafkaService;
