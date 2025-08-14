@@ -218,7 +218,7 @@ salescode:
     default-protocol: http
     global-endpoint: https://trace.salescode.ai/api/prod
     global-headers:
-      authorization: Basic YWRtaW5Ac2FsZXNjb2RlLmFpOlJ1MG1sOHZ4bzNTZlQxV0k=
+      authorization: Basic YWRtaW5Ac2FsZXNjb2RlLmFpOmF1NmN3SThlTUZoUEVmNUg=
       stream-name: ${spring.application.name}
     default-metrics-interval: 30
     http-metrics:
