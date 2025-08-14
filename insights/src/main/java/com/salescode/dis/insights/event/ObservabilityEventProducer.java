@@ -3,6 +3,7 @@ package com.salescode.dis.insights.event;
 import ai.salescode.observability.toolkit.api.ObservabilityEventManager;
 import com.salescode.dis.insights.observability.ProgressAggregatedEventLog;
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
+import com.salescode.dis.insights.service.PropertyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -15,9 +16,11 @@ import java.util.UUID;
 public class ObservabilityEventProducer {
 
     private final ObservabilityEventManager observabilityEventManager;
+    private final PropertyService propertyService;
 
-    public ObservabilityEventProducer(ApplicationContext context) {
+    public ObservabilityEventProducer(ApplicationContext context, PropertyService propertyService) {
         this.observabilityEventManager = getBeanSafely(context, ObservabilityEventManager.class).orElse(null);
+        this.propertyService = propertyService;
     }
 
     private <T> Optional<T> getBeanSafely(ApplicationContext ctx, Class<T> clazz) {
@@ -33,12 +36,14 @@ public class ObservabilityEventProducer {
         if (aggregabilityEventManagerNullCheck()) return;
 
         if (aggregatedEvent == null) return;
+        String env = propertyService.getEnvFromLob(aggregatedEvent.getLob());
 
         ProgressAggregatedEventLog event = new ProgressAggregatedEventLog()
                 .setTraceId(UUID.randomUUID().toString())
                 .setMasterName(aggregatedEvent.getMasterName())
                 .setJobId(aggregatedEvent.getJobId())
                 .setLob(aggregatedEvent.getLob())
+                .setEnv(env)
                 .setMinProcessingTime(aggregatedEvent.getProgress().getMinProcessingTimeMs())
                 .setMaxProcessingTime(aggregatedEvent.getProgress().getMaxProcessingTimeMs())
                 .setStageType(Optional.ofNullable(aggregatedEvent.getProgress().getStageType())

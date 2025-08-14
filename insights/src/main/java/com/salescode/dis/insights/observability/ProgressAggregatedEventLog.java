@@ -15,6 +15,7 @@ public class ProgressAggregatedEventLog implements ObservabilityEvent {
     private String lob;
     private String traceId;
     private String message;
+    private String env;
     private Integer minProcessingTime;
     private Integer maxProcessingTime;
     private String stageType;
@@ -33,6 +34,7 @@ public class ProgressAggregatedEventLog implements ObservabilityEvent {
                 .put("masterName", masterName)
                 .put("jobId", jobId)
                 .put("lob", lob)
+                .put("env",env)
                 .put("message", message)
                 .put("minProcessingTime",minProcessingTime!=null?minProcessingTime:5)
                 .put("maxProcessingTime",maxProcessingTime!=null?maxProcessingTime:5)
