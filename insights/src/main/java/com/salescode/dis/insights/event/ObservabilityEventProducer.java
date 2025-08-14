@@ -45,6 +45,7 @@ public class ObservabilityEventProducer {
                         .map(Enum::name)
                         .orElse("UNKNOWN"))
                 .setSuccessCount((aggregatedEvent.getProgress().getSuccessCount()))
+                .setFailureCount((aggregatedEvent.getProgress().getLogicalFailureCount()+aggregatedEvent.getProgress().getServerFailureCount()))
                 .setMessage(String.format("Aggregated progress for fileId=%s master=%s jobId=%s lob=%s progress=%s",
                         aggregatedEvent.getFileId(),
                         aggregatedEvent.getMasterName(),

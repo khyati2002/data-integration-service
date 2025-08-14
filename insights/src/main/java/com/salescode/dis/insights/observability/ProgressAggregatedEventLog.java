@@ -19,6 +19,7 @@ public class ProgressAggregatedEventLog implements ObservabilityEvent {
     private Integer maxProcessingTime;
     private String stageType;
     private Long successCount;
+    private Long failureCount;
 
     @Override
     public String getEventType() {
@@ -38,6 +39,7 @@ public class ProgressAggregatedEventLog implements ObservabilityEvent {
                 .put("stageType", stageType)
                 .put("event.type", getEventType())
                 .put("successCount",successCount)
+                .put("failureCount",failureCount)
                 .build();
     }
 }
