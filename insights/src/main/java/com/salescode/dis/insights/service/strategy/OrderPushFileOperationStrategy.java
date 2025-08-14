@@ -1,19 +1,16 @@
 package com.salescode.dis.insights.service.strategy;
 
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
-import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
-import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
-import com.salescode.dis.insights.repository.JobRepository;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.service.FileOperationsHelperService;
 import com.salescode.dis.insights.service.JobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +53,17 @@ public class OrderPushFileOperationStrategy implements IFileOperationStrategy {
         log.info("ORDER_PUSH file {} progress updated for stage {}", file.getFileId(), progress.getStageType());
         return fileStageMetrics;
     }
+
+    @Transactional
+    public void updateStatus(FileStageMetrics fileStageMetrics) {
+        FileEntity file = fileStageMetrics.getFile();
+        if(fileStageMetrics.getTotal() != 0 && fileStageMetrics.getTotal().compareTo(file.getTotalCount()) == 0 ){
+            fileStageMetrics.setProgressStatus(fileStageMetrics.getCurrentStatus());
+        }
+        else{
+            fileStageMetrics.setProgressStatus(ProgressStatus.FAILED);
+        }
+    }
     @Override
     public ModeOfIntegration getModeOfIntegration() {
         return ModeOfIntegration.CK_ORDER_PUSH;
@@ -64,6 +72,6 @@ public class OrderPushFileOperationStrategy implements IFileOperationStrategy {
 
     @Override
     public List<ProgressStage> getSupportedStages() {
-        return List.of(READ, PUBLISH, SAVE);
+        return List.of(PUBLISH, READ, PROCESS, SAVE);
     }
 }
