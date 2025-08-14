@@ -204,5 +204,22 @@ salescode:
     http-metrics:
       enabled: true
 
+---
 
+# observability-prod profile
+spring:
+  config:
+    activate:
+      on-profile: observability-prod
 
+salescode:
+  observability:
+    enabled: true
+    default-protocol: http
+    global-endpoint: https://trace.salescode.ai/api/prod
+    global-headers:
+      authorization: Basic YWRtaW5Ac2FsZXNjb2RlLmFpOmF1NmN3SThlTUZoUEVmNUg=
+      stream-name: ${spring.application.name}
+    default-metrics-interval: 30
+    http-metrics:
+      enabled: true
