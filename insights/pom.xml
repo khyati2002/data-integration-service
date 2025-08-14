@@ -34,7 +34,7 @@
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 		<insights-common.version>0.0.8-SNAPSHOT</insights-common.version>
         <salescode-auth-sdk.version>1.7.3-SNAPSHOT</salescode-auth-sdk.version>
-		<observability.version>1.0.75</observability.version>
+		<observability.version>1.0.76</observability.version>
 	</properties>
 
 	<repositories>
