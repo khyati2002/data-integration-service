@@ -36,7 +36,9 @@ public class ObservabilityEventProducer {
         if (aggregabilityEventManagerNullCheck()) return;
 
         if (aggregatedEvent == null) return;
-        String env = propertyService.getEnvFromLob(aggregatedEvent.getLob());
+        String env = Optional.ofNullable(propertyService.getEnvFromLob(aggregatedEvent.getLob()))
+                .orElse("unknown");
+
 
         ProgressAggregatedEventLog event = new ProgressAggregatedEventLog()
                 .setTraceId(UUID.randomUUID().toString())
