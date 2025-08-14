@@ -2,6 +2,7 @@ package com.salescode.dis.insights.kafka;
 
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import com.salescode.dis.insights.entity.FileEntity;
+import com.salescode.dis.insights.event.ObservabilityEventProducer;
 import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.validation.ValidationService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class FileProgressEventListener {
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
     private final ValidationService validationService;
+    private final ObservabilityEventProducer eventProducer;
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
             ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000"
@@ -46,6 +48,8 @@ public class FileProgressEventListener {
         log.info("Received {} events to process.", events.size());
         Map<String, AggregationWrapper> aggregationMap = aggregate(events);
         processAggregatedUpdates(aggregationMap);
+        Map<String,AggregationWrapper> LobAndMasterAggregation =  aggregateByLobAndMaster(events);
+        sendEvents(LobAndMasterAggregation);
     }
 
     private Map<String, AggregationWrapper> aggregate(List<FileProgressEvent> events) {
@@ -105,4 +109,40 @@ public class FileProgressEventListener {
         }
     }
 
+    private void sendEvents(Map<String, AggregationWrapper> aggregationMap){
+        aggregationMap.forEach((key, wrapper) -> {
+            FileProgressEvent aggregatedEvent = wrapper.getAggregatedEvent();
+            try {
+                eventProducer.emitProgressAggregatedEvent(aggregatedEvent);
+            } catch (Exception e) {
+                log.error("Failed to update aggregated progress for key: {}", key, e);
+            }
+        });
+    }
+
+    private Map<String,AggregationWrapper> aggregateByLobAndMaster(List<FileProgressEvent> events) {
+        Map<String, AggregationWrapper> aggregationMap = new HashMap<>();
+
+        for (FileProgressEvent event : events) {
+            Optional<String> validationError = validate(event);
+            if (validationError.isPresent()) {
+                String errorMsg = validationError.get();
+                log.warn("Invalid event: {}. Reason: {}", event, errorMsg);
+                continue;
+            }
+            String key = buildLobMasterKey(event);
+            aggregationMap.computeIfAbsent(key, k -> new AggregationWrapper(event)).addEvent(event);
+        }
+        return aggregationMap;
+    }
+
+    private String buildLobMasterKey(FileProgressEvent event) {
+        String lob = Optional.ofNullable(event.getLob()).orElse("unknown");
+        String masterName = Optional.ofNullable(event.getMasterName()).orElse("unknown");
+        String stageName = Optional.ofNullable(event.getProgress())
+                .map(p -> p.getStageType())
+                .map(Enum::name)
+                .orElse("UNKNOWN");
+        return lob + ":" + masterName + ":" + stageName;
+    }
 }
