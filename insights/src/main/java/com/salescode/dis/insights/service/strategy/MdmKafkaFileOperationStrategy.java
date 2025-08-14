@@ -45,7 +45,7 @@ public class MdmKafkaFileOperationStrategy implements IFileOperationStrategy {
             return fileStageMetrics;
         }
         log.info("MDM_KAFKA  file {} progress update FAILED for stage {}", fileEntity.getFileId(), progress.getStageType());
-        return null;
+        throw new IllegalStateException("Duplicate file entity detected  with file id :" + fileId);
     }
 
     @Transactional
