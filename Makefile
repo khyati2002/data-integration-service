@@ -4,6 +4,7 @@ init:
 		exit 0; \
 	else \
 	  	echo "Initializing"; \
+	  	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
 		mvn clean install -f jooq/pom.xml; \
 		mvn clean install -DskipTests=true; \
 		mvn clean install -f bundle/pom.xml; \
