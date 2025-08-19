@@ -2,27 +2,28 @@ package com.salescode.dis.insights.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.salescode.dis.insights.dto.TopicStats;
+import com.salescode.dis.insights.dto.TopicStatsResponse;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import com.github.benmanes.caffeine.cache.Caffeine;
-
 
 @Service
 public class KafkaStatsService {
 
     private final AdminClient kafkaAdminClient;
     private final PropertyService propertyService;
-    private final Cache<String, List<TopicStats>> metricsCache;
+    private final Cache<String, TopicStatsResponse> metricsCache;
 
     @Autowired
     public KafkaStatsService(AdminClient kafkaAdminClient,
                              PropertyService propertyService,
-                             @Value("${spring.kafka.metrics.cache-expiry-seconds:10}") long cacheExpirySeconds
+                             @Value("${spring.kafka.metrics.cache-expiry-seconds:5}") long cacheExpirySeconds
     ) {
         this.kafkaAdminClient = kafkaAdminClient;
         this.propertyService = propertyService;
@@ -30,25 +31,24 @@ public class KafkaStatsService {
                 .expireAfterWrite(cacheExpirySeconds, TimeUnit.SECONDS)
                 .maximumSize(1000)
                 .build();
-
     }
-
-    public List<TopicStats> getTopicsStats(String consumerGroup, String env) {
+    public TopicStatsResponse getTopicsStats(String consumerGroup, String env) {
 
         String cacheKey = env + ":" + consumerGroup;
 
-        List<TopicStats> cached = metricsCache.getIfPresent(cacheKey);
+        TopicStatsResponse cached = metricsCache.getIfPresent(cacheKey);
         if (cached != null) {
             return cached;
         }
 
-        List<TopicStats> result = computeTopicStats(consumerGroup, env);
+        List<TopicStats> lobStats = computeTopicStats(consumerGroup, env);
 
-        metricsCache.put(cacheKey, result);
+        TopicStatsResponse response = new TopicStatsResponse(Instant.now(), lobStats);
 
-        return result;
+        metricsCache.put(cacheKey, response);
+
+        return response;
     }
-
 
     private List<TopicStats> computeTopicStats(String consumerGroup, String env) {
         List<String> lobNames = propertyService.getLobsForEnv(env);
