@@ -1,8 +1,8 @@
 package com.salescode.dim;
 
 import com.applicate.services.channelkart.utils.JSONUtils;
-import com.salescode.dim.kafka.FileProgressEvent;
 import com.salescode.dim.utils.EventListenerDTO;
+import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Serializer;
 

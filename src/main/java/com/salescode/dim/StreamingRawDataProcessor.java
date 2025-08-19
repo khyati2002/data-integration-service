@@ -20,8 +20,11 @@ import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
 import com.salescode.dim.jooq.impl.OutletDetails;
-import com.salescode.dim.kafka.FileProgressEvent;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
+import com.salescode.dim.utils.InsightsUtils;
+import com.salescode.dis.insights.dto.event.FileProgressEvent;
+import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
+import com.salescode.dis.insights.enums.ProgressStage;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -46,8 +49,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.salescode.dim.kafka.FileProgressEvent.createInsightsConsumerDto;
-import static com.salescode.dim.kafka.FileProgressEvent.createInsightsPublisherDto;
 
 import static com.salescode.dim.jooq.generated.tables.CkIntegrationHistory.CK_INTEGRATION_HISTORY;
 
@@ -145,7 +146,8 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 long start = System.currentTimeMillis();
                 Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>(); // Data storage
                 List<String> errorList = new ArrayList<>(); // Error tracking
-                sendToKafkaPublisherUpdate(streamingRawData);
+                sendToKafkaPublisherUpdate(streamingRawData, ProgressStage.QUEUE);
+                sendToKafkaPublisherUpdate(streamingRawData,ProgressStage.PROCESS);
                 // Processing each transformer in the streaming data
                 for (TransformerInfo transformerInfo : streamingRawData.getTransformerInfo()) {
                     processTransformer(streamingRawData, transformerInfo, dataset, errorList);
@@ -159,7 +161,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                     .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
                                     .collect(Collectors.toList())
                     );
-                    sendToKafkaConsumerUpdate(streamingRawData,0,1);
+                    sendToKafkaConsumerUpdate(streamingRawData,0,1,0);
                     resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                 } else {
                     streamingRawData.setStatus("Success");
@@ -176,7 +178,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                             .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
                                             .collect(Collectors.toList())
                             );
-                            sendToKafkaConsumerUpdate(streamingRawData,0,1);
+                            sendToKafkaConsumerUpdate(streamingRawData,0,1,0);
                             resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                         }
                     }
@@ -193,14 +195,14 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
             }
         });
     }
-    private void sendToKafkaPublisherUpdate(StreamingRawData streamingRawData) {
+    private void sendToKafkaPublisherUpdate(StreamingRawData streamingRawData, ProgressStage stage) {
         try {
             String topic = topicName;
             long idleEvictionTTL = Long.parseLong(properties.getProperty("INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES"));
             if(streamingRawData.getFileId()==null){
                 streamingRawData.setFileId(RedisIdleEvictionManager.getInstance().getOrCreateFileId(streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0).getEntityName(), "fileId", idleEvictionTTL, TimeUnit.MINUTES));
             }
-            FileProgressEvent message =  createInsightsPublisherDto(streamingRawData.getRequestId(),streamingRawData.getFileId(),streamingRawData.getGroupId(),streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0).getEntityName(),"",1,0);// Create a message based on streamingRawData and dataset
+            FileProgressEvent message = InsightsUtils.createRequest(streamingRawData,1,0,0,stage);
 
             ProducerRecord<String, FileProgressEvent> record = new ProducerRecord<>(topic, streamingRawData.getFileId(), message);
             producer.send(record, (metadata, exception) -> {
@@ -214,7 +216,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
             logger.error("Error while sending to Kafka", e);
         }
     }
-    private void sendToKafkaConsumerUpdate(StreamingRawData streamingRawData, Integer consumedSuccess, Integer consumedFailed) {
+    private void sendToKafkaConsumerUpdate(StreamingRawData streamingRawData,long successCount,long logicalFailureCount,long serverFailureCount) {
         try {
             String topic = topicName;
             long idleEvictionTTL = Long.parseLong(properties.getProperty("INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES"));
@@ -222,8 +224,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 streamingRawData.setFileId(RedisIdleEvictionManager.getInstance().getOrCreateFileId(streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0)
                         .getEntityName(), "fileId", idleEvictionTTL, TimeUnit.MINUTES));
             }
-            FileProgressEvent message =  createInsightsConsumerDto(streamingRawData.getRequestId(),streamingRawData.getFileId(),streamingRawData.getGroupId(),streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0).getEntityName(),streamingRawData.getResponses().toString(),consumedSuccess,consumedFailed);// Create a message based on streamingRawData and dataset
-
+            FileProgressEvent message= InsightsUtils.createRequest(streamingRawData,successCount,logicalFailureCount,serverFailureCount,ProgressStage.SAVE);
             ProducerRecord<String, FileProgressEvent> record = new ProducerRecord<>(topic, streamingRawData.getFileId(), message);
             producer.send(record, (metadata, exception) -> {
                 if (exception != null) {

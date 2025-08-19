@@ -194,13 +194,9 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             for (CommonDataModel model : entry.getValue()) {
                                 StreamingRawData rawData = modelToRawDataMap.get(model);
                                 insightsPublisher.publishEventAsync(
-                                        rawData.getRequestId(),
-                                        rawData.getFileId(),
-                                        rawData.getGroupId(),
-                                        rawData.getLob(),
-                                        entry.getKey().getSimpleName(),
-                                        "",
+                                        rawData,
                                         1,
+                                        0,
                                         0
                                 );
                             }
@@ -224,13 +220,9 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     }
  //                                   saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
                                     insightsPublisher.publishEventAsync(
-                                            rawData.getRequestId(),
-                                            rawData.getFileId(),
-                                            rawData.getGroupId(),
-                                            rawData.getLob(),
-                                            entry.getKey().getSimpleName(),
-                                            "",
+                                            rawData,
                                             1,
+                                            0,
                                             0
                                     );
                                 } catch (Exception individualEx) {
@@ -253,14 +245,10 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                             rawData
                                     );
                                     insightsPublisher.publishEventAsync(
-                                            rawData.getRequestId(),
-                                            rawData.getFileId(),
-                                            rawData.getGroupId(),
-                                            rawData.getLob(),
-                                            entry.getKey().getSimpleName(),
-                                            individualEx.getMessage(),
+                                            rawData,
                                             0,
-                                            1
+                                            1,
+                                            0
                                     );
                                 }
                             }
