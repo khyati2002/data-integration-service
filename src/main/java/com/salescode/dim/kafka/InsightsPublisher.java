@@ -3,19 +3,22 @@ package com.salescode.dim.kafka;
 import com.applicate.services.channelkart.models.diff.Change;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
+import com.salescode.dim.StreamingRawData;
 import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.utils.EventListenerDTO;
+import com.salescode.dim.utils.InsightsUtils;
+import com.salescode.dis.insights.dto.event.FileProgressEvent;
+import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
+import com.salescode.dis.insights.enums.ProgressStage;
 import org.apache.flink.api.common.operators.MailboxExecutor;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.Properties;
-import java.util.Set;
 
-import static com.salescode.dim.kafka.FileProgressEvent.createInsightsConsumerDto;
+
 
 public class InsightsPublisher {
     private static final Logger LOG = LoggerFactory.getLogger(EventPublisher.class);
@@ -30,10 +33,9 @@ public class InsightsPublisher {
     }
 
 
+    public void publishEventAsync(StreamingRawData streamingRawData,long successCount, long logicalFailureCount, long serverFailureCount){
 
-    public void publishEventAsync(String eventId, String fileId, String jobId, String lob, String master, String errorMessage, Integer consumedSuccess, Integer consumedFailure){
-
-        FileProgressEvent event = createInsightsConsumerDto(eventId, fileId, jobId, lob, master, errorMessage, consumedSuccess, consumedFailure);
+        FileProgressEvent event = InsightsUtils.createRequest(streamingRawData,successCount,logicalFailureCount,serverFailureCount, ProgressStage.SAVE);
         ProducerRecord<String, FileProgressEvent> record = new ProducerRecord<>(topicName, event.getFileId(), event);
 
         executor.execute(() -> {
@@ -50,6 +52,7 @@ public class InsightsPublisher {
             }
         }, "Kafka async publish");
     }
+
 
     public void close() {
         producer.close();

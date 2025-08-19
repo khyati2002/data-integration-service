@@ -42,6 +42,7 @@ under the License.
         <jooq.version>3.16.23</jooq.version>
         <com.bazaarvoice.jolt.version>0.1.1</com.bazaarvoice.jolt.version>
         <aspectj.version>1.9.6</aspectj.version>
+        <insights-common.version>0.0.9-SNAPSHOT</insights-common.version>
     </properties>
 
     <repositories>
@@ -55,6 +56,11 @@ under the License.
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>salescode-dis-insights</id>
+            <name>salescode-dis-insights</name>
+            <url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
         </repository>
     </repositories>
 
@@ -114,6 +120,13 @@ under the License.
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-scala_2.12</artifactId>
             <version>${flink.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.salescode.dis</groupId>
+            <artifactId>insights-common</artifactId>
+            <version>${insights-common.version}</version>
+            <classifier>sb3</classifier>
         </dependency>
 
         <!-- Add logging framework, to produce console output when running in the IDE. -->
