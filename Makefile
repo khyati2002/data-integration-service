@@ -45,5 +45,8 @@ generate-all: remove-submodule setup-submodule init generate-bundle generate-dis
 generate-bundle-only: init generate-bundle
 
 generate-project-jar:
-	mvn clean install -f jooq/pom.xml
+	@echo "Generating project JAR with AWS CodeArtifact authentication..."
+	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
+	mvn clean install -f jooq/pom.xml; \
 	mvn clean compile install -DskipTests=true
+
