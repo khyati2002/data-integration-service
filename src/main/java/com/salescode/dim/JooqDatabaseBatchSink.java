@@ -83,6 +83,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         private transient ServiceLocator serviceLocator;
         private final String baseUrl;
         private final ObjectMapper objectMapper;
+        private boolean insightsEnabled;
 
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
             System.setProperty("sun.net.maxDatagramSockets","4096");
@@ -98,7 +99,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             serviceLocator.registerSubClasses();
             this.baseUrl = properties.getProperty("api.base.url");
             this.objectMapper = new ObjectMapper();
-
+            this.insightsEnabled = Boolean.parseBoolean(properties.getProperty("insights.enabled"));
             Properties kafkaProps = new Properties();
             kafkaProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
             kafkaProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
@@ -118,7 +119,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             kafkaInsightsProps.put(ProducerConfig.ACKS_CONFIG, "1");
             this.topicName = DataStreamJob.getLobEventTopic(properties);
             this.failureTopicName = DataStreamJob.getLobFailureTopic(properties);
-            this.insightsTopicName = properties.getProperty("publishConsumedMetrics.topic");
+            this.insightsTopicName = properties.getProperty("insights.topic");
             this.eventPublisher = new EventPublisher(kafkaProps, topicName, mailboxExecutor);
             this.insightsPublisher = new InsightsPublisher(kafkaInsightsProps, insightsTopicName, mailboxExecutor);
             this.failurePublisher = new FailurePublisher(kafkaFailureTopicProps, failureTopicName, mailboxExecutor);
@@ -174,32 +175,34 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                         try {
                             service.batchSave(entry.getValue());
 
-                                for (CommonDataModel model : entry.getValue()) {
-                                    LOG.info("Operation performed is " + model.getOperationPerformed());
-                                    StreamingRawData rawData = modelToRawDataMap.get(model);
-                                    String fileId = rawData.getFileId();
-                                    if (model.getOperationPerformed() != null && !model.getChanges().isEmpty()) {
-                                        eventPublisher.publishEventAsync(
-                                                rawData.getRequestId(),
-                                                entry.getKey().getSimpleName(),
-                                                rawData.getLob(),
-                                                model.getChanges(),
-                                                model.getOperationPerformed(),
-                                                model.getId()
-                                        );
-                                    }
+                            for (CommonDataModel model : entry.getValue()) {
+                                LOG.info("Operation performed is " + model.getOperationPerformed());
+                                StreamingRawData rawData = modelToRawDataMap.get(model);
+                                String fileId = rawData.getFileId();
+                                if (model.getOperationPerformed() != null && !model.getChanges().isEmpty()) {
+                                    eventPublisher.publishEventAsync(
+                                            rawData.getRequestId(),
+                                            entry.getKey().getSimpleName(),
+                                            rawData.getLob(),
+                                            model.getChanges(),
+                                            model.getOperationPerformed(),
+                                            model.getId()
+                                    );
                                 }
+                            }
 
                             //saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
-                            for (CommonDataModel model : entry.getValue()) {
-                                StreamingRawData rawData = modelToRawDataMap.get(model);
-                                insightsPublisher.publishEventAsync(
-                                        rawData,
-                                        1,
-                                        0,
-                                        0
-                                );
-                            }
+                            if (insightsEnabled){
+                                for (CommonDataModel model : entry.getValue()) {
+                                    StreamingRawData rawData = modelToRawDataMap.get(model);
+                                    insightsPublisher.publishEventAsync(
+                                            rawData,
+                                            1,
+                                            0,
+                                            0
+                                    );
+                                }
+                          }
                         } catch (Exception batchEx) {
                             LOG.error("Batch save failed. Falling back to individual saves.", batchEx);
                             for (CommonDataModel model : entry.getValue()) {
@@ -219,12 +222,14 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                         );
                                     }
  //                                   saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
-                                    insightsPublisher.publishEventAsync(
-                                            rawData,
-                                            1,
-                                            0,
-                                            0
-                                    );
+                                    if(insightsEnabled) {
+                                        insightsPublisher.publishEventAsync(
+                                                rawData,
+                                                1,
+                                                0,
+                                                0
+                                        );
+                                    }
                                 } catch (Exception individualEx) {
                                     LOG.error("Individual Exception for {}", model.getId(), individualEx);
                                     StreamingRawData rawData = modelToRawDataMap.get(model);
@@ -244,12 +249,14 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     failurePublisher.publishEventAsync(
                                             rawData
                                     );
-                                    insightsPublisher.publishEventAsync(
-                                            rawData,
-                                            0,
-                                            1,
-                                            0
-                                    );
+                                    if(insightsEnabled) {
+                                        insightsPublisher.publishEventAsync(
+                                                rawData,
+                                                0,
+                                                1,
+                                                0
+                                        );
+                                    }
                                 }
                             }
                         }

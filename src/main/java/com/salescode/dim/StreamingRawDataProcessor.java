@@ -63,6 +63,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
     private transient DataTransformationService dataTransformationService;
     private transient PreProcessPipelineService preProcessPipelineService;
     private transient String topicName;
+    private transient boolean insightsEnabled;
     private KafkaProducer<String, FileProgressEvent> producer;
     Logger logger = LoggerFactory.getLogger(StreamingRawDataProcessor.class);
 
@@ -120,7 +121,8 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         ServiceLocator serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();
 
-        topicName = properties.getProperty("publishConsumedMetrics.topic");
+        topicName = properties.getProperty("insights.topic");
+        insightsEnabled = Boolean.parseBoolean(properties.getProperty("insights.enabled"));
         PropertyService propertyService = new PropertyService((MetaDataService) ServiceLocator.lookup(Metadata.class));
         PropertyRegistry.getInstance(propertyService);
 
@@ -146,8 +148,10 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 long start = System.currentTimeMillis();
                 Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>(); // Data storage
                 List<String> errorList = new ArrayList<>(); // Error tracking
-                sendToKafkaPublisherUpdate(streamingRawData, ProgressStage.QUEUE);
-                sendToKafkaPublisherUpdate(streamingRawData,ProgressStage.PROCESS);
+                if(insightsEnabled) {
+                    sendToKafkaPublisherUpdate(streamingRawData, ProgressStage.QUEUE);
+                    sendToKafkaPublisherUpdate(streamingRawData, ProgressStage.PROCESS);
+                }
                 // Processing each transformer in the streaming data
                 for (TransformerInfo transformerInfo : streamingRawData.getTransformerInfo()) {
                     processTransformer(streamingRawData, transformerInfo, dataset, errorList);
@@ -161,7 +165,9 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                     .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
                                     .collect(Collectors.toList())
                     );
-                    sendToKafkaConsumerUpdate(streamingRawData,0,1,0);
+                    if(insightsEnabled) {
+                        sendToKafkaConsumerUpdate(streamingRawData, 0, 1, 0);
+                    }
                     resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                 } else {
                     streamingRawData.setStatus("Success");
@@ -178,7 +184,9 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                             .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
                                             .collect(Collectors.toList())
                             );
-                            sendToKafkaConsumerUpdate(streamingRawData,0,1,0);
+                            if(insightsEnabled) {
+                                sendToKafkaConsumerUpdate(streamingRawData, 0, 1, 0);
+                            }
                             resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                         }
                     }

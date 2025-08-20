@@ -15,7 +15,8 @@
       "redisUrl": "${redisUrl}",
       "cacheClustered": "${cacheClustered}",
       "INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES": "${INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES}",
-      "publishConsumedMetrics.topic": "${publishConsumedMetrics.topic}"
+      "insights.enabled": "${insights.enabled}",
+      "insights.topic": "${insights.topic}"
     }
   },
   {
