@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -237,6 +238,11 @@ public class JobController {
 
         if (endDate == null) {
             endDate = LocalDateTime.now();
+        }
+
+        if(Objects.equals(mode, "CK_WORKFLOW_JOB")){
+            AccumulatedJobsAndMasterDto result  =  jobService.getWorkflowJobs(lob,startDate,endDate,mode);
+            return ResponseEntity.ok(result);
         }
 
         AccumulatedJobsAndMasterDto result = jobService.getJobsWithAggregatedStagesAndMasters(lob, startDate, endDate, mode);

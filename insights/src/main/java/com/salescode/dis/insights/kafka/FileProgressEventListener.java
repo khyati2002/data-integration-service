@@ -36,7 +36,7 @@ public class FileProgressEventListener {
     private final ValidationService validationService;
     private final ObservabilityEventProducer eventProducer;
 
-    @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}", groupId = "file-progress-processor", batch = "true", properties = {
+    @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates-2}", groupId = "file-progress-processor", batch = "true", properties = {
             ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000"
     })
     public void consumeProgressEvents(@Payload List<FileProgressEvent> events) throws InterruptedException {
@@ -57,7 +57,7 @@ public class FileProgressEventListener {
 
         for (FileProgressEvent event : events) {
             Optional<String> validationError = validate(event);
-            if (validationError.isPresent()) {
+            if (validationError.isPresent() && !event.getProgress().getModeOfIntegration().name().equals("CK_WORKFLOW_JOB")) {
                 String errorMsg = validationError.get();
                 log.warn("Invalid event: {}. Reason: {}", event, errorMsg);
                 sendToFailureTopic(event, errorMsg);

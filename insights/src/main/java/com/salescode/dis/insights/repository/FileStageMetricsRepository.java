@@ -4,6 +4,7 @@ import com.salescode.dis.insights.dto.job.JobStageAccumulatedData;
 import com.salescode.dis.insights.dto.LobSummaryDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.FileStageMetrics;
+import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.enums.ProgressStatus;
@@ -53,7 +54,7 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
             "j.startTime, j.endTime, j.status ," +
             "j.publisherJobUri, j.consumerJobUri, " +
             "s.stageType, CAST(COALESCE(SUM(s.successCount), 0) AS long),CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long))" +
-            "FROM JobEntity j JOIN FileStageMetrics s ON j.id = s.job.id " +
+            "FROM JobEntity j LEFT JOIN FileStageMetrics s ON j.id = s.job.id " +
             "WHERE j.lob = :lob AND j.lastModifiedTime BETWEEN :startDate AND :endDate " +
             "GROUP BY j.id, j.creationTime, j.lastModifiedTime, j.lob, j.startTime, j.endTime, j.status, " +
             "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master, s.modeOfIntegration")
@@ -72,6 +73,16 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
             "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master, s.modeOfIntegration")
     List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLobAndMode(@Param("lob") String lob, @Param("startDate") Instant startDate,
                                                                            @Param("endDate") Instant endDate, @Param("modeOfIntegration")ModeOfIntegration modeOfIntegration);
+
+
+    @Query("SELECT DISTINCT j " +
+            "FROM JobEntity j JOIN FileEntity f ON j.id = f.job.id " +
+            "WHERE f.modeOfIntegration = 'CK_WORKFLOW_JOB' " +
+            "AND j.lob = :lob " +
+            "AND j.lastModifiedTime BETWEEN :startDate AND :endDate")
+    List<JobEntity> findJobsWithWorkflowFilesByLobAndDate(@Param("lob") String lob,
+                                                          @Param("startDate") Instant startDate,
+                                                          @Param("endDate") Instant endDate);
 
 
     @Query("SELECT s FROM FileStageMetrics s " +

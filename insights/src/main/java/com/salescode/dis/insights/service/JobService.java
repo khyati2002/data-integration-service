@@ -2,6 +2,7 @@ package com.salescode.dis.insights.service;
 
 import com.salescode.dis.insights.dto.AccumulatedJobsAndMasterDto;
 import com.salescode.dis.insights.dto.MasterCard;
+import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.dto.job.JobStageAccumulatedData;
 import com.salescode.dis.insights.dto.file.stage.AccumulatedStageDataDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDtoWithStages;
@@ -87,6 +88,18 @@ public class JobService {
         });
     }
 
+    public JobEntity createWorkflowJob(String jobId, String lob, ModeOfIntegration modeOfIntegration,ProgressStatus status) {
+        Optional<JobEntity> job = jobRepo.findById(jobId);
+        return job.orElseGet(()->{
+            JobEntity jobEntity = new JobEntity();
+            jobEntity.setId(jobId);
+            jobEntity.setLob(lob);
+            jobEntity.setStatus(status);
+            return saveJob(jobEntity);
+        });
+    }
+
+
     public List<JobEntityResponseDtoWithStages> getJobsWithAggregatedStages(String lob, LocalDateTime startDate, LocalDateTime endDate, String mode) {
         Instant startInstant = startDate.atZone(ZoneId.systemDefault()).toInstant();
         Instant endInstant = endDate.atZone(ZoneId.systemDefault()).toInstant();
@@ -140,6 +153,36 @@ public class JobService {
                             .build();
                 })
                 .collect(Collectors.toList());
+    }
+
+
+    public AccumulatedJobsAndMasterDto getWorkflowJobs(String lob, LocalDateTime startDate, LocalDateTime endDate, String mode) {
+        Instant startInstant = startDate.atZone(ZoneId.systemDefault()).toInstant();
+        Instant endInstant = endDate.atZone(ZoneId.systemDefault()).toInstant();
+        List<JobEntity> results = fileStageMetricsRepository.findJobsWithWorkflowFilesByLobAndDate(lob, startInstant, endInstant);
+
+        // map JobEntity -> JobEntityResponseDtoWithStages
+        List<JobEntityResponseDtoWithStages> mappedResults = results.stream()
+                .map(job -> JobEntityResponseDtoWithStages.builder()
+                        .id(job.getId())
+//                        .masters(job.getMasters()) // adjust if your entity stores masters differently
+                        .modeOfIntegration(ModeOfIntegration.valueOf("CK_WORKFLOW_JOB"))
+                        .creationTime(job.getCreationTime())
+                        .lastModifiedTime(job.getLastModifiedTime())
+                        .lob(job.getLob())
+                        .extendedAttributes(job.getExtendedAttributes())
+                        .startTime(job.getStartTime())
+                        .endTime(job.getEndTime())
+                        .status(job.getStatus())
+                        .publisherJobUri(job.getPublisherJobUri())
+                        .consumerJobUri(job.getConsumerJobUri())
+                        .stages(List.of()) // keep empty list
+                        .build())
+                .toList();
+
+        AccumulatedJobsAndMasterDto dto = new AccumulatedJobsAndMasterDto();
+        dto.setJobs(mappedResults); // make sure AccumulatedJobsAndMasterDto expects List<JobEntityResponseDtoWithStages>
+        return dto;
     }
 
 
