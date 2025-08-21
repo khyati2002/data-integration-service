@@ -14,6 +14,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
@@ -63,6 +64,7 @@ public class DataChangeListener {
                     handleStageDataChange(sseService);
                     break;
                 case "FILE_UPDATE":
+                    handleAllJobDataChange(event, sseService);
                     handleFileUpdate(event, sseService);
                     handleLobSummaryDataChange(event, sseService);
                     break;

@@ -152,8 +152,9 @@ public class SSEService {
         try {
             AccumulatedJobsAndMasterDto jobsData = jobService.getJobsWithAggregatedStagesAndMasters(
                     lob, startDate, endDate, mode);
-            List<Object> queryKey = Arrays.asList("jobs", lob);
-            List<Object> queryKey1 = Arrays.asList("individual-job", lob, jobId);
+            String encodedjobId= Base64.getEncoder().encodeToString(jobId.getBytes());
+            List<Object> queryKey = Arrays.asList("all-jobs", lob,"");
+            List<Object> queryKey1 = Arrays.asList("individual-job", lob, encodedjobId);
 
             JobEntity job = jobService.getJob(jobId);
             JobEntityResponseDto dto = jobEntityMapper.toDto(job);
