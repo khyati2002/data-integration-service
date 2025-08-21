@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.entity;
 
+import com.salescode.dis.insights.SSE.DataChangeListener;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
+@EntityListeners({DataChangeListener.class})
 @Table(name = "file_stage_metrics",
         uniqueConstraints = @UniqueConstraint(columnNames = {"file_id", "stage_type"}))
 @Getter

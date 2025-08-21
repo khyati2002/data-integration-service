@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.entity;
 
+import com.salescode.dis.insights.SSE.DataChangeListener;
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Slf4j
 @Entity
+@EntityListeners({DataChangeListener.class})
 @Table(name = "integration_file", uniqueConstraints = @UniqueConstraint(columnNames = {"fileId", "master"}))
 @Getter
 @Setter

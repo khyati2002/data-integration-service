@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.entity;
 
+import com.salescode.dis.insights.SSE.DataChangeListener;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@EntityListeners({DataChangeListener.class})
 @Table(name = "integration_job", indexes = {
     @Index(name = "idx_job_lob_master", columnList = "lob, start_time desc")
 })
