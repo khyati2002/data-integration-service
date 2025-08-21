@@ -1,6 +1,6 @@
 package com.salescode.dis.insights.entity;
 
-import com.salescode.dis.insights.SSE.DataChangeListener;
+import com.salescode.dis.insights.sse.DataChangeListener;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;

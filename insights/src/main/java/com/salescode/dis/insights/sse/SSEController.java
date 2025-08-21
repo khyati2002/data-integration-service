@@ -1,4 +1,4 @@
-package com.salescode.dis.insights.SSE;
+package com.salescode.dis.insights.sse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,21 +39,23 @@ public class SSEController {
             emitter.complete();
         });
 
-        emitter.onError((throwable) -> {
+        emitter.onError(throwable -> {
             log.warn("SSE connection error for client: {}, error: {}", clientId, throwable.getMessage());
             sseService.removeEmitter(clientId, emitter);
         });
 
-        // Register this emitter with the service BEFORE sending initial data
         sseService.addEmitter(clientId, emitter);
 
-        // Send initial data asynchronously to prevent blocking
         CompletableFuture.runAsync(() -> {
             try {
-                // Small delay to ensure connection is fully established
                 Thread.sleep(100);
                 sseService.sendInitialData(clientId, emitter);
-            } catch (Exception e) {
+            }
+            catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                log.warn("Thread interrupted while sending initial SSE data for client: {}", clientId, ie);
+            }
+            catch (Exception e) {
                 log.error("Error sending initial SSE data for client: {}", clientId, e);
                 try {
                     emitter.completeWithError(e);
@@ -65,7 +67,6 @@ public class SSEController {
 
         return emitter;
     }
-
     @PostMapping("/context")
     public ResponseEntity<String> updateClientContext(
             HttpServletRequest request,

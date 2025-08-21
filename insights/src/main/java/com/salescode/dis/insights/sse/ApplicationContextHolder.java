@@ -1,5 +1,4 @@
-package com.salescode.dis.insights.SSE;
-
+package com.salescode.dis.insights.sse;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationContext;

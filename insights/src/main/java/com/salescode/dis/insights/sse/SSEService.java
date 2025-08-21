@@ -1,4 +1,4 @@
-package com.salescode.dis.insights.SSE;
+package com.salescode.dis.insights.sse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salescode.dis.insights.dto.AccumulatedJobsAndMasterDto;
@@ -28,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Service
@@ -189,10 +188,7 @@ public class SSEService {
 
             List<LobSummaryDto> summaryData = fileStageMetricsRepository.findAggregateMetricsAndJobCountsByLobAndDateRange(
                     lobs, ProgressStage.QUEUE, ProgressStage.SAVE, startInstant, endInstant);
-
-            List<Object> queryKey= Arrays.asList("lobSummary", lob, startDate, endDate);
             List<Object> queryKey1= Arrays.asList("summary-data", lob, startDate, endDate);
-            broadcastDataToClients("lob-summary-update", summaryData, queryKey);
             broadcastDataToClients("dashboard-summary-update", summaryData, queryKey1);
 
         } catch (Exception e) {
@@ -216,7 +212,6 @@ public class SSEService {
 
             List<Object> queryKey = Arrays.asList("fileDetail", lob, masterName, jobId, fileId);
             broadcastDataToClients("file-detail-update", dto, queryKey);
-
             log.debug("📨 Broadcasted file detail update for fileId: {}", fileId);
 
         } catch (Exception e) {
@@ -238,9 +233,7 @@ public class SSEService {
                     failedClients.add(clientId);
                 }
         }
-        failedClients.forEach(clientId -> {
-            clientEmitters.remove(clientId);
-        });
+        failedClients.forEach(clientEmitters::remove);
         if (!failedClients.isEmpty()) {
             log.info("Cleaned up {} dead SSE connections", failedClients.size());
         }
@@ -270,7 +263,6 @@ public class SSEService {
             }
         });
         clientEmitters.clear();
-        // Shutdown scheduler
         scheduler.shutdown();
         try {
             if (!scheduler.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS)) {

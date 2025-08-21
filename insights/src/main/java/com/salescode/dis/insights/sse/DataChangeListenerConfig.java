@@ -1,6 +1,5 @@
-package com.salescode.dis.insights.SSE;
+package com.salescode.dis.insights.sse;
 
-import com.salescode.dis.insights.SSE.DataChangeListener;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
