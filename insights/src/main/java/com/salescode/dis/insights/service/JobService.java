@@ -16,6 +16,8 @@ import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.repository.JobRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,12 +39,25 @@ public class JobService {
     private final JobEntityMapper jobEntityMapper;
     private final FileStageMetricsRepository fileStageMetricsRepository;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     public int countJobsByLobAndStatus(String lob, ProgressStatus status) {
         return jobRepo.countByLobAndStatus(lob, status);
     }
 
     public JobEntity saveJob(JobEntity req) {
-        return jobRepo.save(req);
+        JobEntity jobEntity = jobRepo.save(req);
+        if(req.getStatus() != null) {
+            FileService fileService = applicationContext.getBean(FileService.class);
+            FileEntity file = new FileEntity();
+            file.setModeOfIntegration(ModeOfIntegration.CK_WORKFLOW_JOB);
+            file.setLob(req.getLob());
+            file.setJob(jobEntity);
+            file.setMaster("undefined");
+            fileService.createFile(req.getId(),file);
+        }
+        return jobEntity;
     }
 
     @Transactional(readOnly = true)
