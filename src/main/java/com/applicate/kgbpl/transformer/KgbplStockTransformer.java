@@ -1,12 +1,14 @@
 package com.applicate.kgbpl.transformer;
 
 import com.salescode.dim.etl.transformation.AbstractTransformer;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+@Slf4j
 public class KgbplStockTransformer extends AbstractTransformer<Map<String, Object>, List<Map<String, Object>>> {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
@@ -23,6 +25,8 @@ public class KgbplStockTransformer extends AbstractTransformer<Map<String, Objec
         String dataAreaId = getValue(inputMap, "dataAreaId");
         String colorId = getValue(inputMap, "InventColorId"); // ✅ new field
 
+        log.info("Transforming input with itemId={}, styleId={}, configId={}, sizeId={}, dataAreaId={}, colorId={}", itemId, styleId, configId, sizeId, dataAreaId, colorId);
+
         StringBuilder skuBuilder = new StringBuilder();
         skuBuilder.append(itemId).append("_").append(styleId).append("_").append(configId);
 
@@ -35,6 +39,9 @@ public class KgbplStockTransformer extends AbstractTransformer<Map<String, Objec
 
         skuBuilder.append("_").append(dataAreaId);
         String skuCode = skuBuilder.toString();
+
+        log.info("KGBPL Skucode => {}",skuCode);
+
         String siteId = getValue(inputMap, "InventSiteId");
         String warehouseId = !siteId.isEmpty() && !dataAreaId.isEmpty()
                 ? siteId + "-" + dataAreaId
