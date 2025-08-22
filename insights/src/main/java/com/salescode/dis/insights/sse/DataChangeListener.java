@@ -101,15 +101,11 @@ public class DataChangeListener {
     private void handleEventByType(String eventType, DataChangeEvent event, SSEService sseService, boolean isImmediate) {
         switch (eventType) {
             case "JOB_UPDATE":
-                handleAllJobDataChange(event, sseService, isImmediate);
+                handleJobDataChange(event, sseService);
                 break;
             case "SUMMARY_UPDATE":
-                handleLobSummaryDataChange(event, sseService, isImmediate);
-                handleAllJobDataChange(event, sseService, isImmediate);
+                handleJobDataChange(event, sseService);
                 handleFileUpdate(event, sseService);
-                break;
-            case "STAGE_UPDATE":
-                handleStageDataChange(sseService);
                 break;
             case "FILE_UPDATE":
                 handleFileUpdate(event, sseService);
@@ -139,36 +135,13 @@ public class DataChangeListener {
         return null;
     }
 
-    private void handleAllJobDataChange(DataChangeEvent event, SSEService sseService, boolean isImmediate) {
+    private void handleJobDataChange(DataChangeEvent event, SSEService sseService) {
         try {
             String lob = event.getLobId();
             String jobId = extractJobIdFromEntity(event.getEntity());
-            LocalDateTime endDate = LocalDateTime.now();
-            LocalDateTime startDate = isImmediate ? endDate.minusHours(1) : endDate.minusDays(10);
-            sseService.broadcastAllJobsUpdate(lob, null, startDate, endDate, jobId);
+            sseService.broadcastJobUpdate(lob,jobId);
         } catch (Exception e) {
             log.error("Error handling job data change", e);
-        }
-    }
-
-    private void handleLobSummaryDataChange(DataChangeEvent event, SSEService sseService, boolean isImmediate) {
-        try {
-            String lob = event.getLobId();
-            LocalDateTime endDate = LocalDateTime.now();
-            LocalDateTime startDate = isImmediate ? endDate.minusHours(1) : endDate.minusDays(10);
-
-            sseService.broadcastLobSummaryUpdate(lob, startDate, endDate);
-
-        } catch (Exception e) {
-            log.error("Error handling summary data change", e);
-        }
-    }
-
-    private void handleStageDataChange(SSEService sseService) {
-        try {
-            sseService.broadcastStagesData();
-        } catch (Exception e) {
-            log.error("Error handling stage data change", e);
         }
     }
 
@@ -179,7 +152,7 @@ public class DataChangeListener {
             String masterName = extractMasterName(event.getEntity());
             String fileId = extractFileId(event.getEntity());
 
-            sseService.broadcastFileDetailUpdate(lob, masterName, jobId, fileId);
+            sseService.broadcastFileUpdate(lob, masterName, jobId, fileId);
 
         } catch (Exception e) {
             log.error("Error handling file progress update", e);

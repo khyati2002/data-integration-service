@@ -1,13 +1,11 @@
 package com.salescode.dis.insights.entity;
 
-import com.salescode.dis.insights.sse.DataChangeListener;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStage;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@EntityListeners({DataChangeListener.class})
 @Table(name = "stage_metadata", uniqueConstraints = @UniqueConstraint(columnNames = {"mode", "stage_type"}))
 @Data
 @NoArgsConstructor

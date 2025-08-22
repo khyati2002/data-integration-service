@@ -21,69 +21,40 @@ import java.util.concurrent.CompletableFuture;
 public class SSEController {
 
     private final SSEService sseService;
-
-    @GetMapping(value = "/data-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter streamData(HttpServletRequest request, @RequestParam String clientId) {
-
-        log.info("✅ New SSE connection established from IP: {}", clientId);
+    @GetMapping(value = "/job-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter streamJob(@RequestParam String clientId, @RequestParam String jobId) {
         SseEmitter emitter = new SseEmitter(0L);
+        emitter.onCompletion(() -> sseService.removeEmitter(clientId,jobId, true));
+        emitter.onTimeout(() -> { sseService.removeEmitter(clientId,jobId, true); emitter.complete(); });
+        emitter.onError(ex -> sseService.removeEmitter(clientId,jobId, true));
 
-        emitter.onCompletion(() -> {
-            log.info("SSE connection completed for client: {}", clientId);
-            sseService.removeEmitter(clientId, emitter);
-        });
-
-        emitter.onTimeout(() -> {
-            log.info("SSE connection timeout for client: {}", clientId);
-            sseService.removeEmitter(clientId, emitter);
-            emitter.complete();
-        });
-
-        emitter.onError(throwable -> {
-            log.warn("SSE connection error for client: {}, error: {}", clientId, throwable.getMessage());
-            sseService.removeEmitter(clientId, emitter);
-        });
-
-        sseService.addEmitter(clientId, emitter);
-
-        CompletableFuture.runAsync(() -> {
-            try {
-                Thread.sleep(100);
-                sseService.sendInitialData(clientId, emitter);
-            }
-            catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-                log.warn("Thread interrupted while sending initial SSE data for client: {}", clientId, ie);
-            }
-            catch (Exception e) {
-                log.error("Error sending initial SSE data for client: {}", clientId, e);
-                try {
-                    emitter.completeWithError(e);
-                } catch (Exception ex) {
-                    log.error("Error completing emitter with error", ex);
-                }
-            }
-        });
+        sseService.addJobEmitter(clientId, jobId, emitter);
+        try {
+            sseService.sendConnectionEstablished(emitter);
+        } catch (Exception e) {
+            log.error("Failed to send connection established event", e);
+        }
 
         return emitter;
     }
-    @PostMapping("/context")
-    public ResponseEntity<String> updateClientContext(
-            HttpServletRequest request,
-            @RequestParam(required = false) String lob,
-            @RequestParam(required = false) String jobId,
-            @RequestParam(required = false) String masterId,
-            @RequestParam(required = false) String timePeriod,
-            @RequestParam(required = false) String mode,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
 
-        String clientId = request.getRemoteAddr();
-        log.debug("Updated context for client: {} - LOB: {}, Job: {}, Master: {}, Period: {}, Mode: {}",
-                clientId, lob, jobId, masterId, timePeriod, mode);
+    @GetMapping(value = "/file-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter streamFile(@RequestParam String clientId, @RequestParam String fileId) {
+        SseEmitter emitter = new SseEmitter(0L);
+        emitter.onCompletion(() -> sseService.removeEmitter(clientId,fileId, false));
+        emitter.onTimeout(() -> { sseService.removeEmitter(clientId,fileId, false); emitter.complete(); });
+        emitter.onError(ex -> sseService.removeEmitter(clientId,fileId, false));
 
-        return ResponseEntity.ok("Context updated");
+        sseService.addFileEmitter(clientId, fileId, emitter);
+        try {
+            sseService.sendConnectionEstablished(emitter);
+        } catch (Exception e) {
+            log.error("Failed to send connection established event", e);
+        }
+
+        return emitter;
     }
+
 
     @GetMapping("/status")
     public ResponseEntity<Object> getConnectionStatus() {

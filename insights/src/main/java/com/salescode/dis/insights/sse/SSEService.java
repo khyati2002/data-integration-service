@@ -1,53 +1,45 @@
 package com.salescode.dis.insights.sse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salescode.dis.insights.dto.AccumulatedJobsAndMasterDto;
-import com.salescode.dis.insights.dto.LobSummaryDto;
-import com.salescode.dis.insights.dto.StageDto;
 import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.JobEntity;
-import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
-import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.service.JobService;
-import com.salescode.dis.insights.service.StageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import jakarta.annotation.PreDestroy;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class SSEService {
 
-    private final FileStageMetricsRepository fileStageMetricsRepository;
     private final JobService jobService;
-    private final StageService stageService;
     private final ObjectMapper objectMapper;
-    private final Map<String, SseEmitter> clientEmitters = new ConcurrentHashMap<>();
+    private final Map<String, String> fileSubscriptions = new ConcurrentHashMap<>();
+    private final Map<String, String> jobSubscriptions = new ConcurrentHashMap<>();
+
+    private final Map<String, SseEmitter> fileEmitters = new ConcurrentHashMap<>();
+    private final Map<String, SseEmitter> jobEmitters = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final JobEntityMapper jobEntityMapper;
     private final FileService fileService;
     private final FileEntityMapper fileEntityMapper;
 
-    public SSEService(FileStageMetricsRepository fileStageMetricsRepository, JobService jobService, StageService stageService, ObjectMapper objectMapper, JobEntityMapper jobEntityMapper, FileService  fileService, FileEntityMapper fileEntityMapper)
+    public SSEService( JobService jobService, ObjectMapper objectMapper, JobEntityMapper jobEntityMapper, FileService  fileService, FileEntityMapper fileEntityMapper)
     {
-        this.fileStageMetricsRepository = fileStageMetricsRepository;
         this.jobService = jobService;
-        this.stageService = stageService;
         this.objectMapper = objectMapper;
         this.jobEntityMapper=jobEntityMapper;
         this.fileService=fileService;
@@ -55,224 +47,186 @@ public class SSEService {
         startCleanupTask();
     }
 
-    public void addEmitter(String clientId, SseEmitter emitter) {
-        SseEmitter existingEmitter = clientEmitters.get(clientId);
+    public void addJobEmitter(String clientId, String jobId, SseEmitter emitter) {
+        String key = "job:" + clientId + ":" + jobId;
+
+        SseEmitter existingEmitter = jobEmitters.get(key);
         if (existingEmitter != null) {
             try {
-                log.info("Replacing existing SSE connection for client: {}", clientId);
+                log.info("Replacing existing Job SSE connection for client={}, jobId={}", clientId, jobId);
                 existingEmitter.complete();
             } catch (Exception e) {
-                log.warn("Error closing existing emitter", e);
+                log.warn("Error closing existing job emitter", e);
             }
         }
-        clientEmitters.put(clientId, emitter);
-        log.info("✅ Added SSE emitter for client: {}. Total connections: {}",
-                clientId, clientEmitters.size());
+
+        jobEmitters.put(key, emitter);
+        jobSubscriptions.put(key, jobId);
+        log.info("Added Job SSE emitter for client={}, jobId={}. Total job connections={}",
+                clientId, jobId, jobEmitters.size());
     }
 
-    public void removeEmitter(String clientId, SseEmitter emitter) {
-        SseEmitter existingEmitter = clientEmitters.get(clientId);
-        if (existingEmitter == emitter) {
-            clientEmitters.remove(clientId);
-            log.info("❌ Removed SSE emitter for client: {}. Total connections: {}",
-                    clientId, clientEmitters.size());
-        }
-    }
+    public void addFileEmitter(String clientId, String fileId, SseEmitter emitter) {
+        String key = "file:" + clientId + ":" + fileId;
 
-    public int getActiveConnectionsCount() {
-        cleanupDeadConnections();
-        return clientEmitters.size();
-    }
-
-    private void cleanupDeadConnections() {
-        Iterator<Map.Entry<String, SseEmitter>> iterator = clientEmitters.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, SseEmitter> entry = iterator.next();
-            SseEmitter emitter = entry.getValue();
-
+        SseEmitter existingEmitter = fileEmitters.get(key);
+        if (existingEmitter != null) {
             try {
-                emitter.send(SseEmitter.event().comment("heartbeat"));
+                log.info("Replacing existing File SSE connection for client={}, fileId={}", clientId, fileId);
+                existingEmitter.complete();
             } catch (Exception e) {
-                log.debug("Removing dead SSE connection for client: {}", entry.getKey());
-                iterator.remove();
+                log.warn("Error closing existing file emitter", e);
+            }
+        }
+        fileEmitters.put(key, emitter);
+        fileSubscriptions.put(key, fileId);
+        log.info("Added File SSE emitter for client={}, fileId={}. Total file connections={}",
+                clientId, fileId, fileEmitters.size());
+    }
+
+
+    public void removeEmitter(String clientId, String id, boolean isJob) {
+        String key = (isJob ? "job:" : "file:") + clientId + ":" + id;
+        Map<String, SseEmitter> targetEmitters = isJob ? jobEmitters : fileEmitters;
+        Map<String, String> targetSubscriptions = isJob ? jobSubscriptions : fileSubscriptions;
+
+        SseEmitter existingEmitter = targetEmitters.remove(key);
+        targetSubscriptions.remove(key);
+
+        if (existingEmitter != null) {
+            try {
+                existingEmitter.complete();
+                log.info("Removed {} SSE emitter for client={}, id={}. Remaining {} connections={}",
+                        isJob ? "Job" : "File", clientId, id,
+                        isJob ? "job" : "file", targetEmitters.size());
+            } catch (Exception e) {
+                log.warn("Error completing {} emitter for client={}, id={}",
+                        isJob ? "Job" : "File", clientId, id, e);
+            }
+        } else {
+            log.debug("No {} emitter found to remove for client={}, id={}",
+                    isJob ? "Job" : "File", clientId, id);
+        }
+    }
+    public void broadcastJobUpdate(String lob, String jobId) {
+        JobEntity job = jobService.getJob(jobId);
+        JobEntityResponseDto dto = jobEntityMapper.toDto(job);
+        Iterator<Map.Entry<String, SseEmitter>> it = jobEmitters.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, SseEmitter> entry = it.next();
+            String key = entry.getKey();
+            SseEmitter emitter = entry.getValue();
+            String encodedJobId=Base64.getEncoder().encodeToString(jobId.getBytes());
+            String subscribedJob = jobSubscriptions.get(key);
+            if (encodedJobId.equals(subscribedJob)) {
+                try {
+                    sendSSEEvent(emitter, "individual-job-update", dto, Arrays.asList("individual-job",log, encodedJobId));
+                } catch (IOException e) {
+                    log.warn("Failed to send job update to {}. Removing connection.", key);
+                    it.remove();
+                    jobSubscriptions.remove(key);
+                }
             }
         }
     }
 
-    public void sendInitialData(String clientId, SseEmitter emitter) {
-        try {
-            log.info("📤 Sending initial data for client: {}", clientId);
-            emitter.send(SseEmitter.event().comment("Connected - sending initial data"));
-            sendSSEEvent(emitter, "connection", "established", Arrays.asList("connection", "status"));
-            log.info("✅ Initial SSE data sent successfully for client: {}", clientId);
-        } catch (Exception e) {
-            log.error("❌ Error sending initial SSE data for client: {}", clientId, e);
-            throw new RuntimeException("Failed to send initial data", e);
+    public void broadcastFileUpdate(String lob, String masterName, String jobId, String fileId) {
+        FileEntity file = fileService.get(fileId, masterName);
+        FileEntityResponseDto dto = fileEntityMapper.toDto(file);
+
+        List<Object> queryKey = Arrays.asList("fileDetail", lob, masterName, jobId, fileId);
+
+        Iterator<Map.Entry<String, SseEmitter>> it = fileEmitters.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, SseEmitter> entry = it.next();
+            String key = entry.getKey();
+            SseEmitter emitter = entry.getValue();
+            String encodedFileId=Base64.getEncoder().encodeToString(fileId.getBytes());
+            String subscribedFile = fileSubscriptions.get(key);
+            if (encodedFileId.equals(subscribedFile)) {
+                try {
+                    sendSSEEvent(emitter, "file-detail-update", dto, queryKey);
+                } catch (IOException e) {
+                    log.warn("Failed to send file update to {}. Removing connection.", key);
+                    it.remove();                 // safe with CHM iterator too
+                    fileSubscriptions.remove(key);
+                }
+            }
         }
     }
 
 
-    private List<String> getAllAvailableLabsSafely() {
-        try {
-            return jobService.getAllAvailableLobs();
-        } catch (Exception e) {
-            log.error("Error getting available LOBs", e);
-            return Collections.emptyList();
-        }
-    }
 
     private void sendSSEEvent(SseEmitter emitter, String eventType, Object data, List<Object> queryKey) throws IOException {
         try {
+            final List<String> finalqueryKey = queryKey == null ? Collections.emptyList() : queryKey.stream().map(String::valueOf).collect(Collectors.toList());
             Map<String, Object> eventData = new HashMap<>();
             eventData.put("type", eventType);
             eventData.put("data", data);
-            eventData.put("queryKey", queryKey);
+            eventData.put("queryKey", finalqueryKey);
             eventData.put("timestamp", System.currentTimeMillis());
-
             String jsonData = objectMapper.writeValueAsString(eventData);
 
-            emitter.send(SseEmitter.event()
-                    .name("message")
-                    .data(jsonData)
-                    .id(UUID.randomUUID().toString()));
-
-            log.debug("📨 Sent SSE event: {} with queryKey: {}", eventType, queryKey);
-
+            emitter.send(SseEmitter.event().name("message").data(jsonData).id(UUID.randomUUID().toString()));
+            log.debug(" Sent SSE event: {} with queryKey: {}", eventType, queryKey);
         } catch (IllegalStateException e) {
             log.warn("Emitter already completed, removing it");
-
         } catch (IOException e) {
             log.warn("Emitter send failed, removing it", e);
         }
     }
+    public void sendConnectionEstablished(SseEmitter emitter) throws IOException {
+        Map<String, Object> eventData = new HashMap<>();
+        eventData.put("type", "connection");
+        eventData.put("data", "established");
+        eventData.put("timestamp", System.currentTimeMillis());
 
-
-    public void broadcastAllJobsUpdate(String lob, String mode, LocalDateTime startDate, LocalDateTime endDate, String jobId) {
-        try {
-            AccumulatedJobsAndMasterDto jobsData = jobService.getJobsWithAggregatedStagesAndMasters(
-                    lob, startDate, endDate, mode);
-            String encodedjobId= Base64.getEncoder().encodeToString(jobId.getBytes());
-            List<Object> queryKey = Arrays.asList("all-jobs", lob,"");
-            List<Object> queryKey1 = Arrays.asList("individual-job", lob, encodedjobId);
-
-            JobEntity job = jobService.getJob(jobId);
-            JobEntityResponseDto dto = jobEntityMapper.toDto(job);
-
-            for (Map.Entry<String, SseEmitter> entry : clientEmitters.entrySet()) {
-                String clientId = entry.getKey();
-                SseEmitter emitter = entry.getValue();
-                if (emitter != null) {
-                    try {
-                        sendSSEEvent(emitter, "all-jobs-update", jobsData, queryKey);
-                        sendSSEEvent(emitter, "individual-job-update", dto, queryKey1);
-                        log.debug("📨 Sent jobs update to client: {}", clientId);
-                    } catch (IOException e) {
-                        log.warn("Failed to send jobs update to client: {}, removing connection", clientId);
-                        clientEmitters.remove(clientId);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            log.error("Error fetching and broadcasting jobs data", e);
-        }
-    }
-
-    public void broadcastLobSummaryUpdate(String lob, LocalDateTime startDate, LocalDateTime endDate) {
-        try {
-            Instant startInstant = (startDate != null) ? startDate.atZone(ZoneId.systemDefault()).toInstant()
-                    : LocalDateTime.now().minusDays(10).atZone(ZoneId.systemDefault()).toInstant();
-            Instant endInstant = (endDate != null) ? endDate.atZone(ZoneId.systemDefault()).toInstant()
-                    : LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
-
-            List<String> lobs = "ALL".equals(lob) ? getAllAvailableLabsSafely() : Arrays.asList(lob);
-
-            List<LobSummaryDto> summaryData = fileStageMetricsRepository.findAggregateMetricsAndJobCountsByLobAndDateRange(
-                    lobs, ProgressStage.QUEUE, ProgressStage.SAVE, startInstant, endInstant);
-            List<Object> queryKey1= Arrays.asList("summary-data", lob, startDate, endDate);
-            broadcastDataToClients("dashboard-summary-update", summaryData, queryKey1);
-
-        } catch (Exception e) {
-            log.error("Error broadcasting LOB summary update", e);
-        }
-    }
-
-    public  void broadcastStagesData() throws IOException {
-        try {
-            List<StageDto> stagesData = stageService.getStages();
-            List<Object> queryKey = Arrays.asList("stages");
-            broadcastDataToClients("stages", stagesData, queryKey);
-        } catch (Exception e) {
-            log.error("Error sending stages data via SSE", e);
-        }
-    }
-    public void broadcastFileDetailUpdate(String lob, String masterName, String jobId, String fileId) {
-        try {
-            FileEntity file = fileService.get(fileId, masterName);
-            FileEntityResponseDto dto = fileEntityMapper.toDto(file);
-
-            List<Object> queryKey = Arrays.asList("fileDetail", lob, masterName, jobId, fileId);
-            broadcastDataToClients("file-detail-update", dto, queryKey);
-            log.debug("📨 Broadcasted file detail update for fileId: {}", fileId);
-
-        } catch (Exception e) {
-            log.error("Error broadcasting file detail update for fileId: {}", fileId, e);
-        }
-    }
-
-
-    private void broadcastDataToClients(String eventType, Object data, List<Object> queryKey) {
-        List<String> failedClients = new ArrayList<>();
-
-        for (Map.Entry<String, SseEmitter> entry : clientEmitters.entrySet()) {
-            String clientId = entry.getKey();
-            SseEmitter emitter = entry.getValue();
-                try {
-                    sendSSEEvent(emitter, eventType, data, queryKey);
-                } catch (IOException e) {
-                    log.warn("Failed to send SSE event to client: {}, removing connection", clientId);
-                    failedClients.add(clientId);
-                }
-        }
-        failedClients.forEach(clientEmitters::remove);
-        if (!failedClients.isEmpty()) {
-            log.info("Cleaned up {} dead SSE connections", failedClients.size());
-        }
+        String jsonData = objectMapper.writeValueAsString(eventData);
+        emitter.send(SseEmitter.event().name("message").data(jsonData).id(UUID.randomUUID().toString()));
+        log.info("Sent connection established event");
     }
 
     private void startCleanupTask() {
-        scheduler.scheduleAtFixedRate(() -> {
+        scheduler.scheduleAtFixedRate(this::cleanupDeadConnections, 60, 60, TimeUnit.SECONDS);
+    }
+
+    public int getActiveConnectionsCount() {
+        cleanupDeadConnections();
+        return fileEmitters.size();
+    }
+
+    private void cleanupDeadConnections() {
+        cleanupMap(fileEmitters, fileSubscriptions, "File");
+        cleanupMap(jobEmitters, jobSubscriptions, "Job");
+    }
+
+    private void cleanupMap(Map<String, SseEmitter> emitters, Map<String, String> subscriptions, String type) {
+        List<String> deadKeys = new ArrayList<>();
+        emitters.forEach((key, emitter) -> {
             try {
-                cleanupDeadConnections();
+                emitter.send(SseEmitter.event().comment("heartbeat"));
             } catch (Exception e) {
-                log.error("Error in SSE cleanup task", e);
+                deadKeys.add(key);
             }
-        }, 60, 60, TimeUnit.SECONDS); // Every minute
+        });
+        deadKeys.forEach(key -> {
+            emitters.remove(key);
+            subscriptions.remove(key);
+            log.info("Removed dead {} connection: {}", type, key);
+        });
     }
 
     @PreDestroy
     public void cleanup() {
-        log.info("🛑 Shutting down SSE service...");
+        fileEmitters.forEach((k, e) -> safeComplete(e));
+        jobEmitters.forEach((k, e) -> safeComplete(e));
+        fileEmitters.clear();
+        jobEmitters.clear();
+        scheduler.shutdownNow();
+        log.info("SSE service shutdown complete");
+    }
 
-        // Close all connections
-        clientEmitters.forEach((clientId, emitter) -> {
-            try {
-                emitter.send(SseEmitter.event().comment("Server shutting down"));
-                emitter.complete();
-            } catch (Exception e) {
-                log.warn("Error closing SSE connection for client: {}", clientId);
-            }
-        });
-        clientEmitters.clear();
-        scheduler.shutdown();
-        try {
-            if (!scheduler.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS)) {
-                scheduler.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            scheduler.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-
-        log.info("✅ SSE service shutdown complete");
+    private void safeComplete(SseEmitter emitter) {
+        try { emitter.complete(); } catch (Exception ignored) {}
     }
 }
