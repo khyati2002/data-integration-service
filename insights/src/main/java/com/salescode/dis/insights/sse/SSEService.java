@@ -39,13 +39,12 @@ public class SSEService {
     private final FileService fileService;
     private final FileEntityMapper fileEntityMapper;
 
-    public SSEService( JobService jobService, ObjectMapper objectMapper, JobEntityMapper jobEntityMapper, FileService  fileService, FileEntityMapper fileEntityMapper)
-    {
+    public SSEService(JobService jobService, ObjectMapper objectMapper, JobEntityMapper jobEntityMapper, FileService fileService, FileEntityMapper fileEntityMapper) {
         this.jobService = jobService;
         this.objectMapper = objectMapper;
-        this.jobEntityMapper=jobEntityMapper;
-        this.fileService=fileService;
-        this.fileEntityMapper=fileEntityMapper;
+        this.jobEntityMapper = jobEntityMapper;
+        this.fileService = fileService;
+        this.fileEntityMapper = fileEntityMapper;
         startCleanupTask();
     }
 
@@ -110,6 +109,7 @@ public class SSEService {
                     isJob ? "Job" : "File", clientId, id);
         }
     }
+
     public void broadcastJobUpdate(String lob, String jobId) {
         JobEntity job = jobService.getJob(jobId);
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
@@ -118,11 +118,11 @@ public class SSEService {
             Map.Entry<String, SseEmitter> entry = it.next();
             String key = entry.getKey();
             SseEmitter emitter = entry.getValue();
-            String encodedJobId=Base64.getEncoder().encodeToString(jobId.getBytes());
+            String encodedJobId = Base64.getEncoder().encodeToString(jobId.getBytes());
             String subscribedJob = jobSubscriptions.get(key);
             if (encodedJobId.equals(subscribedJob)) {
                 try {
-                    sendSSEEvent(emitter, "individual-job-update", dto, Arrays.asList("individual-job",lob, encodedJobId),key,true);
+                    sendSSEEvent(emitter, "individual-job-update", dto, Arrays.asList("individual-job", lob, encodedJobId), key);
                 } catch (IOException e) {
                     log.warn("Failed to send job update to {}. Removing connection.", key);
                     it.remove();
@@ -143,11 +143,11 @@ public class SSEService {
             Map.Entry<String, SseEmitter> entry = it.next();
             String key = entry.getKey();
             SseEmitter emitter = entry.getValue();
-            String encodedFileId=Base64.getEncoder().encodeToString(fileId.getBytes());
+            String encodedFileId = Base64.getEncoder().encodeToString(fileId.getBytes());
             String subscribedFile = fileSubscriptions.get(key);
             if (encodedFileId.equals(subscribedFile)) {
                 try {
-                    sendSSEEvent(emitter, "file-detail-update", dto, queryKey, key, false);
+                    sendSSEEvent(emitter, "file-detail-update", dto, queryKey, key);
                 } catch (IOException e) {
                     log.warn("Failed to send file update to {}. Removing connection.", key);
                     it.remove();
@@ -157,7 +157,7 @@ public class SSEService {
         }
     }
 
-    private void sendSSEEvent(SseEmitter emitter, String eventType, Object data, List<Object> queryKey, String mapKey, boolean isJob) throws IOException {
+    private void sendSSEEvent(SseEmitter emitter, String eventType, Object data, List<Object> queryKey, String mapKey) throws IOException {
         if (emitter == null) {
             log.debug("Emitter is null for key: {}", mapKey);
             return;
@@ -181,25 +181,28 @@ public class SSEService {
             log.debug("Emitter error for key={}, removing (cause: {})", mapKey, ex.toString());
         }
     }
+
     public void sendConnectionEstablished(SseEmitter emitter) throws IOException {
         Map<String, Object> eventData = new HashMap<>();
         eventData.put("type", "connection");
         eventData.put("data", "established");
         eventData.put("timestamp", System.currentTimeMillis());
-        if (emitter == null) {
-            log.info("Emitter is null or complete ");
-            return;
-        }
         try {
             String jsonData = objectMapper.writeValueAsString(eventData);
+            if (emitter == null) {
+                log.info("Emitter is null or complete ");
+                return;
+            }
             emitter.send(SseEmitter.event().name("message").data(jsonData).id(UUID.randomUUID().toString()));
             log.info("Sent connection established event");
         } catch (IllegalStateException e) {
-            log.warn("Emitter already completed, cannot send event", e);
+            log.warn("Emitter already completed, cannot send connection established event", e);
+        } catch (ClientAbortException | AsyncRequestNotUsableException e) {
+            log.debug("Client disconnected during connection established", e);
         } catch (IOException e) {
-            log.error("Failed to send SSE event, IO Exception", e);
+            log.warn("IO error sending connection established event", e);
         } catch (Exception e) {
-            log.error("Failed to send SSE event", e);
+            log.error("Unexpected error sending connection established event", e);
         }
     }
 
@@ -229,7 +232,15 @@ public class SSEService {
         deadKeys.forEach(key -> {
             SseEmitter e = emitters.remove(key);
             subscriptions.remove(key);
-            if (e != null) { try { e.complete(); } catch (Exception ignored) {} }
+            if (e != null) {
+                    try {
+                        e.complete();
+                    } catch (IllegalStateException  ex) {
+                        log.debug("Emitter already dead when completing {} connection: {}", type, key);
+                    } catch (Exception ex) {
+                        log.warn("Error completing dead {} emitter {}", type, key, ex);
+                    }
+                }
             log.info("Removed dead {} connection: {}", type, key);
         });
     }

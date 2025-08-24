@@ -45,9 +45,6 @@ public class JobService {
         return jobRepo.save(req);
     }
 
-    public List<String> getAllAvailableLobs() {
-        return jobRepo.findDistinctLobs();
-    }
     @Transactional(readOnly = true)
     public JobEntity getJob(String id) {
         return jobRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));

@@ -29,11 +29,18 @@ public class SSEController {
         emitter.onError(ex -> sseService.removeEmitter(clientId,jobId, true));
 
         sseService.addJobEmitter(clientId, jobId, emitter);
-        try {
-            sseService.sendConnectionEstablished(emitter);
-        } catch (Exception e) {
-            log.error("Failed to send connection established event", e);
-        }
+        CompletableFuture.runAsync(() -> {
+            try {
+                // Small delay to ensure emitter is properly registered
+                Thread.sleep(120);
+                sseService.sendConnectionEstablished(emitter);
+            } catch (IllegalStateException e) {
+                // Emitter already completed - this is fine, just log it
+                log.debug("Emitter already completed when trying to send connection established message for clientId: {}, jobId: {}", clientId, jobId);
+            } catch (Exception e) {
+                log.warn("Failed to send connection established event for clientId: {}, jobId: {}", clientId, jobId, e);
+            }
+        });
 
         return emitter;
     }
@@ -49,11 +56,18 @@ public class SSEController {
         emitter.onError(ex -> sseService.removeEmitter(clientId,fileId, false));
 
         sseService.addFileEmitter(clientId, fileId, emitter);
-        try {
-            sseService.sendConnectionEstablished(emitter);
-        } catch (Exception e) {
-            log.error("Failed to send connection established event", e);
-        }
+        CompletableFuture.runAsync(() -> {
+            try {
+                // Small delay to ensure emitter is properly registered
+                Thread.sleep(120);
+                sseService.sendConnectionEstablished(emitter);
+            } catch (IllegalStateException e) {
+                // Emitter already completed - this is fine, just log it
+                log.debug("Emitter already completed when trying to send connection established message for clientId: {}, fileId: {}", clientId, fileId);
+            } catch (Exception e) {
+                log.warn("Failed to send connection established event for clientId: {}, fileId: {}", clientId, fileId, e);
+            }
+        });
 
         return emitter;
     }

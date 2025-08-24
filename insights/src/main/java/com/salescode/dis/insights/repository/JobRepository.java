@@ -29,8 +29,4 @@ public interface JobRepository extends JpaRepository<JobEntity, String> {
     @Transactional
     @Query("DELETE FROM JobEntity j WHERE j.lastModifiedTime < :cutoffTime")
     int deleteByLastModifiedBefore(Instant cutoffTime);
-
-    @Query("SELECT DISTINCT j.lob FROM JobEntity j")
-    List<String> findDistinctLobs();
-
 }
