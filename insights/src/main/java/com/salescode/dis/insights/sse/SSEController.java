@@ -42,7 +42,10 @@ public class SSEController {
     public SseEmitter streamFile(@RequestParam String clientId, @RequestParam String fileId) {
         SseEmitter emitter = new SseEmitter(0L);
         emitter.onCompletion(() -> sseService.removeEmitter(clientId,fileId, false));
-        emitter.onTimeout(() -> { sseService.removeEmitter(clientId,fileId, false); emitter.complete(); });
+        emitter.onTimeout(() -> {
+            sseService.removeEmitter(clientId,fileId, false); emitter.complete();
+            try { emitter.complete(); } catch (Exception ignored) {}
+        });
         emitter.onError(ex -> sseService.removeEmitter(clientId,fileId, false));
 
         sseService.addFileEmitter(clientId, fileId, emitter);
@@ -75,17 +78,13 @@ public class SSEController {
         return ResponseEntity.ok("SSE service is healthy");
     }
 
-
     public static class ConnectionStatus {
         public final int activeConnections;
         public final String status;
-
         public ConnectionStatus(int activeConnections, String status) {
             this.activeConnections = activeConnections;
             this.status = status;
         }
-
-        // Getters for JSON serialization
         public int getActiveConnections() { return activeConnections; }
         public String getStatus() { return status; }
     }

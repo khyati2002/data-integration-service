@@ -8,10 +8,12 @@ import jakarta.annotation.PreDestroy;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+import org.springframework.context.ApplicationContext;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -23,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DataChangeListener {
 
     private final ApplicationEventPublisher eventPublisher;
+    @Autowired
+    ApplicationContext applicationContext;
 
     private static final ThreadLocal<Set<String>> PROCESSING_ENTITIES =
             ThreadLocal.withInitial(ConcurrentHashMap::newKeySet);
@@ -61,10 +65,10 @@ public class DataChangeListener {
         try {
             log.info("Handling immediate data change event: {}", event.getEventType());
 
-            SSEService sseService = ApplicationContextHolder.getContext().getBean(SSEService.class);
+            SSEService sseService = applicationContext.getBean(SSEService.class);
             String baseEventType = event.getEventType().replace("_IMMEDIATE", "");
 
-            handleEventByType(baseEventType, event, sseService, true);
+            handleEventByType(baseEventType, event, sseService);
 
         } catch (Exception e) {
             log.error("Error handling immediate data change event: {}", event.getEventType(), e);
@@ -87,9 +91,9 @@ public class DataChangeListener {
         try {
             log.info("Handling async data change event: {}", event.getEventType());
 
-            SSEService sseService = ApplicationContextHolder.getContext().getBean(SSEService.class);
+            SSEService sseService = applicationContext.getBean(SSEService.class);
 
-            handleEventByType(event.getEventType(), event, sseService, false);
+            handleEventByType(event.getEventType(), event, sseService);
 
         } catch (Exception e) {
             log.error("Error handling async data change event: {}", event.getEventType(), e);
@@ -98,16 +102,17 @@ public class DataChangeListener {
         }
     }
 
-    private void handleEventByType(String eventType, DataChangeEvent event, SSEService sseService, boolean isImmediate) {
+    private void handleEventByType(String eventType, DataChangeEvent event, SSEService sseService) {
         switch (eventType) {
             case "JOB_UPDATE":
                 handleJobDataChange(event, sseService);
                 break;
-            case "SUMMARY_UPDATE":
-                handleJobDataChange(event, sseService);
+            case "FILE_UPDATE":
                 handleFileUpdate(event, sseService);
                 break;
-            case "FILE_UPDATE":
+            case "SUMMARY_UPDATE":
+            default:
+                handleJobDataChange(event, sseService);
                 handleFileUpdate(event, sseService);
                 break;
         }
@@ -131,7 +136,6 @@ public class DataChangeListener {
         if (entity instanceof JobEntity) return "JOB_UPDATE";
         if (entity instanceof FileEntity) return "FILE_UPDATE";
         if (entity instanceof FileStageMetrics) return "SUMMARY_UPDATE";
-        if (entity instanceof StageMetadata) return "STAGE_UPDATE";
         return null;
     }
 
