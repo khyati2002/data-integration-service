@@ -159,15 +159,14 @@ public class SSEService {
 
     private void sendSSEEvent(SseEmitter emitter, String eventType, Object data, List<Object> queryKey, String mapKey) throws IOException {
         if (emitter == null) {
-            log.debug("Emitter is null for key: {}", mapKey);
-            return;
+            throw new IOException("Cannot send event to a null emitter for key: " + mapKey);
         }
         try {
-            final List<String> finalqueryKey = queryKey == null ? Collections.emptyList() : queryKey.stream().map(String::valueOf).collect(Collectors.toList());
+            final List<String> finalQueryKey = queryKey == null ? Collections.emptyList() : queryKey.stream().map(String::valueOf).toList();
             Map<String, Object> eventData = new HashMap<>();
             eventData.put("type", eventType);
             eventData.put("data", data);
-            eventData.put("queryKey", finalqueryKey);
+            eventData.put("queryKey", finalQueryKey);
             eventData.put("timestamp", System.currentTimeMillis());
             String jsonData = objectMapper.writeValueAsString(eventData);
 
@@ -207,7 +206,7 @@ public class SSEService {
     }
 
     private void startCleanupTask() {
-        scheduler.scheduleAtFixedRate(this::cleanupDeadConnections, 60, 60, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::cleanupDeadConnections, 30, 30, TimeUnit.SECONDS);
     }
 
     public int getActiveConnectionsCount() {
@@ -256,6 +255,7 @@ public class SSEService {
     }
 
     private void safeComplete(SseEmitter emitter) {
-        try { emitter.complete(); } catch (Exception ignored) {}
+        try { emitter.complete(); } catch (Exception ignored) {// ignored
+        }
     }
 }

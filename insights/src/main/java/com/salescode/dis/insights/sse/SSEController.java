@@ -24,24 +24,19 @@ public class SSEController {
     @GetMapping(value = "/job-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter streamJob(@RequestParam String clientId, @RequestParam String jobId) {
         SseEmitter emitter = new SseEmitter(0L);
-        emitter.onCompletion(() -> sseService.removeEmitter(clientId,jobId, true));
-        emitter.onTimeout(() -> { sseService.removeEmitter(clientId,jobId, true); emitter.complete(); });
-        emitter.onError(ex -> sseService.removeEmitter(clientId,jobId, true));
+        emitter.onCompletion(() -> sseService.removeEmitter(clientId, jobId, true));
+        emitter.onTimeout(() -> {
+            sseService.removeEmitter(clientId, jobId, true);
+            emitter.complete();
+        });
+        emitter.onError(ex -> sseService.removeEmitter(clientId, jobId, true));
 
         sseService.addJobEmitter(clientId, jobId, emitter);
-        CompletableFuture.runAsync(() -> {
-            try {
-                // Small delay to ensure emitter is properly registered
-                Thread.sleep(120);
-                sseService.sendConnectionEstablished(emitter);
-            } catch (IllegalStateException e) {
-                // Emitter already completed - this is fine, just log it
-                log.debug("Emitter already completed when trying to send connection established message for clientId: {}, jobId: {}", clientId, jobId);
-            } catch (Exception e) {
-                log.warn("Failed to send connection established event for clientId: {}, jobId: {}", clientId, jobId, e);
-            }
-        });
-
+        try {
+            sseService.sendConnectionEstablished(emitter);
+        } catch (Exception e) {
+            log.error("Failed to send connection established event", e);
+        }
         return emitter;
     }
 
@@ -51,27 +46,19 @@ public class SSEController {
         emitter.onCompletion(() -> sseService.removeEmitter(clientId,fileId, false));
         emitter.onTimeout(() -> {
             sseService.removeEmitter(clientId,fileId, false); emitter.complete();
-            try { emitter.complete(); } catch (Exception ignored) {}
-        });
-        emitter.onError(ex -> sseService.removeEmitter(clientId,fileId, false));
-
-        sseService.addFileEmitter(clientId, fileId, emitter);
-        CompletableFuture.runAsync(() -> {
-            try {
-                // Small delay to ensure emitter is properly registered
-                Thread.sleep(120);
-                sseService.sendConnectionEstablished(emitter);
-            } catch (IllegalStateException e) {
-                // Emitter already completed - this is fine, just log it
-                log.debug("Emitter already completed when trying to send connection established message for clientId: {}, fileId: {}", clientId, fileId);
-            } catch (Exception e) {
-                log.warn("Failed to send connection established event for clientId: {}, fileId: {}", clientId, fileId, e);
+            try { emitter.complete(); } catch (Exception ignored) {
+                //ignored
             }
         });
-
+        emitter.onError(ex -> sseService.removeEmitter(clientId,fileId, false));
+        sseService.addFileEmitter(clientId, fileId, emitter);
+        try {
+            sseService.sendConnectionEstablished(emitter);
+        } catch (Exception e) {
+            log.error("Failed to send connection established event", e);
+        }
         return emitter;
     }
-
 
     @GetMapping("/status")
     public ResponseEntity<Object> getConnectionStatus() {
