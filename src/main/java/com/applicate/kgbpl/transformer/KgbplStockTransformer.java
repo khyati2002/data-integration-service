@@ -46,12 +46,14 @@ public class KgbplStockTransformer extends AbstractTransformer<Map<String, Objec
         String warehouseId = !siteId.isEmpty() && !dataAreaId.isEmpty()
                 ? siteId + "-" + dataAreaId
                 : siteId;
+
+        // ✅ Changed: caseQty now Double (preserves decimals, no flooring)
         String caseQtyStr = getValue(inputMap, "AvailPhysical");
-        Integer caseQty = 0;
+        Double caseQty = 0.0;
         try {
-            caseQty = (int) Math.floor(Double.parseDouble(caseQtyStr));
+            caseQty = Double.parseDouble(caseQtyStr);
         } catch (Exception ignored) {}
-        responseMap.put("caseQty", caseQty); // ✅ Integer
+        responseMap.put("caseQty", caseQty); // ✅ Double
 
         // ✅ Determine supplierId from dataAreaId
         String supplierId = "";
