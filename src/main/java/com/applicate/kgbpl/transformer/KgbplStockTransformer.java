@@ -54,7 +54,7 @@ public class KgbplStockTransformer extends AbstractTransformer<Map<String, Objec
             caseQty = Double.parseDouble(caseQtyStr);
         } catch (Exception ignored) {}
         responseMap.put("caseQty", caseQty); // ✅ Double
-
+        log.info("KGBPL caseQty => {}",caseQty);
         // ✅ Determine supplierId from dataAreaId
         String supplierId = "";
         if ("kbpl".equalsIgnoreCase(dataAreaId)) {
