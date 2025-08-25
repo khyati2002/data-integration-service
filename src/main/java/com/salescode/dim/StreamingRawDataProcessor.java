@@ -199,6 +199,9 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
             } catch (Exception e) {
                 logger.error("Processing failed", e);
                 streamingRawData.setStatus("Failure");
+                if(insightsEnabled) {
+                    sendToKafkaConsumerUpdate(streamingRawData, 0, 1, 0);
+                }
                 resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap())));
             }
         });
