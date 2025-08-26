@@ -199,11 +199,8 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
             } catch (Exception e) {
                 logger.error("Processing failed", e);
                 streamingRawData.setStatus("Failure");
-                logger.error("Value of insights enabled is " + insightsEnabled);
                 if(insightsEnabled) {
-                    logger.error("Called publish insights " + insightsEnabled);
                     sendToKafkaConsumerUpdate(streamingRawData, 0, 1, 0);
-                    logger.error("Finished publish insights " + insightsEnabled);
                 }
                 resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap())));
             }
@@ -216,6 +213,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
             if(streamingRawData.getFileId()==null){
                 streamingRawData.setFileId(RedisIdleEvictionManager.getInstance().getOrCreateFileId(streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0).getEntityName(), "fileId", idleEvictionTTL, TimeUnit.MINUTES));
             }
+
             FileProgressEvent message = InsightsUtils.createRequest(streamingRawData,1,0,0,stage);
 
             ProducerRecord<String, FileProgressEvent> record = new ProducerRecord<>(topic, streamingRawData.getFileId(), message);
@@ -233,13 +231,11 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
     private void sendToKafkaConsumerUpdate(StreamingRawData streamingRawData,long successCount,long logicalFailureCount,long serverFailureCount) {
         try {
             String topic = topicName;
-            logger.error("Topic name is" + topicName);
             long idleEvictionTTL = Long.parseLong(properties.getProperty("INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES"));
             if(streamingRawData.getFileId()==null){
                 streamingRawData.setFileId(RedisIdleEvictionManager.getInstance().getOrCreateFileId(streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0)
                         .getEntityName(), "fileId", idleEvictionTTL, TimeUnit.MINUTES));
             }
-            logger.error("File id is", streamingRawData.getFileId());
             FileProgressEvent message= InsightsUtils.createRequest(streamingRawData,successCount,logicalFailureCount,serverFailureCount,ProgressStage.SAVE);
             ProducerRecord<String, FileProgressEvent> record = new ProducerRecord<>(topic, streamingRawData.getFileId(), message);
             producer.send(record, (metadata, exception) -> {
