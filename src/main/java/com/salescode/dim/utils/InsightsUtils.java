@@ -13,7 +13,9 @@ public class InsightsUtils {
       fileProgressEvent.setLob(streamingRawData.getLob());
       fileProgressEvent.setMasterName(streamingRawData.getTransformerInfo().get(0).getEntityName());
       fileProgressEvent.setProgress(FileProgressRequest.builder().stageType(stage).successCount(successCount).logicalFailureCount(logicalFailureCount).serverFailureCount(serverFailureCount).build());
-      fileProgressEvent.setErrorMessage(streamingRawData.getResponses().toString());
+      if(streamingRawData.getResponses() != null) {
+          fileProgressEvent.setErrorMessage(streamingRawData.getResponses().toString());
+      }
       return fileProgressEvent;
     }
 }
