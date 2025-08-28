@@ -182,7 +182,8 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
     metrics:
-      cache-expiry-seconds: 10
+      cache-expiry-seconds: 5
+      broadcast-interval: 6000
 
 ---
 
