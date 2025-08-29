@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class CleanupScheduler {
     private final FileStageMetricsRepository fileStageMetricsRepository;
     private final FileRepository fileRepository;
     private final JobRepository jobRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Scheduled(cron = "${file-cleanup.scheduler.cron:0 0 16 * * ?}", zone = "Asia/Kolkata")
     @Transactional
@@ -49,6 +51,17 @@ public class CleanupScheduler {
             log.info("Cleanup of old entities completed successfully.");
         } catch (Exception e) {
             log.error("Exception occurred during cleanupOldEntities execution: {}", e.getMessage(), e);
+        }
+    }
+
+    @Scheduled(cron = "0 */30 * * * *", zone = "Asia/Kolkata")  // every 60 min
+    public void cleanupExpiredPartitions() {
+        try {
+            String result = jdbcTemplate.queryForObject(
+                    "SELECT cleanup_expired_partitions()", String.class);
+            log.info("[Partition Cleanup] {}", result);
+        } catch (Exception e) {
+            log.error("Exception occurred during cleanupExpiredPartitions: {}", e.getMessage(), e);
         }
     }
 

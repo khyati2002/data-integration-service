@@ -25,6 +25,14 @@ public class PropertyService {
     private final Cache<String, String> lobToEnvCache;       // key = lob, value = env
 
     private String TOKEN ;
+
+    public List<String> getEnabledLobs() {
+        return  lobFeatureCache.asMap().entrySet().stream()
+                .filter(entry -> Boolean.TRUE.equals(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .toList();
+    }
+
     private String getToken() {
         if (TOKEN == null) {
             TOKEN = metadataRepository.findByKey("token")

@@ -51,6 +51,11 @@ file:
       failure:
         topic: file-progress-updates-failed
 
+insights:
+  order:
+    topic: order-progress-updates
+    group-id: order-progress-processor
+
 property-service:
   token: "your-token-here"
 ---
@@ -63,6 +68,8 @@ spring:
 
   kafka:
     bootstrap-servers: 164.52.202.184:9092
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 application:
   environment: uat
