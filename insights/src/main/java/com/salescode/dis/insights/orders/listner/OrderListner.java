@@ -9,9 +9,12 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.header.Header;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.annotation.EnableKafka;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -31,16 +34,28 @@ public class OrderListner {
 
     private final OrderService ordersService;
     private final ConsumerFactory<String, byte[]> consumerFactory;
-    private final PropertyService propertyService;
+    private final JdbcTemplate jdbcTemplate;
+
+    public List<String> fetchEnabledLobValues() {
+        String sql = "SELECT value FROM insights_metadata where key='orderLobs'";
+        String value= jdbcTemplate.queryForObject(sql, String.class);
+        if (value != null) {
+            return Arrays.stream(value.split(","))
+                    .map(String::trim)
+                    .toList();
+        }
+        return Collections.emptyList();
+    }
+
 
 
     @PostConstruct
     public void startListeners() {
-        List<String> enabledLobs=propertyService.getEnabledLobs();
+        List<String> enabledLobs=fetchEnabledLobValues();
         for (String lob : enabledLobs) {
         String topic = lob + "-event-streams";
         ContainerProperties containerProps = new ContainerProperties(topic);
-        containerProps.setGroupId("order-group-" + lob); // optional: per LOB group
+        containerProps.setGroupId("order-group-" + lob);
         containerProps.setMessageListener((MessageListener<String, byte[]>) this::handleMessage);
         KafkaMessageListenerContainer<String, byte[]> container =
                 new KafkaMessageListenerContainer<>(consumerFactory, containerProps);
