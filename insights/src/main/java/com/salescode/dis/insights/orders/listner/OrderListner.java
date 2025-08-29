@@ -2,7 +2,6 @@ package com.salescode.dis.insights.orders.listner;
 
 import com.salescode.dis.insights.orders.entity.OrderEntity;
 import com.salescode.dis.insights.orders.service.OrderService;
-import com.salescode.dis.insights.service.PropertyService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -37,17 +36,22 @@ public class OrderListner {
     private final JdbcTemplate jdbcTemplate;
 
     public List<String> fetchEnabledLobValues() {
-        String sql = "SELECT value FROM insights_metadata where key='orderLobs'";
-        String value= jdbcTemplate.queryForObject(sql, String.class);
-        if (value != null) {
-            return Arrays.stream(value.split(","))
-                    .map(String::trim)
-                    .toList();
+        String sql = "SELECT value FROM insights_metadata WHERE key = 'orderLobs' LIMIT 1";
+        List<String> rows = jdbcTemplate.queryForList(sql, String.class);
+        if (rows.isEmpty()) {
+            log.warn("No 'orderLobs' entry found in insights_metadata. No listeners will be started.");
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
+        String value = rows.get(0);
+        if (value == null || value.trim().isEmpty()) {
+            log.warn("'orderLobs' value is empty.");
+            return Collections.emptyList();
+        }
+        return Arrays.stream(value.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
     }
-
-
 
     @PostConstruct
     public void startListeners() {
