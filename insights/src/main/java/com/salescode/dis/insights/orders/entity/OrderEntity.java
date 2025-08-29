@@ -61,7 +61,7 @@ public class OrderEntity {
     private OffsetDateTime createdAt;
 
     public enum Operation {
-        INSERT, UPDATE
+        INSERT, UPDATE, UNKNOWN
     }
     public enum Status {
         PENDING, SUCCESS, FAILURE, NA

@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
     order_number VARCHAR(255) NOT NULL,
     lob TEXT NOT NULL,
     "user" TEXT NOT NULL,
-    operation TEXT NOT NULL CHECK (operation IN ('INSERT', 'UPDATE')),
+    operation TEXT NOT NULL CHECK (operation IN ('INSERT', 'UPDATE', 'UNKNOWN')),
     publish_status TEXT NOT NULL DEFAULT 'PENDING' CHECK (publish_status IN ('SUCCESS','NA', 'PENDING')),
     read_status    TEXT NOT NULL DEFAULT 'PENDING' CHECK (read_status IN ('PENDING','SUCCESS','FAILURE')),
     process_status TEXT NOT NULL DEFAULT 'PENDING' CHECK (process_status IN ('PENDING','SUCCESS','FAILURE')),

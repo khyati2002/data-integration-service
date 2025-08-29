@@ -50,6 +50,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create the trigger
+DROP TRIGGER IF EXISTS before_insert_orders ON public.orders;
 CREATE TRIGGER before_insert_orders
   BEFORE INSERT ON public.orders
   FOR EACH ROW
