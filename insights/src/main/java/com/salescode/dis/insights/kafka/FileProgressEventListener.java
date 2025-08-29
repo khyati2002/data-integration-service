@@ -36,12 +36,10 @@ public class FileProgressEventListener {
     private final ValidationService validationService;
     private final ObservabilityEventProducer eventProducer;
 
-    @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates-1}",
+    @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}",
             groupId = "file-progress-processor", batch = "true",
             containerFactory = "fileProgressContainerFactory",
-            properties = {
-            ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000"
-    })
+            properties = { ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000" })
     public void consumeProgressEvents(@Payload List<FileProgressEvent> events) throws InterruptedException {
         if (events == null || events.isEmpty()) {
             log.debug("Received empty or null event list. Skipping.");
