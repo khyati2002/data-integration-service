@@ -38,7 +38,7 @@ public class RestExceptionHandler {
         String path = request.getRequestURI();
         if (path.startsWith("/api/sse")) {
             log.warn("Ignoring exception on SSE endpoint {}: {}", path, ex.toString());
-            return null; // VERY IMPORTANT: do not let Spring render /error
+            return null;
         }
 
         log.error("STACKTRACE", ex);
