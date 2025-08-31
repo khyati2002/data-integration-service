@@ -11,6 +11,9 @@ import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.service.JobService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.concurrent.DelegatingSecurityContextScheduledExecutorService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -34,7 +37,7 @@ public class SSEService {
 
     private final Map<String, SseEmitter> fileEmitters = new ConcurrentHashMap<>();
     private final Map<String, SseEmitter> jobEmitters = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduler;
     private final JobEntityMapper jobEntityMapper;
     private final FileService fileService;
     private final FileEntityMapper fileEntityMapper;
@@ -45,22 +48,16 @@ public class SSEService {
         this.jobEntityMapper = jobEntityMapper;
         this.fileService = fileService;
         this.fileEntityMapper = fileEntityMapper;
+        this.scheduler = new DelegatingSecurityContextScheduledExecutorService(Executors.newScheduledThreadPool(1));
         startCleanupTask();
     }
 
     public void addJobEmitter(String clientId, String jobId, SseEmitter emitter) {
-        String key = "job:" + clientId + ":" + jobId;
-
-        SseEmitter existingEmitter = jobEmitters.get(key);
+        String key = "job:" + clientId ;
+        SseEmitter existingEmitter = jobEmitters.remove(key);
         if (existingEmitter != null) {
-            try {
-                log.info("Replacing existing Job SSE connection for client={}, jobId={}", clientId, jobId);
-                existingEmitter.complete();
-            } catch (Exception e) {
-                log.warn("Error closing existing job emitter", e);
-            }
+            log.info("Replacing existing Job SSE connection for client={}, jobId={}", clientId, jobId);
         }
-
         jobEmitters.put(key, emitter);
         jobSubscriptions.put(key, jobId);
         log.info("Added Job SSE emitter for client={}, jobId={}. Total job connections={}",
@@ -68,23 +65,17 @@ public class SSEService {
     }
 
     public void addFileEmitter(String clientId, String fileId, SseEmitter emitter) {
-        String key = "file:" + clientId + ":" + fileId;
+        String key = "file:" + clientId ;
 
-        SseEmitter existingEmitter = fileEmitters.get(key);
+        SseEmitter existingEmitter = fileEmitters.remove(key);
         if (existingEmitter != null) {
-            try {
-                log.info("Replacing existing File SSE connection for client={}, fileId={}", clientId, fileId);
-                existingEmitter.complete();
-            } catch (Exception e) {
-                log.warn("Error closing existing file emitter", e);
-            }
+            log.info("Replacing existing File SSE connection for client={}, fileId={}", clientId, fileId);
         }
         fileEmitters.put(key, emitter);
         fileSubscriptions.put(key, fileId);
         log.info("Added File SSE emitter for client={}, fileId={}. Total file connections={}",
                 clientId, fileId, fileEmitters.size());
     }
-
 
     public void removeEmitter(String clientId, String id, boolean isJob) {
         String key = (isJob ? "job:" : "file:") + clientId + ":" + id;
@@ -95,15 +86,9 @@ public class SSEService {
         targetSubscriptions.remove(key);
 
         if (existingEmitter != null) {
-            try {
-                existingEmitter.complete();
-                log.info("Removed {} SSE emitter for client={}, id={}. Remaining {} connections={}",
-                        isJob ? "Job" : "File", clientId, id,
-                        isJob ? "job" : "file", targetEmitters.size());
-            } catch (Exception e) {
-                log.warn("Error completing {} emitter for client={}, id={}",
-                        isJob ? "Job" : "File", clientId, id, e);
-            }
+            log.info("Removed {} SSE emitter for client={}, id={}. Remaining {} connections={}",
+                    isJob ? "Job" : "File", clientId, id,
+                    isJob ? "job" : "file", targetEmitters.size());
         } else {
             log.debug("No {} emitter found to remove for client={}, id={}",
                     isJob ? "Job" : "File", clientId, id);
@@ -206,12 +191,12 @@ public class SSEService {
     }
 
     private void startCleanupTask() {
-        scheduler.scheduleAtFixedRate(this::cleanupDeadConnections, 30, 30, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::cleanupDeadConnections, 1, 5, TimeUnit.MINUTES);
     }
 
     public int getActiveConnectionsCount() {
         cleanupDeadConnections();
-        return fileEmitters.size();
+        return fileEmitters.size()+ jobEmitters.size();
     }
 
     private void cleanupDeadConnections() {
@@ -222,40 +207,42 @@ public class SSEService {
     private void cleanupMap(Map<String, SseEmitter> emitters, Map<String, String> subscriptions, String type) {
         List<String> deadKeys = new ArrayList<>();
         emitters.forEach((key, emitter) -> {
-            try {
-                emitter.send(SseEmitter.event().comment("heartbeat"));
-            } catch (Exception e) {
+            if (emitter.getTimeout() != null && emitter.getTimeout() <= 0) {
                 deadKeys.add(key);
+            } else {
+                try {
+                    emitter.send(SseEmitter.event().comment(""));
+                } catch (IllegalStateException | IOException e) {
+                    deadKeys.add(key);
+                } catch (Exception e) {
+                    log.debug("Connection check failed for {}: {}", key, e.getMessage());
+                    deadKeys.add(key);
+                }
             }
         });
         deadKeys.forEach(key -> {
             SseEmitter e = emitters.remove(key);
             subscriptions.remove(key);
-            if (e != null) {
-                    try {
-                        e.complete();
-                    } catch (IllegalStateException  ex) {
-                        log.debug("Emitter already dead when completing {} connection: {}", type, key);
-                    } catch (Exception ex) {
-                        log.warn("Error completing dead {} emitter {}", type, key, ex);
-                    }
-                }
             log.info("Removed dead {} connection: {}", type, key);
         });
     }
 
+
     @PreDestroy
     public void cleanup() {
-        fileEmitters.forEach((k, e) -> safeComplete(e));
-        jobEmitters.forEach((k, e) -> safeComplete(e));
         fileEmitters.clear();
         jobEmitters.clear();
         scheduler.shutdownNow();
+        try {
+            scheduler.shutdownNow();
+            if (!scheduler.awaitTermination(5, TimeUnit.SECONDS)) {
+                log.warn("Scheduler did not terminate gracefully");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.warn("Interrupted while shutting down scheduler");
+        }
         log.info("SSE service shutdown complete");
     }
 
-    private void safeComplete(SseEmitter emitter) {
-        try { emitter.complete(); } catch (Exception ignored) {// ignored
-        }
-    }
 }

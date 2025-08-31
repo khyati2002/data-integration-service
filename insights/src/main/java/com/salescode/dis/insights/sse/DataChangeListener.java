@@ -36,7 +36,6 @@ public class DataChangeListener {
     @PostRemove
     public void handleDataChange(Object entity) {
         String entityKey = generateEntityKey(entity);
-        // Prevent recursive calls for the same entity
         if (PROCESSING_ENTITIES.get().contains(entityKey)) {
             log.debug("Skipping recursive data change event for: {}", entityKey);
             return;

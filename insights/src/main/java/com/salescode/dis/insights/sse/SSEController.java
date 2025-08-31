@@ -25,12 +25,8 @@ public class SSEController {
     public SseEmitter streamJob(@RequestParam String clientId, @RequestParam String jobId) {
         SseEmitter emitter = new SseEmitter(0L);
         emitter.onCompletion(() -> sseService.removeEmitter(clientId, jobId, true));
-        emitter.onTimeout(() -> {
-            sseService.removeEmitter(clientId, jobId, true);
-            emitter.complete();
-        });
+        emitter.onTimeout(() -> sseService.removeEmitter(clientId, jobId, true));
         emitter.onError(ex -> sseService.removeEmitter(clientId, jobId, true));
-
         sseService.addJobEmitter(clientId, jobId, emitter);
         try {
             sseService.sendConnectionEstablished(emitter);
@@ -44,12 +40,7 @@ public class SSEController {
     public SseEmitter streamFile(@RequestParam String clientId, @RequestParam String fileId) {
         SseEmitter emitter = new SseEmitter(0L);
         emitter.onCompletion(() -> sseService.removeEmitter(clientId,fileId, false));
-        emitter.onTimeout(() -> {
-            sseService.removeEmitter(clientId,fileId, false); emitter.complete();
-            try { emitter.complete(); } catch (Exception ignored) {
-                //ignored
-            }
-        });
+        emitter.onTimeout(() -> sseService.removeEmitter(clientId,fileId, false));
         emitter.onError(ex -> sseService.removeEmitter(clientId,fileId, false));
         sseService.addFileEmitter(clientId, fileId, emitter);
         try {
