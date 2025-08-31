@@ -9,8 +9,10 @@ import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
 import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.service.JobService;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.concurrent.DelegatingSecurityContextScheduledExecutorService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,6 +44,12 @@ public class SSEService {
     private final FileService fileService;
     private final FileEntityMapper fileEntityMapper;
 
+    @Value("${sse.cleanup.initial-delay:1}")
+    private long cleanupInitialDelayMinutes;
+
+    @Value("${sse.cleanup.interval:5}")
+    private long cleanupIntervalMinutes;
+
     public SSEService(JobService jobService, ObjectMapper objectMapper, JobEntityMapper jobEntityMapper, FileService fileService, FileEntityMapper fileEntityMapper) {
         this.jobService = jobService;
         this.objectMapper = objectMapper;
@@ -49,7 +57,6 @@ public class SSEService {
         this.fileService = fileService;
         this.fileEntityMapper = fileEntityMapper;
         this.scheduler = new DelegatingSecurityContextScheduledExecutorService(Executors.newScheduledThreadPool(1));
-        startCleanupTask();
     }
 
     public void addJobEmitter(String clientId, String jobId, SseEmitter emitter) {
@@ -190,8 +197,9 @@ public class SSEService {
         }
     }
 
+    @PostConstruct
     private void startCleanupTask() {
-        scheduler.scheduleAtFixedRate(this::cleanupDeadConnections, 1, 5, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(this::cleanupDeadConnections, cleanupInitialDelayMinutes, cleanupIntervalMinutes, TimeUnit.MINUTES);
     }
 
     public int getActiveConnectionsCount() {
