@@ -54,7 +54,7 @@ public class CleanupScheduler {
         }
     }
 
-    @Scheduled(cron = "0 */30 * * * *", zone = "Asia/Kolkata")  // every 60 min
+    @Scheduled(cron = "0 */30 * * * *", zone = "Asia/Kolkata") 
     public void cleanupExpiredPartitions() {
         try {
             String result = jdbcTemplate.queryForObject(
