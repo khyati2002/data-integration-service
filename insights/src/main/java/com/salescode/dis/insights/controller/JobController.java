@@ -5,6 +5,7 @@ import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDtoWithStages;
 import com.salescode.dis.insights.entity.JobEntity;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -241,6 +243,12 @@ public class JobController {
 
         AccumulatedJobsAndMasterDto result = jobService.getJobsWithAggregatedStagesAndMasters(lob, startDate, endDate, mode);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping(path= "/modes")
+    public ResponseEntity<Map<String,String>> getModes(@PathVariable String lob){
+        Map<String,String> modes = jobService.getModesPerLob(lob);
+        return ResponseEntity.ok(modes);
     }
     
 
