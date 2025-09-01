@@ -1,6 +1,7 @@
 package com.salescode.dis.insights.repository;
 
 import com.salescode.dis.insights.entity.FileEntity;
+import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,4 +36,7 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
     @Transactional
     @Query("DELETE FROM FileEntity f WHERE f.lastModifiedTime < :cutoffTime")
     int deleteByLastModifiedBefore(@Param("cutoffTime") Instant cutoffTime);
+
+    @Query("SELECT DISTINCT f.modeOfIntegration FROM FileEntity f WHERE f.lob = :lob")
+    List<ModeOfIntegration> findDistinctModesByLob(@Param("lob") String lob);
 }
