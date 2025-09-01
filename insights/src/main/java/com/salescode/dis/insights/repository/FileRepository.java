@@ -1,7 +1,6 @@
 package com.salescode.dis.insights.repository;
 
 import com.salescode.dis.insights.entity.FileEntity;
-import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

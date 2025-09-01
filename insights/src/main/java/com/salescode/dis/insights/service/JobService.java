@@ -140,6 +140,7 @@ public class JobService {
                             .collect(Collectors.toList());
 
 
+
                     return JobEntityResponseDtoWithStages.builder()
                             .id(firstResult.getJobId())
                             .masters(uniqueMastersForJob)
@@ -159,6 +160,7 @@ public class JobService {
                 .collect(Collectors.toList());
     }
 
+    
 
     public AccumulatedJobsAndMasterDto getJobsWithAggregatedStagesAndMasters(String lob, LocalDateTime startDate, LocalDateTime endDate, String mode) {
         Instant startInstant = startDate.atZone(ZoneId.systemDefault()).toInstant();
