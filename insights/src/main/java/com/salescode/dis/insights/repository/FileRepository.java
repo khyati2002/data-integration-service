@@ -37,6 +37,4 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
     @Query("DELETE FROM FileEntity f WHERE f.lastModifiedTime < :cutoffTime")
     int deleteByLastModifiedBefore(@Param("cutoffTime") Instant cutoffTime);
 
-    @Query("SELECT DISTINCT f.modeOfIntegration FROM FileEntity f WHERE f.lob = :lob")
-    List<ModeOfIntegration> findDistinctModesByLob(@Param("lob") String lob);
 }
