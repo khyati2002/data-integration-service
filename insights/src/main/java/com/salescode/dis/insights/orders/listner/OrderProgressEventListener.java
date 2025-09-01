@@ -27,8 +27,8 @@ public class OrderProgressEventListener {
     private final ObjectMapper mapper;
 
     @KafkaListener(
-            topics = "${insights.order.topic}",
-            groupId = "${insights.order.group-id}",
+            topics = "${insights.order.topic:order-progress-updates}",
+            groupId = "${insights.order.group-id:order-progress-processor}",
             containerFactory = "orderProgressContainerFactory"
     )
     public void consumeOrderProgressEvents(String message) {
