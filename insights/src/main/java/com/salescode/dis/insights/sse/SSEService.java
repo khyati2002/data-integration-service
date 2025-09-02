@@ -13,20 +13,15 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.http.MediaType;
 import org.springframework.security.concurrent.DelegatingSecurityContextScheduledExecutorService;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import jakarta.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import java.util.concurrent.*;
 
 @Slf4j
 @Service
@@ -36,9 +31,10 @@ public class SSEService {
     private final ObjectMapper objectMapper;
     private final Map<String, String> fileSubscriptions = new ConcurrentHashMap<>();
     private final Map<String, String> jobSubscriptions = new ConcurrentHashMap<>();
-
     private final Map<String, SseEmitter> fileEmitters = new ConcurrentHashMap<>();
     private final Map<String, SseEmitter> jobEmitters = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, CopyOnWriteArraySet<SseEmitter>> statsEmitters = new ConcurrentHashMap<>();
+    private final ExecutorService sendExecutor = Executors.newCachedThreadPool();
     private final ScheduledExecutorService scheduler;
     private final JobEntityMapper jobEntityMapper;
     private final FileService fileService;
@@ -84,6 +80,15 @@ public class SSEService {
                 clientId, fileId, fileEmitters.size());
     }
 
+    public SseEmitter addStatsEmitter(String key, long timeoutMillis) {
+        SseEmitter emitter = new SseEmitter(timeoutMillis);
+        statsEmitters.computeIfAbsent(key, k -> new CopyOnWriteArraySet<>()).add(emitter);
+        emitter.onCompletion(() -> removeStatsEmitter(key, emitter));
+        emitter.onTimeout(() -> removeStatsEmitter(key, emitter));
+        emitter.onError((ex) -> removeStatsEmitter(key, emitter));
+        return emitter;
+    }
+
     public void removeEmitter(String clientId, String id, boolean isJob) {
         String key = (isJob ? "job:" : "file:") + clientId + ":" + id;
         Map<String, SseEmitter> targetEmitters = isJob ? jobEmitters : fileEmitters;
@@ -99,6 +104,16 @@ public class SSEService {
         } else {
             log.debug("No {} emitter found to remove for client={}, id={}",
                     isJob ? "Job" : "File", clientId, id);
+        }
+    }
+
+    public void removeStatsEmitter(String key, SseEmitter emitter) {
+        Set<SseEmitter> set = statsEmitters.get(key);
+        if (set != null) {
+            set.remove(emitter);
+            if (set.isEmpty()) {
+                statsEmitters.remove(key);
+            }
         }
     }
 
@@ -146,6 +161,24 @@ public class SSEService {
                     fileSubscriptions.remove(key);
                 }
             }
+        }
+    }
+
+    public void broadcastStatsUpdate(String key, Object payload, String eventName) {
+        Set<SseEmitter> set = statsEmitters.get(key);
+        if (set == null || set.isEmpty()) return;
+
+        for (SseEmitter emitter : set) {
+            sendExecutor.submit(() -> {
+                try {
+                    SseEmitter.SseEventBuilder event = SseEmitter.event()
+                            .name(eventName)
+                            .data(payload, MediaType.APPLICATION_JSON);
+                    emitter.send(event);
+                } catch (IOException e) {
+                    removeStatsEmitter(key, emitter);
+                }
+            });
         }
     }
 
@@ -205,6 +238,9 @@ public class SSEService {
     public int getActiveConnectionsCount() {
         cleanupDeadConnections();
         return fileEmitters.size()+ jobEmitters.size();
+    }
+    public Set<String> getActiveStatsConnections() {
+        return statsEmitters.keySet();
     }
 
     private void cleanupDeadConnections() {
