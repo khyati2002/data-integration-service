@@ -2,6 +2,7 @@ package com.salescode.dis.insights.service;
 
 import com.salescode.dis.insights.dto.AccumulatedJobsAndMasterDto;
 import com.salescode.dis.insights.dto.MasterCard;
+import com.salescode.dis.insights.dto.MetadataEntry;
 import com.salescode.dis.insights.dto.job.JobStageAccumulatedData;
 import com.salescode.dis.insights.dto.file.stage.AccumulatedStageDataDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDtoWithStages;
@@ -13,6 +14,7 @@ import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.mapper.JobEntityMapper;
 import com.salescode.dis.insights.repository.FileStageMetricsRepository;
+import com.salescode.dis.insights.repository.InsightsMetadataRepository;
 import com.salescode.dis.insights.repository.JobRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
 public class JobService {
 
     private final JobRepository jobRepo;
+    private final InsightsMetadataRepository metadataRepository;
     private final JobEntityMapper jobEntityMapper;
     private final FileStageMetricsRepository fileStageMetricsRepository;
 
@@ -157,7 +160,7 @@ public class JobService {
                 .collect(Collectors.toList());
     }
 
-
+    
 
     public AccumulatedJobsAndMasterDto getJobsWithAggregatedStagesAndMasters(String lob, LocalDateTime startDate, LocalDateTime endDate, String mode) {
         Instant startInstant = startDate.atZone(ZoneId.systemDefault()).toInstant();
@@ -297,6 +300,9 @@ public class JobService {
         return dto;
     }
 
-
+    public Map<String, String> getModesPerLob(String lob) {
+        return metadataRepository.findKeyValueByLobPrefix(lob).stream()
+                .collect(Collectors.toMap(MetadataEntry::getKey, MetadataEntry::getValue));
+    }
 
 }
