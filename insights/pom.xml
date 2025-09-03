@@ -35,6 +35,7 @@
 		<insights-common.version>0.0.8-SNAPSHOT</insights-common.version>
         <salescode-auth-sdk.version>1.7.3-SNAPSHOT</salescode-auth-sdk.version>
 		<observability.version>1.0.76</observability.version>
+		<insights-common.version>0.0.11-SNAPSHOT</insights-common.version>
 	</properties>
 
 	<repositories>
