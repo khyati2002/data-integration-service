@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -34,6 +35,8 @@ public class OrderListner {
     private final OrderService ordersService;
     private final ConsumerFactory<String, byte[]> consumerFactory;
     private final JdbcTemplate jdbcTemplate;
+    private final Map<String, KafkaMessageListenerContainer<String, byte[]>> activeContainers = new ConcurrentHashMap<>();
+
 
     public List<String> fetchEnabledLobValues() {
         String sql = "SELECT value FROM insights_metadata WHERE key = 'orderLobs' LIMIT 1";
@@ -52,21 +55,38 @@ public class OrderListner {
                 .filter(s -> !s.isEmpty())
                 .toList();
     }
-
     @PostConstruct
-    public void startListeners() {
-        List<String> enabledLobs=fetchEnabledLobValues();
-        for (String lob : enabledLobs) {
-        String topic = lob + "-event-streams";
-        ContainerProperties containerProps = new ContainerProperties(topic);
-        containerProps.setGroupId("order-group-" + lob);
-        containerProps.setMessageListener((MessageListener<String, byte[]>) this::handleMessage);
-        KafkaMessageListenerContainer<String, byte[]> container =
-                new KafkaMessageListenerContainer<>(consumerFactory, containerProps);
-        container.setBeanName("OrderListener-" + lob);
-        container.start();
-        log.info("Started listener for topic: {}", topic);
+    public List<String> refreshListeners()
+    {
+       return  startListeners();
     }
+
+    private List<String> startListeners() {
+
+        activeContainers.values().forEach(container -> {
+            try {
+                container.stop();
+                log.info("Stopped listener: {}", container.getBeanName());
+            } catch (Exception e) {
+                log.warn("Error stopping container {}", container.getBeanName(), e);
+            }
+        });
+        activeContainers.clear();
+
+        List<String> enabledLobs = fetchEnabledLobValues();
+        for (String lob : enabledLobs) {
+            String topic = lob + "-event-streams";
+            ContainerProperties containerProps = new ContainerProperties(topic);
+            containerProps.setGroupId("order-group-" + lob);
+            containerProps.setMessageListener((MessageListener<String, byte[]>) this::handleMessage);
+            KafkaMessageListenerContainer<String, byte[]> container =
+                    new KafkaMessageListenerContainer<>(consumerFactory, containerProps);
+            container.setBeanName("OrderListener-" + lob);
+            container.start();
+            activeContainers.put(lob, container);
+            log.info("Started listener for topic: {}", topic);
+        }
+        return enabledLobs;
     }
     private void handleMessage(ConsumerRecord<String, byte[]> rec) {
         try {

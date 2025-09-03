@@ -4,7 +4,9 @@ import com.salescode.dis.insights.orders.entity.OrderEntity;
 import com.salescode.dis.insights.orders.dto.OrderResponse;
 import com.salescode.dis.insights.orders.dto.OrderSummaryResponse;
 import com.salescode.dis.insights.orders.dto.UpdateStageRequest;
+import com.salescode.dis.insights.orders.listner.OrderListner;
 import com.salescode.dis.insights.orders.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +23,16 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/orders")
 @Validated
 public class OrderController {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
-    @Autowired
-    private OrderService orderService;
+    private  final OrderService orderService;
+    private final OrderListner orderListner;
+
 
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderEntity entity) {
@@ -82,6 +86,18 @@ public class OrderController {
         } catch (Exception ex) {
             logger.error("Error during search", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<String> refreshListeners() {
+        try {
+             List<String> refreshedLobs=orderListner.refreshListeners();
+            logger.info("Order listeners refreshed ");
+            return ResponseEntity.ok("Order listeners refreshed successfully for "+refreshedLobs);
+        } catch (Exception e) {
+            logger.error("Error refreshing listeners via API", e);
+            return ResponseEntity.internalServerError().body("Failed to refresh order listeners");
         }
     }
 }
