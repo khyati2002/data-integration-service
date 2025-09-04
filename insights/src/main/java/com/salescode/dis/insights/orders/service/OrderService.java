@@ -88,7 +88,7 @@ public class OrderService {
         return new OrderResponse(updated);
     }
 
-    public List<OrderSummaryResponse> getOrdersSummary() {
+    public List<OrderSummaryResponse> getOrdersSummary(List<String> lobs) {
         logger.debug("Generating orders summary");
 
         // Get retention config for all lobs
@@ -100,7 +100,7 @@ public class OrderService {
                 ));
 
 
-        List<Object[]> summaryData = orderRepository.findOrderSummaryByLob();
+        List<Object[]> summaryData = orderRepository.findOrderSummaryByLob(lobs);
 
         return summaryData.stream().map(row -> {
             String lob = (String) row[0];
@@ -123,7 +123,7 @@ public class OrderService {
                     readSuccess, readFailure, readPending,
                     processSuccess, processFailure, processPending,
                     saveSuccess, saveFailure, savePending,publishSuccess,publishNA );
-        }).collect(Collectors.toList());
+        }).toList();
     }
     public Page<OrderResponse> searchOrdersByField(String lob, String field, String value, Pageable pageable) {
         logger.debug("Searching orders for lob: {}, field: {}, value: {}", lob, field, value);
