@@ -242,3 +242,7 @@ salescode:
     default-metrics-interval: 30
     http-metrics:
       enabled: true
+sse:
+  cleanup:
+    initial-delay: 1   # minutes
+    interval: 5        # minutes
