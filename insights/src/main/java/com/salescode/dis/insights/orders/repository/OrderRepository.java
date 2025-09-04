@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -42,6 +43,8 @@ public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
             "SUM(CASE WHEN o.saveStatus = 'PENDING' THEN 1 ELSE 0 END) as savePending, " +
             "SUM(CASE WHEN o.publishStatus = 'SUCCESS' THEN 1 ELSE 0 END) as publishSuccess, " +
             "SUM(CASE WHEN o.publishStatus = 'NA' THEN 1 ELSE 0 END) as publishNA " +
-            "FROM OrderEntity o GROUP BY o.lob")
-    List<Object[]> findOrderSummaryByLob();
+            "FROM OrderEntity o " +
+            "WHERE o.lob IN :lobs " +
+            "GROUP BY o.lob")
+    List<Object[]> findOrderSummaryByLob(@Param("lobs") List<String> lobs);
 }
