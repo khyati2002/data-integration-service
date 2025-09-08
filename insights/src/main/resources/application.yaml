@@ -88,6 +88,12 @@ spring:
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
+  aws:
+    region: ap-south-1
+    s3:
+      bucket-name: globalintegration
+
+
 application:
   environment: uat
 
