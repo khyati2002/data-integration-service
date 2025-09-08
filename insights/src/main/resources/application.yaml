@@ -23,7 +23,6 @@ spring:
 
   # Development-specific settings
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
 
@@ -34,9 +33,6 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   flyway:
-#    url: jdbc:postgresql://localhost:5432/dis_insights   # force Postgres
-#    user: postgres
-#    password: postgres
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
@@ -49,7 +45,7 @@ spring:
     driver-class-name: com.amazon.redshift.jdbc42.Driver
 
   kafka:
-    bootstrap-servers: 164.52.202.184:9092
+    bootstrap-servers: localhost:9092
 
   aws:
     region: ap-south-1
@@ -65,12 +61,11 @@ application:
 app:
   active-environments:
     - dev
-    - uat
 
 file:
   progress:
     update:
-      topic: file-progress-updates-1
+      topic: file-progress-updates
       failure:
         topic: file-progress-updates-failed
 
