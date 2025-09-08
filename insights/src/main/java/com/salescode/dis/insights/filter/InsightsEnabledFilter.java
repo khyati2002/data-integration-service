@@ -13,7 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@Profile("!test")
+@Profile("!test && !dev")
 public class InsightsEnabledFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -24,7 +24,7 @@ public class InsightsEnabledFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        if(request.getRequestURI().contains("hckeck") || request.getRequestURI().contains("summary") || request.getRequestURI().contains("unit") || request.getRequestURI().startsWith("/api/integration-stats") || request.getRequestURI().contains("modes") || (!request.getRequestURI().startsWith("/api/") && (!request.getRequestURI().contains("master") || !request.getRequestURI().contains("job") ||  request.getRequestURI().startsWith("/api/sse")))) {
+        if(request.getRequestURI().startsWith("/api/orders/refresh") || request.getRequestURI().contains("hckeck") || request.getRequestURI().contains("summary") || request.getRequestURI().contains("unit") || request.getRequestURI().startsWith("/api/integration-stats") || request.getRequestURI().contains("modes") || (!request.getRequestURI().startsWith("/api/") && (!request.getRequestURI().contains("master") || !request.getRequestURI().contains("job") ||  request.getRequestURI().startsWith("/api/sse")))) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -1,0 +1,392 @@
+package com.salescode.dis.insights.service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.salescode.dis.insights.entity.FileReportEntity;
+import com.salescode.dis.insights.repository.FileReportRepository;
+import com.salescode.dis.insights.sse.SSEService;
+import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
+import java.net.URL;
+import java.util.*;
+
+@Service
+public class S3ExportService {
+
+    private static final Logger logger = LoggerFactory.getLogger(S3ExportService.class);
+    private static final int CHUNK_SIZE = 1000;
+
+    private final S3Client s3Client;
+    private final String bucketName;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final JdbcTemplate jdbcTemplate;
+    private final FileReportRepository fileReportRepository;
+    private final SSEService sseService;
+    private final S3Presigner s3Presigner;
+
+    public S3ExportService(
+            S3Client s3Client,
+            @Value("${spring.aws.s3.bucket-name}") String bucketName,
+            @Value("${spring.redshift.jdbc-url}") String jdbcUrl,
+            @Value("${spring.redshift.username}") String username,
+            @Value("${spring.redshift.password}") String password,
+            @Value("${spring.redshift.driver-class-name}") String driverClassName,
+            FileReportRepository fileReportRepository,
+            SSEService sseService,
+            S3Presigner s3Presigner
+    ) {
+        this.s3Client = s3Client;
+        this.bucketName = bucketName;
+        this.fileReportRepository = fileReportRepository;
+        this.sseService = sseService;
+        this.s3Presigner = s3Presigner;
+
+        HikariDataSource ds = new HikariDataSource();
+        ds.setJdbcUrl(jdbcUrl);
+        ds.setUsername(username);
+        ds.setPassword(password);
+        ds.setDriverClassName(driverClassName);
+        ds.setMaximumPoolSize(5);
+        this.jdbcTemplate = new JdbcTemplate(ds);
+    }
+
+
+    @Async()
+    public void exportFailuresAsync(String fileId) {
+        try {
+            long timeoutMillis = 30 * 60 * 1000L;
+            String fileUrl = exportFailures(fileId);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
+                    .withZone(ZoneId.of("UTC"));
+            String formattedTime = formatter.format(Instant.now());
+            String name = String.format("file-%s-%s.csv",fileId,formattedTime);
+            fileReportRepository.findByFileId(fileId).ifPresentOrElse(r -> {
+                r.setUrl(fileUrl);
+                r.setName(name);
+                r.setStatus("COMPLETED");
+                r.setErrorMessage(null);
+                FileReportEntity saved = fileReportRepository.save(r);
+
+                Map<String, Object> payload = new LinkedHashMap<>();
+                payload.put("id", saved.getId() != null ? saved.getId().toString() : null);
+                payload.put("fileId", saved.getFileId());
+                payload.put("url", saved.getUrl());
+                payload.put("name", saved.getName());
+                payload.put("status", saved.getStatus());
+                sseService.broadcastReportEvent(fileId, "report-update", payload);
+
+            }, () -> {
+                // fallback if no entity exists
+                sseService.broadcastReportEvent(fileId, "report-update", Map.of(
+                        "fileId", fileId,
+                        "message", "Completed but fileReport entry not found"
+                ));
+            });
+
+        } catch (Exception ex) {
+            Optional<FileReportEntity> updatedReport = fileReportRepository.findByFileId(fileId).map(r -> {
+                r.setStatus("FAILED");
+                r.setName(null);
+                r.setErrorMessage(ex.getMessage());
+                return fileReportRepository.save(r);
+            });
+
+            if (updatedReport.isPresent()) {
+                // broadcast the updated report
+                sseService.broadcastReportEvent(fileId, "report-update", updatedReport.get());
+            } else {
+                // fallback if somehow the report row wasn't found
+                sseService.broadcastReportEvent(fileId, "report-update", Map.of(
+                        "fileId", fileId,
+                        "message", "Failed but fileReport entry not found"
+                ));
+            }
+            sseService.broadcastReportEvent(fileId, "error", Map.of("error", ex.getMessage()));
+            sseService.completeReportEmitters(fileId);
+        }
+    }
+
+    public String exportFailures(String fileId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
+                .withZone(ZoneId.of("UTC"));
+
+        String formattedTime = formatter.format(Instant.now());
+
+        String s3Key = String.format("dataintegration/insights_reports/file-%s-%s.csv",
+                fileId, formattedTime);
+        logger.info("Starting multipart upload for fileId '{}' to S3 key 's3://{}/{}'", fileId, bucketName, s3Key);
+
+        CreateMultipartUploadRequest createMultipartUploadRequest = CreateMultipartUploadRequest.builder()
+                .bucket(bucketName)
+                .key(s3Key)
+                .contentType("text/csv")
+                .build();
+        CreateMultipartUploadResponse initiatedUpload = s3Client.createMultipartUpload(createMultipartUploadRequest);
+        String uploadId = initiatedUpload.uploadId();
+        logger.info("Multipart upload initiated with uploadId: {}", uploadId);
+
+        List<CompletedPart> completedParts = new ArrayList<>();
+        int partNumber = 1;
+        int offset = 0;
+        boolean isFirstChunk = true;
+        List<String> csvHeaders = null;
+        ByteArrayOutputStream currentPartData = new ByteArrayOutputStream();
+
+        final long MIN_PART_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+
+        try {
+            while (true) {
+                String sql = """
+                        SELECT
+                            s.features,
+                            s.responses,
+                            s.recordstatus,
+                            s.fileid,
+                            s.lob,
+                            s.entity_name,
+                            CASE
+                                WHEN suc.fileid IS NOT NULL THEN 'SUCCESS'
+                                WHEN fail.fileid IS NOT NULL THEN 'FAILURE'
+                                ELSE 'FAILURE'
+                            END AS recordstatus
+                        FROM ex_schema_dataintegration.integration_streams s
+                        LEFT JOIN ex_schema_dataintegration.integration_success suc
+                            ON s.fileid = suc.fileid
+                        LEFT JOIN ex_schema_dataintegration.integration_failure fail
+                            ON s.fileid = fail.fileid
+                        WHERE s.fileid = ?
+                        ORDER BY s.timestamp
+                        LIMIT ? OFFSET ?;
+                   """;
+
+//                String sql = "SELECT * from ex_schema_dataintegration.integration_failure where fileId = ? limit ? offset ?";
+
+                List<Map<String, Object>> rawRecords = jdbcTemplate.query(
+                        sql,
+                        new Object[]{fileId,100, offset},
+                        new ColumnMapRowMapper()
+                );
+
+                if (rawRecords.isEmpty()) {
+                    logger.info("No more records found for fileId '{}' at offset {}. Exiting fetch loop.", fileId, offset);
+                    break;
+                }
+
+                List<Map<String, Object>> processedRecords = processAndFlattenRecords(rawRecords);
+
+
+                CsvMapper csvMapper = new CsvMapper();
+                byte[] csvBytes;
+
+                if (isFirstChunk) {
+                    csvHeaders = new ArrayList<>(processedRecords.get(0).keySet());
+                    CsvSchema schemaWithHeader = buildCsvSchema(csvHeaders, true);
+                    csvBytes = csvMapper.writer(schemaWithHeader).writeValueAsBytes(processedRecords);
+                    isFirstChunk = false;
+                } else {
+                    CsvSchema schemaWithoutHeader = buildCsvSchema(csvHeaders, false);
+                    csvBytes = csvMapper.writer(schemaWithoutHeader).writeValueAsBytes(processedRecords);
+                }
+
+                currentPartData.write(csvBytes);
+
+                if (currentPartData.size() >= MIN_PART_SIZE_BYTES) {
+                    byte[] partBytes = currentPartData.toByteArray();
+                    UploadPartRequest uploadPartRequest = UploadPartRequest.builder()
+                            .bucket(bucketName)
+                            .key(s3Key)
+                            .uploadId(uploadId)
+                            .partNumber(partNumber)
+                            .build();
+
+                    UploadPartResponse partResponse = s3Client.uploadPart(uploadPartRequest, RequestBody.fromBytes(partBytes));
+
+                    completedParts.add(CompletedPart.builder().partNumber(partNumber).eTag(partResponse.eTag()).build());
+                    logger.info("Successfully uploaded part #{} ({} bytes) for uploadId '{}'. ETag: {}", partNumber, partBytes.length, uploadId, partResponse.eTag());
+
+                    currentPartData.reset();
+                    partNumber++;
+                }
+
+                offset += CHUNK_SIZE;
+            }
+
+            if (currentPartData.size() > 0) {
+                byte[] finalPartBytes = currentPartData.toByteArray();
+                UploadPartRequest uploadPartRequest = UploadPartRequest.builder()
+                        .bucket(bucketName)
+                        .key(s3Key)
+                        .uploadId(uploadId)
+                        .partNumber(partNumber)
+                        .build();
+
+                UploadPartResponse partResponse = s3Client.uploadPart(uploadPartRequest, RequestBody.fromBytes(finalPartBytes));
+
+                completedParts.add(CompletedPart.builder().partNumber(partNumber).eTag(partResponse.eTag()).build());
+                logger.info("Successfully uploaded final part #{} ({} bytes) for uploadId '{}'. ETag: {}", partNumber, finalPartBytes.length, uploadId, partResponse.eTag());
+            }
+
+            if (completedParts.isEmpty()) {
+                abortMultipartUpload(s3Key, uploadId);
+                logger.warn("No records found for fileId '{}'. Aborted multipart upload.", fileId);
+
+                throw new RuntimeException("No records found for fileId. Aborted multipart upload."+ fileId);
+
+//                return "No records found to export for the given fileId.";
+            }
+
+            CompletedMultipartUpload completedMultipartUpload = CompletedMultipartUpload.builder()
+                    .parts(completedParts)
+                    .build();
+            CompleteMultipartUploadRequest completeMultipartUploadRequest = CompleteMultipartUploadRequest.builder()
+                    .bucket(bucketName)
+                    .key(s3Key)
+                    .uploadId(uploadId)
+                    .multipartUpload(completedMultipartUpload)
+                    .build();
+
+            s3Client.completeMultipartUpload(completeMultipartUploadRequest);
+            logger.info("Successfully completed multipart upload for file '{}'.", s3Key);
+
+            GetUrlRequest getUrlRequest = GetUrlRequest.builder().bucket(bucketName).key(s3Key).build();
+            URL fileUrl = s3Client.utilities().getUrl(getUrlRequest);
+            sseService.broadcastReportEvent(fileId, "report-update", Map.of(
+                    "fileUrl", fileUrl.toString(),
+                    "parts", completedParts.size(),
+                    "s3Key", s3Key
+            ));
+
+            return fileUrl.toString();
+
+        } catch (Exception e) {
+            logger.error("Error during multipart S3 upload for fileId '{}'. Aborting upload.", fileId, e);
+            if (uploadId != null) {
+                abortMultipartUpload(uploadId, s3Key);
+            }
+            throw new RuntimeException("Failed to export data to S3 due to an internal error.", e);
+
+        }
+    }
+
+
+    private void abortMultipartUpload(String s3Key, String uploadId) {
+        try {
+            logger.warn("Aborting multipart upload with ID: {}", uploadId);
+            s3Client.abortMultipartUpload(AbortMultipartUploadRequest.builder()
+                    .bucket(bucketName)
+                    .key(s3Key)
+                    .uploadId(uploadId)
+                    .build());
+        } catch (Exception e) {
+            logger.error("Failed to abort multipart upload. Orphaned parts may exist.", e);
+        }
+    }
+
+    private List<Map<String, Object>> processAndFlattenRecords(List<Map<String, Object>> rawRecords) {
+        List<Map<String, Object>> processedList = new ArrayList<>();
+        TypeReference<List<Map<String, Object>>> typeRef = new TypeReference<>() {};
+
+        for (Map<String, Object> rawRecord : rawRecords) {
+            Map<String, Object> newRecord = new LinkedHashMap<>();
+
+            Object featuresObj = rawRecord.get("features");
+            if (featuresObj instanceof String) {
+                try {
+                    List<Map<String, Object>> featuresList = objectMapper.readValue((String) featuresObj, typeRef);
+                    if (!featuresList.isEmpty()) featuresList.get(0).forEach(newRecord::put);
+                } catch (JsonProcessingException e) {
+                    logger.error("Error parsing 'features'. Skipping.", e);
+                }
+            }
+
+            String errorMessage = "";
+            String recordStatus = rawRecord.get("recordstatus") != null ? rawRecord.get("recordstatus").toString() : "unknown";
+
+            Object responsesObj = rawRecord.get("responses");
+            if (responsesObj instanceof String) {
+                try {
+                    List<Map<String, Object>> responsesList = objectMapper.readValue((String) responsesObj, typeRef);
+                    if (!responsesList.isEmpty() && responsesList.get(0).get("message") != null) {
+                        errorMessage = responsesList.get(0).get("message").toString();
+                    }
+                } catch (JsonProcessingException e) {
+                    logger.error("Error parsing 'responses'.", e);
+                    errorMessage = "Error parsing response data";
+                }
+            }
+
+            newRecord.put("status", recordStatus);
+            newRecord.put("errorMessage", errorMessage);
+            processedList.add(newRecord);
+        }
+        return processedList;
+    }
+
+    private CsvSchema buildCsvSchema(List<String> headers, boolean withHeader) {
+        CsvSchema.Builder schemaBuilder = CsvSchema.builder();
+        for (String header : headers) schemaBuilder.addColumn(header);
+        return withHeader ? schemaBuilder.build().withHeader() : schemaBuilder.build().withoutHeader();
+    }
+
+    public URL generatePresignedUrl(String s3Path, long expirationMillis) {
+        try {
+            logger.info("Generating presigned URL for path: {} using AWS SDK v2", s3Path);
+
+            URI uri = new URI(s3Path);
+            String host = uri.getHost();
+
+            int firstDotIndex = host.indexOf('.');
+            if (firstDotIndex == -1) {
+                throw new IllegalArgumentException("Invalid S3 URL: Cannot determine bucket name from host: " + host);
+            }
+            String bucketName = host.substring(0, firstDotIndex);
+            String objectKey = uri.getPath().startsWith("/") ? uri.getPath().substring(1) : uri.getPath();
+
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(objectKey)
+                    .build();
+
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMillis(expirationMillis))
+                    .getObjectRequest(getObjectRequest)
+                    .build();
+
+            PresignedGetObjectRequest presignedGetObjectRequest = s3Presigner.presignGetObject(presignRequest);
+            URL url = presignedGetObjectRequest.url();
+
+            logger.info("Successfully generated v2 presigned URL for key: {}", objectKey);
+            return url;
+
+        } catch (Exception e) {
+            logger.error("Failed to generate v2 presigned URL for path: {}", s3Path, e);
+            throw new RuntimeException("Error generating presigned URL. See server logs for details.", e);
+        }
+    }
+
+}
+
+

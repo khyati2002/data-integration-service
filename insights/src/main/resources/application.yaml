@@ -23,6 +23,7 @@ spring:
 
   # Development-specific settings
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
 
@@ -30,14 +31,30 @@ spring:
     url: jdbc:postgresql://localhost:5432/dis_insights
     username: postgres
     password: postgres
-    flyway:
-      enabled: true
-      locations: classpath:db/migration
-      baseline-on-migrate: true
-      baseline-version: 0
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+#    url: jdbc:postgresql://localhost:5432/dis_insights   # force Postgres
+#    user: postgres
+#    password: postgres
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+
+  redshift:
+    jdbc-url: jdbc:redshift://redshift-channelkart-demo.c4ncoki1rp70.ap-south-1.redshift.amazonaws.com:5439/channelkartdemo?currentSchema=ex_schema_dataintegration
+    username: dataintegrationuser
+    password: htZFTaQH;3lK]_
+    driver-class-name: com.amazon.redshift.jdbc42.Driver
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: 164.52.202.184:9092
+
+  aws:
+    region: ap-south-1
+    s3:
+      bucket-name: globalintegration
 
 cache:
   redisUrl: redis://localhost:6379
@@ -48,11 +65,12 @@ application:
 app:
   active-environments:
     - dev
+    - uat
 
 file:
   progress:
     update:
-      topic: file-progress-updates
+      topic: file-progress-updates-1
       failure:
         topic: file-progress-updates-failed
 
@@ -200,8 +218,8 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
     metrics:
-      cache-expiry-seconds: 5
-      broadcast-interval: 6000
+      cache-expiry-seconds: 2
+      broadcast-interval: 3000
 
 ---
 
