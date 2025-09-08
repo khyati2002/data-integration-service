@@ -30,7 +30,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/dis_insights
     username: postgres
     password: postgres
-    driver-class-name: org.postgresql.Driver
 
   flyway:
     enabled: true
