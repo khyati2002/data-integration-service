@@ -93,6 +93,11 @@ spring:
     s3:
       bucket-name: globalintegration
 
+  redshift:
+    jdbc-url: jdbc:redshift://redshift-channelkart-demo.c4ncoki1rp70.ap-south-1.redshift.amazonaws.com:5439/channelkartdemo?currentSchema=ex_schema_dataintegration
+    username: dataintegrationuser
+    password: htZFTaQH;3lK]_
+    driver-class-name: com.amazon.redshift.jdbc42.Driver
 
 application:
   environment: uat
@@ -101,15 +106,6 @@ app:
   active-environments:
     - dev
     - uat
-
-aws:
-  region: ap-south-1
-  s3:
-    bucket-name: globalintegration
-  aws:
-    region: ap-south-1
-    s3:
-      bucket-name: globalintegration
 
 file:
   progress:
@@ -129,6 +125,17 @@ spring:
   config:
     activate:
       on-profile: demo
+
+  aws:
+    region: ap-south-1
+    s3:
+      bucket-name: globalintegration
+
+  redshift:
+    jdbc-url: jdbc:redshift://redshift-channelkart-demo.c4ncoki1rp70.ap-south-1.redshift.amazonaws.com:5439/channelkartdemo?currentSchema=ex_schema_dataintegration
+    username: dataintegrationuser
+    password: htZFTaQH;3lK]_
+    driver-class-name: com.amazon.redshift.jdbc42.Driver
 
 
 application:
