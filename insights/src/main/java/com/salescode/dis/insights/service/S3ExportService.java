@@ -160,33 +160,29 @@ public class S3ExportService {
         try {
             while (true) {
                 String sql = """
-                        SELECT
-                            s.features,
-                            s.responses,
-                            s.recordstatus,
-                            s.fileid,
-                            s.lob,
-                            s.entity_name,
-                            CASE
-                                WHEN suc.fileid IS NOT NULL THEN 'SUCCESS'
-                                WHEN fail.fileid IS NOT NULL THEN 'FAILURE'
-                                ELSE 'FAILURE'
-                            END AS recordstatus
-                        FROM ex_schema_dataintegration.integration_streams s
-                        LEFT JOIN ex_schema_dataintegration.integration_success suc
-                            ON s.fileid = suc.fileid
-                        LEFT JOIN ex_schema_dataintegration.integration_failure fail
-                            ON s.fileid = fail.fileid
-                        WHERE s.fileid = ?
+                SELECT
+                s.features,
+                        s.responses,
+                        s.fileid,
+                        s.lob,
+                        s.entity_name,
+                        COALESCE(suc.recordstatus, fail.recordstatus, 'FAILURE') AS recordstatus
+                FROM ex_schema_dataintegration.integration_streams s
+                LEFT JOIN ex_schema_dataintegration.integration_success suc
+                ON s.fileid = suc.fileid
+                LEFT JOIN ex_schema_dataintegration.integration_failure fail
+                ON s.fileid = fail.fileid
+                WHERE s.fileid = ?
                         ORDER BY s.timestamp
-                        LIMIT ? OFFSET ?;
+                LIMIT ? OFFSET ?;
+
                    """;
 
-//                String sql = "SELECT * from ex_schema_dataintegration.integration_failure where fileId = ? limit ? offset ?";
+//                String sql = "SELECT * from ex_schema_dataintegration.integration_streams limit ? offset ?";
 
                 List<Map<String, Object>> rawRecords = jdbcTemplate.query(
                         sql,
-                        new Object[]{fileId,100, offset},
+                        new Object[]{fileId,CHUNK_SIZE, offset},
                         new ColumnMapRowMapper()
                 );
 
