@@ -226,8 +226,8 @@
         <dependency>
             <groupId>com.salescode.dis</groupId>
             <artifactId>insights-common</artifactId>
-            <version>0.0.9-SNAPSHOT</version>
-            <scope>compile</scope>
+			<version>${insights-common.version}</version>
+			<scope>compile</scope>
         </dependency>
 		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
