@@ -223,7 +223,27 @@
 			<artifactId>observability-spring-boot-starter</artifactId>
 			<version>${observability.version}</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.salescode.dis</groupId>
+            <artifactId>insights-common</artifactId>
+			<version>${insights-common.version}</version>
+			<scope>compile</scope>
+        </dependency>
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.25.46</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-csv</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.amazon.redshift</groupId>
+			<artifactId>redshift-jdbc42</artifactId>
+			<version>2.1.0.12</version>
+		</dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

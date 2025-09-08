@@ -3,9 +3,11 @@ package com.salescode.dis.insights.service;
 
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.entity.FileEntity;
+import com.salescode.dis.insights.entity.FileReportEntity;
 import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.exception.ResourceNotFoundException;
+import com.salescode.dis.insights.repository.FileReportRepository;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.service.strategy.IFileOperationStrategy;
 import jakarta.annotation.PostConstruct;
@@ -17,6 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -29,6 +34,7 @@ public class FileService {
 
     private final FileRepository fileRepo;
     private final List<IFileOperationStrategy> fileOperationStrategies;
+    private final FileReportRepository fileReportRepository;
 
     private Map<ModeOfIntegration, IFileOperationStrategy> operationStrategyMap;
 
@@ -95,4 +101,13 @@ public class FileService {
                 .map(IFileOperationStrategy::getModeOfIntegration)
                 .collect(Collectors.toList());
     }
+
+    public FileReportEntity createReportEntry(String fileId) {
+        FileReportEntity report = new FileReportEntity();
+        report.setFileId(fileId);
+        report.setName(null);
+        report.setStatus("IN_PROGRESS");
+        return fileReportRepository.save(report);
+    }
+
 }
