@@ -115,7 +115,7 @@ public class FileManager {
             log.debug("Attempting to update progress for file ID: {} for LOB: {}, Master: {}", fileId, lob, masterName);
             ResponseEntity<FileProgressResponse> response = restTemplate.exchange(FILE_PROGRESS_UPDATE_URL, HttpMethod.PUT, entity, FileProgressResponse.class, lob, masterName, fileId);
             if (response.getStatusCode().is2xxSuccessful()) {
-                log.info("File progress updated successfully for ID: {}", fileId);
+                log.debug("File progress updated successfully for ID: {}", fileId);
                 return response.getBody();
             } else {
                 String errorMessage = String.format("File progress update for LOB '%s', Master '%s', File ID '%s' returned non-2xx status: %s. URL: %s. Response: %s", lob, masterName, fileId, response.getStatusCode(), FILE_PROGRESS_UPDATE_URL, response.getBody());
