@@ -96,6 +96,15 @@ app:
     - dev
     - uat
 
+aws:
+  region: ap-south-1
+  s3:
+    bucket-name: globalintegration
+  aws:
+    region: ap-south-1
+    s3:
+      bucket-name: globalintegration
+
 file:
   progress:
     update:
