@@ -17,7 +17,7 @@ public class FileReportEntity {
     @Column(nullable = false, unique = true)
     private String fileId;
 
-    @Column(length = 1024)
+    @Column(columnDefinition = "TEXT")
     private String url;
 
     @Column
@@ -26,6 +26,6 @@ public class FileReportEntity {
     @Column()
     private String status;
 
-    @Column(length = 1024)
+    @Column(columnDefinition = "TEXT")
     private String errorMessage;
 }
