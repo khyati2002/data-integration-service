@@ -130,24 +130,28 @@ public class S3ExportService {
             });
 
         } catch (Exception ex) {
+            Throwable rootCause = ex;
+            while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+                rootCause = rootCause.getCause();
+            }
+            String detailedErrorMessage = rootCause.getClass().getSimpleName() + ": " + rootCause.getMessage();
+
             Optional<FileReportEntity> updatedReport = fileReportRepository.findByFileId(fileId).map(r -> {
                 r.setStatus("FAILED");
                 r.setName(null);
-                r.setErrorMessage(ex.getMessage());
+                r.setErrorMessage(detailedErrorMessage);
                 return fileReportRepository.save(r);
             });
 
             if (updatedReport.isPresent()) {
-                // broadcast the updated report
                 sseService.broadcastReportEvent(fileId, "report-update", updatedReport.get());
             } else {
-                // fallback if somehow the report row wasn't found
                 sseService.broadcastReportEvent(fileId, "report-update", Map.of(
                         "fileId", fileId,
                         "message", "Failed but fileReport entry not found"
                 ));
             }
-            sseService.broadcastReportEvent(fileId, "error", Map.of("error", ex.getMessage()));
+            sseService.broadcastReportEvent(fileId, "error", Map.of("error", detailedErrorMessage));
             sseService.completeReportEmitters(fileId);
         }
     }
