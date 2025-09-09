@@ -159,6 +159,9 @@ public class FileController {
     @PostMapping("/failures")
     public ResponseEntity<Object> startFailureExport(@RequestBody Map<String, String> payload) {
         String fileId = payload.get("fileId");
+        String lob = payload.get("lob");
+        String entity = payload.get("entity");
+
 
         if (fileId == null || fileId.trim().isEmpty()) {
             return ResponseEntity
@@ -183,7 +186,7 @@ public class FileController {
                     report.setErrorMessage(null);
                     report.setUrl(null);
                     fileReportRepository.save(report);
-                    s3ExportService.exportFailuresAsync(fileId);
+                    s3ExportService.exportFailuresAsync(fileId,lob,entity);
                     return ResponseEntity.ok(Collections.singletonMap("fileReport", report));
                 }
 
@@ -193,7 +196,7 @@ public class FileController {
 
             logger.info("No existing report found for fileId '{}'. Creating new export entry.", fileId);
             FileReportEntity newReport = fileService.createReportEntry(fileId);
-            s3ExportService.exportFailuresAsync(fileId);
+            s3ExportService.exportFailuresAsync(fileId,lob,entity);
 
             return ResponseEntity.ok(Collections.singletonMap("fileReport", newReport));
 

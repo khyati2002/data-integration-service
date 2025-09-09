@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.salescode.dis.insights.entity.FileReportEntity;
+import com.salescode.dis.insights.entity.InsightsMetadata;
 import com.salescode.dis.insights.repository.FileReportRepository;
+import com.salescode.dis.insights.repository.InsightsMetadataRepository;
 import com.salescode.dis.insights.sse.SSEService;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -46,6 +48,24 @@ public class S3ExportService {
     private final FileReportRepository fileReportRepository;
     private final SSEService sseService;
     private final S3Presigner s3Presigner;
+    private final InsightsMetadataRepository metadataRepository;
+    private static final String default_sql = """
+                SELECT
+                        s.features,
+                        s.responses,
+                        s.fileid,
+                        s.lob,
+                        s.entity_name,
+                        COALESCE(suc.recordstatus, fail.recordstatus, 'FAILURE') AS recordstatus
+                FROM ex_schema_dataintegration.integration_streams s
+                LEFT JOIN ex_schema_dataintegration.integration_success suc
+                ON s.fileid = suc.fileid
+                LEFT JOIN ex_schema_dataintegration.integration_failure fail
+                ON s.fileid = fail.fileid
+                WHERE s.fileid = ? and s.lob = ? and s.entity_name = ?
+                        ORDER BY s.timestamp
+                LIMIT ? OFFSET ?;
+                """;
 
     public S3ExportService(
             S3Client s3Client,
@@ -56,13 +76,16 @@ public class S3ExportService {
             @Value("${spring.redshift.driver-class-name}") String driverClassName,
             FileReportRepository fileReportRepository,
             SSEService sseService,
-            S3Presigner s3Presigner
+            S3Presigner s3Presigner,
+            InsightsMetadataRepository metadataRepository
+
     ) {
         this.s3Client = s3Client;
         this.bucketName = bucketName;
         this.fileReportRepository = fileReportRepository;
         this.sseService = sseService;
         this.s3Presigner = s3Presigner;
+        this.metadataRepository = metadataRepository;
 
         HikariDataSource ds = new HikariDataSource();
         ds.setJdbcUrl(jdbcUrl);
@@ -75,10 +98,10 @@ public class S3ExportService {
 
 
     @Async()
-    public void exportFailuresAsync(String fileId) {
+    public void exportFailuresAsync(String fileId,String lob,String entity) {
         try {
             long timeoutMillis = 30 * 60 * 1000L;
-            String fileUrl = exportFailures(fileId);
+            String fileUrl = exportFailures(fileId,lob,entity);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
                     .withZone(ZoneId.of("UTC"));
             String formattedTime = formatter.format(Instant.now());
@@ -107,29 +130,33 @@ public class S3ExportService {
             });
 
         } catch (Exception ex) {
+            Throwable rootCause = ex;
+            while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+                rootCause = rootCause.getCause();
+            }
+            String detailedErrorMessage = rootCause.getClass().getSimpleName() + ": " + rootCause.getMessage();
+
             Optional<FileReportEntity> updatedReport = fileReportRepository.findByFileId(fileId).map(r -> {
                 r.setStatus("FAILED");
                 r.setName(null);
-                r.setErrorMessage(ex.getMessage());
+                r.setErrorMessage(detailedErrorMessage);
                 return fileReportRepository.save(r);
             });
 
             if (updatedReport.isPresent()) {
-                // broadcast the updated report
                 sseService.broadcastReportEvent(fileId, "report-update", updatedReport.get());
             } else {
-                // fallback if somehow the report row wasn't found
                 sseService.broadcastReportEvent(fileId, "report-update", Map.of(
                         "fileId", fileId,
                         "message", "Failed but fileReport entry not found"
                 ));
             }
-            sseService.broadcastReportEvent(fileId, "error", Map.of("error", ex.getMessage()));
+            sseService.broadcastReportEvent(fileId, "error", Map.of("error", detailedErrorMessage));
             sseService.completeReportEmitters(fileId);
         }
     }
 
-    public String exportFailures(String fileId) {
+    public String exportFailures(String fileId,String lob,String entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
                 .withZone(ZoneId.of("UTC"));
 
@@ -159,29 +186,16 @@ public class S3ExportService {
 
         try {
             while (true) {
-                String sql = """
-                SELECT
-                        s.features,
-                        s.responses,
-                        s.fileid,
-                        s.lob,
-                        s.entity_name,
-                        COALESCE(suc.recordstatus, fail.recordstatus, 'FAILURE') AS recordstatus
-                FROM ex_schema_dataintegration.integration_streams s
-                LEFT JOIN ex_schema_dataintegration.integration_success suc
-                ON s.fileid = suc.fileid
-                LEFT JOIN ex_schema_dataintegration.integration_failure fail
-                ON s.fileid = fail.fileid
-                WHERE s.fileid = ?
-                        ORDER BY s.timestamp
-                LIMIT ? OFFSET ?;
-                """;
+
+                String sql = metadataRepository.findByKey("redshift_query")
+                        .map(InsightsMetadata::getValue)
+                        .orElse(default_sql);
 
 //                String sql = "SELECT * from ex_schema_dataintegration.integration_streams limit ? offset ?";
 
                 List<Map<String, Object>> rawRecords = jdbcTemplate.query(
                         sql,
-                        new Object[]{fileId,CHUNK_SIZE, offset},
+                        new Object[]{fileId,lob,entity,CHUNK_SIZE, offset},
                         new ColumnMapRowMapper()
                 );
 
@@ -195,7 +209,7 @@ public class S3ExportService {
 
                 CsvMapper csvMapper = new CsvMapper();
                 byte[] csvBytes;
-
+                
                 if (isFirstChunk) {
                     csvHeaders = new ArrayList<>(processedRecords.get(0).keySet());
                     CsvSchema schemaWithHeader = buildCsvSchema(csvHeaders, true);
