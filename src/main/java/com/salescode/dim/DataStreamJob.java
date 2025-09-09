@@ -108,11 +108,16 @@ public class DataStreamJob {
         String lobFailureTopic = getLobFailureTopic(inout0Properties);
         String lobEventTopic = getLobEventTopic(inout0Properties);
         String lobOutTopic = String.join("-", lobTopic, "out");     // cktestitcloyalty-dataintegration-out (for testing only)
+        String lobSuccessTopic = getLobSuccessTopic(inout0Properties);
+        String insightsTopic = getInsightsTopic(inout0Properties);
 
         // Create lob topics if not exists
         KafkaTopicCreator.createTopicIfNotExists(lobTopic, bootstrapServers);
         KafkaTopicCreator.createTopicIfNotExists(lobFailureTopic, bootstrapServers);
         KafkaTopicCreator.createTopicIfNotExists(lobEventTopic, bootstrapServers);
+        KafkaTopicCreator.createTopicIfNotExists(lobSuccessTopic, bootstrapServers);
+        KafkaTopicCreator.createTopicIfNotExists(insightsTopic, bootstrapServers);
+
         if(isLocal(env)) {
             KafkaTopicCreator.clearAndRecreateTopic(lobOutTopic, bootstrapServers);
             env.setParallelism(1);
@@ -191,6 +196,15 @@ public class DataStreamJob {
         } else {
             KafkaTopicCreator.createTopicIfNotExists(lobEntityTopic.getValue(), bootstrapServers);
         }
+    }
+
+    public static String getLobSuccessTopic(Properties inout0Properties){
+        return String.join("-", inout0Properties.getProperty("lob")
+                .trim(), inout0Properties.getProperty("success.topic").trim());
+    }
+
+    public static String getInsightsTopic(Properties inout0Properties){
+        return inout0Properties.getProperty("insights.topic");
     }
 
 }

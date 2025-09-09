@@ -17,6 +17,8 @@
       "INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES": "${INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES}",
       "insights.enabled": "${insights.enabled}",
       "insights.topic": "${insights.topic}"
+      "publish.success.enabled": "${publish.success.enabled}",
+      "insights.topic": "${insights.topic}",
     }
   },
   {
@@ -24,6 +26,7 @@
     "PropertyMap": {
       "input.topic": "${input.topic}",
       "failure.topic": "${failure.topic}",
+      "success.topic": "${success.topic}",
       "output.topic" : "${output.topic}",
       "event.topic" : "${event.topic}"
     }
