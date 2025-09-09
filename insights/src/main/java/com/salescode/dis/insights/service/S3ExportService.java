@@ -210,11 +210,7 @@ public class S3ExportService {
                 CsvMapper csvMapper = new CsvMapper();
                 byte[] csvBytes;
 
-                if (processedRecords.isEmpty()) {
-                    logger.warn("A chunk of raw records was processed, but resulted in zero valid records. Skipping this chunk.");
-                    offset += CHUNK_SIZE;
-                    continue;
-                }
+
 
                 if (isFirstChunk) {
                     csvHeaders = new ArrayList<>(processedRecords.get(0).keySet());
