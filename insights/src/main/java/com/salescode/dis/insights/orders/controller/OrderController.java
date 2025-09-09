@@ -9,7 +9,6 @@ import com.salescode.dis.insights.orders.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -64,8 +63,8 @@ public class OrderController {
 
     //for  lob wise getting order summary
     @GetMapping("/summary")
-    public ResponseEntity<List<OrderSummaryResponse>> getOrdersSummary() {
-        List<OrderSummaryResponse> summary = orderService.getOrdersSummary();
+    public ResponseEntity<List<OrderSummaryResponse>> getOrdersSummary( @RequestParam(required = false) List<String> lobs) {
+        List<OrderSummaryResponse> summary = orderService.getOrdersSummary(lobs);
         return ResponseEntity.ok(summary);
     }
 

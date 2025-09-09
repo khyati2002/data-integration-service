@@ -3,10 +3,14 @@ package com.salescode.dis.insights.controller;
 import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
 import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.entity.FileEntity;
+import com.salescode.dis.insights.entity.FileReportEntity;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
+import com.salescode.dis.insights.repository.FileReportRepository;
 import com.salescode.dis.insights.service.FileService;
+import com.salescode.dis.insights.service.S3ExportService;
+import com.salescode.dis.insights.sse.SSEService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,12 +22,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -32,6 +45,10 @@ import java.util.Base64;
 public class FileController {
     private final FileService fileService;
     private final FileEntityMapper fileEntityMapper;
+    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
+    private final S3ExportService s3ExportService;
+    private final FileReportRepository fileReportRepository;
+    private final SSEService sseService;
 
     @Operation(summary = "Register a new file", description = "Registers a new file entity for the job.")
     @ApiResponse(responseCode = "201", description = "File created successfully", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
@@ -116,6 +133,115 @@ public class FileController {
         return fileId;
     }
 
+    @GetMapping("/failures/{fileId}")
+    public ResponseEntity<FileReportEntity> checkFileExists(@PathVariable String fileId) {
+        if (fileId == null || fileId.trim().isEmpty()) {
+            logger.warn("Received a request with a blank or null fileId.");
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            Optional<FileReportEntity> fileReportOptional = fileReportRepository.findByFileId(fileId);
+            if (fileReportOptional.isPresent() && "COMPLETED".equals(fileReportOptional.get().getStatus()) ) {
+                logger.info("File with fileId '{}' found. Returning OK.", fileId);
+                return ResponseEntity.ok(fileReportOptional.get());
+            } else {
+                logger.info("File with fileId '{}' not found. Returning NOT_FOUND.", fileId);
+                return ResponseEntity.notFound().build();
+            }
+
+        } catch (Exception e) {
+            logger.error("Error checking existence for fileId: {}", fileId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/failures")
+    public ResponseEntity<Object> startFailureExport(@RequestBody Map<String, String> payload) {
+        String fileId = payload.get("fileId");
+
+        if (fileId == null || fileId.trim().isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Collections.singletonMap("error", "The 'fileId' field must be provided."));
+        }
+
+        try {
+            Optional<FileReportEntity> existingReport = fileReportRepository.findByFileId(fileId);
+
+            if (existingReport.isPresent()) {
+                FileReportEntity report = existingReport.get();
+
+                if ("COMPLETED".equals(report.getStatus())) {
+                    logger.info("Found existing report URL for fileId '{}' in database.", fileId);
+                    return ResponseEntity.ok(report);
+                }
+
+                if ("FAILED".equals(report.getStatus())) {
+                    logger.info("Retrying export for fileId '{}'. Resetting status to IN_PROGRESS.", fileId);
+                    report.setStatus("IN_PROGRESS");
+                    report.setErrorMessage(null);
+                    report.setUrl(null);
+                    fileReportRepository.save(report);
+                    s3ExportService.exportFailuresAsync(fileId);
+                    return ResponseEntity.ok(Collections.singletonMap("fileReport", report));
+                }
+
+                logger.info("Report for fileId '{}' already in status '{}'. Returning existing.", fileId, report.getStatus());
+                return ResponseEntity.ok(Collections.singletonMap("fileReport", report));
+            }
+
+            logger.info("No existing report found for fileId '{}'. Creating new export entry.", fileId);
+            FileReportEntity newReport = fileService.createReportEntry(fileId);
+            s3ExportService.exportFailuresAsync(fileId);
+
+            return ResponseEntity.ok(Collections.singletonMap("fileReport", newReport));
+
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred during the export process for fileId: {}", fileId, e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "An internal server error occurred."));
+        }
+    }
+
+
+    @GetMapping("/reports/{fileId}/events")
+    public SseEmitter streamReportEvents(@PathVariable String fileId) {
+        long timeout = 10 * 60 * 1000L;
+        SseEmitter emitter = sseService.addFileReportEmitter(fileId, timeout);
+
+        try {
+            emitter.send(SseEmitter.event()
+                    .name("report-update")
+                    .id(fileId)
+                    .data(Map.of("report-update","started" ), MediaType.APPLICATION_JSON));
+        } catch (IOException e) {
+            sseService.removeReportEmitter(fileId, emitter);
+        }
+        return emitter;
+    }
+
+    @GetMapping("/file/{fileId}/download-url")
+    public ResponseEntity<?> getDownloadUrl(@PathVariable String fileId) {
+        return fileReportRepository.findByFileId(fileId)
+                .map(report -> {
+                    if (report.getUrl() == null || report.getUrl().isEmpty()) {
+                        return ResponseEntity.notFound().build();
+                    }
+
+                    try {
+                        long expirationMillis = 5 * 60 * 1000;
+                        URL presignedUrl = s3ExportService.generatePresignedUrl(report.getUrl(), expirationMillis);
+
+                        return ResponseEntity.ok(Map.of("url", presignedUrl.toString()));
+                    } catch (Exception e) {
+                        // Handle exceptions during URL generation
+                        return ResponseEntity.internalServerError().body("Error generating download link.");
+                    }
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 
 
 }

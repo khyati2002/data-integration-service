@@ -34,6 +34,7 @@ public class SSEService {
     private final Map<String, SseEmitter> fileEmitters = new ConcurrentHashMap<>();
     private final Map<String, SseEmitter> jobEmitters = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, CopyOnWriteArraySet<SseEmitter>> statsEmitters = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, CopyOnWriteArraySet<SseEmitter>> reportEmitters = new ConcurrentHashMap<>();
     private final ExecutorService sendExecutor = Executors.newCachedThreadPool();
     private final ScheduledExecutorService scheduler;
     private final JobEntityMapper jobEntityMapper;
@@ -89,6 +90,17 @@ public class SSEService {
         return emitter;
     }
 
+    public SseEmitter addFileReportEmitter(String fileId, long timeoutMillis) {
+        SseEmitter emitter = new SseEmitter(timeoutMillis);
+        String key = Base64.getEncoder().encodeToString(fileId.getBytes());
+        reportEmitters.computeIfAbsent(key, k -> new CopyOnWriteArraySet<>()).add(emitter);
+
+        emitter.onCompletion(() -> removeReportEmitter(key, emitter));
+        emitter.onTimeout(() -> removeReportEmitter(key, emitter));
+        emitter.onError((ex) -> removeReportEmitter(key, emitter));
+        return emitter;
+    }
+
     public void removeEmitter(String clientId, String id, boolean isJob) {
         String key = (isJob ? "job:" : "file:") + clientId + ":" + id;
         Map<String, SseEmitter> targetEmitters = isJob ? jobEmitters : fileEmitters;
@@ -115,6 +127,56 @@ public class SSEService {
                 statsEmitters.remove(key);
             }
         }
+    }
+
+    public void removeReportEmitter(String fileId, SseEmitter emitter) {
+        String key = Base64.getEncoder().encodeToString(fileId.getBytes());
+        Set<SseEmitter> set = reportEmitters.get(key);
+        if (set != null) {
+            set.remove(emitter);
+            if (set.isEmpty()) {
+                reportEmitters.remove(key);
+            }
+        }
+    }
+
+    public void broadcastReportEvent(String fileId, String eventName, Object payload) {
+        String encodedFileId = Base64.getEncoder().encodeToString(fileId.getBytes());
+        Set<SseEmitter> set = reportEmitters.get(encodedFileId);
+        if (set == null || set.isEmpty()) return;
+//        logger.info("sending report event",eventName);
+
+        for (SseEmitter emitter : set) {
+            sendExecutor.submit(() -> {
+                try {
+                    List<Object> queryKey = Arrays.asList("report", encodedFileId);
+                    emitter.send(SseEmitter.event()
+                            .name("report-update")
+                            .id(fileId)
+                            .data(payload, MediaType.APPLICATION_JSON));
+                } catch (IOException e) {
+                    removeReportEmitter(encodedFileId, emitter);
+                } catch (Exception ex) {
+                    // defensive: remove bad emitter
+                    removeReportEmitter(encodedFileId, emitter);
+                }
+            });
+        }
+    }
+
+    public void completeReportEmitters(String fileId) {
+        String encodedFileId = Base64.getEncoder().encodeToString(fileId.getBytes());
+        Set<SseEmitter> set = reportEmitters.remove(encodedFileId);
+        if (set == null || set.isEmpty()) return;
+
+        for (SseEmitter emitter : set) {
+            try {
+                emitter.complete();
+            } catch (Exception e) {
+                log.debug("Error completing report emitter for {}: {}", encodedFileId, e.getMessage());
+            }
+        }
+        log.info("Completed and removed {} report emitters for fileId={}", set.size(), fileId);
     }
 
     public void broadcastJobUpdate(String lob, String jobId) {
