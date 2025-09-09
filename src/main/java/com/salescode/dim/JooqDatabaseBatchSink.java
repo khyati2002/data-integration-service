@@ -12,6 +12,7 @@ import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecor
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.kafka.FailurePublisher;
 import com.salescode.dim.kafka.InsightsPublisher;
+import com.salescode.dim.kafka.SuccessPublisher;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.salescode.dim.utils.EventListenerDTO;
 import com.zaxxer.hikari.HikariDataSource;
@@ -76,14 +77,17 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         private final String topicName;
         private final String failureTopicName;
         private final String insightsTopicName;
+        private final String successTopicName;
         public static EventPublisher eventPublisher;
         public static InsightsPublisher insightsPublisher;
         public static FailurePublisher failurePublisher;
+        public static SuccessPublisher successPublisher;
         private long lastBatchTime;
         private transient ServiceLocator serviceLocator;
         private final String baseUrl;
         private final ObjectMapper objectMapper;
         private boolean insightsEnabled;
+        private boolean publishSuccessEnabled;
 
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
             System.setProperty("sun.net.maxDatagramSockets","4096");
@@ -100,6 +104,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             this.baseUrl = properties.getProperty("api.base.url");
             this.objectMapper = new ObjectMapper();
             this.insightsEnabled = Boolean.parseBoolean(properties.getProperty("insights.enabled"));
+            this.publishSuccessEnabled = Boolean.parseBoolean(properties.getProperty("publish.success.enabled"));
             Properties kafkaProps = new Properties();
             kafkaProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
             kafkaProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
@@ -112,17 +117,27 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             kafkaFailureTopicProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StreamingRawDataSerializer.class.getName());
             kafkaFailureTopicProps.put(ProducerConfig.ACKS_CONFIG, "1");
 
+
             Properties kafkaInsightsProps = new Properties();
             kafkaInsightsProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
             kafkaInsightsProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
             kafkaInsightsProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, FileProgressEventSerializer.class.getName());
             kafkaInsightsProps.put(ProducerConfig.ACKS_CONFIG, "1");
+
+            Properties kafkaSuccessTopicProps = new Properties();
+            kafkaSuccessTopicProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
+            kafkaSuccessTopicProps .put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+            kafkaSuccessTopicProps .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StreamingRawDataSerializer.class.getName());
+            kafkaSuccessTopicProps .put(ProducerConfig.ACKS_CONFIG, "1");
+
             this.topicName = DataStreamJob.getLobEventTopic(properties);
             this.failureTopicName = DataStreamJob.getLobFailureTopic(properties);
             this.insightsTopicName = properties.getProperty("insights.topic");
+            this.successTopicName = DataStreamJob.getLobSuccessTopic(properties);
             this.eventPublisher = new EventPublisher(kafkaProps, topicName, mailboxExecutor);
             this.insightsPublisher = new InsightsPublisher(kafkaInsightsProps, insightsTopicName, mailboxExecutor);
             this.failurePublisher = new FailurePublisher(kafkaFailureTopicProps, failureTopicName, mailboxExecutor);
+            this.successPublisher = new SuccessPublisher(kafkaSuccessTopicProps, successTopicName, mailboxExecutor);
         }
 
         public static EventPublisher getEventPublisher(){
@@ -203,6 +218,13 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                     );
                                 }
                           }
+
+                            if(publishSuccessEnabled){
+                                for (CommonDataModel model : entry.getValue()) {
+                                    StreamingRawData rawData = modelToRawDataMap.get(model);
+                                    successPublisher.publishEventAsync(rawData);
+                                }
+                            }
                         } catch (Exception batchEx) {
                             LOG.error("Batch save failed. Falling back to individual saves.", batchEx);
                             for (CommonDataModel model : entry.getValue()) {
@@ -229,6 +251,9 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                                 0,
                                                 0
                                         );
+                                    }
+                                    if(publishSuccessEnabled){
+                                        successPublisher.publishEventAsync(rawData);
                                     }
                                 } catch (Exception individualEx) {
                                     LOG.error("Individual Exception for {}", model.getId(), individualEx);
