@@ -161,7 +161,7 @@ public class S3ExportService {
             while (true) {
                 String sql = """
                 SELECT
-                s.features,
+                        s.features,
                         s.responses,
                         s.fileid,
                         s.lob,
@@ -175,8 +175,7 @@ public class S3ExportService {
                 WHERE s.fileid = ?
                         ORDER BY s.timestamp
                 LIMIT ? OFFSET ?;
-
-                   """;
+                """;
 
 //                String sql = "SELECT * from ex_schema_dataintegration.integration_streams limit ? offset ?";
 
