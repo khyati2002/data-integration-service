@@ -209,9 +209,7 @@ public class S3ExportService {
 
                 CsvMapper csvMapper = new CsvMapper();
                 byte[] csvBytes;
-
-
-
+                
                 if (isFirstChunk) {
                     csvHeaders = new ArrayList<>(processedRecords.get(0).keySet());
                     CsvSchema schemaWithHeader = buildCsvSchema(csvHeaders, true);
