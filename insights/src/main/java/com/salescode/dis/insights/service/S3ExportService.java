@@ -62,7 +62,7 @@ public class S3ExportService {
                 ON s.fileid = suc.fileid
                 LEFT JOIN ex_schema_dataintegration.integration_failure fail
                 ON s.fileid = fail.fileid
-                WHERE s.fileid = ?
+                WHERE s.fileid = ? and s.lob = ? and s.entity_name = ?
                         ORDER BY s.timestamp
                 LIMIT ? OFFSET ?;
                 """;
@@ -98,10 +98,10 @@ public class S3ExportService {
 
 
     @Async()
-    public void exportFailuresAsync(String fileId) {
+    public void exportFailuresAsync(String fileId,String lob,String entity) {
         try {
             long timeoutMillis = 30 * 60 * 1000L;
-            String fileUrl = exportFailures(fileId);
+            String fileUrl = exportFailures(fileId,lob,entity);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
                     .withZone(ZoneId.of("UTC"));
             String formattedTime = formatter.format(Instant.now());
@@ -156,7 +156,7 @@ public class S3ExportService {
         }
     }
 
-    public String exportFailures(String fileId) {
+    public String exportFailures(String fileId,String lob,String entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
                 .withZone(ZoneId.of("UTC"));
 
@@ -195,7 +195,7 @@ public class S3ExportService {
 
                 List<Map<String, Object>> rawRecords = jdbcTemplate.query(
                         sql,
-                        new Object[]{fileId,CHUNK_SIZE, offset},
+                        new Object[]{fileId,lob,entity,CHUNK_SIZE, offset},
                         new ColumnMapRowMapper()
                 );
 
@@ -209,7 +209,7 @@ public class S3ExportService {
 
                 CsvMapper csvMapper = new CsvMapper();
                 byte[] csvBytes;
-
+                
                 if (isFirstChunk) {
                     csvHeaders = new ArrayList<>(processedRecords.get(0).keySet());
                     CsvSchema schemaWithHeader = buildCsvSchema(csvHeaders, true);
