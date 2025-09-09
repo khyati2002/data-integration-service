@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.salescode.dis.insights.entity.FileReportEntity;
+import com.salescode.dis.insights.entity.InsightsMetadata;
 import com.salescode.dis.insights.repository.FileReportRepository;
+import com.salescode.dis.insights.repository.InsightsMetadataRepository;
 import com.salescode.dis.insights.sse.SSEService;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -46,6 +48,24 @@ public class S3ExportService {
     private final FileReportRepository fileReportRepository;
     private final SSEService sseService;
     private final S3Presigner s3Presigner;
+    private final InsightsMetadataRepository metadataRepository;
+    private static final String default_sql = """
+                SELECT
+                        s.features,
+                        s.responses,
+                        s.fileid,
+                        s.lob,
+                        s.entity_name,
+                        COALESCE(suc.recordstatus, fail.recordstatus, 'FAILURE') AS recordstatus
+                FROM ex_schema_dataintegration.integration_streams s
+                LEFT JOIN ex_schema_dataintegration.integration_success suc
+                ON s.fileid = suc.fileid
+                LEFT JOIN ex_schema_dataintegration.integration_failure fail
+                ON s.fileid = fail.fileid
+                WHERE s.fileid = ?
+                        ORDER BY s.timestamp
+                LIMIT ? OFFSET ?;
+                """;
 
     public S3ExportService(
             S3Client s3Client,
@@ -56,13 +76,16 @@ public class S3ExportService {
             @Value("${spring.redshift.driver-class-name}") String driverClassName,
             FileReportRepository fileReportRepository,
             SSEService sseService,
-            S3Presigner s3Presigner
+            S3Presigner s3Presigner,
+            InsightsMetadataRepository metadataRepository
+
     ) {
         this.s3Client = s3Client;
         this.bucketName = bucketName;
         this.fileReportRepository = fileReportRepository;
         this.sseService = sseService;
         this.s3Presigner = s3Presigner;
+        this.metadataRepository = metadataRepository;
 
         HikariDataSource ds = new HikariDataSource();
         ds.setJdbcUrl(jdbcUrl);
@@ -159,23 +182,10 @@ public class S3ExportService {
 
         try {
             while (true) {
-                String sql = """
-                SELECT
-                        s.features,
-                        s.responses,
-                        s.fileid,
-                        s.lob,
-                        s.entity_name,
-                        COALESCE(suc.recordstatus, fail.recordstatus, 'FAILURE') AS recordstatus
-                FROM ex_schema_dataintegration.integration_streams s
-                LEFT JOIN ex_schema_dataintegration.integration_success suc
-                ON s.fileid = suc.fileid
-                LEFT JOIN ex_schema_dataintegration.integration_failure fail
-                ON s.fileid = fail.fileid
-                WHERE s.fileid = ?
-                        ORDER BY s.timestamp
-                LIMIT ? OFFSET ?;
-                """;
+
+                String sql = metadataRepository.findByKey("redshift_query")
+                        .map(InsightsMetadata::getValue)
+                        .orElse(default_sql);
 
 //                String sql = "SELECT * from ex_schema_dataintegration.integration_streams limit ? offset ?";
 
