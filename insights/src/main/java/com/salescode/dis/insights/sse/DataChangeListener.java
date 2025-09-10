@@ -53,7 +53,6 @@ public class DataChangeListener {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    @Async
     public void handleImmediateDataChange(DataChangeEvent event) {
         if (!event.getEventType().endsWith("_IMMEDIATE")) {
             return;
@@ -78,7 +77,6 @@ public class DataChangeListener {
 
     // Handle final events (after transaction commit)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Async
     public void handleAsyncDataChange(DataChangeEvent event) {
         if (event.getEventType().endsWith("_IMMEDIATE")) {
             return;
@@ -88,14 +86,14 @@ public class DataChangeListener {
         PROCESSING_ENTITIES.get().add(entityKey);
 
         try {
-            log.info("Handling async data change event: {}", event.getEventType());
+            log.info("Handling data change event: {}", event.getEventType());
 
             SSEService sseService = applicationContext.getBean(SSEService.class);
 
             handleEventByType(event.getEventType(), event, sseService);
 
         } catch (Exception e) {
-            log.error("Error handling async data change event: {}", event.getEventType(), e);
+            log.error("Error handling data change event: {}", event.getEventType(), e);
         } finally {
             PROCESSING_ENTITIES.get().remove(entityKey);
         }
