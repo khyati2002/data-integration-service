@@ -152,7 +152,7 @@ public class SSEService {
                     List<Object> queryKey = Arrays.asList("report", encodedFileId);
                     emitter.send(SseEmitter.event()
                             .name("report-update")
-                            .id(fileId)
+                            .id(UUID.randomUUID().toString())
                             .data(payload, MediaType.APPLICATION_JSON));
                 } catch (IOException e) {
                     removeReportEmitter(encodedFileId, emitter);

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Entity
@@ -54,9 +55,14 @@ public class FileEntity extends TimeAwareEntity {
     @Override
     protected void onCreate() {
         super.onCreate();
+        if (this.getId() == null) {
+            this.setId(UUID.randomUUID().toString());
+        }
+
         if (this.fileId == null) {
             this.fileId = this.getId();
         }
+
         if(this.modeOfIntegration == null) {
             this.modeOfIntegration = ModeOfIntegration.CK_API_CLIENT;
         }

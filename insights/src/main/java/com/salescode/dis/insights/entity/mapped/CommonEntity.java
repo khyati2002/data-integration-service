@@ -48,9 +48,9 @@ public abstract class CommonEntity {
 
     @PrePersist
     protected void onCreate() {
-        if (id == null) {
-            setId(java.util.UUID.randomUUID().toString());
-        }
+//        if (id == null) {
+//            setId(java.util.UUID.randomUUID().toString());
+//        }
         if (creationTime == null) {
             creationTime = Instant.now();
         }

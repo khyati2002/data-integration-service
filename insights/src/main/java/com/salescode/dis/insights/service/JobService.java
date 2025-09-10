@@ -51,15 +51,15 @@ public class JobService {
 
     public JobEntity saveJob(JobEntity req) {
         JobEntity jobEntity = jobRepo.save(req);
-        if(req.getStatus() != null) {
-            FileService fileService = applicationContext.getBean(FileService.class);
-            FileEntity file = new FileEntity();
-            file.setModeOfIntegration(ModeOfIntegration.CK_WORKFLOW_JOB);
-            file.setLob(req.getLob());
-            file.setJob(jobEntity);
-            file.setMaster("undefined");
-            fileService.createFile(req.getId(),file);
-        }
+//        if(req.getStatus() != null) {
+//            FileService fileService = applicationContext.getBean(FileService.class);
+//            FileEntity file = new FileEntity();
+//            file.setModeOfIntegration(ModeOfIntegration.CK_WORKFLOW_JOB);
+//            file.setLob(req.getLob());
+//            file.setJob(jobEntity);
+//            file.setMaster("undefined");
+//            fileService.createFile(req.getId(),file);
+//        }
         return jobEntity;
     }
 
@@ -96,10 +96,12 @@ public class JobService {
 
 
     public JobEntity createJobIfNotExists(String jobId, String lob, ModeOfIntegration modeOfIntegration) {
+        if(jobId == null) jobId = UUID.randomUUID().toString();
         Optional<JobEntity> job = jobRepo.findById(jobId);
+        String finalJobId = jobId;
         return job.orElseGet(()->{
             JobEntity jobEntity = new JobEntity();
-            jobEntity.setId(jobId);
+            jobEntity.setId(finalJobId);
             jobEntity.setLob(lob);
             return saveJob(jobEntity);
         });

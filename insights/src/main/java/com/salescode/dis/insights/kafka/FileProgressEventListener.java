@@ -39,7 +39,13 @@ public class FileProgressEventListener {
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}",
             groupId = "file-progress-processor", batch = "true",
             containerFactory = "fileProgressContainerFactory",
-            properties = { ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000" })
+            properties = {
+                ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=120000",      // 2 min
+                ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=10",
+                ConsumerConfig.FETCH_MIN_BYTES_CONFIG + "=1",
+                ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG + "=1",
+            }
+    )
     public void consumeProgressEvents(@Payload List<FileProgressEvent> events) throws InterruptedException {
         if (events == null || events.isEmpty()) {
             log.debug("Received empty or null event list. Skipping.");
@@ -49,8 +55,8 @@ public class FileProgressEventListener {
         log.info("Received {} events to process.", events.size());
         Map<String, AggregationWrapper> aggregationMap = aggregate(events);
         processAggregatedUpdates(aggregationMap);
-        Map<String,AggregationWrapper> LobAndMasterAggregation =  aggregateByLobAndMaster(events);
-        sendEvents(LobAndMasterAggregation);
+//        Map<String,AggregationWrapper> LobAndMasterAggregation =  aggregateByLobAndMaster(events);
+//        sendEvents(LobAndMasterAggregation);
     }
 
     private Map<String, AggregationWrapper> aggregate(List<FileProgressEvent> events) {
@@ -79,7 +85,7 @@ public class FileProgressEventListener {
                 log.debug("Progress updated successfully for key: {}", key);
             } catch (Exception e) {
                 log.error("Failed to update aggregated progress for key: {}", key, e);
-                wrapper.getOriginalEvents().forEach(event -> sendToFailureTopic(event, e.getMessage()));
+//                wrapper.getOriginalEvents().forEach(event -> sendToFailureTopic(event, e.getMessage()));
             }
         });
     }
