@@ -33,10 +33,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -139,6 +136,12 @@ public class FileController {
             logger.warn("Received a request with a blank or null fileId.");
             return ResponseEntity.badRequest().build();
         }
+        try {
+            byte[] decodedBytes = Base64.getDecoder().decode(fileId);
+            fileId = new String(decodedBytes, StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
 
         try {
             Optional<FileReportEntity> fileReportOptional = fileReportRepository.findByFileId(fileId);
@@ -162,11 +165,21 @@ public class FileController {
         String lob = payload.get("lob");
         String entity = payload.get("entity");
 
-
-        if (fileId == null || fileId.trim().isEmpty()) {
+        if (fileId == null || fileId.trim().isEmpty() ||
+                lob == null || lob.trim().isEmpty() ||
+                entity == null || entity.trim().isEmpty()) {
             return ResponseEntity
                     .badRequest()
-                    .body(Collections.singletonMap("error", "The 'fileId' field must be provided."));
+                    .body(Collections.singletonMap("error", "'fileId', 'lob' and 'entity' field must be provided."));
+        }
+
+        try {
+            byte[] decodedBytes = Base64.getDecoder().decode(fileId);
+            fileId = new String(decodedBytes, StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Collections.singletonMap("error", "Invalid Base64 encoding for 'fileId'."));
         }
 
         try {
@@ -177,7 +190,7 @@ public class FileController {
 
                 if ("COMPLETED".equals(report.getStatus())) {
                     logger.info("Found existing report URL for fileId '{}' in database.", fileId);
-                    return ResponseEntity.ok(report);
+                    return ResponseEntity.ok(Collections.singletonMap("fileReport", report));
                 }
 
                 if ("FAILED".equals(report.getStatus())) {
@@ -185,7 +198,7 @@ public class FileController {
                     report.setStatus("IN_PROGRESS");
                     report.setErrorMessage(null);
                     report.setUrl(null);
-                    fileReportRepository.save(report);
+                    fileReportRepository.saveAndFlush(report);
                     s3ExportService.exportFailuresAsync(fileId,lob,entity);
                     return ResponseEntity.ok(Collections.singletonMap("fileReport", report));
                 }
@@ -212,15 +225,20 @@ public class FileController {
     @GetMapping("/reports/{fileId}/events")
     public SseEmitter streamReportEvents(@PathVariable String fileId) {
         long timeout = 10 * 60 * 1000L;
+
+        byte[] decodedBytes = Base64.getDecoder().decode(fileId);
+        fileId = new String(decodedBytes, StandardCharsets.UTF_8);
         SseEmitter emitter = sseService.addFileReportEmitter(fileId, timeout);
 
         try {
+
             emitter.send(SseEmitter.event()
                     .name("report-update")
-                    .id(fileId)
+                    .id(UUID.randomUUID().toString())
                     .data(Map.of("report-update","started" ), MediaType.APPLICATION_JSON));
         } catch (IOException e) {
             sseService.removeReportEmitter(fileId, emitter);
+            logger.error(e.getMessage());
         }
         return emitter;
     }
