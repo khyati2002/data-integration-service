@@ -10,6 +10,7 @@ public class InsightsUtils {
       FileProgressEvent fileProgressEvent = new FileProgressEvent();
       fileProgressEvent.setFileId(streamingRawData.getFileId());
       fileProgressEvent.setEventId(streamingRawData.getRequestId());
+      fileProgressEvent.setJobId(streamingRawData.getGroupId());
       fileProgressEvent.setLob(streamingRawData.getLob());
       fileProgressEvent.setMasterName(streamingRawData.getTransformerInfo().get(0).getEntityName());
       fileProgressEvent.setProgress(FileProgressRequest.builder().stageType(stage).successCount(successCount).logicalFailureCount(logicalFailureCount).serverFailureCount(serverFailureCount).build());
