@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.dto.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import lombok.AllArgsConstructor;
