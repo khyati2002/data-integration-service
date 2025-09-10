@@ -1,5 +1,10 @@
 package com.salescode.dis.insights.kafka;
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import org.apache.kafka.common.TopicPartition;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
@@ -76,11 +81,16 @@ public class KafkaConfig {
 
     @Bean(name = "fileProgressContainerFactory")
     public ConcurrentKafkaListenerContainerFactory<String, FileProgressEvent> fileProgressContainerFactory(
-            ConsumerFactory<String, FileProgressEvent> fileProgressConsumerFactory) {
+            ConsumerFactory<String, FileProgressEvent> fileProgressConsumerFactory,
+            KafkaTemplate<String, FileProgressEvent> template) {
         ConcurrentKafkaListenerContainerFactory<String, FileProgressEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(fileProgressConsumerFactory);
         factory.setBatchListener(true);
+        var recoverer = new DeadLetterPublishingRecoverer(template, (r, e) -> new TopicPartition("file-progress-updates-failed", r.partition()));
+        var eh = new DefaultErrorHandler(recoverer);
+        eh.addNotRetryableExceptions(UnrecognizedPropertyException.class);
+        factory.setCommonErrorHandler(eh);
         return factory;
     }
 
