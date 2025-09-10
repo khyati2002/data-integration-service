@@ -60,8 +60,8 @@ public class FileProgressEventListener {
         log.info("Received {} events to process.", events.size());
         Map<String, AggregationWrapper> aggregationMap = aggregate(events);
         processAggregatedUpdates(aggregationMap);
-        Map<String,AggregationWrapper> LobAndMasterAggregation =  aggregateByLobAndMaster(events);
-        sendEvents(LobAndMasterAggregation);
+//        Map<String,AggregationWrapper> LobAndMasterAggregation =  aggregateByLobAndMaster(events);
+//        sendEvents(LobAndMasterAggregation);
     }
 
     private Map<String, AggregationWrapper> aggregate(List<FileProgressEvent> events) {
@@ -90,7 +90,7 @@ public class FileProgressEventListener {
                 log.debug("Progress updated successfully for key: {}", key);
             } catch (Exception e) {
                 log.error("Failed to update aggregated progress for key: {}", key, e);
-                wrapper.getOriginalEvents().forEach(event -> sendToFailureTopic(event, e.getMessage()));
+//                wrapper.getOriginalEvents().forEach(event -> sendToFailureTopic(event, e.getMessage()));
             }
         });
     }
