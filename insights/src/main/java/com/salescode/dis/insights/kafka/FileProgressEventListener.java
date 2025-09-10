@@ -39,7 +39,18 @@ public class FileProgressEventListener {
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}",
             groupId = "file-progress-processor", batch = "true",
             containerFactory = "fileProgressContainerFactory",
-            properties = { ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=10000" })
+            properties = {
+                // --- Keep processing time well under this to avoid rebalances ---
+                ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=120_000",      // 2 min
+
+                // --- Bound batch size so one poll is predictable to process ---
+                ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=100",
+
+                // --- Let the broker batch responses (avoid tiny fetches) ---
+                ConsumerConfig.FETCH_MIN_BYTES_CONFIG + "=50000",            // 50 KB
+                ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG + "=100",            // up to 100 ms wait to batch
+            }
+    )
     public void consumeProgressEvents(@Payload List<FileProgressEvent> events) throws InterruptedException {
         if (events == null || events.isEmpty()) {
             log.debug("Received empty or null event list. Skipping.");
