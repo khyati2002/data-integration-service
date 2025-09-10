@@ -68,6 +68,7 @@ public class KafkaConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class); // Use ErrorHandlingDeserializer
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class); // Specify the delegate deserializer
+        props.put("spring.json.ignore.unknown", true);
         JsonDeserializer<FileProgressEvent> deserializer = new JsonDeserializer<>(FileProgressEvent.class, new ObjectMapper(), false);
         deserializer.addTrustedPackages("com.salescode.dis.insights", "java.util");
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new ErrorHandlingDeserializer<>(deserializer));
