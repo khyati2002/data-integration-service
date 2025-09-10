@@ -95,6 +95,7 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ARTICLE_CODE, ros.getArticleCode())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.SKU_CODE, ros.getSkuCode())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.M_CODE, ros.getMCode())
+                        .set(CK_SCHEME_PRODUCT_BIFURCATIONS.EAN_NUMBER, ros.getEanNumber())
                         .set(CK_SCHEME_PRODUCT_BIFURCATIONS.CHANGED, false)
                         .onConflict(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ID)
                         .doUpdate()
@@ -131,6 +132,7 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ARTICLE_CODE, ros.getArticleCode())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.SKU_CODE, ros.getSkuCode())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.M_CODE, ros.getMCode())
+                        .set(CK_SCHEME_PRODUCT_BIFURCATIONS.EAN_NUMBER, ros.getEanNumber())
                         .set(CK_SCHEME_PRODUCT_BIFURCATIONS.CHANGED, true);
     };
 
