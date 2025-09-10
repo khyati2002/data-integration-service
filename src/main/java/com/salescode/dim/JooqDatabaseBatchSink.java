@@ -193,16 +193,6 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             //saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
                             for (CommonDataModel model : entry.getValue()) {
                                 StreamingRawData rawData = modelToRawDataMap.get(model);
-                                insightsPublisher.publishEventAsync(
-                                        rawData.getRequestId(),
-                                        rawData.getFileId(),
-                                        rawData.getGroupId(),
-                                        rawData.getLob(),
-                                        entry.getKey().getSimpleName(),
-                                        "",
-                                        1,
-                                        0
-                                );
                             }
                         } catch (Exception batchEx) {
                             LOG.error("Batch save failed. Falling back to individual saves.", batchEx);
@@ -223,16 +213,6 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                         );
                                     }
  //                                   saveIntegrationHistory(model, "SUCCESS", "Individual save successful");
-                                    insightsPublisher.publishEventAsync(
-                                            rawData.getRequestId(),
-                                            rawData.getFileId(),
-                                            rawData.getGroupId(),
-                                            rawData.getLob(),
-                                            entry.getKey().getSimpleName(),
-                                            "",
-                                            1,
-                                            0
-                                    );
                                 } catch (Exception individualEx) {
                                     LOG.error("Individual Exception for {}", model.getId(), individualEx);
                                     StreamingRawData rawData = modelToRawDataMap.get(model);
@@ -251,16 +231,6 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
 
                                     failurePublisher.publishEventAsync(
                                             rawData
-                                    );
-                                    insightsPublisher.publishEventAsync(
-                                            rawData.getRequestId(),
-                                            rawData.getFileId(),
-                                            rawData.getGroupId(),
-                                            rawData.getLob(),
-                                            entry.getKey().getSimpleName(),
-                                            individualEx.getMessage(),
-                                            0,
-                                            1
                                     );
                                 }
                             }

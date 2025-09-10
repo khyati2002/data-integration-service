@@ -145,7 +145,6 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 long start = System.currentTimeMillis();
                 Map<Class<? extends CommonDataModel>, Set<CommonDataModel>> dataset = new LinkedHashMap<>(); // Data storage
                 List<String> errorList = new ArrayList<>(); // Error tracking
-                sendToKafkaPublisherUpdate(streamingRawData);
                 // Processing each transformer in the streaming data
                 for (TransformerInfo transformerInfo : streamingRawData.getTransformerInfo()) {
                     processTransformer(streamingRawData, transformerInfo, dataset, errorList);
@@ -159,7 +158,6 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                     .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
                                     .collect(Collectors.toList())
                     );
-                    sendToKafkaConsumerUpdate(streamingRawData,0,1);
                     resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                 } else {
                     streamingRawData.setStatus("Success");
@@ -176,7 +174,6 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                                             .map(errorMsg -> new StreamingRawData.Response("Failure", errorMsg))
                                             .collect(Collectors.toList())
                             );
-                            sendToKafkaConsumerUpdate(streamingRawData,0,1);
                             resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap()))); // Handle failure case
                         }
                     }
