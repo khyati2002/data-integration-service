@@ -39,12 +39,11 @@ public class OrderProgressEventListener {
                 log.warn("Received invalid payload (null or missing orderNumber): {}", message);
                 return;
             }
-
             UpdateStageRequest.Stage stage = payload.getStage() != null ? payload.getStage() : UpdateStageRequest.Stage.READ;
             OrderEntity.Status status = payload.getStatus() != null ? payload.getStatus() : OrderEntity.Status.PENDING;
             String lob = payload.getLob() != null ? payload.getLob() : "UNKNOWN_LOB";
-
-            UpdateStageRequest dto = new UpdateStageRequest(payload.getOrderNumber(), stage, status, lob, payload.getUser());
+            String errorMessage=payload.getErrorMessage();
+            UpdateStageRequest dto = new UpdateStageRequest(payload.getOrderNumber(), stage, status, lob, payload.getUser(), errorMessage);
 
             orderService.updateOrderStage(dto);
             log.info("Processed order progress event for orderNumber={}, lob={}, stage={}, status={}",

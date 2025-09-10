@@ -31,6 +31,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
 
 import java.net.URL;
 import java.util.*;
@@ -50,22 +51,21 @@ public class S3ExportService {
     private final S3Presigner s3Presigner;
     private final InsightsMetadataRepository metadataRepository;
         private static final String default_sql = """
-                    SELECT
-                            s.features,
-                            COALESCE(fail.responses,suc.responses, s.responses) AS responses,
-                            s.fileid,
-                            s.lob,
-                            s.entity_name,
-                            COALESCE(suc.recordstatus, fail.recordstatus, 'FAILURE') AS recordstatus
-                    FROM ex_schema_dataintegration.integration_streams s
-                    LEFT JOIN ex_schema_dataintegration.integration_success suc
-                    ON s.fileid = suc.fileid
-                    LEFT JOIN ex_schema_dataintegration.integration_failure fail
-                    ON s.fileid = fail.fileid
-                    WHERE s.entity_name ILIKE ? and s.lob = ? and s.fileid = ?
-                            ORDER BY s.timestamp
-                    LIMIT ? OFFSET ?;
-                    """;
+                SELECT
+                         s.features,
+                         COALESCE(fail.responses,suc.responses, s.responses) AS responses,
+                         s.fileid,
+                         s.lob,
+                         s.entity_name,
+                         s.timestamp,
+                         COALESCE(suc.recordstatus, fail.recordstatus, 'FAILURE') AS recordstatus
+                 FROM ex_schema_dataintegration.integration_streams s
+                 LEFT JOIN ex_schema_dataintegration.integration_success suc
+                 ON s.fileid = suc.fileid AND s.lob = suc.lob AND s.entity_name = suc.entity_name
+                 LEFT JOIN ex_schema_dataintegration.integration_failure fail
+                 ON s.fileid = fail.fileid AND s.lob = fail.lob AND s.entity_name = fail.entity_name
+                 WHERE s.entity_name ILIKE ? and s.lob = ? and s.fileid = ?
+                """;
 
     public S3ExportService(
             S3Client s3Client,
@@ -177,35 +177,62 @@ public class S3ExportService {
 
         List<CompletedPart> completedParts = new ArrayList<>();
         int partNumber = 1;
-        int offset = 0;
         boolean isFirstChunk = true;
         List<String> csvHeaders = null;
         ByteArrayOutputStream currentPartData = new ByteArrayOutputStream();
 
         final long MIN_PART_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
         int totalExported = 0;
+        Instant lastTimestamp = null;
 
         try {
             while (true) {
 
-                String sql = metadataRepository.findByKey("redshift_query")
+                String baseSql = metadataRepository.findByKey("redshift_query")
                         .map(InsightsMetadata::getValue)
                         .orElse(default_sql);
+
+                StringBuilder sqlBuilder = new StringBuilder(baseSql);
+                List<Object> queryParams = new ArrayList<>(List.of(entity, lob, fileId));
+
+                if (lastTimestamp != null) {
+                    sqlBuilder.append(" AND s.timestamp > ?");
+                    queryParams.add(Timestamp.from(lastTimestamp));
+                }
+
+                sqlBuilder.append(" ORDER BY s.timestamp LIMIT ?");
+                queryParams.add(CHUNK_SIZE);
+
+                String finalSql = sqlBuilder.toString();
 
 //                String sql = "SELECT * FROM ex_schema_dataintegration.integration_success WHERE fileid = ? AND lob = ? order BY timestamp LIMIT ? OFFSET ?";
 
                 List<Map<String, Object>> rawRecords = jdbcTemplate.query(
-                        sql,
-                        new Object[]{entity,lob,fileId,CHUNK_SIZE,offset},
+                        finalSql,
+                        queryParams.toArray(),
                         new ColumnMapRowMapper()
                 );
 
                 if (rawRecords.isEmpty()) {
-                    logger.info("No more records found for fileId '{}' at offset {}. Exiting fetch loop.", fileId, offset);
+                    logger.info("No more records found for fileId '{}'. Exiting fetch loop.", fileId);
                     break;
                 }
 
+                Map<String, Object> lastRecord = rawRecords.get(rawRecords.size() - 1);
+                Object timestampObj = lastRecord.get("timestamp");
+                if (timestampObj instanceof Timestamp) {
+                    lastTimestamp = ((Timestamp) timestampObj).toInstant();
+                } else {
+                    // Handle cases where the timestamp might be in a different format if necessary
+                    logger.warn("Timestamp format not as expected. Could not update lastTimestamp.");
+                    break; // Or handle more gracefully
+                }
+
                 List<Map<String, Object>> processedRecords = processAndFlattenRecords(rawRecords);
+
+                if (processedRecords.isEmpty()) {
+                    continue;
+                }
 
 
                 CsvMapper csvMapper = new CsvMapper();
@@ -246,11 +273,11 @@ public class S3ExportService {
             sseService.broadcastReportEvent(fileId, "report-progress", Map.of(
                     "fileId", fileId,
                     "exported", totalExported,
-                    "currentOffset", offset,
-                    "partsUploaded", partNumber
+                    "lastTimestamp", lastTimestamp.toString(),
+                    "partsUploaded", partNumber - 1
             ));
 
-                offset += CHUNK_SIZE;
+
             }
 
             if (currentPartData.size() > 0) {
@@ -303,7 +330,7 @@ public class S3ExportService {
         } catch (Exception e) {
             logger.error("Error during multipart S3 upload for fileId '{}'. Aborting upload.", fileId, e);
             if (uploadId != null) {
-                abortMultipartUpload(uploadId, s3Key);
+                abortMultipartUpload(s3Key,uploadId);
             }
             throw new RuntimeException("Failed to export data to S3 due to an internal error.", e);
 

@@ -18,6 +18,7 @@ public class OrderResponse {
     private String orderNumber;
     private String lob;
     private String user;
+    private String errorMessage;
     private OrderEntity.Operation operation;
     private OrderEntity.Status readStatus;
     private OrderEntity.Status processStatus;
@@ -38,6 +39,7 @@ public class OrderResponse {
         this.saveStatus = entity.getSaveStatus();
         this.publishStatus=entity.getPublishStatus();
         this.createdAt = entity.getCreatedAt();
+        this.errorMessage=entity.getErrorMessage();
     }
 
 }
