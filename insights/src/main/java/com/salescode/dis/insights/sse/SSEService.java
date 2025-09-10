@@ -140,7 +140,8 @@ public class SSEService {
         }
     }
 
-    public void broadcastReportEvent(String fileId, String eventName, Object payload) {
+    public void
+    broadcastReportEvent(String fileId, String eventName, Object payload) {
         String encodedFileId = Base64.getEncoder().encodeToString(fileId.getBytes());
         Set<SseEmitter> set = reportEmitters.get(encodedFileId);
         if (set == null || set.isEmpty()) return;
@@ -152,7 +153,7 @@ public class SSEService {
                     List<Object> queryKey = Arrays.asList("report", encodedFileId);
                     emitter.send(SseEmitter.event()
                             .name("report-update")
-                            .id(fileId)
+                            .id(UUID.randomUUID().toString())
                             .data(payload, MediaType.APPLICATION_JSON));
                 } catch (IOException e) {
                     removeReportEmitter(encodedFileId, emitter);

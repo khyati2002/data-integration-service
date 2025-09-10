@@ -49,23 +49,23 @@ public class S3ExportService {
     private final SSEService sseService;
     private final S3Presigner s3Presigner;
     private final InsightsMetadataRepository metadataRepository;
-    private static final String default_sql = """
-                SELECT
-                        s.features,
-                        s.responses,
-                        s.fileid,
-                        s.lob,
-                        s.entity_name,
-                        COALESCE(suc.recordstatus, fail.recordstatus, 'FAILURE') AS recordstatus
-                FROM ex_schema_dataintegration.integration_streams s
-                LEFT JOIN ex_schema_dataintegration.integration_success suc
-                ON s.fileid = suc.fileid
-                LEFT JOIN ex_schema_dataintegration.integration_failure fail
-                ON s.fileid = fail.fileid
-                WHERE s.fileid = ? and s.lob = ? and s.entity_name = ?
-                        ORDER BY s.timestamp
-                LIMIT ? OFFSET ?;
-                """;
+        private static final String default_sql = """
+                    SELECT
+                            s.features,
+                            COALESCE(fail.responses,suc.responses, s.responses) AS responses,
+                            s.fileid,
+                            s.lob,
+                            s.entity_name,
+                            COALESCE(suc.recordstatus, fail.recordstatus, 'FAILURE') AS recordstatus
+                    FROM ex_schema_dataintegration.integration_streams s
+                    LEFT JOIN ex_schema_dataintegration.integration_success suc
+                    ON s.fileid = suc.fileid
+                    LEFT JOIN ex_schema_dataintegration.integration_failure fail
+                    ON s.fileid = fail.fileid
+                    WHERE s.entity_name ILIKE ? and s.lob = ? and s.fileid = ?
+                            ORDER BY s.timestamp
+                    LIMIT ? OFFSET ?;
+                    """;
 
     public S3ExportService(
             S3Client s3Client,
@@ -183,6 +183,7 @@ public class S3ExportService {
         ByteArrayOutputStream currentPartData = new ByteArrayOutputStream();
 
         final long MIN_PART_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+        int totalExported = 0;
 
         try {
             while (true) {
@@ -191,11 +192,11 @@ public class S3ExportService {
                         .map(InsightsMetadata::getValue)
                         .orElse(default_sql);
 
-//                String sql = "SELECT * from ex_schema_dataintegration.integration_streams limit ? offset ?";
+//                String sql = "SELECT * FROM ex_schema_dataintegration.integration_success WHERE fileid = ? AND lob = ? order BY timestamp LIMIT ? OFFSET ?";
 
                 List<Map<String, Object>> rawRecords = jdbcTemplate.query(
                         sql,
-                        new Object[]{fileId,lob,entity,CHUNK_SIZE, offset},
+                        new Object[]{entity,lob,fileId,CHUNK_SIZE,offset},
                         new ColumnMapRowMapper()
                 );
 
@@ -209,7 +210,7 @@ public class S3ExportService {
 
                 CsvMapper csvMapper = new CsvMapper();
                 byte[] csvBytes;
-                
+
                 if (isFirstChunk) {
                     csvHeaders = new ArrayList<>(processedRecords.get(0).keySet());
                     CsvSchema schemaWithHeader = buildCsvSchema(csvHeaders, true);
@@ -239,6 +240,15 @@ public class S3ExportService {
                     currentPartData.reset();
                     partNumber++;
                 }
+
+            totalExported += processedRecords.size();
+
+            sseService.broadcastReportEvent(fileId, "report-progress", Map.of(
+                    "fileId", fileId,
+                    "exported", totalExported,
+                    "currentOffset", offset,
+                    "partsUploaded", partNumber
+            ));
 
                 offset += CHUNK_SIZE;
             }
