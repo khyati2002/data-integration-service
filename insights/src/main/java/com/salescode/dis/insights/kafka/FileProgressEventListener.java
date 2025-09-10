@@ -41,7 +41,7 @@ public class FileProgressEventListener {
             containerFactory = "fileProgressContainerFactory",
             properties = {
                 // --- Keep processing time well under this to avoid rebalances ---
-                ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=120_000",      // 2 min
+                ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=120000",      // 2 min
 
                 // --- Bound batch size so one poll is predictable to process ---
                 ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=100",
