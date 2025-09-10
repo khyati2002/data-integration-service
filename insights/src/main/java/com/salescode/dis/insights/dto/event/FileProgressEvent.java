@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.dto.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FileProgressEvent {
     private String eventId;
     private String fileId;
