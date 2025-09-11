@@ -43,7 +43,7 @@ public class RecommendedOrdersFileOperationStrategy implements IFileOperationStr
         if(getSupportedStages().get(0).equals(fileStageMetrics.getStageType())){
             fileEntity.setTotalCount(fileStageMetrics.getTotal());
         }
-        log.info("API_BASED file {} progress updated for stage {}", fileEntity.getFileId(), progress.getStageType());
+        log.info("STREAM_BASED file {} progress updated for stage {}", fileEntity.getFileId(), progress.getStageType());
         updateStatus(fileEntity, fileStageMetrics);
         return fileStageMetrics;
     }
