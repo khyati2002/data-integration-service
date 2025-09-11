@@ -207,17 +207,17 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             }
 
                             //saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
-                            if (insightsEnabled){
-                                for (CommonDataModel model : entry.getValue()) {
-                                    StreamingRawData rawData = modelToRawDataMap.get(model);
-                                    insightsPublisher.publishEventAsync(
-                                            rawData,
-                                            1,
-                                            0,
-                                            0
-                                    );
-                                }
-                          }
+                            if (insightsEnabled && !entry.getValue().isEmpty()) {
+                                CommonDataModel model = entry.getValue().iterator().next();
+                                StreamingRawData rawData = modelToRawDataMap.get(model);
+                                insightsPublisher.publishEventAsync(
+                                        rawData,
+                                        entry.getValue().size(),
+                                        0,
+                                        0
+                                );
+                            }
+
 
                             if(publishSuccessEnabled){
                                 for (CommonDataModel model : entry.getValue()) {
