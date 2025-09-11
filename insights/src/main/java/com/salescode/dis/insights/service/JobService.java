@@ -51,15 +51,15 @@ public class JobService {
 
     public JobEntity saveJob(JobEntity req) {
         JobEntity jobEntity = jobRepo.save(req);
-//        if(req.getStatus() != null) {
-//            FileService fileService = applicationContext.getBean(FileService.class);
-//            FileEntity file = new FileEntity();
-//            file.setModeOfIntegration(ModeOfIntegration.CK_WORKFLOW_JOB);
-//            file.setLob(req.getLob());
-//            file.setJob(jobEntity);
-//            file.setMaster("undefined");
-//            fileService.createFile(req.getId(),file);
-//        }
+        if(req.getStatus() == ProgressStatus.COMPLETED_SUCCESSFULLY) {
+            FileService fileService = applicationContext.getBean(FileService.class);
+            FileEntity file = new FileEntity();
+            file.setModeOfIntegration(ModeOfIntegration.CK_WORKFLOW_JOB);
+            file.setLob(req.getLob());
+            file.setJob(jobEntity);
+            file.setMaster("undefined");
+            fileService.createFile(req.getId(),file);
+        }
         return jobEntity;
     }
 
