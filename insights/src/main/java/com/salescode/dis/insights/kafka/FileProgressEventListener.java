@@ -3,7 +3,6 @@ package com.salescode.dis.insights.kafka;
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.event.ObservabilityEventProducer;
-import com.salescode.dis.insights.redis.RedisLockService;
 import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.validation.ValidationService;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +30,6 @@ public class FileProgressEventListener {
 
     @Value("${file.progress.update.failure.topic:file-progress-updates-failed}")
     private String FAILURE_TOPIC;
-
-    private final RedisLockService redisLockService;
 
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
@@ -83,16 +80,13 @@ public class FileProgressEventListener {
     private void processAggregatedUpdates(Map<String, AggregationWrapper> aggregationMap) {
         aggregationMap.forEach((key, wrapper) -> {
             FileProgressEvent aggregatedEvent = wrapper.getAggregatedEvent();
-            redisLockService.executeWithLockAndWait(aggregatedEvent.getFileId(), () -> {
             try {
                 fileService.updateProgress(aggregatedEvent.getFileId(), aggregatedEvent.getMasterName(), aggregatedEvent.getJobId(), aggregatedEvent.getLob(), aggregatedEvent.getProgress());
                 log.debug("Progress updated successfully for key: {}", key);
             } catch (Exception e) {
                 log.error("Failed to update aggregated progress for key: {}", key, e);
-                wrapper.getOriginalEvents().forEach(event -> sendToFailureTopic(event, e.getMessage()));
+//                wrapper.getOriginalEvents().forEach(event -> sendToFailureTopic(event, e.getMessage()));
             }
-            }, 60, 5000);
-
         });
     }
 
