@@ -31,7 +31,7 @@ public class RecommendedOrdersFileOperationStrategy implements IFileOperationStr
     public FileEntity createFile(FileEntity fileEntity, String jobId) {
         JobEntity job = jobService.getJob(jobId);
         FileEntity savedFile = fileOperationsHelperService.saveFileEntity(fileEntity, job, this);
-        log.info("Registered file {} under job {} for RECOMMENDED_ORDERS integration", savedFile.getId(), job.getId());
+        log.info("Registered file {} under job {} for STREAM_BASED integration", savedFile.getId(), job.getId());
         return savedFile;
     }
 
