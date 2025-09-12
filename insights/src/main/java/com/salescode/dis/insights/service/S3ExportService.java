@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.salescode.dis.insights.InsightsApplication;
 import com.salescode.dis.insights.entity.FileReportEntity;
 import com.salescode.dis.insights.entity.InsightsMetadata;
 import com.salescode.dis.insights.repository.FileReportRepository;
@@ -50,22 +51,36 @@ public class S3ExportService {
     private final SSEService sseService;
     private final S3Presigner s3Presigner;
     private final InsightsMetadataRepository metadataRepository;
-        private static final String default_sql = """
-                SELECT
-                         s.features,
-                         COALESCE(fail.responses,suc.responses, s.responses) AS responses,
-                         s.fileid,
-                         s.lob,
-                         s.entity_name,
-                         s.timestamp,
-                         COALESCE(suc.recordstatus, fail.recordstatus, 'FAILURE') AS recordstatus
-                 FROM ex_schema_dataintegration.integration_streams s
-                 LEFT JOIN ex_schema_dataintegration.integration_success suc
-                 ON s.fileid = suc.fileid AND s.lob = suc.lob AND s.entity_name = suc.entity_name
-                 LEFT JOIN ex_schema_dataintegration.integration_failure fail
-                 ON s.fileid = fail.fileid AND s.lob = fail.lob AND s.entity_name = fail.entity_name
-                 WHERE s.entity_name ILIKE ? and s.lob = ? and s.fileid = ?
-                """;
+
+    private static final String default_sql = """
+            SELECT
+                features,
+                responses,
+                fileid,
+                lob,
+                entity_name,
+                "timestamp",
+                recordstatus
+            FROM ex_schema_dataintegration.integration_success
+            WHERE fileid = ? AND lob = ? AND entity_name = ?
+            UNION ALL
+            SELECT
+                features,
+                responses,
+                fileid,
+                lob,
+                entity_name,
+                "timestamp",
+                recordstatus
+            FROM ex_schema_dataintegration.integration_failure
+            WHERE fileid = ? AND lob = ? AND entity_name = ?
+            """;
+
+    private static final String countSql = """
+    SELECT
+      (SELECT count(*) FROM ex_schema_dataintegration.integration_success WHERE fileid = ? AND lob = ? AND entity_name = ?)
+    + (SELECT count(*) FROM ex_schema_dataintegration.integration_failure WHERE fileid = ? AND lob = ? AND entity_name = ?)
+    """;
 
     public S3ExportService(
             S3Client s3Client,
@@ -186,26 +201,41 @@ public class S3ExportService {
         Instant lastTimestamp = null;
 
         try {
+            Long totalRecords = 0L;
+            try {
+                totalRecords = jdbcTemplate.queryForObject(
+                        countSql,
+                        new Object[]{fileId, lob, entity,fileId, lob, entity},
+                        Long.class
+                );
+            } catch (Exception exCount) {
+                logger.warn("Could not fetch total record count for fileId '{}'. Will fallback to sending raw exported counts. Reason: {}", fileId, exCount.getMessage());
+                totalRecords = 0L;
+            }
             while (true) {
 
                 String baseSql = metadataRepository.findByKey("redshift_query")
                         .map(InsightsMetadata::getValue)
                         .orElse(default_sql);
 
-                StringBuilder sqlBuilder = new StringBuilder(baseSql);
-                List<Object> queryParams = new ArrayList<>(List.of(entity, lob, fileId));
+                StringBuilder sqlBuilder = new StringBuilder();
+                List<Object> queryParams = new ArrayList<>(List.of(fileId,lob,entity,fileId,lob,entity));
+
+
+                sqlBuilder.append("SELECT * FROM (")
+                        .append(baseSql)
+                        .append(") sub");
 
                 if (lastTimestamp != null) {
-                    sqlBuilder.append(" AND s.timestamp > ?");
+                    sqlBuilder.append(" WHERE sub.\"timestamp\" > ?");
                     queryParams.add(Timestamp.from(lastTimestamp));
                 }
 
-                sqlBuilder.append(" ORDER BY s.timestamp LIMIT ?");
+                sqlBuilder.append(" ORDER BY sub.\"timestamp\"");
+                sqlBuilder.append(" LIMIT ?");
                 queryParams.add(CHUNK_SIZE);
 
                 String finalSql = sqlBuilder.toString();
-
-//                String sql = "SELECT * FROM ex_schema_dataintegration.integration_success WHERE fileid = ? AND lob = ? order BY timestamp LIMIT ? OFFSET ?";
 
                 List<Map<String, Object>> rawRecords = jdbcTemplate.query(
                         finalSql,
@@ -269,13 +299,8 @@ public class S3ExportService {
                 }
 
             totalExported += processedRecords.size();
-
-            sseService.broadcastReportEvent(fileId, "report-progress", Map.of(
-                    "fileId", fileId,
-                    "exported", totalExported,
-                    "lastTimestamp", lastTimestamp.toString(),
-                    "partsUploaded", partNumber - 1
-            ));
+                
+             sendReportProgress(totalExported,totalRecords,partNumber,fileId,lastTimestamp);
 
 
             }
@@ -396,6 +421,29 @@ public class S3ExportService {
         for (String header : headers) schemaBuilder.addColumn(header);
         return withHeader ? schemaBuilder.build().withHeader() : schemaBuilder.build().withoutHeader();
     }
+
+    private void sendReportProgress(int totalExported,Long totalRecords,int partNumber,String fileId,Instant lastTimestamp){
+        if (totalRecords != null && totalRecords > 0) {
+                int percent = (int) Math.min(100, (totalExported * 100) / totalRecords);
+                sseService.broadcastReportEvent(fileId, "report-progress", Map.of(
+                        "fileId", fileId,
+                        "exported", totalExported,
+                        "percentage", percent,
+                        "lastTimestamp", lastTimestamp.toString(),
+                        "partsUploaded", partNumber - 1
+                ));
+
+        } else {
+                sseService.broadcastReportEvent(fileId, "report-progress", Map.of(
+                        "fileId", fileId,
+                        "exported", totalExported,
+                        "lastTimestamp", lastTimestamp.toString(),
+                        "partsUploaded", partNumber - 1
+                ));
+            }
+
+    }
+
 
     public URL generatePresignedUrl(String s3Path, long expirationMillis) {
         try {
