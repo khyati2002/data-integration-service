@@ -4,7 +4,6 @@ import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.event.ObservabilityEventProducer;
 import com.salescode.dis.insights.service.FileService;
-import com.salescode.dis.insights.validation.ValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -20,6 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Service
 @EnableKafka
@@ -33,17 +36,18 @@ public class FileProgressEventListener {
 
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
-    private final ValidationService validationService;
     private final ObservabilityEventProducer eventProducer;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(50); // Tune based on CPU cores
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}",
             groupId = "file-progress-processor", batch = "true",
             containerFactory = "fileProgressContainerFactory",
+            concurrency = "5",
             properties = {
                 ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=120000",      // 2 min
-                ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=10",
-                ConsumerConfig.FETCH_MIN_BYTES_CONFIG + "=1",
-                ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG + "=1",
+                ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=500",
+                ConsumerConfig.FETCH_MIN_BYTES_CONFIG + "=1048576",    //1MB
+                ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG + "=500",
             }
     )
     public void consumeProgressEvents(@Payload List<FileProgressEvent> events) throws InterruptedException {
@@ -54,9 +58,25 @@ public class FileProgressEventListener {
 
         log.info("Received {} events to process.", events.size());
         Map<String, AggregationWrapper> aggregationMap = aggregate(events);
-        processAggregatedUpdates(aggregationMap);
-//        Map<String,AggregationWrapper> LobAndMasterAggregation =  aggregateByLobAndMaster(events);
-//        sendEvents(LobAndMasterAggregation);
+        // Group by fileId to prevent race conditions on same file
+        Map<String, List<Map.Entry<String, AggregationWrapper>>> partitioned =
+                aggregationMap.entrySet().stream()
+                        .collect(Collectors.groupingBy(
+                                entry -> entry.getValue().getAggregatedEvent().getFileId()
+                        ));
+
+        // Process each file in isolation - no cross-file race conditions
+        List<CompletableFuture<Void>> futures = partitioned.values().stream()
+                .map(entries -> CompletableFuture.runAsync(() -> {
+                    // All updates for this fileId processed sequentially
+                    entries.forEach(entry ->
+                            processAggregatedUpdateSafely(entry.getKey(), entry.getValue())
+                    );
+                }, executorService))
+                .toList();
+
+        // Wait for all files to complete processing
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
     private Map<String, AggregationWrapper> aggregate(List<FileProgressEvent> events) {
@@ -77,17 +97,21 @@ public class FileProgressEventListener {
         return aggregationMap;
     }
 
-    private void processAggregatedUpdates(Map<String, AggregationWrapper> aggregationMap) {
-        aggregationMap.forEach((key, wrapper) -> {
-            FileProgressEvent aggregatedEvent = wrapper.getAggregatedEvent();
-            try {
-                fileService.updateProgress(aggregatedEvent.getFileId(), aggregatedEvent.getMasterName(), aggregatedEvent.getJobId(), aggregatedEvent.getLob(), aggregatedEvent.getProgress());
-                log.debug("Progress updated successfully for key: {}", key);
-            } catch (Exception e) {
-                log.error("Failed to update aggregated progress for key: {}", key, e);
-//                wrapper.getOriginalEvents().forEach(event -> sendToFailureTopic(event, e.getMessage()));
-            }
-        });
+    private void processAggregatedUpdateSafely(String key, AggregationWrapper wrapper) {
+        FileProgressEvent aggregatedEvent = wrapper.getAggregatedEvent();
+        try {
+            fileService.updateProgress(
+                    aggregatedEvent.getFileId(),
+                    aggregatedEvent.getMasterName(),
+                    aggregatedEvent.getJobId(),
+                    aggregatedEvent.getLob(),
+                    aggregatedEvent.getProgress()
+            );
+            log.debug("Progress updated successfully for key: {}", key);
+        } catch (Exception e) {
+            log.error("Failed to update aggregated progress for key: {}", key, e);
+            //  wrapper.getOriginalEvents().forEach(event -> sendToFailureTopic(event, e.getMessage()));
+        }
     }
 
     private Optional<String> validate(FileProgressEvent event) {
