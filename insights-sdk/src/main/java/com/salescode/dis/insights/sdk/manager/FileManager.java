@@ -110,7 +110,9 @@ public class FileManager {
     public FileProgressResponse updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload, String authorizationToken) {
         Objects.requireNonNull(progressPayload, "FileProgressRequest cannot be null");
 
-        HttpEntity<FileProgressRequest> entity = new HttpEntity<>(progressPayload, getHttpHeaders(authorizationToken));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<FileProgressRequest> entity = new HttpEntity<>(progressPayload,headers);
         try {
             log.debug("Attempting to update progress for file ID: {} for LOB: {}, Master: {}", fileId, lob, masterName);
             ResponseEntity<FileProgressResponse> response = restTemplate.exchange(FILE_PROGRESS_UPDATE_URL, HttpMethod.PUT, entity, FileProgressResponse.class, lob, masterName, fileId);
