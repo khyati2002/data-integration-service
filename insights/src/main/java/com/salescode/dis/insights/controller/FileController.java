@@ -257,7 +257,6 @@ public class FileController {
 
                         return ResponseEntity.ok(Map.of("url", presignedUrl.toString()));
                     } catch (Exception e) {
-                        // Handle exceptions during URL generation
                         return ResponseEntity.internalServerError().body("Error generating download link.");
                     }
                 })
