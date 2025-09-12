@@ -149,9 +149,9 @@ app:
 file:
   progress:
     update:
-      topic: file-progress-updates
+      topic: file-progress-updates-2
       failure:
-        topic: file-progress-updates-failed
+        topic: file-progress-updates-failed-2
 
 insights:
   order:

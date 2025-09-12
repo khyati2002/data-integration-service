@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.dto.file.progress;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 
 import com.salescode.dis.insights.enums.ProgressStage;
@@ -15,6 +16,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FileProgressRequest implements Serializable {
 
     ProgressStage stageType;

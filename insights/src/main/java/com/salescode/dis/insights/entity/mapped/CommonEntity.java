@@ -25,6 +25,7 @@ public abstract class CommonEntity {
     public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "creation_time", nullable = false, updatable = false)
@@ -47,9 +48,9 @@ public abstract class CommonEntity {
 
     @PrePersist
     protected void onCreate() {
-        if (id == null) {
-            setId(java.util.UUID.randomUUID().toString());
-        }
+//        if (id == null) {
+//            setId(java.util.UUID.randomUUID().toString());
+//        }
         if (creationTime == null) {
             creationTime = Instant.now();
         }

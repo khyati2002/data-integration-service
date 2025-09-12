@@ -7,7 +7,6 @@ import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.service.strategy.ApiClientBasedFileOperationStrategy;
 import com.salescode.dis.insights.service.strategy.MdmKafkaFileOperationStrategy;
-import com.salescode.dis.insights.service.strategy.OrderPushFileOperationStrategy;
 import com.salescode.dis.insights.service.strategy.StreamletSyncOperationStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +39,6 @@ public class FileStageStatusScheduler {
 
     private final StreamletSyncOperationStrategy streamletSyncOperationStrategy;
     private final MdmKafkaFileOperationStrategy mdmKafkaFileOperationStrategy;
-    private final OrderPushFileOperationStrategy orderPushFileOperationStrategy;
 
     @Scheduled(fixedRateString = "${file-status-scheduler.rate-millis:60000}") // Run every 1 minute (60000 ms)
     @Transactional
@@ -57,7 +55,6 @@ public class FileStageStatusScheduler {
             log.info("No stale files found in the {}-{} minute window.", STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
             return;
         }
-
         log.warn("Found {} potentially stale stages (PENDING, modified between {}-{} mins ago). Marking as FAILED.", pendingStages.size(), STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
 
         log.info("Found {} stages with PENDING status modified in the last 10 minutes", pendingStages.size());
@@ -68,9 +65,6 @@ public class FileStageStatusScheduler {
             }
             else if(stage.getModeOfIntegration().equals(ModeOfIntegration.CK_MDM_KAFKA)){
                mdmKafkaFileOperationStrategy.updateStatus(stage);
-            }
-            else if(stage.getModeOfIntegration().equals(ModeOfIntegration.CK_ORDER_PUSH)){
-                orderPushFileOperationStrategy.updateStatus(stage);
             }
             else {
                 apiClientBasedFileOperationStrategy.updateStatus(stage);

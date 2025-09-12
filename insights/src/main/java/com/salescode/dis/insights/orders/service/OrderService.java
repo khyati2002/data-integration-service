@@ -7,9 +7,9 @@ import com.salescode.dis.insights.orders.repository.OrderRepository;
 import com.salescode.dis.insights.orders.dto.OrderResponse;
 import com.salescode.dis.insights.orders.dto.OrderSummaryResponse;
 import com.salescode.dis.insights.orders.dto.UpdateStageRequest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,17 +23,14 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class OrderService {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private LobRetentionConfigRepository lobRetentionConfigRepository;
+    private final OrderRepository orderRepository;
+    private  final JdbcTemplate jdbcTemplate;
+    private final  LobRetentionConfigRepository lobRetentionConfigRepository;
 
     public OrderResponse createOrder(OrderEntity entity) {
         logger.debug("Creating order: {}", entity.getOrderNumber());
@@ -68,6 +65,7 @@ public class OrderService {
                     newEntity.setUser(request.getUser()!=null? request.getUser() :"unknown user");
                     newEntity.setPublishStatus(OrderEntity.Status.NA);
                     newEntity.setCreatedAt(OffsetDateTime.now());
+                    newEntity.setErrorMessage(request.getErrorMessage());
                     createOrder(newEntity);
                     return newEntity;
                 });
@@ -75,13 +73,17 @@ public class OrderService {
         switch (request.getStage()) {
             case READ:
                 entity.setReadStatus(request.getStatus());
+              appendErrorMessage(entity, request.getErrorMessage());
                 break;
             case PROCESS:
                 entity.setProcessStatus(request.getStatus());
+                appendErrorMessage(entity, request.getErrorMessage());
                 break;
             case SAVE:
                 entity.setSaveStatus(request.getStatus());
+                appendErrorMessage(entity, request.getErrorMessage());
                 break;
+                default:  appendErrorMessage(entity, request.getErrorMessage());
         }
         OrderEntity updated = orderRepository.save(entity);
         logger.debug("Updated order stage for: {}", request.getOrderNumber());
@@ -138,6 +140,20 @@ public class OrderService {
 
         return pageResult.map(OrderResponse::new);
     }
+
+    private void appendErrorMessage(OrderEntity entity, String newError) {
+        if (newError == null || newError.isBlank()) {
+            return;
+        }
+        String existing = entity.getErrorMessage();
+        if (existing == null || existing.isBlank()) {
+            entity.setErrorMessage(newError);
+        } else {
+            entity.setErrorMessage(existing + " | " + newError);
+        }
+    }
+
+
 
 
 }
