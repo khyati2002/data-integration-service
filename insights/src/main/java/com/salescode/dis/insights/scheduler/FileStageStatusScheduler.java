@@ -55,7 +55,6 @@ public class FileStageStatusScheduler {
             log.info("No stale files found in the {}-{} minute window.", STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
             return;
         }
-
         log.warn("Found {} potentially stale stages (PENDING, modified between {}-{} mins ago). Marking as FAILED.", pendingStages.size(), STALE_THRESHOLD_SECONDS, TOO_OLD_THRESHOLD_SECONDS);
 
         log.info("Found {} stages with PENDING status modified in the last 10 minutes", pendingStages.size());
