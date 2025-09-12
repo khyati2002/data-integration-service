@@ -37,7 +37,7 @@ public class FileProgressEventListener {
     private final FileService fileService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
     private final ObservabilityEventProducer eventProducer;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(50); // Tune based on CPU cores
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10); // Tune based on CPU cores
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}",
             groupId = "file-progress-processor", batch = "true",
