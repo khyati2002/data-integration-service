@@ -3,6 +3,7 @@ package com.salescode.dis.insights.kafka;
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.event.ObservabilityEventProducer;
+import com.salescode.dis.insights.redis.RedisLockService;
 import com.salescode.dis.insights.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class FileProgressEventListener {
     private String FAILURE_TOPIC;
 
     private final FileService fileService;
+    private final RedisLockService redisLockService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
     private final ObservabilityEventProducer eventProducer;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10); // Tune based on CPU cores
@@ -99,19 +101,22 @@ public class FileProgressEventListener {
 
     private void processAggregatedUpdateSafely(String key, AggregationWrapper wrapper) {
         FileProgressEvent aggregatedEvent = wrapper.getAggregatedEvent();
-        try {
-            fileService.updateProgress(
-                    aggregatedEvent.getFileId(),
-                    aggregatedEvent.getMasterName(),
-                    aggregatedEvent.getJobId(),
-                    aggregatedEvent.getLob(),
-                    aggregatedEvent.getProgress()
-            );
-            log.debug("Progress updated successfully for key: {}", key);
-        } catch (Exception e) {
-            log.error("Failed to update aggregated progress for key: {}", key, e);
-            //  wrapper.getOriginalEvents().forEach(event -> sendToFailureTopic(event, e.getMessage()));
-        }
+        redisLockService.executeWithLockAndWait(aggregatedEvent.getFileId(), ()-> {
+            try {
+                fileService.updateProgress(
+                        aggregatedEvent.getFileId(),
+                        aggregatedEvent.getMasterName(),
+                        aggregatedEvent.getJobId(),
+                        aggregatedEvent.getLob(),
+                        aggregatedEvent.getProgress()
+                );
+                log.debug("Progress updated successfully for key: {}", key);
+            } catch (Exception e) {
+                log.error("Failed to update aggregated progress for key: {}", key, e);
+                //  wrapper.getOriginalEvents().forEach(event -> sendToFailureTopic(event, e.getMessage()));
+            }
+        });
+
     }
 
     private Optional<String> validate(FileProgressEvent event) {
