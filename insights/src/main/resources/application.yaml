@@ -20,7 +20,7 @@ spring:
   data:
     redis:
       host: localhost
-      port: 6379    
+      port: 6379
 
   devtools:
     add-properties: true
@@ -87,6 +87,11 @@ spring:
     activate:
       on-profile: uat
 
+  data:
+    redis:
+      host: uat-elasticache-redis-cluster.zymj1k.0001.aps1.cache.amazonaws.com
+      port: 6379
+
   kafka:
     bootstrap-servers: 164.52.202.184:9092
     consumer:
@@ -129,6 +134,10 @@ spring:
   config:
     activate:
       on-profile: demo
+  data:
+    redis:
+      host: redisdemo.wguhyp.ng.0001.aps1.cache.amazonaws.com
+      port: 6379
 
   aws:
     region: ap-south-1
