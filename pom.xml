@@ -330,6 +330,7 @@ under the License.
                         <configuration>
                             <files>
                                 <file>src/main/resources/application.properties</file>
+                                <file>src/main/resources/jenkins_application.properties</file>
                             </files>
                         </configuration>
                     </execution>
