@@ -73,8 +73,8 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
             "CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), " +
             "CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long)) " +
             "FROM JobEntity j " +
-            "LEFT JOIN FileStageMetrics s ON j.id = s.job.id AND (:modeOfIntegration IS NULL OR s.modeOfIntegration = :modeOfIntegration) " +
-            "WHERE j.lob = :lob AND j.lastModifiedTime BETWEEN :startDate AND :endDate " +
+            "LEFT JOIN FileStageMetrics s ON j.id = s.job.id " +
+            "WHERE j.lob = :lob AND j.lastModifiedTime BETWEEN :startDate AND :endDate AND (:modeOfIntegration IS NULL OR s.modeOfIntegration = :modeOfIntegration)" +
             "GROUP BY j.id, j.creationTime, j.lastModifiedTime, j.lob, j.startTime, j.endTime, j.status, " +
             "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master, s.modeOfIntegration")
     List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLobAndMode(@Param("lob") String lob,
