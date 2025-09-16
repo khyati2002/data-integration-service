@@ -102,6 +102,12 @@ spring:
     s3:
       bucket-name: globalintegration
 
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+
   redshift:
     jdbc-url: jdbc:redshift://redshift-channelkart-demo.c4ncoki1rp70.ap-south-1.redshift.amazonaws.com:5439/channelkartdemo?currentSchema=ex_schema_dataintegration
     username: dataintegrationuser
@@ -185,6 +191,12 @@ spring:
     region: ap-south-1
     s3:
       bucket-name: globalintegration
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
 
   redshift:
     jdbc-url: jdbc:redshift://redshift-channelkart-demo.c4ncoki1rp70.ap-south-1.redshift.amazonaws.com:5439/channelkartdemo?currentSchema=ex_schema_dataintegration
