@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import java.util.Optional;
@@ -101,5 +102,15 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
     @Transactional
     @Query("DELETE FROM FileStageMetrics fsm WHERE fsm.lastModifiedTime < :cutoffTime")
     int deleteByLastModifiedBefore(Instant cutoffTime);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE FileStageMetrics fsm SET fsm.progressStatus = :newStatus, fsm.lastModifiedTime = CURRENT_TIMESTAMP " +
+            "WHERE fsm.file.lob = :lob AND fsm.progressStatus = :currentStatus " +
+            "AND fsm.lastModifiedTime < :cutoffTime")
+    int updateStaleStageMetricsByLobAndStatus(@Param("lob") String lob,
+                                              @Param("currentStatus") ProgressStatus currentStatus,
+                                              @Param("newStatus") ProgressStatus newStatus,
+                                              @Param("cutoffTime") Instant cutoffTime);
 
 }

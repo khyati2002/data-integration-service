@@ -48,6 +48,18 @@ public class SafeInsightsManager {
         }
     }
 
+    public Optional<JobEntityResponseDto> createJobIfNotExists(String lob, JobEntityRequestDto jobRequest, String authorizationToken) {
+        try {
+            return Optional.ofNullable(insightsManager.createJobIfNotExists(lob, jobRequest, authorizationToken));
+        } catch (RestClientException e) {
+            log.warn("SafeInsightsManager: createJob operation failed for LOB '{}'. Returning Optional.empty().", lob);
+            return Optional.empty();
+        } catch (IllegalArgumentException e) {
+            log.warn("SafeInsightsManager: createJob operation called with invalid arguments for LOB '{}'. Returning Optional.empty().", lob, e);
+            return Optional.empty();
+        }
+    }
+
     public Optional<FileEntityResponseDto> updateFileCount(String lob, String masterName, String fileId, Long totalCount,String authorizationToken) {
         try {
             return Optional.ofNullable(insightsManager.updateFileCount(lob, masterName,fileId,totalCount,authorizationToken));

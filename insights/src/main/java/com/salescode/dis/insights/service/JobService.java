@@ -456,4 +456,20 @@ public class JobService {
                 .collect(Collectors.toMap(MetadataEntry::getKey, MetadataEntry::getValue));
     }
 
+    @Transactional
+    public int updateStaleJobs(String lob, ProgressStatus currentStatus,
+                               ProgressStatus newStatus, Instant cutoffTime) {
+
+        log.debug("Updating stale jobs for LOB: {}, currentStatus: {}, newStatus: {}, cutoffTime: {}",
+                lob, currentStatus, newStatus, cutoffTime);
+
+        int updatedCount = jobRepo.updateStaleJobsByLobAndStatus(
+                lob, currentStatus, newStatus, cutoffTime);
+
+        log.debug("Successfully updated {} jobs from {} to {} for LOB: {}",
+                updatedCount, currentStatus, newStatus, lob);
+
+        return updatedCount;
+    }
+
 }

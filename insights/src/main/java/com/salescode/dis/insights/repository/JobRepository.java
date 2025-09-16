@@ -30,4 +30,14 @@ public interface JobRepository extends JpaRepository<JobEntity, String> {
     @Query("DELETE FROM JobEntity j WHERE j.lastModifiedTime < :cutoffTime")
     int deleteByLastModifiedBefore(Instant cutoffTime);
 
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE JobEntity j SET j.status = :newStatus, j.lastModifiedTime = CURRENT_TIMESTAMP " +
+            "WHERE j.lob = :lob AND j.status = :currentStatus " +
+            "AND j.lastModifiedTime < :cutoffTime")
+    int updateStaleJobsByLobAndStatus(@Param("lob") String lob,
+                                      @Param("currentStatus") ProgressStatus currentStatus,
+                                      @Param("newStatus") ProgressStatus newStatus,
+                                      @Param("cutoffTime") Instant cutoffTime);
 }

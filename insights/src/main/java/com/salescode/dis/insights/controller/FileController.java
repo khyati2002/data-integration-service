@@ -5,6 +5,7 @@ import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.FileReportEntity;
 import com.salescode.dis.insights.entity.mapped.TimeAwareEntity;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
 import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.repository.FileReportRepository;
@@ -33,6 +34,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @RestController
@@ -262,6 +266,103 @@ public class FileController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @Operation(
+            summary = "Update file status",
+            description = """
+        Updates the processing status of a specific file.
+        
+        The status must be one of the allowed values from the FileStatus enum 
+        (e.g., PENDING, PROCESSING, COMPLETED, FAILED).
+        """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "File status updated successfully",
+            content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Invalid status value or bad request",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "File not found with the specified ID",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error occurred while updating file status",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
+    @PutMapping("/master/{master_name}/unit/{id}/status/{status}")
+    public ResponseEntity<FileEntityResponseDto> updateFileStatus(
+            @PathVariable String lob,
+            @PathVariable("master_name") String masterName,
+            @PathVariable String id,
+            @PathVariable ProgressStatus status) {
+
+        log.info("Updating status of file {} in master {} to {}", id, masterName, status);
+
+        FileEntity updatedFile = fileService.updateStatus(id, masterName, status);
+        FileEntityResponseDto resp = fileEntityMapper.toDto(updatedFile);
+        return ResponseEntity.ok(resp);
+    }
+
+    @Operation(
+            summary = "Mark stale pending files as failed",
+            description = """
+        Finds all files for a specific LOB with PENDING status that haven't been 
+        modified in the last hour and updates their status to FAILED.
+        Returns a simple string message with the count of updated files.
+        """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "Files successfully updated to FAILED status",
+            content = @Content(mediaType = "text/plain", schema = @Schema(type = "string"))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Invalid LOB parameter",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error occurred",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
+    @PutMapping(value = "/files/pending", produces = "text/plain")
+    public ResponseEntity<String> timeoutPendingFiles(@PathVariable String lob) {
+
+        if (lob == null || lob.trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body("Error: LOB parameter is required");
+        }
+
+        try {
+            Instant cutoffTime = Instant.now().minus(1, ChronoUnit.HOURS);
+
+            log.info("Finding stale PENDING files for LOB {} older than {}", lob, cutoffTime);
+
+            // Update the files to FAILED status
+            int updatedCount = fileService.updateStaleFiles(
+                    lob, ProgressStatus.PENDING, ProgressStatus.FAILED, cutoffTime);
+
+            log.info("Updated {} stale PENDING files to FAILED for LOB {}", updatedCount, lob);
+
+            // Return simple string message with count
+            String message = String.format("Successfully updated %d stale PENDING files to FAILED status for LOB: %s",
+                    updatedCount, lob);
+
+            return ResponseEntity.ok(message);
+
+        } catch (Exception e) {
+            log.error("Error updating stale PENDING files for LOB {}: {}", lob, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: Failed to update stale files - " + e.getMessage());
+        }
+    }
+
 
 
 }

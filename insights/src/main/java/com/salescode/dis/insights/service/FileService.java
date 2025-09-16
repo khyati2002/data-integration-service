@@ -4,8 +4,8 @@ package com.salescode.dis.insights.service;
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.FileReportEntity;
-import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.repository.FileReportRepository;
 import com.salescode.dis.insights.repository.FileRepository;
@@ -20,8 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -109,5 +108,32 @@ public class FileService {
         report.setStatus("IN_PROGRESS");
         return fileReportRepository.save(report);
     }
+
+    public FileEntity updateStatus(String fileId, String masterName, ProgressStatus status) {
+        FileEntity file = fileRepo.findById(fileId)
+                .orElseThrow(() -> new ResourceNotFoundException("File not found: " + fileId));
+
+        file.setStatus(status);
+        return fileRepo.save(file);
+    }
+
+    @Transactional
+    public int updateStaleFiles(String lob, ProgressStatus currentStatus,
+                                ProgressStatus newStatus, Instant cutoffTime) {
+
+        log.debug("Updating stale files for LOB: {}, currentStatus: {}, newStatus: {}, cutoffTime: {}",
+                lob, currentStatus, newStatus, cutoffTime);
+
+        int updatedCount = fileRepo.updateStaleFilesByLobAndStatus(
+                lob, currentStatus, newStatus, cutoffTime);
+
+        log.debug("Successfully updated {} files from {} to {} for LOB: {}",
+                updatedCount, currentStatus, newStatus, lob);
+
+        return updatedCount;
+    }
+
+
+
 
 }

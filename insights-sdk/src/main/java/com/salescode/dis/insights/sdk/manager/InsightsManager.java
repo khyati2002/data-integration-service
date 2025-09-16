@@ -67,6 +67,25 @@ public class InsightsManager {
         }
     }
 
+    public JobEntityResponseDto createJobIfNotExists(String lob, JobEntityRequestDto jobRequest, String authorizationToken) {
+        Objects.requireNonNull(lob, "LOB cannot be null for createJob");
+        Objects.requireNonNull(jobRequest, "JobEntityRequestDto cannot be null for createJob");
+
+        try {
+            log.debug("Calling JobManager to create job for LOB: {}", lob);
+            if(this.getJobEntityResponseDto().isEmpty()) {
+                JobEntityResponseDto createdJob = this.jobManager.createJob(lob, jobRequest, authorizationToken);
+                this.setJobEntityResponseDto(createdJob);
+                log.debug("Job creation successful, updated internal state.");
+                return createdJob;
+            }
+            return null;
+        } catch (RestClientException e) {
+            log.error("Failed to create job via InsightsManager for LOB: {}, ExceptionMsg: {}", lob, e.getMessage());
+            throw e; // Re-throw the exception from the manager
+        }
+    }
+
     public JobEntityResponseDto updateJobStatus(String lob, String jobId, ProgressStatus status, String authorizationToken) {
         Objects.requireNonNull(lob, "LOB cannot be null for updateJobStatus");
         Objects.requireNonNull(jobId, "Job ID cannot be null for updateJobStatus");

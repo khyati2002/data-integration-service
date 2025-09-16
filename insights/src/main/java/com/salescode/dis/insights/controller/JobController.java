@@ -26,7 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -250,7 +252,62 @@ public class JobController {
         Map<String,String> modes = jobService.getModesPerLob(lob);
         return ResponseEntity.ok(modes);
     }
-    
+
+
+    @Operation(
+            summary = "Mark stale pending jobs as failed",
+            description = """
+        Finds all jobs for a specific LOB with PENDING status that haven't been 
+        modified in the last hour and updates their status to FAILED.
+        Returns a simple string message with the count of updated jobs.
+        """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "Jobs successfully updated to FAILED status",
+            content = @Content(mediaType = "text/plain", schema = @Schema(type = "string"))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Invalid LOB parameter",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error occurred",
+            content = @Content(schema = @Schema(implementation = ApiError.class))
+    )
+    @PutMapping(value = "/jobs/pending", produces = "text/plain")
+    public ResponseEntity<String> timeoutPendingJobs(@PathVariable String lob) {
+
+        if (lob == null || lob.trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body("Error: LOB parameter is required");
+        }
+
+        try {
+            // Calculate cutoff time (1 hour ago) using Instant
+            Instant cutoffTime = Instant.now().minus(1, ChronoUnit.HOURS);
+
+            log.info("Finding stale PENDING jobs for LOB {} older than {}", lob, cutoffTime);
+
+            // Update the jobs to FAILED status
+            int updatedCount = jobService.updateStaleJobs(
+                    lob, ProgressStatus.PENDING, ProgressStatus.FAILED, cutoffTime);
+
+            log.info("Updated {} stale PENDING jobs to FAILED for LOB {}", updatedCount, lob);
+
+            // Return simple string message with count
+            String message = String.format("Successfully updated %d stale PENDING jobs to FAILED status for LOB: %s",
+                    updatedCount, lob);
+
+            return ResponseEntity.ok(message);
+
+        } catch (Exception e) {
+            log.error("Error updating stale PENDING jobs for LOB {}: {}", lob, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: Failed to update stale jobs - " + e.getMessage());
+        }
+    }
 
 
 

@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,5 +36,16 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
     @Transactional
     @Query("DELETE FROM FileEntity f WHERE f.lastModifiedTime < :cutoffTime")
     int deleteByLastModifiedBefore(@Param("cutoffTime") Instant cutoffTime);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE FileEntity f SET f.status = :newStatus, f.lastModifiedTime = CURRENT_TIMESTAMP " +
+            "WHERE f.lob = :lob AND f.status = :currentStatus " +
+            "AND f.lastModifiedTime < :cutoffTime")
+    int updateStaleFilesByLobAndStatus(@Param("lob") String lob,
+                                       @Param("currentStatus") ProgressStatus currentStatus,
+                                       @Param("newStatus") ProgressStatus newStatus,
+                                       @Param("cutoffTime") Instant cutoffTime);
+
 
 }
