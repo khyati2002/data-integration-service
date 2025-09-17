@@ -96,10 +96,11 @@ public class JobService {
 
 
     public JobEntity createJobIfNotExists(String jobId, String lob, ModeOfIntegration modeOfIntegration) {
-        Optional<JobEntity> job = jobRepo.findById(jobId);
+        String id = jobId + lob;
+        Optional<JobEntity> job = jobRepo.findById(id);
         return job.orElseGet(()->{
             JobEntity jobEntity = new JobEntity();
-            jobEntity.setId(jobId);
+            jobEntity.setId(id);
             jobEntity.setLob(lob);
             return saveJob(jobEntity);
         });
