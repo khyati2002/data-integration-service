@@ -96,7 +96,7 @@ public class JobService {
 
 
     public JobEntity createJobIfNotExists(String jobId, String lob, ModeOfIntegration modeOfIntegration) {
-        Optional<JobEntity> job = jobRepo.findById(jobId);
+        Optional<JobEntity> job = jobRepo.findByIdAndLob(jobId,lob);
         return job.orElseGet(()->{
             JobEntity jobEntity = new JobEntity();
             jobEntity.setId(jobId);

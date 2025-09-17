@@ -16,8 +16,11 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface JobRepository extends JpaRepository<JobEntity, String> {
+
+    Optional<JobEntity> findByIdAndLob(String id,String lob);
 
     Page<JobEntity> getJobEntitiesByLob(String lob, Pageable pageable);
 
