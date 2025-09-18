@@ -4,7 +4,9 @@ import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.jooq.generated.tables.pojos.Productmetadata;
+import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.ProductDetails;
+import com.salescode.dim.jooq.impl.ProductMetaData;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,11 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
     private final List<String> fileNameColumns = Arrays.asList("fileName", "fileName_a", "fileName_b", "fileName_c", "fileName_f", "fileName_l");
 
     public static final String BATCH_CODE_SEPARATOR = "-";
+    private final LocationService locationService;
+
+    public ProductDetailsService() {
+        this.locationService = new LocationService();
+    }
 
 
     public List<List<ProductDetails>> getDataToSaveList(List<ProductDetails> productDetailsList) {
@@ -84,7 +91,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
                 if (value != null && !value.isBlank()) {
                     String filesimplename = getSimpleFileNameWithExtension(value);
                     if (filesimplename != null) {
-                        filesimplename = Optional.ofNullable(FilenameUtils.getBaseName(filesimplename).toLowerCase())
+                        filesimplename = Optional.of(FilenameUtils.getBaseName(filesimplename).toLowerCase())
                                 .orElse(null);
                     }
 
@@ -101,7 +108,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
     public void fillBatchCode(ProductDetails product) {
         if (product.getBatchCode() == null) {
             List<String> keys = getBatchKeys();
-            if (keys != null && !keys.isEmpty()) {
+            if (!keys.isEmpty()) {
                 StringBuilder buffer = new StringBuilder();
                 for (String key : keys) {
                     if (buffer.length() == 0) {
@@ -141,7 +148,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
     }
 
     private List<String> getBatchKeys() {
-        return Arrays.asList("batchCode");
+        return List.of("batchCode");
     }
 
     private Object getFieldValue(String fieldName, ProductDetails product) {
@@ -159,7 +166,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
         }
             String basename = FilenameUtils.getBaseName(filepath);
             if (basename != null) {
-                basename = basename.replaceAll("[^A-Za-z0-9_\\/\\-()]", "");
+                basename = basename.replaceAll("[^A-Za-z0-9_/\\-()]", "");
             }
             String ext = FilenameUtils.getExtension(filepath);
             return !ext.isEmpty() ? basename + "." + ext : basename;
@@ -168,7 +175,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
     public void saveProductMetadata(Collection<ProductDetails> productDetailsList, boolean insert ) {
 
         for (ProductDetails pd : productDetailsList) {
-            List<Productmetadata> metaList = pd.getProductMetaData();
+            List<ProductMetaData> metaList = pd.getProductMetaData();
             IdGenerator generator = new IdGenerator(metaList.get(0).getClass().getSimpleName());
 
             Map<String, Productmetadata> existingMetaMap = getDslContext().selectFrom(CK_PRODUCTMETADATA)
@@ -192,6 +199,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
                     meta.setVersion(existing.getVersion() + 1);
                 }
             }
+            populateBatchLocation(metaList);
                 if (insert) {
                     getDslContext().batchInsert(
                             metaList.stream()
@@ -208,6 +216,16 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
                   }
 
             LOG.info("Batch save for product metadata is successful");
+        }
+    }
+
+    private void populateBatchLocation(List<ProductMetaData> metaDataList) {
+        List<Location> locationList = metaDataList.stream()
+                .map(ProductMetaData::getLocation)  // Assuming there's a getLocation() method// Filter out null locations
+                .collect(Collectors.toList());
+        List<Location> savedList = locationService.findLocationOrPersistLocation(locationList);
+        for (int i = 0; i < metaDataList.size(); i++) {
+            metaDataList.get(i).setLocationHierarchy(savedList.get(i).getLocationHierarchy());
         }
     }
 

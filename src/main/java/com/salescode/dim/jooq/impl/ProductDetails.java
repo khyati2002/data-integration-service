@@ -2,14 +2,11 @@ package com.salescode.dim.jooq.impl;
 
 import com.salescode.dim.jooq.generated.tables.pojos.Discount;
 import com.salescode.dim.jooq.generated.tables.pojos.Productdetails;
-import com.salescode.dim.jooq.generated.tables.pojos.Productmetadata;
 import com.salescode.dim.jooq.generated.tables.pojos.Stock;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.io.Serializable;
@@ -23,7 +20,7 @@ import java.util.List;
 public class ProductDetails extends com.salescode.dim.jooq.generated.tables.pojos.Productdetails implements Serializable {
 
 
-    private List<Productmetadata> productMetaData;
+    private List<ProductMetaData> productMetaData;
     private List<Discount> discount;
     private List<Stock> stock;
 
@@ -93,7 +90,7 @@ public class ProductDetails extends com.salescode.dim.jooq.generated.tables.pojo
     }
 
     @JsonSetter("mCode")
-    public void setmCode(String mCode) {
+    public void setMCode(String mCode) {
         super.setMCode(mCode);
     }
 
