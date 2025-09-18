@@ -1,4 +1,5 @@
 package com.salescode.dis.insights.sdk.manager;
+import com.github.benmanes.caffeine.cache.Cache;
 import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
 import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
@@ -6,6 +7,7 @@ import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.enums.ProgressStatus;
+import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.sdk.InsightsEnv;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,16 +39,20 @@ public class InsightsManager {
 
     @Setter
     private JobEntityResponseDto jobEntityResponseDto;
+    private final Cache<String, Object> cache;
+    private static final String NOT_FOUND_CACHE_PREFIX = "NOT_FOUND:";
 
-
-    InsightsManager(RestTemplate restTemplate, InsightsEnv env) {
+    InsightsManager(RestTemplate restTemplate, InsightsEnv env, Cache<String, Object> cache) {
         Objects.requireNonNull(restTemplate, "RestTemplate cannot be null");
         Objects.requireNonNull(env, "InsightsEnv cannot be null");
         this.baseURL = env.getInsightsUrl();
         this.jobManager = new JobManager(restTemplate, baseURL);
         this.fileManager = new FileManager(restTemplate, baseURL);
+        this.cache = cache;
         log.info("InsightsManager initialized with base URL: {}", baseURL);
     }
+
+
 
     // --- Job Operations ---
 
@@ -180,7 +186,17 @@ public class InsightsManager {
                 log.debug("File progress update successful, but no request ID in response.");
             }
             return updateResponse;
-        } catch (RestClientException e) {
+        }
+        catch(ResourceNotFoundException e){
+            String notFoundCacheKey = NOT_FOUND_CACHE_PREFIX + ":" + fileId + ":" + masterName;
+            if (cache != null) {
+                log.error("Putting cache");
+                cache.put(notFoundCacheKey,1L );
+            }
+            log.error("File {} not found", fileId);
+            throw e;
+        }
+        catch (RestClientException e) {
             log.error("Failed to update file progress via InsightsManager for File ID: {}, ExceptionMsg: {}", fileId, e.getMessage());
             throw e; // Re-throw the exception from the manager
         }
@@ -214,5 +230,9 @@ public class InsightsManager {
         Objects.requireNonNull(fileId, "fileId cannot be null");
         log.trace("Retrieving FileEntityResponseDto for ID: {}", fileId);
         return fileEntityResponseDtoMap.get(fileId);
+    }
+
+    public Cache<String,Object> getLocalCache(){
+        return this.cache;
     }
 }

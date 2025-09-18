@@ -1,6 +1,7 @@
 package com.salescode.dis.insights.sdk.manager;
 
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
 import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
@@ -8,6 +9,7 @@ import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
 import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDto;
 import com.salescode.dis.insights.enums.ProgressStatus;
+import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClientException;
 
@@ -24,11 +26,14 @@ public class SafeInsightsManager {
 
     private final InsightsManager insightsManager;
 
+    private static final String NOT_FOUND_CACHE_PREFIX = "NOT_FOUND:";
     /**
      * Constructs a SafeInsightsManager.
      *
      * @param insightsManager The underlying InsightsManager instance to delegate calls to.
      *                        It is expected that this instance is fully initialized.
+     *
+     *
      */
     public SafeInsightsManager(InsightsManager insightsManager) {
         Objects.requireNonNull(insightsManager, "InsightsManager cannot be null for SafeInsightsManager");
@@ -85,7 +90,6 @@ public class SafeInsightsManager {
     }
 
 
-
     // --- Safe File Operations ---
 
     public Optional<FileEntityResponseDto> createFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest,String authorizationToken) {
@@ -115,9 +119,29 @@ public class SafeInsightsManager {
 
 
     public Optional<FileProgressResponse> updateFileProgress(String lob, String masterName, String fileId, FileProgressRequest progressPayload, String authorizationToken) {
+        Cache<String, Object> cache = insightsManager.getLocalCache();
+        String notFoundCacheKey = NOT_FOUND_CACHE_PREFIX + ":" + fileId + ":" + masterName;
+
+        Object cachedValue = cache != null ? cache.getIfPresent(notFoundCacheKey) : null;
+        if (cachedValue != null) {
+            Long currentCount = (Long) cachedValue + 1;
+
+            cache.put(notFoundCacheKey, currentCount);
+            if (currentCount % 1000 == 0) {
+                log.error("File not found for FileId: {}, Master: {}", fileId, masterName);
+            }
+
+            log.debug("File {} not found, skipping request", fileId, currentCount);
+            return Optional.empty();
+        }
         try {
             return Optional.ofNullable(insightsManager.updateFileProgress(lob, masterName, fileId, progressPayload, authorizationToken));
-        } catch (RestClientException e) {
+        }
+        catch(ResourceNotFoundException e){
+            log.warn("SafeInsightsManager: File not found for File ID '{}' . Returning Optional.empty(), ", fileId);
+            return Optional.empty();
+        }
+        catch (RestClientException e) {
             log.warn("SafeInsightsManager: updateFileProgress operation failed for File ID '{}'. Returning Optional.empty().", fileId);
             return Optional.empty();
         } catch (IllegalArgumentException e) {
