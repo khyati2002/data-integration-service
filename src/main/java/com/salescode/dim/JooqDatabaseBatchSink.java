@@ -127,7 +127,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             Properties kafkaSuccessTopicProps = new Properties();
             kafkaSuccessTopicProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getProperty("bootstrap.servers"));
             kafkaSuccessTopicProps .put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-            kafkaSuccessTopicProps .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StreamingRawDataSerializer.class.getName());
+            kafkaSuccessTopicProps .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StreamingRawDataSerializerSuccess.class.getName());
             kafkaSuccessTopicProps .put(ProducerConfig.ACKS_CONFIG, "1");
 
             this.topicName = DataStreamJob.getLobEventTopic(properties);
