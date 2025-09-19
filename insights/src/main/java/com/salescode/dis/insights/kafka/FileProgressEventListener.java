@@ -1,7 +1,6 @@
 package com.salescode.dis.insights.kafka;
 
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
-import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.event.ObservabilityEventProducer;
 import com.salescode.dis.insights.redis.RedisLockService;
 import com.salescode.dis.insights.service.FileService;
@@ -14,15 +13,15 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +31,17 @@ import java.util.stream.Collectors;
 @Profile("kafka")
 public class FileProgressEventListener {
 
+
+    private volatile long firstBatchTime = 0;  // timestamp when first batch arrives
+    private volatile long lastBatchTime = 0;   // timestamp when last batch is processed
+
+    // Idle threshold to consider "last batch"
+    private static final long IDLE_THRESHOLD_MS = 10000; // 30 seconds
+
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+
+
     @Value("${file.progress.update.failure.topic:file-progress-updates-failed}")
     private String FAILURE_TOPIC;
 
@@ -39,7 +49,21 @@ public class FileProgressEventListener {
     private final RedisLockService redisLockService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
     private final ObservabilityEventProducer eventProducer;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(10); // Tune based on CPU cores
+    private final ThreadPoolTaskExecutor fileProgressExecutor;
+
+    {
+        // Schedule periodic check for idle time
+        scheduler.scheduleAtFixedRate(() -> {
+            if (firstBatchTime > 0 && lastBatchTime > 0) {
+                long idleTime = System.currentTimeMillis() - lastBatchTime;
+                if (idleTime >= IDLE_THRESHOLD_MS) {
+                    long totalTime = lastBatchTime - firstBatchTime;
+                    log.info("✅ Total listening window: {} ms (~{} s). No new events in last {} ms",
+                            totalTime, totalTime / 1000, idleTime);
+                }
+            }
+        }, 10, 5, TimeUnit.SECONDS);
+    }
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}",
             groupId = "file-progress-processor", batch = "true",
@@ -47,7 +71,7 @@ public class FileProgressEventListener {
             concurrency = "5",
             properties = {
                 ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG + "=120000",      // 2 min
-                ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=500",
+                ConsumerConfig.MAX_POLL_RECORDS_CONFIG + "=1000",
                 ConsumerConfig.FETCH_MIN_BYTES_CONFIG + "=1048576",    //1MB
                 ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG + "=500",
             }
@@ -57,6 +81,12 @@ public class FileProgressEventListener {
             log.debug("Received empty or null event list. Skipping.");
             return;
         }
+        long now = System.currentTimeMillis();
+        if (firstBatchTime == 0) {
+            firstBatchTime = now;
+            log.info("🎯 First batch received at {}", firstBatchTime);
+        }
+
 
         log.info("Received {} events to process.", events.size());
         Map<String, AggregationWrapper> aggregationMap = aggregate(events);
@@ -66,19 +96,22 @@ public class FileProgressEventListener {
                         .collect(Collectors.groupingBy(
                                 entry -> entry.getValue().getAggregatedEvent().getFileId()
                         ));
-
-        // Process each file in isolation - no cross-file race conditions
         List<CompletableFuture<Void>> futures = partitioned.values().stream()
-                .map(entries -> CompletableFuture.runAsync(() -> {
-                    // All updates for this fileId processed sequentially
+                .map(entries -> CompletableFuture.runAsync(() ->
                     entries.forEach(entry ->
                             processAggregatedUpdateSafely(entry.getKey(), entry.getValue())
-                    );
-                }, executorService))
+                    ),fileProgressExecutor))
                 .toList();
-
-        // Wait for all files to complete processing
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        try {
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                    .get(100, TimeUnit.SECONDS);
+            log.debug("Batch processed successfully. Offsets committed.");
+            lastBatchTime = now;
+        } catch (TimeoutException te) {
+            log.error("Batch processing timed out. Offsets NOT committed → will retry", te);
+        } catch (Exception ex) {
+            log.error("Batch processing failed. Offsets NOT committed → will retry", ex);
+        }
     }
 
     private Map<String, AggregationWrapper> aggregate(List<FileProgressEvent> events) {

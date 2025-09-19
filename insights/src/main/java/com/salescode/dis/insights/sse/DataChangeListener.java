@@ -61,8 +61,6 @@ public class DataChangeListener {
         PROCESSING_ENTITIES.get().add(entityKey);
 
         try {
-            log.info("Handling immediate data change event: {}", event.getEventType());
-
             SSEService sseService = applicationContext.getBean(SSEService.class);
             String baseEventType = event.getEventType().replace("_IMMEDIATE", "");
 
@@ -86,8 +84,6 @@ public class DataChangeListener {
         PROCESSING_ENTITIES.get().add(entityKey);
 
         try {
-            log.info("Handling data change event: {}", event.getEventType());
-
             SSEService sseService = applicationContext.getBean(SSEService.class);
 
             handleEventByType(event.getEventType(), event, sseService);
