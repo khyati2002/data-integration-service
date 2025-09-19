@@ -38,6 +38,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.tables.CkIntegrationHistory.CK_INTEGRATION_HISTORY;
 
@@ -206,16 +207,30 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                                 }
                             }
 
-                            //saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
                             if (insightsEnabled && !entry.getValue().isEmpty()) {
-                                CommonDataModel model = entry.getValue().iterator().next();
-                                StreamingRawData rawData = modelToRawDataMap.get(model);
-                                insightsPublisher.publishEventAsync(
-                                        rawData,
-                                        entry.getValue().size(),
-                                        0,
-                                        0
-                                );
+                                // Group models by fileId and master (composite key)
+                                Map<String, List<CommonDataModel>> groupedModels = entry.getValue()
+                                        .stream()
+                                        .collect(Collectors.groupingBy(model -> {
+                                            StreamingRawData rawData = modelToRawDataMap.get(model);
+                                            // Create composite key: fileId + master
+                                            return rawData.getFileId() + "_" + rawData.getTransformerInfo().get(0).getEntityName(); // Adjust based on how you access master
+                                        }));
+
+                                // Publish insights for each group
+                                for (Map.Entry<String, List<CommonDataModel>> groupEntry : groupedModels.entrySet()) {
+                                    List<CommonDataModel> groupedList = groupEntry.getValue();
+                                    if (!groupedList.isEmpty()) {
+                                        CommonDataModel firstModel = groupedList.get(0);
+                                        StreamingRawData rawData = modelToRawDataMap.get(firstModel);
+                                        insightsPublisher.publishEventAsync(
+                                                rawData,
+                                                groupedList.size(),
+                                                0,
+                                                0
+                                        );
+                                    }
+                                }
                             }
 
 
