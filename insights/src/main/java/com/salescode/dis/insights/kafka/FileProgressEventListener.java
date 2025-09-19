@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,16 +29,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Profile("kafka")
 public class FileProgressEventListener {
-
-
-    private volatile long firstBatchTime = 0;  // timestamp when first batch arrives
-    private volatile long lastBatchTime = 0;   // timestamp when last batch is processed
-
-    // Idle threshold to consider "last batch"
-    private static final long IDLE_THRESHOLD_MS = 10000; // 30 seconds
-
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-
 
 
     @Value("${file.progress.update.failure.topic:file-progress-updates-failed}")
@@ -51,19 +40,6 @@ public class FileProgressEventListener {
     private final ObservabilityEventProducer eventProducer;
     private final ThreadPoolTaskExecutor fileProgressExecutor;
 
-    {
-        // Schedule periodic check for idle time
-        scheduler.scheduleAtFixedRate(() -> {
-            if (firstBatchTime > 0 && lastBatchTime > 0) {
-                long idleTime = System.currentTimeMillis() - lastBatchTime;
-                if (idleTime >= IDLE_THRESHOLD_MS) {
-                    long totalTime = lastBatchTime - firstBatchTime;
-                    log.info("✅ Total listening window: {} ms (~{} s). No new events in last {} ms",
-                            totalTime, totalTime / 1000, idleTime);
-                }
-            }
-        }, 10, 5, TimeUnit.SECONDS);
-    }
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}",
             groupId = "file-progress-processor", batch = "true",
@@ -81,13 +57,6 @@ public class FileProgressEventListener {
             log.debug("Received empty or null event list. Skipping.");
             return;
         }
-        long now = System.currentTimeMillis();
-        if (firstBatchTime == 0) {
-            firstBatchTime = now;
-            log.info("🎯 First batch received at {}", firstBatchTime);
-        }
-
-
         log.info("Received {} events to process.", events.size());
         Map<String, AggregationWrapper> aggregationMap = aggregate(events);
         // Group by fileId to prevent race conditions on same file
@@ -106,7 +75,6 @@ public class FileProgressEventListener {
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
                     .get(100, TimeUnit.SECONDS);
             log.debug("Batch processed successfully. Offsets committed.");
-            lastBatchTime = now;
         } catch (TimeoutException te) {
             log.error("Batch processing timed out. Offsets NOT committed → will retry", te);
         } catch (Exception ex) {
