@@ -1,0 +1,7 @@
+{
+    "bootstrap.servers": "b-1.demo-cluster-1.cw43sk.c4.kafka.ap-south-1.amazonaws.com:9092,b-2.demo-cluster-2.cw43sk.c4.kafka.ap-south-1.amazonaws.com:9092",
+    "jdbc.password": "Unnati#24Feb!",
+    "jdbc.url": "jdbc:mysql://demoaurora.c2szfgab1pix.ap-south-1.rds.amazonaws.com:3306/ck_demounnati",
+    "jdbc.user": "demounnatiadmin",
+    "redisUrl": "redis://redisdemo.wguhyp.ng.0001.aps1.cache.amazonaws.com:6379"
+}
