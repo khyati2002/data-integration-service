@@ -5,6 +5,8 @@ pipeline {
         string(name: 'LOB_NAME', defaultValue: 'new-lob', description: 'Unique name for the new Line of Business')
         string(name: 'ENV', defaultValue: 'dev', description: 'Target environment (e.g., dev, qa, prod)')
         string(name: 'REGION', defaultValue: 'ap-south-1', description: 'Target AWS Region')
+        string(name: 'TERRAGRUNT_INPUTS', defaultValue: '{}', description: 'JSON string of terragrunt inputs to override')
+        string(name: 'FLINK_PROPERTIES', defaultValue: '{}', description: 'JSON string of flink properties to override')
     }
 
     stages {
@@ -12,7 +14,7 @@ pipeline {
             steps {
                 script {
                     // Ensure Node.js is available in your Jenkins agent environment
-                    sh "node scripts/setup-lob.js --lob '${params.LOB_NAME}' --env '${params.ENV}' --region '${params.REGION}'"
+                    sh "node scripts/setup-lob.js --lob '${params.LOB_NAME}' --env '${params.ENV}' --region '${params.REGION}' --terragrunt-inputs '${params.TERRAGRUNT_INPUTS}' --flink-properties '${params.FLINK_PROPERTIES}'"
                 }
             }
         }
