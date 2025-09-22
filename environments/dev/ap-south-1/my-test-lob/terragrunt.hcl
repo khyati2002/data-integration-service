@@ -9,4 +9,5 @@ inputs = {
   region = "ap-south-1"
   s3_bucket_name = "salescode-dev-uat"
   s3_file_key = "dataintegration/my-test-lob/my-test-lob-project.jar"
+  flink_app_environment_variables = file("${get_terragrunt_dir()}/flink-common-properties.json")
 }

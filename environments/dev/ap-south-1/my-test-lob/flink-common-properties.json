@@ -23,6 +23,7 @@
     "InOut0": {
       "acks": "1",
       "event.topic": "dataintegration-event",
-      "failure.topic": "int-failure-streams-dis"
+      "failure.topic": "int-failure-streams-dis",
+      "stream.name": "dataintegration-my-test-lob"
     }
   }

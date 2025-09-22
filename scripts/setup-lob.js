@@ -83,27 +83,28 @@ const main = () => {
   fs.writeFileSync(flinkPropertiesPath, propertiesTemplate);
   console.log('flink-common-properties.json created.');
 
-  // Prepare Flink environment variables for Terraform
-  const flinkPropertiesJson = JSON.parse(propertiesTemplate);
-  const flinkAppEnvVars = {
-    "FlinkProperties": flinkPropertiesJson
-  };
-
   // 3. Generate terragrunt.hcl
   const terragruntInputs = {
     flink_app_name: `dataintegration-${lob}`,
     region: region,
     s3_bucket_name: envConfig.s3_bucket_name,
     s3_file_key: `dataintegration/${lob}/${lob}-project.jar`,
-    flink_app_environment_variables: flinkAppEnvVars,
-    ...terragruntInputsConfig
+    ...terragruntInputsConfig,
+    // This must be the last entry, so it is not overridden by terragruntInputsConfig
+    flink_app_environment_variables: 'file(\"${get_terragrunt_dir()}/flink-common-properties.json\")',
   };
 
   const inputsContent = Object.entries(terragruntInputs)
     .map(([key, value]) => {
         if (typeof value === 'string') {
-            return `  ${key} = "${value}"`;
+            // The value for flink_app_environment_variables is a raw HCL expression,
+            // not a string that needs to be quoted.
+            if (key === 'flink_app_environment_variables') {
+                return `  ${key} = ${value}`;
+            }
+            return `  ${key} = \"${value}\"`;
         }
+        // For any other complex types, stringify them.
         return `  ${key} = ${JSON.stringify(value)}`;
     })
     .join('\n');

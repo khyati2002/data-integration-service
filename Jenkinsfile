@@ -10,11 +10,28 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    def branchName = "feature/${params.LOB_NAME}"
+                    echo "Checking out branch: ${branchName}"
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: branchName]],
+                        userRemoteConfigs: scm.userRemoteConfigs
+                    ])
+                }
+            }
+        }
         stage('Setup LOB Environment') {
             steps {
                 script {
                     // Ensure Node.js is available in your Jenkins agent environment
                     sh "node scripts/setup-lob.js --lob '${params.LOB_NAME}' --env '${params.ENV}' --region '${params.REGION}' --terragrunt-inputs '${params.TERRAGRUNT_INPUTS}' --flink-properties '${params.FLINK_PROPERTIES}'"
+                    
+                    // Commit the generated files
+                    sh "git add environments/${params.ENV}/${params.REGION}/${params.LOB_NAME}/"
+                    sh "git commit -m 'feat: Add/Update LOB ${params.LOB_NAME}'"
                 }
             }
         }
