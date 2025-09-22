@@ -45,8 +45,8 @@ public class FileProgressController {
     private final FileRepository fileRepository;
     private final ValidationService validationService;
     private final StageService stageService;
-    @Value("${file.progress.update.topic:file-progress-updates}")
     private final KafkaProgressPublisher kafkaProgressPublisher;
+    @Value("${file.progress.update.topic:file-progress-updates}")
     private String fileUpdatesTopic;
 
     @Operation(summary = "Update file progress", description = "Updates the progress metrics for a file")
