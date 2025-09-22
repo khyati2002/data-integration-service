@@ -8,7 +8,7 @@ import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.error.ApiError;
-import com.salescode.dis.insights.mapper.FileStageMetricsMapper;
+import com.salescode.dis.insights.kafka.KafkaProgressPublisher;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.service.FileService;
@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.nio.charset.StandardCharsets;
@@ -31,6 +32,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/{lob}")
@@ -44,6 +46,7 @@ public class FileProgressController {
     private final ValidationService validationService;
     private final StageService stageService;
     @Value("${file.progress.update.topic:file-progress-updates}")
+    private final KafkaProgressPublisher kafkaProgressPublisher;
     private String fileUpdatesTopic;
 
     @Operation(summary = "Update file progress", description = "Updates the progress metrics for a file")
@@ -60,27 +63,20 @@ public class FileProgressController {
       if(progress.getModeOfIntegration()== ModeOfIntegration.CK_MDM_KAFKA) {
           try {
               fileId = new String(Base64.getUrlDecoder().decode(fileId), StandardCharsets.UTF_8);
-          } catch (Exception e) {
+          } catch (Exception ignored) {
+              log.warn("Invalid Base64 fileId for CK_MDM_KAFKA: fileId={}", fileId, ignored);
           }
       }
-        FileEntity file = fileService.get(fileId,masterName);
-        FileProgressEvent event = new FileProgressEvent();
         String eventId = UUID.randomUUID().toString();
-        event.setEventId(eventId);
-        event.setFileId(fileId);
-        event.setLob(lob);
-        event.setMasterName(masterName);
-        event.setProgress(progress);
-        event.setJobId(file.getJob().getId());
-        kafkaTemplate.send(fileUpdatesTopic, fileId, event);
-
-        FileProgressResponse response = new FileProgressResponse();
-        response.setRequestId(event.getEventId());
-        response.setStatus("ACCEPTED");
-        response.setMessage("Progress update has been queued");
-        response.setFileId(fileId);
-        response.setMaster(masterName);
-        response.setModeOfIntegration(progress.getModeOfIntegration());
+        kafkaProgressPublisher.sendKafkaMessage(fileUpdatesTopic, fileId, progress, lob, masterName, eventId);
+        FileProgressResponse response = FileProgressResponse.builder()
+                .requestId(eventId)
+                .status("ACCEPTED")
+                .message("Progress update has been queued")
+                .fileId(fileId)
+                .master(masterName)
+                .modeOfIntegration(progress.getModeOfIntegration())
+                .build();
         return ResponseEntity.accepted().body(response);
     }
 

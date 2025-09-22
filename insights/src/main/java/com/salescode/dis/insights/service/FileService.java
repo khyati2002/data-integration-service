@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -61,6 +62,7 @@ public class FileService {
         }
     }
 
+    @Cacheable(value = "files", key = "#fileId + '_' + #master")
     @Transactional(readOnly = true)
     public FileEntity get(String fileId, String master) {
         return fileRepo.findByFileIdAndMaster(fileId, master)
