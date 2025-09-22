@@ -14,7 +14,7 @@ variable "region" {
 
 variable "flink_app_runtime_environment" {
   type = string
-  default = "FLINK-1_18"
+  default = "FLINK-1_20"
 }
 
 variable "flink_app_allow_non_restored_state" {
@@ -42,7 +42,7 @@ variable "flink_app_parallelism_per_kpu" {
 
 variable "flink_app_autoscaling_enabled" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "flink_app_monitoring_log_level" {
@@ -57,7 +57,7 @@ variable "flink_app_monitoring_metrics_level" {
 
 variable "flink_app_snapshots_enabled" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "flink_app_restore_type" {
@@ -72,7 +72,7 @@ variable "flink_app_snapshot_name" {
 
 variable "flink_app_start" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "code_content_type" {
