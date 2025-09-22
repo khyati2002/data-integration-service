@@ -53,7 +53,8 @@ const main = () => {
 
   // 2. Generate terragrunt.hcl
   const terragruntInputs = {
-    flink_app_name: `flink-app-${lob}`,
+    flink_app_name: `dataintegration-${lob}`,
+    region: region,
     ...terragruntInputsConfig
   };
 
@@ -71,7 +72,7 @@ include "root" {
   path = find_in_parent_folders()
 }
 terraform {
-  source = "../../../../../../terraform"
+  source = "../../../../terraform"
 }
 inputs = {
 ${inputsContent}
