@@ -51,10 +51,51 @@ const main = () => {
   fs.mkdirSync(targetDir, { recursive: true });
   console.log(`Created directory: ${targetDir}`);
 
-  // 2. Generate terragrunt.hcl
+  // Load environment config
+  const envConfigPath = path.join('environments', env, region, 'config.json');
+  if (!fs.existsSync(envConfigPath)) {
+    console.error(`Error: Environment config file not found at ${envConfigPath}`);
+    process.exit(1);
+  }
+  const envConfig = JSON.parse(fs.readFileSync(envConfigPath, 'utf8'));
+
+  // 2. Generate flink-common-properties.json
+  const templatePath = path.join('terraform', 'flink-common-properties.json');
+
+  if (!fs.existsSync(templatePath)) {
+    console.error(`Error: Template file not found at ${templatePath}`);
+    process.exit(1);
+  }
+
+  let propertiesTemplate = fs.readFileSync(templatePath, 'utf8');
+  
+  const finalFlinkConfig = { ...envConfig, ...flinkPropertiesConfig };
+
+  // Replace environment-specific placeholders
+  for (const [key, value] of Object.entries(finalFlinkConfig)) {
+    propertiesTemplate = propertiesTemplate.replace(new RegExp(`__${key.toUpperCase().replace('.', '\\.')}__`, 'g'), value);
+  }
+
+  // Replace the LOB placeholder
+  propertiesTemplate = propertiesTemplate.replace(/__LOB__/g, lob);
+
+  const flinkPropertiesPath = path.join(targetDir, 'flink-common-properties.json');
+  fs.writeFileSync(flinkPropertiesPath, propertiesTemplate);
+  console.log('flink-common-properties.json created.');
+
+  // Prepare Flink environment variables for Terraform
+  const flinkPropertiesJson = JSON.parse(propertiesTemplate);
+  const flinkAppEnvVars = {
+    "FlinkProperties": flinkPropertiesJson
+  };
+
+  // 3. Generate terragrunt.hcl
   const terragruntInputs = {
     flink_app_name: `dataintegration-${lob}`,
     region: region,
+    s3_bucket_name: envConfig.s3_bucket_name,
+    s3_file_key: `dataintegration/${lob}/${lob}-project.jar`,
+    flink_app_environment_variables: flinkAppEnvVars,
     ...terragruntInputsConfig
   };
 
@@ -63,7 +104,7 @@ const main = () => {
         if (typeof value === 'string') {
             return `  ${key} = "${value}"`;
         }
-        return `  ${key} = ${value}`;
+        return `  ${key} = ${JSON.stringify(value)}`;
     })
     .join('\n');
 
@@ -81,35 +122,6 @@ ${inputsContent}
 
   fs.writeFileSync(path.join(targetDir, 'terragrunt.hcl'), terragruntContent);
   console.log('terragrunt.hcl created.');
-
-  // 3. Generate flink-common-properties.json
-  const templatePath = path.join('terraform', 'flink-common-properties.json');
-  const envConfigPath = path.join('environments', env, region, 'config.json');
-
-  if (!fs.existsSync(templatePath)) {
-    console.error(`Error: Template file not found at ${templatePath}`);
-    process.exit(1);
-  }
-  if (!fs.existsSync(envConfigPath)) {
-    console.error(`Error: Environment config file not found at ${envConfigPath}`);
-    process.exit(1);
-  }
-
-  let propertiesTemplate = fs.readFileSync(templatePath, 'utf8');
-  const envConfig = JSON.parse(fs.readFileSync(envConfigPath, 'utf8'));
-
-  const finalFlinkConfig = { ...envConfig, ...flinkPropertiesConfig };
-
-  // Replace environment-specific placeholders
-  for (const [key, value] of Object.entries(finalFlinkConfig)) {
-    propertiesTemplate = propertiesTemplate.replace(new RegExp(`__${key.toUpperCase().replace('.', '\.')}__`, 'g'), value);
-  }
-
-  // Replace the LOB placeholder
-  propertiesTemplate = propertiesTemplate.replace(/__LOB__/g, lob);
-
-  fs.writeFileSync(path.join(targetDir, 'flink-common-properties.json'), propertiesTemplate);
-  console.log('flink-common-properties.json created.');
 
   console.log(`
 Scaffolding for LOB '${lob}' in '${env}/${region}' completed successfully.`);

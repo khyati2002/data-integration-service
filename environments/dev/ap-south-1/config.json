@@ -3,5 +3,6 @@
     "jdbc.password": "eNTIELFoRnARmEDh",
     "jdbc.url": "jdbc:mysql://dev-serverless-cluster.cluster-ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/db___LOB__",
     "jdbc.user": "ckuatadmin",
-    "redisUrl": "redis://dev-elasticache-redis-cluster.zymj1k.0001.aps1.cache.amazonaws.com:6379"
+    "redisUrl": "redis://dev-elasticache-redis-cluster.zymj1k.0001.aps1.cache.amazonaws.com:6379",
+    "s3_bucket_name": "salescode-dev-uat"
 }
