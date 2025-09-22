@@ -51,6 +51,8 @@ data "aws_iam_policy_document" "flink_app" {
 }
 
 data "aws_iam_policy_document" "kms_key_policy" {
+  count = var.enable_cloudwatch_encryption ? 1 : 0
+
   version = "2012-10-17"
   policy_id = "key-default-1"
 
@@ -99,16 +101,18 @@ resource "aws_iam_role_policy" "flink_app" {
 }
 
 resource "aws_kms_key" "cloudwatch_log_group_key" {
+  count = var.enable_cloudwatch_encryption ? 1 : 0
+
   description             = "KMS key for CloudWatch Log Group encryption"
   deletion_window_in_days = 30
   enable_key_rotation     = true
-  policy                  = data.aws_iam_policy_document.kms_key_policy.json
+  policy                  = data.aws_iam_policy_document.kms_key_policy[0].json
 }
 
 resource "aws_cloudwatch_log_group" "flink_app" {
   name              = var.flink_app_name
   retention_in_days = var.cloudwatch_log_retention
-  kms_key_id        = aws_kms_key.cloudwatch_log_group_key.arn
+  kms_key_id        = var.enable_cloudwatch_encryption ? aws_kms_key.cloudwatch_log_group_key[0].arn : null
 }
 
 resource "aws_cloudwatch_log_stream" "flink_app" {

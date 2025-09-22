@@ -82,5 +82,11 @@ variable "code_content_type" {
 
 variable "cloudwatch_log_retention" {
   type    = number
-  default = 365
+  default = 3
+}
+
+variable "enable_cloudwatch_encryption" {
+  type    = bool
+  default = false
+  description = "Set to true to enable customer-managed KMS encryption for CloudWatch logs."
 }
