@@ -27,9 +27,9 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
     List<FileStageMetrics> findByJobIdIn(List<String> jobIds);
 
     @Query("SELECT new com.salescode.dis.insights.dto.LobSummaryDto(" +
-            "j.lob, " +
-            "COALESCE(AVG(f.throughput), 0), " +
-            "COALESCE(MAX(f.throughput), 0), " +
+            "f.job.lob, " + // Keep this to get the LOB in the DTO
+            "AVG(f.throughput), " +
+            "MAX(f.throughput), " +
             "SUM(CASE WHEN f.stageType = :queueStage THEN f.successCount ELSE 0 END), " +
             "SUM(CASE WHEN f.stageType = :queueStage THEN (f.logicalFailureCount + f.serverFailureCount) ELSE 0 END), " +
             "SUM(CASE WHEN f.stageType = :saveStage THEN f.successCount ELSE 0 END), " +
@@ -37,52 +37,42 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
             "COUNT(DISTINCT CASE WHEN j.status = 'PENDING' THEN j.id ELSE NULL END), " +
             "COUNT(DISTINCT CASE WHEN j.status IN ('COMPLETED_SUCCESSFULLY', 'COMPLETED_UNSUCCESSFULLY') THEN j.id ELSE NULL END), " +
             "COUNT(DISTINCT CASE WHEN j.status = 'FAILED' THEN j.id ELSE NULL END)) " +
-            "FROM JobEntity j LEFT JOIN FileStageMetrics f ON j.id = f.job.id " +
-            "WHERE j.lob IN :lobs " +
-            "AND j.lastModifiedTime BETWEEN :startDate AND :endDate " +
-            "GROUP BY j.lob")
+            "FROM FileStageMetrics f JOIN f.job j " +
+            "WHERE f.job.lob IN :lobs " + // Changed to IN clause
+            "AND f.lastModifiedTime BETWEEN :startDate AND :endDate " +
+            "GROUP BY f.job.lob")
     List<LobSummaryDto> findAggregateMetricsAndJobCountsByLobAndDateRange(
                                                                            @Param("lobs") List<String> lobs, // Change parameter type to List<String>
                                                                            @Param("queueStage") ProgressStage queueStage,
                                                                            @Param("saveStage") ProgressStage saveStage,
                                                                            @Param("startDate") Instant startDate,
                                                                            @Param("endDate") Instant endDate);
+
     @Query("SELECT new com.salescode.dis.insights.dto.job.JobStageAccumulatedData(" +
             "j.id, s.master, s.modeOfIntegration, j.creationTime, j.lastModifiedTime, j.lob," +
             "CAST(j.extendedAttributes AS string), " +
             "j.startTime, j.endTime, j.status ," +
             "j.publisherJobUri, j.consumerJobUri, " +
-            "s.stageType, CAST(COALESCE(SUM(s.successCount), 0) AS long), " +
-            "CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), " +
-            "CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long)) " +
-            "FROM JobEntity j " +
-            "LEFT JOIN FileStageMetrics s ON j.id = s.job.id " +
+            "s.stageType, CAST(COALESCE(SUM(s.successCount), 0) AS long),CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long))" +
+            "FROM JobEntity j JOIN FileStageMetrics s ON j.id = s.job.id " +
             "WHERE j.lob = :lob AND j.lastModifiedTime BETWEEN :startDate AND :endDate " +
             "GROUP BY j.id, j.creationTime, j.lastModifiedTime, j.lob, j.startTime, j.endTime, j.status, " +
             "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master, s.modeOfIntegration")
-    List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLob(@Param("lob") String lob,
-                                                                    @Param("startDate") Instant startDate,
+    List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLob(@Param("lob") String lob,    @Param("startDate") Instant startDate,
                                                                     @Param("endDate") Instant endDate);
-
 
     @Query("SELECT new com.salescode.dis.insights.dto.job.JobStageAccumulatedData(" +
             "j.id, s.master, s.modeOfIntegration, j.creationTime, j.lastModifiedTime, j.lob," +
             "CAST(j.extendedAttributes AS string), " +
             "j.startTime, j.endTime, j.status ," +
             "j.publisherJobUri, j.consumerJobUri, " +
-            "s.stageType, CAST(COALESCE(SUM(s.successCount), 0) AS long), " +
-            "CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), " +
-            "CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long)) " +
-            "FROM JobEntity j " +
-            "LEFT JOIN FileStageMetrics s ON j.id = s.job.id " +
-            "WHERE j.lob = :lob AND j.lastModifiedTime BETWEEN :startDate AND :endDate AND (:modeOfIntegration IS NULL OR s.modeOfIntegration = :modeOfIntegration)" +
+            "s.stageType, CAST(COALESCE(SUM(s.successCount), 0) AS long),CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long))" +
+            "FROM JobEntity j JOIN FileStageMetrics s ON j.id = s.job.id " +
+            "WHERE j.lob = :lob AND j.lastModifiedTime BETWEEN :startDate AND :endDate AND s.modeOfIntegration = :modeOfIntegration " +
             "GROUP BY j.id, j.creationTime, j.lastModifiedTime, j.lob, j.startTime, j.endTime, j.status, " +
             "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master, s.modeOfIntegration")
-    List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLobAndMode(@Param("lob") String lob,
-                                                                           @Param("startDate") Instant startDate,
-                                                                           @Param("endDate") Instant endDate,
-                                                                           @Param("modeOfIntegration") ModeOfIntegration modeOfIntegration);
-
+    List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLobAndMode(@Param("lob") String lob, @Param("startDate") Instant startDate,
+                                                                           @Param("endDate") Instant endDate, @Param("modeOfIntegration")ModeOfIntegration modeOfIntegration);
 
 
     @Query("SELECT s FROM FileStageMetrics s " +
