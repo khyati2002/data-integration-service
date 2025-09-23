@@ -41,7 +41,7 @@ import java.util.*;
 public class S3ExportService {
 
     private static final Logger logger = LoggerFactory.getLogger(S3ExportService.class);
-    private static final int CHUNK_SIZE = 1000;
+    private static final int CHUNK_SIZE = 5000;
 
     private final S3Client s3Client;
     private final String bucketName;
@@ -51,19 +51,7 @@ public class S3ExportService {
     private final SSEService sseService;
     private final S3Presigner s3Presigner;
     private final InsightsMetadataRepository metadataRepository;
-
     private static final String default_sql = """
-            SELECT
-                features,
-                responses,
-                fileid,
-                lob,
-                entity_name,
-                "timestamp",
-                recordstatus
-            FROM ex_schema_dataintegration.integration_success
-            WHERE fileid = ? AND lob = ? AND entity_name = ?
-            UNION ALL
             SELECT
                 features,
                 responses,
@@ -77,9 +65,11 @@ public class S3ExportService {
             """;
 
     private static final String countSql = """
-    SELECT
-      (SELECT count(*) FROM ex_schema_dataintegration.integration_success WHERE fileid = ? AND lob = ? AND entity_name = ?)
-    + (SELECT count(*) FROM ex_schema_dataintegration.integration_failure WHERE fileid = ? AND lob = ? AND entity_name = ?)
+        SELECT COUNT(*)
+        FROM ex_schema_dataintegration.integration_failure
+        WHERE fileid = ?
+        AND lob = ?
+        AND entity_name = ?;
     """;
 
     public S3ExportService(
@@ -205,7 +195,7 @@ public class S3ExportService {
             try {
                 totalRecords = jdbcTemplate.queryForObject(
                         countSql,
-                        new Object[]{fileId, lob, entity,fileId, lob, entity},
+                        new Object[]{fileId, lob, entity},
                         Long.class
                 );
             } catch (Exception exCount) {
@@ -219,7 +209,7 @@ public class S3ExportService {
                         .orElse(default_sql);
 
                 StringBuilder sqlBuilder = new StringBuilder();
-                List<Object> queryParams = new ArrayList<>(List.of(fileId,lob,entity,fileId,lob,entity));
+                List<Object> queryParams = new ArrayList<>(List.of(fileId,lob,entity));
 
 
                 sqlBuilder.append("SELECT * FROM (")
