@@ -31,7 +31,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 
         for (ProductDetails productDetails : productDetailsList) {
             productDetails.setId(new IdGenerator(productDetails.getClass().getSimpleName()).getId(productDetails));
-            productDetails.setChanged((byte) 1);
+            productDetails.setChanged(true);
             productDetails.setActiveStatus(ActiveStatus.ACTIVE);
             fillBatchCode(productDetails);
             processFileNames(productDetails);
