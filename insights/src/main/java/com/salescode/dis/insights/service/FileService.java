@@ -69,7 +69,13 @@ public class FileService {
     @Transactional(readOnly = true)
     public FileEntity get(String fileId, String master) {
         return fileRepo.findByFileIdAndMaster(fileId, master)
-                .orElseThrow(() -> new ResourceNotFoundException("File not found: " + fileId));
+                .orElseThrow(() -> new ResourceNotFoundException("File not found for: " + fileId));
+    }
+
+    @Transactional(readOnly = true)
+    public FileEntity getFile(String fileId, String master) {
+        return fileRepo.findByFileIdAndMaster(fileId, master)
+                       .orElseThrow(() -> new ResourceNotFoundException("File not found: " + fileId));
     }
 
     @Transactional(readOnly = true)

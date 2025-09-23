@@ -74,7 +74,7 @@ public class FileController {
             decodedFileId = new String(Base64.getDecoder().decode(fileId));
         }
         catch (Exception e){}
-        FileEntity file = fileService.get(decodedFileId, masterName);
+        FileEntity file = fileService.getFile(decodedFileId, masterName);
         FileEntityResponseDto resp = fileEntityMapper.toDto(file);
         return ResponseEntity.ok(resp);
     }
