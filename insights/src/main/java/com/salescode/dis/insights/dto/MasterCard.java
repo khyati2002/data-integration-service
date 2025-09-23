@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @Builder
 public class MasterCard {
 
+    private String masterName;
     private Long pendingJobCount;
     private Long completedJobCount;
     private Long failedJobCount;

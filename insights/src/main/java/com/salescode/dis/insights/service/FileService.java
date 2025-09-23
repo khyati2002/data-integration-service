@@ -14,10 +14,13 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -34,6 +37,7 @@ public class FileService {
     private final FileRepository fileRepo;
     private final List<IFileOperationStrategy> fileOperationStrategies;
     private final FileReportRepository fileReportRepository;
+    private final  CacheManager cacheManager;
 
     private Map<ModeOfIntegration, IFileOperationStrategy> operationStrategyMap;
 
@@ -61,10 +65,17 @@ public class FileService {
         }
     }
 
+    @Cacheable(value = "files", key = "#fileId + '_' + #master")
     @Transactional(readOnly = true)
     public FileEntity get(String fileId, String master) {
         return fileRepo.findByFileIdAndMaster(fileId, master)
-                .orElseThrow(() -> new ResourceNotFoundException("File not found: " + fileId));
+                .orElseThrow(() -> new ResourceNotFoundException("File not found for: " + fileId));
+    }
+
+    @Transactional(readOnly = true)
+    public FileEntity getFile(String fileId, String master) {
+        return fileRepo.findByFileIdAndMaster(fileId, master)
+                       .orElseThrow(() -> new ResourceNotFoundException("File not found: " + fileId));
     }
 
     @Transactional(readOnly = true)
@@ -133,6 +144,10 @@ public class FileService {
         return updatedCount;
     }
 
+    public void clearFilesCache() {
+        Optional.ofNullable(cacheManager.getCache("files"))
+                .ifPresent(Cache::clear);
+    }
 
 
 

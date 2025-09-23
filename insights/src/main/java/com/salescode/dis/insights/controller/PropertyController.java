@@ -1,5 +1,6 @@
 package com.salescode.dis.insights.controller;
 
+import com.salescode.dis.insights.service.FileService;
 import com.salescode.dis.insights.service.PropertyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,9 +10,11 @@ import org.springframework.web.bind.annotation.*;
 public class PropertyController {
 
     private final PropertyService propertyService;
+    private final FileService fileService;
 
-    public PropertyController(PropertyService propertyService) {
+    public PropertyController(PropertyService propertyService, FileService fileService) {
         this.propertyService = propertyService;
+        this.fileService = fileService;
     }
 
     // GET /api/properties/{env}/{lob}
@@ -53,8 +56,9 @@ public class PropertyController {
     // DELETE /api/properties/cache
     @DeleteMapping("/cache")
     public ResponseEntity<String> clearAllCache() {
+        fileService.clearFilesCache();
         propertyService.clearAllCache();
-        return ResponseEntity.ok("All LOB feature cache cleared.");
+        return ResponseEntity.ok("All LOB feature cache and file cache cleared.");
     }
 
     @DeleteMapping("/cache/property")
