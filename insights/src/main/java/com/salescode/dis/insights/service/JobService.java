@@ -242,10 +242,12 @@ public class JobService {
         Map<String, List<JobStageAccumulatedData>> resultsByMaster = queryResults.stream()
                 .collect(Collectors.groupingBy(JobStageAccumulatedData::getMaster));
 
+        // Fixed master processing with proper stage aggregation
         List<MasterCard> resultsMaster = resultsByMaster.entrySet().stream()
                 .map(entry -> {
                     List<JobStageAccumulatedData> jobResults = entry.getValue();
 
+                    // Job status counts (this part was correct)
                     Map<ProgressStatus, Long> statusCounts = jobResults.stream()
                             .collect(Collectors.groupingBy(
                                     JobStageAccumulatedData::getStatus,
@@ -264,28 +266,32 @@ public class JobService {
                     Long failed = statusCounts.get(ProgressStatus.FAILED) != null ? statusCounts.get(ProgressStatus.FAILED) : 0L;
                     Long completed = completed_success + completed_unsuccess;
 
-                    List<AccumulatedStageDataDto> stages = jobResults.stream()
+                    // FIXED: Group by stage type and aggregate across all jobs for this master
+                    Map<ProgressStage, List<JobStageAccumulatedData>> stageGroups = jobResults.stream()
                             .filter(result -> result.getStageType() != null)
-                            .map(result -> AccumulatedStageDataDto.builder()
-                                    .stageType((result.getStageType()))
-                                    .totalSuccessCount(result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L)
-                                    .totalFailureCount((result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L) + (result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L))
-                                    .build())
-                            .collect(Collectors.toList());
+                            .collect(Collectors.groupingBy(JobStageAccumulatedData::getStageType));
 
-                    Long queueCount = stages.stream()
-                            .filter(stage -> stage.getStageType() == ProgressStage.QUEUE)
-                            .findFirst()
-                            .map(queueStage -> queueStage.getTotalSuccessCount() + queueStage.getTotalFailureCount())
-                            .orElse(0L);
+                    // Calculate aggregated counts per stage type
+                    Long queueCount = stageGroups.getOrDefault(ProgressStage.QUEUE, Collections.emptyList())
+                            .stream()
+                            .mapToLong(result ->
+                                    (result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L) +
+                                            (result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L) +
+                                            (result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L)
+                            )
+                            .sum();
 
-                    Long saveCount = stages.stream()
-                            .filter(stage -> stage.getStageType() == ProgressStage.SAVE)
-                            .findFirst()
-                            .map(saveStage -> saveStage.getTotalSuccessCount() + saveStage.getTotalFailureCount())
-                            .orElse(0L);
+                    Long saveCount = stageGroups.getOrDefault(ProgressStage.SAVE, Collections.emptyList())
+                            .stream()
+                            .mapToLong(result ->
+                                    (result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L) +
+                                            (result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L) +
+                                            (result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L)
+                            )
+                            .sum();
 
                     return MasterCard.builder()
+                            .masterName(entry.getKey())
                             .queueCount(queueCount)
                             .saveCount(saveCount)
                             .completedJobCount(completed)
