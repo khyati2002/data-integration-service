@@ -60,7 +60,7 @@ const main = () => {
   const envConfig = JSON.parse(fs.readFileSync(envConfigPath, 'utf8'));
 
   // 2. Generate flink-common-properties.json
-  const templatePath = path.join('terraform', 'flink-common-properties.json');
+  const templatePath = path.join('terraform_configs', 'flink-common-properties.json');
 
   if (!fs.existsSync(templatePath)) {
     console.error(`Error: Template file not found at ${templatePath}`);
@@ -114,7 +114,7 @@ include "root" {
   path = find_in_parent_folders()
 }
 terraform {
-  source = "../../../../terraform"
+  source = "../../../../terraform_configs"
 }
 inputs = {
 ${inputsContent}
