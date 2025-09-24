@@ -3,6 +3,7 @@ package com.salescode.dis.insights.scheduler;
 
 import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
+import com.salescode.dis.insights.enums.ProgressStage;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.service.strategy.ApiClientBasedFileOperationStrategy;
@@ -68,6 +69,9 @@ public class FileStageStatusScheduler {
             }
             else {
                 apiClientBasedFileOperationStrategy.updateStatus(stage);
+            }
+            if(stage.getStageType()== ProgressStage.PUBLISH) {
+                stage.setServerFailureCount(stage.getFile().getFileStageMetrics().get(0).getSuccessCount()-stage.getSuccessCount());
             }
         }
     }
