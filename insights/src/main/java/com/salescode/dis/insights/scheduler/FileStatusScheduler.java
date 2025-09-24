@@ -82,18 +82,21 @@ public class FileStatusScheduler {
         log.info("Updated file status and jobStatus {}", file.getId());
     }
 
-    private void updateCount(FileEntity file)
-    {
-        List<FileStageMetrics> fileStageMetrics=file.getFileStageMetrics().stream().sorted(FileStageMetrics.STAGE_ORDER_COMPARATOR).toList();
-        if(fileStageMetrics.get(0).getTotal()> file.getTotalCount())
-            fileStageMetrics.get(0).setSuccessCount(file.getTotalCount()-fileStageMetrics.get(0).getLogicalFailureCount()-fileStageMetrics.get(0).getServerFailureCount());
-        for(int i=1;i<fileStageMetrics.size();i++)
-        {
-            FileStageMetrics currentProgressStage=fileStageMetrics.get(i);
-            FileStageMetrics previousProgressStage=fileStageMetrics.get(i-1);
-            if(currentProgressStage.getTotal()>previousProgressStage.getTotal()) {
-                currentProgressStage.setSuccessCount(previousProgressStage.getSuccessCount()-currentProgressStage.getServerFailureCount()-currentProgressStage.getLogicalFailureCount());
+    private void updateCount(FileEntity file) {
+        long totalCount = file.getTotalCount();
+        if(totalCount==0) return;
+        List<FileStageMetrics> stages = file.getFileStageMetrics();
+        stages.sort(FileStageMetrics.STAGE_ORDER_COMPARATOR);
+        FileStageMetrics prev = stages.get(0);      // handling first stage
+        if (prev.getTotal() > totalCount) {
+            prev.setSuccessCount(totalCount - prev.getLogicalFailureCount() - prev.getServerFailureCount());
+        }
+        for (int i = 1; i < stages.size(); i++) {         // handling other stages
+            FileStageMetrics curr = stages.get(i);
+            if (curr.getTotal() > prev.getTotal()) {
+                curr.setSuccessCount(prev.getSuccessCount() - curr.getServerFailureCount() - curr.getLogicalFailureCount());
             }
+            prev = curr;
         }
     }
 }
