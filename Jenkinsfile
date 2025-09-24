@@ -77,16 +77,16 @@ pipeline {
         stage('Deploy Infrastructure (Manual Trigger)') {
             // This stage is for demonstrating the next step.
             // You might run this automatically or have a manual approval.
-//             input {
-//                 message "Deploy infrastructure for ${params.LOB_NAME}?"
-//                 ok "Yes, deploy"
-//             }
+            input {
+                message "Deploy infrastructure for ${params.LOB_NAME}?"
+                ok "Yes, deploy"
+            }
             steps {
                 dir("environments/${params.ENV}/${params.REGION}/${params.LOB_NAME}") {
 
                     withAWS(region: 'ap-south-1', credentials: 'dev_ui_build') {
                         // Ensure Terragrunt is installed on your Jenkins agent
-                        sh 'terragrunt run-all apply --terragrunt-non-interactive'
+                        // sh 'terragrunt run-all apply --terragrunt-non-interactive'
                         sh 'pwd'
                         sh 'ls -larth'
                     }
