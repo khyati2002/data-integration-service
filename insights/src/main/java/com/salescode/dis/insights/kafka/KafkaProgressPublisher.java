@@ -27,7 +27,7 @@ public class KafkaProgressPublisher {
             String eventId
     ) {
         try {
-            FileEntity file = fileService.get(fileId, masterName);
+            FileEntity file = fileService.getCached(fileId, masterName);
             FileProgressEvent event = new FileProgressEvent();
             event.setEventId(eventId);
             event.setFileId(fileId);

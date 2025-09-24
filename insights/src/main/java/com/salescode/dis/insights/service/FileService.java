@@ -65,9 +65,15 @@ public class FileService {
         }
     }
 
-    @Cacheable(value = "files", key = "#fileId + '_' + #master")
     @Transactional(readOnly = true)
     public FileEntity get(String fileId, String master) {
+        return fileRepo.findByFileIdAndMaster(fileId, master)
+                .orElseThrow(() -> new ResourceNotFoundException("File not found for: " + fileId));
+    }
+
+    @Cacheable(value = "files", key = "#fileId + '_' + #master")
+    @Transactional(readOnly = true)
+    public FileEntity getCached(String fileId, String master) {
         return fileRepo.findByFileIdAndMaster(fileId, master)
                 .orElseThrow(() -> new ResourceNotFoundException("File not found for: " + fileId));
     }
