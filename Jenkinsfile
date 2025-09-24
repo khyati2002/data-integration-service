@@ -19,7 +19,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    def branchName = "feature/${params.LOB_NAME}"
+                    def branchName = "standard-deployment"
                     echo "Checking out branch: ${branchName}"
                     checkout([
                         $class: 'GitSCM',
