@@ -64,7 +64,7 @@ pipeline {
             steps {
                 script {
                     // Ensure Node.js is available in your Jenkins agent environment
-                    sh "npm install"
+                    sh "npm init -y"
                     sh "node scripts/setup-lob.js --lob '${params.LOB_NAME}' --env '${params.ENV}' --region '${params.REGION}' --terragrunt-inputs '${params.TERRAGRUNT_INPUTS}' --flink-properties '${params.FLINK_PROPERTIES}'"
                     
                     // Commit the generated files
