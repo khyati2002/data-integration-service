@@ -19,6 +19,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
+                   cleanWs()
                     def branchName = "standard-deployment"
                     echo "Checking out branch: ${branchName}"
                     checkout([
@@ -43,7 +44,7 @@ pipeline {
                     sh '''
                         if ! command -v terraform >/dev/null 2>&1; then
                           wget https://releases.hashicorp.com/terraform/1.6.6/terraform_1.6.6_linux_amd64.zip
-                          unzip -o terraform_1.6.6_linux_amd64.zip
+                          unzip terraform_1.6.6_linux_amd64.zip
                           sudo mv terraform /usr/local/bin/
                         fi
                     '''
