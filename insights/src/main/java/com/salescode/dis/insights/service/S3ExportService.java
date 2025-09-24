@@ -141,7 +141,7 @@ public class S3ExportService {
             while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
                 rootCause = rootCause.getCause();
             }
-            String detailedErrorMessage = rootCause.getClass().getSimpleName() + ": " + rootCause.getMessage();
+            String detailedErrorMessage = rootCause.getMessage();
 
             Optional<FileReportEntity> updatedReport = fileReportRepository.findByFileId(fileId).map(r -> {
                 r.setStatus("FAILED");
