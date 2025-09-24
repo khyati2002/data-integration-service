@@ -62,6 +62,7 @@ public class FileStatusScheduler {
 
         for (FileEntity file : pendingFiles) {
             updateFileStatus(file);
+            updateCount(file);
         }
     }
 
@@ -78,6 +79,21 @@ public class FileStatusScheduler {
         file.setStatus(lastStageStatus);
         file.setEndTime(Instant.now());
         jobService.recalcStatus(file.getJob());
-        log.info("Updated file status and jobStatus " + file.getId());
+        log.info("Updated file status and jobStatus {}", file.getId());
+    }
+
+    private void updateCount(FileEntity file)
+    {
+        List<FileStageMetrics> fileStageMetrics=file.getFileStageMetrics().stream().sorted(FileStageMetrics.STAGE_ORDER_COMPARATOR).toList();
+        if(fileStageMetrics.get(0).getTotal()> file.getTotalCount())
+            fileStageMetrics.get(0).setSuccessCount(file.getTotalCount()-fileStageMetrics.get(0).getLogicalFailureCount()-fileStageMetrics.get(0).getServerFailureCount());
+        for(int i=1;i<fileStageMetrics.size();i++)
+        {
+            FileStageMetrics currentProgressStage=fileStageMetrics.get(i);
+            FileStageMetrics previousProgressStage=fileStageMetrics.get(i-1);
+            if(currentProgressStage.getTotal()>previousProgressStage.getTotal()) {
+                currentProgressStage.setSuccessCount(previousProgressStage.getSuccessCount()-currentProgressStage.getServerFailureCount()-currentProgressStage.getLogicalFailureCount());
+            }
+        }
     }
 }
