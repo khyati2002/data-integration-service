@@ -62,7 +62,7 @@ public class FileProgressEventListener {
         log.info("Received {} events to process.", events.size());
 
         for (FileProgressEvent event : events) {
-            boolean duplicate = redisCacheService.checkAndCacheEventId(event.getEventId());
+            boolean duplicate = redisCacheService.checkAndCacheEventId(event.getEventId(), event.getProgress().getStageType());
             if (duplicate) log.error("Duplicate event: {}", event);
         }
         Map<String, AggregationWrapper> aggregationMap = aggregate(events);
