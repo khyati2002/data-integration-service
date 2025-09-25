@@ -1,3 +1,4 @@
+def branchName = "standard-deployment"
 pipeline {
     agent {
         label 'ec2-master'
@@ -20,7 +21,6 @@ pipeline {
             steps {
                 script {
                    cleanWs()
-                    def branchName = "standard-deployment"
                     echo "Checking out branch: ${branchName}"
                     checkout([
                         $class: 'GitSCM',
@@ -72,7 +72,7 @@ pipeline {
                         sh "git add environments/${params.ENV}/${params.REGION}/${params.LOB_NAME}/"
                         sh "git commit -m 'feat: Add/Update LOB ${params.LOB_NAME}'"
                         // Push the commit to the remote repository
-                        sh "git push"
+                        sh "git push -u origin ${branchName}"
                     }
                 }
             }
