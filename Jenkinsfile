@@ -18,20 +18,6 @@ pipeline {
     }
 
     stages {
-         stage('Checkout') {
-                    steps {
-                        script {
-                           cleanWs()
-                            echo "Checking out branch: ${branchName}"
-                            checkout([
-                                $class: 'GitSCM',
-                                branches: [[name: branchName]],
-                                userRemoteConfigs: scm.userRemoteConfigs
-                            ])
-                        }
-                    }
-                }
-
        stage('Install Dependencies') {
                    steps {
                        script {
@@ -73,7 +59,7 @@ pipeline {
                     sh "git add environments/${params.ENV}/${params.REGION}/${params.LOB_NAME}/"
                     sh "git commit -m 'feat: Add/Update LOB ${params.LOB_NAME}'"
                     // Push the commit to the remote repository
-                    sh "git push -u origin ${branchName}"
+                    sh "git push origin HEAD:${branchName}"
                 }
             }
         }
