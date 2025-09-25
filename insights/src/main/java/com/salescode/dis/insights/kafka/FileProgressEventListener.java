@@ -2,6 +2,7 @@ package com.salescode.dis.insights.kafka;
 
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
 import com.salescode.dis.insights.event.ObservabilityEventProducer;
+import com.salescode.dis.insights.redis.RedisCacheService;
 import com.salescode.dis.insights.redis.RedisLockService;
 import com.salescode.dis.insights.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class FileProgressEventListener {
 
     private final FileService fileService;
     private final RedisLockService redisLockService;
+    private final RedisCacheService redisCacheService;
     private final KafkaTemplate<String, FileProgressEvent> kafkaTemplate;
     private final ObservabilityEventProducer eventProducer;
     private final ThreadPoolTaskExecutor fileProgressExecutor;
@@ -58,6 +60,11 @@ public class FileProgressEventListener {
             return;
         }
         log.info("Received {} events to process.", events.size());
+
+        for (FileProgressEvent event : events) {
+            boolean duplicate = redisCacheService.checkAndCacheEventId(event.getEventId());
+            if (duplicate) log.error("Duplicate event: {}", event);
+        }
         Map<String, AggregationWrapper> aggregationMap = aggregate(events);
         // Group by fileId to prevent race conditions on same file
         Map<String, List<Map.Entry<String, AggregationWrapper>>> partitioned =
