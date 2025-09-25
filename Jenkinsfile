@@ -1,4 +1,5 @@
 def branchName = "standard-deployment"
+def BUNDLE_REPO_URL="https://applicatetech.git.beanstalkapp.com/data-integration-service.git"
 pipeline {
     agent {
         label 'ec2-master'
@@ -17,6 +18,26 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                script {
+                   cleanWs()
+                    echo "Checking out branch: ${branchName}"
+                    withCredentials([gitUsernamePassword(credentialsId: 'applicate_git')]) {
+                        sh """
+                            set -eux
+                            git clone -b ${branchName} ${BUNDLE_REPO_URL}
+                             REPO_HOST=\$(echo "${BUNDLE_REPO_URL}" | cut -d'/' -f3)
+                            REPO_PATH=\$(echo "${BUNDLE_REPO_URL}" | cut -d'/' -f4-)
+                            git remote set-url origin "https://\${GIT_USERNAME}:\${GIT_PASSWORD}@\${REPO_HOST}/\${REPO_PATH}"
+                            git fetch origin "${branchName}:${branchName}" || true
+                            git checkout "${branchName}"
+                            git branch --set-upstream-to=origin/${branchName} || true
+                        """
+                    }
+                }
+            }
+        }
        stage('Install Dependencies') {
                    steps {
                        script {
