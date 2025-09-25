@@ -70,12 +70,25 @@ public class FileStageStatusScheduler {
             else {
                 apiClientBasedFileOperationStrategy.updateStatus(stage);
             }
-            if(stage.getStageType()== ProgressStage.PUBLISH) {
-                stage.setServerFailureCount(stage.getFile().getFileStageMetrics().get(0).getSuccessCount()-stage.getSuccessCount());
-            }
+            correctPublishIfPresent(stage);
         }
     }
 
-
+    private  void correctPublishIfPresent(FileStageMetrics stage)
+    {
+        if(stage.getStageType()!=ProgressStage.PUBLISH || stage.getFile().getTotalCount()==0) return;
+        List<FileStageMetrics> stages=stage.getFile().getFileStageMetrics();
+        stages.sort(FileStageMetrics.STAGE_ORDER_COMPARATOR);
+        if(stages.get(0).getStageType()==ProgressStage.PUBLISH){
+            stage.setServerFailureCount(stage.getFile().getTotalCount()- stage.getSuccessCount() );
+            return ;
+        }
+        for(int i=1;i< stages.size();i++) {
+            if(stages.get(i).getStageType()== ProgressStage.PUBLISH) {
+                stage.setServerFailureCount(stages.get(i-1).getSuccessCount() - stage.getSuccessCount());
+                break;
+            }
+        }
+    }
 }
 
