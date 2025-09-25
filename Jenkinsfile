@@ -70,6 +70,8 @@ pipeline {
                     // Commit the generated files
                     sh "git add environments/${params.ENV}/${params.REGION}/${params.LOB_NAME}/"
                     sh "git commit -m 'feat: Add/Update LOB ${params.LOB_NAME}'"
+                    // Push the commit to the remote repository
+                    sh "git push"
                 }
             }
         }
@@ -86,7 +88,7 @@ pipeline {
 
                     withAWS(region: 'ap-south-1', credentials: 'dev_ui_build') {
                         // Ensure Terragrunt is installed on your Jenkins agent
-                        sh 'terragrunt run-all apply --terragrunt-non-interactive'
+                        sh 'terragrunt run-all apply --terragrunt-non-interactive -no-color'
                         sh 'pwd'
                         sh 'ls -larth'
                     }
