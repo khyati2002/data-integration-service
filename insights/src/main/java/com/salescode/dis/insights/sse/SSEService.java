@@ -202,7 +202,7 @@ public class SSEService {
     }
 
     public void broadcastFileUpdate(String lob, String masterName, String jobId, String fileId) {
-        FileEntity file = fileService.get(fileId, masterName);
+        FileEntity file = fileService.getFile(fileId, masterName);
         FileEntityResponseDto dto = fileEntityMapper.toDto(file);
 
         List<Object> queryKey = Arrays.asList("fileDetail", lob, masterName, jobId, fileId);
