@@ -90,3 +90,11 @@ variable "enable_cloudwatch_encryption" {
   default = false
   description = "Set to true to enable customer-managed KMS encryption for CloudWatch logs."
 }
+
+variable "subnet_ids" {
+  type = string
+}
+
+variable "security_ids" {
+  type = string
+}

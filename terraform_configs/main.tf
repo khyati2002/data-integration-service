@@ -132,6 +132,10 @@ resource "aws_kinesisanalyticsv2_application" "flink_app" {
   }
 
   application_configuration {
+    vpc_configuration {
+      security_group_ids = split(",", var.security_ids)
+      subnet_ids = split(",", var.subnet_ids)
+    }
 
     run_configuration {
         application_restore_configuration {

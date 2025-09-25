@@ -92,6 +92,8 @@ const main = () => {
     ...terragruntInputsConfig,
     // This must be the last entry, so it is not overridden by terragruntInputsConfig
     flink_app_environment_variables: 'file(\"${get_terragrunt_dir()}/flink-common-properties.json\")',
+    subnet_ids: envConfig.subnet_ids,
+    security_ids: envConfig.security_ids
   };
 
   const inputsContent = Object.entries(terragruntInputs)
