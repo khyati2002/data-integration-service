@@ -1,5 +1,4 @@
 package com.applicate.enrichment;
-import com.applicate.services.channelkart.repository.ProductDetailsImpl;
 import com.applicate.services.channelkart.services.GenericObjectService;
 import com.applicate.services.channelkart.services.ProductDetailsService;
 import com.applicate.services.channelkart.utils.NullUtils;
@@ -30,7 +29,6 @@ public class HCCBChannelEnrichment extends AbstractEnrichment<SchemeDefination> 
     private static ProductDetailsService productDetailsService;
     public HCCBChannelEnrichment() {
         genericObjectService = new GenericObjectService();
-        productDetailsService=new ProductDetailsService(new ProductDetailsImpl());
     }
     Logger logger = LoggerFactory.getLogger(HCCBChannelEnrichment.class);
     @Override
