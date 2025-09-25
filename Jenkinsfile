@@ -59,7 +59,14 @@ pipeline {
                     sh "git add environments/${params.ENV}/${params.REGION}/${params.LOB_NAME}/"
                     sh "git commit -m 'feat: Add/Update LOB ${params.LOB_NAME}'"
                     // Push the commit to the remote repository
-                    sh "git push origin HEAD:${branchName}"
+                    withCredentials([gitUsernamePassword(credentialsId: 'applicate_git')]) {
+                        sh """
+                            git remote -v
+                            REPO_HOST=\$(echo "${BUNDLE_REPO_URL}" | cut -d'/' -f3)
+                            REPO_PATH=\$(echo "${BUNDLE_REPO_URL}" | cut -d'/' -f4-)
+                            git push  dis HEAD:${branchName}
+                        """
+                    }
                 }
             }
         }
