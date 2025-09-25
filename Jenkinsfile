@@ -18,22 +18,21 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    echo "Checking out branch: ${branchName}"
-                    withCredentials([gitUsernamePassword(credentialsId: 'applicate_git')]) {
-                        checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: branchName]],
-                            userRemoteConfigs: scm.userRemoteConfigs
-                        ])
+         stage('Checkout') {
+                    steps {
+                        script {
+                           cleanWs()
+                            echo "Checking out branch: ${branchName}"
+                            checkout([
+                                $class: 'GitSCM',
+                                branches: [[name: branchName]],
+                                userRemoteConfigs: scm.userRemoteConfigs
+                            ])
+                        }
                     }
                 }
-            }
-        }
 
-        stage('Install Dependencies') {
+       stage('Install Dependencies') {
                    steps {
                        script {
                            // Install Node.js and npm
