@@ -71,17 +71,15 @@ pipeline {
         stage('Setup LOB Environment') {
             steps {
                 script {
-                    withAWS(region: 'ap-south-1', credentials: 'dev_ui_build') {
-                        // Ensure Node.js is available in your Jenkins agent environment
-                        sh "npm init -y"
-                        sh "node scripts/setup-lob.js --lob '${params.LOB_NAME}' --env '${params.ENV}' --region '${params.REGION}' --terragrunt-inputs '${params.TERRAGRUNT_INPUTS}' --flink-properties '${params.FLINK_PROPERTIES}'"
-                        
-                        // Commit the generated files
-                        sh "git add environments/${params.ENV}/${params.REGION}/${params.LOB_NAME}/"
-                        sh "git commit -m 'feat: Add/Update LOB ${params.LOB_NAME}'"
-                        // Push the commit to the remote repository
-                        sh "git push -u origin ${branchName}"
-                    }
+                    // Ensure Node.js is available in your Jenkins agent environment
+                    sh "npm init -y"
+                    sh "node scripts/setup-lob.js --lob '${params.LOB_NAME}' --env '${params.ENV}' --region '${params.REGION}' --terragrunt-inputs '${params.TERRAGRUNT_INPUTS}' --flink-properties '${params.FLINK_PROPERTIES}'"
+                    
+                    // Commit the generated files
+                    sh "git add environments/${params.ENV}/${params.REGION}/${params.LOB_NAME}/"
+                    sh "git commit -m 'feat: Add/Update LOB ${params.LOB_NAME}'"
+                    // Push the commit to the remote repository
+                    sh "git push -u origin ${branchName}"
                 }
             }
         }
