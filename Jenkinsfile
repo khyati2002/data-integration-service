@@ -17,19 +17,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                script {
-                   cleanWs()
-                    echo "Checking out branch: ${branchName}"
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: branchName]],
-                        userRemoteConfigs: scm.userRemoteConfigs
-                    ])
-                }
-            }
-        }
        stage('Install Dependencies') {
                    steps {
                        script {
