@@ -48,6 +48,57 @@ data "aws_iam_policy_document" "flink_app" {
       aws_cloudwatch_log_stream.flink_app.arn
     ]
   }
+  statement {
+    actions = [
+      "ec2:Describe*",
+      "ec2:List*",
+      "ec2:Get*",
+      "ec2:Search*",
+      "ec2:Read*",
+      "ec2:View*",
+      "ec2:DescribeInstances",
+      "ec2:DescribeVpcs",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DescribeTags",
+      "ec2:DescribeAddresses",
+      "ec2:DescribeRouteTables",
+      "ec2:DescribeInternetGateways",
+      "ec2:DescribeNatGateways",
+      "ec2:DescribeAvailabilityZones"
+    ]
+    resources = ["*"]
+  }
+  # Grant ENI permissions for VPC connectivity
+  statement {
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeVpcs",
+      "ec2:DescribeRouteTables",
+      "ec2:DescribeDhcpOptions",
+      "ec2:DescribeNetworkInterfaceAttribute",
+      "ec2:DescribeNetworkInterfacePermissions",
+      "ec2:ModifyNetworkInterfaceAttribute"
+    ]
+    resources = ["*"]
+  }
+  # Grant pass role for VPC ENI
+  statement {
+    actions = [
+      "iam:PassRole"
+    ]
+    resources = [aws_iam_role.flink_app.arn]
+    condition {
+      test     = "StringEquals"
+      variable = "iam:PassedToService"
+      values   = ["kinesisanalytics.amazonaws.com"]
+    }
+  }
 }
 
 data "aws_iam_policy_document" "kms_key_policy" {
