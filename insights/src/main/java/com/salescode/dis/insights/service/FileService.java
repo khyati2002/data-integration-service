@@ -165,6 +165,7 @@ public class FileService {
         extended.put("originalServerFailureCount", metrics.getServerFailureCount());
         extended.put("originalLogicalFailureCount", metrics.getLogicalFailureCount());
         extended.put("updateTimestamp", request.getTimestamp());
+        extended.put("duplicatesSubtracted", request.getDuplicateCounts());
         JsonNode extendedJson = mapper.valueToTree(extended);
         metrics.setExtendedAttributes(extendedJson);
         metrics.setSuccessCount(metrics.getSuccessCount() - request.getDuplicateCounts().getOrDefault("successCount", 0));
