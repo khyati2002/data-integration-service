@@ -2,6 +2,7 @@ package com.applicate.transformer;
 
 import com.applicate.services.channelkart.utils.NullUtils;
 import com.salescode.dim.etl.transformation.AbstractTransformer;
+import com.salescode.dim.etl.transformation.service.DataTransformationService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ArrayNode;
@@ -200,6 +201,9 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
 
     private Map<String, Object> schemeDefinition(Map<String, Object> inputMap) {
         Map<String, Object> schemeDefinitionMap = new HashMap<>();
+        if(inputMap.get(MONITORING_SCOPE)!=null && inputMap.get(MONITORING_SCOPE).toString().equalsIgnoreCase("4")){
+            throw new DataTransformationService.TransformationException("invalid MONITORING_SCOPE, value= 4 ");
+        }
         schemeDefinitionMap.put(SCHEME_ID, inputMap.get(SCHEME_NO));
         schemeDefinitionMap.put(CRITERIA, getSchemeCriteria(inputMap));
         String startDateInput = inputMap.get("mer_wef").toString().trim();
