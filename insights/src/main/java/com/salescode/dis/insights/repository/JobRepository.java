@@ -28,12 +28,18 @@ public interface JobRepository extends JpaRepository<JobEntity, String> {
     @Modifying
     @Transactional
     @Query(
-            value = "DELETE FROM integration_job j WHERE j.last_modified_time < :cutoffTime " +
-                    "AND NOT EXISTS (SELECT 1 FROM file_stage_metrics fsm WHERE fsm.job_id = j.id) " +
-                    "AND NOT EXISTS (SELECT 1 FROM integration_file ifl WHERE ifl.job_id = j.id)",
+            value = "DELETE FROM integration_job j WHERE j.id IN (" +
+                    "  SELECT j2.id FROM integration_job j2 " +
+                    "  LEFT JOIN file_stage_metrics fsm ON fsm.job_id = j2.id " +
+                    "  LEFT JOIN integration_file ifl ON ifl.job_id = j2.id " +
+                    "  WHERE j2.last_modified_time < :cutoffTime " +
+                    "    AND fsm.job_id IS NULL " +
+                    "    AND ifl.job_id IS NULL" +
+                    ")",
             nativeQuery = true
     )
     int deleteByLastModifiedBefore(@Param("cutoffTime") Instant cutoffTime);
+
 
 
 
