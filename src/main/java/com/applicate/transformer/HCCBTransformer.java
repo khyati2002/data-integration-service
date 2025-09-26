@@ -201,7 +201,7 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
 
     private Map<String, Object> schemeDefinition(Map<String, Object> inputMap) {
         Map<String, Object> schemeDefinitionMap = new HashMap<>();
-        if(inputMap.get(MONITORING_SCOPE)!=null && inputMap.get(MONITORING_SCOPE).toString().equalsIgnoreCase("4")){
+        if(inputMap.get(MONITORING_SCOPE)!=null && inputMap.get(MONITORING_SCOPE).toString().trim().equalsIgnoreCase("4")){
             throw new DataTransformationService.TransformationException("invalid MONITORING_SCOPE, value= 4 ");
         }
         schemeDefinitionMap.put(SCHEME_ID, inputMap.get(SCHEME_NO));
