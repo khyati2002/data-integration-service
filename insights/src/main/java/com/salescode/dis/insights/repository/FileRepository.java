@@ -34,8 +34,9 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM FileEntity f WHERE f.lastModifiedTime < :cutoffTime")
+    @Query("DELETE FROM FileEntity f WHERE f.lastModifiedTime < :cutoffTime AND NOT EXISTS (SELECT 1 FROM FileStageMetrics fsm WHERE fsm.fileId = f.id)")
     int deleteByLastModifiedBefore(@Param("cutoffTime") Instant cutoffTime);
+
 
     @Modifying
     @Transactional
