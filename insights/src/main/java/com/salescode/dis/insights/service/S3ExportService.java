@@ -15,6 +15,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
@@ -41,45 +43,35 @@ import java.util.*;
 public class S3ExportService {
 
     private static final Logger logger = LoggerFactory.getLogger(S3ExportService.class);
-    private static final int CHUNK_SIZE = 1000;
+    private static final int CHUNK_SIZE = 5000;
 
     private final S3Client s3Client;
     private final String bucketName;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final JdbcTemplate jdbcTemplate;
     private final FileReportRepository fileReportRepository;
     private final SSEService sseService;
     private final S3Presigner s3Presigner;
-    private final InsightsMetadataRepository metadataRepository;
-
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final InsightsMetadataService insightsMetadataService;
     private static final String default_sql = """
-            SELECT
-                features,
-                responses,
-                fileid,
-                lob,
-                entity_name,
-                "timestamp",
-                recordstatus
-            FROM ex_schema_dataintegration.integration_success
-            WHERE fileid = ? AND lob = ? AND entity_name = ?
-            UNION ALL
-            SELECT
-                features,
-                responses,
-                fileid,
-                lob,
-                entity_name,
-                "timestamp",
-                recordstatus
-            FROM ex_schema_dataintegration.integration_failure
-            WHERE fileid = ? AND lob = ? AND entity_name = ?
-            """;
+    SELECT
+        features,
+        responses,
+        fileid,
+        lob,
+        entity_name,
+        "timestamp",
+        recordstatus
+        FROM ex_schema_dataintegration.integration_failure
+        WHERE fileid = :fileId AND lob = :lob AND entity_name = :entity
+    """;
 
     private static final String countSql = """
-    SELECT
-      (SELECT count(*) FROM ex_schema_dataintegration.integration_success WHERE fileid = ? AND lob = ? AND entity_name = ?)
-    + (SELECT count(*) FROM ex_schema_dataintegration.integration_failure WHERE fileid = ? AND lob = ? AND entity_name = ?)
+         SELECT COUNT(*)
+         FROM ex_schema_dataintegration.integration_failure
+         WHERE fileid = :fileId
+         AND lob = :lob
+         AND entity_name = :entity
     """;
 
     public S3ExportService(
@@ -92,7 +84,7 @@ public class S3ExportService {
             FileReportRepository fileReportRepository,
             SSEService sseService,
             S3Presigner s3Presigner,
-            InsightsMetadataRepository metadataRepository
+            InsightsMetadataService insightsMetadataService
 
     ) {
         this.s3Client = s3Client;
@@ -100,7 +92,6 @@ public class S3ExportService {
         this.fileReportRepository = fileReportRepository;
         this.sseService = sseService;
         this.s3Presigner = s3Presigner;
-        this.metadataRepository = metadataRepository;
 
         HikariDataSource ds = new HikariDataSource();
         ds.setJdbcUrl(jdbcUrl);
@@ -108,7 +99,8 @@ public class S3ExportService {
         ds.setPassword(password);
         ds.setDriverClassName(driverClassName);
         ds.setMaximumPoolSize(5);
-        this.jdbcTemplate = new JdbcTemplate(ds);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(ds);
+        this.insightsMetadataService = insightsMetadataService;
     }
 
 
@@ -149,7 +141,7 @@ public class S3ExportService {
             while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
                 rootCause = rootCause.getCause();
             }
-            String detailedErrorMessage = rootCause.getClass().getSimpleName() + ": " + rootCause.getMessage();
+            String detailedErrorMessage = rootCause.getMessage();
 
             Optional<FileReportEntity> updatedReport = fileReportRepository.findByFileId(fileId).map(r -> {
                 r.setStatus("FAILED");
@@ -200,46 +192,53 @@ public class S3ExportService {
         int totalExported = 0;
         Instant lastTimestamp = null;
 
+        MapSqlParameterSource countParams = new MapSqlParameterSource()
+                .addValue("fileId", fileId)
+                .addValue("lob", lob)
+                .addValue("entity", entity);
+
         try {
             Long totalRecords = 0L;
             try {
-                totalRecords = jdbcTemplate.queryForObject(
-                        countSql,
-                        new Object[]{fileId, lob, entity,fileId, lob, entity},
-                        Long.class
-                );
+                totalRecords = namedParameterJdbcTemplate.queryForObject(countSql, countParams, Long.class);
             } catch (Exception exCount) {
                 logger.warn("Could not fetch total record count for fileId '{}'. Will fallback to sending raw exported counts. Reason: {}", fileId, exCount.getMessage());
                 totalRecords = 0L;
             }
+
+            String baseSql = insightsMetadataService.getQuery(lob + "-redshift_query");
+            if (baseSql == null || baseSql.isBlank()) {
+                baseSql = default_sql;
+            } else {
+                baseSql = baseSql.trim();  // cleanup
+                if (baseSql.endsWith(";")) baseSql = baseSql.substring(0, baseSql.length() - 1).trim();
+            }
+
             while (true) {
 
-                String baseSql = metadataRepository.findByKey("redshift_query")
-                        .map(InsightsMetadata::getValue)
-                        .orElse(default_sql);
-
-                StringBuilder sqlBuilder = new StringBuilder();
-                List<Object> queryParams = new ArrayList<>(List.of(fileId,lob,entity,fileId,lob,entity));
-
-
-                sqlBuilder.append("SELECT * FROM (")
-                        .append(baseSql)
-                        .append(") sub");
+                MapSqlParameterSource params = new MapSqlParameterSource()
+                        .addValue("fileId", fileId)
+                        .addValue("lob", lob)
+                        .addValue("entity", entity)
+                        .addValue("limit", CHUNK_SIZE);
 
                 if (lastTimestamp != null) {
-                    sqlBuilder.append(" WHERE sub.\"timestamp\" > ?");
-                    queryParams.add(Timestamp.from(lastTimestamp));
+                    params.addValue("lastTimestamp", Timestamp.from(lastTimestamp));
                 }
 
-                sqlBuilder.append(" ORDER BY sub.\"timestamp\"");
-                sqlBuilder.append(" LIMIT ?");
-                queryParams.add(CHUNK_SIZE);
+                StringBuilder sqlBuilder = new StringBuilder();
+                sqlBuilder.append("SELECT * FROM (").append(baseSql).append(") sub");
+                if (lastTimestamp != null) {
+                    sqlBuilder.append(" WHERE sub.\"timestamp\" > :lastTimestamp");
+                }
+                sqlBuilder.append(" ORDER BY sub.\"timestamp\" ");
+                sqlBuilder.append(" LIMIT :limit");
 
                 String finalSql = sqlBuilder.toString();
 
-                List<Map<String, Object>> rawRecords = jdbcTemplate.query(
+                List<Map<String, Object>> rawRecords = namedParameterJdbcTemplate.query(
                         finalSql,
-                        queryParams.toArray(),
+                        params,
                         new ColumnMapRowMapper()
                 );
 

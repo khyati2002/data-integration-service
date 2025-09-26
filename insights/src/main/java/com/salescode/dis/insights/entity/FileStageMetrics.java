@@ -10,6 +10,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Objects;
 
 @Entity
@@ -78,5 +79,6 @@ public class FileStageMetrics extends TimeAwareEntity {
             return ProgressStatus.FAILED;
         }
     }
+    public static final Comparator<FileStageMetrics> STAGE_ORDER_COMPARATOR = Comparator.comparingInt(fsm -> fsm.getStageType().ordinal());
 
 }
