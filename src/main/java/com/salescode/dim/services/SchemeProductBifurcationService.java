@@ -71,6 +71,7 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.LAST_MODIFIED_TIME, LocalDateTime.now(ZoneId.of("UTC")))
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.LOB, ros.getLob())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.MODIFIED_BY, ros.getModifiedBy())
+                        .set(CK_SCHEME_PRODUCT_BIFURCATIONS.EAN_NUMBER, ros.getEanNumber())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.SOURCE, ros.getSource())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.VERSION, ros.getVersion())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.BATCH_CODE, ros.getBatchCode())
@@ -131,6 +132,7 @@ public class SchemeProductBifurcationService extends AbstractCDMService<SchemePr
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.ARTICLE_CODE, ros.getArticleCode())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.SKU_CODE, ros.getSkuCode())
                         .set(Tables.CK_SCHEME_PRODUCT_BIFURCATIONS.M_CODE, ros.getMCode())
+                        .set(CK_SCHEME_PRODUCT_BIFURCATIONS.EAN_NUMBER, ros.getEanNumber())
                         .set(CK_SCHEME_PRODUCT_BIFURCATIONS.CHANGED, true);
     };
 
