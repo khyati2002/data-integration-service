@@ -134,6 +134,7 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         schemeProductMap.put("articleCode", "all");
         schemeProductMap.put("skuCode", "all");
         schemeProductMap.put("mcode", "all");
+        schemeProductMap.put("eanNumber", "all");
         if (monitoringScope == 1) {
             schemeProductMap.put(ITEM_CLASS, monitoringValue);
         } else if (monitoringScope == 2) {
