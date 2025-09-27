@@ -144,6 +144,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
                             }
 //                            saveBatchIntegrationHistory(entry.getValue(), "SUCCESS", "Batch save successful");
                         } catch (Exception batchEx) {
+                            batchEx.printStackTrace();
                             LOG.error("Batch save failed. Falling back to individual saves.");
                             for (CommonDataModel model : entry.getValue()) {
                                 try {

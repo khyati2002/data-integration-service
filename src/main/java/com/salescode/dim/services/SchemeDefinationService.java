@@ -245,6 +245,7 @@ public class SchemeDefinationService extends AbstractCDMService<SchemeDefination
                 logger.info("Time taken for schemeDefination : {}", System.currentTimeMillis() - currentTime);
 
             } catch (Exception e) {
+                e.printStackTrace();
                 for (SchemeDefination s : updatedIds) {
 
                     dsl.transaction(config -> {
