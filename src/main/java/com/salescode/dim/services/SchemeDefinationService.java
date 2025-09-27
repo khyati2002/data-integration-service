@@ -32,6 +32,7 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_SCHEME_DEFINATION;
+import static org.jooq.meta.jaxb.OnError.LOG;
 
 public class SchemeDefinationService extends AbstractCDMService<SchemeDefination> {
     private DSLContext dsl = null;
@@ -245,7 +246,7 @@ public class SchemeDefinationService extends AbstractCDMService<SchemeDefination
                 logger.info("Time taken for schemeDefination : {}", System.currentTimeMillis() - currentTime);
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
                 for (SchemeDefination s : updatedIds) {
 
                     dsl.transaction(config -> {
