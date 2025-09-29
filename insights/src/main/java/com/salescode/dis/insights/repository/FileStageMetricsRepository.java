@@ -34,9 +34,9 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
             "SUM(CASE WHEN f.stageType = :queueStage THEN (f.logicalFailureCount + f.serverFailureCount) ELSE 0 END), " +
             "SUM(CASE WHEN f.stageType = :saveStage THEN f.successCount ELSE 0 END), " +
             "SUM(CASE WHEN f.stageType = :saveStage THEN (f.logicalFailureCount + f.serverFailureCount) ELSE 0 END), " +
-            "(SELECT COUNT(j1) FROM Job j1 WHERE j1.lob = f.job.lob AND j1.status = 'PENDING' AND j1.lastModifiedTime BETWEEN :startDate AND :endDate), " +
-            "(SELECT COUNT(j2) FROM Job j2 WHERE j2.lob = f.job.lob AND j2.status IN ('COMPLETED_SUCCESSFULLY', 'COMPLETED_UNSUCCESSFULLY') AND j2.lastModifiedTime BETWEEN :startDate AND :endDate), " +
-            "(SELECT COUNT(j3) FROM Job j3 WHERE j3.lob = f.job.lob AND j3.status = 'FAILED' AND j3.lastModifiedTime BETWEEN :startDate AND :endDate)) " +
+            "(SELECT COUNT(j1) FROM JobEntity j1 WHERE j1.lob = f.job.lob AND j1.status = 'PENDING' AND j1.lastModifiedTime BETWEEN :startDate AND :endDate), " +
+            "(SELECT COUNT(j2) FROM JobEntity  j2 WHERE j2.lob = f.job.lob AND j2.status IN ('COMPLETED_SUCCESSFULLY', 'COMPLETED_UNSUCCESSFULLY') AND j2.lastModifiedTime BETWEEN :startDate AND :endDate), " +
+            "(SELECT COUNT(j3) FROM JobEntity  j3 WHERE j3.lob = f.job.lob AND j3.status = 'FAILED' AND j3.lastModifiedTime BETWEEN :startDate AND :endDate)) " +
             "FROM FileStageMetrics f " +
             "WHERE f.job.lob IN :lobs " +
             "AND f.lastModifiedTime BETWEEN :startDate AND :endDate " +
