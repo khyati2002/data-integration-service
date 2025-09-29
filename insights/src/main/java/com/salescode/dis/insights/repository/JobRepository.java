@@ -27,20 +27,8 @@ public interface JobRepository extends JpaRepository<JobEntity, String> {
 
     @Modifying
     @Transactional
-    @Query(
-            value = "DELETE FROM integration_job j WHERE j.id IN (" +
-                    "  SELECT j2.id FROM integration_job j2 " +
-                    "  LEFT JOIN file_stage_metrics fsm ON fsm.job_id = j2.id " +
-                    "  LEFT JOIN integration_file ifl ON ifl.job_id = j2.id " +
-                    "  WHERE j2.last_modified_time < :cutoffTime " +
-                    "    AND fsm.job_id IS NULL " +
-                    "    AND ifl.job_id IS NULL" +
-                    ")",
-            nativeQuery = true
-    )
-    int deleteByLastModifiedBefore(@Param("cutoffTime") Instant cutoffTime);
-
-
+    @Query("DELETE FROM JobEntity j WHERE j.lastModifiedTime < :cutoffTime")
+    int deleteByLastModifiedBefore(Instant cutoffTime);
 
 
     @Modifying
