@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -164,8 +165,11 @@ public class JobService {
     
 
     public AccumulatedJobsAndMasterDto getJobsWithAggregatedStagesAndMasters(String lob, LocalDateTime startDate, LocalDateTime endDate, String mode) {
-        Instant startInstant = startDate.atZone(ZoneId.systemDefault()).toInstant();
-        Instant endInstant = endDate.atZone(ZoneId.systemDefault()).toInstant();
+        LocalDateTime utcStartDate = startDate.minusHours(5).minusMinutes(30);
+        LocalDateTime utcEndDate = endDate.minusHours(5).minusMinutes(30);
+
+        Instant startInstant = utcStartDate.atZone(ZoneOffset.UTC).toInstant();
+        Instant endInstant = utcEndDate.atZone(ZoneOffset.UTC).toInstant();
         List<JobStageAccumulatedData> queryResults = new ArrayList<>();
 
         if(mode != null) {
