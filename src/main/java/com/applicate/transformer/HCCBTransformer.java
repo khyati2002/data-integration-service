@@ -2,6 +2,7 @@ package com.applicate.transformer;
 
 import com.salescode.dim.etl.transformation.AbstractTransformer;
 import com.applicate.services.channelkart.utils.NullUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ArrayNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Slf4j
 public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Map<String, Object>> {
 
     private static final String CRITERIA = "criteria";
@@ -316,7 +318,7 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         if (PRIORITY_MAP.containsKey(key)) {
             return PRIORITY_MAP.get(key);
         }
-
+        log.error("Unsupported scheme combination: {}" , key);
         throw new IllegalArgumentException("Unsupported scheme combination: " + key);
     }
 }
