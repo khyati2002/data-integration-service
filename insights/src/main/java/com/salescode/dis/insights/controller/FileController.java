@@ -149,8 +149,11 @@ public class FileController {
 
         try {
             Optional<FileReportEntity> fileReportOptional = fileReportRepository.findByFileId(fileId);
-            if (fileReportOptional.isPresent() && "COMPLETED".equals(fileReportOptional.get().getStatus()) ) {
-                logger.info("File with fileId '{}' found. Returning OK.", fileId);
+            if (fileReportOptional.isPresent() &&
+                    ("COMPLETED".equals(fileReportOptional.get().getStatus()) ||
+                            "FAILED".equals(fileReportOptional.get().getStatus()))
+            ) {
+                logger.info("File with fileId '{}' found with status COMPLETED or FAILED. Returning OK.", fileId);
                 return ResponseEntity.ok(fileReportOptional.get());
             } else {
                 logger.info("File with fileId '{}' not found. Returning NOT_FOUND.", fileId);
