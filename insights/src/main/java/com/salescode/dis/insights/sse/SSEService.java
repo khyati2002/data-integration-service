@@ -20,6 +20,7 @@ import org.springframework.web.context.request.async.AsyncRequestNotUsableExcept
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import jakarta.annotation.PreDestroy;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -95,9 +96,9 @@ public class SSEService {
         String key = Base64.getEncoder().encodeToString(fileId.getBytes());
         reportEmitters.computeIfAbsent(key, k -> new CopyOnWriteArraySet<>()).add(emitter);
 
-        emitter.onCompletion(() -> removeReportEmitter(key, emitter));
-        emitter.onTimeout(() -> removeReportEmitter(key, emitter));
-        emitter.onError((ex) -> removeReportEmitter(key, emitter));
+        emitter.onCompletion(() -> removeReportEmitter(fileId, emitter));
+        emitter.onTimeout(() -> removeReportEmitter(fileId, emitter));
+        emitter.onError((ex) -> removeReportEmitter(fileId, emitter));
         return emitter;
     }
 
@@ -155,10 +156,9 @@ public class SSEService {
                             .id(UUID.randomUUID().toString())
                             .data(payload, MediaType.APPLICATION_JSON));
                 } catch (IOException e) {
-                    removeReportEmitter(encodedFileId, emitter);
+                    removeReportEmitter(fileId, emitter);
                 } catch (Exception ex) {
-                    // defensive: remove bad emitter
-                    removeReportEmitter(encodedFileId, emitter);
+                    removeReportEmitter(fileId, emitter);
                 }
             });
         }
@@ -266,6 +266,26 @@ public class SSEService {
         } catch (Exception ex) {
             log.debug("Emitter error for key={}, removing (cause: {})", mapKey, ex.toString());
         }
+    }
+
+
+    public void sendFinalEventAndComplete(String fileId, String eventName, Object payload) {
+        String encodedFileId = Base64.getEncoder().encodeToString(fileId.getBytes(StandardCharsets.UTF_8));
+        Set<SseEmitter> set = reportEmitters.get(encodedFileId);
+        if (set == null || set.isEmpty()) return;
+
+        List<SseEmitter> emitters = new ArrayList<>(set);
+        for (SseEmitter emitter : emitters) {
+            try {
+                emitter.send(SseEmitter.event()
+                        .name(eventName)
+                        .id(UUID.randomUUID().toString())
+                        .data(payload, MediaType.APPLICATION_JSON));
+            } catch (IOException | IllegalStateException e) {
+                removeReportEmitter(fileId, emitter);
+            }
+        }
+        completeReportEmitters(fileId); // safe — sends already finished
     }
 
     public void sendConnectionEstablished(SseEmitter emitter) throws IOException {
