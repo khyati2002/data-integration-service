@@ -48,6 +48,7 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         schemeData.put("schemeLocationBifurcationsList", schemeLocationTransformer(inputMap));
         return schemeData;
     }
+
     private Map<String, Object> schemeLocationTransformer(Map<String, Object> inputMap) {
         Map<String, Object> schemeLocationMap = new HashMap<>();
         schemeLocationMap.put(SCHEME_ID, inputMap.get(SCHEME_NO));
@@ -56,10 +57,9 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         schemeLocationMap.put(STATE, ObjectUtils.isEmpty(inputMap.get(STATE)) ? "all" : inputMap.get(STATE));
         schemeLocationMap.put(TOWN, ObjectUtils.isEmpty(inputMap.get(TOWN)) ? "all" : inputMap.get(TOWN));
         schemeLocationMap.put(DISTRICT, ObjectUtils.isEmpty(inputMap.get(DISTRICT)) ? "all" : inputMap.get(DISTRICT));
-
-
         return schemeLocationMap;
     }
+
     private Map<String, Object> schemeOutletTransformer(Map<String, Object> inputMap){
         Map<String, Object> schemeOutletMap = new HashMap<>();
         schemeOutletMap.put(SCHEME_ID, inputMap.get(SCHEME_NO));
@@ -81,6 +81,7 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         schemeOutletMap.put("soldTo", "all");
         schemeOutletMap.put("outletDivision", "all");
         schemeOutletMap.put("priceListId", "all");
+        schemeOutletMap.put("linkedOutletProductKey","all");
 
         if(NullUtils.isNotNull(inputMap.get("external_id")) && !ObjectUtils.isEmpty(inputMap.get("external_id").toString())) {
             String[] parts = inputMap.get("external_id").toString().split("_");
@@ -99,7 +100,6 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         }
         return schemeOutletMap;
     }
-
     static {
         MONITORING_SCOPE_TO_FIELD.put(1, ITEM_CLASS);
         MONITORING_SCOPE_TO_FIELD.put(2, BATCH_CODE);
@@ -121,6 +121,13 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         schemeProductMap.put("category", "all");
         schemeProductMap.put("subCategory", "all");
         schemeProductMap.put("customGroupCode", "all");
+        schemeProductMap.put("qualifier_", "1");
+        schemeProductMap.put("size", "all");
+        schemeProductMap.put("product", "all");
+        schemeProductMap.put("itemType", "all");
+        schemeProductMap.put("articleCode", "all");
+        schemeProductMap.put("skuCode", "all");
+        schemeProductMap.put("mcode", "all");
 
         int monitoringScope = Integer.parseInt(inputMap.get(MONITORING_SCOPE).toString().trim());
         String monitoringValue = inputMap.get("monitoring_value").toString().trim();
@@ -131,12 +138,10 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
             throw new IllegalArgumentException("Invalid monitoring scope value: " + monitoringScope);
         }
         schemeProductMap.put(field, monitoringValue);
-
         // If monitoring scope is not 4, add eanNumber as "all"
         if (monitoringScope != 4) {
             schemeProductMap.put("eanNumber", "all");
         }
-
         return schemeProductMap;
     }
 
