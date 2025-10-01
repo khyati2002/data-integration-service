@@ -15,12 +15,15 @@ import com.salescode.dim.jooq.impl.SchemeDefination;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class HCCBChannelEnrichment
         extends AbstractEnrichment<SchemeDefination> {
     private static GenericObjectService genericObjectService;
@@ -56,6 +59,7 @@ public class HCCBChannelEnrichment
             this.enrichItemSchemeDescription(cdm);
             this.logger.info("Time taken for channel enrichment : {}", (System.currentTimeMillis() - currentTime));
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             throw new RuntimeException("Exception in channel enrichment {}", ex);
         }
         return new OperationResult.StepResult(OperationResult.Status.OK, "Data enriched successfully");
