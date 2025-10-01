@@ -153,7 +153,7 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         ArrayNode slabArray = getSlabIfAlreadyExist(inputMap);
         schemeCalculationMap.put("slabInfo", slabArray);
         if(inputMap.get(MONITORING_SCOPE).toString().trim().equalsIgnoreCase("4")){
-            if(inputMap.get("monitoring_uom")!=null && inputMap.get("monitoring_uom").toString().trim().isEmpty()){
+            if(inputMap.get("monitoring_uom")!=null && inputMap.get("monitoring_uom").toString().trim().isEmpty() && "cs".equalsIgnoreCase(inputMap.get("monitoring_uom").toString().trim())){
                 schemeCalculationMap.put("rangeLevelUnit", inputMap.get("monitoring_uom").toString().trim());
             }else{
                 schemeCalculationMap.put("rangeLevelUnit", "nq");
