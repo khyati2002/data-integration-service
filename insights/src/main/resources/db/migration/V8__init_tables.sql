@@ -155,7 +155,7 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'file_stage_metrics_stage_type_check') THEN
         ALTER TABLE public.file_stage_metrics ADD CONSTRAINT file_stage_metrics_stage_type_check
-        CHECK (((stage_type)::text = ANY ((ARRAY['read'::character varying, 'PUBLISH'::character varying, 'QUEUE'::character varying, 'PROCESS'::character varying, 'SAVE'::character varying])::text[])));
+        CHECK (((stage_type)::text = ANY ((ARRAY['READ'::character varying, 'PUBLISH'::character varying, 'QUEUE'::character varying, 'PROCESS'::character varying, 'SAVE'::character varying])::text[])));
     END IF;
 END $$;
 
