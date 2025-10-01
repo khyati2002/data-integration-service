@@ -16,6 +16,7 @@ import com.salescode.dis.insights.mapper.JobEntityMapper;
 import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.repository.InsightsMetadataRepository;
 import com.salescode.dis.insights.repository.JobRepository;
+import com.salescode.dis.insights.service.strategy.IFileOperationStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -242,49 +243,43 @@ public class JobService {
                 })
                 .collect(Collectors.toList());
 
-        // Master processing remains the same
-        Map<String, List<JobStageAccumulatedData>> resultsByMaster = queryResults.stream()
-                .collect(Collectors.groupingBy(JobStageAccumulatedData::getMaster));
 
-        // Fixed master processing with proper stage aggregation
-        List<MasterCard> resultsMaster = resultsByMaster.entrySet().stream()
+        Map<Map.Entry<String, ModeOfIntegration>, List<JobStageAccumulatedData>> resultsByMasterMode =
+                queryResults.stream()
+                        .collect(Collectors.groupingBy(j ->
+                                Map.entry(j.getMaster(), j.getModeOfIntegration())
+                        ));
+
+        List<MasterCard> resultsMaster = resultsByMasterMode.entrySet().stream()
                 .map(entry -> {
+                    Map.Entry<String, ModeOfIntegration> key = entry.getKey();
+                    String masterName = key.getKey();
+                    ModeOfIntegration mode1 = key.getValue();
                     List<JobStageAccumulatedData> jobResults = entry.getValue();
 
-                    // Job status counts (this part was correct)
+                    // Job status counts (unique jobId per status)
                     Map<ProgressStatus, Long> statusCounts = jobResults.stream()
                             .collect(Collectors.groupingBy(
                                     JobStageAccumulatedData::getStatus,
                                     Collectors.mapping(
                                             JobStageAccumulatedData::getJobId,
-                                            Collectors.collectingAndThen(
-                                                    Collectors.toSet(),
-                                                    set -> (long) set.size()
-                                            )
+                                            Collectors.collectingAndThen(Collectors.toSet(), set -> (long) set.size())
                                     )
                             ));
 
-                    Long completed_success = statusCounts.get(ProgressStatus.COMPLETED_SUCCESSFULLY) != null ? statusCounts.get(ProgressStatus.COMPLETED_SUCCESSFULLY) : 0L;
-                    Long completed_unsuccess = statusCounts.get(ProgressStatus.COMPLETED_UNSUCCESSFULLY) != null ? statusCounts.get(ProgressStatus.COMPLETED_UNSUCCESSFULLY) : 0L;
-                    Long pending = statusCounts.get(ProgressStatus.PENDING) != null ? statusCounts.get(ProgressStatus.PENDING) : 0L;
-                    Long failed = statusCounts.get(ProgressStatus.FAILED) != null ? statusCounts.get(ProgressStatus.FAILED) : 0L;
+                    Long completed_success = statusCounts.getOrDefault(ProgressStatus.COMPLETED_SUCCESSFULLY, 0L);
+                    Long completed_unsuccess = statusCounts.getOrDefault(ProgressStatus.COMPLETED_UNSUCCESSFULLY, 0L);
+                    Long pending = statusCounts.getOrDefault(ProgressStatus.PENDING, 0L);
+                    Long failed = statusCounts.getOrDefault(ProgressStatus.FAILED, 0L);
                     Long completed = completed_success + completed_unsuccess;
 
-                    // FIXED: Group by stage type and aggregate across all jobs for this master
-                    Map<ProgressStage, List<JobStageAccumulatedData>> stageGroups = jobResults.stream()
-                            .filter(result -> result.getStageType() != null)
-                            .collect(Collectors.groupingBy(JobStageAccumulatedData::getStageType));
+                    // Group by stage type (within this (master, mode) group)
+                    Map<ProgressStage, List<JobStageAccumulatedData>> stageGroups =
+                            jobResults.stream()
+                                    .filter(r -> r.getStageType() != null)
+                                    .collect(Collectors.groupingBy(JobStageAccumulatedData::getStageType));
 
-                    // Calculate aggregated counts per stage type
-                    Long queueCount = stageGroups.getOrDefault(ProgressStage.QUEUE, Collections.emptyList())
-                            .stream()
-                            .mapToLong(result ->
-                                    (result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L) +
-                                            (result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L) +
-                                            (result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L)
-                            )
-                            .sum();
-
+                    // Save count
                     Long saveCount = stageGroups.getOrDefault(ProgressStage.SAVE, Collections.emptyList())
                             .stream()
                             .mapToLong(result ->
@@ -294,13 +289,37 @@ public class JobService {
                             )
                             .sum();
 
+                    // Get the first stage from the strategy for this mode
+                    ProgressStage startStage = null;
+                    Long startStageCount = 0L;
+                    try {
+                        FileService fileService = applicationContext.getBean(FileService.class);
+                        IFileOperationStrategy strategy = fileService.getFileOperationStrategy(mode1);
+                        List<ProgressStage> supported = strategy != null ? strategy.getSupportedStages() : Collections.emptyList();
+                        if (supported != null && !supported.isEmpty()) {
+                            startStage = supported.get(0);
+                            startStageCount = stageGroups.getOrDefault(startStage, Collections.emptyList())
+                                    .stream()
+                                    .mapToLong(result ->
+                                            (result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L) +
+                                                    (result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L) +
+                                                    (result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L)
+                                    )
+                                    .sum();
+                        }
+                    } catch (Exception ex) {
+                        log.error(ex.getMessage());
+                    }
+
                     return MasterCard.builder()
-                            .masterName(entry.getKey())
-                            .queueCount(queueCount)
-                            .saveCount(saveCount)
-                            .completedJobCount(completed)
+                            .masterName(masterName)
+                            .mode(mode1)
                             .pendingJobCount(pending)
+                            .completedJobCount(completed)
                             .failedJobCount(failed)
+                            .saveCount(saveCount)
+                            .startStage(startStage)
+                            .startStageCount(startStageCount)
                             .build();
                 })
                 .collect(Collectors.toList());
