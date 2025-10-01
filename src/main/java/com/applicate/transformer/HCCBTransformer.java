@@ -164,7 +164,17 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         }
         schemeCalculationMap.put("schemeDiscountedProductPrice", inputMap.get("discountedprice"));
         schemeCalculationMap.put("schemeDiscountedProductcode", inputMap.get("discounted_item_id"));
-        schemeCalculationMap.put("schemeDiscountedProductcodeuom", inputMap.get("discounted_item_uom"));
+
+        String calculationMethod = inputMap.get("calculation_method").toString().trim();
+        if(calculationMethod.equalsIgnoreCase("4")){
+            if(inputMap.get("discounted_item_uom")!=null && inputMap.get("discounted_item_uom").toString().trim().equalsIgnoreCase("cs")) {
+                schemeCalculationMap.put("schemeDiscountedProductcodeuom", "CS");
+            }else{
+                schemeCalculationMap.put("schemeDiscountedProductcodeuom", "EA");
+            }
+        }else{
+            schemeCalculationMap.put("schemeDiscountedProductcodeuom", inputMap.get("discounted_item_uom"));
+        }
         schemeCalculationMap.put("maxDiscount", "0");
         schemeCalculationMap.put("maxTerm", "0");
         schemeCalculationMap.put("minimumAmount", "0");
