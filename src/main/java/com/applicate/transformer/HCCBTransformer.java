@@ -180,6 +180,11 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         schemeCalculationMap.put("minimumAmount", "0");
         schemeCalculationMap.put("usageLimit", "0");
         if(inputMap.get(MONITORING_SCOPE).toString().trim().equalsIgnoreCase("3")) schemeCalculationMap.put("mustBuyGroupId", inputMap.get(SCHEME_NO));
+       com.fasterxml.jackson.databind.node.ObjectNode extendedAttributes = new com.fasterxml.jackson.databind.ObjectMapper().createObjectNode();
+        if(inputMap.get(MONITORING_SCOPE).toString().trim().equalsIgnoreCase("3")){
+            extendedAttributes.put("mustBuyRepeatSlabSync", "true");
+        }
+        schemeCalculationMap.put("extendedAttributes", extendedAttributes);
         return schemeCalculationMap;
     }
 
@@ -333,6 +338,11 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
     }
 
     private int getPriority(String disbursementMethod, String marketScope, String monitoringScope) {
+
+        if ("3".equals(monitoringScope)) {
+            return 1;
+        }
+
         String key = disbursementMethod + "-" + marketScope + "-" + monitoringScope;
 
         if (PRIORITY_MAP.containsKey(key)) {
