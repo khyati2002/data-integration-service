@@ -53,13 +53,16 @@ public class HCCBChannelEnrichment
                         outletBifurcation.setChannel(geobject.getKey3());
                         continue;
                     }
+                    if(ObjectUtils.isEmpty(ge)) {
+                        log.error("Channel not found for schemeID: {}", cdm.getSchemeId());
+                    }
                     outletBifurcation.setChannel(channelId);
                 }
             }
             this.enrichItemSchemeDescription(cdm);
             this.logger.info("Time taken for channel enrichment : {}", (System.currentTimeMillis() - currentTime));
         } catch (Exception ex) {
-            log.error(ex.getMessage());
+            log.error("Error while setting channel {}", ex.getMessage());
             throw new RuntimeException("Exception in channel enrichment {}", ex);
         }
         return new OperationResult.StepResult(OperationResult.Status.OK, "Data enriched successfully");
@@ -105,6 +108,7 @@ public class HCCBChannelEnrichment
 
             List<Productdetails> sku = productDetailsService.findByEanCode(eanCode);
             if (sku == null) {
+                log.error("Product Details not found for EAN Code {} | {}", eanCode, inputCode);
                 return null;
             }
 
