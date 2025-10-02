@@ -62,7 +62,7 @@ public class HCCBChannelEnrichment
             this.enrichItemSchemeDescription(cdm);
             this.logger.info("Time taken for channel enrichment : {}", (System.currentTimeMillis() - currentTime));
         } catch (Exception ex) {
-            log.error("Error while setting channel {}", ex.getMessage());
+            log.error("Error while setting channel {} | {}", cdm.getSchemeId(), ex.getMessage());
             throw new RuntimeException("Exception in channel enrichment {}", ex);
         }
         return new OperationResult.StepResult(OperationResult.Status.OK, "Data enriched successfully");
