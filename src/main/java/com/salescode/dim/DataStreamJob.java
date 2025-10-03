@@ -96,7 +96,7 @@ public class DataStreamJob {
         boolean clearCache = Boolean.parseBoolean(inout0Properties.getProperty("clearCache", "false"));
         // Create lob topics if not exists
         if(clearCache) {
-            String cachePattern = "dataintegration*"; // Matches any cache name containing "dataintegration"
+            String cachePattern = "dataintegration"; // Matches any cache name containing "dataintegration"
             env.fromElements(cachePattern).flatMap(new CacheEvictionFunction(inout0Properties));
         }
 
