@@ -51,27 +51,6 @@ public class DataChangeListener {
             eventPublisher.publishEvent(event);
         }
     }
-//    @Async("sseExecutor")
-//    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-//    public void handleImmediateDataChange(DataChangeEvent event) {
-//        if (!event.getEventType().endsWith("_IMMEDIATE")) {
-//            return;
-//        }
-//        String entityKey = generateEntityKey(event.getEntity());
-//        PROCESSING_ENTITIES.get().add(entityKey);
-//
-//        try {
-//            SSEService sseService = applicationContext.getBean(SSEService.class);
-//            String baseEventType = event.getEventType().replace("_IMMEDIATE", "");
-//
-//            handleEventByType(baseEventType, event, sseService);
-//
-//        } catch (Exception e) {
-//            log.error("Error handling immediate data change event: {}", event.getEventType(), e);
-//        } finally {
-//            PROCESSING_ENTITIES.get().remove(entityKey);
-//        }
-//    }
 
     // Handle final events (after transaction commit)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)

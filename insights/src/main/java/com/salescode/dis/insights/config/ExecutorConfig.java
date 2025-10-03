@@ -42,19 +42,6 @@ public class ExecutorConfig {
         return executor;
     }
 
-    @Bean(name = "sseExecutor")
-    public ThreadPoolTaskExecutor sseExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
-        executor.setMaxPoolSize(8);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("SSE-Executor-");
-        executor.setTaskDecorator(new SecurityContextPropagatingTaskDecorator());
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.initialize();
-        return executor;
-    }
-
 
     private static class SecurityContextPropagatingTaskDecorator implements TaskDecorator {
         @Override
