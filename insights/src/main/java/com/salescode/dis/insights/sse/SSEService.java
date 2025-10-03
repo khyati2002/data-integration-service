@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.concurrent.DelegatingSecurityContextScheduledExecutorService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import jakarta.annotation.PreDestroy;
@@ -179,8 +181,11 @@ public class SSEService {
         log.info("Completed and removed {} report emitters for fileId={}", set.size(), fileId);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public void broadcastJobUpdate(String lob, String jobId) {
         JobEntity job = jobService.getJob(jobId);
+        // Force initialization
+        job.getFiles().size();
         JobEntityResponseDto dto = jobEntityMapper.toDto(job);
         Iterator<Map.Entry<String, SseEmitter>> it = jobEmitters.entrySet().iterator();
         while (it.hasNext()) {
@@ -200,9 +205,10 @@ public class SSEService {
             }
         }
     }
-
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public void broadcastFileUpdate(String lob, String masterName, String jobId, String fileId) {
         FileEntity file = fileService.get(fileId, masterName);
+        file.getFileStageMetrics().size();
         FileEntityResponseDto dto = fileEntityMapper.toDto(file);
 
         List<Object> queryKey = Arrays.asList("fileDetail", lob, masterName, jobId, fileId);

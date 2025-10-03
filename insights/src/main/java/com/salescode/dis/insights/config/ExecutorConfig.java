@@ -1,8 +1,13 @@
 package com.salescode.dis.insights.config;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
@@ -37,4 +42,33 @@ public class ExecutorConfig {
         return executor;
     }
 
+    @Bean(name = "sseExecutor")
+    public ThreadPoolTaskExecutor sseExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(8);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("SSE-Executor-");
+        executor.setTaskDecorator(new SecurityContextPropagatingTaskDecorator());
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.initialize();
+        return executor;
+    }
+
+
+    private static class SecurityContextPropagatingTaskDecorator implements TaskDecorator {
+        @Override
+        public @NotNull Runnable decorate(@NotNull Runnable runnable) {
+            SecurityContext context = SecurityContextHolder.getContext();
+            return () -> {
+                try {
+                    SecurityContextHolder.setContext(context);
+                    runnable.run();
+                } finally {
+                    SecurityContextHolder.clearContext();
+                }
+            };
+        }
+
+    }
 }
