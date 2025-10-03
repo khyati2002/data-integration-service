@@ -1,12 +1,8 @@
 package com.salescode.dis.insights.config;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -40,22 +36,5 @@ public class ExecutorConfig {
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.initialize();
         return executor;
-    }
-
-
-    private static class SecurityContextPropagatingTaskDecorator implements TaskDecorator {
-        @Override
-        public @NotNull Runnable decorate(@NotNull Runnable runnable) {
-            SecurityContext context = SecurityContextHolder.getContext();
-            return () -> {
-                try {
-                    SecurityContextHolder.setContext(context);
-                    runnable.run();
-                } finally {
-                    SecurityContextHolder.clearContext();
-                }
-            };
-        }
-
     }
 }
