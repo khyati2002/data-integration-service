@@ -23,7 +23,7 @@ import java.util.UUID;
 @Profile("!test")
 public class CleanupScheduler {
 
-    @Value("${file-cleanup.scheduler.cleanup-threshold-days:15}")
+    @Value("${file-cleanup.scheduler.cleanup-threshold-days:7}")
     private int cleanupThresholdDays;
 
     private final FileStageMetricsRepository fileStageMetricsRepository;

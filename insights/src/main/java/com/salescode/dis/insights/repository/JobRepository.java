@@ -31,7 +31,7 @@ public interface JobRepository extends JpaRepository<JobEntity, String> {
     @Query("DELETE FROM JobEntity j WHERE j.lastModifiedTime < :cutoffTime")
     int deleteByLastModifiedBefore(Instant cutoffTime);
 
-    @Query(value = "SELECT id FROM integration_job WHERE last_modified < ?1", nativeQuery = true)
+    @Query(value = "SELECT id FROM integration_job WHERE last_modified_time < ?1", nativeQuery = true)
     List<String> findJobIdsOlderThan(Instant cutoffTime);
 
     @Modifying
@@ -44,7 +44,7 @@ public interface JobRepository extends JpaRepository<JobEntity, String> {
     @Query("UPDATE JobEntity j SET j.status = :newStatus, j.lastModifiedTime = CURRENT_TIMESTAMP " +
             "WHERE j.lob = :lob AND j.status = :currentStatus " +
             "AND j.lastModifiedTime < :cutoffTime")
-    int updateStaleintegration_jobByLobAndStatus(@Param("lob") String lob,
+    int updateStaleJobsByLobAndStatus(@Param("lob") String lob,
                                       @Param("currentStatus") ProgressStatus currentStatus,
                                       @Param("newStatus") ProgressStatus newStatus,
                                       @Param("cutoffTime") Instant cutoffTime);

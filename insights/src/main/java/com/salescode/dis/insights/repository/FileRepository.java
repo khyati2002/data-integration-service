@@ -26,7 +26,7 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
             "WHERE (f.status = :status) " +
             "AND f.lastModifiedTime < :staleCutoffTime " +
             "AND f.lastModifiedTime >= :tooOldCutoffTime")
-    List<FileEntity> findAllStalePendingintegration_file(
+    List<FileEntity> findAllStalePendingFiles(
             @Param("staleCutoffTime") Instant staleCutoffTime,
             @Param("tooOldCutoffTime") Instant tooOldCutoffTime,
             @Param("status")ProgressStatus status
@@ -41,7 +41,7 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
     @Query(value = "DELETE FROM integration_file WHERE job_id IN (?1)", nativeQuery = true)
     int deleteByJobIdIn(List<String> jobIds);
 
-    @Query(value = "SELECT id FROM integration_file WHERE last_modified < ?1", nativeQuery = true)
+    @Query(value = "SELECT id FROM integration_file WHERE last_modified_time < ?1", nativeQuery = true)
     List<String> findFileIdsOlderThan(Instant cutoffTime);
     
     @Modifying
@@ -53,7 +53,7 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
     @Query("UPDATE FileEntity f SET f.status = :newStatus, f.lastModifiedTime = CURRENT_TIMESTAMP " +
             "WHERE f.lob = :lob AND f.status = :currentStatus " +
             "AND f.lastModifiedTime < :cutoffTime")
-    int updateStaleintegration_fileByLobAndStatus(@Param("lob") String lob,
+    int updateStaleFilesByLobAndStatus(@Param("lob") String lob,
                                        @Param("currentStatus") ProgressStatus currentStatus,
                                        @Param("newStatus") ProgressStatus newStatus,
                                        @Param("cutoffTime") Instant cutoffTime);
