@@ -37,6 +37,16 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
     @Query("DELETE FROM FileEntity f WHERE f.lastModifiedTime < :cutoffTime")
     int deleteByLastModifiedBefore(@Param("cutoffTime") Instant cutoffTime);
 
+    @Modifying
+    @Query(value = "DELETE FROM files WHERE job_id IN (?1)", nativeQuery = true)
+    int deleteByJobIdIn(List<String> jobIds);
+
+    @Query(value = "SELECT id FROM files WHERE last_modified < ?1", nativeQuery = true)
+    List<String> findFileIdsOlderThan(Instant cutoffTime);
+    
+    @Modifying
+    @Query(value = "DELETE FROM files WHERE id IN (?1)", nativeQuery = true)
+    int deleteByIdIn(List<String> fileIds);
 
     @Modifying
     @Transactional

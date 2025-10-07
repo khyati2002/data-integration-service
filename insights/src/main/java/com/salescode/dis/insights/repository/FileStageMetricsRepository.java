@@ -91,6 +91,10 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
     int deleteByLastModifiedBefore(Instant cutoffTime);
 
     @Modifying
+    @Query(value = "DELETE FROM file_stage_metrics WHERE file_id IN (?1)", nativeQuery = true)
+    int deleteByFileIdIn(List<String> fileIds);
+
+    @Modifying
     @Transactional
     @Query("UPDATE FileStageMetrics fsm SET fsm.progressStatus = :newStatus, fsm.lastModifiedTime = CURRENT_TIMESTAMP " +
             "WHERE fsm.file.lob = :lob AND fsm.progressStatus = :currentStatus " +
@@ -99,5 +103,9 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
                                               @Param("currentStatus") ProgressStatus currentStatus,
                                               @Param("newStatus") ProgressStatus newStatus,
                                               @Param("cutoffTime") Instant cutoffTime);
+
+    @Modifying
+    @Query(value = "DELETE FROM file_stage_metrics WHERE job_id IN (?1)", nativeQuery = true)
+    int deleteByJobIdIn(List<String> jobIds);
 
 }
