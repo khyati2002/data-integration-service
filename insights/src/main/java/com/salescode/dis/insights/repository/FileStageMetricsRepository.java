@@ -53,11 +53,11 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
             "CAST(j.extendedAttributes AS string), " +
             "j.startTime, j.endTime, j.status ," +
             "j.publisherJobUri, j.consumerJobUri, " +
-            "s.stageType, CAST(COALESCE(SUM(s.successCount), 0) AS long),CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long))" +
+            "s.stageType, s.progressStatus, CAST(COALESCE(SUM(s.successCount), 0) AS long),CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long))" +
             "FROM JobEntity j JOIN FileStageMetrics s ON j.id = s.job.id " +
             "WHERE j.lob = :lob AND j.lastModifiedTime BETWEEN :startDate AND :endDate " +
             "GROUP BY j.id, j.creationTime, j.lastModifiedTime, j.lob, j.startTime, j.endTime, j.status, " +
-            "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master, s.modeOfIntegration")
+            "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master, s.modeOfIntegration, s.progressStatus")
     List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLob(@Param("lob") String lob,    @Param("startDate") Instant startDate,
                                                                     @Param("endDate") Instant endDate);
 
@@ -66,11 +66,11 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
             "CAST(j.extendedAttributes AS string), " +
             "j.startTime, j.endTime, j.status ," +
             "j.publisherJobUri, j.consumerJobUri, " +
-            "s.stageType, CAST(COALESCE(SUM(s.successCount), 0) AS long),CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long))" +
+            "s.stageType, s.progressStatus, CAST(COALESCE(SUM(s.successCount), 0) AS long),CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long), CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long))" +
             "FROM JobEntity j JOIN FileStageMetrics s ON j.id = s.job.id " +
             "WHERE j.lob = :lob AND j.lastModifiedTime BETWEEN :startDate AND :endDate AND s.modeOfIntegration = :modeOfIntegration " +
             "GROUP BY j.id, j.creationTime, j.lastModifiedTime, j.lob, j.startTime, j.endTime, j.status, " +
-            "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master, s.modeOfIntegration")
+            "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master, s.modeOfIntegration, s.progressStatus")
     List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLobAndMode(@Param("lob") String lob, @Param("startDate") Instant startDate,
                                                                            @Param("endDate") Instant endDate, @Param("modeOfIntegration")ModeOfIntegration modeOfIntegration);
 

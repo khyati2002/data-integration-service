@@ -28,6 +28,7 @@ public class JobStageAccumulatedData {
     private String publisherJobUri;
     private String consumerJobUri;
     private ProgressStage stageType;
+    private ProgressStatus progressStatus;
     private Long totalSuccessCount;
     private Long serverFailureCount;
     private Long logicalFailureCount;
@@ -36,7 +37,7 @@ public class JobStageAccumulatedData {
             String jobId, String master, ModeOfIntegration modeOfIntegration, Instant creationTime, Instant lastModifiedTime, String lob,
             String extendedAttributesJson,
             Instant startTime, Instant endTime, ProgressStatus status, String publisherJobUri,
-            String consumerJobUri, ProgressStage stageType, Long totalSuccessCount, Long serverFailureCount, Long logicalFailureCount) { // Use Number for counts to be safe
+            String consumerJobUri, ProgressStage stageType, ProgressStatus progressStatus, Long totalSuccessCount, Long serverFailureCount, Long logicalFailureCount) { // Use Number for counts to be safe
         this.jobId = jobId;
         this.master = master;
         this.modeOfIntegration = modeOfIntegration;
@@ -49,6 +50,7 @@ public class JobStageAccumulatedData {
         this.publisherJobUri = publisherJobUri;
         this.consumerJobUri = consumerJobUri;
         this.stageType = stageType;
+        this.progressStatus = progressStatus;
         this.totalSuccessCount = totalSuccessCount != null ? totalSuccessCount : 0L;
         this.serverFailureCount = serverFailureCount != null ? serverFailureCount : 0L;
         this.logicalFailureCount = logicalFailureCount != null ? logicalFailureCount : 0L;

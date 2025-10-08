@@ -257,21 +257,21 @@ public class JobService {
                     ModeOfIntegration mode1 = key.getValue();
                     List<JobStageAccumulatedData> jobResults = entry.getValue();
 
-                    // Job status counts (unique jobId per status)
-                    Map<ProgressStatus, Long> statusCounts = jobResults.stream()
-                            .collect(Collectors.groupingBy(
-                                    JobStageAccumulatedData::getStatus,
-                                    Collectors.mapping(
-                                            JobStageAccumulatedData::getJobId,
-                                            Collectors.collectingAndThen(Collectors.toSet(), set -> (long) set.size())
-                                    )
-                            ));
+                    Map<String, Set<ProgressStatus>> jobStatusMapForMaster = jobResults.stream()
+                                                                                     .filter(j -> masterName.equals(j.getMaster()))
+                                                                                     .collect(Collectors.groupingBy(
+                                                                                             JobStageAccumulatedData::getJobId,
+                                                                                             Collectors.mapping(JobStageAccumulatedData::getProgressStatus, Collectors.toSet())
+                                                                                     ));
+                    long pendingJobCount = 0;
+                    long failedJobCount = 0;
+                    long completedJobCount = 0;
 
-                    Long completed_success = statusCounts.getOrDefault(ProgressStatus.COMPLETED_SUCCESSFULLY, 0L);
-                    Long completed_unsuccess = statusCounts.getOrDefault(ProgressStatus.COMPLETED_UNSUCCESSFULLY, 0L);
-                    Long pending = statusCounts.getOrDefault(ProgressStatus.PENDING, 0L);
-                    Long failed = statusCounts.getOrDefault(ProgressStatus.FAILED, 0L);
-                    Long completed = completed_success + completed_unsuccess;
+                    for (Set<ProgressStatus> statuses : jobStatusMapForMaster.values()) {
+                        if (statuses.contains(ProgressStatus.FAILED)) failedJobCount++;
+                        else if (statuses.contains(ProgressStatus.PENDING)) pendingJobCount++;
+                        else completedJobCount++;
+                    }
 
                     // Group by stage type (within this (master, mode) group)
                     Map<ProgressStage, List<JobStageAccumulatedData>> stageGroups =
@@ -314,9 +314,9 @@ public class JobService {
                     return MasterCard.builder()
                             .masterName(masterName)
                             .mode(mode1)
-                            .pendingJobCount(pending)
-                            .completedJobCount(completed)
-                            .failedJobCount(failed)
+                            .pendingJobCount(pendingJobCount)
+                            .completedJobCount(completedJobCount)
+                            .failedJobCount(failedJobCount)
                             .saveCount(saveCount)
                             .startStage(startStage)
                             .startStageCount(startStageCount)
