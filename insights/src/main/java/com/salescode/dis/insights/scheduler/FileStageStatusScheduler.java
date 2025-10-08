@@ -85,7 +85,8 @@ public class FileStageStatusScheduler {
         }
         for(int i=1;i< stages.size();i++) {
             if(stages.get(i).getStageType()== ProgressStage.PUBLISH) {
-                stage.setServerFailureCount(stages.get(i-1).getSuccessCount() - stage.getSuccessCount());
+                long serverFailureCount=stages.get(i-1).getSuccessCount() - stage.getSuccessCount();
+                stage.setServerFailureCount(Math.max(0,serverFailureCount));
                 break;
             }
         }

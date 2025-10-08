@@ -15,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -45,8 +42,11 @@ public class LobController {
         LocalDateTime queryEndTime = (endDate != null) ? endDate : LocalDateTime.now();
         LocalDateTime queryStartTime = (startDate != null) ? startDate : queryEndTime.minusDays(1);
 
-        Instant startInstant = queryStartTime.atZone(ZoneId.systemDefault()).toInstant();
-        Instant endInstant = queryEndTime.atZone(ZoneId.systemDefault()).toInstant();
+        LocalDateTime utcQueryStartTime = queryStartTime.minusHours(5).minusMinutes(30);
+        LocalDateTime utcQueryEndTime = queryEndTime.minusHours(5).minusMinutes(30);
+
+        Instant startInstant = utcQueryStartTime.atZone(ZoneOffset.UTC).toInstant();
+        Instant endInstant = utcQueryEndTime.atZone(ZoneOffset.UTC).toInstant();
 
         if (lobs == null || lobs.isEmpty()) {
             LobSummaryDto defaultValue = new LobSummaryDto(null, 0.0, BigDecimal.ZERO, 0L, 0L, 0L, 0L, 0L, 0L, 0L);

@@ -151,15 +151,14 @@ public class S3ExportService {
             });
 
             if (updatedReport.isPresent()) {
-                sseService.broadcastReportEvent(fileId, "report-update", updatedReport.get());
+                sseService.sendFinalEventAndComplete(fileId, "report-update", updatedReport.get());
             } else {
-                sseService.broadcastReportEvent(fileId, "report-update", Map.of(
+                sseService.sendFinalEventAndComplete(fileId, "report-update", Map.of(
                         "fileId", fileId,
                         "message", "Failed but fileReport entry not found"
                 ));
             }
-            sseService.broadcastReportEvent(fileId, "error", Map.of("error", detailedErrorMessage));
-            sseService.completeReportEmitters(fileId);
+//            sseService.broadcastReportEvent(fileId, "error", Map.of("error", detailedErrorMessage));
         }
     }
 
