@@ -134,7 +134,7 @@ public class FileController {
         return fileId;
     }
 
-    @GetMapping("/failures/{fileId}")
+    @GetMapping("/report/{fileId}")
     public ResponseEntity<FileReportEntity> checkFileExists(@PathVariable String fileId) {
         if (fileId == null || fileId.trim().isEmpty()) {
             logger.warn("Received a request with a blank or null fileId.");
@@ -166,7 +166,7 @@ public class FileController {
         }
     }
 
-    @PostMapping("/failures")
+    @PostMapping("/report/generate")
     public ResponseEntity<Object> startFailureExport(@RequestBody Map<String, String> payload) {
         String fileId = payload.get("fileId");
         String lob = payload.get("lob");
