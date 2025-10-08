@@ -18,7 +18,7 @@ import java.time.Instant;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j
 public class DuplicatesController {
