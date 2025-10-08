@@ -252,6 +252,16 @@ public class FileController {
 
     @GetMapping("/file/{fileId}/download-url")
     public ResponseEntity<?> getDownloadUrl(@PathVariable String fileId) {
+
+        try {
+            byte[] decodedBytes = Base64.getDecoder().decode(fileId);
+            fileId = new String(decodedBytes, StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Collections.singletonMap("error", "Invalid Base64 encoding for 'fileId'."));
+        }
+
         return fileReportRepository.findByFileId(fileId)
                 .map(report -> {
                     if (report.getUrl() == null || report.getUrl().isEmpty()) {
