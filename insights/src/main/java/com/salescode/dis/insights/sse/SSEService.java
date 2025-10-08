@@ -229,7 +229,7 @@ public class SSEService {
     }
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public void broadcastFileUpdate(String lob, String masterName, String jobId, String fileId) {
-        FileEntity file = fileService.get(fileId, masterName);
+        FileEntity file = fileService.getFile(fileId, masterName);
         file.getFileStageMetrics().size();
         FileEntityResponseDto dto = fileEntityMapper.toDto(file);
 
