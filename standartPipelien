@@ -1,0 +1,143 @@
+pipeline {
+  agent { label 'master' }
+
+  options {
+    timestamps()
+  }
+
+  parameters {
+    string(name: 'LOB', defaultValue: 'testLob', description: 'Name for the new LOB branch in bundles repo')
+    string(name: 'SOURCE_BRANCH', defaultValue: 'standard-deployment', description: 'Source branch to clone from')
+    string(name: 'BUNDLE_REPO_URL', defaultValue: 'https://applicatetech.git.beanstalkapp.com/data-integration-bundles.git', description: 'Bundles repository URL')
+    string(name: 'DOWNSTREAM_JOB', defaultValue: 'Deployment job for flink bundle', description: 'Existing build pipeline job name')
+  }
+
+  environment {
+    WORKDIR = "bundle"
+    // Jenkins base URL (fallback to BUILD_URL’s base if JENKINS_URL is not set)
+    JENKINS_BASE = "${env.JENKINS_URL ?: (env.BUILD_URL?.replaceAll('/job/.*',''))}"
+  }
+
+  stages {
+    stage('Clean') {
+      steps { deleteDir() }
+    }
+
+    stage('Clone Bundles (source branch)') {
+      steps {
+        dir("${env.WORKDIR}") {
+          withCredentials([gitUsernamePassword(credentialsId: 'applicate_git')]) {
+            sh """
+              set -eux
+              git clone -b "${params.SOURCE_BRANCH}" "${params.BUNDLE_REPO_URL}" .
+              REPO_HOST=\$(echo "${params.BUNDLE_REPO_URL}" | cut -d'/' -f3)
+              REPO_PATH=\$(echo "${params.BUNDLE_REPO_URL}" | cut -d'/' -f4-)
+              git remote set-url origin "https://\${GIT_USERNAME}:\${GIT_PASSWORD}@\${REPO_HOST}/\${REPO_PATH}"
+            """
+          }
+        }
+      }
+    }
+
+    stage('Create / Checkout LOB Branch') {
+      steps {
+        dir("${env.WORKDIR}") {
+          sh """
+            set -eux
+            if git ls-remote --heads origin "${params.LOB}" | grep -q "refs/heads/${params.LOB}"; then
+              echo "Branch '${params.LOB}' already exists remotely."
+              git fetch origin "${params.LOB}:${params.LOB}" || true
+              git checkout "${params.LOB}"
+              git branch --set-upstream-to=origin/${params.LOB} || true
+            else
+              echo "Creating branch '${params.LOB}' from '${params.SOURCE_BRANCH}'..."
+              git checkout "${params.SOURCE_BRANCH}"
+              git pull --ff-only origin "${params.SOURCE_BRANCH}"
+              git checkout -b "${params.LOB}"
+              git push -u origin "${params.LOB}"
+            fi
+          """
+        }
+      }
+    }
+
+    stage('Trigger Downstream (async) & Capture Build Number') {
+      steps {
+        script {
+          echo "Triggering ${params.DOWNSTREAM_JOB} asynchronously…"
+
+          // Wait just until the downstream run actually STARTS, then continue
+          def run = build job: params.DOWNSTREAM_JOB,
+                          wait: false,
+                          waitForStart: true,
+                          parameters: [
+                            string(name: 'PROJECT_BRANCH', value: 'standard-deployment'),
+                            string(name: 'BUNDLE_BRANCH',  value: params.LOB),
+                            string(name: 'LOB',            value: params.LOB)
+                          ]
+
+          // Now that it has started, we have a RunWrapper and can read its build number
+          def downstreamBuildNumber = run.getNumber() as Integer
+          echo "Downstream started: #${downstreamBuildNumber}"
+
+          // currentBuild.displayName = "#${env.BUILD_NUMBER} → ${params.DOWNSTREAM_JOB} #${downstreamBuildNumber}"
+          env.DOWNSTREAM_BUILD_NUMBER = downstreamBuildNumber.toString()
+        }
+      }
+    }
+
+    stage('Tag Repo with Downstream Build Number') {
+      steps {
+        dir("${env.WORKDIR}") {
+          // Use a LIGHTWEIGHT tag so no git identity is required
+          sh """
+            set -eux
+            TAG_NAME="standard-deploy-${params.LOB}"
+            echo "Creating lightweight tag: \${TAG_NAME}"
+            # ensure we are at the LOB branch tip
+            git checkout "${params.LOB}"
+            git fetch origin "${params.LOB}"
+            git reset --hard origin/"${params.LOB}"
+
+            # create lightweight tag (no -a, no identity needed)
+            git tag "\${TAG_NAME}"
+            git push origin "refs/tags/\${TAG_NAME}"
+          """
+        }
+      }
+    }
+
+    stage('Publish Metadata (JSON)') {
+      steps {
+        script {
+          def meta = [
+            lob                : params.LOB,
+            source_branch      : params.SOURCE_BRANCH,
+            bundle_repo_url    : params.BUNDLE_REPO_URL,
+            downstream_job     : params.DOWNSTREAM_JOB,
+            downstream_build   : env.DOWNSTREAM_BUILD_NUMBER,
+            downstream_url     : "${env.JENKINS_BASE}/job/${params.DOWNSTREAM_JOB}/${env.DOWNSTREAM_BUILD_NUMBER}/",
+            branch_ref         : "refs/heads/${params.LOB}",
+            tag                : "deploy-${params.LOB}-${env.DOWNSTREAM_BUILD_NUMBER}",
+            tag_ref            : "refs/tags/deploy-${params.LOB}-${env.DOWNSTREAM_BUILD_NUMBER}",
+            triggered_at_epoch : System.currentTimeMillis()
+          ]
+          writeJSON file: 'branch_and_build_meta.json', json: meta, pretty: 4
+        }
+        archiveArtifacts artifacts: 'branch_and_build_meta.json', fingerprint: true
+        echo "Metadata archived: branch_and_build_meta.json"
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "✅ LOB branch '${params.LOB}' prepared."
+      echo "✅ Triggered ${params.DOWNSTREAM_JOB} #${env.DOWNSTREAM_BUILD_NUMBER} (async)."
+      echo "✅ Tagged repo: deploy-${params.LOB}-${env.DOWNSTREAM_BUILD_NUMBER}."
+    }
+    failure {
+      echo "❌ Pipeline failed. Check logs."
+    }
+  }
+}

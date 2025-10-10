@@ -93,10 +93,10 @@ public class DataStreamJob {
         Properties inout0Properties = mergeProperties(applicationProperties.get("InOut0"), commonProperties);
         ConfigValidator.validate(inout0Properties, "input.topic", "failure.topic");
 
-        boolean clearCache = Boolean.parseBoolean(inout0Properties.getProperty("clearCache", "false"));
+        boolean clearCache = Boolean.parseBoolean(inout0Properties.getProperty("clearCache", "true"));
         // Create lob topics if not exists
         if(clearCache) {
-            String cachePattern = "dataintegration*"; // Matches any cache name containing "dataintegration"
+            String cachePattern = "dataintegration"; // Matches any cache name containing "dataintegration"
             env.fromElements(cachePattern).flatMap(new CacheEvictionFunction(inout0Properties));
         }
 
