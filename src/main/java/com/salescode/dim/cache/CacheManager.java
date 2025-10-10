@@ -165,6 +165,32 @@ public class CacheManager {
         }
     }
 
+    public void getAllCachesAndClear(String prefix,String suffix) {
+        try {
+            // Use Redisson's scan functionality to find all keys matching the pattern
+            Iterable<String> keys = redissonClient.getKeys().getKeysByPattern(prefix + "*" + suffix);
+
+            for (String key : keys) {
+                // Get the RMapCache instance for each matching key
+                RMapCache<String, Object> cache = redissonClient.getMapCache(key);
+
+                // Clear the cache
+                cache.clear();
+
+                // Also remove from local cache map if it exists
+                caches.remove(key);
+
+                System.out.println("Cleared cache: " + key);
+            }
+
+            System.out.println("Successfully cleared all caches with prefix: " + prefix + "and suffix :" + suffix );
+
+        } catch (Exception e) {
+            System.err.println("Error clearing caches with prefix " + prefix + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void clearCachePattern(Pattern pattern) {
         caches.forEach((cacheName, cache) -> {
             Set<String> keys = cache.keySet();

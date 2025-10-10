@@ -33,11 +33,7 @@ public class CacheEvictionFunction extends RichFlatMapFunction<String, Void> {
 
         @Override
         public void flatMap(String cachePattern, Collector<Void> out) {
-            String regexPattern = cachePattern.replace("*", ".*");
-            Pattern pattern = Pattern.compile(regexPattern);
-
-            // Convert Iterable to a Set or List before using stream
-            CacheManager.getInstance().clearCachePattern(pattern);
+            CacheManager.getInstance().getAllCachesAndClear(cachePattern,properties.getProperty("lob"));
 
         }
 

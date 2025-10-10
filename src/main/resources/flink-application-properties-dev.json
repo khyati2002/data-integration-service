@@ -1,28 +1,46 @@
-{
-  "Common": {
-    "INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES": "10",
-    "bootstrap.servers": "b-1.demo-cluster-1.cw43sk.c4.kafka.ap-south-1.amazonaws.com:9092,b-2.demo-cluster-2.cw43sk.c4.kafka.ap-south-1.amazonaws.com:9092",
-    "cacheClustered": "false",
-    "entities": "OutletDetails,OutletMetadata,Targets,ScoreDetails,GenericEntity",
-    "group.id": "dataintegration",
-    "input.topic": "dataintegration",
-    "insights.enabled": "true",
-    "insights.topic": "file-progress-updates",
-    "jdbc.password": "Unnati#24Feb!",
-    "jdbc.url": "jdbc:mysql://demoaurora.c2szfgab1pix.ap-south-1.rds.amazonaws.com:3306/ck_demounnati",
-    "jdbc.user": "demounnatiadmin",
-    "lob": "demounnati",
-    "publishConsumedMetrics.topic": "file-progress-updates",
-    "redisUrl": "redis://redisdemo.wguhyp.ng.0001.aps1.cache.amazonaws.com:6379",
-    "flink.parallelism": "2",
-    "flink.checkpointing_interval_ms": "60000"
+[
+  {
+    "PropertyGroupId": "Common",
+    "PropertyMap": {
+      "bootstrap.servers": "${bootstrap.servers}",
+      "group.id": "${group.id}",
+      "lob": "${lob}",
+      "jdbc.driver": "${jdbc.driver}",
+      "jdbc.url": "${jdbc.url}",
+      "jdbc.user": "${jdbc.user}",
+      "jdbc.password": "${jdbc.password}",
+      "schema.includePattern": "${schema.includePattern}",
+      "schema.excludePattern": "${schema.excludePattern}",
+      "entities": "${entities}",
+      "redisUrl": "${redisUrl}",
+      "cacheClustered": "${cacheClustered}",
+      "INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES": "${INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES}",
+      "insights.enabled": "${insights.enabled}",
+      "insights.topic": "${insights.topic}",
+      "publish.success.enabled": "${publish.success.enabled}",
+      "failure.topic": "${failure.topic}",
+      "success.topic": "${success.topic}"
+    }
   },
-  "default": {
-    "sun.net.maxDatagramSockets": "2048"
+  {
+    "PropertyGroupId": "InOut0",
+    "PropertyMap": {
+      "input.topic": "${input.topic}",
+      "failure.topic": "${failure.topic}",
+      "success.topic": "${success.topic}",
+      "output.topic" : "${output.topic}",
+      "event.topic" : "${event.topic}"
+    }
   },
-  "InOut0": {
-    "acks": "1",
-    "event.topic": "dataintegration-event",
-    "failure.topic": "int-failure-streams-dis"
+  {
+    "PropertyGroupId": "AuthProperties",
+    "PropertyMap": {
+      "sasl.mechanism": "AWS_MSK_IAM",
+      "sasl.client.callback.handler.class": "software.amazon.msk.auth.iam.IAMClientCallbackHandler",
+      "sasl.jaas.config": "software.amazon.msk.auth.iam.IAMLoginModule required;",
+      "security.protocol": "SASL_SSL",
+      "ssl.truststore.location": "/usr/lib/jvm/java-11-amazon-corretto/lib/security/cacerts",
+      "ssl.truststore.password": "changeit"
+    }
   }
-}
+]
