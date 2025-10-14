@@ -71,6 +71,7 @@ file:
       topic: file-progress-updates
       failure:
         topic: file-progress-updates-failed
+    processor: file-progress-processor
 
 insights:
   order:
@@ -128,6 +129,7 @@ file:
       topic: file-progress-updates
       failure:
         topic: file-progress-updates-failed
+    processor: file-progress-processor
 insights:
   order:
     topic: order-progress-updates
@@ -170,6 +172,7 @@ file:
       topic: file-progress-updates-demo
       failure:
         topic: file-progress-updates-failed-demo
+    processor: file-progress-processor-demo
 
 insights:
   order:
@@ -218,6 +221,7 @@ file:
       topic: file-progress-updates
       failure:
         topic: file-progress-updates-failed
+    processor: file-progress-processor
 
 file-cleanup:
   scheduler:
