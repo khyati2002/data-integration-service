@@ -146,6 +146,12 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
         if (monitoringScope != 4) {
             schemeProductMap.put("eanNumber", "all");
         }
+        if(inputMap.get("discountedscope").equals("1")) {
+            String discountedItemId=inputMap.get("discounted_item_id").toString();
+            String[] parts = discountedItemId.split("_");
+            String eanCode = parts[0];
+            schemeProductMap.put("eanNumber", eanCode);
+        }
         return schemeProductMap;
     }
 
@@ -179,6 +185,10 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
             }
         }else{
             schemeCalculationMap.put("schemeDiscountedProductcodeuom", inputMap.get("discounted_item_uom"));
+        }
+        if(inputMap.get(MONITORING_SCOPE).toString().trim().equalsIgnoreCase("4")){
+//            schemeCalculationMap.put("schemeDiscountedProductcode", null);
+            schemeCalculationMap.put("schemeDiscountedProductcodeuom", null);
         }
         schemeCalculationMap.put("maxDiscount", "0");
         schemeCalculationMap.put("maxTerm", "0");
