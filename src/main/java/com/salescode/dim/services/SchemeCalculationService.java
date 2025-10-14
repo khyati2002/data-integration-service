@@ -7,10 +7,12 @@ import com.applicate.services.channelkart.utils.IDGenerator;
 import com.applicate.services.channelkart.utils.JSONUtils;
 import com.applicate.services.channelkart.utils.NullUtils;
 import com.salescode.dim.jooq.generated.Tables;
+import com.salescode.dim.jooq.generated.tables.pojos.SchemeFreeproductinfo;
 import com.salescode.dim.jooq.impl.SchemeCalculation;
 import com.salescode.dim.jooq.generated.tables.records.CkSchemeCalculationRecord;
 import com.salescode.dim.repository.SchemeCalculationRepo;
 import com.salescode.dim.repository.SchemeCalculationRepoImpl;
+import com.salescode.dim.repository.SchemeFreeProductInfoRepoImpl;
 import com.salescode.dim.repository.SchemeMustBuyGroupRepo;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,14 +51,15 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
     private static MetaDataService metaDataService;
     private static final String DOMAIN_NAME = "SchemeCalculation";
     private static final String DOMAIN_TYPE = "DynamicUniqueKey";
+    private final SchemeFreeProductInfoRepoImpl schemeFreeProductInfoRepoImpl;
 
     public SchemeCalculationService() {
         this.dsl = getDslContext();
         this.schemeCalculationRepo = new SchemeCalculationRepoImpl(dsl);
         metaDataService = new MetaDataService();
         idGenerator = new IDGenerator();
+        this.schemeFreeProductInfoRepoImpl = new SchemeFreeProductInfoRepoImpl(dsl);
 //        schemeMustBuyGroupService = new SchemeMustBuyGroupService(dsl);
-//        schemeFreeProductInfoService = new SchemeFreeProductInfoService(dsl);
     }
 
     private BiFunction<SchemeCalculation, DSLContext, InsertSetMoreStep<?>> schemeCalculationBiFunctionMapper = (ros, dslContext) -> {
@@ -235,6 +238,16 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
             scheme.setOutletLimitOnOrder(null);
         }
         scheme.setSlabInfo(newSlabArray);
+
+        String freeProductInfoId = null;
+        if(calculationRecord != null) {
+            freeProductInfoId = calculationRecord.getValue(CK_SCHEME_CALCULATION.FREE_PRODUCT_INFO_ID);
+        }
+        if(NullUtils.isNotNull(freeProductInfoId)) {
+            List<SchemeFreeproductinfo>  freeproductinfoList = schemeFreeProductInfoRepoImpl.findBySchemeId(scheme.getSchemeId());
+            schemeFreeProductInfoService.sfpSave(freeproductinfoList);
+        }
+
         logger.info("Time taken for schemeCalculation : {}", System.currentTimeMillis() - currentTime);
 
         return scheme;
