@@ -219,6 +219,10 @@ file:
       failure:
         topic: file-progress-updates-failed
 
+file-cleanup:
+  scheduler:
+    cleanup-threshold-days: 7
+
 insights:
   order:
     topic: order-progress-updates

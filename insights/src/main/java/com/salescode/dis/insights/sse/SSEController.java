@@ -22,11 +22,11 @@ public class SSEController {
 
     private final SSEService sseService;
     @GetMapping(value = "/job-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter streamJob(@RequestParam String clientId, @RequestParam String jobId) {
+    public SseEmitter streamJob(@RequestParam String clientId, @RequestParam String jobId ) {
         SseEmitter emitter = new SseEmitter(0L);
-        emitter.onCompletion(() -> sseService.removeEmitter(clientId, jobId, true));
-        emitter.onTimeout(() -> sseService.removeEmitter(clientId, jobId, true));
-        emitter.onError(ex -> sseService.removeEmitter(clientId, jobId, true));
+        emitter.onCompletion(() -> sseService.removeJobEmitter(clientId, jobId));
+        emitter.onTimeout(() -> sseService.removeJobEmitter(clientId, jobId));
+        emitter.onError(ex -> sseService.removeJobEmitter(clientId, jobId));
         sseService.addJobEmitter(clientId, jobId, emitter);
         try {
             sseService.sendConnectionEstablished(emitter);
@@ -37,12 +37,12 @@ public class SSEController {
     }
 
     @GetMapping(value = "/file-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter streamFile(@RequestParam String clientId, @RequestParam String fileId) {
+    public SseEmitter streamFile(@RequestParam String clientId, @RequestParam String fileId, @RequestParam String masterName) {
         SseEmitter emitter = new SseEmitter(0L);
-        emitter.onCompletion(() -> sseService.removeEmitter(clientId,fileId, false));
-        emitter.onTimeout(() -> sseService.removeEmitter(clientId,fileId, false));
-        emitter.onError(ex -> sseService.removeEmitter(clientId,fileId, false));
-        sseService.addFileEmitter(clientId, fileId, emitter);
+        emitter.onCompletion(() -> sseService.removeFileEmitter(clientId,masterName,fileId));
+        emitter.onTimeout(() -> sseService.removeFileEmitter(clientId,masterName,fileId));
+        emitter.onError(ex -> sseService.removeFileEmitter(clientId,masterName,fileId));
+        sseService.addFileEmitter(clientId, masterName,fileId, emitter);
         try {
             sseService.sendConnectionEstablished(emitter);
         } catch (Exception e) {

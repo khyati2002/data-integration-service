@@ -5,6 +5,7 @@ import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.entity.JobEntity;
 import com.salescode.dis.insights.enums.ProgressStage;
+import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.service.strategy.IFileOperationStrategy;
@@ -27,6 +28,7 @@ public class FileOperationsHelperService {
 
     private final FileRepository fileRepository;
     private final FileStageMetricsRepository fileStageMetricsRepository;
+    private final JobService jobService;
 
     @Transactional
     public FileEntity saveFileEntity(FileEntity fileEntity, JobEntity job, IFileOperationStrategy operationStrategy) {
@@ -90,10 +92,12 @@ public class FileOperationsHelperService {
             }
         }
 
-
-
+        metrics.setProgressStatus(ProgressStatus.PENDING);
+        if(!metrics.getFile().getStatus().equals(ProgressStatus.PENDING)){
+            metrics.getFile().setStatus(ProgressStatus.PENDING);
+            jobService.recalcStatus(metrics.getJob());
+        }
         return fileStageMetricsRepository.save(metrics);
     }
-
 
 }

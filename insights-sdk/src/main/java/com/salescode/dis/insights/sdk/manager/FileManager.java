@@ -4,8 +4,10 @@ import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
 import com.salescode.dis.insights.dto.file.FileEntityResponseDto;
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.dto.file.progress.FileProgressResponse;
+import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -124,9 +126,18 @@ public class FileManager {
                 log.warn(errorMessage);
                 throw new RestClientException(errorMessage);
             }
-        } catch (RestClientException e) {
-            log.error("Error during file progress update for LOB '{}', Master '{}', File ID '{}'. URL: {}, ExceptionMsg {}", lob, masterName, fileId, FILE_PROGRESS_UPDATE_URL, e.getMessage());
+        }
+        catch (RestClientException e) {
+            if (e instanceof HttpClientErrorException) {
+                HttpClientErrorException httpException = (HttpClientErrorException) e;
+                if (httpException.getStatusCode() == HttpStatus.NOT_FOUND) {
+                    log.error("File not found (404) for LOB '{}', Master '{}', File ID '{}'", lob, masterName, fileId);
+                    throw new ResourceNotFoundException("File not found: " + fileId);
+                }
+            }
+            log.error("Failed to update file progress via InsightsManager for File ID: {}, ExceptionMsg: {}", fileId, e.getMessage());
             throw e;
         }
+
     }
 }

@@ -74,7 +74,7 @@ public class FileController {
             decodedFileId = new String(Base64.getDecoder().decode(fileId));
         }
         catch (Exception e){}
-        FileEntity file = fileService.get(decodedFileId, masterName);
+        FileEntity file = fileService.getFile(decodedFileId, masterName);
         FileEntityResponseDto resp = fileEntityMapper.toDto(file);
         return ResponseEntity.ok(resp);
     }
@@ -134,7 +134,7 @@ public class FileController {
         return fileId;
     }
 
-    @GetMapping("/failures/{fileId}")
+    @GetMapping("/report/{fileId}")
     public ResponseEntity<FileReportEntity> checkFileExists(@PathVariable String fileId) {
         if (fileId == null || fileId.trim().isEmpty()) {
             logger.warn("Received a request with a blank or null fileId.");
@@ -149,8 +149,11 @@ public class FileController {
 
         try {
             Optional<FileReportEntity> fileReportOptional = fileReportRepository.findByFileId(fileId);
-            if (fileReportOptional.isPresent() && "COMPLETED".equals(fileReportOptional.get().getStatus()) ) {
-                logger.info("File with fileId '{}' found. Returning OK.", fileId);
+            if (fileReportOptional.isPresent() &&
+                    ("COMPLETED".equals(fileReportOptional.get().getStatus()) ||
+                            "FAILED".equals(fileReportOptional.get().getStatus()))
+            ) {
+                logger.info("File with fileId '{}' found with status COMPLETED or FAILED. Returning OK.", fileId);
                 return ResponseEntity.ok(fileReportOptional.get());
             } else {
                 logger.info("File with fileId '{}' not found. Returning NOT_FOUND.", fileId);
@@ -163,7 +166,7 @@ public class FileController {
         }
     }
 
-    @PostMapping("/failures")
+    @PostMapping("/report/generate")
     public ResponseEntity<Object> startFailureExport(@RequestBody Map<String, String> payload) {
         String fileId = payload.get("fileId");
         String lob = payload.get("lob");
@@ -249,6 +252,16 @@ public class FileController {
 
     @GetMapping("/file/{fileId}/download-url")
     public ResponseEntity<?> getDownloadUrl(@PathVariable String fileId) {
+
+        try {
+            byte[] decodedBytes = Base64.getDecoder().decode(fileId);
+            fileId = new String(decodedBytes, StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Collections.singletonMap("error", "Invalid Base64 encoding for 'fileId'."));
+        }
+
         return fileReportRepository.findByFileId(fileId)
                 .map(report -> {
                     if (report.getUrl() == null || report.getUrl().isEmpty()) {

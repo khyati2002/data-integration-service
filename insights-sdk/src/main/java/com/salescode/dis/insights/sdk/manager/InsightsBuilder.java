@@ -1,11 +1,14 @@
 package com.salescode.dis.insights.sdk.manager;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.salescode.dis.insights.sdk.InsightsEnv;
 import lombok.Getter;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class InsightsBuilder {
 
@@ -13,6 +16,8 @@ public class InsightsBuilder {
 
     @Getter
     private InsightsEnv env;
+
+    private Cache<String, Object> localCache;
 
     private InsightsBuilder() {
     }
@@ -37,6 +42,24 @@ public class InsightsBuilder {
         return this;
     }
 
+    public InsightsBuilder withLocalCache(boolean enableCache,long expiryTime) {
+        if (enableCache) {
+            this.localCache = Caffeine.newBuilder()
+                    .maximumSize(10000)
+                    .expireAfterAccess(expiryTime, TimeUnit.MINUTES)
+                    .initialCapacity(100)
+                    .recordStats()
+                    .build();
+        } else {
+            this.localCache = null;
+        }
+        return this;
+    }
+
+    public InsightsBuilder withLocalCache() {
+        return withLocalCache(true,1);
+    }
+
     public InsightsBuilder withTimeout(int timeout) {
         if (timeout < 0) {
             throw new IllegalArgumentException("Timeout cannot be negative");
@@ -52,14 +75,14 @@ public class InsightsBuilder {
         if (this.env == null) {
             throw new IllegalStateException("Environment must be set before building InsightsManager");
         }
-        return new InsightsManager(restTemplate, env);
+        return new InsightsManager(restTemplate, env, localCache);
     }
 
     public SafeInsightsManager buildSafe() {
         if (this.env == null) {
             throw new IllegalStateException("Environment must be set before building SafeInsightsManager");
         }
-        InsightsManager coreManager = new InsightsManager(restTemplate, env);
+        InsightsManager coreManager = new InsightsManager(restTemplate, env, localCache);
         return new SafeInsightsManager(coreManager);
     }
 }

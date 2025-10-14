@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface JobRepository extends JpaRepository<JobEntity, String> {
 
@@ -29,6 +30,13 @@ public interface JobRepository extends JpaRepository<JobEntity, String> {
     @Transactional
     @Query("DELETE FROM JobEntity j WHERE j.lastModifiedTime < :cutoffTime")
     int deleteByLastModifiedBefore(Instant cutoffTime);
+
+    @Query(value = "SELECT id FROM integration_job WHERE last_modified_time < ?1", nativeQuery = true)
+    List<String> findJobIdsOlderThan(Instant cutoffTime);
+
+    @Modifying
+    @Query(value = "DELETE FROM integration_job WHERE id IN (?1)", nativeQuery = true)
+    int deleteByIdIn(List<String> jobIds);
 
 
     @Modifying

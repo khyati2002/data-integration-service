@@ -1,23 +1,31 @@
 // File: service/FileService.java
 package com.salescode.dis.insights.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salescode.dis.insights.controller.DuplicatesController;
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.FileReportEntity;
+import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.ResourceNotFoundException;
 import com.salescode.dis.insights.repository.FileReportRepository;
 import com.salescode.dis.insights.repository.FileRepository;
+import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.service.strategy.IFileOperationStrategy;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -34,6 +42,8 @@ public class FileService {
     private final FileRepository fileRepo;
     private final List<IFileOperationStrategy> fileOperationStrategies;
     private final FileReportRepository fileReportRepository;
+    private final  CacheManager cacheManager;
+    private final FileStageMetricsRepository fileStageMetricsRepository;
 
     private Map<ModeOfIntegration, IFileOperationStrategy> operationStrategyMap;
 
@@ -61,10 +71,17 @@ public class FileService {
         }
     }
 
+    @Cacheable(value = "files", key = "#fileId + '_' + #master")
     @Transactional(readOnly = true)
-    public FileEntity get(String fileId, String master) {
+    public FileEntity getCached(String fileId, String master) {
         return fileRepo.findByFileIdAndMaster(fileId, master)
-                .orElseThrow(() -> new ResourceNotFoundException("File not found: " + fileId));
+                .orElseThrow(() -> new ResourceNotFoundException("File not found for: " + fileId));
+    }
+
+    @Transactional(readOnly = true)
+    public FileEntity getFile(String fileId, String master) {
+        return fileRepo.findByFileIdAndMaster(fileId, master)
+                       .orElseThrow(() -> new ResourceNotFoundException("File not found: " + fileId));
     }
 
     @Transactional(readOnly = true)
@@ -133,7 +150,29 @@ public class FileService {
         return updatedCount;
     }
 
+    public void clearFilesCache() {
+        Optional.ofNullable(cacheManager.getCache("files"))
+                .ifPresent(Cache::clear);
+    }
 
-
+    @Transactional
+    public FileStageMetrics updateMetricsForDuplicates(FileEntity file, DuplicatesController.DuplicateEventRequest request) {
+        FileStageMetrics metrics = fileStageMetricsRepository.findByFileAndStageType(file,request.getStageType())
+                                           .orElseThrow(() -> new IllegalArgumentException("No metrics found for stage: " + request.getStageType()));
+        Map<String, Object> extended = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
+        extended.put("originalSuccessCount", metrics.getSuccessCount());
+        extended.put("originalServerFailureCount", metrics.getServerFailureCount());
+        extended.put("originalLogicalFailureCount", metrics.getLogicalFailureCount());
+        extended.put("updateTimestamp", request.getTimestamp());
+        extended.put("duplicatesSubtracted", request.getDuplicateCounts());
+        JsonNode extendedJson = mapper.valueToTree(extended);
+        metrics.setExtendedAttributes(extendedJson);
+        metrics.setSuccessCount(metrics.getSuccessCount() - request.getDuplicateCounts().getOrDefault("successCount", 0));
+        metrics.setServerFailureCount(metrics.getServerFailureCount() - request.getDuplicateCounts().getOrDefault("serverFailureCount", 0));
+        metrics.setLogicalFailureCount(metrics.getLogicalFailureCount() - request.getDuplicateCounts().getOrDefault("logicalFailureCount", 0));
+        metrics.setProgressStatus(metrics.getCurrentStatus());
+        return fileStageMetricsRepository.save(metrics);
+    }
 
 }

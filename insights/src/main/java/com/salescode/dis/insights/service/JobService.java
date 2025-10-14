@@ -16,6 +16,7 @@ import com.salescode.dis.insights.mapper.JobEntityMapper;
 import com.salescode.dis.insights.repository.FileStageMetricsRepository;
 import com.salescode.dis.insights.repository.InsightsMetadataRepository;
 import com.salescode.dis.insights.repository.JobRepository;
+import com.salescode.dis.insights.service.strategy.IFileOperationStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -96,10 +98,11 @@ public class JobService {
 
 
     public JobEntity createJobIfNotExists(String jobId, String lob, ModeOfIntegration modeOfIntegration) {
-        Optional<JobEntity> job = jobRepo.findById(jobId);
+        String id = jobId + lob;
+        Optional<JobEntity> job = jobRepo.findById(id);
         return job.orElseGet(()->{
             JobEntity jobEntity = new JobEntity();
-            jobEntity.setId(jobId);
+            jobEntity.setId(id);
             jobEntity.setLob(lob);
             return saveJob(jobEntity);
         });
@@ -160,152 +163,14 @@ public class JobService {
                 .collect(Collectors.toList());
     }
 
-
-
-//    public AccumulatedJobsAndMasterDto getJobsWithAggregatedStagesAndMasters(String lob, LocalDateTime startDate, LocalDateTime endDate, String mode) {
-//        Instant startInstant = startDate.atZone(ZoneId.systemDefault()).toInstant();
-//        Instant endInstant = endDate.atZone(ZoneId.systemDefault()).toInstant();
-//        List<JobStageAccumulatedData> queryResults = new ArrayList<>();
-//
-//        if(mode != null) {
-//            ModeOfIntegration modeOfIntegration = ModeOfIntegration.valueOf(mode);
-//            queryResults = fileStageMetricsRepository.findJobsWithAggregatedStagesByLobAndMode(lob, startInstant, endInstant, modeOfIntegration);
-//        } else {
-//            queryResults = fileStageMetricsRepository.findJobsWithAggregatedStagesByLob(lob, startInstant, endInstant);
-//        }
-//
-//        Map<String, List<JobStageAccumulatedData>> resultsByJobId = queryResults.stream()
-//                .collect(Collectors.groupingBy(JobStageAccumulatedData::getJobId));
-//
-//        List<JobEntityResponseDtoWithStages> results = resultsByJobId.entrySet().stream()
-//                .map(entry -> {
-//                    List<JobStageAccumulatedData> jobResults = entry.getValue();
-//                    JobStageAccumulatedData firstResult = jobResults.get(0);
-//
-//                    // Get unique masters for this job
-//                    List<String> uniqueMastersForJob = jobResults.stream()
-//                            .map(JobStageAccumulatedData::getMaster)
-//                            .filter(master -> master != null && !master.trim().isEmpty())
-//                            .distinct()
-//                            .collect(Collectors.toList());
-//
-//                    // Group by stage type and aggregate across all masters for this job
-//                    Map<ProgressStage, List<JobStageAccumulatedData>> stageGroups = jobResults.stream()
-//                            .filter(result -> result.getStageType() != null)
-//                            .collect(Collectors.groupingBy(JobStageAccumulatedData::getStageType));
-//
-//                    List<AccumulatedStageDataDto> stages = new ArrayList<>();
-//                    if(!stageGroups.isEmpty()){
-//                    stages = stageGroups.entrySet().stream()
-//                            .map(stageEntry -> {
-//                                List<JobStageAccumulatedData> stageResults = stageEntry.getValue();
-//
-//                                // Sum up all counts for this stage type across all masters
-//                                Long totalSuccessCount = stageResults.stream()
-//                                        .mapToLong(result -> result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L)
-//                                        .sum();
-//
-//                                Long totalServerFailureCount = stageResults.stream()
-//                                        .mapToLong(result -> result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L)
-//                                        .sum();
-//
-//                                Long totalLogicalFailureCount = stageResults.stream()
-//                                        .mapToLong(result -> result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L)
-//                                        .sum();
-//
-//                                return AccumulatedStageDataDto.builder()
-//                                        .stageType(stageEntry.getKey())
-//                                        .totalSuccessCount(totalSuccessCount)
-//                                        .totalFailureCount(totalServerFailureCount + totalLogicalFailureCount)
-//                                        .build();
-//                            })
-//                            .collect(Collectors.toList());
-//                    }
-//
-//                    return JobEntityResponseDtoWithStages.builder()
-//                            .id(firstResult.getJobId())
-//                            .masters(uniqueMastersForJob)
-//                            .modeOfIntegration(firstResult.getModeOfIntegration())
-//                            .creationTime(firstResult.getCreationTime())
-//                            .lastModifiedTime(firstResult.getLastModifiedTime())
-//                            .lob(firstResult.getLob())
-//                            .extendedAttributes(firstResult.getExtendedAttributes())
-//                            .startTime(firstResult.getStartTime())
-//                            .endTime(firstResult.getEndTime())
-//                            .status(firstResult.getStatus())
-//                            .publisherJobUri(firstResult.getPublisherJobUri())
-//                            .consumerJobUri(firstResult.getConsumerJobUri())
-//                            .stages(stages)
-//                            .build();
-//                })
-//                .collect(Collectors.toList());
-//
-//        // Master processing remains the same
-//        Map<String, List<JobStageAccumulatedData>> resultsByMaster = queryResults.stream()
-//                .collect(Collectors.groupingBy(JobStageAccumulatedData::getMaster));
-//
-//        List<MasterCard> resultsMaster = resultsByMaster.entrySet().stream()
-//                .map(entry -> {
-//                    List<JobStageAccumulatedData> jobResults = entry.getValue();
-//
-//                    Map<ProgressStatus, Long> statusCounts = jobResults.stream()
-//                            .collect(Collectors.groupingBy(
-//                                    JobStageAccumulatedData::getStatus,
-//                                    Collectors.mapping(
-//                                            JobStageAccumulatedData::getJobId,
-//                                            Collectors.collectingAndThen(
-//                                                    Collectors.toSet(),
-//                                                    set -> (long) set.size()
-//                                            )
-//                                    )
-//                            ));
-//
-//                    Long completed_success = statusCounts.get(ProgressStatus.COMPLETED_SUCCESSFULLY) != null ? statusCounts.get(ProgressStatus.COMPLETED_SUCCESSFULLY) : 0L;
-//                    Long completed_unsuccess = statusCounts.get(ProgressStatus.COMPLETED_UNSUCCESSFULLY) != null ? statusCounts.get(ProgressStatus.COMPLETED_UNSUCCESSFULLY) : 0L;
-//                    Long pending = statusCounts.get(ProgressStatus.PENDING) != null ? statusCounts.get(ProgressStatus.PENDING) : 0L;
-//                    Long failed = statusCounts.get(ProgressStatus.FAILED) != null ? statusCounts.get(ProgressStatus.FAILED) : 0L;
-//                    Long completed = completed_success + completed_unsuccess;
-//
-//                    List<AccumulatedStageDataDto> stages = jobResults.stream()
-//                            .filter(result -> result.getStageType() != null)
-//                            .map(result -> AccumulatedStageDataDto.builder()
-//                                    .stageType((result.getStageType()))
-//                                    .totalSuccessCount(result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L)
-//                                    .totalFailureCount((result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L) + (result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L))
-//                                    .build())
-//                            .collect(Collectors.toList());
-//
-//                    Long queueCount = stages.stream()
-//                            .filter(stage -> stage.getStageType() == ProgressStage.QUEUE)
-//                            .findFirst()
-//                            .map(queueStage -> queueStage.getTotalSuccessCount() + queueStage.getTotalFailureCount())
-//                            .orElse(0L);
-//
-//                    Long saveCount = stages.stream()
-//                            .filter(stage -> stage.getStageType() == ProgressStage.SAVE)
-//                            .findFirst()
-//                            .map(saveStage -> saveStage.getTotalSuccessCount() + saveStage.getTotalFailureCount())
-//                            .orElse(0L);
-//
-//                    return MasterCard.builder()
-//                            .queueCount(queueCount)
-//                            .saveCount(saveCount)
-//                            .completedJobCount(completed)
-//                            .pendingJobCount(pending)
-//                            .failedJobCount(failed)
-//                            .build();
-//                })
-//                .collect(Collectors.toList());
-//
-//        AccumulatedJobsAndMasterDto dto = new AccumulatedJobsAndMasterDto();
-//        dto.setJobs(results);
-//        dto.setMasters(resultsMaster);
-//        return dto;
-//    }
+    
 
     public AccumulatedJobsAndMasterDto getJobsWithAggregatedStagesAndMasters(String lob, LocalDateTime startDate, LocalDateTime endDate, String mode) {
-        Instant startInstant = startDate.atZone(ZoneId.systemDefault()).toInstant();
-        Instant endInstant = endDate.atZone(ZoneId.systemDefault()).toInstant();
+        LocalDateTime utcStartDate = startDate.minusHours(5).minusMinutes(30);
+        LocalDateTime utcEndDate = endDate.minusHours(5).minusMinutes(30);
+
+        Instant startInstant = utcStartDate.atZone(ZoneOffset.UTC).toInstant();
+        Instant endInstant = utcEndDate.atZone(ZoneOffset.UTC).toInstant();
         List<JobStageAccumulatedData> queryResults = new ArrayList<>();
 
         if(mode != null) {
@@ -315,9 +180,7 @@ public class JobService {
             queryResults = fileStageMetricsRepository.findJobsWithAggregatedStagesByLob(lob, startInstant, endInstant);
         }
 
-        // Filter out records with null jobId before grouping
         Map<String, List<JobStageAccumulatedData>> resultsByJobId = queryResults.stream()
-                .filter(data -> data.getJobId() != null && !data.getJobId().trim().isEmpty())
                 .collect(Collectors.groupingBy(JobStageAccumulatedData::getJobId));
 
         List<JobEntityResponseDtoWithStages> results = resultsByJobId.entrySet().stream()
@@ -325,7 +188,7 @@ public class JobService {
                     List<JobStageAccumulatedData> jobResults = entry.getValue();
                     JobStageAccumulatedData firstResult = jobResults.get(0);
 
-                    // Get unique masters for this job - filter nulls
+                    // Get unique masters for this job
                     List<String> uniqueMastersForJob = jobResults.stream()
                             .map(JobStageAccumulatedData::getMaster)
                             .filter(master -> master != null && !master.trim().isEmpty())
@@ -333,38 +196,34 @@ public class JobService {
                             .collect(Collectors.toList());
 
                     // Group by stage type and aggregate across all masters for this job
-                    // Filter out null stageTypes before grouping
                     Map<ProgressStage, List<JobStageAccumulatedData>> stageGroups = jobResults.stream()
                             .filter(result -> result.getStageType() != null)
                             .collect(Collectors.groupingBy(JobStageAccumulatedData::getStageType));
 
-                    List<AccumulatedStageDataDto> stages = new ArrayList<>();
-                    if(!stageGroups.isEmpty()) {
-                        stages = stageGroups.entrySet().stream()
-                                .map(stageEntry -> {
-                                    List<JobStageAccumulatedData> stageResults = stageEntry.getValue();
+                    List<AccumulatedStageDataDto> stages = stageGroups.entrySet().stream()
+                            .map(stageEntry -> {
+                                List<JobStageAccumulatedData> stageResults = stageEntry.getValue();
 
-                                    // Sum up all counts for this stage type across all masters
-                                    Long totalSuccessCount = stageResults.stream()
-                                            .mapToLong(result -> result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L)
-                                            .sum();
+                                // Sum up all counts for this stage type across all masters
+                                Long totalSuccessCount = stageResults.stream()
+                                        .mapToLong(result -> result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L)
+                                        .sum();
 
-                                    Long totalServerFailureCount = stageResults.stream()
-                                            .mapToLong(result -> result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L)
-                                            .sum();
+                                Long totalServerFailureCount = stageResults.stream()
+                                        .mapToLong(result -> result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L)
+                                        .sum();
 
-                                    Long totalLogicalFailureCount = stageResults.stream()
-                                            .mapToLong(result -> result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L)
-                                            .sum();
+                                Long totalLogicalFailureCount = stageResults.stream()
+                                        .mapToLong(result -> result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L)
+                                        .sum();
 
-                                    return AccumulatedStageDataDto.builder()
-                                            .stageType(stageEntry.getKey())
-                                            .totalSuccessCount(totalSuccessCount)
-                                            .totalFailureCount(totalServerFailureCount + totalLogicalFailureCount)
-                                            .build();
-                                })
-                                .collect(Collectors.toList());
-                    }
+                                return AccumulatedStageDataDto.builder()
+                                        .stageType(stageEntry.getKey())
+                                        .totalSuccessCount(totalSuccessCount)
+                                        .totalFailureCount(totalServerFailureCount + totalLogicalFailureCount)
+                                        .build();
+                            })
+                            .collect(Collectors.toList());
 
                     return JobEntityResponseDtoWithStages.builder()
                             .id(firstResult.getJobId())
@@ -384,62 +243,83 @@ public class JobService {
                 })
                 .collect(Collectors.toList());
 
-        // Master processing - filter out null masters before grouping
-        Map<String, List<JobStageAccumulatedData>> resultsByMaster = queryResults.stream()
-                .filter(data -> data.getMaster() != null && !data.getMaster().trim().isEmpty())
-                .collect(Collectors.groupingBy(JobStageAccumulatedData::getMaster));
 
-        List<MasterCard> resultsMaster = resultsByMaster.entrySet().stream()
+        Map<Map.Entry<String, ModeOfIntegration>, List<JobStageAccumulatedData>> resultsByMasterMode =
+                queryResults.stream()
+                        .collect(Collectors.groupingBy(j ->
+                                Map.entry(j.getMaster(), j.getModeOfIntegration())
+                        ));
+
+        List<MasterCard> resultsMaster = resultsByMasterMode.entrySet().stream()
                 .map(entry -> {
+                    Map.Entry<String, ModeOfIntegration> key = entry.getKey();
+                    String masterName = key.getKey();
+                    ModeOfIntegration mode1 = key.getValue();
                     List<JobStageAccumulatedData> jobResults = entry.getValue();
 
-                    // Filter out null status before grouping
-                    Map<ProgressStatus, Long> statusCounts = jobResults.stream()
-                            .filter(data -> data.getStatus() != null)
-                            .collect(Collectors.groupingBy(
-                                    JobStageAccumulatedData::getStatus,
-                                    Collectors.mapping(
-                                            JobStageAccumulatedData::getJobId,
-                                            Collectors.collectingAndThen(
-                                                    Collectors.toSet(),
-                                                    set -> (long) set.size()
-                                            )
+                    Map<String, Set<ProgressStatus>> jobStatusMapForMaster = jobResults.stream()
+                                                                                     .filter(j -> masterName.equals(j.getMaster()))
+                                                                                     .collect(Collectors.groupingBy(
+                                                                                             JobStageAccumulatedData::getJobId,
+                                                                                             Collectors.mapping(JobStageAccumulatedData::getProgressStatus, Collectors.toSet())
+                                                                                     ));
+                    long pendingJobCount = 0;
+                    long failedJobCount = 0;
+                    long completedJobCount = 0;
+
+                    for (Set<ProgressStatus> statuses : jobStatusMapForMaster.values()) {
+                        if (statuses.contains(ProgressStatus.FAILED)) failedJobCount++;
+                        else if (statuses.contains(ProgressStatus.PENDING)) pendingJobCount++;
+                        else completedJobCount++;
+                    }
+
+                    // Group by stage type (within this (master, mode) group)
+                    Map<ProgressStage, List<JobStageAccumulatedData>> stageGroups =
+                            jobResults.stream()
+                                    .filter(r -> r.getStageType() != null)
+                                    .collect(Collectors.groupingBy(JobStageAccumulatedData::getStageType));
+
+                    // Save count
+                    Long saveCount = stageGroups.getOrDefault(ProgressStage.SAVE, Collections.emptyList())
+                            .stream()
+                            .mapToLong(result ->
+                                    (result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L) +
+                                            (result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L) +
+                                            (result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L)
+                            )
+                            .sum();
+
+                    // Get the first stage from the strategy for this mode
+                    ProgressStage startStage = null;
+                    Long startStageCount = 0L;
+                    try {
+                        FileService fileService = applicationContext.getBean(FileService.class);
+                        IFileOperationStrategy strategy = fileService.getFileOperationStrategy(mode1);
+                        List<ProgressStage> supported = strategy != null ? strategy.getSupportedStages() : Collections.emptyList();
+                        if (supported != null && !supported.isEmpty()) {
+                            startStage = supported.get(0);
+                            startStageCount = stageGroups.getOrDefault(startStage, Collections.emptyList())
+                                    .stream()
+                                    .mapToLong(result ->
+                                            (result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L) +
+                                                    (result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L) +
+                                                    (result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L)
                                     )
-                            ));
-
-                    Long completed_success = statusCounts.getOrDefault(ProgressStatus.COMPLETED_SUCCESSFULLY, 0L);
-                    Long completed_unsuccess = statusCounts.getOrDefault(ProgressStatus.COMPLETED_UNSUCCESSFULLY, 0L);
-                    Long pending = statusCounts.getOrDefault(ProgressStatus.PENDING, 0L);
-                    Long failed = statusCounts.getOrDefault(ProgressStatus.FAILED, 0L);
-                    Long completed = completed_success + completed_unsuccess;
-
-                    List<AccumulatedStageDataDto> stages = jobResults.stream()
-                            .filter(result -> result.getStageType() != null)
-                            .map(result -> AccumulatedStageDataDto.builder()
-                                    .stageType((result.getStageType()))
-                                    .totalSuccessCount(result.getTotalSuccessCount() != null ? result.getTotalSuccessCount() : 0L)
-                                    .totalFailureCount((result.getServerFailureCount() != null ? result.getServerFailureCount() : 0L) + (result.getLogicalFailureCount() != null ? result.getLogicalFailureCount() : 0L))
-                                    .build())
-                            .collect(Collectors.toList());
-
-                    Long queueCount = stages.stream()
-                            .filter(stage -> stage.getStageType() == ProgressStage.QUEUE)
-                            .findFirst()
-                            .map(queueStage -> queueStage.getTotalSuccessCount() + queueStage.getTotalFailureCount())
-                            .orElse(0L);
-
-                    Long saveCount = stages.stream()
-                            .filter(stage -> stage.getStageType() == ProgressStage.SAVE)
-                            .findFirst()
-                            .map(saveStage -> saveStage.getTotalSuccessCount() + saveStage.getTotalFailureCount())
-                            .orElse(0L);
+                                    .sum();
+                        }
+                    } catch (Exception ex) {
+                        log.error(ex.getMessage());
+                    }
 
                     return MasterCard.builder()
-                            .queueCount(queueCount)
+                            .masterName(masterName)
+                            .mode(mode1)
+                            .pendingJobCount(pendingJobCount)
+                            .completedJobCount(completedJobCount)
+                            .failedJobCount(failedJobCount)
                             .saveCount(saveCount)
-                            .completedJobCount(completed)
-                            .pendingJobCount(pending)
-                            .failedJobCount(failed)
+                            .startStage(startStage)
+                            .startStageCount(startStageCount)
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -449,7 +329,6 @@ public class JobService {
         dto.setMasters(resultsMaster);
         return dto;
     }
-
 
     public Map<String, String> getModesPerLob(String lob) {
         return metadataRepository.findKeyValueByLobPrefix(lob).stream()
