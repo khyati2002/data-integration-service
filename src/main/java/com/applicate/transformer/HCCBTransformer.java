@@ -187,7 +187,6 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
             schemeCalculationMap.put("schemeDiscountedProductcodeuom", inputMap.get("discounted_item_uom"));
         }
         if(inputMap.get(MONITORING_SCOPE).toString().trim().equalsIgnoreCase("4")){
-//            schemeCalculationMap.put("schemeDiscountedProductcode", null);
             schemeCalculationMap.put("schemeDiscountedProductcodeuom", null);
         }
         schemeCalculationMap.put("maxDiscount", "0");
@@ -200,6 +199,7 @@ public class HCCBTransformer extends AbstractTransformer<Map<String, Object>, Ma
             extendedAttributes.put("mustBuyRepeatSlabSync", "true");
         }
         schemeCalculationMap.put("extendedAttributes", extendedAttributes);
+        schemeCalculationMap.put("freeProductInfoId", inputMap.get(SCHEME_NO));
         return schemeCalculationMap;
     }
 

@@ -84,10 +84,11 @@ public class HCCBChannelEnrichment
         String discount=slab.get(0).get("schemeBenefit").asText();
         Productdetails pd = productDetailsService.findByBatchCode(inputCode);
         BigDecimal benefit = new BigDecimal(discount);
+        String schemeId= cdm.getSchemeId();
 
         List<SchemeFreeproductinfo> fpdInfo = null;
         if (pd == null && inputCode.contains("_")) {
-            fpdInfo = findAllFreeProductsByEanCode(inputCode, benefit);
+            fpdInfo = findAllFreeProductsByEanCode(inputCode, benefit, schemeId);
             cdm.getSchemeCalculation().get(0).setSchemeFreeproductinfoList(fpdInfo);
             cdm.getSchemeCalculation().get(0).setSchemeDiscountedProductcode(null);
         }
@@ -107,7 +108,7 @@ public class HCCBChannelEnrichment
         return cdm.getSchemeType().contains("item");
     }
 
-    private List<SchemeFreeproductinfo> findAllFreeProductsByEanCode(String inputCode, BigDecimal freeQty) {
+    private List<SchemeFreeproductinfo> findAllFreeProductsByEanCode(String inputCode, BigDecimal freeQty, String schemeId) {
         try {
             String[] parts = inputCode.split("_");
             String eanCode = parts[0];
@@ -126,6 +127,7 @@ public class HCCBChannelEnrichment
                 info.setBatchCode(s.getBatchCode());
                 info.setFreeProductuom(s.getUom());
                 info.setQty(String.valueOf(freeQty));
+                info.setSchemeId(schemeId);
 
                 // Extended attributes with MRP as double
                 ObjectMapper mapper = new ObjectMapper();
