@@ -12,12 +12,9 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.Arra
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class JoltTransformer extends AbstractTransformer<Map<String, Object>, Object> {
-
-	protected Map<String, Chainr> templateCompilationCache = new ConcurrentHashMap<>();
 
 	@Override
 	@SneakyThrows
@@ -27,7 +24,8 @@ public class JoltTransformer extends AbstractTransformer<Map<String, Object>, Ob
 		final ArrayNode codeNode = JSONUtils.getObjectMapper().readValue(code, ArrayNode.class);
 		if (codeNode != null && stringObjectMap != null) {
 			try {
-				Chainr chainr = templateCompilationCache.computeIfAbsent(transformerInfo.getId(), (r) -> Chainr.fromSpec(JsonUtils.jsonToObject(String.valueOf(codeNode))));
+				// Create new Chainr instance for each transformation (no caching)
+				Chainr chainr = Chainr.fromSpec(JsonUtils.jsonToObject(String.valueOf(codeNode)));
 				Object transformedOutput = chainr.transform(stringObjectMap);
 				String prettyJsonString = JsonUtils.toJsonString(transformedOutput);
 				Map<String, Object> transformedData = JSONUtils.getObjectMapper().readValue(prettyJsonString, new TypeReference<HashMap<String, Object>>() {
@@ -40,7 +38,7 @@ public class JoltTransformer extends AbstractTransformer<Map<String, Object>, Ob
 					log.error("Location found: {}", location);
 					log.error("Data received is: {}", transformedData);
 				} else {
-				//	log.error("Location not found in transformed data.");
+					// log.error("Location not found in transformed data.");
 				}
 				return transformedData;
 			} catch (Exception ex) {
