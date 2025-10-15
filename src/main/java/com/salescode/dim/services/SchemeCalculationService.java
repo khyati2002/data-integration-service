@@ -59,6 +59,7 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
         metaDataService = new MetaDataService();
         idGenerator = new IDGenerator();
         this.schemeFreeProductInfoRepoImpl = new SchemeFreeProductInfoRepoImpl(dsl);
+        schemeFreeProductInfoService = new SchemeFreeProductInfoService();
 //        schemeMustBuyGroupService = new SchemeMustBuyGroupService(dsl);
     }
 
@@ -201,6 +202,15 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
                 schemeCalculation.setOutletLimitOnOrder(null);
             }
             schemeCalculation.setSlabInfo(newSlabArray);
+
+            String freeProductInfoId = null;
+            if(calculationRecord != null) {
+                freeProductInfoId = calculationRecord.getValue(CK_SCHEME_CALCULATION.FREE_PRODUCT_INFO_ID);
+            }
+            if(NullUtils.isNotNull(freeProductInfoId)) {
+                List<SchemeFreeproductinfo>  freeproductinfoList = schemeCalculation.getSchemeFreeproductinfoList();
+                schemeFreeProductInfoService.sfpSave(freeproductinfoList);
+            }
         }
         transDSL.batch(schemeCalculations.stream().map(entity -> schemeCalculationBiFunctionMapper.apply(entity, transDSL)).collect(Collectors.toList())).execute();
 
