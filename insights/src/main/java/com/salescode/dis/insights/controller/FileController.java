@@ -63,6 +63,24 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 
+    @Operation(summary = "Update an existing file id", description = "Updates an existing file entity for the job.")
+    @ApiResponse(responseCode = "200", description = "File updated successfully", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @PutMapping("/master/{master_name}/job/{jobId}")
+    public ResponseEntity<FileEntityResponseDto> updateFile(
+            @PathVariable String lob,
+            @PathVariable("master_name") String masterName,
+            @PathVariable String jobId,
+            @Validated @RequestBody FileEntityRequestDto req) {
+
+        FileEntity updated = fileService.updateFile(jobId, masterName,req, lob);
+        FileEntityResponseDto resp = fileEntityMapper.toDto(updated);
+        return ResponseEntity.ok(resp);
+    }
+
+
     @Operation(summary = "Get a specific file by ID", description = "Fetch a file by its unique ID.")
     @ApiResponse(responseCode = "200", description = "File found", content = @Content(schema = @Schema(implementation = FileEntityResponseDto.class)))
     @ApiResponse(responseCode = "404", description = "File not found", content = @Content(schema = @Schema(implementation = ApiError.class)))

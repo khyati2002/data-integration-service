@@ -73,6 +73,21 @@ public class InsightsManager {
         }
     }
 
+    public JobEntityResponseDto updateJob(String lob, JobEntityRequestDto jobRequest, String authorizationToken) {
+        Objects.requireNonNull(lob, "LOB cannot be null for job update");
+        Objects.requireNonNull(jobRequest, "JobEntityRequestDto cannot be null for job update");
+        try {
+            log.debug("Calling JobManager to update job for LOB: {}", lob);
+            JobEntityResponseDto createdJob = this.jobManager.updateJob(lob, jobRequest, authorizationToken);
+            this.setJobEntityResponseDto(createdJob);
+            log.debug("Job update successful");
+            return createdJob;
+        } catch (RestClientException e) {
+            log.error("Failed to update job via InsightsManager for LOB: {}, ExceptionMsg: {}", lob, e.getMessage());
+            throw e;
+        }
+    }
+
     public JobEntityResponseDto createJobIfNotExists(String lob, JobEntityRequestDto jobRequest, String authorizationToken) {
         Objects.requireNonNull(lob, "LOB cannot be null for createJob");
         Objects.requireNonNull(jobRequest, "JobEntityRequestDto cannot be null for createJob");
@@ -127,6 +142,25 @@ public class InsightsManager {
             return createdFile;
         } catch (RestClientException e) {
             log.error("Failed to create file via InsightsManager for File ID: {}, ExceptionMsg: {}", fileRequest.getFileId(), e.getMessage());
+            throw e; // Re-throw the exception from the manager
+        }
+    }
+
+    public FileEntityResponseDto updateFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest,String authorizationToken) {
+        Objects.requireNonNull(lob, "LOB cannot be null for updateFile");
+        Objects.requireNonNull(masterName, "MasterName cannot be null for  updateFile");
+        Objects.requireNonNull(jobId, "JobId cannot be null for  updateFile");
+        Objects.requireNonNull(fileRequest, "FileEntityRequestDto cannot be null for  updateFile");
+        Objects.requireNonNull(fileRequest.getFileId(), "FileId within FileEntityRequestDto cannot be null for  updateFile");
+
+        try {
+            log.debug("Calling FileManager to update file with ID: {} for Job ID: {}", fileRequest.getFileId(), jobId);
+            FileEntityResponseDto updatedFile = this.fileManager.updateFile(lob, masterName, jobId, fileRequest,authorizationToken);
+            addFileEntityResponse(updatedFile.getFileId(), updatedFile);
+            log.debug("File update successful");
+            return updatedFile;
+        } catch (RestClientException e) {
+            log.error("Failed to update file via InsightsManager for File ID: {}, ExceptionMsg: {}", fileRequest.getFileId(), e.getMessage());
             throw e; // Re-throw the exception from the manager
         }
     }

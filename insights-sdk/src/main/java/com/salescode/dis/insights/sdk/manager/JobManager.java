@@ -14,6 +14,7 @@ public class JobManager {
     private final String JOB_CREATE_URL;
     private final String JOB_GET_BY_ID_URL;
     private final String JOB_STATUS_UPDATE_URL;
+    private final String JOB_UPDATE_URL;
 
     RestTemplate restTemplate;
 
@@ -21,6 +22,7 @@ public class JobManager {
         JOB_CREATE_URL = baseURL + "/api/{lob}/job";
         JOB_GET_BY_ID_URL = baseURL + "/api/{lob}/job/{jobId}";
         JOB_STATUS_UPDATE_URL = baseURL + "/api/{lob}/job/{jobId}/status/{status}";
+        JOB_UPDATE_URL= baseURL + "/api/{lob}/job/update";
     }
 
     JobManager(RestTemplate restTemplate, String baseURL) {
@@ -52,6 +54,28 @@ public class JobManager {
             }
         } catch (RestClientException e) {
             log.error("Error during job creation for LOB '{}'. URL: {}, ExceptionMsg {}", lob, JOB_CREATE_URL, e.getMessage());
+            throw e;
+        }
+    }
+
+    public JobEntityResponseDto updateJob(String lob, JobEntityRequestDto jobRequest, String authorizationToken) {
+        HttpEntity<JobEntityRequestDto> entity = new HttpEntity<>(jobRequest, getHttpHeaders(authorizationToken));
+        try {
+            log.debug("Attempting to update job for LOB: {} , id: {}", lob, jobRequest.getId() );
+            ResponseEntity<JobEntityResponseDto> response = restTemplate.exchange(JOB_UPDATE_URL, HttpMethod.PUT, entity, JobEntityResponseDto.class, lob);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                log.info("Job status updated successfully for ID: {}", jobRequest.getId());
+                return response.getBody();
+            } else {
+                String errorMessage = String.format(
+                        "Failed to update job for LOB '%s', Job ID '%s'. Expected status %s but got %s. URL: %s",
+                        lob, jobRequest.getId(),HttpStatus.OK, response.getStatusCode(), JOB_UPDATE_URL
+                );
+                log.warn(errorMessage);
+                throw new RestClientException(errorMessage);
+            }
+        } catch (RestClientException e) {
+            log.error("Error during job update for LOB '{}'. URL: {}, ExceptionMsg {}", lob, JOB_CREATE_URL, e.getMessage());
             throw e;
         }
     }

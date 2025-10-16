@@ -3,6 +3,7 @@ package com.salescode.dis.insights.service;
 import com.salescode.dis.insights.dto.AccumulatedJobsAndMasterDto;
 import com.salescode.dis.insights.dto.MasterCard;
 import com.salescode.dis.insights.dto.MetadataEntry;
+import com.salescode.dis.insights.dto.job.JobEntityRequestDto;
 import com.salescode.dis.insights.dto.job.JobStageAccumulatedData;
 import com.salescode.dis.insights.dto.file.stage.AccumulatedStageDataDto;
 import com.salescode.dis.insights.dto.job.JobEntityResponseDtoWithStages;
@@ -63,6 +64,12 @@ public class JobService {
             fileService.createFile(req.getId(),file);
         }
         return jobEntity;
+    }
+
+    public JobEntity updateJob(JobEntityRequestDto req, String lob) {
+        JobEntity jobEntity = jobRepo.findById(req.getId()).orElseGet(() -> createJobIfNotExists(req.getId(), lob, null));
+        jobEntity.setPublisherJobUri(req.getPublisherJobUri());
+        return jobRepo.save(jobEntity);
     }
 
     @Transactional(readOnly = true)

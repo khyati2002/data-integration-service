@@ -3,7 +3,9 @@ package com.salescode.dis.insights.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.dis.insights.controller.DuplicatesController;
+import com.salescode.dis.insights.dto.file.FileEntityRequestDto;
 import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.entity.FileEntity;
 import com.salescode.dis.insights.entity.FileReportEntity;
@@ -11,6 +13,7 @@ import com.salescode.dis.insights.entity.FileStageMetrics;
 import com.salescode.dis.insights.enums.ModeOfIntegration;
 import com.salescode.dis.insights.enums.ProgressStatus;
 import com.salescode.dis.insights.exception.ResourceNotFoundException;
+import com.salescode.dis.insights.mapper.FileEntityMapper;
 import com.salescode.dis.insights.repository.FileReportRepository;
 import com.salescode.dis.insights.repository.FileRepository;
 import com.salescode.dis.insights.repository.FileStageMetricsRepository;
@@ -19,6 +22,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
@@ -44,6 +48,8 @@ public class FileService {
     private final FileReportRepository fileReportRepository;
     private final  CacheManager cacheManager;
     private final FileStageMetricsRepository fileStageMetricsRepository;
+    private final ObjectMapper mapper;
+    private final FileEntityMapper fileEntityMapper;
 
     private Map<ModeOfIntegration, IFileOperationStrategy> operationStrategyMap;
 
@@ -108,8 +114,32 @@ public class FileService {
     public FileEntity setTotalCount(String fileId, String masterName, long totalCount){
         FileEntity file = fileRepo.findByFileIdAndMaster(fileId, masterName)
                 .orElseThrow(() -> new EntityNotFoundException("File entity does not exist with fileId: " + fileId + " and master: " + masterName));
+        if (file.getTotalCount() != null && file.getTotalCount()> 0 && file.getTotalCount() != totalCount) {
+            JsonNode existing = file.getExtendedAttributes();
+            ObjectNode extended = existing != null && existing.isObject() ?(ObjectNode) existing : mapper.createObjectNode();
+            extended.put("previousTotalCount", file.getTotalCount());
+            file.setExtendedAttributes(extended);
+        }
         file.setTotalCount(totalCount);
-        return file;
+        return fileRepo.save(file);
+    }
+
+    public FileEntity updateFile(String fileId, String masterName, FileEntityRequestDto req, String lob){
+
+        FileEntity file = fileRepo.findByFileIdAndMaster(fileId, masterName)
+                                  .orElse(null);
+        if(file==null) {
+            file = createFile(fileId , fileEntityMapper.toEntity(req, lob, masterName));
+            return file;
+        }
+        file.setFileId(req.getFileId());
+
+        JsonNode existing = file.getExtendedAttributes();
+        ObjectNode updated = existing != null && existing.isObject() ?(ObjectNode) existing: new ObjectMapper().createObjectNode();
+        updated.put("nifiFileID", fileId);
+        file.setExtendedAttributes(updated);
+        file.setModeOfIntegration(req.getModeOfIntegration());
+        return fileRepo.save(file);
     }
 
     public List<ModeOfIntegration> getAllModesOfIntegration() {
@@ -159,20 +189,31 @@ public class FileService {
     public FileStageMetrics updateMetricsForDuplicates(FileEntity file, DuplicatesController.DuplicateEventRequest request) {
         FileStageMetrics metrics = fileStageMetricsRepository.findByFileAndStageType(file,request.getStageType())
                                            .orElseThrow(() -> new IllegalArgumentException("No metrics found for stage: " + request.getStageType()));
-        Map<String, Object> extended = new HashMap<>();
-        ObjectMapper mapper = new ObjectMapper();
-        extended.put("originalSuccessCount", metrics.getSuccessCount());
-        extended.put("originalServerFailureCount", metrics.getServerFailureCount());
-        extended.put("originalLogicalFailureCount", metrics.getLogicalFailureCount());
-        extended.put("updateTimestamp", request.getTimestamp());
-        extended.put("duplicatesSubtracted", request.getDuplicateCounts());
-        JsonNode extendedJson = mapper.valueToTree(extended);
-        metrics.setExtendedAttributes(extendedJson);
+        ObjectNode extended = getJsonNodesForDuplicates(request, metrics);
+        metrics.setExtendedAttributes(extended);
         metrics.setSuccessCount(metrics.getSuccessCount() - request.getDuplicateCounts().getOrDefault("successCount", 0));
         metrics.setServerFailureCount(metrics.getServerFailureCount() - request.getDuplicateCounts().getOrDefault("serverFailureCount", 0));
         metrics.setLogicalFailureCount(metrics.getLogicalFailureCount() - request.getDuplicateCounts().getOrDefault("logicalFailureCount", 0));
         metrics.setProgressStatus(metrics.getCurrentStatus());
         return fileStageMetricsRepository.save(metrics);
+    }
+
+    private  @NotNull ObjectNode getJsonNodesForDuplicates(DuplicatesController.DuplicateEventRequest request, FileStageMetrics metrics) {
+        JsonNode existing = metrics.getExtendedAttributes();
+        ObjectNode extended =existing != null && existing.isObject()? (ObjectNode) existing:mapper.createObjectNode();
+
+        extended.put("originalSuccessCount", metrics.getSuccessCount());
+        extended.put("originalServerFailureCount", metrics.getServerFailureCount());
+        extended.put("originalLogicalFailureCount", metrics.getLogicalFailureCount());
+        extended.put("updateTimestamp", request.getTimestamp());
+
+        Map<String, Integer> duplicates = request.getDuplicateCounts();
+        if (duplicates != null) {
+            extended.put("duplicatesSubtractedSuccess", duplicates.getOrDefault("successCount", 0));
+            extended.put("duplicatesSubtractedServerFailure", duplicates.getOrDefault("serverFailureCount", 0));
+            extended.put("duplicatesSubtractedLogicalFailure", duplicates.getOrDefault("logicalFailureCount", 0));
+        }
+        return extended;
     }
 
 }

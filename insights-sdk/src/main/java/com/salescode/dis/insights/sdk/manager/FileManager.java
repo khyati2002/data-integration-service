@@ -21,6 +21,7 @@ public class FileManager {
     private final String FILE_STATUS_UPDATE_URL;
     private final String FILE_COUNT_UPDATE_URL;
     private final String FILE_PROGRESS_UPDATE_URL;
+    private final String FILE_UPDATE_URL;
 
     RestTemplate restTemplate;
 
@@ -30,6 +31,8 @@ public class FileManager {
         FILE_STATUS_UPDATE_URL = baseURL + "/api/{lob}/master/{masterName}/job/{jobId}/unit/{fileId}/status";
         FILE_COUNT_UPDATE_URL = baseURL + "/api/{lob}/master/{masterName}/unit/{fileId}/total-count";
         FILE_PROGRESS_UPDATE_URL = baseURL + "/api/{lob}/master/{masterName}/unit/{fileId}/progress";
+        FILE_UPDATE_URL = baseURL + "/api/{lob}/master/{master_name}/job/{jobId}";
+
     }
 
     FileManager(RestTemplate restTemplate, String baseURL) {
@@ -58,6 +61,28 @@ public class FileManager {
                 return response.getBody();
             } else {
                 String errorMessage = String.format("File creation failed for LOB '%s', Master '%s', Job ID '%s', File ID '%s'. Expected status %s but received %s. URL: %s", lob, masterName, jobId, fileRequest.getFileId(), HttpStatus.CREATED, response.getStatusCode(), FILE_CREATE_URL);
+                log.warn(errorMessage);
+                throw new RestClientException(errorMessage);
+            }
+        } catch (RestClientException e) {
+            log.error("Error during file creation for LOB '{}', Master '{}', Job ID '{}', File ID '{}'. URL: {}, ExceptionMsg {}", lob, masterName, jobId, fileRequest.getFileId(), FILE_CREATE_URL, e.getMessage());
+            throw e;
+        }
+    }
+
+    public FileEntityResponseDto updateFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest, String authorizationToken) {
+        Objects.requireNonNull(fileRequest, "FileEntityRequestDto cannot be null");
+        HttpEntity<FileEntityRequestDto> entity = new HttpEntity<>(fileRequest, getHttpHeaders(authorizationToken));
+        try {
+            log.debug("Attempting to update file with ID: {} for LOB: {}, Master: {}, Job ID: {}", fileRequest.getFileId(), lob, masterName, jobId);
+            ResponseEntity<FileEntityResponseDto> response = restTemplate.exchange(FILE_UPDATE_URL, HttpMethod.PUT, entity, FileEntityResponseDto.class, lob, masterName, jobId);
+
+            if (response.getStatusCode().equals(HttpStatus.OK)) {
+                log.info("File updated successfully with ID: {}", fileRequest.getFileId());
+                return response.getBody();
+            } else {
+                String errorMessage = String.format("Update file count failed for LOB '%s', Master '%s', File ID '%s',. Expected status %s but received %s. URL: %s",
+                        lob, masterName, fileRequest.getFileId(), HttpStatus.OK, response.getStatusCode(), FILE_UPDATE_URL);
                 log.warn(errorMessage);
                 throw new RestClientException(errorMessage);
             }

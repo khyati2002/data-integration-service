@@ -82,6 +82,18 @@ public class JobController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
+    @Operation(summary = "Update an existing job", description = "Updates an existing job entity for the given LOB.")
+    @ApiResponse(responseCode = "200", description = "Job updated successfully", content = @Content(schema = @Schema(implementation = JobEntityResponseDto.class)))
+    @ApiResponse(responseCode = "404", description = "Job not found", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "500", description = "Unexpected error", content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @PutMapping("/job/update")
+    public ResponseEntity<JobEntityResponseDto> updateJob(@PathVariable String lob,@Validated @RequestBody JobEntityRequestDto req) {
+        JobEntity updatedJob = jobService.updateJob(req, lob);
+        JobEntityResponseDto dto = jobEntityMapper.toDto(updatedJob);
+        return ResponseEntity.ok(dto);
+    }
+
 
 
     @Operation(

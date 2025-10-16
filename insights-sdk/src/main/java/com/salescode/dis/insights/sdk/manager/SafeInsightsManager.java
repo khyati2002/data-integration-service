@@ -53,6 +53,18 @@ public class SafeInsightsManager {
         }
     }
 
+    public Optional<JobEntityResponseDto> updateJob(String lob, JobEntityRequestDto jobRequest, String authorizationToken) {
+        try {
+            return Optional.ofNullable(insightsManager.updateJob(lob, jobRequest, authorizationToken));
+        } catch (RestClientException e) {
+            log.warn("SafeInsightsManager: updateJob operation failed for LOB '{}'. Returning Optional.empty().", lob);
+            return Optional.empty();
+        } catch (IllegalArgumentException e) {
+            log.warn("SafeInsightsManager: updateJob operation called with invalid arguments for LOB '{}'. Returning Optional.empty().", lob, e);
+            return Optional.empty();
+        }
+    }
+
     public Optional<JobEntityResponseDto> createJobIfNotExists(String lob, JobEntityRequestDto jobRequest, String authorizationToken) {
         try {
             return Optional.ofNullable(insightsManager.createJobIfNotExists(lob, jobRequest, authorizationToken));
@@ -100,6 +112,17 @@ public class SafeInsightsManager {
             return Optional.empty();
         } catch (IllegalArgumentException e) {
             log.warn("SafeInsightsManager: createFile operation called with invalid arguments for Job ID '{}'. Returning Optional.empty().", jobId, e);
+            return Optional.empty();
+        }
+    }
+    public Optional<FileEntityResponseDto> updateFile(String lob, String masterName, String jobId, FileEntityRequestDto fileRequest,String authorizationToken) {
+        try {
+            return Optional.ofNullable(insightsManager.updateFile(lob, masterName, jobId, fileRequest, authorizationToken));
+        } catch (RestClientException e) {
+            log.warn("SafeInsightsManager: updateFile operation failed for Job ID '{}', File ID '{}'. Returning Optional.empty().", jobId, fileRequest != null ? fileRequest.getFileId() : "N/A");
+            return Optional.empty();
+        } catch (IllegalArgumentException e) {
+            log.warn("SafeInsightsManager: updateFile operation called with invalid arguments for Job ID '{}'. Returning Optional.empty().", jobId, e);
             return Optional.empty();
         }
     }
