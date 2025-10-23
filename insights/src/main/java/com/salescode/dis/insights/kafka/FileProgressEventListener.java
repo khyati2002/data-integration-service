@@ -41,7 +41,7 @@ public class FileProgressEventListener {
     private final ThreadPoolTaskExecutor fileProgressExecutor;
 
 
-    @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates-2}",
+    @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}",
             groupId = "${file.progress.processor:file-progress-processor}", batch = "true",
             containerFactory = "fileProgressContainerFactory",
             concurrency = "5",
