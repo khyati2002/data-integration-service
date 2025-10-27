@@ -2,6 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.repository.GenericEntityRepository;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.jooq.generated.tables.records.CkGenericObjectRecord;
 import com.salescode.dim.jooq.impl.GenericEntity;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 import static com.salescode.dim.jooq.generated.Tables.CK_GENERIC_OBJECT;
 
 public class GenericEntityService extends AbstractCDMService<GenericEntity> {
+	private GenericEntityRepository genericEntityRepository;
 	private static final Logger LOG = LoggerFactory.getLogger(GenericEntityService.class);
 
 	public List<List<GenericEntity>> getItemsToSaveList(List<GenericEntity> genericEntityList) {
@@ -43,7 +45,7 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 				GenericEntity existingOutlet = savedList.get(loginId.getId());
 				loginId.setOperationPerformed(ActionType.UPDATE);
 				loginId.setRangeKey(0L);
-				loginId.setChanged((byte) 1);
+				loginId.setChanged(Boolean.TRUE);
 				loginId.setTimestamp(new Date().toInstant().toEpochMilli());
 				itemsToUpdate.add(loginId);
 			}
@@ -58,11 +60,15 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		entity.setId(record.getId());
 		entity.setRangeKey(record.getRangeKey());
 		entity.setTimestamp(record.getTimestamp());
-		entity.setChanged((byte) 1);
+		entity.setChanged(Boolean.TRUE);
 		entity.setActiveStatus(record.getActiveStatus());
 
 
 		return entity;
+	}
+
+	public List<GenericEntity> readModelsByNameAndKey1AndKey2(String name, String key1, String key2) {
+		return this.genericEntityRepository.findByNameAndKey1AndKey2(name, key1, key2);
 	}
 
 
@@ -75,14 +81,14 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 			loginId.setActiveStatus(ActiveStatus.ACTIVE);
 			loginId.setRangeKey(0L);
 			loginId.setTimestamp(new Date().toInstant().toEpochMilli());
-			loginId.setChanged((byte) 1);
+			loginId.setChanged(Boolean.TRUE);
 		});
 
 		saveItemsList.get(1).forEach(loginId -> {
 			loginId.setActiveStatus(ActiveStatus.ACTIVE);
 			loginId.setRangeKey(0L);
 			loginId.setTimestamp(new Date().toInstant().toEpochMilli());
-			loginId.setChanged((byte) 1);
+			loginId.setChanged(Boolean.TRUE);
 
 		});
 		if (!saveItemsList.get(0).isEmpty()) {
