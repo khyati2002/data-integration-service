@@ -595,6 +595,8 @@ public enum PropertyDefinition {
 	IS_REROUTE_AS_PER_BEAT("is.reroute.as.per.beat", Constants.TRUE, "is reroute feature as per beat then value will be TRUE, if it is as per pjp then it should remain false"),
 	ASSIGN_UNATTENDED_OUTLETS("assign.unattended.outlets", Constants.TRUE, "in case of reroute which all outlets should we assign to rerouted user"),
 
+	HASH_CHECK_FOR_PJP_ENTITY("hash.check.for.pjp.entity",Constants.FALSE,"enable hash check for pjp entity"),
+
 	FREE_ITEM_TYPE_CONFIG("free.item.type.config", "freeItem", "It defines type for the sku detail of free item"),
 	SET_BALANCE_SCHEME_USED_FLAG("set.balance.scheme.used.flag",Constants.FALSE ,"If true , it will set the scheme used flag as true in the order response" ),
 	USE_PIECE_TO_OTHER_FOR_ORDER_CALCULATION("use.piece.to.other.quantity.for.case.calculation",Constants.TRUE,"if true piece to other quantity will be used in order normalizedQuanity coalculation"),
