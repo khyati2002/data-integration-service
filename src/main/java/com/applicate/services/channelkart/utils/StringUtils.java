@@ -25,6 +25,10 @@ public class StringUtils {
 		return value == null || value.isEmpty();
 	}
 
+	public static boolean isEqual(String firstValue, String secondValue, boolean ignoreCase) {
+		return ignoreCase ? firstValue.equalsIgnoreCase(secondValue) : firstValue.equals(secondValue);
+	}
+
 	public static boolean isValidString(String value) {
 		return !isEmpty(value) && !value.equals("null") && !value.equals("\"\"") && !value.equalsIgnoreCase("undefined");
 	}
