@@ -10,6 +10,12 @@ import static com.salescode.dim.jooq.generated.Tables.CK_GENERIC_OBJECT;
 public class GenericEntityRepository {
     private final DSLContext dsl;
 
+    public List<GenericEntity> findByName(String name){
+        return dsl.selectFrom(CK_GENERIC_OBJECT)
+                .where(CK_GENERIC_OBJECT.NAME.eq(name))
+                .fetchInto(GenericEntity.class);
+    }
+
     public GenericEntityRepository(DSLContext dsl) {
         this.dsl = dsl;
     }
