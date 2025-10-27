@@ -28,7 +28,7 @@ import java.util.List;
 public class FileStageStatusScheduler {
 
     // Define constants for time window
-    @Value("${file-status-scheduler.stale-threshold-seconds:600}")
+    @Value("${file-status-scheduler.stale-threshold-seconds:300}")
     public int STALE_THRESHOLD_SECONDS;
 
     @Value("${file-status-scheduler.too-old-threshold-seconds:900}")
