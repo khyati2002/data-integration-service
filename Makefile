@@ -4,7 +4,7 @@
 # Common variables
 # =============================
 profile    ?= default
-version    ?= 0.0.15-SNAPSHOT
+version    ?= 0.0.16-SNAPSHOT
 insights_version ?=
 debug      ?= false
 
