@@ -2,17 +2,11 @@ package com.salescode.dim.jooq.impl;
 
 import com.applicate.services.channelkart.client.properties.PropertyDefinition;
 import com.applicate.services.channelkart.client.properties.PropertyRegistry;
-import com.applicate.services.channelkart.models.CommonDataModel;
-import com.applicate.services.channelkart.services.CategoryInfoService;
 import com.applicate.services.channelkart.services.ServiceLocator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import lombok.Setter;
+import org.jooq.JSON;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,13 +16,13 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DeliveryPJP extends com.salescode.dim.jooq.generated.tables.pojos.OutletDetails implements Serializable {
+public class DeliveryPJP extends com.salescode.dim.jooq.generated.tables.pojos.DeliveryPjp implements Serializable {
     private static final long serialVersionUID = 1L;
     private String outletCode;
     private String loginId;
     private String beat;
     private Date pjpDate;
-    private JsonNode dayAndFrequency;
+    private JSON dayAndFrequency;
     private String month;
     private @Pattern(
             regexp = "(^[0-9]*$)"
@@ -115,11 +109,11 @@ public class DeliveryPJP extends com.salescode.dim.jooq.generated.tables.pojos.O
         this.beat = beat;
     }
 
-    public JsonNode getDayAndFrequency() {
+    public JSON getDayAndFrequency() {
         return this.dayAndFrequency;
     }
 
-    public void setDayAndFrequency(JsonNode dayAndFrequency) {
+    public void setDayAndFrequency(JSON dayAndFrequency) {
         this.dayAndFrequency = dayAndFrequency;
     }
 
@@ -266,7 +260,7 @@ public class DeliveryPJP extends com.salescode.dim.jooq.generated.tables.pojos.O
         }
     }
 
-    public int getSequence() {
+    public Integer getSequence() {
         return this.sequence;
     }
 
@@ -276,7 +270,7 @@ public class DeliveryPJP extends com.salescode.dim.jooq.generated.tables.pojos.O
 
     private static PropertyRegistry getPropertyRegistry() {
         if (propertyRegistry == null) {
-            propertyRegistry = (PropertyRegistry) ServiceLocator.lookup(PropertyRegistry.class);
+            propertyRegistry = (PropertyRegistry) ServiceLocator.lookup((Class) PropertyRegistry.class);
         }
 
         return propertyRegistry;

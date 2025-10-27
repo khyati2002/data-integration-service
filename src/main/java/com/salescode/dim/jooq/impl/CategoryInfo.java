@@ -10,7 +10,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CategoryInfo extends com.salescode.dim.jooq.generated.tables.pojos.OutletDetails implements Serializable {
+public class CategoryInfo extends com.salescode.dim.jooq.generated.tables.pojos.CategoryInfo implements Serializable {
 
     private String categoryCode;
 

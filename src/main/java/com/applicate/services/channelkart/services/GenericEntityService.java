@@ -43,7 +43,7 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 				GenericEntity existingOutlet = savedList.get(loginId.getId());
 				loginId.setOperationPerformed(ActionType.UPDATE);
 				loginId.setRangeKey(0L);
-				loginId.setChanged(true);
+				loginId.setChanged((byte) 1);
 				loginId.setTimestamp(new Date().toInstant().toEpochMilli());
 				itemsToUpdate.add(loginId);
 			}
@@ -58,7 +58,7 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		entity.setId(record.getId());
 		entity.setRangeKey(record.getRangeKey());
 		entity.setTimestamp(record.getTimestamp());
-		entity.setChanged(true);
+		entity.setChanged((byte) 1);
 		entity.setActiveStatus(record.getActiveStatus());
 
 
