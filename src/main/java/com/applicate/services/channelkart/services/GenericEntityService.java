@@ -71,7 +71,9 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		return this.genericEntityRepository.findByNameAndKey1AndKey2(name, key1, key2);
 	}
 
-
+    public List<GenericEntity> readModelsByName(String name) {
+        return genericEntityRepository.findByName(name);
+    }
 	@Override
 	public Collection<GenericEntity> batchSave(Collection<GenericEntity> genericEntityList) {
 		LOG.info("Size of list is " + genericEntityList.size());
