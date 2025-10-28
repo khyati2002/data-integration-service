@@ -42,7 +42,7 @@ public class FileProgressEventListener {
 
 
     @KafkaListener(topics = "${file.progress.update.topic:file-progress-updates}",
-            groupId = "file-progress-processor", batch = "true",
+            groupId = "${file.progress.processor:file-progress-processor}", batch = "true",
             containerFactory = "fileProgressContainerFactory",
             concurrency = "5",
             properties = {

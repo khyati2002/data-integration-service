@@ -71,6 +71,7 @@ file:
       topic: file-progress-updates
       failure:
         topic: file-progress-updates-failed
+    processor: file-progress-processor
 
 insights:
   order:
@@ -102,6 +103,12 @@ spring:
     s3:
       bucket-name: globalintegration
 
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+
   redshift:
     jdbc-url: jdbc:redshift://redshift-channelkart-demo.c4ncoki1rp70.ap-south-1.redshift.amazonaws.com:5439/channelkartdemo?currentSchema=ex_schema_dataintegration
     username: dataintegrationuser
@@ -122,6 +129,7 @@ file:
       topic: file-progress-updates
       failure:
         topic: file-progress-updates-failed
+    processor: file-progress-processor
 insights:
   order:
     topic: order-progress-updates
@@ -157,6 +165,54 @@ application:
 app:
   active-environments:
     - demo
+
+file:
+  progress:
+    update:
+      topic: file-progress-updates-demo
+      failure:
+        topic: file-progress-updates-failed-demo
+    processor: file-progress-processor-demo
+
+insights:
+  order:
+    topic: order-progress-updates-demo
+    group-id: order-progress-processor-demo
+---
+
+# Configuration for 'prod' profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+  data:
+    redis:
+      host: redisdemo.wguhyp.ng.0001.aps1.cache.amazonaws.com
+      port: 6379
+
+  aws:
+    region: ap-south-1
+    s3:
+      bucket-name: globalintegration
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+
+  redshift:
+    jdbc-url: jdbc:redshift://redshift-channelkart-demo.c4ncoki1rp70.ap-south-1.redshift.amazonaws.com:5439/channelkartdemo?currentSchema=ex_schema_dataintegration
+    username: dataintegrationuser
+    password: htZFTaQH;3lK]_
+    driver-class-name: com.amazon.redshift.jdbc42.Driver
+
+
+application:
+  environment: prod
+
+app:
+  active-environments:
     - prod
 
 file:
@@ -165,6 +221,7 @@ file:
       topic: file-progress-updates
       failure:
         topic: file-progress-updates-failed
+    processor: file-progress-processor
 
 file-cleanup:
   scheduler:
