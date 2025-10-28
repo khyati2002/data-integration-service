@@ -5,7 +5,7 @@
  */
 package com.applicate.services.channelkart.converters;
 
-import com.applicate.services.channelkart.models.Location;
+import com.salescode.dim.jooq.impl.Location;
 import com.applicate.services.channelkart.services.LocationService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.JSONUtils;

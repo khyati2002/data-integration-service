@@ -115,7 +115,15 @@ public class JSONUtils {
 		return (T) OBJECT_MAPPER.convertValue(node, typeReference);
 	}
 
+    public static <T> T convert(com.fasterxml.jackson.databind.JsonNode node, Class<T> clazz) {
+        return OBJECT_MAPPER.convertValue(node, clazz);
+    }
+
 	public static Stream<JsonNode> stream(JsonNode nodes) {
 		return StreamSupport.stream(nodes.spliterator(), false);
 	}
+
+    public static com.fasterxml.jackson.databind.JsonNode toJsonNode(Map<?, ?> input) {
+        return OBJECT_MAPPER.convertValue(input, com.fasterxml.jackson.databind.JsonNode.class);
+    }
 }

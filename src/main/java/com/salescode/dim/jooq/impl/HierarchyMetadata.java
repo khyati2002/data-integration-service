@@ -12,6 +12,8 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSet
 public class HierarchyMetadata extends com.salescode.dim.jooq.generated.tables.pojos.HierarchyMetadata {
     private static final long serialVersionUID = -7546424289965519236L;
 
+    public String immediateParent;
+
     @JsonSetter("immediateParent")
     public void setImmediateParent(String parent) {
         setParent(parent);

@@ -50,9 +50,9 @@ public class Tax extends com.salescode.dim.jooq.generated.tables.pojos.Tax imple
 		this.taxGroup = taxGroup;
 	}
 
-	public int getPriority() {
-		return priority;
-	}
+//	public int getPriority() {
+//		return priority;
+//	}
 
 	public void setPriority(int priority) {
 		this.priority = priority;

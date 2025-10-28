@@ -69,6 +69,10 @@ public class LocationService extends AbstractCDMService<Location> {
         }
     }
 
+    public String formHierarchyUsingColumns(Location location) {
+        return formHierarchyUsingColumns(location,getLocationColumns(),delimiter);
+    }
+
     public String formHierarchyUsingColumns(Location location, String[] columnList,
                                             String delimiter) {
         StringBuilder hierarchyStr = new StringBuilder("");

@@ -25,6 +25,7 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
     private transient Set<String> designation;
     @Getter(value = AccessLevel.NONE)
     private Location locationHierarchy;
+    private String loginId;
 
     public User(){
         super();
