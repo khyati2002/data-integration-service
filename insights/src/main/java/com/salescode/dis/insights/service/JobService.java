@@ -167,17 +167,17 @@ public class JobService {
 
     public AccumulatedJobsAndMasterDto getJobsWithAggregatedStagesAndMasters(String lob, LocalDateTime startDate, LocalDateTime endDate, String mode) {
         LocalDateTime utcStartDate = startDate.minusHours(5).minusMinutes(30);
-        LocalDateTime utcEndDate = endDate.minusHours(5).minusMinutes(30);
+        LocalDateTime utcEndDate = endDate != null ? endDate.minusHours(5).minusMinutes(30) : null;
 
         Instant startInstant = utcStartDate.atZone(ZoneOffset.UTC).toInstant();
-        Instant endInstant = utcEndDate.atZone(ZoneOffset.UTC).toInstant();
+        Instant endInstant = utcEndDate != null ? utcEndDate.atZone(ZoneOffset.UTC).toInstant() : null;
         List<JobStageAccumulatedData> queryResults = new ArrayList<>();
 
         if(mode != null) {
             ModeOfIntegration modeOfIntegration = ModeOfIntegration.valueOf(mode);
-            queryResults = fileStageMetricsRepository.findJobsWithAggregatedStagesByLobAndMode(lob, startInstant, endInstant, modeOfIntegration);
+            queryResults = endInstant != null ? fileStageMetricsRepository.findJobsWithAggregatedStagesByLobAndMode(lob, startInstant, endInstant, modeOfIntegration) : fileStageMetricsRepository.findJobsWithAggregatedStagesByLobAndModeWithoutEndDate(lob, startInstant, modeOfIntegration);
         } else {
-            queryResults = fileStageMetricsRepository.findJobsWithAggregatedStagesByLob(lob, startInstant, endInstant);
+            queryResults = endInstant != null ? fileStageMetricsRepository.findJobsWithAggregatedStagesByLob(lob, startInstant, endInstant) : fileStageMetricsRepository.findJobsWithAggregatedStagesByLobWithNoEndDate(lob, startInstant);
         }
 
         Map<String, List<JobStageAccumulatedData>> resultsByJobId = queryResults.stream()

@@ -239,10 +239,6 @@ public class JobController {
             startDate = LocalDateTime.now().minusDays(10);
         }
 
-        if (endDate == null) {
-            endDate = LocalDateTime.now();
-        }
-
         AccumulatedJobsAndMasterDto result = jobService.getJobsWithAggregatedStagesAndMasters(lob, startDate, endDate, mode);
         return ResponseEntity.ok(result);
     }
