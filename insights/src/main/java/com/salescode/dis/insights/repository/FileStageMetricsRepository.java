@@ -61,6 +61,32 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
     List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLob(@Param("lob") String lob,    @Param("startDate") Instant startDate,
                                                                     @Param("endDate") Instant endDate);
 
+    @Query("""
+            SELECT new com.salescode.dis.insights.dto.job.JobStageAccumulatedData(
+                j.id, s.master, s.modeOfIntegration, j.creationTime, j.lastModifiedTime, j.lob,
+                CAST(j.extendedAttributes AS string),
+                j.startTime, j.endTime, j.status,
+                j.publisherJobUri, j.consumerJobUri,
+                s.stageType, s.progressStatus,
+                CAST(COALESCE(SUM(s.successCount), 0) AS long),
+                CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long),
+                CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long)
+            )
+            FROM JobEntity j
+            JOIN FileStageMetrics s ON j.id = s.job.id
+            WHERE j.lob = :lob
+              AND j.lastModifiedTime >= :startDate
+            GROUP BY j.id, j.creationTime, j.lastModifiedTime, j.lob,
+                     j.startTime, j.endTime, j.status,
+                     j.publisherJobUri, j.consumerJobUri,
+                     s.stageType, s.master, s.modeOfIntegration, s.progressStatus
+            """)
+    List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLobWithNoEndDate(
+            @Param("lob") String lob,
+            @Param("startDate") Instant startDate
+    );
+
+
     @Query("SELECT new com.salescode.dis.insights.dto.job.JobStageAccumulatedData(" +
             "j.id, s.master, s.modeOfIntegration, j.creationTime, j.lastModifiedTime, j.lob," +
             "CAST(j.extendedAttributes AS string), " +
@@ -73,6 +99,34 @@ public interface FileStageMetricsRepository extends JpaRepository<FileStageMetri
             "j.publisherJobUri, j.consumerJobUri, s.stageType, s.master, s.modeOfIntegration, s.progressStatus")
     List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLobAndMode(@Param("lob") String lob, @Param("startDate") Instant startDate,
                                                                            @Param("endDate") Instant endDate, @Param("modeOfIntegration")ModeOfIntegration modeOfIntegration);
+
+
+    @Query("""
+            SELECT new com.salescode.dis.insights.dto.job.JobStageAccumulatedData(
+                j.id, s.master, s.modeOfIntegration, j.creationTime, j.lastModifiedTime, j.lob,
+                CAST(j.extendedAttributes AS string),
+                j.startTime, j.endTime, j.status,
+                j.publisherJobUri, j.consumerJobUri,
+                s.stageType, s.progressStatus,
+                CAST(COALESCE(SUM(s.successCount), 0) AS long),
+                CAST(COALESCE(SUM(s.serverFailureCount), 0) AS long),
+                CAST(COALESCE(SUM(s.logicalFailureCount), 0) AS long)
+            )
+            FROM JobEntity j
+            JOIN FileStageMetrics s ON j.id = s.job.id
+            WHERE j.lob = :lob
+              AND j.lastModifiedTime >= :startDate
+              AND s.modeOfIntegration = :modeOfIntegration
+            GROUP BY j.id, j.creationTime, j.lastModifiedTime, j.lob,
+                     j.startTime, j.endTime, j.status,
+                     j.publisherJobUri, j.consumerJobUri,
+                     s.stageType, s.master, s.modeOfIntegration, s.progressStatus
+            """)
+    List<JobStageAccumulatedData> findJobsWithAggregatedStagesByLobAndModeWithoutEndDate(
+            @Param("lob") String lob,
+            @Param("startDate") Instant startDate,
+            @Param("modeOfIntegration") ModeOfIntegration modeOfIntegration
+    );
 
 
     @Query("SELECT s FROM FileStageMetrics s " +
