@@ -66,7 +66,7 @@ public class SupplierMetaDataService extends AbstractCDMService<SupplierMetadata
                     supplierMetaDataList.stream()
                             .map(supplier -> {
                                 supplier.setId(UUID.randomUUID().toString());
-                                supplier.setChanged((byte) 1);
+                                supplier.setChanged(Boolean.TRUE);
                                 CkSupplierMetadataRecord record = getDslContext().newRecord(CK_SUPPLIER_METADATA, supplier);
                                 return record;
                             })
