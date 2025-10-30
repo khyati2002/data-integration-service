@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Point;
 
 import java.io.Serializable;
@@ -29,22 +30,22 @@ public class UserMetadata extends com.salescode.dim.jooq.generated.tables.pojos.
 
 	private static final long serialVersionUID = 1L;
 
-	private String loginId;
+	private String loginid;
 	private String value;
 	private boolean isPrimary;
 
 	private UserMetadataType type;
 
-	@JsonSerialize(using = LocationPointSerializer.class)
-	@JsonDeserialize(using = LocationPointDeserializer.class)
-	private Point location;
+//	@JsonSerialize(using = LocationPointSerializer.class)
+//	@JsonDeserialize(using = LocationPointDeserializer.class)
+//	private Point location;
 
 	private BigDecimal latitude;
 	private BigDecimal longitude;
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(loginId, type);
+		return Objects.hash(loginid, type);
 	}
 
 
@@ -54,13 +55,14 @@ public class UserMetadata extends com.salescode.dim.jooq.generated.tables.pojos.
 //	//public void setType(String type) {
 //		this.type.toString() = type;
 //	}
+// Point getter
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
 		if (obj == null || getClass() != obj.getClass()) return false;
 		UserMetadata other = (UserMetadata) obj;
-		return Objects.equals(loginId, other.loginId) &&
+		return Objects.equals(loginid, other.loginid) &&
 				Objects.equals(type, other.type);
 	}
 }
