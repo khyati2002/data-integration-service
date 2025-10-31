@@ -23,9 +23,13 @@ public class MetaDataService extends AbstractCDMService<Metadata> {
 		}
 	}
 
-	@Cacheable(cacheName = "dataintegration-metadata")
+	@Cacheable(cacheName = "dataintegration-metadata1")
 	public Metadata fetchByValueFromDB(String domainName,String domainType) {
 		return this.metaDataRepository.findByDomainNameAndDomainType(domainName, domainType).orElse(null);
+	}
+	public Metadata fetchByValue(String domainName, String domainType, boolean cached) {
+
+		return this.fetchByValueFromDB(domainName, domainType);
 	}
 
 	public Metadata fetchByValue(String domainName,String domainType) {

@@ -213,7 +213,6 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
             if(streamingRawData.getFileId()==null){
                 streamingRawData.setFileId(RedisIdleEvictionManager.getInstance().getOrCreateFileId(streamingRawData.getLob(),streamingRawData.getTransformerInfo().get(0).getEntityName(), "fileId", idleEvictionTTL, TimeUnit.MINUTES));
             }
-
             FileProgressEvent message = InsightsUtils.createRequest(streamingRawData,1,0,0,stage);
 
             ProducerRecord<String, FileProgressEvent> record = new ProducerRecord<>(topic, streamingRawData.getFileId(), message);
