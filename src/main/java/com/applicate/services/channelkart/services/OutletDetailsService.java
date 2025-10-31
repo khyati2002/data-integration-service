@@ -238,7 +238,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 if (!Objects.equals(outlet.getHash(), existingOutlet.getHash())) {
                     outlet.setChanges(CdmDiffUtil.getChanges(outlet,existingOutlet));
                     outlet.setOperationPerformed(ActionType.UPDATE);
-                    outlet.setChanged(1=1);
+              outlet.setChanged(1==1);
                     itemsToUpdate.add(outlet);
                 }
             }
