@@ -29,11 +29,6 @@ public class CreditOutletsService extends AbstractCDMService<CreditOutlets> {
         try{
             LOG.info("Size of list is "  + creditOutletsList.size());
             if (creditOutletsList != null && !creditOutletsList.isEmpty()) {
-                creditOutletsList.forEach(creditOutlet -> {
-                    if (creditOutlet.getId() == null || creditOutlet.getId().isEmpty()) {
-                        creditOutlet.setId(UUID.randomUUID().toString());
-                    }
-                });
                 List<CreditOutletsRecord> records = creditOutletsList.stream()
                         .map(creditOutlet -> getDslContext().newRecord(CREDIT_OUTLETS, creditOutlet))
                         .collect(Collectors.toList());
@@ -42,7 +37,6 @@ public class CreditOutletsService extends AbstractCDMService<CreditOutlets> {
             }
 
             LOG.info("Batch save successful");
-//        CacheManager.getInstance().evictAll("dataintegration-outlets");
             return creditOutletsList;
         } catch (Exception e) {
             Log.error(e.getMessage());
