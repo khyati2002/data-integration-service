@@ -14,8 +14,9 @@ import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.tables.CkUserMetadata.CK_USER_METADATA;
 
-public class UserMetadataService extends AbstractCDMService<UserMetadata>{
+public class UserMetadataService extends AbstractCDMService<UserMetadata> {
 	private static final Logger LOG = LoggerFactory.getLogger(UserMetadataService.class);
+
 	public List<List<UserMetadata>> getItemsToSaveList(List<UserMetadata> userMetadataList) {
 		List<List<UserMetadata>> result = new ArrayList<>();
 		List<String> users = userMetadataList.stream().map(UserMetadata::getId).collect(Collectors.toList());
@@ -24,41 +25,51 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata>{
 
 		List<UserMetadata> itemsToInsert = new ArrayList<>();
 		List<UserMetadata> itemsToUpdate = new ArrayList<>();
-		for (UserMetadata loginId : userMetadataList) {
-			fillAttributes(loginId, savedList.get(loginId.getId()));
-			fillCommonAttributes(loginId);
-			if (loginId.getId() == null)
-				loginId.setId(new IdGenerator(loginId.getClass().getSimpleName()).getId(loginId));
+		for (UserMetadata loginid : userMetadataList) {
+			fillAttributes(loginid, savedList.get(loginid.getId()));
+			fillCommonAttributes(loginid);
+			loginid.setId(new IdGenerator(loginid.getClass().getSimpleName()).getId(loginid));
 
-			if (savedList.get(loginId.getId()) == null) {
-				itemsToInsert.add(loginId);
-				loginId.setOperationPerformed(ActionType.INSERT);
+			if (loginid.getId() == null)
+				loginid.setId(new IdGenerator(loginid.getClass().getSimpleName()).getId(loginid));
+			if (savedList.get(loginid.getId()) == null) {
+				itemsToInsert.add(loginid);
+				loginid.setOperationPerformed(ActionType.INSERT);
 			} else {
-				com.salescode.dim.jooq.generated.tables.pojos.UserMetadata existingOutlet = savedList.get(loginId.getId());
-				loginId.setOperationPerformed(ActionType.UPDATE);
-				loginId.setChanged(Boolean.TRUE);
-				itemsToUpdate.add(loginId);
+				com.salescode.dim.jooq.generated.tables.pojos.UserMetadata existingOutlet = savedList.get(loginid.getId());
+				loginid.setOperationPerformed(ActionType.UPDATE);
+				loginid.setChanged(Boolean.TRUE);
+				itemsToUpdate.add(loginid);
 			}
 		}
 		result.add(itemsToInsert);
 		result.add(itemsToUpdate);
 		return result;
 	}
+
 	@Override
 	public Collection<UserMetadata> batchSave(Collection<UserMetadata> userMetadataList) {
 		LOG.info("Size of list is {}", userMetadataList.size());
 
-		List<List<UserMetadata>> saveItemsList = getItemsToSaveList(new ArrayList<>(userMetadataList));
+		try {
+			List<List<UserMetadata>> saveItemsList = getItemsToSaveList(new ArrayList<>(userMetadataList));
 
-		if (!saveItemsList.get(0).isEmpty()) {
-			getDslContext().batchInsert(saveItemsList.get(0).stream().map(outlet -> getDslContext().newRecord(CK_USER_METADATA, outlet)).collect(Collectors.toList())).execute();
+			if (!saveItemsList.get(0).isEmpty()) {
+				LOG.info("Performing batch insert for {} records", saveItemsList.get(0).size());
+				getDslContext().batchInsert(saveItemsList.get(0).stream().map(outlet -> getDslContext().newRecord(CK_USER_METADATA, outlet)).collect(Collectors.toList())).execute();
+			}
+
+			if (!saveItemsList.get(1).isEmpty()) {
+				LOG.info("Performing batch update for {} records", saveItemsList.get(1).size());
+				getDslContext().batchUpdate(saveItemsList.get(1).stream().map(outlet -> getDslContext().newRecord(CK_USER_METADATA, outlet)).collect(Collectors.toList())).execute();
+			}
+
+			LOG.info("Batch save completed successfully for {} records", userMetadataList.size());
+
+		} catch (Exception e) {
+			LOG.error("Error occurred during batch save of UserMetadata. Message: {}", e.getMessage(), e);
 		}
 
-		if (!saveItemsList.get(1).isEmpty()) {
-			getDslContext().batchUpdate(saveItemsList.get(1).stream().map(outlet -> getDslContext().newRecord(CK_USER_METADATA, outlet)).collect(Collectors.toList())).execute();
-		}
-
-		LOG.info("Batch save is successful");
 		return userMetadataList;
 	}
 }
