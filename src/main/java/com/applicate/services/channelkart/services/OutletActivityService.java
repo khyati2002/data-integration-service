@@ -15,6 +15,7 @@ import com.salescode.dim.jooq.impl.OutletActivity;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -94,6 +95,9 @@ public class OutletActivityService extends AbstractCDMService<OutletActivity> {
 			preSaveEnrichment(entry);
 			if (savedList.get(entry.getId()) == null) {
 				entry.setVersion(0);
+				entry.setChanged((byte)1);
+			    entry.setSystemTime(LocalDateTime.now());
+				entry.setSubmissionTime(LocalDateTime.now());
 				entry.setOperationPerformed(ActionType.INSERT);
 				itemsToInsert.add(entry);
 			} else {
