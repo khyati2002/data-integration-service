@@ -94,6 +94,13 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         return OutletDetails.of(outletDetails);
     }
 
+    public String getOutletNameByOutletCode(String outletcode){
+        return getDslContext().select(CK_OUTLET_DETAILS.OUTLET_NAME)
+                .from(CK_OUTLET_DETAILS)
+                .where(CK_OUTLET_DETAILS.OUTLETCODE.eq(outletcode))
+                .fetchOne(CK_OUTLET_DETAILS.OUTLET_NAME);
+    }
+
     private List<User> preProcessUser(List<User> userList) {
 //        userList.parallelStream().forEach(user -> {
 //            preProcessPipelineService.preProcessPipeline(user, null);
