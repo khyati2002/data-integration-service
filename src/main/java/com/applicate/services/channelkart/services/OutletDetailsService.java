@@ -49,7 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 
-import static com.salescode.dim.jooq.generated.Tables.*;
+import static com.salescode.dim.jooq.generated.Tables.CK_OUTLET_DETAILS;
 import static com.salescode.dim.jooq.generated.Tables.CK_OUTLET_DETAILS_HIERARCHYMETADATA;
 import static java.util.Arrays.stream;
 
