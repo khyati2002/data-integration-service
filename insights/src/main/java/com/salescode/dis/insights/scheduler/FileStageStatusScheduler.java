@@ -44,7 +44,7 @@ public class FileStageStatusScheduler {
     @Scheduled(fixedRateString = "${file-status-scheduler.rate-millis:60000}") // Run every 1 minute (60000 ms)
     @Transactional
     public void updateAllFileStatus() {
-        log.info("Starting scheduled update of all file statuses");
+//        log.info("Starting scheduled update of all file statuses");
 
         // Define the time window for staleness
         Instant staleCutoffTime = Instant.now().minus(STALE_THRESHOLD_SECONDS, ChronoUnit.SECONDS); // e.g., 10 mins ago
