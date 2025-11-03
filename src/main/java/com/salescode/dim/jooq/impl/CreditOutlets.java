@@ -3,6 +3,8 @@ package com.salescode.dim.jooq.impl;
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 
 import java.math.BigDecimal;
@@ -13,7 +15,8 @@ import java.util.Objects;
  * Entity representing a credit outlet.
  * Extends BaseEntity for common audit fields and functionality.
  */
-
+@Getter
+@Setter
 public class CreditOutlets extends CommonDataModel {
 
 
@@ -26,7 +29,6 @@ public class CreditOutlets extends CommonDataModel {
 
     @Size(max = 200, message = "Outlet name cannot exceed 200 characters")
     private String outletName;
-
 
 
     @DecimalMin(value = "0.0", message = "Base credit limit cannot be negative")
@@ -47,6 +49,8 @@ public class CreditOutlets extends CommonDataModel {
     @Min(value = 1, message = "Credit day code must be 1 or 2")
     @Max(value = 2, message = "Credit day code must be 1 or 2")
     private Integer creditDayCode; // 1: first open invoice date, 2: next month's 1st PJP date
+
+    private BigDecimal availableCredit;
 
 
     private String lob;
