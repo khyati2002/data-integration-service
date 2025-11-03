@@ -2,6 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.repository.GenericEntityRepository;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.jooq.generated.tables.records.CkGenericObjectRecord;
 import com.salescode.dim.jooq.impl.GenericEntity;
@@ -19,6 +20,7 @@ import static com.salescode.dim.jooq.generated.Tables.CK_GENERIC_OBJECT;
 
 public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 	private static final Logger LOG = LoggerFactory.getLogger(GenericEntityService.class);
+	private GenericEntityRepository entityRepository;
 
 	public List<List<GenericEntity>> getItemsToSaveList(List<GenericEntity> genericEntityList) {
 		List<List<GenericEntity>> result = new ArrayList<>();
@@ -63,6 +65,10 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 
 
 		return entity;
+	}
+
+	public List<GenericEntity> readModelsByName(String name) {
+		return this.entityRepository.findByName(name);
 	}
 
 

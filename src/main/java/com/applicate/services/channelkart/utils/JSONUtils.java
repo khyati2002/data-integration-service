@@ -115,6 +115,10 @@ public class JSONUtils {
 		return (T) OBJECT_MAPPER.convertValue(node, typeReference);
 	}
 
+	public static JsonNode toJsonNode(Map<?, ?> input) {
+		return OBJECT_MAPPER.convertValue(input, JsonNode.class);
+	}
+
 	public static Stream<JsonNode> stream(JsonNode nodes) {
 		return StreamSupport.stream(nodes.spliterator(), false);
 	}
