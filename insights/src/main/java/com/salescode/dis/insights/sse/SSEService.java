@@ -61,12 +61,20 @@ public class SSEService {
         this.scheduler = new DelegatingSecurityContextScheduledExecutorService(Executors.newScheduledThreadPool(1));
     }
 
-    public void addJobEmitter(String clientId, String jobId, SseEmitter emitter) {
+    public synchronized void addJobEmitter(String clientId, String jobId, SseEmitter emitter) {
         String key = "job:" + clientId+":"+ jobId ;
         SseEmitter existingEmitter = jobEmitters.remove(key);
         if (existingEmitter != null) {
-            emitterExecutors.remove(existingEmitter);
-            log.info("Replacing existing Job SSE connection for client={}, jobId={}", clientId, jobId);
+            Executor oldExecutor = emitterExecutors.remove(existingEmitter);
+            if (oldExecutor instanceof ExecutorService) {
+                ((ExecutorService) oldExecutor).shutdown();
+            }
+            try {
+                existingEmitter.complete();
+            } catch (Exception e) {
+                log.debug("Error completing old emitter: {}", e.getMessage());
+            }
+            log.info("Replaced existing Job SSE connection for client={}, jobId={}", clientId, jobId);
         }
         jobEmitters.put(key, emitter);
         jobSubscriptions.put(key, jobId);
@@ -76,12 +84,20 @@ public class SSEService {
     }
 
 
-    public void addFileEmitter(String clientId, String  masterName,String fileId, SseEmitter emitter) {
+    public synchronized void addFileEmitter(String clientId, String  masterName,String fileId, SseEmitter emitter) {
         String key = "file:" + clientId + ":" + fileId + ":" + masterName;
         SseEmitter existingEmitter = fileEmitters.remove(key);
         if (existingEmitter != null) {
-            emitterExecutors.remove(existingEmitter);
-            log.info("Replacing existing File SSE connection for client={}, fileId={}", clientId, fileId);
+            Executor oldExecutor = emitterExecutors.remove(existingEmitter);
+            if (oldExecutor instanceof ExecutorService) {
+                ((ExecutorService) oldExecutor).shutdown();
+            }
+            try {
+                existingEmitter.complete();
+            } catch (Exception e) {
+                log.debug("Error completing old emitter: {}", e.getMessage());
+            }
+            log.info("Replaced existing File SSE connection for client={}, fileId={}", clientId, fileId);
         }
         fileEmitters.put(key, emitter);
         fileSubscriptions.put(key, fileId);
@@ -223,6 +239,8 @@ public class SSEService {
                     log.warn("Failed to send job update to {}. Removing connection.", key);
                     it.remove();
                     jobSubscriptions.remove(key);
+                    Executor executor = emitterExecutors.remove(emitter);
+                    if (executor instanceof ExecutorService executorService) executorService.shutdown();
                 }
             }
         }
@@ -251,6 +269,8 @@ public class SSEService {
                     it.remove();
                     fileSubscriptions.remove(key);
                     masterNameSubscriptions.remove(key);
+                    Executor executor = emitterExecutors.remove(emitter);
+                    if (executor instanceof ExecutorService executorService) executorService.shutdown();
                 }
             }
         }
