@@ -274,16 +274,16 @@ public class DeliveryPJP extends com.salescode.dim.jooq.generated.tables.pojos.O
         this.sequence = sequence;
     }
 
-    private static PropertyRegistry getPropertyRegistry() {
-        if (propertyRegistry == null) {
-            propertyRegistry = (PropertyRegistry) ServiceLocator.lookup(PropertyRegistry.class);
-        }
+//    private static PropertyRegistry getPropertyRegistry() {
+//        if (propertyRegistry == null) {
+//            propertyRegistry = (PropertyRegistry) ServiceLocator.lookup(PropertyRegistry.class);
+//        }
+//
+//        return propertyRegistry;
+//    }
 
-        return propertyRegistry;
-    }
-
-    public boolean canHash() {
-        return getPropertyRegistry().getAsBoolean(PropertyDefinition.HASH_CHECK_FOR_PJP_ENTITY);
-    }
+//    public boolean canHash() {
+//        return getPropertyRegistry().getAsBoolean(PropertyDefinition.HASH_CHECK_FOR_PJP_ENTITY);
+//    }
 }
 
