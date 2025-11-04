@@ -1,19 +1,14 @@
 package com.salescode.dim.jooq.impl;
 
 
-import com.applicate.services.channelkart.converters.LocationPointDeserializer;
-import com.applicate.services.channelkart.converters.LocationPointSerializer;
-
 import com.applicate.services.channelkart.models.enums.UserMetadataType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSetter;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Point;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonProperty;
+
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -41,9 +36,15 @@ public class UserMetadata extends com.salescode.dim.jooq.generated.tables.pojos.
 
 	private BigDecimal latitude;
 	private BigDecimal longitude;
-	@JsonSetter("loginId")
+
+	@JsonProperty("loginId")
+	public String getLoginId() {
+		return getLoginid(); // calls generated POJO getter
+	}
+
+	@JsonProperty("loginId")
 	public void setLoginId(String loginId) {
-		setLoginid(loginId);
+		setLoginid(loginId); // calls generated POJO setter
 	}
 
 
