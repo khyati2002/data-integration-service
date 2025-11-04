@@ -3,6 +3,8 @@ package com.applicate.services.channelkart.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.bazaarvoice.jolt.utils.StringTools.isBlank;
+
 public class StringUtils {
 	public static boolean isNullOrBlank(Object value) {
 		return (value == null) || (String.valueOf(value).isBlank());
@@ -23,6 +25,10 @@ public class StringUtils {
 
 	public static boolean isEmpty(String value) {
 		return value == null || value.isEmpty();
+	}
+
+	public static boolean isNotBlank(String str) {
+		return !isBlank(str);
 	}
 
 	public static boolean isValidString(String value) {
