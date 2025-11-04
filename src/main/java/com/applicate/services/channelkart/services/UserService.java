@@ -229,7 +229,7 @@ public class UserService extends AbstractCDMService<User> {
     private void fillUserDetails(List<User> userList) {
         for(User user : userList) {
             if (user.getVerified() == null) {
-                user.setVerified(false);
+                user.setVerified((byte)0);
             }
 
             if (user.getPassword() == null) {
@@ -291,8 +291,8 @@ public class UserService extends AbstractCDMService<User> {
                     user.setPassword(savedList.get(user.getLoginid()).getPassword());
                 }
             }
-            if (savedList.get(user.getLoginid()) != null && User.of(savedList.get(user.getLoginid())).getVerified()) {
-                user.setVerified(true);
+            if (savedList.get(user.getLoginid()) != null && User.of(savedList.get(user.getLoginid())).getVerified()==1) {
+                user.setVerified((byte)1);
             }
             super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
@@ -311,12 +311,12 @@ public class UserService extends AbstractCDMService<User> {
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
                     user.setChanges(CdmDiffUtil.getChanges(user,savedUser));
                     user.setOperationPerformed(ActionType.UPDATE);
-                    user.setChanged(true);
+                    user.setChanged((byte)1);
                     itemsToUpdate.add(user);
                 } else {
                     user.setId(savedList.get(user.getLoginid()).getId());
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
-                    user.setChanged(true);
+                    user.setChanged((byte)1);
                 }
             }
         }
