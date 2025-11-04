@@ -108,6 +108,7 @@ public class OutletActivityService extends AbstractCDMService<OutletActivity> {
 				entry.setVersion(savedList.get(entry.getId()).getVersion() + 1);
 				entry.setChanges(CdmDiffUtil.getChanges(entry, savedEntry));
 				entry.setOperationPerformed(ActionType.UPDATE);
+				entry.setActiveStatus(ActiveStatus.ACTIVE);
 				itemsToUpdate.add(entry);
 			}
 		}
