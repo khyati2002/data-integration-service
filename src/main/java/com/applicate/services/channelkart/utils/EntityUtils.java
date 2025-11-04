@@ -3,9 +3,10 @@ package com.applicate.services.channelkart.utils;
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dim.utils.ReflectionUtils;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,6 +56,27 @@ public class EntityUtils {
         return tempfield;
     }
 
+    public <T> List<?> findDataByQuery(Class<T> clazz, String query, boolean isNative) {
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
+
+        // Run raw SQL using JOOQ
+        Result<Record> result = dslContext.fetch(query);
+
+        if (clazz == Map.class) {
+            // Convert to list of maps (column alias -> value)
+            return result.stream()
+                    .map(Record::intoMap)
+                    .collect(Collectors.toList());
+        } else if (clazz == List.class || clazz == Record.class) {
+            // Return raw records
+            return result;
+        } else {
+            // Convert into the provided POJO class
+            return result.into(clazz);
+        }
+    }
 
 
     public Class<? extends CommonDataModel> getEntityClass(String entityName) {

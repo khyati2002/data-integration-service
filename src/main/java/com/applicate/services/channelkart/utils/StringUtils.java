@@ -29,6 +29,10 @@ public class StringUtils {
 		return !isEmpty(value) && !value.equals("null") && !value.equals("\"\"") && !value.equalsIgnoreCase("undefined");
 	}
 
+    public static boolean isEqual(String firstValue, String secondValue, boolean ignoreCase) {
+        return ignoreCase ? firstValue.equalsIgnoreCase(secondValue) : firstValue.equals(secondValue);
+    }
+
 
 	public static String format(final String str, Object... values) {
 		synchronized (str.intern()) {
