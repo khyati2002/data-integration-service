@@ -8,6 +8,7 @@ package com.applicate.services.channelkart.repository;
 
 import com.salescode.dim.jooq.impl.Tax;
 import org.jooq.DSLContext;
+import org.jooq.Name;
 
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class TaxRepository {
     }
 	
 	public List<Tax> findByBatchCodeIn(List<String> batchCodeList){
-        return dslContext.selectFrom(CK_TAX)
+        return dslContext.selectFrom(CK_TAX.getName())
                 .where(CK_TAX.BATCH_CODE.in(batchCodeList))
                 .fetchInto(Tax.class);
     }

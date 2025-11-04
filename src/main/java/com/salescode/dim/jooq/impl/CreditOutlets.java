@@ -22,6 +22,7 @@ public class CreditOutlets extends CommonDataModel {
 
     private String id;
 
+    private ActiveStatus activeStatus;
 
     @NotBlank(message = "Outlet code is required")
     @Size(max = 50, message = "Outlet code cannot exceed 50 characters")
@@ -139,12 +140,12 @@ public class CreditOutlets extends CommonDataModel {
 
     @Override
     public ActiveStatus getActiveStatus() {
-        return null;
+        return activeStatus;
     }
 
     @Override
     public void setActiveStatus(ActiveStatus activeStatus) {
-
+        this.activeStatus=activeStatus;
     }
 
     @Override

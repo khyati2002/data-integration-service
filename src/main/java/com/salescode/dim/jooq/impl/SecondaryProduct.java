@@ -4,10 +4,8 @@ package com.salescode.dim.jooq.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
 @Getter
@@ -17,12 +15,11 @@ public class SecondaryProduct extends com.salescode.dim.jooq.generated.tables.po
 
 	/* we can store competitor name for other features like competitor focus product, SOS of competitors*/
 	private String companyName;
-	
+
 	/* This specifies for which feature it is stored like focus brand ,competitor sku info ..etc*/
 	private String feature;
-	
 
-	private JsonNode blobKeys;
+
 
 	private String skuCode;
 	private String batchCode;
@@ -43,14 +40,9 @@ public class SecondaryProduct extends com.salescode.dim.jooq.generated.tables.po
 	private String productTag;
 
 
-	private Date startTime;
-	
-
-	private Date endTime;
-	
 	/* we can store feature specific information like minbaseqty value for bil */
-	private double quantity; 
-	
+	private Double quantity;
+
 
 	private String outletCode;
 

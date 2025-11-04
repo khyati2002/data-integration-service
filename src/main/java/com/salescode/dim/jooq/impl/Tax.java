@@ -5,6 +5,7 @@ import lombok.Data;
 
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -21,7 +22,7 @@ public class Tax extends com.salescode.dim.jooq.generated.tables.pojos.Tax imple
 	private String skuCode;
 
 	/** Rate of tax on product like 9% */
-	private double taxRate;
+	private Double taxRate;
 
 	/** Type of tax like IGST,CGST,VAT,CESS */
 	private String taxType;
@@ -31,11 +32,11 @@ public class Tax extends com.salescode.dim.jooq.generated.tables.pojos.Tax imple
 
 	private String taxGroup;
 
-	private int priority;
+	private Integer priority;
 
-	private Date startDate;
+	private LocalDateTime startDate;
 
-	private Date endDate;
+	private LocalDateTime endDate;
 
 
 }
