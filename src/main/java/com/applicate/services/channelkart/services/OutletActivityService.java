@@ -2,6 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.applicate.services.channelkart.utils.StringUtils;
@@ -91,13 +92,13 @@ public class OutletActivityService extends AbstractCDMService<OutletActivity> {
 			fillAttributes(entry, OutletActivity.of(savedList.get(entry.getId())));
 			fillCommonAttributes(entry);
 			new AttributeUpdateOverrideManager().overrideAttributes(entry, savedList.get(entry.getId()));
-			super.addHash(entry);
 			preSaveEnrichment(entry);
 			if (savedList.get(entry.getId()) == null) {
 				entry.setVersion(0);
 				entry.setChanged((byte)1);
-			    entry.setSystemTime(LocalDateTime.now());
-				entry.setSubmissionTime(LocalDateTime.now());
+				entry.setActiveStatus(ActiveStatus.ACTIVE);
+				entry.setSystemTime(LocalDateTime.now(ZoneOffset.UTC));
+				entry.setSubmissionTime(LocalDateTime.now(ZoneOffset.UTC));
 				entry.setOperationPerformed(ActionType.INSERT);
 				itemsToInsert.add(entry);
 			} else {
