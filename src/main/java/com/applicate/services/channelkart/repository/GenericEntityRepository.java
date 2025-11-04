@@ -3,12 +3,8 @@ package com.applicate.services.channelkart.repository;
 import com.salescode.dim.jooq.impl.GenericEntity;
 import org.jooq.DSLContext;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
 import static com.salescode.dim.jooq.generated.Tables.CK_GENERIC_OBJECT;
 
 public class GenericEntityRepository {
