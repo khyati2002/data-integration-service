@@ -118,6 +118,9 @@ public class JSONUtils {
 	public static JsonNode toJsonNode(Map<?, ?> input) {
 		return OBJECT_MAPPER.convertValue(input, JsonNode.class);
 	}
+    public static boolean isNull(JsonNode node) {
+        return node == null || node.isNull();
+    }
 
 	public static Stream<JsonNode> stream(JsonNode nodes) {
 		return StreamSupport.stream(nodes.spliterator(), false);

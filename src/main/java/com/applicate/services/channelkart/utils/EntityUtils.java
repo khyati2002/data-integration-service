@@ -4,6 +4,7 @@ import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dim.utils.ReflectionUtils;
 import org.jooq.DSLContext;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,21 @@ public class EntityUtils {
         }
         return instance;
     }
+    public Field findField(Class<?> clazz, String fieldName) {
+        Class<?> c = clazz;
+        Field tempfield = null;
+        while (c != null) {
+            for (Field field : org.reflections.ReflectionUtils.getAllFields(c)) {
+                if (field.getName().equals(fieldName)) {
+                    tempfield = field;
+                    break;
+                }
+            }
+            c = c.getSuperclass();
+        }
+        return tempfield;
+    }
+
 
 
     public Class<? extends CommonDataModel> getEntityClass(String entityName) {
