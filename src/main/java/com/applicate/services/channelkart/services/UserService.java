@@ -24,6 +24,7 @@ import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.shaded.zookeeper3.org.apache.zookeeper.Op;
@@ -467,5 +468,30 @@ public class UserService extends AbstractCDMService<User> {
 
     public static String getExludedCharactors() {
         return System.getProperty("excludeCharNormalizedHierarchy", "[^a-zA-Z0-9>]");
+    }
+
+    public Optional<List<User>> findByMobileSafely(String mobile) {
+        List<com.salescode.dim.jooq.generated.tables.pojos.User> userRecords = getDslContext()
+                .selectFrom(CK_USER)
+                .where(CK_USER.MOBILE.eq(mobile))
+                .fetchInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
+
+        List<User> users = userRecords.stream()
+                .map(User::of)
+                .collect(Collectors.toList());
+
+        return users.isEmpty() ? Optional.empty() : Optional.of(users);
+    }
+
+    /**
+     * Checks if user is active.
+     * @param user the user
+     * @return true, if is active
+     */
+    public static boolean isActive(User user) {
+        if(user == null) {
+            throw new IllegalArgumentException("Illegal null user provided in argument");
+        }
+        return user.getActiveStatus().equals(ActiveStatus.ACTIVE);
     }
 }
