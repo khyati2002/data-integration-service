@@ -1,44 +1,34 @@
 package com.applicate.services.channelkart.services;
 
-import com.salescode.dim.jooq.impl.SalesHistory;
 import com.applicate.services.channelkart.models.enums.ActionType;
-import com.applicate.services.channelkart.utils.CdmDiffUtil;
-import com.salescode.dim.jooq.generated.tables.records.CkSalesHistoryRecord;
-import com.salescode.dim.cache.CacheManager;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.salescode.dim.jooq.impl.SalesHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-import static com.salescode.dim.jooq.generated.Tables.*;
+import static com.salescode.dim.jooq.generated.Tables.CK_SALES_HISTORY;
 
 public class SalesHistoryService extends AbstractCDMService<SalesHistory> {
     private static final Logger LOG = LoggerFactory.getLogger(SalesHistoryService.class);
 
-    public SalesHistoryService() {
-    }
+    private static final String GENERATED_TAG = "GENERATED";
 
     public List<List<SalesHistory>> getItemsToSaveList(List<SalesHistory> salesHistoryList) {
         List<List<SalesHistory>> result = new ArrayList<>();
+        List<String> historyIds = salesHistoryList.stream()
+                                          .map(SalesHistory::getId)
+                                          .collect(Collectors.toList());
 
-        // Collect all IDs from the input list
-        List<String> ids = salesHistoryList.stream()
-                .filter(history -> history.getId() != null)
-                .map(SalesHistory::getId)
-                .collect(Collectors.toList());
-
-        // Fetch existing records from database
-        Map<String, SalesHistory> savedList = new HashMap<>();
-        if (!ids.isEmpty()) {
-            savedList = getDslContext()
-                    .select(CK_SALES_HISTORY.asterisk())
-                    .from(CK_SALES_HISTORY)
-                    .where(CK_SALES_HISTORY.ID.in(ids))
-                    .fetch()
-                    .intoMap(CK_SALES_HISTORY.ID,
-                            record -> record.into(SalesHistory.class));
-        }
+        Map<String, SalesHistory> savedList = getDslContext()
+                                                      .selectFrom(CK_SALES_HISTORY)
+                                                      .where(CK_SALES_HISTORY.ID.in(historyIds))
+                                                      .fetch()
+                                                      .intoMap(CK_SALES_HISTORY.ID, record -> record.into(SalesHistory.class));
 
         List<SalesHistory> itemsToInsert = new ArrayList<>();
         List<SalesHistory> itemsToUpdate = new ArrayList<>();
@@ -46,30 +36,28 @@ public class SalesHistoryService extends AbstractCDMService<SalesHistory> {
         for (SalesHistory history : salesHistoryList) {
             fillAttributes(history, savedList.get(history.getId()));
             fillCommonAttributes(history);
-            new AttributeUpdateOverrideManager().overrideAttributes(history, savedList.get(history.getId()));
 
-            super.addHash(history);
-
-            if (history.getId() == null || savedList.get(history.getId()) == null) {
-                // New record to insert
-                history.setVersion(0);
-                if (history.getId() == null) {
-                    history.setId(UUID.randomUUID().toString());
+            if (history.getStatus() != null) {
+                history.setStatus(history.getStatus().toUpperCase());
+                if (!isValidStatus(history.getStatus())) {
+                    throw new IllegalArgumentException("Status value NOT ALLOWED: " + history.getStatus());
                 }
-                history.setChanged(true);
+            }
+
+            if (savedList.get(history.getId()) == null) {
+                history.setVersion(0);
+
+                if (history.getCreationTime() == null) {
+                    history.setCreationTime(LocalDateTime.now());
+                }
+
                 itemsToInsert.add(history);
                 history.setOperationPerformed(ActionType.INSERT);
             } else {
-                // Existing record to potentially update
                 SalesHistory existingHistory = savedList.get(history.getId());
                 history.setVersion(existingHistory.getVersion() + 1);
-
-                if (!Objects.equals(history.getHash(), existingHistory.getHash())) {
-                    history.setChanges(CdmDiffUtil.getChanges(history, existingHistory));
-                    history.setOperationPerformed(ActionType.UPDATE);
-                    history.setChanged(true);
-                    itemsToUpdate.add(history);
-                }
+                history.setOperationPerformed(ActionType.UPDATE);
+                itemsToUpdate.add(history);
             }
         }
 
@@ -79,37 +67,51 @@ public class SalesHistoryService extends AbstractCDMService<SalesHistory> {
     }
 
     @Override
-    public Collection<SalesHistory> batchSave(Collection<SalesHistory> salesHistoryCollection) {
-        LOG.info("Size of list is " + salesHistoryCollection.size());
-        List<SalesHistory> salesHistoryList = new ArrayList<>(salesHistoryCollection);
+    public Collection<SalesHistory> batchSave(Collection<SalesHistory> salesHistoryList) {
+        LOG.info("Size of SalesHistory list is " + salesHistoryList.size());
+        List<SalesHistory> salesHistories = new ArrayList<>(salesHistoryList);
+        List<List<SalesHistory>> saveItemsList = getItemsToSaveList(salesHistories);
 
-        List<List<SalesHistory>> saveItemsList = getItemsToSaveList(salesHistoryList);
+        saveItemsList.get(0).forEach(history -> {
+            history.setActiveStatus(ActiveStatus.ACTIVE);
+            history.setChanged(Boolean.TRUE);
+        });
 
-        // Batch insert new records
+        saveItemsList.get(1).forEach(history -> {
+            history.setActiveStatus(ActiveStatus.ACTIVE);
+            history.setChanged(Boolean.TRUE);
+        });
+
         if (!saveItemsList.get(0).isEmpty()) {
             getDslContext().batchInsert(
                     saveItemsList.get(0).stream()
                             .map(history -> getDslContext().newRecord(CK_SALES_HISTORY, history))
                             .collect(Collectors.toList())
             ).execute();
-            LOG.info("Inserted {} sales history records", saveItemsList.get(0).size());
         }
 
-        // Batch update existing records
         if (!saveItemsList.get(1).isEmpty()) {
             getDslContext().batchUpdate(
                     saveItemsList.get(1).stream()
                             .map(history -> {
-                                CkSalesHistoryRecord record = getDslContext().newRecord(CK_SALES_HISTORY, history);
-                                return record;
+                                return getDslContext().newRecord(CK_SALES_HISTORY, history);
                             })
                             .collect(Collectors.toList())
             ).execute();
-            LOG.info("Updated {} sales history records", saveItemsList.get(1).size());
         }
-
-        LOG.info("Batch save successful for sales history");
-        CacheManager.getInstance().evictAll("dataintegration-sales-history");
-        return salesHistoryList;
+        LOG.info("SalesHistory batch save successful");
+        return salesHistories;
     }
+
+    public boolean isValidStatus(String status) {
+        if (status == null) {
+            return false;
+        }
+        List<String> validStatuses = List.of(
+                GENERATED_TAG, "CONFIRMED", "PENDING", "DELIVERED",
+                "CANCELLED", "REJECTED", "PROCESSING", "SHIPPED"
+        );
+        return validStatuses.contains(status.toUpperCase());
+    }
+
 }
