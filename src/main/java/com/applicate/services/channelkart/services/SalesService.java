@@ -1,11 +1,7 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
-import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
-import com.applicate.services.channelkart.utils.JSONUtils;
-import com.salescode.dim.DataStreamJob;
-import com.salescode.dim.PreProcessOperationResult;
 import com.salescode.dim.PreProcessPipelineService;
 import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.cache.Cacheable;
@@ -61,13 +57,11 @@ public class SalesService extends AbstractCDMService<Sales> {
 
     @Cacheable(cacheName = "dataintegration-sales")
     public Sales findByInvoiceNumber(String invoiceNumber) {
-        // Assuming you have a CK_SALES table in your jooq generated tables
-       Sales sales = getDslContext()
+       return getDslContext()
                 .select(CK_SALES.asterisk())
                 .from(CK_SALES)
                 .where(CK_SALES.INVOICE_NUMBER.eq(invoiceNumber))
                 .fetchOneInto(Sales.class);
-        return sales;
     }
 
     private List<SalesDetails> preProcessSalesDetails(List<SalesDetails> salesDetailsList) {
@@ -139,20 +133,13 @@ public class SalesService extends AbstractCDMService<Sales> {
     }
 
     private void populateBatchAssociatedData(List<Sales> salesList) {
-        // Populate SalesDetails
         ConcurrentHashMap<String, List<SalesDetails>> savedDetailsMap = populateSalesDetails(salesList);
-
-        // Populate SalesHistory
         ConcurrentHashMap<String, List<SalesHistory>> savedHistoryMap = populateSalesHistory(salesList);
-
-        // Update each sales record with saved details and history
         salesList.forEach(sales -> {
             String invoiceNumber = sales.getInvoiceNumber();
-
             if (savedDetailsMap.containsKey(invoiceNumber)) {
                 sales.setSalesDetails(savedDetailsMap.get(invoiceNumber));
             }
-
             if (savedHistoryMap.containsKey(invoiceNumber)) {
                 sales.setSalesHistory(savedHistoryMap.get(invoiceNumber));
             }
@@ -250,8 +237,6 @@ public class SalesService extends AbstractCDMService<Sales> {
     }
 
     public void postBatchSave(List<Sales> salesList) {
-        // Add any post-save operations here if needed
-        // For example, updating related entities or triggering events
         LOG.info("Post batch save completed for {} sales records", salesList.size());
     }
 }
