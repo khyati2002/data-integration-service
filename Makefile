@@ -1,14 +1,9 @@
 init:
-	@if [ -d "./bundle/target/" ]; then \
-		echo "Directory exists, skipping install."; \
-		exit 0; \
-	else \
-	  	echo "Initializing"; \
-	  	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
-		mvn clean install -f jooq/pom.xml -s settings.xml; \
-		mvn clean install -DskipTests=true -s settings.xml; \
-		mvn clean install -f bundle/pom.xml -s settings.xml; \
-	fi
+	@echo "Initializing"; \
+	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
+	mvn clean install -f jooq/pom.xml -s settings.xml; \
+	mvn clean install -DskipTests=true -s settings.xml; \
+	mvn clean install -f bundle/pom.xml -s settings.xml
 
 setup-submodule:
 	@if [ -z "$(BRANCH)" ]; then \
