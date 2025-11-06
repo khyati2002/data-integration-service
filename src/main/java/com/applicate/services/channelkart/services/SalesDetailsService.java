@@ -98,8 +98,7 @@ public class SalesDetailsService extends AbstractCDMService<SalesDetails> {
     }
 
     private ConcurrentHashMap<String, ProductDetails> preBatchSave(List<SalesDetails> salesDetailsList) {
-        ConcurrentHashMap<String, ProductDetails> savedProductList = populateBatchAssociatedData(salesDetailsList);
-        return savedProductList;
+        return populateBatchAssociatedData(salesDetailsList);
     }
 
     public List<List<SalesDetails>> getItemsToSaveList(List<SalesDetails> salesDetailsList) {
@@ -163,7 +162,7 @@ public class SalesDetailsService extends AbstractCDMService<SalesDetails> {
         List<SalesDetails> salesDetailsList = new ArrayList<>(salesDetailsCollection);
 
         LOG.info("Pre Batch Save Called with size " + salesDetailsList.size());
-        Map<String, ProductDetails> savedProductList = preBatchSave(salesDetailsList);
+       preBatchSave(salesDetailsList);
 
         List<List<SalesDetails>> saveItemsList = getItemsToSaveList(salesDetailsList);
 
