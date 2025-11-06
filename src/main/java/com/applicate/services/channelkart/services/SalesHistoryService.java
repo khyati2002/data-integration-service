@@ -3,10 +3,8 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.salescode.dim.jooq.generated.tables.pojos.SalesHistory;
-import com.salescode.dim.jooq.generated.tables.records.CkSalesHistoryRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +37,6 @@ public class SalesHistoryService extends AbstractCDMService<SalesHistory> {
             fillAttributes(history, savedList.get(history.getId()));
             fillCommonAttributes(history);
 
-            // Validate and normalize status
             if (history.getStatus() != null) {
                 history.setStatus(history.getStatus().toUpperCase());
                 if (!isValidStatus(history.getStatus())) {
@@ -50,7 +47,6 @@ public class SalesHistoryService extends AbstractCDMService<SalesHistory> {
             if (savedList.get(history.getId()) == null) {
                 history.setVersion(0);
 
-                // Set default creation time if not present
                 if (history.getCreationTime() == null) {
                     history.setCreationTime(LocalDateTime.now());
                 }
