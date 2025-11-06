@@ -1,7 +1,6 @@
 package com.applicate.services.channelkart.repository;
 
 import com.salescode.dim.jooq.impl.SupplierMetaData;
-import com.salescode.dim.jooq.generated.tables.pojos.SupplierMetadata;
 import static com.salescode.dim.jooq.generated.Tables.CK_SUPPLIER_METADATA;
 import org.jooq.DSLContext;
 
