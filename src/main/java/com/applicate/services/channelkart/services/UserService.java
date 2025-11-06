@@ -505,4 +505,20 @@ public class UserService extends AbstractCDMService<User> {
         }
         return user.getActiveStatus().equals(ActiveStatus.ACTIVE);
     }
+
+    @Cacheable(cacheName = "dataintegration-user")
+    public List<User> findByLoginIdIn(List<String> loginIds) {
+        if (loginIds == null || loginIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<com.salescode.dim.jooq.generated.tables.pojos.User> users = getDslContext()
+                .selectFrom(CK_USER)
+                .where(CK_USER.LOGINID.in(loginIds))
+                .fetch()
+                .into(com.salescode.dim.jooq.generated.tables.pojos.User.class);
+
+        return users.stream()
+                .map(User::of)
+                .collect(Collectors.toList());
+    }
 }

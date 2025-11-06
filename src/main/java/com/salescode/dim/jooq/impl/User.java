@@ -54,6 +54,10 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
         setLoginid(loginId);
     }
 
+    public String getUserAccountId() {
+        return getUseraccountid();
+    }
+
     @JsonSetter("userAccountId")
     public void setUserAccountId(String userAccountId) {
         setUseraccountid(userAccountId);
