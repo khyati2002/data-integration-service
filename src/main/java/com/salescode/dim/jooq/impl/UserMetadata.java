@@ -36,24 +36,25 @@ public class UserMetadata extends com.salescode.dim.jooq.generated.tables.pojos.
 
 	private BigDecimal latitude;
 	private BigDecimal longitude;
+	private String loginId;
+
 
 	@JsonProperty("loginId")
 	public String getLoginId() {
-		return getLoginid(); // calls generated POJO getter
+		return getLoginid();// calls generated POJO getter
 	}
+
 
 	@JsonProperty("loginId")
 	public void setLoginId(String loginId) {
 		setLoginid(loginId); // calls generated POJO setter
+		this.loginId=loginId;
 	}
 
 
 	public String getType() {
 		return this.type.toString();
 	}
-//	//public void setType(String type) {
-//		this.type.toString() = type;
-//	}
-// Point getter
+
 
 }
