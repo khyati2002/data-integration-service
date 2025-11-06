@@ -59,10 +59,9 @@ public class SalesDetailsService extends AbstractCDMService<SalesDetails> {
     }
 
     private List<ProductDetails> preProcessProductDetails(List<ProductDetails> productDetailsList) {
-        // Add preprocessing logic if needed
-        // productDetailsList.parallelStream().forEach(product -> {
-        //     preProcessPipelineService.preProcessPipeline(product, null);
-        // });
+         productDetailsList.parallelStream().forEach(product -> {
+             preProcessPipelineService.preProcessPipeline(product, null);
+         });
         return productDetailsList;
     }
 

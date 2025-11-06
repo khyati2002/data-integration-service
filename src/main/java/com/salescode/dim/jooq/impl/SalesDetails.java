@@ -18,7 +18,6 @@ public class SalesDetails extends com.salescode.dim.jooq.generated.tables.pojos.
 
     private ProductDetails productDetails;
     private String productCode;
-    private String invoiceNumber;
 
 
     public SalesDetails() {
@@ -36,4 +35,10 @@ public class SalesDetails extends com.salescode.dim.jooq.generated.tables.pojos.
         return new SalesDetails(salesDetails);
     }
 
+    public void setInvoiceNumber(String invoiceNumber) {
+        setSaleId(invoiceNumber);
+    }
+    public String getInvoiceNumber() {
+        return getSaleId();
+    }
 }
