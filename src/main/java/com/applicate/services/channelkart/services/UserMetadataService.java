@@ -39,10 +39,12 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
 			if (savedList.get(loginid.getId()) == null) {
 				itemsToInsert.add(loginid);
 				loginid.setOperationPerformed(ActionType.INSERT);
+				loginid.setVersion(0);
 			} else {
-				com.salescode.dim.jooq.generated.tables.pojos.UserMetadata existingOutlet = savedList.get(loginid.getId());
+				com.salescode.dim.jooq.generated.tables.pojos.UserMetadata existingUser = savedList.get(loginid.getId());
 				loginid.setOperationPerformed(ActionType.UPDATE);
 				loginid.setChanged(Boolean.TRUE);
+		        loginid.setVersion((existingUser.getVersion() + 1));
 				itemsToUpdate.add(loginid);
 			}
 		}
