@@ -2,10 +2,8 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.IdGenerator;
-import com.salescode.dim.jooq.generated.tables.CkUserMetadata;
 import com.salescode.dim.jooq.generated.tables.records.CkUserMetadataRecord;
 import com.salescode.dim.jooq.impl.UserMetadata;
-import org.jooq.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,15 +34,20 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
 
 			if (loginid.getId() == null)
 				loginid.setId(new IdGenerator(loginid.getClass().getSimpleName()).getId(loginid));
-			if (savedList.get(loginid.getId()) == null) {
+
+			if (savedList.get(loginid.getLoginid()) == null) {
+				// New record -> assign ID
+				loginid.setId(new IdGenerator(loginid.getClass().getSimpleName()).getId(loginid));
 				itemsToInsert.add(loginid);
 				loginid.setOperationPerformed(ActionType.INSERT);
 				loginid.setVersion(0);
 			} else {
-				com.salescode.dim.jooq.generated.tables.pojos.UserMetadata existingUser = savedList.get(loginid.getId());
+				// Existing record -> do NOT change ID
+				com.salescode.dim.jooq.generated.tables.pojos.UserMetadata existingUser = savedList.get(loginid.getLoginid());
+				loginid.setId(existingUser.getId()); // Preserve existing ID
 				loginid.setOperationPerformed(ActionType.UPDATE);
 				loginid.setChanged(Boolean.TRUE);
-		        loginid.setVersion((existingUser.getVersion() + 1));
+				loginid.setVersion(existingUser.getVersion() + 1);
 				itemsToUpdate.add(loginid);
 			}
 		}
@@ -63,24 +66,17 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
 			if (!saveItemsList.get(0).isEmpty()) {
 				LOG.info("Performing batch insert for {} records", saveItemsList.get(0).size());
 
-				List<CkUserMetadataRecord> insertRecords = saveItemsList.get(0).stream()
-						.map(userMetadata -> {
-							CkUserMetadataRecord record = getDslContext().newRecord(CK_USER_METADATA, userMetadata);
+				List<CkUserMetadataRecord> insertRecords = saveItemsList.get(0).stream().map(userMetadata -> {
+					CkUserMetadataRecord record = getDslContext().newRecord(CK_USER_METADATA, userMetadata);
 
-							// Handle location field with SRID 4326
-							if (userMetadata.getLatitude() != null && userMetadata.getLongitude() != null) {
-								Object pointValue = getDslContext()
-										.select(field("ST_GeomFromText({0}, 4326)",
-												String.format("POINT(%s %s)",
-														userMetadata.getLongitude(),
-														userMetadata.getLatitude())))
-										.fetchOne(0);
-								record.set(CK_USER_METADATA.LOCATION, pointValue);
-							}
+					// Handle location field with SRID 4326
+					if (userMetadata.getLatitude() != null && userMetadata.getLongitude() != null) {
+						Object pointValue = getDslContext().select(field("ST_GeomFromText({0}, 4326)", String.format("POINT(%s %s)", userMetadata.getLongitude(), userMetadata.getLatitude()))).fetchOne(0);
+						record.set(CK_USER_METADATA.LOCATION, pointValue);
+					}
 
-							return record;
-						})
-						.collect(Collectors.toList());
+					return record;
+				}).collect(Collectors.toList());
 
 				getDslContext().batchInsert(insertRecords).execute();
 			}
@@ -88,24 +84,17 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
 			if (!saveItemsList.get(1).isEmpty()) {
 				LOG.info("Performing batch update for {} records", saveItemsList.get(1).size());
 
-				List<CkUserMetadataRecord> updateRecords = saveItemsList.get(1).stream()
-						.map(userMetadata -> {
-							CkUserMetadataRecord record = getDslContext().newRecord(CK_USER_METADATA, userMetadata);
+				List<CkUserMetadataRecord> updateRecords = saveItemsList.get(1).stream().map(userMetadata -> {
+					CkUserMetadataRecord record = getDslContext().newRecord(CK_USER_METADATA, userMetadata);
 
-							// Handle location field with SRID 4326
-							if (userMetadata.getLatitude() != null && userMetadata.getLongitude() != null) {
-								Object pointValue = getDslContext()
-										.select(field("ST_GeomFromText({0}, 4326)",
-												String.format("POINT(%s %s)",
-														userMetadata.getLongitude(),
-														userMetadata.getLatitude())))
-										.fetchOne(0);
-								record.set(CK_USER_METADATA.LOCATION, pointValue);
-							}
+					// Handle location field with SRID 4326
+					if (userMetadata.getLatitude() != null && userMetadata.getLongitude() != null) {
+						Object pointValue = getDslContext().select(field("ST_GeomFromText({0}, 4326)", String.format("POINT(%s %s)", userMetadata.getLongitude(), userMetadata.getLatitude()))).fetchOne(0);
+						record.set(CK_USER_METADATA.LOCATION, pointValue);
+					}
 
-							return record;
-						})
-						.collect(Collectors.toList());
+					return record;
+				}).collect(Collectors.toList());
 
 				getDslContext().batchUpdate(updateRecords).execute();
 			}
