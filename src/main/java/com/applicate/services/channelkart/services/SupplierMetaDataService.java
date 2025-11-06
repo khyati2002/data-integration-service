@@ -1,6 +1,7 @@
 package com.applicate.services.channelkart.services;
 
 import com.salescode.dim.jooq.impl.SupplierMetaData;
+import com.salescode.dim.jooq.generated.tables.pojos.SupplierMetadata;
 import com.applicate.services.channelkart.repository.SupplierMetaDataRepository;
 import com.salescode.dim.cache.Cacheable;
 
@@ -20,6 +21,10 @@ public class SupplierMetaDataService extends AbstractCDMService<SupplierMetaData
      */
     @Cacheable(cacheName = "dataintegration-suppliermetadata")
     public SupplierMetaData findById(String id) {
-        return repository.findById(id);
+        SupplierMetadata pojo = repository.findById(id);
+        if(pojo == null){
+            return null;
+        }
+        return SupplierMetaData.of(pojo);
     }
 }
