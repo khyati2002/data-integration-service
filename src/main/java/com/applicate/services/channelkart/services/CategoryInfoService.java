@@ -19,7 +19,7 @@ import static com.salescode.dim.jooq.generated.Tables.CK_CATEGORY_INFO;
 public class CategoryInfoService extends AbstractCDMService<CategoryInfo> {
     private static final Logger LOG = LoggerFactory.getLogger(CategoryInfoService.class);
 
-    public List<List<CategoryInfo>> getDataToSaveList(List<CategoryInfo> categoryInfoList) {
+    public List<List<CategoryInfo>> getItemsToSaveList(List<CategoryInfo> categoryInfoList) {
         List<List<CategoryInfo>> result = new ArrayList<>();
         List<String> categoryIds = categoryInfoList.stream()
                 .map(CategoryInfo::getId)
@@ -72,7 +72,7 @@ public class CategoryInfoService extends AbstractCDMService<CategoryInfo> {
     public Collection<CategoryInfo> batchSave(Collection<CategoryInfo> categoryInfoList) {
         LOG.info("Size of list is {}", categoryInfoList.size());
 
-        List<List<CategoryInfo>> saveItemsList = getDataToSaveList(new ArrayList<>(categoryInfoList));
+        List<List<CategoryInfo>> saveItemsList = getItemsToSaveList(new ArrayList<>(categoryInfoList));
 
         if (!saveItemsList.get(0).isEmpty()) {
             getDslContext().batchInsert(saveItemsList.get(0).stream()
