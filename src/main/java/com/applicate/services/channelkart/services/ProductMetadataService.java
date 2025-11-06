@@ -1,0 +1,103 @@
+package com.applicate.services.channelkart.services;
+
+import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.utils.IdGenerator;
+import com.salescode.dim.jooq.generated.tables.CkProductmetadata;
+import com.salescode.dim.jooq.generated.tables.pojos.Productmetadata;
+import com.salescode.dim.jooq.impl.Location;
+import com.salescode.dim.jooq.impl.ProductMetaData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.salescode.dim.jooq.generated.Tables.CK_PRODUCTMETADATA;
+
+public class ProductMetadataService extends AbstractCDMService<ProductMetaData> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ProductMetadataService.class);
+
+	private final LocationService locationService;
+
+	public ProductMetadataService() {
+		this.locationService = new LocationService();
+	}
+
+	public List<List<ProductMetaData>> getDataToSaveList(List<ProductMetaData> productMetadataList) {
+
+		List<List<ProductMetaData>> result = new ArrayList<>();
+		List<ProductMetaData> itemsToInsert = new ArrayList<>();
+		List<ProductMetaData> itemsToUpdate = new ArrayList<>();
+
+		if (productMetadataList == null || productMetadataList.isEmpty()) {
+			result.add(itemsToInsert);
+			result.add(itemsToUpdate);
+			return result;
+		}
+
+		// Pre-process incoming products
+		for (ProductMetaData product : productMetadataList) {
+			product.setId(new IdGenerator(product.getClass().getSimpleName()).getId(product));
+			product.setChanged(true);
+			product.setActiveStatus(ActiveStatus.ACTIVE);
+		}
+
+		// Fetch saved data by batchCode
+		List<String> batchCodes = productMetadataList.stream().map(ProductMetaData::getBatchCode).collect(Collectors.toList());
+
+		Map<String, Productmetadata> existingBatchCodeMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.BATCH_CODE.in(batchCodes)).fetch().stream().collect(Collectors.toMap(Productmetadata::getBatchCode, rec -> rec.into(com.salescode.dim.jooq.generated.tables.pojos.Productmetadata.class), (a, b) -> a // Avoid duplicate key issues
+		));
+
+		for (ProductMetaData product : productMetadataList) {
+			Productmetadata existing = existingBatchCodeMap.get(product.getBatchCode());
+
+			//	fillAttributes(product, ProductMetaData.of(existing));
+
+			if (existing == null) {
+				product.setVersion(0);
+				product.setOperationPerformed(ActionType.INSERT);
+				itemsToInsert.add(product);
+			} else {
+				product.setVersion(existing.getVersion() + 1);
+				product.setOperationPerformed(ActionType.UPDATE);
+				itemsToUpdate.add(product);
+			}
+		}
+
+		result.add(itemsToInsert);
+		result.add(itemsToUpdate);
+		return result;
+	}
+
+	@Override
+	public Collection<ProductMetaData> batchSave(Collection<ProductMetaData> productMetadataList) {
+		LOG.info("Size of list is {}", productMetadataList.size());
+
+		List<List<ProductMetaData>> saveItemsList = getDataToSaveList(new ArrayList<>(productMetadataList));
+
+		// Inserts
+		if (!saveItemsList.get(0).isEmpty()) {
+			getDslContext().batchInsert(saveItemsList.get(0).stream().map(prod -> getDslContext().newRecord(CK_PRODUCTMETADATA, prod)).collect(Collectors.toList())).execute();
+		}
+
+		// Updates
+		if (!saveItemsList.get(1).isEmpty()) {
+			getDslContext().batchUpdate(saveItemsList.get(1).stream().map(prod -> getDslContext().newRecord(CK_PRODUCTMETADATA, prod)).collect(Collectors.toList())).execute();
+		}
+
+		LOG.info("Batch save successful for ProductMetadata");
+		return productMetadataList;
+	}
+
+	private void populateBatchLocation(List<ProductMetaData> metaDataList) {
+		List<Location> locations = metaDataList.stream().map(ProductMetaData::getLocation).collect(Collectors.toList());
+
+		List<Location> savedLocations = locationService.findLocationOrPersistLocation(locations);
+
+		for (int i = 0; i < metaDataList.size(); i++) {
+			metaDataList.get(i).setLocationHierarchy(savedLocations.get(i).getLocationHierarchy());
+		}
+	}
+}
