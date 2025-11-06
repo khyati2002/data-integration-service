@@ -19,10 +19,7 @@ import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
 import com.salescode.dim.jooq.generated.tables.pojos.UserRoles;
 import com.salescode.dim.jooq.generated.tables.pojos.Userdesignation;
 import com.salescode.dim.jooq.generated.tables.records.CkUserRecord;
-import com.salescode.dim.jooq.impl.HierarchyMetadata;
-import com.salescode.dim.jooq.impl.Location;
-import com.salescode.dim.jooq.impl.OutletDetails;
-import com.salescode.dim.jooq.impl.User;
+import com.salescode.dim.jooq.impl.*;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +41,7 @@ public class UserService extends AbstractCDMService<User> {
     private final UserParentService userParentService;
     private final HierarchyMetadataService hierarchyMetadataService;
     private final CustomerAccountsService customerAccountsService;
+    private final SupplierMetaDataService supplierMetaDataService;
     private final RoleService roleService;
     private final DataEnrichmentService dataEnrichmentService;
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
@@ -55,9 +53,11 @@ public class UserService extends AbstractCDMService<User> {
         userParentService = new UserParentService();
         hierarchyMetadataService = new HierarchyMetadataService();
         customerAccountsService = new CustomerAccountsService();
+        supplierMetaDataService = new SupplierMetaDataService();
         roleService = new RoleService();
         enrichmentInfoRegistry = new EnrichmentInfoRegistry(getDslContext());
         dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry,etlRegistry);
+
     }
     @Cacheable(cacheName = "dataintegration-user")
     public User findByLoginId(String loginid) {
@@ -248,6 +248,17 @@ public class UserService extends AbstractCDMService<User> {
 
         populateBatchRoles(userList);
 
+        userList.forEach(user -> {
+            if(user.getSupplierMetaData() != null) {
+                user.getSupplierMetaData().forEach(s -> {
+                    s.setActiveStatus(ActiveStatus.ACTIVE);
+                    s.setUserLoginid(user.getLoginid());
+                    supplierMetaDataService.fillCommonAttributes(s);
+                    s.setUser(user);
+                });
+            }
+        });
+
         userList.forEach(user -> userParentService.populateAndSaveUserParent(user));
 
         userList.stream().parallel().forEachOrdered(user -> {
@@ -349,6 +360,9 @@ public class UserService extends AbstractCDMService<User> {
                             .collect(Collectors.toList())
             ).execute();
         }
+
+        usersList.forEach(user -> supplierMetaDataService.saveSupplier(user.getLoginid(),user.getSupplierMetaData()));
+
         CacheManager.getInstance().evictAll("dataintegration-user");
         if(!saveItemsList.get(0).isEmpty() || !saveItemsList.get(1).isEmpty()){
             postBatchSave(userList);
