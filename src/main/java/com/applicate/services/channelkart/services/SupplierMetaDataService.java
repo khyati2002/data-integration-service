@@ -4,10 +4,15 @@ import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.jooq.generated.tables.pojos.SupplierMetadata;
 import com.salescode.dim.jooq.impl.SupplierMetaData;
 import com.salescode.dim.jooq.impl.User;
-
+import com.applicate.services.channelkart.repository.SupplierMetaDataRepository;
 import static com.salescode.dim.jooq.generated.Tables.CK_SUPPLIER_METADATA;
 
 public class SupplierMetaDataService extends AbstractCDMService<SupplierMetaData>  {
+
+    private static SupplierMetaDataRepository repository;
+    public SupplierMetaDataService() {
+        repository = new SupplierMetaDataRepository(getDslContext());
+    }
 
     /**
      * ADDED: Finds a SupplierMetadata entity by its primary key (ID).
