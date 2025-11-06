@@ -82,6 +82,17 @@ public class UserService extends AbstractCDMService<User> {
         //  return new User();
     }
 
+    @Cacheable(cacheName = "dataintegration-user-id")
+    public User findById(String id) {
+        com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
+                .where(CK_USER.ID.eq(id))
+                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
+        if(user == null){
+            return null;
+        }
+        return User.of(user);
+    }
+
     private void populateBatchLocation(List<User> userList) {
         List<Location> locationList = userList.stream()
                 .map(User::getLocation)  // Assuming there's a getLocation() method// Filter out null locations

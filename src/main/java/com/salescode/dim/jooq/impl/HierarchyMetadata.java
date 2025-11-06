@@ -17,6 +17,10 @@ public class HierarchyMetadata extends com.salescode.dim.jooq.generated.tables.p
         setParent(parent);
     }
 
+    public String getImmediateParent() {
+        return getParent();
+    }
+
     public HierarchyMetadata(){
         super();
     }
