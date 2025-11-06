@@ -20,8 +20,6 @@ import com.salescode.dim.jooq.impl.Sales;
 import com.salescode.dim.jooq.impl.SalesDetails;
 import com.salescode.dim.jooq.impl.SalesHistory;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
-import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,18 +71,16 @@ public class SalesService extends AbstractCDMService<Sales> {
     }
 
     private List<SalesDetails> preProcessSalesDetails(List<SalesDetails> salesDetailsList) {
-        // Add preprocessing logic if needed
-        // salesDetailsList.parallelStream().forEach(detail -> {
-        //     preProcessPipelineService.preProcessPipeline(detail, null);
-        // });
+         salesDetailsList.parallelStream().forEach(detail -> {
+             preProcessPipelineService.preProcessPipeline(detail, null);
+         });
         return salesDetailsList;
     }
 
     private List<SalesHistory> preProcessSalesHistory(List<SalesHistory> salesHistoryList) {
-        // Add preprocessing logic if needed
-        // salesHistoryList.parallelStream().forEach(history -> {
-        //     preProcessPipelineService.preProcessPipeline(history, null);
-        // });
+         salesHistoryList.parallelStream().forEach(history -> {
+             preProcessPipelineService.preProcessPipeline(history, null);
+         });
         return salesHistoryList;
     }
 

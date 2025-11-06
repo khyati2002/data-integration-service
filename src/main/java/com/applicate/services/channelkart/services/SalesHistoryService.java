@@ -2,7 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
-import com.salescode.dim.jooq.generated.tables.pojos.SalesHistory;
+import com.salescode.dim.jooq.impl.SalesHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.LocalDateTime;
