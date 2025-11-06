@@ -21,6 +21,10 @@ public class SalesHistory extends com.salescode.dim.jooq.generated.tables.pojos.
     public void setInvoiceNumber(String invoiceNumber) {
        setSaleId(invoiceNumber);
     }
+    public String getInvoiceNumber() {
+        return getSaleId();
+    }
+
     private SalesHistory(SalesHistory salesHistory) {
         super(salesHistory);
     }
