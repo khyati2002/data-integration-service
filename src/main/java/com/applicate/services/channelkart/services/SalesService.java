@@ -189,10 +189,8 @@ public class SalesService extends AbstractCDMService<Sales> {
             fillCommonAttributes(sale);
             new AttributeUpdateOverrideManager().overrideAttributes(sale, savedList.get(sale.getInvoiceNumber()));
 
-            super.addHash(sale);
 
             if (savedList.get(sale.getInvoiceNumber()) == null) {
-                sale.setVersion(0);
                 sale.setId(UUID.randomUUID().toString());
                 sale.setChanged(true);
                 itemsToInsert.add(sale);
