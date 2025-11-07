@@ -2,7 +2,7 @@ package com.salescode.dim.jooq.impl;
 
 import java.io.Serializable;
 
-public class ApprovalInfo {
+public class ApprovalInfo  extends com.salescode.dim.jooq.generated.tables.pojos.ApprovalInfo implements Serializable {
 	private String referenceId;
 	private Status status;
 	/**
@@ -10,16 +10,14 @@ public class ApprovalInfo {
 	 */
 	private String remark;
 
+
+
 	public String getReferenceId() {
 		return referenceId;
 	}
 
 	public void setReferenceId(String referenceId) {
 		this.referenceId = referenceId;
-	}
-
-	public Status getStatus() {
-		return status;
 	}
 
 	public void setStatus(Status status) {

@@ -7,7 +7,10 @@ import java.util.List;
 
 public class ApprovalInfoService extends AbstractCDMService<ApprovalInfo> {
 
-	private final ApprovalInfoRepository approvalInfoRepository;
+	public ApprovalInfoService() {
+	}
+
+	private ApprovalInfoRepository approvalInfoRepository;
 
 	public ApprovalInfoService(ApprovalInfoRepository approvalInfoRepository) {
 		this.approvalInfoRepository = approvalInfoRepository;
