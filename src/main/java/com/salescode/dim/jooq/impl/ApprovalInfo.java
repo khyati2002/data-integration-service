@@ -10,7 +10,19 @@ public class ApprovalInfo  extends com.salescode.dim.jooq.generated.tables.pojos
 	 */
 	private String remark;
 
+	public ApprovalInfo(){
+		super();
+	}
+	public ApprovalInfo(com.salescode.dim.jooq.generated.tables.pojos.ApprovalInfo approvalInfo) {
+	}
 
+
+	public static ApprovalInfo of(com.salescode.dim.jooq.generated.tables.pojos.ApprovalInfo approvalInfo) {
+		if(approvalInfo == null) {
+			return null;
+		}
+		return new ApprovalInfo(approvalInfo);
+	}
 
 	public String getReferenceId() {
 		return referenceId;
