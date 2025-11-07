@@ -30,8 +30,6 @@ public class SalesService extends AbstractCDMService<Sales> {
 
     private final SalesDetailsService salesDetailsService;
     private final SalesHistoryService salesHistoryService;
-    private final UserService userService;
-    private final OutletDetailsService outletDetailsService;
     private final DataValidationService dataValidationService;
     private final DataEnrichmentService dataEnrichmentService;
     private final PreProcessPipelineService preProcessPipelineService;
@@ -43,8 +41,6 @@ public class SalesService extends AbstractCDMService<Sales> {
     public SalesService() {
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
         etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
-        userService = new UserService();
-        outletDetailsService = new OutletDetailsService();
         salesDetailsService = new SalesDetailsService();
         salesHistoryService = new SalesHistoryService();
         validationInfoRegistry = new ValidationInfoRegistry(getDslContext());
@@ -220,7 +216,6 @@ public class SalesService extends AbstractCDMService<Sales> {
                     saveItemsList.get(1).stream()
                             .map(sale -> {
                                 CkSalesRecord record = getDslContext().newRecord(CK_SALES, sale);
-                                // record.changed(CK_SALES.ID, false); // Avoid updating primary key
                                 return record;
                             })
                             .collect(Collectors.toList())

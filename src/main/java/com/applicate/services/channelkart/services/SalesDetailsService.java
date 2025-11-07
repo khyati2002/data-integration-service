@@ -179,7 +179,6 @@ public class SalesDetailsService extends AbstractCDMService<SalesDetails> {
                     saveItemsList.get(1).stream()
                             .map(salesDetail -> {
                                 CkSalesDetailsRecord record = getDslContext().newRecord(CK_SALES_DETAILS, salesDetail);
-                                // record.changed(CK_SALES_DETAILS.ID, false); // Avoid updating primary key
                                 return record;
                             })
                             .collect(Collectors.toList())
@@ -196,7 +195,6 @@ public class SalesDetailsService extends AbstractCDMService<SalesDetails> {
     }
 
     public void postBatchSave(List<SalesDetails> salesDetailsList) {
-        // Add any post-save operations here if needed
         LOG.info("Post batch save completed for {} sales details records", salesDetailsList.size());
     }
 }
