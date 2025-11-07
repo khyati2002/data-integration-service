@@ -39,7 +39,7 @@ public class DataStreamJobTest {
     public static String rawStreamingData = "{\n" +
             "    \"requestId\": \"99f92b4a-ddeb-43be-8581-99de70095832\",\n" +
             "    \"groupId\": \"2025-03-20\",\n" +
-            "    \"lob\": \"itcvissfaindemo\",\n" +
+            "    \"lob\": \"itcvissfainuat\",\n" +
             "    \"loginId\": \"admin@applicate.in\",\n" +
             "    \"batchNumber\": 0,\n" +
             "    \"transformerInfo\": [\n" +

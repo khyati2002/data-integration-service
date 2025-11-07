@@ -28,7 +28,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.shaded.zookeeper3.org.apache.zookeeper.Op;
+import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
+import static com.salescode.dim.jooq.generated.Tables.CK_USERDESIGNATION;
 import scala.tools.ant.sabbus.Use;
 
 import java.util.*;
@@ -440,6 +442,26 @@ public class UserService extends AbstractCDMService<User> {
                     return userdesignation;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public static void addDesignationFromDb(User user) {
+        if (user == null || StringUtils.isBlank(user.getLoginid())) {
+            return;
+        }
+
+        DSLContext dsl = AbstractCDMService.getDslContext();
+
+        if (user.getDesignation() == null) {
+            String designation = dsl
+                    .select(CK_USERDESIGNATION.DESIGNATION)
+                    .from(CK_USERDESIGNATION)
+                    .where(CK_USERDESIGNATION.LOGIN_ID.eq(user.getLoginid()))
+                    .fetchOneInto(String.class);
+
+            if (designation != null) {
+                user.setDesignation(Collections.singleton(designation));
+            }
+        }
     }
 
     public void saveDesignation(List<Userdesignation> userDesignation) {
