@@ -131,7 +131,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 	}
 
 	public boolean checkIfBatchCodeExists(String batchCode) {
-		List<String> result = productDetailsRepository.batchCodeExists(batchCode);
+		List<String> result = productDetailsRepository.checkIfBatchCodeExists(batchCode);
 		return result != null && result.size() >= 1;
 	}
 

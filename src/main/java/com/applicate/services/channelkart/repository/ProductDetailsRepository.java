@@ -14,7 +14,7 @@ public class ProductDetailsRepository {
 		this.dsl = dsl;
 	}
 
-	public List<String> batchCodeExists(String batchCode) {
+	public List<String> checkIfBatchCodeExists(String batchCode) {
 		return dsl.select(CK_PRODUCTDETAILS.BATCH_CODE).from(CK_PRODUCTDETAILS).where(CK_PRODUCTDETAILS.BATCH_CODE.eq(batchCode)).fetch(CK_PRODUCTDETAILS.BATCH_CODE);
 	}
 }
