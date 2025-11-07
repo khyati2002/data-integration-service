@@ -36,67 +36,42 @@ class CollectSink<T> implements SinkFunction<T> {
 
 public class DataStreamJobTest {
 
-
     public static String rawStreamingData = "{\n" +
-            "    \"requestId\": \"8a318b6b-95ca-49ff-8310-d90ec102827a\",\n" +
-            "    \"groupId\": \"2025-05-02\",\n" +
-            "    \"lob\": \"cktestitcloyalty\",\n" +
-            "    \"loginId\": \"integration_user\",\n" +
+            "    \"requestId\": \"99f92b4a-ddeb-43be-8581-99de70095832\",\n" +
+            "    \"groupId\": \"2025-03-20\",\n" +
+            "    \"lob\": \"itcvissfaindemo\",\n" +
+            "    \"loginId\": \"admin@applicate.in\",\n" +
             "    \"batchNumber\": 0,\n" +
             "    \"transformerInfo\": [\n" +
             "        {\n" +
             "            \"skipPreprocessing\": false,\n" +
             "            \"skipPersist\": false,\n" +
-            "            \"entityName\": \"OutletDetails\",\n" +
-            "            \"transformerId\": \"unnati_csp_outlet_master_mdm1\",\n" +
-            "            \"preprocessValidationExcludeGroup\": \"outlet_validation_exclude\",\n" +
-            "            \"messageLevelHash\": null,\n" +
+            "            \"entityName\": \"User\",\n" +
+            "            \"transformerId\": \"mdm_user_psr_integ_test\",\n" +
+            "            \"preprocessValidationExcludeGroup\": null,\n" +
+            "            \"messageLevelHash\": \"NUgKG5wpO4h0jfQJoXzBVUUVfX2sPWej4PXSdlD7HRw=\",\n" +
             "            \"messageHashSupported\": false,\n" +
-            "            \"messageLevelKey\": null,\n" +
+            "            \"messageLevelKey\": \"mdm_user_psr_integ:User:4002583\",\n" +
             "            \"cachedArtifact\": null,\n" +
             "            \"operationType\": \"insert\"\n" +
             "        }\n" +
             "    ],\n" +
-            "    \"features\":  [{\n" +
-            "    \"UID\": \"EGAU-SL-54327\",\n" +
-            "    \"CREATIONDATE\": \"1746770380797\",\n" +
-            "    \"DISTRICT\": \"EDIS\",\n" +
-            "    \"Branch\": \"EGAU\",\n" +
-            "    \"CUSTName\": \"BABUL STORES\",\n" +
-            "    \"OwnerName\": \"BABUL STORES\",\n" +
-            "    \"ChannelType\": \"Rural Wholesale\",\n" +
-            "    \"OutletType\": \"Dual (FMCG + Tobacco)\",\n" +
-            "    \"LoyaltyType\": \"SWD Others\",\n" +
-            "    \"OutletLat\": \"26.424693999999999\",\n" +
-            "    \"OutletLong\": \"90.973511000000002\",\n" +
-            "    \"TYPE\": \"LOYALTY\",\n" +
-            "    \"OutletName\": \"BABUL STORES\",\n" +
-            "    \"supplierMapping\": [\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"GA2799DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"GA2799\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING CO\"\n" +
-            "      },\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"NG2949DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"NG2949\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING COOOOOO\"\n" +
-            "      }\n" +
+            "    \"features\": [\n" +
+            "        {\n" +
+            "            \"District\": \"EDIS\",\n" +
+            "            \"Branch\": \"EGAU\",\n" +
+            "            \"immediateParent\": \"NG22411\",\n" +
+            "            \"PSRCRMID\": \"4000999\",\n" +
+            "            \"PSRName\": \"Arpan PSR\",\n" +
+            "            \"userName\": \"9319420555\",\n" +
+            "            \"DSType\": \"PSR\",\n" +
+            "            \"AUS\": \"Y\",\n" +
+            "            \"PICK_UP_STATUS\": \"0\",\n" +
+            "            \"source_key\": \"integration\"\n" +
+            "        }\n" +
             "    ]\n" +
-            "  }\n" +
-            "    ],\n" +
-            "    \"appId\": \"integration\",\n" +
-            "    \"retryCount\": 0,\n" +
-            "    \"preserveOnFailure\": true,\n" +
-            "    \"ignoreS3Log\": false,\n" +
-            "    \"topicName\": \"unnati-dataintegration\"\n" +
             "}";
+
     @Test
     public void testDataStreamJobWithFewObjects() throws Exception {
         // Clear previously collected values (if any)
@@ -121,7 +96,7 @@ public class DataStreamJobTest {
         SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = AsyncDataStream.unorderedWait(
                 source.rebalance().flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
                 new StreamingRawDataProcessor(stringPropertiesMap.get("Common")),  // Async Processing
-                5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
+                5000, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
         ).process(new ProcessRecordStatus());
 
         processedStream.sinkTo(new JooqDatabaseBatchSink(stringPropertiesMap.get("Common"))).name("Database Success Sink");

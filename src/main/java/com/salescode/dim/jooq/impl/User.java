@@ -63,6 +63,34 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
         setUseraccountid(userAccountId);
     }
 
+    @JsonSetter("designation")
+    public void setDesignation(Set<String> designation) {
+        this.designation = (designation != null)
+                ? designation.stream().map(String::toLowerCase).collect(java.util.stream.Collectors.toSet())
+                : null;
+    }
+
+    public Set<String> getDesignation() {
+        return designation;
+    }
+
+    @JsonSetter("supplierMetaData")
+    public void setSupplierMetaData(List<SupplierMetadata> supplierMetaData) {
+        this.supplierMetaData = supplierMetaData;
+    }
+
+    public List<SupplierMetadata> getSupplierMetaData() {
+        return supplierMetaData;
+    }
+
+    @JsonSetter("immediateParent")
+    public void setImmediateParent(List<HierarchyMetadata> immediateParent) {
+        this.immediateParent = immediateParent;
+    }
+
+    public List<HierarchyMetadata> getImmediateParent() {
+        return immediateParent;
+    }
 
     @Override
     public String toString() {
@@ -77,5 +105,3 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
         return sb.toString();
     }
 }
-
-
