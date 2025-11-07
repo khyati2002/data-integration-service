@@ -3,10 +3,11 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.IdGenerator;
-import com.salescode.dim.jooq.generated.tables.CkProductmetadata;
+
 import com.salescode.dim.jooq.generated.tables.pojos.Productmetadata;
 import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.ProductMetaData;
+import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,6 @@ import static com.salescode.dim.jooq.generated.Tables.CK_PRODUCTMETADATA;
 public class ProductMetadataService extends AbstractCDMService<ProductMetaData> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProductMetadataService.class);
-
 	private final LocationService locationService;
 
 	public ProductMetadataService() {
@@ -26,7 +26,6 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 	}
 
 	public List<List<ProductMetaData>> getDataToSaveList(List<ProductMetaData> productMetadataList) {
-
 		List<List<ProductMetaData>> result = new ArrayList<>();
 		List<ProductMetaData> itemsToInsert = new ArrayList<>();
 		List<ProductMetaData> itemsToUpdate = new ArrayList<>();
@@ -45,15 +44,29 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 		}
 
 		// Fetch saved data by batchCode
-		List<String> batchCodes = productMetadataList.stream().map(ProductMetaData::getBatchCode).collect(Collectors.toList());
+		List<String> batchCodes = productMetadataList.stream().map(ProductMetaData::getBatchCode).filter(Objects::nonNull).collect(Collectors.toList());
 
-		Map<String, Productmetadata> existingBatchCodeMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.BATCH_CODE.in(batchCodes)).fetch().stream().collect(Collectors.toMap(Productmetadata::getBatchCode, rec -> rec.into(com.salescode.dim.jooq.generated.tables.pojos.Productmetadata.class), (a, b) -> a // Avoid duplicate key issues
-		));
+		if (batchCodes.isEmpty()) {
+			result.add(itemsToInsert);
+			result.add(itemsToUpdate);
+			return result;
+		}
+
+		DSLContext dsl = getDslContext();
+//		Map<String, Productmetadata> existingBatchCodeMap = dsl.selectFrom(CK_PRODUCTMETADATA)
+//				.where(CK_PRODUCTMETADATA.BATCH_CODE.in(batchCodes))
+//				.fetch()
+//				.stream()
+//				.collect(Collectors.toMap(
+//						Productmetadata::getBatchCode,
+//						rec -> rec.into(Productmetadata.class),
+//						(a, b) -> a // avoid duplicate key issue
+//				));
+
+		Map<String, Productmetadata> existingBatchCodeMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.BATCH_CODE.in(batchCodes)).fetch().stream().collect(Collectors.toMap(rec -> rec.get(CK_PRODUCTMETADATA.BATCH_CODE), rec -> rec.into(Productmetadata.class), (a, b) -> a));
 
 		for (ProductMetaData product : productMetadataList) {
 			Productmetadata existing = existingBatchCodeMap.get(product.getBatchCode());
-
-			//	fillAttributes(product, ProductMetaData.of(existing));
 
 			if (existing == null) {
 				product.setVersion(0);
@@ -76,15 +89,16 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 		LOG.info("Size of list is {}", productMetadataList.size());
 
 		List<List<ProductMetaData>> saveItemsList = getDataToSaveList(new ArrayList<>(productMetadataList));
+		DSLContext dsl = getDslContext();
 
 		// Inserts
 		if (!saveItemsList.get(0).isEmpty()) {
-			getDslContext().batchInsert(saveItemsList.get(0).stream().map(prod -> getDslContext().newRecord(CK_PRODUCTMETADATA, prod)).collect(Collectors.toList())).execute();
+			dsl.batchInsert(saveItemsList.get(0).stream().map(prod -> dsl.newRecord(CK_PRODUCTMETADATA, prod)).collect(Collectors.toList())).execute();
 		}
 
 		// Updates
 		if (!saveItemsList.get(1).isEmpty()) {
-			getDslContext().batchUpdate(saveItemsList.get(1).stream().map(prod -> getDslContext().newRecord(CK_PRODUCTMETADATA, prod)).collect(Collectors.toList())).execute();
+			dsl.batchUpdate(saveItemsList.get(1).stream().map(prod -> dsl.newRecord(CK_PRODUCTMETADATA, prod)).collect(Collectors.toList())).execute();
 		}
 
 		LOG.info("Batch save successful for ProductMetadata");
