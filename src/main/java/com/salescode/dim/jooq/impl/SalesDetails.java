@@ -7,7 +7,6 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonIgn
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Getter
 @Setter
@@ -40,5 +39,11 @@ public class SalesDetails extends com.salescode.dim.jooq.generated.tables.pojos.
     }
     public String getInvoiceNumber() {
         return getSaleId();
+    }
+    public void setSkuCode(String skuCode) {
+        setSkucode(skuCode);
+    }
+    public String getSkuCode() {
+        return getSkucode();
     }
 }

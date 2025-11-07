@@ -87,14 +87,7 @@ public class SalesDetailsService extends AbstractCDMService<SalesDetails> {
     }
 
     private ConcurrentHashMap<String, ProductDetails> populateBatchAssociatedData(List<SalesDetails> salesDetailsList) {
-        ConcurrentHashMap<String, ProductDetails> savedProductList = populateProductDetails(salesDetailsList);
-
-        for (int i = 0; i < salesDetailsList.size(); i++) {
-            String productCode = salesDetailsList.get(i).getProductCode();
-            salesDetailsList.get(i).setProductDetails(savedProductList.get(productCode));
-        }
-
-        return savedProductList;
+         return populateProductDetails(salesDetailsList);
     }
 
     private ConcurrentHashMap<String, ProductDetails> preBatchSave(List<SalesDetails> salesDetailsList) {
