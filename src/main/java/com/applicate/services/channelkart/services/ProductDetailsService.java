@@ -30,12 +30,16 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 
 
 	public ProductDetailsService(){
+		if(productDetailsRepository == null) {
+			productDetailsRepository = new  ProductDetailsRepository(getDslContext());
+		}
 
 	}
 	public ProductDetailsService(ProductDetailsRepository productDetailsRepository) {
 		this.productDetailsRepository = productDetailsRepository;
 		this.locationService = new LocationService();
 	}
+
 
 	private static String getSimpleFileNameWithExtension(String filepath) {
 		if (filepath == null) {
