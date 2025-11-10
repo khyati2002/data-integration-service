@@ -2,9 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.client.properties.PropertyDefinition;
 import com.applicate.services.channelkart.client.properties.PropertyRegistry;
-import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.GRNStatus;
-import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.JSONUtils;
 import com.applicate.services.channelkart.utils.NullUtils;
@@ -31,7 +29,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.*;
@@ -52,11 +49,8 @@ public class SalesService extends AbstractCDMService<Sales> {
     public static final String TAX_AMOUNT = "taxAmount";
     private static final Logger LOG = LoggerFactory.getLogger(SalesService.class);
 
-    private final SalesDetailsService salesDetailsService;
-    private final SalesHistoryService salesHistoryService;
     private final DataValidationService dataValidationService;
     private final DataEnrichmentService dataEnrichmentService;
-    private final PreProcessPipelineService preProcessPipelineService;
     private final ValidationInfoRegistry validationInfoRegistry;
     private final ValidationExcludeGroupRegistry validationExcludeGroupRegistry;
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
@@ -78,14 +72,11 @@ public class SalesService extends AbstractCDMService<Sales> {
         stockService =   new StockService();
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
         etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
-        salesDetailsService = new SalesDetailsService();
-        salesHistoryService = new SalesHistoryService();
         validationInfoRegistry = new ValidationInfoRegistry(getDslContext());
         validationExcludeGroupRegistry = new ValidationExcludeGroupRegistry(getDslContext());
         enrichmentInfoRegistry = new EnrichmentInfoRegistry(getDslContext());
         dataValidationService = new DataValidationService(validationInfoRegistry, validationExcludeGroupRegistry, etlRegistry);
         dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry, etlRegistry);
-        preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
         outletDetailsService = new OutletDetailsService();
         entityUtils =  new EntityUtils(getDslContext());
     }
@@ -97,62 +88,6 @@ public class SalesService extends AbstractCDMService<Sales> {
                 .from(CK_SALES)
                 .where(CK_SALES.INVOICE_NUMBER.eq(invoiceNumber))
                 .fetchOneInto(Sales.class);
-    }
-
-    private List<SalesDetails> preProcessSalesDetails(List<SalesDetails> salesDetailsList) {
-         salesDetailsList.parallelStream().forEach(detail -> {
-             preProcessPipelineService.preProcessPipeline(detail, null);
-         });
-        return salesDetailsList;
-    }
-
-    private List<SalesHistory> preProcessSalesHistory(List<SalesHistory> salesHistoryList) {
-         salesHistoryList.parallelStream().forEach(history -> {
-             preProcessPipelineService.preProcessPipeline(history, null);
-         });
-        return salesHistoryList;
-    }
-
-    private ConcurrentHashMap<String, List<SalesDetails>> populateSalesDetails(List<Sales> salesList) {
-        List<SalesDetails> allSalesDetails = salesList.stream()
-                .filter(sales -> sales.getSalesDetails() != null && !sales.getSalesDetails().isEmpty())
-                .flatMap(sales -> {
-                    sales.getSalesDetails().forEach(detail -> {
-                        detail.setInvoiceNumber(sales.getInvoiceNumber());
-                        detail.setReqId(sales.getReqId());
-                    });
-                    return sales.getSalesDetails().stream();
-                })
-                .collect(Collectors.toList());
-
-        if (!allSalesDetails.isEmpty()) {
-            List<SalesDetails> preProcessedList = preProcessSalesDetails(allSalesDetails);
-            Collection<SalesDetails> savedDetailsList = salesDetailsService.batchSave(preProcessedList);
-            return new ConcurrentHashMap<>(savedDetailsList.stream().collect(Collectors.groupingBy(SalesDetails::getInvoiceNumber)));
-        }
-        return new ConcurrentHashMap<>();
-    }
-
-    private ConcurrentHashMap<String, List<SalesHistory>> populateSalesHistory(List<Sales> salesList) {
-        List<SalesHistory> allSalesHistory = salesList.stream()
-                .filter(sales -> sales.getSalesHistory() != null && !sales.getSalesHistory().isEmpty())
-                .flatMap(sales -> {
-                    sales.getSalesHistory().forEach(history -> {
-                        history.setInvoiceNumber(sales.getInvoiceNumber());
-                        history.setReqId(sales.getReqId());
-                    });
-                    return sales.getSalesHistory().stream();
-                })
-                .collect(Collectors.toList());
-
-        if (!allSalesHistory.isEmpty()) {
-            List<SalesHistory> preProcessedList = preProcessSalesHistory(allSalesHistory);
-            Collection<SalesHistory> savedHistoryList = salesHistoryService.batchSave(preProcessedList);
-
-            return new ConcurrentHashMap<>(savedHistoryList.stream().collect(Collectors.groupingBy(SalesHistory::getInvoiceNumber)));
-        }
-
-        return new ConcurrentHashMap<>();
     }
 
 
@@ -190,8 +125,10 @@ public class SalesService extends AbstractCDMService<Sales> {
             user2.setMobile(CONTACT_NO);
             user2.setPassword(user);
             user2.setName(user);
-            user2.setLocationHierarchy(userService.findByLoginId(SecurityContextUtils.getPrincipal()).getLocationHierarchy());
-//            od = userService.save(user2);
+            Location loc = new Location();
+            loc.setCountry(userService.findByLoginId(SecurityContextUtils.getPrincipal()).getLocationHierarchy());
+            user2.setLocationHierarchy(loc);
+            od = userService.save(user2);
             User u = userService.findByLoginId(user);
             if (u != null) {
                 out = u;
@@ -221,18 +158,20 @@ public class SalesService extends AbstractCDMService<Sales> {
         }
 
         User findByLoginId = userService.findByLoginId(sales.getLoginid());
-        if (sales.getLoginId() != null && findByLoginId==null) {
             if (sales.getLoginid() != null && findByLoginId == null) {
-                synchronized (sales.getLoginid().intern()) {
-                    User user = getOrSetUser(sales.getLoginid());
-//                    sales.setLoginid(user.getLoginid());
-                    findByLoginId = user;
+                try {
+                    synchronized (sales.getLoginid().intern()) {
+                        User user = getOrSetUser(sales.getLoginid());
+                        sales.setLoginid(user!=null? user.getLoginid(): "");
+                        findByLoginId = user;
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
-//            if (findByLoginId.getActiveStatus() == null) {
-//                sales.setActiveStatus(ActiveStatus.INACTIVE);
-//            }
-        }
+            if (findByLoginId.getActiveStatus() == null) {
+                sales.setActiveStatus(ActiveStatus.INACTIVE);
+            }
     }
 
 
@@ -366,73 +305,6 @@ public class SalesService extends AbstractCDMService<Sales> {
         return null;
     }
 
-    private void populateBatchAssociatedData(List<Sales> salesList) {
-        ConcurrentHashMap<String, List<SalesDetails>> savedDetailsMap = populateSalesDetails(salesList);
-        ConcurrentHashMap<String, List<SalesHistory>> savedHistoryMap = populateSalesHistory(salesList);
-        salesList.forEach(sales -> {
-            String invoiceNumber = sales.getInvoiceNumber();
-            if (savedDetailsMap.containsKey(invoiceNumber)) {
-                sales.setSalesDetails(savedDetailsMap.get(invoiceNumber));
-            }
-            if (savedHistoryMap.containsKey(invoiceNumber)) {
-                sales.setSalesHistory(savedHistoryMap.get(invoiceNumber));
-            }
-            var salesDb = findByDynamicIdUsingJooq(sales);
-            createAssociatedData(sales);
-        });
-    }
-
-    private void preBatchSave(List<Sales> salesList) {
-        populateBatchAssociatedData(salesList);
-    }
-
-    public List<List<Sales>> getItemsToSaveList(List<Sales> salesList) {
-        List<List<Sales>> result = new ArrayList<>();
-        List<String> invoiceNumbers = salesList.stream()
-                .map(Sales::getInvoiceNumber)
-                .collect(Collectors.toList());
-
-        Map<String, Sales> savedList = getDslContext()
-                .select(CK_SALES.asterisk())
-                .from(CK_SALES)
-                .where(CK_SALES.INVOICE_NUMBER.in(invoiceNumbers))
-                .fetch()
-                .intoMap(CK_SALES.INVOICE_NUMBER,
-                        record -> record.into(Sales.class));
-
-        List<Sales> itemsToInsert = new ArrayList<>();
-        List<Sales> itemsToUpdate = new ArrayList<>();
-
-        for (Sales sale : salesList) {
-            fillAttributes(sale, (savedList.get(sale.getInvoiceNumber())));
-            fillCommonAttributes(sale);
-            new AttributeUpdateOverrideManager().overrideAttributes(sale, savedList.get(sale.getInvoiceNumber()));
-
-
-            if (savedList.get(sale.getInvoiceNumber()) == null) {
-                sale.setId(UUID.randomUUID().toString());
-                sale.setChanged(true);
-                itemsToInsert.add(sale);
-                sale.setOperationPerformed(ActionType.INSERT);
-            } else {
-                Sales existingSale = (savedList.get(sale.getInvoiceNumber()));
-                sale.setId(existingSale.getId());
-                sale.setVersion(existingSale.getVersion() + 1);
-
-                if (!Objects.equals(sale.getHash(), existingSale.getHash())) {
-                    sale.setChanges(CdmDiffUtil.getChanges(sale, existingSale));
-                    sale.setOperationPerformed(ActionType.UPDATE);
-                    sale.setChanged(true);
-                    itemsToUpdate.add(sale);
-                }
-            }
-        }
-
-        result.add(itemsToInsert);
-        result.add(itemsToUpdate);
-        return result;
-    }
-
     @Override
     public Collection<Sales> batchSave(Collection<Sales> salesCollection) {
         LOG.info("Size of list is {}", salesCollection.size());
@@ -490,9 +362,7 @@ public class SalesService extends AbstractCDMService<Sales> {
                         saleDB.setDiscountInfo(null);
                     }
                     EntityUtils.copyPropertiesWithoutMerging(sld, saleDB, SYSTEM_TIME,VERSION );
-
                     addIncreasedAmountQuantity(saleDB,amtDiff,qtyDiff);
-
                 } else {
                     salesDb.getSalesDetails().add(sld);
                     addIncreasedAmountQuantity(sld,sld.getInitialAmount(),sld.getNormalizedQuantity());
@@ -529,6 +399,8 @@ public class SalesService extends AbstractCDMService<Sales> {
 
     public void cdmSave(Sales sales) throws JsonProcessingException {
         getDslContext().insertInto(CK_SALES)
+                .set(getDslContext().newRecord(CK_SALES, sales))
+                .onDuplicateKeyUpdate()
                 .set(getDslContext().newRecord(CK_SALES, sales))
                 .execute();
         if (PropertyRegistry.getAsBoolean(PropertyDefinition.CREATE_GRN_FOR_INVOICE) && isPrimaryInvoice(sales.getOutletCode())) {
@@ -721,22 +593,15 @@ public class SalesService extends AbstractCDMService<Sales> {
                 exAttrNode = JSONUtils.getObjectMapper().createObjectNode();
             }
 
-            exAttrNode.put("postProcess", "true");
+            exAttrNode.put(POST_PROCESS, "true");
             sales.setExtendedAttributes(exAttrNode);
-            if (exAttrNode.get("return") != null && exAttrNode.get("return").asBoolean()) {
+            if (exAttrNode.get(RETURN) != null && exAttrNode.get(RETURN).asBoolean()) {
                 salesReturn(sales);
             }
         } else {
-            var extendedAttribute = JSONUtils.getObjectMapper().createObjectNode().put("postProcess", "true");
+            var extendedAttribute = JSONUtils.getObjectMapper().createObjectNode().put(POST_PROCESS, "true");
             sales.setExtendedAttributes(extendedAttribute);
         }
     }
 
-    private String findOutletCodeForInvoiceNumber(String invoiceNumber){
-        Sales salesData = findByInvoiceNumber(invoiceNumber);
-        if(salesData!=null){
-            return salesData.getOutletCode();
-        }
-        return "";
-    }
 }
