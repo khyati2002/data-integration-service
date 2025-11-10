@@ -29,6 +29,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.*;
@@ -305,6 +306,73 @@ public class SalesService extends AbstractCDMService<Sales> {
         return null;
     }
 
+    private void populateBatchAssociatedData(List<Sales> salesList) {
+        ConcurrentHashMap<String, List<SalesDetails>> savedDetailsMap = populateSalesDetails(salesList);
+        ConcurrentHashMap<String, List<SalesHistory>> savedHistoryMap = populateSalesHistory(salesList);
+        salesList.forEach(sales -> {
+            String invoiceNumber = sales.getInvoiceNumber();
+            if (savedDetailsMap.containsKey(invoiceNumber)) {
+                sales.setSalesDetails(savedDetailsMap.get(invoiceNumber));
+            }
+            if (savedHistoryMap.containsKey(invoiceNumber)) {
+                sales.setSalesHistory(savedHistoryMap.get(invoiceNumber));
+            }
+            var salesDb = findByDynamicIdUsingJooq(sales);
+            createAssociatedData(sales);
+        });
+    }
+
+    private void preBatchSave(List<Sales> salesList) {
+        populateBatchAssociatedData(salesList);
+    }
+
+    public List<List<Sales>> getItemsToSaveList(List<Sales> salesList) {
+        List<List<Sales>> result = new ArrayList<>();
+        List<String> invoiceNumbers = salesList.stream()
+                .map(Sales::getInvoiceNumber)
+                .collect(Collectors.toList());
+
+        Map<String, Sales> savedList = getDslContext()
+                .select(CK_SALES.asterisk())
+                .from(CK_SALES)
+                .where(CK_SALES.INVOICE_NUMBER.in(invoiceNumbers))
+                .fetch()
+                .intoMap(CK_SALES.INVOICE_NUMBER,
+                        record -> record.into(Sales.class));
+
+        List<Sales> itemsToInsert = new ArrayList<>();
+        List<Sales> itemsToUpdate = new ArrayList<>();
+
+        for (Sales sale : salesList) {
+            fillAttributes(sale, (savedList.get(sale.getInvoiceNumber())));
+            fillCommonAttributes(sale);
+            new AttributeUpdateOverrideManager().overrideAttributes(sale, savedList.get(sale.getInvoiceNumber()));
+
+
+            if (savedList.get(sale.getInvoiceNumber()) == null) {
+                sale.setId(UUID.randomUUID().toString());
+                sale.setChanged(true);
+                itemsToInsert.add(sale);
+                sale.setOperationPerformed(ActionType.INSERT);
+            } else {
+                Sales existingSale = (savedList.get(sale.getInvoiceNumber()));
+                sale.setId(existingSale.getId());
+                sale.setVersion(existingSale.getVersion() + 1);
+
+                if (!Objects.equals(sale.getHash(), existingSale.getHash())) {
+                    sale.setChanges(CdmDiffUtil.getChanges(sale, existingSale));
+                    sale.setOperationPerformed(ActionType.UPDATE);
+                    sale.setChanged(true);
+                    itemsToUpdate.add(sale);
+                }
+            }
+        }
+
+        result.add(itemsToInsert);
+        result.add(itemsToUpdate);
+        return result;
+    }
+
     @Override
     public Collection<Sales> batchSave(Collection<Sales> salesCollection) {
         LOG.info("Size of list is {}", salesCollection.size());
@@ -362,7 +430,9 @@ public class SalesService extends AbstractCDMService<Sales> {
                         saleDB.setDiscountInfo(null);
                     }
                     EntityUtils.copyPropertiesWithoutMerging(sld, saleDB, SYSTEM_TIME,VERSION );
+
                     addIncreasedAmountQuantity(saleDB,amtDiff,qtyDiff);
+
                 } else {
                     salesDb.getSalesDetails().add(sld);
                     addIncreasedAmountQuantity(sld,sld.getInitialAmount(),sld.getNormalizedQuantity());
@@ -399,8 +469,6 @@ public class SalesService extends AbstractCDMService<Sales> {
 
     public void cdmSave(Sales sales) throws JsonProcessingException {
         getDslContext().insertInto(CK_SALES)
-                .set(getDslContext().newRecord(CK_SALES, sales))
-                .onDuplicateKeyUpdate()
                 .set(getDslContext().newRecord(CK_SALES, sales))
                 .execute();
         if (PropertyRegistry.getAsBoolean(PropertyDefinition.CREATE_GRN_FOR_INVOICE) && isPrimaryInvoice(sales.getOutletCode())) {
