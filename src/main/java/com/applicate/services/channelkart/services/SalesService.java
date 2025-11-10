@@ -3,6 +3,7 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.client.properties.PropertyDefinition;
 import com.applicate.services.channelkart.client.properties.PropertyRegistry;
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.GRNStatus;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.JSONUtils;
@@ -12,22 +13,15 @@ import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
-import com.salescode.dim.jooq.generated.tables.records.CkSalesRecord;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
-import com.salescode.dim.jooq.impl.Sales;
-import com.salescode.dim.jooq.impl.SalesDetails;
-import com.salescode.dim.jooq.impl.SalesHistory;
+import com.salescode.dim.jooq.impl.*;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
-import org.jooq.Condition;
-import org.jooq.Record;
-import org.jooq.Result;
-import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
@@ -320,6 +314,62 @@ public class SalesService extends AbstractCDMService<Sales> {
 
 
 // hehe
+
+//    public boolean isPrimaryInvoice(String outletCode) {
+//        if(outletCode == null) return false;
+//        User user = userService.findByLoginId(outletCode);
+//        if(user == null) return false;
+//        Set<String> designation = new HashSet<>(Optional.ofNullable(user.getDesignation()).orElse(Set.of()));
+//        return designation.stream()
+//                       .anyMatch(divisionService::isChannelDivision);
+//    }
+//
+//    public void cdmSave(Sales sales) throws JsonProcessingException {
+//        addReturnParameters(sales);
+//        super.save(sales);
+//
+//        if(PropertyRegistry.getAsBoolean(PropertyDefinition.CREATE_GRN_FOR_INVOICE) && isPrimaryInvoice(sales.getOutletCode())) {
+//         JsonNode extendedAttributes = sales.getExtendedAttributes();
+//            String status = "IntegrationGrnStatus";
+//            String statusReason = "IntegrationGrnStatusReason";
+//            if(!extendedAttributes.has(status) && sales.isCreate()) {
+//                    Sales finalSales = context.get(SAVESALESSTEP, Sales.class);
+//                    GRNInfo grnInfo = new GRNInfo(
+//                            finalSales.getInvoiceNumber(),
+//                            finalSales.getOrderNumber(),
+//                            finalSales.getLoginId(),
+//                            GRNStatus.OPEN.name()
+//                    );
+//                    salesGrnService.addNewEntry(grnInfo);
+//                OrderStatusUpdateStep orderStatusUpdateStep = new OrderStatusUpdateStep(orderService, Optional.ofNullable(sales.getOrderNumber()).orElse(""), INVOICED, "");
+//                sagaOrchestrator.addStep(createGRNInfo);
+//                sagaOrchestrator.addStep(orderStatusUpdateStep);
+//            } else if(extendedAttributes.has(status)) {
+//                String grnStatus = Objects.requireNonNull(extendedAttributes.get(status)).asText();
+//                String grnStatusReason = extendedAttributes.has(statusReason) ? extendedAttributes.get(statusReason).asText() : "";
+//
+//                Map<String, Object> runtimeParams = Map.of(
+//                        "0", SpringContext.getBeanSafely(GRNInfoRepository.class),
+//                        "1", orderService,
+//                        "2", GRNStatus.PARTIALLY_REJECTED.name().equalsIgnoreCase(grnStatus) ? sales.getReferenceNumber() : sales.getInvoiceNumber(),
+//                        "3", grnStatus,
+//                        "4", orderStockHelperService,
+//                        "5", entityUtils,
+//                        "6", grnStatusReason,
+//                        "8",findOutletCodeForInvoiceNumber(GRNStatus.PARTIALLY_REJECTED.name().equalsIgnoreCase(grnStatus) ? sales.getReferenceNumber() : sales.getInvoiceNumber()));
+//
+//                SagaOrchestratorConfiguration sagaOrchestratorConfiguration = new SagaOrchestratorConfiguration();
+//                List<SagaStep<?>> updateGRNStatusSteps =  sagaOrchestratorConfiguration.getSagaStepList(sagaOrchestratorConfiguration.getSagaMetadataConfiguration("updateGRNStatus"), runtimeParams);
+//                sagaOrchestrator.addAllSteps(updateGRNStatusSteps);
+//            }
+//        }
+//        SagaResult sagaResult = sagaOrchestrator.execute();
+//        if(!sagaResult.isSuccess()) {
+//            throw new SagaOrchestratorException(String.valueOf(sagaResult.getExecutionError()));
+//        }
+//        sagaResult.getSagaSuccessResult().get(SAVESALESSTEP);
+//    }
+
 
 
     private void addIncreasedAmountQuantity(SalesDetails saleDB, double amtDiff, double qtyDiff) {

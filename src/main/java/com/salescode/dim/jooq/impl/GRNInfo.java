@@ -1,6 +1,7 @@
 package com.salescode.dim.jooq.impl;
 
 
+import com.salescode.dim.jooq.generated.tables.pojos.GrnInfo;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Sales extends com.salescode.dim.jooq.generated.tables.pojos.Sales implements Serializable {
+public class GRNInfo extends com.salescode.dim.jooq.generated.tables.pojos.GrnInfo implements Serializable {
 
 
     private List<SalesDetails> salesDetails;
@@ -22,26 +23,19 @@ public class Sales extends com.salescode.dim.jooq.generated.tables.pojos.Sales i
     private String invoiceNumber;
     private boolean update;
 
-    public Sales() {
+    public GRNInfo() {
         super();
     }
 
-    private Sales(Sales sales) {
-        super(sales);
+    private GRNInfo(GrnInfo grnInfo) {
+        super(grnInfo);
     }
 
-    public static Sales of(Sales sales) {
-        if (sales == null) {
+    public static GRNInfo of(GRNInfo grnInfo) {
+        if (grnInfo == null) {
             return null;
         }
-        return new Sales(sales);
+        return new GRNInfo(grnInfo);
     }
 
-    public String getOutletCode() {
-        return getOutletcode();
-    }
-
-    public String getLoginId() {
-        return super.getLoginid();
-    }
 }
