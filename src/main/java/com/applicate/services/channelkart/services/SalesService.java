@@ -190,8 +190,10 @@ public class SalesService extends AbstractCDMService<Sales> {
             user2.setMobile(CONTACT_NO);
             user2.setPassword(user);
             user2.setName(user);
-            user2.setLocationHierarchy(userService.findByLoginId(SecurityContextUtils.getPrincipal()).getLocationHierarchy());
-//            od = userService.save(user2);
+            Location loc = new Location();
+            loc.setCountry(userService.findByLoginId(SecurityContextUtils.getPrincipal()).getLocationHierarchy());
+            user2.setLocationHierarchy(loc);
+            od = userService.save(user2);
             User u = userService.findByLoginId(user);
             if (u != null) {
                 out = u;
@@ -225,13 +227,13 @@ public class SalesService extends AbstractCDMService<Sales> {
             if (sales.getLoginid() != null && findByLoginId == null) {
                 synchronized (sales.getLoginid().intern()) {
                     User user = getOrSetUser(sales.getLoginid());
-//                    sales.setLoginid(user.getLoginid());
+                    sales.setLoginid(user.getLoginid());
                     findByLoginId = user;
                 }
             }
-//            if (findByLoginId.getActiveStatus() == null) {
-//                sales.setActiveStatus(ActiveStatus.INACTIVE);
-//            }
+            if (findByLoginId.getActiveStatus() == null) {
+                sales.setActiveStatus(ActiveStatus.INACTIVE);
+            }
         }
     }
 
@@ -350,6 +352,7 @@ public class SalesService extends AbstractCDMService<Sales> {
             }
         }
 
+        // 2) Fallbacks similar to your previous jOOQ helper:
         if (sales.getId() != null) {
             return getDslContext().selectFrom(CK_SALES)
                     .where(CK_SALES.ID.eq(sales.getId()))
@@ -549,7 +552,7 @@ public class SalesService extends AbstractCDMService<Sales> {
 
     private void addIncreasedAmountQuantity(SalesDetails saleDB, double amtDiff, double qtyDiff) {
         ObjectMapper mapper = new ObjectMapper();
-        org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode flinkNode = saleDB.getExtendedAttributes();
+        JsonNode flinkNode = saleDB.getExtendedAttributes();
         org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode extendedAttributes;
         try {
             if (flinkNode == null) {
