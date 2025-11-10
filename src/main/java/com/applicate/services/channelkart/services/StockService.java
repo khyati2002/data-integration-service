@@ -1,8 +1,6 @@
 package com.applicate.services.channelkart.services;
-
-
-import com.applicate.services.channelkart.exceptions.checked.ConfigurationException;
-import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.client.properties.PropertyDefinition;
+import com.applicate.services.channelkart.client.properties.PropertyRegistry;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.EntityUtils;
@@ -14,7 +12,6 @@ import com.salescode.dim.jooq.generated.tables.records.CkStockRecord;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.salescode.dim.jooq.generated.Tables.CK_OUTLET_DETAILS;
 import static com.salescode.dim.jooq.generated.Tables.CK_STOCK;
 
 public class StockService extends AbstractCDMService<Stock> {
@@ -80,9 +77,6 @@ public class StockService extends AbstractCDMService<Stock> {
                 outlet.setId(existingOutlet.getId());
                 outlet.setVersion(existingOutlet.getVersion() + 1);
 
-                String outlethash = outlet.getHash();
-                String existingHash = existingOutlet.getHash();
-
                 if (!Objects.equals(outlet.getHash(), existingOutlet.getHash())) {
                     outlet.setChanges(CdmDiffUtil.getChanges(outlet,existingOutlet));
                     outlet.setOperationPerformed(ActionType.UPDATE);
@@ -94,6 +88,50 @@ public class StockService extends AbstractCDMService<Stock> {
         result.add(itemsToInsert);
         result.add(itemsToUpdate);
         return result;
+    }
+
+    public void deductAndAddStock(Map<String, Map<String, Double>> suppBatCodQty, boolean flag) {
+        List<Stock> stocksToSaved = new ArrayList<>();
+        Set<String> supSet = suppBatCodQty.keySet();
+        for (String supplier : supSet) {
+            Map<String, Double> batQty = suppBatCodQty.get(supplier);
+            List<String> batchCode = new ArrayList<>(suppBatCodQty.get(supplier).keySet());
+            List<Stock> stocks = getDslContext().selectFrom(CK_STOCK)
+                                         .where(CK_STOCK.BATCH_CODE.in(batchCode))
+                                         .and(CK_STOCK.SUPPLIER.eq(supplier))
+                                         .forUpdate()
+                                         .fetchInto(Stock.class);
+            processDeductAndAddStock(stocks,batchCode,batQty,flag,stocksToSaved);
+
+        }
+        batchSave(stocksToSaved);
+    }
+
+
+    private void processDeductAndAddStock(List<Stock> stocks, List<String> batchCode, Map<String, Double> batQty, boolean flag, List<Stock> stocksToSaved) {
+        Map<String, Stock> stockMap = stocks.stream().collect(Collectors.toMap(Stock::getBatchCode, s -> s));
+        boolean allowNegativeStock = PropertyRegistry.getAsBoolean(PropertyDefinition.ALLOW_NEGETIVE_STOCK);
+        batchCode.forEach(b -> {
+            Stock s = stockMap.get(b);
+            if (s == null) {
+                return;
+            }
+            if (flag) {
+                Double curBatQty = batQty.get(s.getBatchCode());
+                if(curBatQty < 0) {
+                    curBatQty = (curBatQty * (-1.0));
+                }
+                s.setQty((s.getQty() + curBatQty));
+                stocksToSaved.add(s);
+            } else {
+                if ((s.getQty() - batQty.get(s.getBatchCode())) < 0 && !allowNegativeStock){
+                    s.setQty(0.0);
+                    return;
+                }
+                s.setQty((s.getQty() - batQty.get(s.getBatchCode())));
+                stocksToSaved.add(s);
+            }
+        });
     }
     
 }

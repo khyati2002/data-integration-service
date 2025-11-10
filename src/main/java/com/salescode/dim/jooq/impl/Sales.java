@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class Sales extends com.salescode.dim.jooq.generated.tables.pojos.Sales i
     private List<SalesDetails> salesDetails;
     private List<SalesHistory> salesHistory;
     private String invoiceNumber;
+    private boolean update;
 
     public Sales() {
         super();
@@ -35,4 +37,7 @@ public class Sales extends com.salescode.dim.jooq.generated.tables.pojos.Sales i
         return new Sales(sales);
     }
 
+    public String getOutletCode() {
+        return getOutletcode();
+    }
 }
