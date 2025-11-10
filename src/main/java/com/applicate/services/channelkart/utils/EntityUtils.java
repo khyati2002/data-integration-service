@@ -1,10 +1,30 @@
 package com.applicate.services.channelkart.utils;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.services.MetaDataService;
+import com.applicate.services.channelkart.services.SalesService;
+import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
+import com.applicate.services.channelkart.services.MetaDataService;
+import com.applicate.services.channelkart.services.SalesService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ArrayNode;
+import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import com.salescode.dim.utils.ReflectionUtils;
+import jakarta.activation.DataHandler;
 import org.jooq.DSLContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -15,18 +35,23 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class EntityUtils {
 
     private static volatile EntityUtils instance;
     private final transient DSLContext dslContext;
     private final Map<String, Class<? extends CommonDataModel>> entityImplClassMap = new ConcurrentHashMap<>();
+    public static final String DYNAMIC_UNIQUE_KEY = "DynamicUniqueKey";
+    private static final MetaDataService metadataService=new MetaDataService();
+    private static final Logger LOG = (Logger) LoggerFactory.getLogger(SalesService.class);
+
+
     Set<Class<? extends CommonDataModel>> subClasses = ReflectionUtils.findSubClasses(CommonDataModel.class);
     private static final Object lockObj = new Object();
     private static final Set<Class<?>> jsonNodeClassList = Collections.singleton(JsonNode.class);
     private static class Logger { void error(String msg, Exception e) { System.err.println(msg); e.printStackTrace(); } }
-    private static final Logger logger = new Logger();
 
-    protected EntityUtils(DSLContext dslContext) {
+    public EntityUtils(DSLContext dslContext) {
         this.dslContext = dslContext;
     }
 
@@ -60,6 +85,48 @@ public class EntityUtils {
                     .orElse(candidates.get(0));
         });
     }
+
+    public static String getMd5(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger no = new BigInteger(1, messageDigest);
+            StringBuilder hashtext = new StringBuilder(no.toString(16));
+            while (hashtext.length() < 32) {
+                hashtext.append( "0" + hashtext);
+            }
+            return hashtext.toString();
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean checkGenerateMD5Hash(String entityName) {
+        Metadata metaData = metadataService.fetchByValue(entityName, DYNAMIC_UNIQUE_KEY);
+
+        boolean generateHash = false;
+        if (metaData != null && metaData.getDomainValues()!=null) {
+            JsonNode dynamicKeysNode = metaData.getDomainValues().get(0);
+            if (dynamicKeysNode != null) {
+                generateHash = dynamicKeysNode.has("generateHash") && dynamicKeysNode.get("generateHash").asBoolean();
+            }
+        }
+        return generateHash;
+    }
+
+    public ArrayNode fetchDynamicPrimaryKeys(String entityName) {
+        Metadata metaData=  metadataService.fetchByValue(entityName,DYNAMIC_UNIQUE_KEY);
+        org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ArrayNode columnArr = JSONUtils.getObjectMapper().createArrayNode();
+        if(metaData!=null && metaData.getDomainValues()!=null) {
+            var dynamicKeys=metaData.getDomainValues().get(0).get("dynamicKeys");
+            if(dynamicKeys!=null) {
+                columnArr = JSONUtils.convertToArrayNode(dynamicKeys);
+            }
+        }
+        return columnArr;
+    }
+
 
     public static void copyPropertiesWithoutMerging(Object src, Object tgt, String... strings) {
         copyPropertiesWithJsonNodeHandling(src, tgt, false, strings);
@@ -144,7 +211,7 @@ public class EntityUtils {
                             try {
                                 mergedJson = JSONUtils.mergeJsonNodes((JsonNode) propertyValue, (JsonNode) tgtValue);
                             } catch (java.io.IOException e) {
-                                logger.error("stacktrace", e);
+                                LOG.error("stacktrace", e);
                             }
                             setter.invoke(tgt, mergedJson);
                         } else {
@@ -152,7 +219,7 @@ public class EntityUtils {
                         }
                     }
                 } catch (Exception e) {
-                    logger.error("Property copy error", e);
+                    LOG.error("Property copy error", e);
                 }
             }
             for (PropertyDescriptor pd : pdsrc) {
@@ -165,7 +232,7 @@ public class EntityUtils {
                             setter.invoke(tgt, value);
                         }
                     } catch (Exception e) {
-                        logger.error("Property copy error", e);
+                        LOG.error("Property copy error", e);
                     }
                 }
             }
