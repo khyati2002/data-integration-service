@@ -1,6 +1,7 @@
 package com.salescode.dim.jooq.impl;
 
 
+import com.applicate.services.channelkart.models.enums.GRNStatus;
 import com.salescode.dim.jooq.generated.tables.pojos.GrnInfo;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,6 +37,13 @@ public class GRNInfo extends com.salescode.dim.jooq.generated.tables.pojos.GrnIn
             return null;
         }
         return new GRNInfo(grnInfo);
+    }
+
+    public GRNInfo(String invoiceNumber, String orderNumber, String loginId, String grnStatus) {
+        this.invoiceNumber = invoiceNumber;
+        this.setLoginId(loginId);
+        this.setGrnStatus(GRNStatus.getStatus(grnStatus).name());
+        this.setOrderNumber(orderNumber);
     }
 
 }

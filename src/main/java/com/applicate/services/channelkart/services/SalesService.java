@@ -63,9 +63,15 @@ public class SalesService extends AbstractCDMService<Sales> {
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
     private final ETLRegistry etlRegistry;
     private final StockService stockService;
+    private final UserService userService;
+    private final DivisionService divisionService;
     private final MetaDataService metaDataService;
+    private final SalesGRNService salesGRNService;
 
     public SalesService() {
+        salesGRNService = new SalesGRNService();
+        divisionService = new DivisionService();
+        userService = new UserService();
         metaDataService =  new MetaDataService();
         stockService =   new StockService();
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
@@ -307,69 +313,40 @@ public class SalesService extends AbstractCDMService<Sales> {
         }
         addReturnParameters(sales);
         var sls = sales;
-//        cdmSave(sls);
+        cdmSave(sls);
         addingOrDeductingStock(sls);
     }
 
 
 
-// hehe
+// save fucntions -----------------------------------------------------------------------------
 
-//    public boolean isPrimaryInvoice(String outletCode) {
-//        if(outletCode == null) return false;
-//        User user = userService.findByLoginId(outletCode);
-//        if(user == null) return false;
-//        Set<String> designation = new HashSet<>(Optional.ofNullable(user.getDesignation()).orElse(Set.of()));
-//        return designation.stream()
-//                       .anyMatch(divisionService::isChannelDivision);
-//    }
-//
-//    public void cdmSave(Sales sales) throws JsonProcessingException {
-//        addReturnParameters(sales);
-//        super.save(sales);
-//
-//        if(PropertyRegistry.getAsBoolean(PropertyDefinition.CREATE_GRN_FOR_INVOICE) && isPrimaryInvoice(sales.getOutletCode())) {
-//         JsonNode extendedAttributes = sales.getExtendedAttributes();
-//            String status = "IntegrationGrnStatus";
-//            String statusReason = "IntegrationGrnStatusReason";
-//            if(!extendedAttributes.has(status) && sales.isCreate()) {
-//                    Sales finalSales = context.get(SAVESALESSTEP, Sales.class);
-//                    GRNInfo grnInfo = new GRNInfo(
-//                            finalSales.getInvoiceNumber(),
-//                            finalSales.getOrderNumber(),
-//                            finalSales.getLoginId(),
-//                            GRNStatus.OPEN.name()
-//                    );
-//                    salesGrnService.addNewEntry(grnInfo);
-//                OrderStatusUpdateStep orderStatusUpdateStep = new OrderStatusUpdateStep(orderService, Optional.ofNullable(sales.getOrderNumber()).orElse(""), INVOICED, "");
-//                sagaOrchestrator.addStep(createGRNInfo);
-//                sagaOrchestrator.addStep(orderStatusUpdateStep);
-//            } else if(extendedAttributes.has(status)) {
-//                String grnStatus = Objects.requireNonNull(extendedAttributes.get(status)).asText();
-//                String grnStatusReason = extendedAttributes.has(statusReason) ? extendedAttributes.get(statusReason).asText() : "";
-//
-//                Map<String, Object> runtimeParams = Map.of(
-//                        "0", SpringContext.getBeanSafely(GRNInfoRepository.class),
-//                        "1", orderService,
-//                        "2", GRNStatus.PARTIALLY_REJECTED.name().equalsIgnoreCase(grnStatus) ? sales.getReferenceNumber() : sales.getInvoiceNumber(),
-//                        "3", grnStatus,
-//                        "4", orderStockHelperService,
-//                        "5", entityUtils,
-//                        "6", grnStatusReason,
-//                        "8",findOutletCodeForInvoiceNumber(GRNStatus.PARTIALLY_REJECTED.name().equalsIgnoreCase(grnStatus) ? sales.getReferenceNumber() : sales.getInvoiceNumber()));
-//
-//                SagaOrchestratorConfiguration sagaOrchestratorConfiguration = new SagaOrchestratorConfiguration();
-//                List<SagaStep<?>> updateGRNStatusSteps =  sagaOrchestratorConfiguration.getSagaStepList(sagaOrchestratorConfiguration.getSagaMetadataConfiguration("updateGRNStatus"), runtimeParams);
-//                sagaOrchestrator.addAllSteps(updateGRNStatusSteps);
-//            }
-//        }
-//        SagaResult sagaResult = sagaOrchestrator.execute();
-//        if(!sagaResult.isSuccess()) {
-//            throw new SagaOrchestratorException(String.valueOf(sagaResult.getExecutionError()));
-//        }
-//        sagaResult.getSagaSuccessResult().get(SAVESALESSTEP);
-//    }
+    public boolean isPrimaryInvoice(String outletCode) {
+        if(outletCode == null) return false;
+        User user = userService.findByLoginId(outletCode);
+        if(user == null) return false;
+        Set<String> designation = new HashSet<>(Optional.ofNullable(user.getDesignation()).orElse(Set.of()));
+        return designation.stream()
+                       .anyMatch(divisionService::isChannelDivision);
+    }
 
+    public void cdmSave(Sales sales) throws JsonProcessingException {
+        addReturnParameters(sales);
+        super.save(sales);
+        if (PropertyRegistry.getAsBoolean(PropertyDefinition.CREATE_GRN_FOR_INVOICE) && isPrimaryInvoice(sales.getOutletCode())) {
+            JsonNode extendedAttributes = sales.getExtendedAttributes();
+            String status = "IntegrationGrnStatus";
+            if (!extendedAttributes.has(status) && sales.isCreate()) {
+                GRNInfo grnInfo = new GRNInfo(
+                        sales.getInvoiceNumber(),
+                        sales.getOrderNumber(),
+                        sales.getLoginId(),
+                        GRNStatus.OPEN.name()
+                );
+                salesGRNService.addNewEntry(grnInfo);
+            }
+        }
+    }
 
 
     private void addIncreasedAmountQuantity(SalesDetails saleDB, double amtDiff, double qtyDiff) {
@@ -548,5 +525,13 @@ public class SalesService extends AbstractCDMService<Sales> {
         boolean metaStockDeduction=(metaData != null && metaData.getDomainValues().get(0).get("enable").asBoolean());
         boolean extAttrStockDeduction=sale.getExtendedAttributes()!=null && (!sale.getExtendedAttributes().has("stockDeduction") || sale.getExtendedAttributes().get("stockDeduction").asBoolean());
         return (metaStockDeduction && extAttrStockDeduction);
+    }
+
+    private String findOutletCodeForInvoiceNumber(String invoiceNumber){
+        Sales salesData = findByInvoiceNumber(invoiceNumber);
+        if(salesData!=null){
+            return salesData.getOutletCode();
+        }
+        return "";
     }
 }
