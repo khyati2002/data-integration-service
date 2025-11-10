@@ -3,6 +3,11 @@ package com.applicate.services.channelkart.utils;
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.services.SalesService;
+import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
+import com.applicate.services.channelkart.services.MetaDataService;
+import com.applicate.services.channelkart.services.SalesService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ArrayNode;
@@ -20,6 +25,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.io.*;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -31,10 +43,13 @@ public class EntityUtils {
     private final Map<String, Class<? extends CommonDataModel>> entityImplClassMap = new ConcurrentHashMap<>();
     public static final String DYNAMIC_UNIQUE_KEY = "DynamicUniqueKey";
     private static final MetaDataService metadataService=new MetaDataService();
-    private static final Logger LOG = LoggerFactory.getLogger(SalesService.class);
+    private static final Logger LOG = (Logger) LoggerFactory.getLogger(SalesService.class);
 
 
     Set<Class<? extends CommonDataModel>> subClasses = ReflectionUtils.findSubClasses(CommonDataModel.class);
+    private static final Object lockObj = new Object();
+    private static final Set<Class<?>> jsonNodeClassList = Collections.singleton(JsonNode.class);
+    private static class Logger { void error(String msg, Exception e) { System.err.println(msg); e.printStackTrace(); } }
 
     public EntityUtils(DSLContext dslContext) {
         this.dslContext = dslContext;
@@ -83,7 +98,7 @@ public class EntityUtils {
             return hashtext.toString();
         }
         catch (NoSuchAlgorithmException e) {
-            LOG.info("no such algorithm",e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -111,5 +126,118 @@ public class EntityUtils {
         }
         return columnArr;
     }
+
+
+    public static void copyPropertiesWithoutMerging(Object src, Object tgt, String... strings) {
+        copyPropertiesWithJsonNodeHandling(src, tgt, false, strings);
+    }
+
+
+    public static <T> T deepClone(T src) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(src);
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return (T) ois.readObject();
+        } catch (Exception e) {
+            throw new RuntimeException("Could not clone object:" + src);
+        }
+    }
+
+    public static String[] getNullPropertyNames(Object source) {
+        try {
+            BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass());
+            PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+
+            Set<String> emptyNames = new HashSet<>();
+            for (PropertyDescriptor pd : pds) {
+                Method getter = pd.getReadMethod();
+                if (getter != null) {
+                    Object srcValue = getter.invoke(source);
+                    if (srcValue == null || isNullNode(srcValue)) {
+                        emptyNames.add(pd.getName());
+                    }
+                }
+            }
+            return emptyNames.toArray(new String[0]);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean isNullNode(Object value) {
+        return value instanceof JsonNode && ((JsonNode) value).isNull();
+    }
+
+    public static void copyPropertiesWithJsonNodeHandling(Object src, Object tgt, boolean mergeJsonNodes, String... strings) {
+        synchronized (lockObj) {
+            String[] data = getNullPropertyNames(src);
+            Set<String> fields = new HashSet<>(Arrays.asList(data));
+
+            if (strings != null) {
+                fields.addAll(Arrays.stream(strings)
+                                      .filter(Objects::nonNull)
+                                      .collect(Collectors.toList()));
+            }
+
+            BeanInfo beanInfo;
+            try {
+                beanInfo = Introspector.getBeanInfo(src.getClass());
+            } catch (IntrospectionException e) {
+                throw new RuntimeException(e);
+            }
+            PropertyDescriptor[] pdsrc = beanInfo.getPropertyDescriptors();
+
+            for (PropertyDescriptor pd : pdsrc) {
+                try {
+                    Method getter = pd.getReadMethod();
+                    Method setter = pd.getWriteMethod();
+                    if (getter == null || setter == null) continue;
+                    Object propertyValue = getter.invoke(src);
+                    if (propertyValue != null
+                                && JsonNode.class.isAssignableFrom(pd.getPropertyType())
+                                && !fields.contains(pd.getName())
+                                && jsonNodeClassList.contains(propertyValue.getClass())) {
+
+                        fields.add(pd.getName());
+                        Object tgtValue = getter.invoke(tgt);
+                        if (tgtValue == null || isNullNode(tgtValue)) {
+                            setter.invoke(tgt, propertyValue);
+                        } else if (mergeJsonNodes) {
+                            JsonNode mergedJson = null;
+                            try {
+                                mergedJson = JSONUtils.mergeJsonNodes((JsonNode) propertyValue, (JsonNode) tgtValue);
+                            } catch (java.io.IOException e) {
+                                LOG.error("stacktrace", e);
+                            }
+                            setter.invoke(tgt, mergedJson);
+                        } else {
+                            setter.invoke(tgt, propertyValue);
+                        }
+                    }
+                } catch (Exception e) {
+                    LOG.error("Property copy error", e);
+                }
+            }
+            for (PropertyDescriptor pd : pdsrc) {
+                if (!fields.contains(pd.getName())) {
+                    try {
+                        Method getter = pd.getReadMethod();
+                        Method setter = pd.getWriteMethod();
+                        if (getter != null && setter != null) {
+                            Object value = getter.invoke(src);
+                            setter.invoke(tgt, value);
+                        }
+                    } catch (Exception e) {
+                        LOG.error("Property copy error", e);
+                    }
+                }
+            }
+        }
+    }
+
 
 }
