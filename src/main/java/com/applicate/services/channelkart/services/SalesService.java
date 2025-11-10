@@ -1,5 +1,7 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.client.properties.PropertyDefinition;
+import com.applicate.services.channelkart.client.properties.PropertyRegistry;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.GRNStatus;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
@@ -8,7 +10,6 @@ import com.applicate.services.channelkart.utils.JSONUtils;
 import com.applicate.services.channelkart.utils.NullUtils;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.*;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.dim.PreProcessPipelineService;
 import com.salescode.dim.cache.CacheManager;
@@ -20,19 +21,12 @@ import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.jooq.impl.*;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ArrayNode;
-import com.salescode.dim.jooq.impl.*;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ArrayNode;
-
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -73,10 +67,7 @@ public class SalesService extends AbstractCDMService<Sales> {
     private final MetaDataService metaDataService;
     private final OutletDetailsService outletDetailsService;
     private static final String CONTACT_NO = "0000000000";
-    private final UserService userService;
     private final EntityUtils entityUtils;
-    private ETLRegistry etlRegistry;
-    private final OrderService orderService;
     private final SalesGRNService salesGRNService;
 
     public SalesService() {
@@ -96,7 +87,6 @@ public class SalesService extends AbstractCDMService<Sales> {
         dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry, etlRegistry);
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
         outletDetailsService = new OutletDetailsService();
-        userService = new UserService();
         entityUtils =  EntityUtils.getInstance(getDslContext());
     }
 
@@ -251,7 +241,6 @@ public class SalesService extends AbstractCDMService<Sales> {
             if (cdm == null || property == null || property.isBlank()) {
                 return null;
             }
-
             String[] parts = property.split("\\.");
 
             java.util.function.BiFunction<Object, String, Object> getProp = (obj, propName) -> {
@@ -266,7 +255,6 @@ public class SalesService extends AbstractCDMService<Sales> {
                             return m.invoke(obj);
                         }
                     } catch (NoSuchMethodException ignored) {
-                        // try next
                     } catch (Exception ex) {
                         break;
                     }
@@ -287,11 +275,9 @@ public class SalesService extends AbstractCDMService<Sales> {
                         return f.get(obj);
                     }
                 } catch (Exception ex) {
-                    // ignore and return null
                 }
                 return null;
             };
-
             Object current = cdm;
             for (int i = 0; i < parts.length; i++) {
                 String part = parts[i];
@@ -307,7 +293,6 @@ public class SalesService extends AbstractCDMService<Sales> {
                         continue;
                     }
                 }
-
                 Object next = getProp.apply(current, part);
                 if (next == null) {
                     if (i == parts.length - 1) return null;
@@ -315,16 +300,12 @@ public class SalesService extends AbstractCDMService<Sales> {
                 }
                 current = next;
             }
-
             if (current == null) return null;
-
             if (current instanceof com.fasterxml.jackson.databind.JsonNode) {
                 com.fasterxml.jackson.databind.JsonNode node = (com.fasterxml.jackson.databind.JsonNode) current;
                 return node.isTextual() ? node.asText() : node.toString();
             }
-
             return String.valueOf(current);
-
         } catch (Exception e) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("could not find property {} from cdm object {}, class {}", property, cdm, cdm != null ? cdm.getClass() : null);
@@ -585,7 +566,7 @@ public class SalesService extends AbstractCDMService<Sales> {
         addReturnParameters(sales);
         super.save(sales);
         if (PropertyRegistry.getAsBoolean(PropertyDefinition.CREATE_GRN_FOR_INVOICE) && isPrimaryInvoice(sales.getOutletCode())) {
-            JsonNode extendedAttributes = sales.getExtendedAttributes();
+            org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode extendedAttributes = sales.getExtendedAttributes();
             String status = "IntegrationGrnStatus";
             if (!extendedAttributes.has(status) && sales.isCreate()) {
                 GRNInfo grnInfo = new GRNInfo(
@@ -602,7 +583,7 @@ public class SalesService extends AbstractCDMService<Sales> {
 
     private void addIncreasedAmountQuantity(SalesDetails saleDB, double amtDiff, double qtyDiff) {
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode flinkNode = saleDB.getExtendedAttributes();
+        org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode flinkNode = saleDB.getExtendedAttributes();
         org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode extendedAttributes;
         try {
             if (flinkNode == null) {
@@ -618,21 +599,6 @@ public class SalesService extends AbstractCDMService<Sales> {
         extendedAttributes.put(POST_PROCESS, "true");
 
         saleDB.setExtendedAttributes(extendedAttributes);
-    }
-
-    private void addReturnParameters(Sales sales) throws JsonProcessingException {
-        boolean flag = sales.getExtendedAttributes() != null ;
-        if (flag) {
-            ObjectNode exAttrNode = (ObjectNode) JSONUtils.getObjectMapper().readTree(sales.getExtendedAttributes().toString());
-            exAttrNode.put(POST_PROCESS, "true");
-            sales.setExtendedAttributes(exAttrNode);
-            if (exAttrNode.get(RETURN) != null && exAttrNode.get(RETURN).asBoolean()) {
-                salesReturn(sales);
-            }
-        } else {
-            var extendedAttribute = JSONUtils.getObjectMapper().createObjectNode().put(POST_PROCESS, "true");
-            sales.setExtendedAttributes(extendedAttribute);
-        }
     }
 
     private void salesReturn(Sales sales) {
