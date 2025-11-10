@@ -32,9 +32,9 @@ public class UserEntityValidator extends AbstractValidationRule<User> {
 				throw new ValidationException("'loginId' or 'userAccountId' must not be empty");
 			}
 
-			Set<Map.Entry<String, String>> constraintViolations = simulateValidation(cdm);
+			Set<Map.Entry<String, String>> constraintViolations = simulateValidation();
 
-			List<String> fieldsList = getFieldsWithConstraints(User.class);
+			List<String> fieldsList = getFieldsWithConstraints();
 
 			for (Map.Entry<String, String> cv : constraintViolations) {
 				errors.add(StringUtils.format("'{}' : {}", cv.getKey(), cv.getValue()));
@@ -80,13 +80,13 @@ public class UserEntityValidator extends AbstractValidationRule<User> {
 	 * Mimics FormValidator.getConstraintsForClass(User.class)
 	 * by listing all declared field names.
 	 */
-	private List<String> getFieldsWithConstraints(Class<?> clazz) {
+	private List<String> getFieldsWithConstraints() {
 		List<String> fields = new ArrayList<>();
-		Arrays.stream(clazz.getDeclaredFields()).forEach(field -> fields.add(field.getName()));
+		Arrays.stream(User.class.getDeclaredFields()).forEach(field -> fields.add(field.getName()));
 		return fields;
 	}
-	
-	private Set<Map.Entry<String, String>> simulateValidation(User cdm) {
+
+	private Set<Map.Entry<String, String>> simulateValidation() {
 		return new HashSet<>();
 	}
 }
