@@ -16,7 +16,7 @@ import static com.salescode.dim.jooq.generated.Tables.CK_USER_METADATA;
 
 public class UserMetadataService extends AbstractCDMService<UserMetadata> {
 
-    private static final String CACHE_DOMAIN = "USERMETADATA";
+    private static final String CACHE_NAME = "dataintegration-usermetadata";
     private final UserMetadataRepository userMetadataRepository;
 
     public UserMetadataService() {
@@ -24,17 +24,17 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
         this.userMetadataRepository = new UserMetadataRepository(getDslContext());
     }
 
-    @Cacheable(cacheName = "dataintegration-usermetadata")
+    @Cacheable(cacheName = CACHE_NAME)
     public UserMetadata getByLoginIdAndTypeAndValue(String loginId, UserMetadataType type, String value){
         return userMetadataRepository.getByLoginIdAndTypeAndValue(loginId, type.name(), value);
     }
 
-    @Cacheable(cacheName = "dataintegration-usermetadata")
+    @Cacheable(cacheName = CACHE_NAME)
     public List<UserMetadata> getByTypeAndValue(UserMetadataType type, String value){
         return userMetadataRepository.getByTypeAndValue(type.name(), value);
     }
 
-    @Cacheable(cacheName = "dataintegration-usermetadata")
+    @Cacheable(cacheName = CACHE_NAME)
     public List<UserMetadata> getByLoginId(String loginId){
         return userMetadataRepository.getByLoginId(loginId);
     }
@@ -69,10 +69,7 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
             ).execute();
         }
 
-        // Evict caches after save
-        CacheManager.getInstance().evictAll("dataintegration-usermetadata");
-        metadataList.forEach(this::clearSpecificCache);
-
+        CacheManager.getInstance().evictAll(CACHE_NAME);
         return metadataList;
     }
 
@@ -134,25 +131,5 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
         }
 
         return Arrays.asList(itemsToInsert, itemsToUpdate);
-    }
-
-    /**
-     * Clears specific cache entries related to a UserMetadata object.
-     */
-    private void clearSpecificCache (UserMetadata userMetadata) {
-        if (userMetadata == null) return;
-
-        String lob = userMetadata.getLob();
-        if (lob == null) {
-            lob = "default";
-        }
-
-        String loginId = userMetadata.getLoginid();
-        String type = userMetadata.getType();
-        String value = userMetadata.getValue();
-
-        distributedCache.clearCache(lob, CACHE_DOMAIN, "USERMETATDATA_" + loginId);
-        distributedCache.clearCache(lob, CACHE_DOMAIN, type + value);
-        distributedCache.clearCache(lob, CACHE_DOMAIN, loginId + type + value);
     }
 }

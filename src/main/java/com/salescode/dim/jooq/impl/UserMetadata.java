@@ -1,6 +1,5 @@
 package com.salescode.dim.jooq.impl;
 
-import com.salescode.dim.jooq.generated.tables.pojos.UserMetadata;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;

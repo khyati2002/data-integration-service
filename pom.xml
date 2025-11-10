@@ -171,6 +171,13 @@ under the License.
             <version>8.0.1.Final</version>
         </dependency>
 
+        <!-- Jts-Core (Geometry coordinate system) -->
+        <dependency>
+            <groupId>org.locationtech.jts</groupId>
+            <artifactId>jts-core</artifactId>
+            <version>1.18.0</version>
+        </dependency>
+
         <!--	test dependencies	-->
         <dependency>
             <groupId>org.apache.flink</groupId>
