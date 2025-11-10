@@ -72,11 +72,15 @@ public class DataEnrichmentService {
         }
 
         String modelType = currentDataModels.get(0).getClass().getSimpleName();
-        List<EnrichmentInfo> enrichmentRules = fetchEnrichmentRules(phase, modelType);
+//        List<EnrichmentInfo> enrichmentRules = fetchEnrichmentRules(phase, modelType);
+        List<EnrichmentInfo> enrichmentRules = Collections.emptyList();
 
-        if (enrichmentRules.isEmpty()) {
+
+        if (true) {
             return OperationResult.of(OperationResult.Status.OK, currentDataModels);
         }
+
+
 
         List<CommonDataModel> resultantModels = new ArrayList<>(currentDataModels);
         List<EnrichmentResult> allResults = new ArrayList<>();

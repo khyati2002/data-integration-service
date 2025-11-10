@@ -43,7 +43,7 @@ public class EntityUtils {
     private final Map<String, Class<? extends CommonDataModel>> entityImplClassMap = new ConcurrentHashMap<>();
     public static final String DYNAMIC_UNIQUE_KEY = "DynamicUniqueKey";
     private static final MetaDataService metadataService=new MetaDataService();
-    private static final Logger LOG = (Logger) LoggerFactory.getLogger(SalesService.class);
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(EntityUtils.class);
 
 
     Set<Class<? extends CommonDataModel>> subClasses = ReflectionUtils.findSubClasses(CommonDataModel.class);

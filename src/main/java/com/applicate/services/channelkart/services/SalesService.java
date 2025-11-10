@@ -10,9 +10,9 @@ import com.applicate.services.channelkart.utils.JSONUtils;
 import com.applicate.services.channelkart.utils.NullUtils;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.*;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import com.salescode.dim.PreProcessPipelineService;
-import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
@@ -87,7 +87,7 @@ public class SalesService extends AbstractCDMService<Sales> {
         dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry, etlRegistry);
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
         outletDetailsService = new OutletDetailsService();
-        entityUtils =  EntityUtils.getInstance(getDslContext());
+        entityUtils =  new EntityUtils(getDslContext());
     }
 
     @Cacheable(cacheName = "dataintegration-sales")
@@ -191,7 +191,7 @@ public class SalesService extends AbstractCDMService<Sales> {
             user2.setPassword(user);
             user2.setName(user);
             user2.setLocationHierarchy(userService.findByLoginId(SecurityContextUtils.getPrincipal()).getLocationHierarchy());
-            od = userService.save(user2);
+//            od = userService.save(user2);
             User u = userService.findByLoginId(user);
             if (u != null) {
                 out = u;
@@ -221,17 +221,17 @@ public class SalesService extends AbstractCDMService<Sales> {
         }
 
         User findByLoginId = userService.findByLoginId(sales.getLoginid());
-        if (findByLoginId!=null) {
+        if (sales.getLoginId() != null && findByLoginId==null) {
             if (sales.getLoginid() != null && findByLoginId == null) {
                 synchronized (sales.getLoginid().intern()) {
                     User user = getOrSetUser(sales.getLoginid());
-                    sales.setLoginid(user.getLoginid());
+//                    sales.setLoginid(user.getLoginid());
                     findByLoginId = user;
                 }
             }
-            if (findByLoginId.getActiveStatus() == null) {
-                sales.setActiveStatus(ActiveStatus.INACTIVE);
-            }
+//            if (findByLoginId.getActiveStatus() == null) {
+//                sales.setActiveStatus(ActiveStatus.INACTIVE);
+//            }
         }
     }
 
@@ -343,8 +343,6 @@ public class SalesService extends AbstractCDMService<Sales> {
                 } else {
                     idValue = value.toString();
                 }
-                // note: jOOQ will handle quoting; escapeSql kept only if you rely on that elsewhere.
-                // Query by id
                 return getDslContext().selectFrom(CK_SALES)
                         .where(CK_SALES.ID.eq(idValue))
                         .fetchOptionalInto(Sales.class)
@@ -352,7 +350,6 @@ public class SalesService extends AbstractCDMService<Sales> {
             }
         }
 
-        // 2) Fallbacks similar to your previous jOOQ helper:
         if (sales.getId() != null) {
             return getDslContext().selectFrom(CK_SALES)
                     .where(CK_SALES.ID.eq(sales.getId()))
@@ -366,18 +363,6 @@ public class SalesService extends AbstractCDMService<Sales> {
                     .fetchOptionalInto(Sales.class)
                     .orElse(null);
         }
-
-        // 3) Final fallback: composite lookup (adjust fields if needed)
-//        if (sales.getOutletCode() != null && sales.getLoginId() != null && sales.getTxnTime() != null) {
-//            return getDslContext().selectFrom(CK_SALES)
-//                    .where(CK_SALES.OUTLET_CODE.eq(sales.getOutletCode()))
-//                    .and(CK_SALES.LOGIN_ID.eq(sales.getLoginId()))
-//                    .and(CK_SALES.TXN_TIME.eq(sales.getTxnTime()))
-//                    .fetchOptionalInto(Sales.class)
-//                    .orElse(null);
-//        }
-
-        // nothing to lookup
         return null;
     }
 
@@ -451,47 +436,26 @@ public class SalesService extends AbstractCDMService<Sales> {
     @Override
     public Collection<Sales> batchSave(Collection<Sales> salesCollection) {
         LOG.info("Size of list is {}", salesCollection.size());
-//        salesCollection.forEach(sales -> save(sales,findUniqueRecord(Sales.class, sales)));
-        List<Sales> salesList = new ArrayList<>(salesCollection);
-
-        LOG.info("Pre Batch Save Called with size {}" ,salesList.size());
-        preBatchSave(salesList);
-
-        List<List<Sales>> saveItemsList = getItemsToSaveList(salesList);
-
-
-        if (!saveItemsList.get(0).isEmpty()) {
-            getDslContext().batchInsert(
-                    saveItemsList.get(0).stream()
-                            .map(sale -> getDslContext().newRecord(CK_SALES, sale))
-                            .collect(Collectors.toList())
-            ).execute();
-        }
-
-        if (!saveItemsList.get(1).isEmpty()) {
-            getDslContext().batchUpdate(
-                    saveItemsList.get(1).stream()
-                            .map(sale -> {
-                                return getDslContext().newRecord(CK_SALES, sale);
-                            })
-                            .collect(Collectors.toList())
-            ).execute();
-        }
-
-        LOG.info("Batch save successful");
-        CacheManager.getInstance().evictAll("dataintegration-sales");
-        return salesList;
+        return salesCollection.stream()
+                       .map(sales -> {
+                           try {
+                               return save(sales, findByDynamicIdUsingJooq(sales));
+                           } catch (JsonProcessingException e) {
+                               throw new RuntimeException(e);
+                           }
+                       })
+                       .collect(Collectors.toList());
     }
 
 
 
-    private void save(Sales sales, Sales salesDb) throws JsonProcessingException {
+    private Sales save(Sales sales, Sales salesDb) throws JsonProcessingException {
         if(salesDb!=null && TALLY.equalsIgnoreCase(sales.getSource())){
                 sales.setUpdate(true);
                 sales.setOldModel(EntityUtils.deepClone(salesDb));
             }
         var sl = sales;
-//       createAssociatedData(sl);
+       createAssociatedData(sl);
 
         if (salesDb != null) {
                 LocalDateTime saleCreationTime = sl.getCreationTime();
@@ -547,6 +511,7 @@ public class SalesService extends AbstractCDMService<Sales> {
         var sls = sales;
         cdmSave(sls);
         addingOrDeductingStock(sls);
+        return sls;
     }
 
 
@@ -563,8 +528,9 @@ public class SalesService extends AbstractCDMService<Sales> {
     }
 
     public void cdmSave(Sales sales) throws JsonProcessingException {
-        addReturnParameters(sales);
-        super.save(sales);
+        getDslContext().insertInto(CK_SALES)
+                .set(getDslContext().newRecord(CK_SALES, sales))
+                .execute();
         if (PropertyRegistry.getAsBoolean(PropertyDefinition.CREATE_GRN_FOR_INVOICE) && isPrimaryInvoice(sales.getOutletCode())) {
             org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode extendedAttributes = sales.getExtendedAttributes();
             String status = "IntegrationGrnStatus";
@@ -746,8 +712,15 @@ public class SalesService extends AbstractCDMService<Sales> {
 
     private void addReturnParameters(Sales sales) {
         boolean flag = sales.getExtendedAttributes() != null ;
+        JsonNode extAttr = sales.getExtendedAttributes();
         if (flag) {
-            var exAttrNode = (ObjectNode) sales.getExtendedAttributes();
+            ObjectNode exAttrNode;
+            if (extAttr != null && extAttr.isObject()) {
+                exAttrNode = (ObjectNode) extAttr;
+            } else {
+                exAttrNode = JSONUtils.getObjectMapper().createObjectNode();
+            }
+
             exAttrNode.put("postProcess", "true");
             sales.setExtendedAttributes(exAttrNode);
             if (exAttrNode.get("return") != null && exAttrNode.get("return").asBoolean()) {
