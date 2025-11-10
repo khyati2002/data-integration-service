@@ -25,10 +25,13 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 	public static final String BATCH_CODE_SEPARATOR = "-";
 	private static final Logger LOG = LoggerFactory.getLogger(ProductDetailsService.class);
 	private final List<String> fileNameColumns = Arrays.asList("fileName", "fileName_a", "fileName_b", "fileName_c", "fileName_f", "fileName_l");
-	private final LocationService locationService;
-	private final ProductDetailsRepository productDetailsRepository;
+	private  LocationService locationService;
+	private  ProductDetailsRepository productDetailsRepository;
 
 
+	public ProductDetailsService(){
+
+	}
 	public ProductDetailsService(ProductDetailsRepository productDetailsRepository) {
 		this.productDetailsRepository = productDetailsRepository;
 		this.locationService = new LocationService();
