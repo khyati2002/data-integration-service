@@ -417,6 +417,11 @@ under the License.
                                     <converter>com.salescode.dim.jooq.DoubleToFloatConverter</converter>
                                     <includeExpression>ck_target_results\.achieved</includeExpression>
                                 </forcedType>
+                                <forcedType>
+                                    <name>BOOLEAN</name>
+                                    <includeExpression>(?i).*\.changed</includeExpression>
+                                </forcedType>
+
                             </forcedTypes>
                         </database>
                         <generate>
