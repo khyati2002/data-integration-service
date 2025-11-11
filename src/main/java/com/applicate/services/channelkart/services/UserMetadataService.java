@@ -77,20 +77,22 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
      * Splits the list into items for insertion and items for update, checking for changes.
      */
     private List<List<UserMetadata>> getItemsToSaveList(List<UserMetadata> metadataList) {
-        List<String> loginIds = metadataList.stream()
-                .map(UserMetadata::getLoginid)
+        List<String> values = metadataList.stream()
+                .map(UserMetadata::getValue)
+                .distinct()
                 .collect(Collectors.toList());
 
-        // Assumes a composite key of loginId and type and value for uniqueness,
-        // matching the getByLoginIdAndTypeAndValue method.
-        // We fetch all existing metadata for the relevant loginIds.
+        // Assumes a composite key of type and value for uniqueness,
+        // matching the getByTypeAndValue method.
+        // We fetch all existing metadata for the relevant values.
         Map<String, UserMetadata> savedMap = new HashMap<>();
-        if (!loginIds.isEmpty()) {
+        if (!values.isEmpty()) {
             getDslContext().selectFrom(CK_USER_METADATA)
-                    .where(CK_USER_METADATA.LOGINID.in(loginIds))
+                    .where(CK_USER_METADATA.VALUE.in(values))
+                    .and(CK_USER_METADATA.TYPE.eq(UserMetadataType.MARKET_MAPPING.name()))
                     .fetchInto(UserMetadata.class)
                     .forEach(meta -> {
-                        String key = meta.getLoginid() + meta.getType() + meta.getValue();
+                        String key = meta.getType() + meta.getValue();
                         savedMap.put(key, meta);
                     });
         }
@@ -100,8 +102,7 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
 
         for (UserMetadata meta : metadataList) {
             fillCommonAttributes(meta);
-
-            String key = meta.getLoginid() + meta.getType() + meta.getValue();
+            String key = meta.getType() + meta.getValue();
             UserMetadata savedMeta = savedMap.get(key);
 
             addHash(meta);
@@ -109,7 +110,7 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
             if (savedMeta == null) {
                 meta.setVersion(0);
                 if (meta.getId() == null) {
-                    meta.setId(UUID.randomUUID().toString());
+                    meta.setId(meta.getType() + "-" + meta.getValue());
                 }
                 meta.setOperationPerformed(ActionType.INSERT);
                 meta.setChanged(true);
