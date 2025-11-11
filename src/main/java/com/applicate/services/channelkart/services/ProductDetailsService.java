@@ -40,12 +40,6 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 		this.locationService = new LocationService();
 	}
 
-	public ProductDetailsService(){
-		if(productDetailsRepository == null) {
-			productDetailsRepository = new  ProductDetailsRepository(getDslContext());
-		}
-
-	}
 	public ProductDetailsService(ProductDetailsRepository productDetailsRepository) {
 		this.productDetailsRepository = productDetailsRepository;
 		this.locationService = new LocationService();
