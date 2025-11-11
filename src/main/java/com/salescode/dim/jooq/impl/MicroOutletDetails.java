@@ -2,14 +2,9 @@ package com.salescode.dim.jooq.impl;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-
-//import com.salescode.dim.utils.GeoUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonIgnore;
-import org.jooq.Geometry;
-import org.locationtech.jts.geom.Point;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -17,72 +12,34 @@ public class MicroOutletDetails extends com.salescode.dim.jooq.generated.tables.
 
     private static final long serialVersionUID = 5919494859608500774L;
 
-    /**
-     * Unique code of the outlet or store. It can also be the retailer code if there is no separate
-     * code for the shop
-     */
     private String outletcode;
 
     private String location;
 
-    /**
-     * If the outlet is being visited by a salesperson and order is taken by the salesperson, then there
-     * will be a defined route or beat. This route or beat comprises of outlets to be visited in that route.
-     */
+
     private String beatName;
 
-    /**
-     * Code of the beat assigned to the salesperson
-     */
     private String beat;
 
-    /**
-     * Name of the outlet
-     */
     private String outletName;
 
-    /**
-     * Type of outlet
-     * For Eg - Grocery, Food chain
-     */
     private String outletType;
 
-    /**
-     * Address of the outlet
-     */
     private String address;
 
-    /**
-     * Contact person of the outlet
-     */
     private String contactName;
 
-    /**
-     * Mobile number of the outlet
-     */
     private String contactno;
 
-    /**
-     * Address to be displayed in the profile
-     */
     private String displayAddress;
 
-    /**
-     * If the location of the outlet has been captured or not. If the latitude/longitude are captured, then it
-     * is mapped. Otherwise it is not.
-     */
+
     private boolean mapped;
 
-    /**
-     * The weeks in the month that the salesperson has to visit the outlet.
-     * For Eg - 1,3 means it will be visited in the 1st and 3rd week of the month.
-     */
+
     private String frequency;
 
-    /**
-     * Channel of the outlet
-     * For Eg - Retail or Wholesale etc.
-     */
+
     private String channel;
 
     private BigDecimal latitude;
