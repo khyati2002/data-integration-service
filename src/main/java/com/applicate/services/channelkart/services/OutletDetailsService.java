@@ -288,5 +288,21 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         saveOutletDetailHierarchyMetadata(outletDetailsHierarchymetadata);
     }
 
+    public List<OutletDetails> findByContactNumber(String contactNumber) {
+        if (StringUtils.isBlank(contactNumber)) {
+            return Collections.emptyList();
+        }
+
+        List<com.salescode.dim.jooq.generated.tables.pojos.OutletDetails> outletDetailsList =
+                getDslContext()
+                        .select(CK_OUTLET_DETAILS.asterisk().except(CK_OUTLET_DETAILS.COORDINATE))
+                        .from(CK_OUTLET_DETAILS)
+                        .where(CK_OUTLET_DETAILS.CONTACTNO.eq(contactNumber))
+                        .fetchInto(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class);
+
+        return outletDetailsList.stream()
+                .map(OutletDetails::of)
+                .collect(Collectors.toList());
+    }
 
 }
