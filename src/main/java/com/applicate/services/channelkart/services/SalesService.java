@@ -147,7 +147,7 @@ public class SalesService extends AbstractCDMService<Sales> {
 
     private void createAssociatedData(Sales sales) {
         LOG.info(sales.getOutletcode());
-        if (sales.getOutletcode() == null) {
+        if (!sales.isOutletExists()) {
             MicroOutletDetails findByOutletCode = microOutletDetailsService.findByOutletCode(sales.getOutletcode());
             if (sales.getOutletcode() != null && findByOutletCode == null) {
                 synchronized (sales.getOutletcode().intern()) {
