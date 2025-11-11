@@ -24,6 +24,7 @@ public class Sales extends com.salescode.dim.jooq.generated.tables.pojos.Sales i
     private List<SalesHistory> salesHistory;
     private String invoiceNumber;
     private boolean update;
+    private Boolean outletExists;
 
     public Sales() {
         super();
@@ -59,5 +60,14 @@ public class Sales extends com.salescode.dim.jooq.generated.tables.pojos.Sales i
             return new ArrayList<>();
         }
         return salesHistory;
+    }
+
+
+    public boolean isOutletExists() {
+        return outletExists;
+    }
+
+    public void setOutletExists(boolean outletExists) {
+        this.outletExists = outletExists;
     }
 }
