@@ -60,6 +60,7 @@ public class SalesService extends AbstractCDMService<Sales> {
     private final DivisionService divisionService;
     private final MetaDataService metaDataService;
     private final OutletDetailsService outletDetailsService;
+    private final MicroOutletDetailsService microOutletDetailsService;
     private static final String CONTACT_NO = "0000000000";
     private final EntityUtils entityUtils;
     private final SalesGRNService salesGRNService;
@@ -79,6 +80,7 @@ public class SalesService extends AbstractCDMService<Sales> {
         dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry, etlRegistry);
         outletDetailsService = new OutletDetailsService();
         entityUtils =  new EntityUtils(getDslContext());
+        microOutletDetailsService = new MicroOutletDetailsService();
     }
 
     @Cacheable(cacheName = "dataintegration-sales")
@@ -91,17 +93,18 @@ public class SalesService extends AbstractCDMService<Sales> {
     }
 
 
-    private OutletDetails getOrSaveOutlet(String outletCode) {
-        OutletDetails out;
-        OutletDetails od = outletDetailsService
+    private MicroOutletDetails getOrSaveOutlet(String outletCode) {
+        MicroOutletDetails out;
+        MicroOutletDetails od = microOutletDetailsService
                 .findByOutletCode(outletCode);
         if (od == null) {
-            OutletDetails microOutletDetails = new OutletDetails();
+            MicroOutletDetails microOutletDetails = new MicroOutletDetails();
             microOutletDetails.setOutletCode(outletCode);
             microOutletDetails.setActiveStatus(ActiveStatus.INACTIVE);
             microOutletDetails.setContactno(CONTACT_NO);
-            od = outletDetailsService.save(microOutletDetails);
-            OutletDetails outletDetails = outletDetailsService
+            microOutletDetails.setLoginid(outletCode);
+            od = microOutletDetailsService.save(microOutletDetails);
+            MicroOutletDetails outletDetails = microOutletDetailsService
                     .findByOutletCode(outletCode);
             if (outletDetails != null) {
                 out = outletDetails;
@@ -143,11 +146,11 @@ public class SalesService extends AbstractCDMService<Sales> {
 
     private void createAssociatedData(Sales sales) {
         LOG.info(sales.getOutletcode());
-        if (sales.getOutletcode() == null) {
-            OutletDetails findByOutletCode = outletDetailsService.findByOutletCode(sales.getOutletcode());
+        if (sales.getOutletcode() != null) {
+            MicroOutletDetails findByOutletCode = microOutletDetailsService.findByOutletCode(sales.getOutletcode());
             if (sales.getOutletcode() != null && findByOutletCode == null) {
                 synchronized (sales.getOutletcode().intern()) {
-                    OutletDetails outlet = getOrSaveOutlet(sales.getOutletcode());
+                    MicroOutletDetails outlet = getOrSaveOutlet(sales.getOutletcode());
                     sales.setOutletcode(outlet.getOutletcode());
                     findByOutletCode = outlet;
                 }
