@@ -1,6 +1,7 @@
 package com.salescode.dim.jooq.impl;
 
 
+import com.applicate.services.channelkart.utils.JSONUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,6 +9,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInc
 
 import java.beans.Transient;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -43,5 +45,18 @@ public class Sales extends com.salescode.dim.jooq.generated.tables.pojos.Sales i
 
     public String getLoginId() {
         return super.getLoginid();
+    }
+    public  List<SalesDetails> getSalesDetails() {
+        if(salesDetails==null){
+            return Collections.emptyList();
+        }
+        return salesDetails;
+    }
+
+    public  List<SalesHistory> getSalesHistory() {
+        if(salesHistory==null){
+            return Collections.emptyList();
+        }
+        return salesHistory;
     }
 }

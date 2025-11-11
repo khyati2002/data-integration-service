@@ -27,6 +27,7 @@ import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.shaded.zookeeper3.org.apache.zookeeper.Op;
+import org.jooq.UpdatableRecord;
 import org.jooq.impl.DSL;
 import scala.tools.ant.sabbus.Use;
 
