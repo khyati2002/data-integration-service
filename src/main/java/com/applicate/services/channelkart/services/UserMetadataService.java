@@ -6,6 +6,7 @@ import com.applicate.services.channelkart.repository.UserMetadataRepository;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.cache.Cacheable;
+import org.jooq.DSLContext;
 import com.salescode.dim.jooq.generated.tables.records.CkUserMetadataRecord;
 import com.salescode.dim.jooq.impl.UserMetadata;
 
@@ -47,27 +48,29 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
         List<UserMetadata> itemsToInsert = saveItemsList.get(0);
         List<UserMetadata> itemsToUpdate = saveItemsList.get(1);
 
-        // Batch Insert
-        if (!itemsToInsert.isEmpty()) {
-            getDslContext().batchInsert(
-                    itemsToInsert.stream()
-                            .map(meta -> getDslContext().newRecord(CK_USER_METADATA, meta))
-                            .collect(Collectors.toList())
-            ).execute();
-        }
+        getDslContext().transaction(config -> {
+            DSLContext txnDsl = config.dsl();
 
-        // Batch Update
-        if (!itemsToUpdate.isEmpty()) {
-            getDslContext().batchUpdate(
-                    itemsToUpdate.stream()
-                            .map(meta -> {
-                                CkUserMetadataRecord records = getDslContext().newRecord(CK_USER_METADATA, meta);
-                                records.changed(CK_USER_METADATA.ID, false);
-                                return records;
-                            })
-                            .collect(Collectors.toList())
-            ).execute();
-        }
+            if (!itemsToInsert.isEmpty()) {
+                txnDsl.batchInsert(
+                        itemsToInsert.stream()
+                                .map(meta -> txnDsl.newRecord(CK_USER_METADATA, meta)) // <-- Use txnDsl
+                                .collect(Collectors.toList())
+                ).execute();
+            }
+
+            if (!itemsToUpdate.isEmpty()) {
+                txnDsl.batchUpdate(
+                        itemsToUpdate.stream()
+                                .map(meta -> {
+                                    CkUserMetadataRecord records = txnDsl.newRecord(CK_USER_METADATA, meta); // <-- Use txnDsl
+                                    records.changed(CK_USER_METADATA.ID, false);
+                                    return records;
+                                })
+                                .collect(Collectors.toList())
+                ).execute();
+            }
+        });
 
         CacheManager.getInstance().evictAll(CACHE_NAME);
         return metadataList;
