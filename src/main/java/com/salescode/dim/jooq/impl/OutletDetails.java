@@ -4,6 +4,7 @@
 package com.salescode.dim.jooq.impl;
 
 
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
@@ -41,9 +42,34 @@ public class OutletDetails extends com.salescode.dim.jooq.generated.tables.pojos
         return new OutletDetails(outletDetails);
     }
 
+    public User getUserName() {
+        return this.userName;
+    }
+
+    public void setUserName(User userName) {
+        this.userName = userName;
+    }
+
     @JsonSetter("outletCode")
     public void setOutletCode(String outletCode) {
         setOutletcode(outletCode);
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    //Renamed to avoid clashing with generated getLocationHierarchy() from pojo
+    public Location getLocationHierarchyModel() {
+        return this.getLocation();
+    }
+
+    public void setLocationHierarchyModel(Location location) {
+        this.setLocation(location);
     }
 
     public List<HierarchyMetadata> getImmediateParent() {
