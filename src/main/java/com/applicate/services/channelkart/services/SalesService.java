@@ -174,9 +174,9 @@ public class SalesService extends AbstractCDMService<Sales> {
                     throw new RuntimeException(e);
                 }
             }
-            if (findByLoginId.getActiveStatus() == null) {
-                sales.setActiveStatus(ActiveStatus.INACTIVE);
-            }
+        if (findByLoginId != null  &&   !findByLoginId.isActive()) {
+            sales.setActiveStatus(ActiveStatus.INACTIVE);
+        }
     }
 
 
