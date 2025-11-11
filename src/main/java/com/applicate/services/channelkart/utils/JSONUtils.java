@@ -101,6 +101,13 @@ public class JSONUtils {
 		}
 	}
 
+
+
+
+	public static JsonNode toJsonNode(Object item) {
+		return get().convertValue(item,JsonNode.class);
+	}
+
 	public static <T> T parse(String data, Class<T> tClass) {
 		try {
 			return OBJECT_MAPPER.readValue(data, tClass);
@@ -111,6 +118,11 @@ public class JSONUtils {
 		}
 	}
 
+	public static JsonNode toJsonNode(Map<?, ?> input) {
+		return OBJECT_MAPPER.convertValue(input, JsonNode.class);
+	}
+
+
 	public static <T> T convert(Object node, TypeReference<List<Map<String, String>>> typeReference) {
 		return (T) OBJECT_MAPPER.convertValue(node, typeReference);
 	}
@@ -118,4 +130,6 @@ public class JSONUtils {
 	public static Stream<JsonNode> stream(JsonNode nodes) {
 		return StreamSupport.stream(nodes.spliterator(), false);
 	}
+
+
 }
