@@ -320,70 +320,73 @@ public class SalesService extends AbstractCDMService<Sales> {
     }
 
     private Sales save(Sales sales, Sales salesDb) throws JsonProcessingException {
-        if(salesDb!=null && TALLY.equalsIgnoreCase(sales.getSource())){
+        try {
+            if (salesDb != null && TALLY.equalsIgnoreCase(sales.getSource())) {
                 sales.setUpdate(true);
                 sales.setOldModel(EntityUtils.deepClone(salesDb));
             }
-        var sl = sales;
-       createAssociatedData(sl);
+            var sl = sales;
+            createAssociatedData(sl);
 
-        if (salesDb != null) {
+            if (salesDb != null) {
                 LocalDateTime saleCreationTime = sl.getCreationTime();
-                initializeDate(sl,salesDb,saleCreationTime);
-            List<SalesDetails> salesDetails = salesDb.getSalesDetails();
-            Map<String, SalesDetails> salesDMap = getSalesDetailMap(salesDetails);
-            Map<String, SalesDetails> salesMap = getSalesDetailMap(sl.getSalesDetails());
-            List<SalesDetails> deletedSalesDetails = salesDb.getSalesDetails().stream().filter(o -> !salesMap.containsKey(o.getBatchCode() + o.getBatchId() + o.getType())).collect(Collectors.toList());
-            Sales finalSales = sales;
-            deletedSalesDetails.forEach(od -> {
-                od.setCaseQuantity(0.0);
-                od.setPieceQuantity(0.0);
-                od.setOtherUnitQuantity(0.0);
-                od.setInitialCaseQuantity(0.0);
-                od.setInitialPieceQuantity(0.0);
-                od.setInitialOtherUnitQuantity(0.0);
-                od.setNormalizedQuantity(0.0);
-                od.setPrice(0.0);
-                od.setNetAmount(0.0);
-                od.setBillAmount(0.0);
-                od.setInitialAmount(0.0);
-                od.setBatchIds(org.jooq.JSON.valueOf(JSONUtils.getObjectMapper().createArrayNode().toString()));
-                od.setDiscountInfo(null);
-                finalSales.getSalesDetails().add(od);
-            });
-            sl.getSalesDetails().forEach(sld -> {
-                if (salesDMap.get(sld.getBatchCode() + sld.getBatchId() + sld.getType()) != null) {
-                    var saleDB = salesDMap.get(sld.getBatchCode()+sld.getBatchId()+sld.getType());
-                    double amtDiff = sld.getInitialAmount() - saleDB.getInitialAmount();
-                    double qtyDiff = sld.getNormalizedQuantity() - saleDB.getNormalizedQuantity();
-                    if(NullUtils.isNull(sld.getDiscountInfo())){
-                        saleDB.setDiscountInfo(null);
-                    }
-                    EntityUtils.copyPropertiesWithoutMerging(sld, saleDB, SYSTEM_TIME,VERSION );
+                initializeDate(sl, salesDb, saleCreationTime);
+                List<SalesDetails> salesDetails = salesDb.getSalesDetails();
+                Map<String, SalesDetails> salesDMap = getSalesDetailMap(salesDetails);
+                Map<String, SalesDetails> salesMap = getSalesDetailMap(sl.getSalesDetails());
+                List<SalesDetails> deletedSalesDetails = salesDb.getSalesDetails().stream().filter(o -> !salesMap.containsKey(o.getBatchCode() + o.getBatchId() + o.getType())).collect(Collectors.toList());
+                Sales finalSales = sales;
+                deletedSalesDetails.forEach(od -> {
+                    od.setCaseQuantity(0.0);
+                    od.setPieceQuantity(0.0);
+                    od.setOtherUnitQuantity(0.0);
+                    od.setInitialCaseQuantity(0.0);
+                    od.setInitialPieceQuantity(0.0);
+                    od.setInitialOtherUnitQuantity(0.0);
+                    od.setNormalizedQuantity(0.0);
+                    od.setPrice(0.0);
+                    od.setNetAmount(0.0);
+                    od.setBillAmount(0.0);
+                    od.setInitialAmount(0.0);
+                    od.setBatchIds(org.jooq.JSON.valueOf(JSONUtils.getObjectMapper().createArrayNode().toString()));
+                    od.setDiscountInfo(null);
+                    finalSales.getSalesDetails().add(od);
+                });
+                sl.getSalesDetails().forEach(sld -> {
+                        if (salesDMap.get(sld.getBatchCode() + sld.getBatchId() + sld.getType()) != null) {
+                            var saleDB = salesDMap.get(sld.getBatchCode() + sld.getBatchId() + sld.getType());
+                            double amtDiff = sld.getInitialAmount() - saleDB.getInitialAmount();
+                            double qtyDiff = sld.getNormalizedQuantity() - saleDB.getNormalizedQuantity();
+                            if (NullUtils.isNull(sld.getDiscountInfo())) {
+                                saleDB.setDiscountInfo(null);
+                            }
+                            EntityUtils.copyPropertiesWithoutMerging(sld, saleDB, SYSTEM_TIME, VERSION);
 
-                    addIncreasedAmountQuantity(saleDB,amtDiff,qtyDiff);
+                            addIncreasedAmountQuantity(saleDB, amtDiff, qtyDiff);
 
-                } else {
-                    salesDb.getSalesDetails().add(sld);
-                    addIncreasedAmountQuantity(sld,sld.getInitialAmount(),sld.getNormalizedQuantity());
-                }
-            });
-            EntityUtils.copyPropertiesWithoutMerging(sales, salesDb, SALES_DETAILS, VERSION);
-            sales = salesDb;
-        }else {
+                        } else {
+                            salesDb.getSalesDetails().add(sld);
+                            addIncreasedAmountQuantity(sld, sld.getInitialAmount(), sld.getNormalizedQuantity());
+                        }
+                });
+                EntityUtils.copyPropertiesWithoutMerging(sales, salesDb, SALES_DETAILS, VERSION);
+                sales = salesDb;
+            } else {
 
-                for(SalesDetails sld:sl.getSalesDetails()) {
+                for (SalesDetails sld : sl.getSalesDetails()) {
                     sld.setInvoiceNumber(sl.getId());
                     addIncreasedAmountQuantity(sld, sld.getInitialAmount(), sld.getNormalizedQuantity());
                 }
+            }
+            addReturnParameters(sales);
+            var sls = sales;
+            cdmSave(sls);
+            addingOrDeductingStock(sls);
+            return sls;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        addReturnParameters(sales);
-        var sls = sales;
-        cdmSave(sls);
-        addingOrDeductingStock(sls);
-        return sls;
     }
-
 
 
 // save fucntions -----------------------------------------------------------------------------

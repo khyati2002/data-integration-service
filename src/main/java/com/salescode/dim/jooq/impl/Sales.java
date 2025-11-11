@@ -9,6 +9,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInc
 
 import java.beans.Transient;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,14 +49,14 @@ public class Sales extends com.salescode.dim.jooq.generated.tables.pojos.Sales i
     }
     public  List<SalesDetails> getSalesDetails() {
         if(salesDetails==null){
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
         return salesDetails;
     }
 
     public  List<SalesHistory> getSalesHistory() {
         if(salesHistory==null){
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
         return salesHistory;
     }
