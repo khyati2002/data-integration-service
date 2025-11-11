@@ -8,15 +8,16 @@ import com.applicate.services.channelkart.services.SequenceInfoService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.salescode.dim.etl.EnrichmentResult;
 import com.salescode.dim.etl.OperationResult;
+import com.salescode.dim.etl.enrichment.AbstractEnrichment;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.SequenceInfo;
 import org.jooq.tools.StringUtils;
 
 import java.util.Date;
 
-public class GenericOutletDetailsEnrichment {
+public class GenericOutletDetailsEnrichment extends AbstractEnrichment<OutletDetails> {
 
-	private SequenceInfoService sequenceService= (SequenceInfoService) ServiceLocator.lookup(SequenceInfo.class);
+	private final SequenceInfoService sequenceService= (SequenceInfoService) ServiceLocator.lookup(SequenceInfo.class);
 	/**
 	 * Apply.
 	 *
