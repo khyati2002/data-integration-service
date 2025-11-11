@@ -3,6 +3,7 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.repository.ProductDetailsRepository;
+import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.jooq.generated.tables.pojos.Productmetadata;
 import com.salescode.dim.jooq.impl.Location;
@@ -15,7 +16,13 @@ import org.slf4j.LoggerFactory;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_PRODUCTDETAILS;
@@ -28,6 +35,10 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 	private final LocationService locationService;
 	private final ProductDetailsRepository productDetailsRepository;
 
+	public ProductDetailsService() {
+		this.productDetailsRepository = new ProductDetailsRepository(getDslContext());
+		this.locationService = new LocationService();
+	}
 
 	public ProductDetailsService(ProductDetailsRepository productDetailsRepository) {
 		this.productDetailsRepository = productDetailsRepository;
@@ -52,7 +63,8 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 
 		for (ProductDetails productDetails : productDetailsList) {
 			productDetails.setId(new IdGenerator(productDetails.getClass().getSimpleName()).getId(productDetails));
-			productDetails.setChanged(true);
+			productDetails.setChanged(false);
+			productDetails.setPriority(0);
 			productDetails.setActiveStatus(ActiveStatus.ACTIVE);
 			fillBatchCode(productDetails);
 			processFileNames(productDetails);
@@ -73,15 +85,22 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 			fillAttributes(product, ProductDetails.of(savedList.get(product.getBatchCode())));
 			fillCommonAttributes(product);
 
+			super.addHash(product);
 			if (savedList.get(product.getBatchCode()) == null) {
 				product.setVersion(0);
 				product.setOperationPerformed(ActionType.INSERT);
+				product.setChanged(true);
 				itemsToInsert.add(product);
 			} else {
 				ProductDetails existingProduct = ProductDetails.of(savedList.get(product.getBatchCode()));
+				product.setId(existingProduct.getId());
 				product.setVersion(existingProduct.getVersion() + 1);
-				product.setOperationPerformed(ActionType.UPDATE);
-				itemsToUpdate.add(product);
+				if (!Objects.equals(product.getHash(), existingProduct.getHash())) {
+					product.setChanges(CdmDiffUtil.getChanges(product, existingProduct));
+					product.setOperationPerformed(ActionType.UPDATE);
+					product.setChanged(true);
+					itemsToUpdate.add(product);
+				}
 			}
 		}
 
@@ -171,8 +190,10 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 
 		for (ProductDetails pd : productDetailsList) {
 			List<ProductMetaData> metaList = pd.getProductMetaData();
+			if (metaList == null || metaList.isEmpty()) {
+				continue;
+			}
 			IdGenerator generator = new IdGenerator(metaList.get(0).getClass().getSimpleName());
-
 			Map<String, Productmetadata> existingMetaMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.BATCH_CODE.eq(pd.getBatchCode())).fetch().map(rec -> rec.into(Productmetadata.class))   // convert record to POJO
 					.stream().collect(Collectors.toMap(Productmetadata::getId, m -> m));
 
@@ -202,8 +223,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 	}
 
 	private void populateBatchLocation(List<ProductMetaData> metaDataList) {
-		List<Location> locationList = metaDataList.stream().map(ProductMetaData::getLocation)  // Assuming there's a getLocation() method// Filter out null locations
-				.collect(Collectors.toList());
+		List<Location> locationList = metaDataList.stream().map(ProductMetaData::getLocation).collect(Collectors.toList());
 		List<Location> savedList = locationService.findLocationOrPersistLocation(locationList);
 		for (int i = 0; i < metaDataList.size(); i++) {
 			metaDataList.get(i).setLocationHierarchy(savedList.get(i).getLocationHierarchy());

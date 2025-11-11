@@ -9,6 +9,10 @@ public class ApprovalInfoService extends AbstractCDMService<ApprovalInfo> {
 
 	private final ApprovalInfoRepository approvalInfoRepository;
 
+	public ApprovalInfoService() {
+		this.approvalInfoRepository = new ApprovalInfoRepository(getDslContext());
+	}
+
 	public ApprovalInfoService(ApprovalInfoRepository approvalInfoRepository) {
 		this.approvalInfoRepository = approvalInfoRepository;
 	}
