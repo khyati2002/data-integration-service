@@ -2,8 +2,14 @@ package com.salescode.dim.jooq.impl;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+
+//import com.salescode.dim.utils.GeoUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jooq.Geometry;
+import org.locationtech.jts.geom.Point;
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -104,9 +110,9 @@ public class MicroOutletDetails extends com.salescode.dim.jooq.generated.tables.
     private String distributionChannel;
 
     private String outletDivision;
-
+//
 //    @JsonIgnore
-//    private Point coordinate;
+//    private Geometry coordinate;
 
     private String hierarchy;
 
@@ -144,11 +150,11 @@ public class MicroOutletDetails extends com.salescode.dim.jooq.generated.tables.
         this.loginid = loginid;
     }
 
-//    public Point getCoordinate() {
+//    public Geometry getCoordinate() {
 //        return coordinate;
 //    }
 //
-//    public void setCoordinate(Point coordinate) {
+//    public void setCoordinate(Geometry coordinate) {
 //        this.coordinate = coordinate;
 //    }
 
@@ -328,19 +334,19 @@ public class MicroOutletDetails extends com.salescode.dim.jooq.generated.tables.
         return latitude;
     }
 
-//    public void setLatitude(Double latitude) {
-//        this.latitude = latitude;
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
 //        setCoordinate(GeoUtils.toGeoPint(latitude, longitude));
-//    }
+    }
 
     public BigDecimal getLongitude() {
         return longitude;
     }
 
-//    public void setLongitude(Double longitude) {
-//        this.longitude = longitude;
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
 //        setCoordinate(GeoUtils.toGeoPint(latitude, longitude));
-//    }
+    }
 
     @Override
     public int hashCode() {

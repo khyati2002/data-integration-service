@@ -104,7 +104,6 @@ public class SalesService extends AbstractCDMService<Sales> {
             microOutletDetails.setOutletCode(outletCode);
             microOutletDetails.setActiveStatus(ActiveStatus.INACTIVE);
             microOutletDetails.setContactno(CONTACT_NO);
-            microOutletDetails.setLoginid(outletCode);
             od = microOutletDetailsService.save(microOutletDetails);
             MicroOutletDetails outletDetails = microOutletDetailsService
                     .findByOutletCode(outletCode);
