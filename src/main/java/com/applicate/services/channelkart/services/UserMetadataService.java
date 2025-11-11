@@ -54,6 +54,7 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
                             .map(meta -> getDslContext().newRecord(CK_USER_METADATA, meta))
                             .collect(Collectors.toList())
             ).execute();
+            getDslContext().commit();
         }
 
         // Batch Update
@@ -67,6 +68,7 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
                             })
                             .collect(Collectors.toList())
             ).execute();
+            getDslContext().commit();
         }
 
         CacheManager.getInstance().evictAll(CACHE_NAME);
