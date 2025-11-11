@@ -2,6 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.client.properties.PropertyDefinition;
 import com.applicate.services.channelkart.client.properties.PropertyRegistry;
+import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.GRNStatus;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.JSONUtils;
@@ -22,6 +23,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.Arra
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
+import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
@@ -401,11 +403,37 @@ public class SalesService extends AbstractCDMService<Sales> {
     }
 
     public void cdmSave(Sales sales) throws JsonProcessingException {
-        getDslContext().insertInto(CK_SALES)
-                .set(getDslContext().newRecord(CK_SALES, sales))
-                .onDuplicateKeyUpdate()
-                .set(getDslContext().newRecord(CK_SALES, sales))
-                .execute();
+
+        DSLContext dsl = getDslContext();
+        String id =sales.getId();
+
+        Sales existing = dsl.selectFrom(CK_SALES)
+                                 .where(CK_SALES.ID.eq(id))
+                                 .fetchOneInto(Sales.class);
+
+        if (existing == null) {
+            sales.setVersion(0);
+            sales.setChanged(true);
+            sales.setOperationPerformed(ActionType.INSERT);
+            fillCommonAttributes(sales);
+            addHash(sales);
+            dsl.insertInto(CK_SALES)
+                    .set(dsl.newRecord(CK_SALES, sales))
+                    .execute();
+        } else {
+            sales.setId(existing.getId());
+            sales.setVersion(existing.getVersion() + 1);
+            sales.setChanged(true);
+            sales.setOperationPerformed(ActionType.UPDATE);
+            addHash(sales);
+            sales.setChanges(CdmDiffUtil.getChanges(sales, existing));
+
+            dsl.update(CK_SALES)
+                    .set(dsl.newRecord(CK_SALES, sales))
+                    .where(CK_SALES.ID.eq(id))
+                    .execute();
+        }
+
         if (PropertyRegistry.getAsBoolean(PropertyDefinition.CREATE_GRN_FOR_INVOICE) && isPrimaryInvoice(sales.getOutletCode())) {
             org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode extendedAttributes = sales.getExtendedAttributes();
             String status = "IntegrationGrnStatus";
