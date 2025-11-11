@@ -82,11 +82,13 @@ public class SalesGRNService extends AbstractCDMService<GRNInfo>{
             if (savedList.get(grnInfo.getId()) == null) {
                 grnInfo.setId(new IdGenerator(grnInfo.getClass().getSimpleName()).getId(grnInfo));
                 grnInfo.setVersion(0);
+                grnInfo.setChanged(true);
                 itemsToInsert.add(grnInfo);
                 grnInfo.setOperationPerformed(ActionType.INSERT);
             } else {
                 GRNInfo existinggrnInfo = savedList.get(grnInfo.getId());
                 grnInfo.setVersion(existinggrnInfo.getVersion() + 1);
+                grnInfo.setChanged(true);
                 grnInfo.setOperationPerformed(ActionType.UPDATE);
                 itemsToUpdate.add(grnInfo);
             }
