@@ -556,8 +556,8 @@ public class SalesService extends AbstractCDMService<Sales> {
             var productDetails = sd.getProductDetails();
             if (sd.getCaseQuantity() != 0) {
                 quantity = sd.getCaseQuantity();
-                otherUnitQty = productDetails.getCaseToOtherUnitQuantity().multiply(BigDecimal.valueOf(quantity)).doubleValue();
-                pieceQty = productDetails.getCaseToPieceQuantity().multiply(BigDecimal.valueOf(quantity)).doubleValue();
+                otherUnitQty = productDetails != null ? productDetails.getCaseToOtherUnitQuantity().multiply(BigDecimal.valueOf(quantity)).doubleValue(): 0.0;
+                pieceQty = productDetails != null ?productDetails.getCaseToPieceQuantity().multiply(BigDecimal.valueOf(quantity)).doubleValue():0.0;
             } else if (sd.getPieceQuantity() != 0) {
                 quantity = sd.getPieceQuantity();
                 pieceQty = quantity;
@@ -565,10 +565,10 @@ public class SalesService extends AbstractCDMService<Sales> {
                 quantity = sd.getOtherUnitQuantity();
                 otherUnitQty = quantity;
             }
-            if (productDetails.getPieceToOtherUnitQuantity().compareTo(BigDecimal.ZERO) != 0) {
+            if (productDetails!=null && productDetails.getPieceToOtherUnitQuantity().compareTo(BigDecimal.ZERO) != 0) {
                 float pieceToOtherUnitQuantity = productDetails.getPieceToOtherUnitQuantity().floatValue();
                 normalizedQty = (pieceToOtherUnitQuantity * pieceQty) + otherUnitQty;
-            } else if (productDetails.getOtherUnitToPieceQuantity().compareTo(BigDecimal.ZERO) != 0) {
+            } else if (productDetails!=null && productDetails.getOtherUnitToPieceQuantity().compareTo(BigDecimal.ZERO) != 0) {
                 float otherUnitToPieceQuantity = productDetails.getOtherUnitToPieceQuantity().floatValue();
                 normalizedQty = (otherUnitToPieceQuantity * otherUnitQty) + pieceQty;
             } else {

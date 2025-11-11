@@ -104,6 +104,9 @@ public class StockService extends AbstractCDMService<Stock> {
             processDeductAndAddStock(stocks,batchCode,batQty,flag,stocksToSaved);
 
         }
+        if(stocksToSaved.isEmpty()) {
+            return;
+        }
         batchSave(stocksToSaved);
     }
 
