@@ -2,7 +2,8 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
-import com.salescode.dim.jooq.impl.GRNInfo; 
+import com.applicate.services.channelkart.utils.IdGenerator;
+import com.salescode.dim.jooq.impl.GRNInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
@@ -79,6 +80,7 @@ public class SalesGRNService extends AbstractCDMService<GRNInfo>{
             fillCommonAttributes(grnInfo);
 
             if (savedList.get(grnInfo.getId()) == null) {
+                grnInfo.setId(new IdGenerator(grnInfo.getClass().getSimpleName()).getId(grnInfo));
                 grnInfo.setVersion(0);
                 itemsToInsert.add(grnInfo);
                 grnInfo.setOperationPerformed(ActionType.INSERT);
