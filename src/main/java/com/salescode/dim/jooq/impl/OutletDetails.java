@@ -46,6 +46,14 @@ public class OutletDetails extends com.salescode.dim.jooq.generated.tables.pojos
         setOutletcode(outletCode);
     }
 
+    public List<HierarchyMetadata> getImmediateParent() {
+        return immediateParent;
+    }
+
+    public void setImmediateParent(List<HierarchyMetadata> immediateParent) {
+        this.immediateParent = immediateParent;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
