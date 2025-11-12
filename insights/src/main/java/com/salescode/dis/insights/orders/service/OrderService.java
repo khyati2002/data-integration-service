@@ -73,7 +73,7 @@ public class OrderService {
         switch (request.getStage()) {
             case READ:
                 entity.setReadStatus(request.getStatus());
-              appendErrorMessage(entity, request.getErrorMessage());
+                appendErrorMessage(entity, request.getErrorMessage());
                 break;
             case PROCESS:
                 entity.setProcessStatus(request.getStatus());
@@ -148,7 +148,7 @@ public class OrderService {
         String existing = entity.getErrorMessage();
         if (existing == null || existing.isBlank()) {
             entity.setErrorMessage(newError);
-        } else {
+        } else if(!existing.equals(newError)) {
             entity.setErrorMessage(existing + " | " + newError);
         }
     }
