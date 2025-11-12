@@ -224,7 +224,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             if (savedList.get(outlet.getOutletcode()) == null) {
                 outlet.setVersion(0);
                 outlet.setId(UUID.randomUUID().toString());
-                outlet.setChanged(1==1);
+				outlet.setChanged(true);
                 itemsToInsert.add(outlet);
                 outlet.setOperationPerformed(ActionType.INSERT);
             } else {
@@ -238,7 +238,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 if (!Objects.equals(outlet.getHash(), existingOutlet.getHash())) {
                     outlet.setChanges(CdmDiffUtil.getChanges(outlet,existingOutlet));
                     outlet.setOperationPerformed(ActionType.UPDATE);
-              outlet.setChanged(1==1);
+					outlet.setChanged(true);
                     itemsToUpdate.add(outlet);
                 }
             }
