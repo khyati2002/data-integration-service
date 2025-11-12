@@ -63,7 +63,7 @@ public class SupplierMetaDataService extends AbstractCDMService<SupplierMetadata
 			if (savedList.get(outlet.getId()) == null) {
 				outlet.setVersion(0);
 				outlet.setId(UUID.randomUUID().toString());
-				outlet.setChanged(1==1);
+				outlet.setChanged(Boolean.TRUE);
 				itemsToInsert.add(outlet);
 				outlet.setOperationPerformed(ActionType.INSERT);
 			} else {
@@ -77,7 +77,7 @@ public class SupplierMetaDataService extends AbstractCDMService<SupplierMetadata
 				if (!Objects.equals(outlet.getHash(), existingOutlet.getHash())) {
 					outlet.setChanges(CdmDiffUtil.getChanges(outlet,existingOutlet));
 					outlet.setOperationPerformed(ActionType.UPDATE);
-					outlet.setChanged(1==1);
+					outlet.setChanged(Boolean.TRUE);
 					itemsToUpdate.add(outlet);
 				}
 			}
