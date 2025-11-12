@@ -15,6 +15,7 @@ import com.salescode.dim.jooq.impl.Targets;
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.beanutils.BeanUtils;
+import org.jooq.True;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
@@ -179,7 +180,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                     saveItemsList.get(0).stream()
                             .map(target -> {
                                 CkTargetsRecord targetsRecord = getDslContext().newRecord(CK_TARGETS, target);
-                                targetsRecord.setChanged(1==1);
+								targetsRecord.setChanged((byte)1);
                                 return targetsRecord;
                             }) // Convert to jOOQ Records
                             .collect(Collectors.toList())).execute();
@@ -189,7 +190,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                     saveItemsList.get(1).stream()
                             .map(target -> {
                                 CkTargetsRecord targetsRecord = getDslContext().newRecord(CK_TARGETS, target);
-                                targetsRecord.setChanged(1==1);
+								targetsRecord.setChanged((byte)1);
                                 targetsRecord.changed(CK_TARGETS.ID, false); // Avoid updating primary key
                                 return targetsRecord;
                             })

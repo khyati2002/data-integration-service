@@ -311,7 +311,7 @@ public class UserService extends AbstractCDMService<User> {
                 user.setVersion(0);
                 user.setId(UUID.randomUUID().toString());
                 user.setOperationPerformed(ActionType.INSERT);
-                user.setChanged(1==1);
+                user.setChanged(true);
                 itemsToInsert.add(user);
 
             } else {
