@@ -65,6 +65,14 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		return entity;
 	}
 
+	public List<GenericEntity> findByNameAndKey1(String var1, String var2) {
+		return getDslContext()
+				.selectFrom(CK_GENERIC_OBJECT)
+				.where(CK_GENERIC_OBJECT.NAME.eq(var1))
+				.and(CK_GENERIC_OBJECT.KEY1.eq(var2))
+				.fetchInto(GenericEntity.class);
+	}
+
 
 	@Override
 	public Collection<GenericEntity> batchSave(Collection<GenericEntity> genericEntityList) {
