@@ -95,7 +95,7 @@ public class OrderListner {
 
             String headerJson = new String(h.value(), StandardCharsets.UTF_8);
             Map<String, Object> headerMap = new ObjectMapper().readValue(headerJson, Map.class);
-            if(!headerMap.get("class").equals("Order")) return;
+            if(!headerMap.get("class").equals("Order") || headerMap.get("operation").toString().equals("UPDATE")) return;
 
             OrderEntity order = setCommonProps(headerMap);
             headerMap.keySet().stream()
