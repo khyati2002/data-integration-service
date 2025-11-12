@@ -110,21 +110,12 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		return genericEntity;
 	}
 
-	public GenericEntity readModelsByNameAndKey1(String name, String key1) {
-
-		GenericEntity genericEntity =
-				getDslContext()
-						.selectFrom(CK_GENERIC_OBJECT)
-						.where(CK_GENERIC_OBJECT.NAME.eq(name))
-						.and(CK_GENERIC_OBJECT.KEY1.eq(key1))
-						.fetchOneInto(GenericEntity.class);
-
-		return genericEntity;
+	public List<GenericEntity> readModelsByNameAndKey1(String name, String key1) {
+		return genericEntityRepository.findModelsByNameandKey1(name, key1);
 	}
 
 	public List<GenericEntity> readModelsByName(String name) {
 		return genericEntityRepository.readModelsByName(name);
-
 	}
 
 

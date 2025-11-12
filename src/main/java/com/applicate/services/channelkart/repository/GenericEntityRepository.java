@@ -24,4 +24,14 @@ public class GenericEntityRepository {
 
     }
 
+
+
+    public List<GenericEntity> findModelsByNameandKey1(String name, String key1){
+
+        return dsl.selectFrom(CK_GENERIC_OBJECT)
+                        .where(CK_GENERIC_OBJECT.NAME.eq(name))
+                        .and(CK_GENERIC_OBJECT.KEY1.eq(key1))
+                        .fetchInto(GenericEntity.class);
+    }
+
 }
