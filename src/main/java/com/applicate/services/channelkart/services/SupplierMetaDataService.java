@@ -62,7 +62,6 @@ public class SupplierMetaDataService extends AbstractCDMService<SupplierMetadata
 			fillCommonAttributes(outlet);
 			if (savedList.get(outlet.getId()) == null) {
 				outlet.setVersion(0);
-				outlet.setId(UUID.randomUUID().toString());
 				outlet.setChanged(Boolean.TRUE);
 				itemsToInsert.add(outlet);
 				outlet.setOperationPerformed(ActionType.INSERT);
