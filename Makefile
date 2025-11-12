@@ -4,22 +4,14 @@ JAVA_HOME := $(shell /usr/libexec/java_home -v 11 2>/dev/null || echo "/Library/
 
 init:
 	@if [ -d "./bundle/target/" ]; then \
-	   echo "Directory exists, skipping install."; \
-	   exit 0; \
+	  	echo "Directory exists, skipping install."; \
+      		exit 0; \
 	else \
-	   echo "Initializing"; \
-	   echo "Using JAVA_HOME: $(JAVA_HOME)"; \
-	   if [ ! -d "$(JAVA_HOME)" ]; then \
-	       echo "ERROR: Java 11 not found. Install it with: brew install openjdk@11"; \
-	       exit 1; \
-	   fi; \
-	   export JAVA_HOME=$(JAVA_HOME); \
-	   export PATH=$(JAVA_HOME)/bin:$$PATH; \
-	   java -version; \
-	   export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
-	   mvn clean install -f jooq/pom.xml -s settings.xml; \
-	   JAVA_HOME=$(/usr/libexec/java_home -v 11) mvn clean install -DskipTests=true -s settings.xml; \
-	   JAVA_HOME=$(/usr/libexec/java_home -v 11) mvn clean install -f bundle/pom.xml -s settings.xml; \
+	 echo "Initializing"; \
+     	  	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
+     		mvn clean install -f jooq/pom.xml -s settings.xml; \
+     		mvn clean install -DskipTests=true -s settings.xml; \
+     		mvn clean install -f bundle/pom.xml -s settings.xml; \
 	fi
 
 setup-submodule:
@@ -49,17 +41,7 @@ generate-bundle:
 	@cp bundle/target/bundle.jar lib/bundle.jar
 
 generate-dis-jar:
-	@echo "Generating DIS JAR with AWS CodeArtifact authentication..."
-	@echo "Using JAVA_HOME: $(JAVA_HOME)"; \
-	if [ ! -d "$(JAVA_HOME)" ]; then \
-	    echo "ERROR: Java 11 not found. Install it with: brew install openjdk@11"; \
-	    exit 1; \
-	fi; \
-	export JAVA_HOME=$(JAVA_HOME); \
-	export PATH=$(JAVA_HOME)/bin:$$PATH; \
-	java -version; \
-	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
-	mvn clean compile install -DskipTests=true -s settings.xml
+	mvn clean compile install -DskipTests=true
 
 generate-all: remove-submodule setup-submodule init generate-bundle generate-dis-jar
 
@@ -67,16 +49,7 @@ generate-bundle-only: init generate-bundle
 
 generate-project-jar:
 	@echo "Generating project JAR with AWS CodeArtifact authentication..."
-	@echo "Using JAVA_HOME: $(JAVA_HOME)"; \
-	if [ ! -d "$(JAVA_HOME)" ]; then \
-	    echo "ERROR: Java 11 not found. Install it with: brew install openjdk@11"; \
-	    exit 1; \
-	fi; \
-	export JAVA_HOME=$(JAVA_HOME); \
-	export PATH=$(JAVA_HOME)/bin:$$PATH; \
-	java -version; \
+
 	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
 	mvn clean install -f jooq/pom.xml -s settings.xml; \
 	mvn clean compile install -DskipTests=true -s settings.xml
-
-.PHONY: init setup-submodule remove-submodule generate-bundle generate-dis-jar generate-all generate-bundle-only generate-project-jar
