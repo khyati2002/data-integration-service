@@ -56,11 +56,40 @@ public class CreditOutlets extends CommonDataModel {
 
     private String lob;
 
+    private String hash;
+
+    private Integer version;
+
+    private String createdBy;
+
+    private String modifiedBy;
+
     // Constructors
     public CreditOutlets() {
         super();
     }
 
+    public CreditOutlets(CreditOutlets value) {
+        this.id = value.id;
+        this.activeStatus = value.activeStatus;
+        this.outletCode=value.outletCode;
+        this.outletName = value.outletName;
+        this.baseCreditLimit=value.baseCreditLimit;
+        this.currentCreditLimit=value.currentCreditLimit;
+        this.creditDays=value.creditDays;
+        this.invoiceCount=value.invoiceCount;
+        this.creditDayCode=value.creditDayCode;
+        this.availableCredit=value.availableCredit;
+        this.lob = value.lob;
+        this.hash=value.hash;
+    }
+
+    public static CreditOutlets of(CreditOutlets creditOutlets) {
+        if(creditOutlets == null) {
+            return null;
+        }
+        return new CreditOutlets(creditOutlets);
+    }
 
 
     public String getOutletCode() {
@@ -130,12 +159,12 @@ public class CreditOutlets extends CommonDataModel {
 
     @Override
     public Integer getVersion() {
-        return 0;
+        return version;
     }
 
     @Override
     public void setVersion(Integer version) {
-
+        this.version=version;
     }
 
     @Override
@@ -180,22 +209,22 @@ public class CreditOutlets extends CommonDataModel {
 
     @Override
     public String getCreatedBy() {
-        return "";
+        return createdBy;
     }
 
     @Override
     public void setCreatedBy(String createdBy) {
-
+        this.createdBy=createdBy;
     }
 
     @Override
     public String getModifiedBy() {
-        return "";
+        return modifiedBy;
     }
 
     @Override
     public void setModifiedBy(String modifiedBy) {
-
+        this.modifiedBy=modifiedBy;
     }
 
     public String getLob() {
@@ -228,12 +257,17 @@ public class CreditOutlets extends CommonDataModel {
 
     @Override
     public String getHash() {
-        return "";
+        return hash;
     }
 
     @Override
     public void setHash(String hash) {
+        this.hash=hash;
+    }
 
+    @Override
+    public boolean canHash() {
+        return true; // allow this entity to be hashed
     }
 
     public Integer getCreditDayCode() {
@@ -244,11 +278,5 @@ public class CreditOutlets extends CommonDataModel {
         this.creditDayCode = creditDayCode;
     }
 
-
-    @Override
-    public int hashCode() {
-        // Use BaseEntity's ID-based hash if ID exists, otherwise use business key
-        return getId() != null ? super.hashCode() : Objects.hash(outletCode);
-    }
 
 }
