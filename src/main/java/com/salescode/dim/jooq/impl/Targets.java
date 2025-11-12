@@ -28,6 +28,10 @@ public class Targets extends com.salescode.dim.jooq.generated.tables.pojos.Targe
         return targetResults;
     }
 
+    public void setTargetResults(List<TargetResults> targetResults) {
+        this.targetResults = targetResults;
+    }
+
     private Targets(com.salescode.dim.jooq.generated.tables.pojos.Targets targets) {
         super(targets);
     }
@@ -38,8 +42,4 @@ public class Targets extends com.salescode.dim.jooq.generated.tables.pojos.Targe
         }
         return new Targets(targets);
     }
-
-
 }
-
-
