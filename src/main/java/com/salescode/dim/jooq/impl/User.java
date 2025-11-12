@@ -22,7 +22,7 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
     private transient List<AuthRole> roles;
     private List<SupplierMetadata> supplierMetaData;
     private List<HierarchyMetadata> immediateParent;
-    private transient Set<String> designation;
+    private Set<String> designation;
     @Getter(value = AccessLevel.NONE)
     private Location locationHierarchy;
 
@@ -90,6 +90,10 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
 
     public List<HierarchyMetadata> getImmediateParent() {
         return immediateParent;
+    }
+
+    public boolean hasDesignation(String toMatch) {
+        return this.designation != null && this.designation.stream().anyMatch(d -> d.equals(toMatch));
     }
 
     @Override
