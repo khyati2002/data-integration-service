@@ -37,39 +37,47 @@ class CollectSink<T> implements SinkFunction<T> {
 public class DataStreamJobTest {
 
     public static String rawStreamingData = "{\n" +
-            "    \"requestId\": \"99f92b4a-ddeb-43be-8581-99de70095832\",\n" +
-            "    \"groupId\": \"2025-03-20\",\n" +
+            "    \"requestId\": \"70egrh7c-8bcb-4d51-a7a6-293a2b0d8e4c\",\n" +
+            "    \"groupId\": \"2025-11-11\",\n" +
+            "    \"fileId\": null,\n" +
             "    \"lob\": \"itcvissfainuat\",\n" +
-            "    \"loginId\": \"admin@applicate.in\",\n" +
-            "    \"batchNumber\": 0,\n" +
+            "    \"submittedBy\": null,\n" +
             "    \"transformerInfo\": [\n" +
             "        {\n" +
-            "            \"skipPreprocessing\": false,\n" +
-            "            \"skipPersist\": false,\n" +
-            "            \"entityName\": \"User\",\n" +
-            "            \"transformerId\": \"mdm_user_psr_integ_test\",\n" +
-            "            \"preprocessValidationExcludeGroup\": null,\n" +
-            "            \"messageLevelHash\": \"NUgKG5wpO4h0jfQJoXzBVUUVfX2sPWej4PXSdlD7HRw=\",\n" +
-            "            \"messageHashSupported\": false,\n" +
-            "            \"messageLevelKey\": \"mdm_user_psr_integ:User:4002583\",\n" +
-            "            \"cachedArtifact\": null,\n" +
-            "            \"operationType\": \"insert\"\n" +
+            "            \"entityName\": \"Targets\",\n" +
+            "            \"operationType\": \"insert\",\n" +
+            "            \"transformerId\": \"mdm_targets_transformer\"\n" +
             "        }\n" +
             "    ],\n" +
+            "    \"topicName\": null,\n" +
+            "    \"preserveOnFailure\": true,\n" +
             "    \"features\": [\n" +
             "        {\n" +
-            "            \"District\": \"EDIS\",\n" +
-            "            \"Branch\": \"EGAU\",\n" +
-            "            \"immediateParent\": \"NG22411\",\n" +
-            "            \"PSRCRMID\": \"4000999\",\n" +
-            "            \"PSRName\": \"Arpan PSR\",\n" +
-            "            \"userName\": \"9319420555\",\n" +
-            "            \"DSType\": \"PSR\",\n" +
-            "            \"AUS\": \"Y\",\n" +
-            "            \"PICK_UP_STATUS\": \"0\",\n" +
-            "            \"source_key\": \"integration\"\n" +
+            "            \"MONTH\": \"Nov\",\n" +
+            "            \"YEAR\": \"2025\",\n" +
+            "            \"PSRID\": \"4002883\",\n" +
+            "            \"DISTRICT\": \"WDIS\",\n" +
+            "            \"BRANCH\": \"WPUN\",\n" +
+            "            \"PARAMETER\": \"SSPSS Gate Numeric Ach\",\n" +
+            "            \"PRODUCT_LEVEL\": null,\n" +
+            "            \"FOCUS\": \"No\",\n" +
+            "            \"TARGET\": \"44.000000\",\n" +
+            "            \"ACH\": \"8.000000\",\n" +
+            "            \"ACH_PER\": \"18.180000\",\n" +
+            "            \"FOCUS_DESC\": null,\n" +
+            "            \"ALLOCATED_POINTS\": null,\n" +
+            "            \"EARNED_POINTS\": null,\n" +
+            "            \"MIN_SLAB_FROM\": null,\n" +
+            "            \"MAX_SLAB_FROM\": null,\n" +
+            "            \"MIN_SLAB_PAYOUT\": null,\n" +
+            "            \"MAX_SLAB_PAYOUT\": null\n" +
             "        }\n" +
-            "    ]\n" +
+            "    ],\n" +
+            "    \"loginId\": \"integration_user\",\n" +
+            "    \"offset\": null,\n" +
+            "    \"retryCount\": null,\n" +
+            "    \"ignoreS3Log\": false,\n" +
+            "    \"headersMap\": null\n" +
             "}";
 
     @Test
@@ -96,7 +104,7 @@ public class DataStreamJobTest {
         SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = AsyncDataStream.unorderedWait(
                 source.rebalance().flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
                 new StreamingRawDataProcessor(stringPropertiesMap.get("Common")),  // Async Processing
-                5000, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
+                8000, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
         ).process(new ProcessRecordStatus());
 
         processedStream.sinkTo(new JooqDatabaseBatchSink(stringPropertiesMap.get("Common"))).name("Database Success Sink");
@@ -117,7 +125,7 @@ public class DataStreamJobTest {
     @SneakyThrows
     private StreamingRawData createStreamingDataObject(Map<String, String> map) {
         return JSONUtils.getObjectMapper()
-                        .readValue(StringSubstitutor.replace(rawStreamingData, map, "%(", ")"), StreamingRawData.class);
+                .readValue(StringSubstitutor.replace(rawStreamingData, map, "%(", ")"), StreamingRawData.class);
     }
 
     @Test
