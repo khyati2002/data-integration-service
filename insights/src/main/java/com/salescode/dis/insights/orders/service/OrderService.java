@@ -61,7 +61,7 @@ public class OrderService {
                     newEntity.setOrderNumber(request.getOrderNumber());
                     newEntity.setLob(request.getLob());
                     newEntity.setUser(request.getUser());
-                    newEntity.setOperation(OrderEntity.Operation.UNKNOWN);
+                    newEntity.setOperation(OrderEntity.Operation.INSERT);
                     newEntity.setUser(request.getUser()!=null? request.getUser() :"unknown user");
                     newEntity.setPublishStatus(OrderEntity.Status.NA);
                     newEntity.setCreatedAt(OffsetDateTime.now());
