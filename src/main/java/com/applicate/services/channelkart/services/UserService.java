@@ -70,7 +70,11 @@ public class UserService extends AbstractCDMService<User> {
         if(user == null){
             return null;
         }
-        return User.of(user);
+        User userWithDesg = User.of(user);
+        UserdesignationService uds = new UserdesignationService(getDslContext());
+        Set<String> designations = uds.getDesignationsByLoginId(userWithDesg.getLoginId());
+        userWithDesg.setDesignation(designations);
+        return userWithDesg;
     }
 
 
