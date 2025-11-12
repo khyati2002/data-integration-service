@@ -54,8 +54,8 @@ generate-bundle:
 	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
 	mvn clean install -f bundle/pom.xml -s settings.xml
 	@mkdir -p lib
-	@rm -r lib/* || true
-	cp bundle/target/bundle.jar lib/bundle.jar
+	@rm -rf lib/* || true
+	@cp bundle/target/bundle.jar lib/bundle.jar
 
 generate-dis-jar:
 	@echo "Generating DIS JAR with AWS CodeArtifact authentication..."

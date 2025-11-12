@@ -43,7 +43,7 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 				GenericEntity existingOutlet = savedList.get(loginId.getId());
 				loginId.setOperationPerformed(ActionType.UPDATE);
 				loginId.setRangeKey(0L);
-				loginId.setChanged((byte) 1);
+				loginId.setChanged(1==1);
 				loginId.setTimestamp(new Date().toInstant().toEpochMilli());
 				itemsToUpdate.add(loginId);
 			}
@@ -58,7 +58,7 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		entity.setId(record.getId());
 		entity.setRangeKey(record.getRangeKey());
 		entity.setTimestamp(record.getTimestamp());
-		entity.setChanged((byte) 1);
+		entity.setChanged(1==1);
 		entity.setActiveStatus(record.getActiveStatus());
 
 
@@ -75,14 +75,14 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 			loginId.setActiveStatus(ActiveStatus.ACTIVE);
 			loginId.setRangeKey(0L);
 			loginId.setTimestamp(new Date().toInstant().toEpochMilli());
-			loginId.setChanged((byte) 1);
+			loginId.setChanged(1==1);
 		});
 
 		saveItemsList.get(1).forEach(loginId -> {
 			loginId.setActiveStatus(ActiveStatus.ACTIVE);
 			loginId.setRangeKey(0L);
 			loginId.setTimestamp(new Date().toInstant().toEpochMilli());
-			loginId.setChanged((byte) 1);
+			loginId.setChanged(1==1);
 
 		});
 		if (!saveItemsList.get(0).isEmpty()) {

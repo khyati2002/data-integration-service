@@ -1,0 +1,89 @@
+pipeline {
+  agent { label 'master' }
+
+  options {
+    timestamps()
+    ansiColor('xterm')
+  }
+
+  parameters {
+    string(name: 'LOB', defaultValue: 'unnati', description: 'Name for the new LOB branch in bundles repo')
+    string(name: 'SOURCE_BRANCH', defaultValue: 'standard-deployment', description: 'Source branch to clone from')
+    string(name: 'BUNDLE_REPO_URL', defaultValue: 'https://applicatetech.git.beanstalkapp.com/data-integration-bundles.git', description: 'Bundles repository URL')
+  }
+
+  environment {
+    WORKDIR = "bundle"
+  }
+
+  stages {
+    stage('Prepare Workspace') {
+      steps {
+        deleteDir()
+      }
+    }
+
+    stage('Clone Bundles (source branch)') {
+      steps {
+        dir("${env.WORKDIR}") {
+          withCredentials([gitUsernamePassword(credentialsId: 'applicate_git', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+            sh """
+              set -euxo pipefail
+              git clone -b "${SOURCE_BRANCH}" "${BUNDLE_REPO_URL}" .
+              git remote set-url origin "https://${GIT_USERNAME}:${GIT_PASSWORD}@${BUNDLE_REPO_URL#https://}"
+            """
+          }
+        }
+      }
+    }
+
+    stage('Create / Checkout LOB Branch') {
+      steps {
+        dir("${env.WORKDIR}") {
+          sh """
+            set -euxo pipefail
+
+            if git ls-remote --heads origin "${LOB}" | grep -q "refs/heads/${LOB}"; then
+              echo "Branch '${LOB}' already exists remotely."
+              git fetch origin "${LOB}:${LOB}" || true
+              git checkout "${LOB}"
+              git branch --set-upstream-to=origin/${LOB} || true
+            else
+              echo "Creating branch '${LOB}' from '${SOURCE_BRANCH}'..."
+              git checkout "${SOURCE_BRANCH}"
+              git pull --ff-only origin "${SOURCE_BRANCH}"
+              git checkout -b "${LOB}"
+              git push -u origin "${LOB}"
+            fi
+          """
+        }
+      }
+    }
+
+    stage('Trigger Build Pipeline') {
+      steps {
+        script {
+          echo "Triggering main build pipeline with PROJECT_BRANCH=standard-deployment and BUNDLE_BRANCH=${params.LOB}"
+
+          build job: 'main-build-pipeline',   // 🔹 replace with your actual Jenkins job name
+                wait: true,
+                parameters: [
+                  string(name: 'PROJECT_BRANCH', value: 'standard-deployment'),
+                  string(name: 'BUNDLE_BRANCH', value: params.LOB),
+                  string(name: 'LOB', value: params.LOB)
+                  // All other params will use their defaults automatically
+                ]
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "✅ Branch '${params.LOB}' prepared and main pipeline triggered."
+    }
+    failure {
+      echo "❌ Something went wrong."
+    }
+  }
+}
