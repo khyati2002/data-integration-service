@@ -12,5 +12,16 @@ import java.io.Serializable;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SupplierMetadata extends com.salescode.dim.jooq.generated.tables.pojos.SupplierMetadata implements Serializable {
+
+  public SupplierMetadata(com.salescode.dim.jooq.generated.tables.pojos.SupplierMetadata supplierMetadata) {
+    super(supplierMetadata);
+  }
+
+  public static SupplierMetadata of(com.salescode.dim.jooq.generated.tables.pojos.SupplierMetadata supplierMetadata) {
+    if(supplierMetadata == null) {
+      return null;
+    }
+    return new SupplierMetadata(supplierMetadata);
+  }
   private User user;
 }
