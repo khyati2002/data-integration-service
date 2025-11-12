@@ -2,9 +2,13 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.repository.GenericEntityRepository;
+import com.applicate.services.channelkart.repository.HierarchyMetadataRepository;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.jooq.generated.tables.records.CkGenericObjectRecord;
 import com.salescode.dim.jooq.impl.GenericEntity;
+import com.salescode.dim.jooq.impl.OutletDetails;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +20,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_GENERIC_OBJECT;
+import static com.salescode.dim.jooq.generated.Tables.CK_OUTLET_DETAILS;
 
 public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 	private static final Logger LOG = LoggerFactory.getLogger(GenericEntityService.class);
+	private static GenericEntityRepository genericEntityRepository;
+
+
+	public GenericEntityService() {
+		genericEntityRepository = new GenericEntityRepository(getDslContext());
+	}
 
 	public List<List<GenericEntity>> getItemsToSaveList(List<GenericEntity> genericEntityList) {
 		List<List<GenericEntity>> result = new ArrayList<>();
@@ -98,5 +109,23 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		LOG.info("Batch save successful");
 		return genericEntity;
 	}
+
+	public GenericEntity readModelsByNameAndKey1(String name, String key1) {
+
+		GenericEntity genericEntity =
+				getDslContext()
+						.selectFrom(CK_GENERIC_OBJECT)
+						.where(CK_GENERIC_OBJECT.NAME.eq(name))
+						.and(CK_GENERIC_OBJECT.KEY1.eq(key1))
+						.fetchOneInto(GenericEntity.class);
+
+		return genericEntity;
+	}
+
+	public List<GenericEntity> readModelsByName(String name) {
+		return genericEntityRepository.readModelsByName(name);
+
+	}
+
 
 }

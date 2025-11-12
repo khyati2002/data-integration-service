@@ -14,10 +14,11 @@ public class GenericEntity extends GenericObject {
 	@JsonSetter("date")
 	public void setDate(String date) {
 
+		if (date == null) return;
 
 		ZonedDateTime zonedDateTime = ZonedDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME);
 		LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
-		setDate(localDateTime);
+		super.setDate(localDateTime);
 
 	}
 
