@@ -199,6 +199,9 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
             } catch (Exception e) {
                 logger.error("Processing failed", e);
                 streamingRawData.setStatus("Failure");
+                if(insightsEnabled) {
+                    sendToKafkaConsumerUpdate(streamingRawData, 0, 1, 0);
+                }
                 resultFuture.complete(Collections.singletonList(Tuple2.of(streamingRawData, Collections.emptyMap())));
             }
         });
@@ -238,7 +241,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
                 if (exception != null) {
                     logger.error("Error sending data to Kafka insights", exception);
                 } else {
-                    logger.info("Successfully sent data to Kafka insights. Offset: " + metadata.offset());
+                    logger.error("Successfully sent data to Kafka insights. Offset: " + metadata.offset());
                 }
             });
         } catch (Exception e) {

@@ -28,7 +28,7 @@ public class UserParentService extends AbstractCDMService<UserParent> {
             up.setUserloginid(user.getLoginid());
             up.setParent(null);
             up.setLob(user.getLob());
-            up.setChanged(true);
+            up.setChanged(1==1);
             save(up);
         }
 
@@ -47,7 +47,7 @@ public class UserParentService extends AbstractCDMService<UserParent> {
                 up.setActiveStatus(user.getActiveStatus());
                 up.setId(UUID.randomUUID().toString());
                 up.setParent(hm.getParent());
-                up.setChanged(true);
+                up.setChanged(1==1);
                 if (up.getUserloginid().equalsIgnoreCase(up.getParent())) {
              //       throw new RuntimeException("User can't be mapped to itself. Found a record for user  mapped to itself. Please verify the data once.");
                 }
@@ -72,7 +72,7 @@ public class UserParentService extends AbstractCDMService<UserParent> {
             up.setParent(hm.getParent());
             up.setId(UUID.randomUUID().toString());
             up.setActiveStatus(user.getActiveStatus());
-            up.setChanged(true);
+            up.setChanged(1==1);
             if (up.getUserloginid().equalsIgnoreCase(up.getParent())) {
                 //  throw new UnexpectedResultException("User can't be mapped to itself. Found a record for user " + up.getUserLoginId() + " mapped to itself. Please verify the data once.");
                 throw new RuntimeException("User can't be mapped to itself");
