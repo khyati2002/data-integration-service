@@ -18,7 +18,7 @@ public class GenericEntity extends GenericObject {
 
 		ZonedDateTime zonedDateTime = ZonedDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME);
 		LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
-		super.setDate(localDateTime);
+		setDate(localDateTime);
 
 	}
 
