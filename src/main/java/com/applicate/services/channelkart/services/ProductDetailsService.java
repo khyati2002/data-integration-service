@@ -229,5 +229,45 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
         }
     }
 
+    public ProductDetails findBySkuCode(String skuCode) {
+        if (skuCode == null || skuCode.isBlank()) {
+            throw new IllegalArgumentException("SKU Code cannot be null or empty");
+        }
+
+        try {
+            return getDslContext()
+                    .selectFrom(CK_PRODUCTDETAILS)
+                    .where(CK_PRODUCTDETAILS.SKU_CODE.eq(skuCode))
+                    .limit(1)
+                    .fetchOptionalInto(com.salescode.dim.jooq.generated.tables.pojos.Productdetails.class)
+                    .map(ProductDetails::of)
+                    .orElse(null);
+
+        } catch (Exception e) {
+            LOG.error("Error fetching ProductDetails for SKU Code: {}", skuCode, e);
+            throw new RuntimeException("Failed to fetch ProductDetails for SKU: " + skuCode, e);
+        }
+    }
+
+    public ProductDetails findByBatchCode(String batchCode) {
+        if (batchCode == null || batchCode.isBlank()) {
+            throw new IllegalArgumentException("Batch code cannot be null or empty");
+        }
+
+        try {
+            return getDslContext()
+                    .selectFrom(CK_PRODUCTDETAILS)
+                    .where(CK_PRODUCTDETAILS.BATCH_CODE.eq(batchCode))
+                    .limit(1)
+                    .fetchOptionalInto(com.salescode.dim.jooq.generated.tables.pojos.Productdetails.class)
+                    .map(ProductDetails::of)
+                    .orElse(null);
+
+        } catch (Exception e) {
+            LOG.error("Error fetching ProductDetails for Batch Code: {}", batchCode, e);
+            throw new RuntimeException("Failed to fetch ProductDetails for Batch Code: " + batchCode, e);
+        }
+    }
+
 
 }
