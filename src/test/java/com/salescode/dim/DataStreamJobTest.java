@@ -39,17 +39,17 @@ public class DataStreamJobTest {
 
     public static String rawStreamingData = "{\n" +
             "    \"requestId\": \"8a318b6b-95ca-49ff-8310-d90ec102827a\",\n" +
-            "    \"groupId\": \"2025-05-02\",\n" +
-            "    \"lob\": \"cktestitcloyalty\",\n" +
+            "    \"groupId\": \"%(groupId)\",\n" +
+            "    \"lob\": \"cokesauat\",\n" +
             "    \"loginId\": \"integration_user\",\n" +
             "    \"batchNumber\": 0,\n" +
             "    \"transformerInfo\": [\n" +
             "        {\n" +
             "            \"skipPreprocessing\": false,\n" +
             "            \"skipPersist\": false,\n" +
-            "            \"entityName\": \"OutletDetails\",\n" +
-            "            \"transformerId\": \"unnati_csp_outlet_master_mdm1\",\n" +
-            "            \"preprocessValidationExcludeGroup\": \"outlet_validation_exclude\",\n" +
+            "            \"entityName\": \"Loadout\",\n" +
+            "            \"transformerId\": \"\",\n" +
+            "            \"preprocessValidationExcludeGroup\": null,\n" +
             "            \"messageLevelHash\": null,\n" +
             "            \"messageHashSupported\": false,\n" +
             "            \"messageLevelKey\": null,\n" +
@@ -57,39 +57,205 @@ public class DataStreamJobTest {
             "            \"operationType\": \"insert\"\n" +
             "        }\n" +
             "    ],\n" +
-            "    \"features\":  [{\n" +
-            "    \"UID\": \"EGAU-SL-54327\",\n" +
-            "    \"CREATIONDATE\": \"1746770380797\",\n" +
-            "    \"DISTRICT\": \"EDIS\",\n" +
-            "    \"Branch\": \"EGAU\",\n" +
-            "    \"CUSTName\": \"BABUL STORES\",\n" +
-            "    \"OwnerName\": \"BABUL STORES\",\n" +
-            "    \"ChannelType\": \"Rural Wholesale\",\n" +
-            "    \"OutletType\": \"Dual (FMCG + Tobacco)\",\n" +
-            "    \"LoyaltyType\": \"SWD Others\",\n" +
-            "    \"OutletLat\": \"26.424693999999999\",\n" +
-            "    \"OutletLong\": \"90.973511000000002\",\n" +
-            "    \"TYPE\": \"LOYALTY\",\n" +
-            "    \"OutletName\": \"BABUL STORES\",\n" +
-            "    \"supplierMapping\": [\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"GA2799DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"GA2799\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING CO\"\n" +
-            "      },\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"NG2949DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"NG2949\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING COOOOOO\"\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }\n" +
+            "    \"features\": [\n" +
+            "        {\n" +
+            "            \"dmsLoadout\": {\n" +
+            "                \"loadNumber\": \"LOAD001\",\n" +
+            "                \"loadOutStatus\": \"PENDING\",\n" +
+            "                \"loadOutType\": \"PRE_SELLER\",\n" +
+            "                \"salesmanId\": \"SM001\",\n" +
+            "                \"supplier\": \"SUPPLIER_A\",\n" +
+            "                \"totalAmount\": 15000.50,\n" +
+            "                \"totalCaseQty\": 100,\n" +
+            "                \"totalCaseLeftQty\": 100,\n" +
+            "                \"totalPieceQty\": 500,\n" +
+            "                \"totalPieceLeftQty\": 500,\n" +
+            "                \"totalOtherQty\": 50,\n" +
+            "                \"totalOtherLeftQty\": 50,\n" +
+            "                \"vehicleId\": \"VEH001\",\n" +
+            "                \"vehicleCapacity\": 2000,\n" +
+            "                \"loadOutDate\": \"2025-01-15 08:00:00\",\n" +
+            "                \"loadoutSource\": \"ORDER\",\n" +
+            "                \"caseShortage\": 0,\n" +
+            "                \"pieceShortage\": 0,\n" +
+            "                \"otherShortage\": 0,\n" +
+            "                \"deliveryStartDate\": \"2025-01-15 08:00:00\",\n" +
+            "                \"deliveryEndDate\": \"2025-01-15 18:00:00\",\n" +
+            "                \"settlementDate\": \"2025-01-19 23:59:59\",\n" +
+            "                \"shortageUpdated\": 0,\n" +
+            "                \"invoiceCreationStartDate\": \"2025-01-15 09:00:00\",\n" +
+            "                \"invoiceCreationEndDate\": \"2025-01-15 17:00:00\"\n" +
+            "            },\n" +
+            "            \"loadoutDetailsList\": [\n" +
+            "                {\n" +
+            "                    \"invoiceNumber\": \"INV001\",\n" +
+            "                    \"loadNumber\": \"LOAD001\",\n" +
+            "                    \"loadOutStatus\": \"PENDING\",\n" +
+            "                    \"outletCode\": \"OUT001\",\n" +
+            "                    \"presellerId\": \"PS001\",\n" +
+            "                    \"routeCode\": \"ROUTE001\",\n" +
+//            "                    \"salesInfo\": \"Regular sale\",\n" +
+            "                    \"totalAmount\": 7500.25,\n" +
+            "                    \"totalCaseQty\": 50,\n" +
+            "                    \"totalCaseLeftQty\": 50,\n" +
+            "                    \"totalPieceQty\": 250,\n" +
+            "                    \"totalPieceLeftQty\": 250,\n" +
+            "                    \"totalOtherQty\": 25,\n" +
+            "                    \"totalOtherLeftQty\": 25,\n" +
+            "                    \"returnCaseQty\": 0,\n" +
+            "                    \"returnPieceQty\": 0,\n" +
+            "                    \"returnOtherQty\": 0,\n" +
+            "                    \"invSerNo\": 1,\n" +
+            "                    \"loadoutItems\": [\n" +
+            "                        {\n" +
+            "                            \"skuCode\": \"SKU001\",\n" +
+            "                            \"batchCode\": \"BATCH001\",\n" +
+            "                            \"batchId\": \"B001\",\n" +
+            "                            \"caseQty\": 20,\n" +
+            "                            \"caseQtyLeft\": 20,\n" +
+            "                            \"pieceQty\": 100,\n" +
+            "                            \"pieceQtyLeft\": 100,\n" +
+            "                            \"otherQty\": 10,\n" +
+            "                            \"otherQtyLeft\": 10,\n" +
+            "                            \"amount\": 3000.00,\n" +
+            "                            \"mrp\": 30.00,\n" +
+            "                            \"itemType\": \"NORMAL\"\n" +
+            "                        },\n" +
+            "                        {\n" +
+            "                            \"skuCode\": \"SKU002\",\n" +
+            "                            \"batchCode\": \"BATCH002\",\n" +
+            "                            \"batchId\": \"B002\",\n" +
+            "                            \"caseQty\": 30,\n" +
+            "                            \"caseQtyLeft\": 30,\n" +
+            "                            \"pieceQty\": 150,\n" +
+            "                            \"pieceQtyLeft\": 150,\n" +
+            "                            \"otherQty\": 15,\n" +
+            "                            \"otherQtyLeft\": 15,\n" +
+            "                            \"amount\": 4500.25,\n" +
+            "                            \"mrp\": 30.00,\n" +
+            "                            \"itemType\": \"NORMAL\"\n" +
+            "                        }\n" +
+            "                    ]\n" +
+            "                },\n" +
+            "                {\n" +
+            "                    \"invoiceNumber\": \"INV002\",\n" +
+            "                    \"loadNumber\": \"LOAD001\",\n" +
+            "                    \"loadOutStatus\": \"PENDING\",\n" +
+            "                    \"outletCode\": \"OUT002\",\n" +
+            "                    \"presellerId\": \"PS002\",\n" +
+            "                    \"routeCode\": \"ROUTE001\",\n" +
+//            "                    \"salesInfo\": \"Promotional sale\",\n" +
+            "                    \"totalAmount\": 7500.25,\n" +
+            "                    \"totalCaseQty\": 50,\n" +
+            "                    \"totalCaseLeftQty\": 50,\n" +
+            "                    \"totalPieceQty\": 250,\n" +
+            "                    \"totalPieceLeftQty\": 250,\n" +
+            "                    \"totalOtherQty\": 25,\n" +
+            "                    \"totalOtherLeftQty\": 25,\n" +
+            "                    \"returnCaseQty\": 0,\n" +
+            "                    \"returnPieceQty\": 0,\n" +
+            "                    \"returnOtherQty\": 0,\n" +
+            "                    \"invSerNo\": 2,\n" +
+            "                    \"loadoutItems\": [\n" +
+            "                        {\n" +
+            "                            \"skuCode\": \"SKU003\",\n" +
+            "                            \"batchCode\": \"BATCH003\",\n" +
+            "                            \"batchId\": \"B003\",\n" +
+            "                            \"caseQty\": 25,\n" +
+            "                            \"caseQtyLeft\": 25,\n" +
+            "                            \"pieceQty\": 125,\n" +
+            "                            \"pieceQtyLeft\": 125,\n" +
+            "                            \"otherQty\": 12,\n" +
+            "                            \"otherQtyLeft\": 12,\n" +
+            "                            \"amount\": 3750.00,\n" +
+            "                            \"mrp\": 30.00,\n" +
+            "                            \"itemType\": \"NORMAL\"\n" +
+            "                        },\n" +
+            "                        {\n" +
+            "                            \"skuCode\": \"SKU004\",\n" +
+            "                            \"batchCode\": \"BATCH004\",\n" +
+            "                            \"batchId\": \"B004\",\n" +
+            "                            \"caseQty\": 25,\n" +
+            "                            \"caseQtyLeft\": 25,\n" +
+            "                            \"pieceQty\": 125,\n" +
+            "                            \"pieceQtyLeft\": 125,\n" +
+            "                            \"otherQty\": 13,\n" +
+            "                            \"otherQtyLeft\": 13,\n" +
+            "                            \"amount\": 3750.25,\n" +
+            "                            \"mrp\": 30.00,\n" +
+            "                            \"itemType\": \"NORMAL\"\n" +
+            "                        }\n" +
+            "                    ]\n" +
+            "                }\n" +
+            "            ]\n" +
+            "        }\n" +
+//            "        {\n" +
+//            "            \"dmsLoadout\": {\n" +
+//            "                \"loadNumber\": \"LOAD002\",\n" +
+//            "                \"loadOutStatus\": \"IN_TRANSIT\",\n" +
+//            "                \"loadOutType\": \"PRE_SELLER\",\n" +
+//            "                \"salesmanId\": \"SM002\",\n" +
+//            "                \"supplier\": \"SUPPLIER_B\",\n" +
+//            "                \"totalAmount\": 8500.75,\n" +
+//            "                \"totalCaseQty\": 60,\n" +
+//            "                \"totalCaseLeftQty\": 55,\n" +
+//            "                \"totalPieceQty\": 300,\n" +
+//            "                \"totalPieceLeftQty\": 280,\n" +
+//            "                \"totalOtherQty\": 30,\n" +
+//            "                \"totalOtherLeftQty\": 28,\n" +
+//            "                \"vehicleId\": \"VEH002\",\n" +
+//            "                \"vehicleCapacity\": 1500,\n" +
+//            "                \"loadOutDate\": \"2025-01-16 00:00:00\",\n" +
+//            "                \"loadoutSource\": \"ORDER\",\n" +
+//            "                \"caseShortage\": 5,\n" +
+//            "                \"pieceShortage\": 20,\n" +
+//            "                \"otherShortage\": 2,\n" +
+//            "                \"deliveryStartDate\": \"2025-01-16 07:00:00\",\n" +
+//            "                \"deliveryEndDate\": \"2025-01-16 19:00:00\",\n" +
+//            "                \"settlementDate\": \"2025-01-17 23:59:59\",\n" +
+//            "                \"shortageUpdated\": 1,\n" +
+//            "                \"invoiceCreationStartDate\": \"2025-01-16 08:00:00\",\n" +
+//            "                \"invoiceCreationEndDate\": \"2025-01-16 18:00:00\"\n" +
+//            "            },\n" +
+//            "            \"loadoutDetailsList\": [\n" +
+//            "                {\n" +
+//            "                    \"invoiceNumber\": \"INV003\",\n" +
+//            "                    \"loadNumber\": \"LOAD002\",\n" +
+//            "                    \"loadOutStatus\": \"IN_PROGRESS\",\n" +
+//            "                    \"outletCode\": \"OUT003\",\n" +
+//            "                    \"presellerId\": \"PS003\",\n" +
+//            "                    \"routeCode\": \"ROUTE002\",\n" +
+////            "                    \"salesInfo\": \"Express delivery\",\n" +
+//            "                    \"totalAmount\": 8500.75,\n" +
+//            "                    \"totalCaseQty\": 60,\n" +
+//            "                    \"totalCaseLeftQty\": 55,\n" +
+//            "                    \"totalPieceQty\": 300,\n" +
+//            "                    \"totalPieceLeftQty\": 280,\n" +
+//            "                    \"totalOtherQty\": 30,\n" +
+//            "                    \"totalOtherLeftQty\": 28,\n" +
+//            "                    \"returnCaseQty\": 5,\n" +
+//            "                    \"returnPieceQty\": 20,\n" +
+//            "                    \"returnOtherQty\": 2,\n" +
+//            "                    \"invSerNo\": 1,\n" +
+//            "                    \"loadoutItems\": [\n" +
+//            "                        {\n" +
+//            "                            \"skuCode\": \"SKU005\",\n" +
+//            "                            \"batchCode\": \"BATCH005\",\n" +
+//            "                            \"batchId\": \"B005\",\n" +
+//            "                            \"caseQty\": 60,\n" +
+//            "                            \"caseQtyLeft\": 55,\n" +
+//            "                            \"pieceQty\": 300,\n" +
+//            "                            \"pieceQtyLeft\": 280,\n" +
+//            "                            \"otherQty\": 30,\n" +
+//            "                            \"otherQtyLeft\": 28,\n" +
+//            "                            \"amount\": 8500.75,\n" +
+//            "                            \"mrp\": 28.33,\n" +
+//            "                            \"itemType\": \"NORMAL\"\n" +
+//            "                        }\n" +
+//            "                    ]\n" +
+//            "                }\n" +
+//            "            ]\n" +
+//            "        }\n" +
             "    ],\n" +
             "    \"appId\": \"integration\",\n" +
             "    \"retryCount\": 0,\n" +

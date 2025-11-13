@@ -225,7 +225,7 @@ public class DataTransformationService implements Serializable {
 
         // Otherwise convert using object mapper
         try{
-           T obj =  objectMapper.convertValue(data, entityClass);
+           T obj =  JSONUtils.getObjectMapper().convertValue(data, entityClass);
            return obj;
         }
         catch (Exception e) {
