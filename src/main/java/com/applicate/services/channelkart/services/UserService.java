@@ -31,6 +31,7 @@ import org.apache.flink.shaded.zookeeper3.org.apache.zookeeper.Op;
 import org.jooq.impl.DSL;
 import scala.tools.ant.sabbus.Use;
 
+import java.awt.print.Pageable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,11 +63,25 @@ public class UserService extends AbstractCDMService<User> {
     }
     @Cacheable(cacheName = "dataintegration-user")
     public User findByLoginId(String loginid) {
-        com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
+        User user = getDslContext().selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
-                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
+                .fetchOneInto(User.class);
         if(user == null){
             return null;
+        }
+
+        // Fetch and attach designation details from ck_userdesignation
+        List<Userdesignation> designationRecords = getDslContext()
+                .selectFrom(CK_USERDESIGNATION)
+                .where(CK_USERDESIGNATION.LOGIN_ID.eq(loginid))
+                .fetchInto(Userdesignation.class);
+
+        if (designationRecords != null && !designationRecords.isEmpty()) {
+            Set<String> designations = designationRecords.stream()
+                    .map(Userdesignation::getDesignation)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+            user.setDesignation(designations);
         }
         return User.of(user);
     }
@@ -493,6 +508,24 @@ public class UserService extends AbstractCDMService<User> {
 
         return users.isEmpty() ? Optional.empty() : Optional.of(users);
     }
+
+    public List<User> findByMobile(String mobile) {
+        return findByMobileSafely(mobile).orElse(Collections.emptyList());
+    }
+
+    public Optional<List<User>> findByMobileSafelyLimit(String mobile, int page, int limit) {
+        int offset = page * limit;
+
+        List<User> users = getDslContext()
+                .selectFrom(CK_USER)
+                .where(CK_USER.MOBILE.eq(mobile))
+                .limit(limit)
+                .offset(offset)
+                .fetchInto(User.class);
+
+        return users.isEmpty() ? Optional.empty() : Optional.of(users);
+    }
+
 
     /**
      * Checks if user is active.

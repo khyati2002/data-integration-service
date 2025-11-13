@@ -22,6 +22,7 @@ import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
 import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
 import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import com.salescode.dim.jooq.generated.tables.pojos.OutletDetailsHierarchymetadata;
+import com.salescode.dim.jooq.generated.tables.pojos.UserParent;
 import com.salescode.dim.jooq.generated.tables.records.CkOutletDetailsRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.Location;
@@ -57,6 +58,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private static final Logger LOG = LoggerFactory.getLogger(OutletDetailsService.class);
     private final UserService userService;
     private final LocationService locationService;
+    private final UserParentService userParentService;
     private final HierarchyMetadataService hierarchyMetadataService;
     private final CustomerAccountsService customerAccountsService;
     private final SupplierInfoService supplierInfoService;
@@ -73,6 +75,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
         etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
         userService = new UserService();
+        userParentService = new UserParentService();
         locationService = new LocationService();
         validationInfoRegistry = new ValidationInfoRegistry(getDslContext());
         validationExcludeGroupRegistry = new ValidationExcludeGroupRegistry(getDslContext());
@@ -248,7 +251,33 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         return result;
     }
 
+    public List<User> getRetailerParent(OutletDetails outletDetails, String designationType) {
+        List<User> parentsList = new ArrayList<>();
+        // Get the outlet's associated user
+        User user = outletDetails.getUserName();
+        if (user == null || user.getLoginid() == null) {
+            return parentsList;
+        }
+        // Find all user-parent mappings for this user's loginId
+        List<UserParent> userParentRecords = userParentService.findByUserLoginId(user.getLoginid());
+        if (userParentRecords == null || userParentRecords.isEmpty()) {
+            return parentsList;
+        }
+        // For each parent, fetch the user and filter by designation
+        for (UserParent userParent : userParentRecords) {
+            String parentLoginid = userParent.getParent();
+            User parentUser = userService.findByLoginId(parentLoginid);
+            if (parentUser != null && parentUser.getDesignation() != null) {
+                boolean hasDesignation = parentUser.getDesignation().stream()
+                        .anyMatch(d -> d.equalsIgnoreCase(designationType));
+                if (hasDesignation) {
+                    parentsList.add(parentUser);
+                }
+            }
+        }
 
+        return parentsList;
+    }
 
     @Override
     public Collection<OutletDetails> batchSave(Collection<OutletDetails> outletDetailsList){

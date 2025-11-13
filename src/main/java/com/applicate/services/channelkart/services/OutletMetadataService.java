@@ -2,15 +2,13 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.repository.OutletMetaDataRepository;
 import com.salescode.dim.jooq.generated.tables.pojos.OutletMetadata;
 import com.salescode.dim.jooq.generated.tables.records.CkOutletMetadataRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_OUTLET_METADATA;
@@ -46,6 +44,14 @@ public class OutletMetadataService extends AbstractCDMService<OutletMetadata> {
 		result.add(itemsToInsert);
 		result.add(itemsToUpdate);
 		return result;
+	}
+
+	public Optional<String> getOutletCodeIfExists(String outletCode) {
+		return getDslContext()
+				.select(CK_OUTLET_METADATA.OUTLET_CODE)
+				.from(CK_OUTLET_METADATA)
+				.where(CK_OUTLET_METADATA.OUTLET_CODE.eq(outletCode))
+				.fetchOptional(CK_OUTLET_METADATA.OUTLET_CODE);
 	}
 
 	@Override
