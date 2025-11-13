@@ -417,6 +417,11 @@ under the License.
                                     <converter>com.salescode.dim.jooq.DoubleToFloatConverter</converter>
                                     <includeExpression>ck_target_results\.achieved</includeExpression>
                                 </forcedType>
+                                <forcedType>
+                                    <userType>com.salescode.dim.jooq.impl.SalesInfo</userType>
+                                    <converter>com.salescode.dim.jooq.SalesInfoConverter</converter>
+                                    <includeExpression>sales_info</includeExpression>
+                                </forcedType>
                             </forcedTypes>
                         </database>
                         <generate>
