@@ -15,31 +15,30 @@ import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
-import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
 import com.salescode.dim.jooq.generated.tables.pojos.UserRoles;
 import com.salescode.dim.jooq.generated.tables.pojos.Userdesignation;
 import com.salescode.dim.jooq.generated.tables.records.CkUserRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.Location;
-import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.flink.shaded.zookeeper3.org.apache.zookeeper.Op;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import static com.salescode.dim.jooq.generated.Tables.CK_USERDESIGNATION;
-import scala.tools.ant.sabbus.Use;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.*;
-import static com.salescode.dim.jooq.generated.Tables.CK_USERDESIGNATION;
 
 public class UserService extends AbstractCDMService<User> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
     public static final String DEFAULT_ENCODED_PASSWORD = "$2a$10$GetnNjgilfLkIv.2R3nHMevLZfI9HGHWQ3iXw3nrCfJlrpePirkIi";
     public static final String NORMALIZED_CHARECTORS = "U";
     public static final String NORMALIZED_JOINING_CHARECTORS = "U>U";
@@ -72,9 +71,18 @@ public class UserService extends AbstractCDMService<User> {
         }
         User userWithDesg = User.of(user);
         UserdesignationService uds = new UserdesignationService(getDslContext());
-        Set<String> designations = uds.getDesignationsByLoginId(userWithDesg.getLoginId());
-        userWithDesg.setDesignation(designations);
+
+        try {
+            Set<String> designations = uds.getDesignationsByLoginId(userWithDesg.getLoginId());
+            if (designations != null && !designations.isEmpty()) {
+                userWithDesg.setDesignation(designations);
+            }
+        } catch (Exception e) {
+            LOG.warn("Failed to fetch designations for user {}: {}", userWithDesg.getLoginId(), e.getMessage());
+        }
+
         return userWithDesg;
+
     }
 
 
