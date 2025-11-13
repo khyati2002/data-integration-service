@@ -2,6 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.repository.CategoryInfoRepository;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.jooq.generated.tables.records.CkCategoryInfoRecord;
 import com.salescode.dim.jooq.impl.CategoryInfo;
@@ -18,6 +19,14 @@ import static com.salescode.dim.jooq.generated.Tables.CK_CATEGORY_INFO;
 
 public class CategoryInfoService extends AbstractCDMService<CategoryInfo> {
     private static final Logger LOG = LoggerFactory.getLogger(CategoryInfoService.class);
+    private CategoryInfoRepository categoryInfoRepository;
+
+    public CategoryInfoService() {
+        if (categoryInfoRepository == null) {
+            categoryInfoRepository = new CategoryInfoRepository(getDslContext());
+        }
+    }
+
 
     public List<List<CategoryInfo>> getDataToSaveList(List<CategoryInfo> categoryInfoList) {
         List<List<CategoryInfo>> result = new ArrayList<>();
@@ -88,5 +97,25 @@ public class CategoryInfoService extends AbstractCDMService<CategoryInfo> {
 
         LOG.info("Batch save for category info is successful");
         return categoryInfoList;
+    }
+
+    public List<CategoryInfo> findByCategoryCodeAndFeature(String categoryCode, String feature) {
+        return categoryInfoRepository.findByCategoryCodeAndFeature(categoryCode, feature);
+    }
+
+    public List<CategoryInfo> findByCategoryCodeAndCategoryValueAndFeature(String categoryCode, String categoryValue, String feature) {
+        return categoryInfoRepository.findByCategoryCodeAndCategoryValueAndFeature(categoryCode, categoryValue, feature);
+    }
+
+    public com.salescode.dim.jooq.generated.tables.pojos.CategoryInfo findByCategoryCode(String categoryCode) {
+        return categoryInfoRepository.findByCategoryCode(categoryCode);
+    }
+
+    public List<CategoryInfo> findByCategoryCodeAndCategoryValueAndName(String categoryCode, String categoryValue, String name) {
+        return categoryInfoRepository.findByCategoryCodeAndCategoryValueAndName(categoryCode, categoryValue, name);
+    }
+
+    public List<CategoryInfo> findByNameAndFeature(String name, String feature) {
+        return categoryInfoRepository.findByNameAndFeature(name, feature);
     }
 }
