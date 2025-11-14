@@ -8,6 +8,8 @@ import com.salescode.dim.jooq.impl.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,20 +38,21 @@ public class OrdersService extends AbstractCDMService<Order> {
 
         for (Order order : OrdersList) {
             fillAttributes(order, savedList.get(order.getId()));
-            fillCommonAttributes(order);
-
-            if (order.getId() == null) {
-                order.setId(new IdGenerator(order.getClass().getSimpleName()).getId(order));
-            }
 
             if (savedList.get(order.getId()) == null) {
+
+                if (order.getId() == null) {
+                    order.setId(new IdGenerator(order.getClass().getSimpleName()).getId(order));
+                }
+
+                fillCommonAttributes(order);
                 itemsToInsert.add(order);
                 order.setOperationPerformed(ActionType.INSERT);
                 order.setActiveStatus(ActiveStatus.ACTIVE);
                 order.setChanged(true);
             } else {
+                fillCommonAttributesForUpdate(savedList.get(order.getId()),order);
                 order.setOperationPerformed(ActionType.UPDATE);
-                order.setActiveStatus(ActiveStatus.ACTIVE);
                 order.setChanged(true);
                 itemsToUpdate.add(order);
             }
@@ -60,11 +63,21 @@ public class OrdersService extends AbstractCDMService<Order> {
         return result;
     }
 
+    public void fillCommonAttributesForUpdate(Order orderDb, Order order){
+        if(orderDb.getCreationTime() == null){
+            order.setCreationTime(LocalDateTime.now(ZoneOffset.UTC));
+        }
+
+        order.setLastModifiedTime(LocalDateTime.now(ZoneOffset.UTC));
+
+    }
+
     private Order convertToOrders(CkOrdersRecord ckOrderRecord) {
         Order order = new Order();
         order.setId(ckOrderRecord.getId());
         order.setChanged(true);
         order.setActiveStatus(ckOrderRecord.getActiveStatus());
+        order.setCreationTime(ckOrderRecord.getCreationTime());
         return order;
     }
 
