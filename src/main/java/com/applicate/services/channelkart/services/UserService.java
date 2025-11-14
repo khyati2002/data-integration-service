@@ -27,18 +27,21 @@ import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.flink.shaded.zookeeper3.org.apache.zookeeper.Op;
+import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import scala.tools.ant.sabbus.Use;
+import static com.salescode.dim.jooq.generated.Tables.CK_USERDESIGNATION;
 
-import java.awt.print.Pageable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.*;
-import static com.salescode.dim.jooq.generated.Tables.CK_USERDESIGNATION;
 
 public class UserService extends AbstractCDMService<User> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
     public static final String DEFAULT_ENCODED_PASSWORD = "$2a$10$GetnNjgilfLkIv.2R3nHMevLZfI9HGHWQ3iXw3nrCfJlrpePirkIi";
     public static final String NORMALIZED_CHARECTORS = "U";
     public static final String NORMALIZED_JOINING_CHARECTORS = "U>U";
@@ -63,27 +66,26 @@ public class UserService extends AbstractCDMService<User> {
     }
     @Cacheable(cacheName = "dataintegration-user")
     public User findByLoginId(String loginid) {
-        User user = getDslContext().selectFrom(CK_USER)
+        com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
-                .fetchOneInto(User.class);
+                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
         if(user == null){
             return null;
         }
+        User userWithDesg = User.of(user);
+        UserdesignationService uds = new UserdesignationService(getDslContext());
 
-        // Fetch and attach designation details from ck_userdesignation
-        List<Userdesignation> designationRecords = getDslContext()
-                .selectFrom(CK_USERDESIGNATION)
-                .where(CK_USERDESIGNATION.LOGIN_ID.eq(loginid))
-                .fetchInto(Userdesignation.class);
-
-        if (designationRecords != null && !designationRecords.isEmpty()) {
-            Set<String> designations = designationRecords.stream()
-                    .map(Userdesignation::getDesignation)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toSet());
-            user.setDesignation(designations);
+        try {
+            Set<String> designations = uds.getDesignationsByLoginId(userWithDesg.getLoginId());
+            if (designations != null && !designations.isEmpty()) {
+                userWithDesg.setDesignation(designations);
+            }
+        } catch (Exception e) {
+            LOG.warn("Failed to fetch designations for user {}: {}", userWithDesg.getLoginId(), e.getMessage());
         }
-        return User.of(user);
+
+        return userWithDesg;
+
     }
 
 
@@ -455,6 +457,26 @@ public class UserService extends AbstractCDMService<User> {
                     return userdesignation;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public static void addDesignationFromDb(User user) {
+        if (user == null || StringUtils.isBlank(user.getLoginid())) {
+            return;
+        }
+
+        DSLContext dsl = AbstractCDMService.getDslContext();
+
+        if (user.getDesignation() == null) {
+            String designation = dsl
+                    .select(CK_USERDESIGNATION.DESIGNATION)
+                    .from(CK_USERDESIGNATION)
+                    .where(CK_USERDESIGNATION.LOGIN_ID.eq(user.getLoginid()))
+                    .fetchOneInto(String.class);
+
+            if (designation != null) {
+                user.setDesignation(Collections.singleton(designation));
+            }
+        }
     }
 
     public void saveDesignation(List<Userdesignation> userDesignation) {
