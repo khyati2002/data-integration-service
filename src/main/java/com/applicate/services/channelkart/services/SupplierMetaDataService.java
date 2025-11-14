@@ -1,18 +1,13 @@
 package com.applicate.services.channelkart.services;
 
-
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
-import com.applicate.services.channelkart.utils.IdGenerator;
-import com.salescode.dim.jooq.generated.tables.records.CkOutletDetailsRecord;
 import com.salescode.dim.jooq.generated.tables.records.CkSupplierMetadataRecord;
-import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.SupplierMetadata;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.salescode.dim.jooq.generated.Tables.CK_OUTLET_DETAILS;
 import static com.salescode.dim.jooq.generated.Tables.CK_SUPPLIER_METADATA;
 
 public class SupplierMetaDataService extends AbstractCDMService<SupplierMetadata> {
@@ -62,7 +57,6 @@ public class SupplierMetaDataService extends AbstractCDMService<SupplierMetadata
 			fillCommonAttributes(outlet);
 			if (savedList.get(outlet.getId()) == null) {
 				outlet.setVersion(0);
-				outlet.setId(UUID.randomUUID().toString());
 				outlet.setChanged(true);
 				itemsToInsert.add(outlet);
 				outlet.setOperationPerformed(ActionType.INSERT);
@@ -70,9 +64,6 @@ public class SupplierMetaDataService extends AbstractCDMService<SupplierMetadata
 				SupplierMetadata existingOutlet = SupplierMetadata.of(savedList.get(outlet.getId()));
 				outlet.setId(existingOutlet.getId());
 				outlet.setVersion(existingOutlet.getVersion() + 1);
-
-				String outlethash = outlet.getHash();
-				String existingHash = existingOutlet.getHash();
 
 				if (!Objects.equals(outlet.getHash(), existingOutlet.getHash())) {
 					outlet.setChanges(CdmDiffUtil.getChanges(outlet,existingOutlet));
