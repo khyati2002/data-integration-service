@@ -2,6 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.cache.CacheManager;
@@ -233,6 +234,9 @@ public class TargetsService extends AbstractCDMService<Targets> {
             fillAttributes(target, Targets.of(savedList.get(target.getId())));
             fillTargetCommonAttributes(target);
             new AttributeUpdateOverrideManager().overrideAttributes(target, savedList.get(target.getId()));
+            if (target.getActiveStatus() == null) {
+                target.setActiveStatus(ActiveStatus.ACTIVE);
+            }
             super.addHash(target);
             preSaveEnrichment(target);
             if (savedList.get(target.getId()) == null) {
