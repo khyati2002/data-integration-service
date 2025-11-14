@@ -161,7 +161,7 @@ public class UserService extends AbstractCDMService<User> {
                                             user.getLocationHierarchy() :
                                             null
                             );
-                            hm.setChanged(1==1);
+							user.setChanged(Boolean.TRUE);
                             return hm;
                         })
                         .collect(Collectors.toList());
@@ -311,7 +311,7 @@ public class UserService extends AbstractCDMService<User> {
                 user.setVersion(0);
                 user.setId(UUID.randomUUID().toString());
                 user.setOperationPerformed(ActionType.INSERT);
-                user.setChanged(1==1);
+                user.setChanged(Boolean.TRUE);
                 itemsToInsert.add(user);
 
             } else {
@@ -322,12 +322,12 @@ public class UserService extends AbstractCDMService<User> {
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
                     user.setChanges(CdmDiffUtil.getChanges(user,savedUser));
                     user.setOperationPerformed(ActionType.UPDATE);
-                    user.setChanged(1==1);
+					user.setChanged(Boolean.TRUE);
                     itemsToUpdate.add(user);
                 } else {
                     user.setId(savedList.get(user.getLoginid()).getId());
                     user.setVersion(savedList.get(user.getLoginid()).getVersion());
-                    user.setChanged(1==1);
+					user.setChanged(Boolean.TRUE);
                 }
             }
         }
