@@ -1,10 +1,7 @@
 package com.applicate.services.channelkart.services;
 
-import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.jooq.generated.tables.records.CkProductmetadataRecord;
 import com.salescode.dim.jooq.impl.ProductMetaData;
-import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,15 +12,15 @@ import static com.salescode.dim.jooq.generated.tables.CkProductmetadata.CK_PRODU
 
 /**
  * Service class to handle batch operations for ProductMetaData.
- * Mirrors the behavior of UserService.batchSave — simple and efficient.
+ * Includes lookup of loginId and optimized batch save processing.
  */
 public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProductMetaDataService.class);
-	private static final String CACHE_NAME = "dataintegration-productmetadata";
 
 	/**
 	 * Fetches loginId for a given batchCode.
+	 * Queries CK_PRODUCTMETADATA table and returns the first matching loginId.
 	 */
 	public String getLoginId(String batchCode) {
 		if (batchCode == null || batchCode.isBlank()) {
@@ -39,7 +36,11 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 	}
 
 	/**
-	 * Batch saves ProductMetaData — performs insert or update based on batch_code and hash.
+	 * Prepares two lists: items to insert and items to update.
+	 * - Builds IDs based on skuCode-loginId-channel.
+	 * - Loads existing records in bulk for comparison.
+	 * - Compares hash to determine update vs no-op.
+	 * - Marks changed items accordingly.
 	 */
 	private List<List<ProductMetaData>> getItemsToSaveList(List<ProductMetaData> productList) {
 
@@ -77,14 +78,14 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 			fillCommonAttributes(product);
 
 			if (existing == null) {
-				product.setChanged((byte)1);
+				product.setChanged((byte) 1);
 				itemsToInsert.add(product);
 			} else {
 				if (!Objects.equals(product.getHash(), existing.getHash())) {
-					product.setChanged((byte)1);
+					product.setChanged((byte) 1);
 					itemsToUpdate.add(product);
 				} else {
-					product.setChanged((byte)1);
+					product.setChanged((byte) 1);
 				}
 			}
 		}
@@ -94,7 +95,9 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 		return result;
 	}
 
-
+	/**
+	 * Batch saves ProductMetaData — performs insert or update based on batch_code and hash.
+	 */
 	@Override
 	public Collection<ProductMetaData> batchSave(Collection<ProductMetaData> inputList) {
 
