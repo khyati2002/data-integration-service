@@ -33,6 +33,10 @@ public class ProductMetadataEnrichment extends AbstractEnrichment<ProductMetaDat
 			cdm.setLoginid(productMetaDataService.getLoginId(cdm.getBatchCode()));
 		}
 
+		if(cdm.getFkProductmetadata() == null){
+			cdm.setFkProductmetadata(cdm.getBatchCode());
+		}
+
 		return new OperationResult.StepResult(OperationResult.Status.OK, "Data enriched successfully");
 	}
 }
