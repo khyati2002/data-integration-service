@@ -7,26 +7,36 @@ import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.AbstractEnrichment;
 import com.salescode.dim.jooq.impl.ProductMetaData;
 
+/**
+ * Enrichment class for ProductMetaData.
+ * Performs enrichment of channel, sub-channel, and loginId fields
+ * before further processing in the ETL pipeline.
+ */
 public class ProductMetadataEnrichment extends AbstractEnrichment<ProductMetaData> {
 
-    private static final String ALL = "ALL";
-    @Override
-    public OperationResult.StepResult apply(ProductMetaData cdm) {
+	private static final String ALL = "ALL";
 
-        ProductMetaDataService productMetaDataService = (ProductMetaDataService) ServiceLocator.lookup(ProductMetaData.class);
+	@Override
+	public OperationResult.StepResult apply(ProductMetaData cdm) {
 
-        if( !StringUtils.isEmpty(cdm.getChannel()) && cdm.getChannel().equalsIgnoreCase("all") ){
-            cdm.setChannel(ALL);
-        }
+		ProductMetaDataService productMetaDataService = (ProductMetaDataService) ServiceLocator.lookup(ProductMetaData.class);
 
-        if( !StringUtils.isEmpty(cdm.getSubChannel()) && cdm.getSubChannel().equalsIgnoreCase("all") ){
-            cdm.setSubChannel(ALL);
-        }
+		if (!StringUtils.isEmpty(cdm.getChannel()) && cdm.getChannel().equalsIgnoreCase("all")) {
+			cdm.setChannel(ALL);
+		}
 
-        if(cdm.getLoginid()==null){
-            cdm.setLoginid(productMetaDataService.getLoginId(cdm.getBatchCode()));
-        }
+		if (!StringUtils.isEmpty(cdm.getSubChannel()) && cdm.getSubChannel().equalsIgnoreCase("all")) {
+			cdm.setSubChannel(ALL);
+		}
 
-        return new OperationResult.StepResult(OperationResult.Status.OK,"Data enriched successfully");
-    }
+		if (cdm.getLoginid() == null) {
+			cdm.setLoginid(productMetaDataService.getLoginId(cdm.getBatchCode()));
+		}
+
+		if(cdm.getFkProductmetadata() == null){
+			cdm.setFkProductmetadata(cdm.getBatchCode());
+		}
+
+		return new OperationResult.StepResult(OperationResult.Status.OK, "Data enriched successfully");
+	}
 }
