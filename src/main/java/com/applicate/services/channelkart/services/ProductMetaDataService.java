@@ -41,20 +41,29 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 	/**
 	 * Batch saves ProductMetaData — performs insert or update based on batch_code and hash.
 	 */
-	@Override
-	public Collection<ProductMetaData> batchSave(Collection<ProductMetaData> productList) {
-		if (productList == null || productList.isEmpty()) {
-			return Collections.emptyList();
-		}
+	private List<List<ProductMetaData>> getItemsToSaveList(List<ProductMetaData> productList) {
 
-		DSLContext dsl = getDslContext();
-		List<ProductMetaData> products = new ArrayList<>(productList);
+		List<List<ProductMetaData>> result = new ArrayList<>();
 
-		// Build deterministic unique IDs (skuCode-loginId-channel)
-		for (ProductMetaData product : products) {
-			if (product == null) {
-				continue;
-			}
+		List<String> ids = productList.stream()
+				.map(p -> String.join("-",
+						Optional.ofNullable(p.getSkuCode()).orElse("NA"),
+						Optional.ofNullable(p.getLoginid()).orElse("NA"),
+						Optional.ofNullable(p.getChannel()).orElse("NA")
+				))
+				.collect(Collectors.toList());
+
+		Map<String, com.salescode.dim.jooq.generated.tables.pojos.Productmetadata> savedMap =
+				getDslContext().selectFrom(CK_PRODUCTMETADATA)
+						.where(CK_PRODUCTMETADATA.ID.in(ids))
+						.fetch()
+						.intoMap(CK_PRODUCTMETADATA.ID,
+								r -> r.into(com.salescode.dim.jooq.generated.tables.pojos.Productmetadata.class));
+
+		List<ProductMetaData> itemsToInsert = new ArrayList<>();
+		List<ProductMetaData> itemsToUpdate = new ArrayList<>();
+
+		for (ProductMetaData product : productList) {
 
 			String id = String.join("-",
 					Optional.ofNullable(product.getSkuCode()).orElse("NA"),
@@ -63,30 +72,64 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 			);
 			product.setId(id);
 
-			if (product.getVersion() == null) {
-				product.setVersion(0);
+			com.salescode.dim.jooq.generated.tables.pojos.Productmetadata existing = savedMap.get(id);
+
+			fillCommonAttributes(product);
+
+			if (existing == null) {
+				product.setChanged((byte)1);
+				itemsToInsert.add(product);
+			} else {
+				if (!Objects.equals(product.getHash(), existing.getHash())) {
+					product.setChanged((byte)1);
+					itemsToUpdate.add(product);
+				} else {
+					product.setChanged((byte)1);
+				}
 			}
-			super.addHash(product);
 		}
 
-		dsl.transaction(configuration -> {
-			DSLContext ctx = DSL.using(configuration);
-
-			List<CkProductmetadataRecord> records = products.stream()
-					.map(p -> ctx.newRecord(CK_PRODUCTMETADATA, p))
-					.collect(Collectors.toList());
-
-			for (CkProductmetadataRecord rec : records) {
-				ctx.insertInto(CK_PRODUCTMETADATA)
-						.set(rec)
-						.onDuplicateKeyUpdate()
-						.set(rec)
-						.execute();
-			}
-		});
-
-		CacheManager.getInstance().evictAll(CACHE_NAME);
-		LOG.info("Batch saved {} ProductMetaData records.", products.size());
-		return products;
+		result.add(itemsToInsert);
+		result.add(itemsToUpdate);
+		return result;
 	}
+
+
+	@Override
+	public Collection<ProductMetaData> batchSave(Collection<ProductMetaData> inputList) {
+
+		if (inputList == null || inputList.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<ProductMetaData> productList = new ArrayList<>(inputList);
+		List<List<ProductMetaData>> items = getItemsToSaveList(productList);
+
+		List<ProductMetaData> itemsToInsert = items.get(0);
+		List<ProductMetaData> itemsToUpdate = items.get(1);
+
+		if (!itemsToInsert.isEmpty()) {
+			getDslContext().batchInsert(
+					itemsToInsert.stream()
+							.map(p -> getDslContext().newRecord(CK_PRODUCTMETADATA, p))
+							.collect(Collectors.toList())
+			).execute();
+		}
+		if (!itemsToUpdate.isEmpty()) {
+			getDslContext().batchUpdate(
+					itemsToUpdate.stream()
+							.map(p -> {
+								CkProductmetadataRecord rec = getDslContext().newRecord(CK_PRODUCTMETADATA, p);
+								rec.changed(CK_PRODUCTMETADATA.ID, false);
+								return rec;
+							})
+							.collect(Collectors.toList())
+			).execute();
+		}
+
+		LOG.info("Batch saved {} ProductMetaData records ({} inserts, {} updates).",
+				productList.size(), itemsToInsert.size(), itemsToUpdate.size());
+
+		return productList;
+	}
+
 }
