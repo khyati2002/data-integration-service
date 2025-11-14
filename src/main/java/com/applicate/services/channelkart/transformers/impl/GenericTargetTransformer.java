@@ -8,7 +8,7 @@ import com.applicate.services.channelkart.utils.NullUtils;
 import com.bazaarvoice.jolt.Chainr;
 import com.bazaarvoice.jolt.JsonUtils;
 import com.salescode.dim.etl.transformation.AbstractTransformer;
-import com.salescode.dim.etl.transformation.service.DataTransformationService.TransformationException; // Fix 1
+import com.salescode.dim.etl.transformation.service.DataTransformationService.TransformationException;
 import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

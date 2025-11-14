@@ -11,6 +11,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// --- ADDED IMPORTS ---
+import org.jooq.Record;
+import org.jooq.Record5;
+import org.jooq.SelectConditionStep;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
+// --- END IMPORTS ---
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -164,12 +171,12 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
         if (filepath == null) {
             return null;
         }
-            String basename = FilenameUtils.getBaseName(filepath);
-            if (basename != null) {
-                basename = basename.replaceAll("[^A-Za-z0-9_/\\-()]", "");
-            }
-            String ext = FilenameUtils.getExtension(filepath);
-            return !ext.isEmpty() ? basename + "." + ext : basename;
+        String basename = FilenameUtils.getBaseName(filepath);
+        if (basename != null) {
+            basename = basename.replaceAll("[^A-Za-z0-9_/\\-()]", "");
+        }
+        String ext = FilenameUtils.getExtension(filepath);
+        return !ext.isEmpty() ? basename + "." + ext : basename;
 
     }
     public void saveProductMetadata(Collection<ProductDetails> productDetailsList, boolean insert ) {
@@ -200,20 +207,20 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
                 }
             }
             populateBatchLocation(metaList);
-                if (insert) {
-                    getDslContext().batchInsert(
-                            metaList.stream()
-                                    .map(m -> getDslContext().newRecord(CK_PRODUCTMETADATA, m))
-                                    .collect(Collectors.toList())
-                    ).execute();
-                }else
-                {
-                     getDslContext().batchUpdate(
+            if (insert) {
+                getDslContext().batchInsert(
                         metaList.stream()
                                 .map(m -> getDslContext().newRecord(CK_PRODUCTMETADATA, m))
                                 .collect(Collectors.toList())
-                    ).execute();
-                  }
+                ).execute();
+            }else
+            {
+                getDslContext().batchUpdate(
+                        metaList.stream()
+                                .map(m -> getDslContext().newRecord(CK_PRODUCTMETADATA, m))
+                                .collect(Collectors.toList())
+                ).execute();
+            }
 
             LOG.info("Batch save for product metadata is successful");
         }
@@ -269,5 +276,50 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
         }
     }
 
+    /**
+     * Replicates the 'blobKeyValue' query to find blob_key by file_name.
+     */
+    public List<Map<String, Object>> findBlobKeyByFileName(String fileName) {
 
+        Record result = getDslContext().select(
+                        CK_PRODUCTDETAILS.FILE_NAME,
+                        CK_PRODUCTDETAILS.BLOB_KEY
+                )
+                .from(CK_PRODUCTDETAILS)
+                .where(CK_PRODUCTDETAILS.BLOB_KEY.isNotNull())
+                .and(CK_PRODUCTDETAILS.BLOB_KEY.ne(""))
+                .and(CK_PRODUCTDETAILS.FILE_NAME.eq(fileName))
+                .limit(1)
+                .fetchOne();
+
+        if (result != null) {
+            return List.of(result.intoMap());
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     * Replicates the 'productImageDataQuery' to fetch product data by MSKU and (optionally) SSKU.
+     */
+    public List<Map<String, Object>> findProductImageData(String msku, String ssku) {
+
+        SelectConditionStep<Record5<JsonNode, String, String, String, String>> query =
+                getDslContext().select(
+                                CK_PRODUCTDETAILS.EXTENDED_ATTRIBUTES,
+                                CK_PRODUCTDETAILS.BLOB_KEY,
+                                CK_PRODUCTDETAILS.SKU_CODE,
+                                CK_PRODUCTDETAILS.BATCH_CODE,
+                                CK_PRODUCTDETAILS.FILE_NAME
+                        )
+                        .from(CK_PRODUCTDETAILS)
+                        .where(CK_PRODUCTDETAILS.MARKET_SKU_CODE.eq(msku));
+
+        if (ssku != null && !ssku.isBlank()) {
+            query.and(CK_PRODUCTDETAILS.SKU_CODE.eq(ssku));
+        }
+
+        return query.fetch().stream()
+                .map(Record::intoMap)
+                .collect(Collectors.toList());
+    }
 }
