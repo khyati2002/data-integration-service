@@ -48,7 +48,7 @@ public class DataStreamJobTest {
             "            \"skipPreprocessing\": false,\n" +
             "            \"skipPersist\": false,\n" +
             "            \"entityName\": \"Loadout\",\n" +
-            "            \"transformerId\": \"\",\n" +
+            "            \"transformerId\": \"DMSLoadoutTransformerCokeSA\",\n" +
             "            \"preprocessValidationExcludeGroup\": null,\n" +
             "            \"messageLevelHash\": null,\n" +
             "            \"messageHashSupported\": false,\n" +
@@ -60,7 +60,7 @@ public class DataStreamJobTest {
             "    \"features\": [\n" +
             "        {\n" +
             "            \"dmsLoadout\": {\n" +
-            "                \"loadNumber\": \"LOAD001\",\n" +
+            "                \"loadNumber\": \"LD_30_1251113_RY454_309127\",\n" +
             "                \"loadOutStatus\": \"PENDING\",\n" +
             "                \"loadOutType\": \"PRE_SELLER\",\n" +
             "                \"salesmanId\": \"SM001\",\n" +
@@ -94,7 +94,6 @@ public class DataStreamJobTest {
             "                    \"outletCode\": \"OUT001\",\n" +
             "                    \"presellerId\": \"PS001\",\n" +
             "                    \"routeCode\": \"ROUTE001\",\n" +
-//            "                    \"salesInfo\": \"Regular sale\",\n" +
             "                    \"totalAmount\": 7500.25,\n" +
             "                    \"totalCaseQty\": 50,\n" +
             "                    \"totalCaseLeftQty\": 50,\n" +
@@ -144,7 +143,6 @@ public class DataStreamJobTest {
             "                    \"outletCode\": \"OUT002\",\n" +
             "                    \"presellerId\": \"PS002\",\n" +
             "                    \"routeCode\": \"ROUTE001\",\n" +
-//            "                    \"salesInfo\": \"Promotional sale\",\n" +
             "                    \"totalAmount\": 7500.25,\n" +
             "                    \"totalCaseQty\": 50,\n" +
             "                    \"totalCaseLeftQty\": 50,\n" +
@@ -189,79 +187,12 @@ public class DataStreamJobTest {
             "                }\n" +
             "            ]\n" +
             "        }\n" +
-//            "        {\n" +
-//            "            \"dmsLoadout\": {\n" +
-//            "                \"loadNumber\": \"LOAD002\",\n" +
-//            "                \"loadOutStatus\": \"IN_TRANSIT\",\n" +
-//            "                \"loadOutType\": \"PRE_SELLER\",\n" +
-//            "                \"salesmanId\": \"SM002\",\n" +
-//            "                \"supplier\": \"SUPPLIER_B\",\n" +
-//            "                \"totalAmount\": 8500.75,\n" +
-//            "                \"totalCaseQty\": 60,\n" +
-//            "                \"totalCaseLeftQty\": 55,\n" +
-//            "                \"totalPieceQty\": 300,\n" +
-//            "                \"totalPieceLeftQty\": 280,\n" +
-//            "                \"totalOtherQty\": 30,\n" +
-//            "                \"totalOtherLeftQty\": 28,\n" +
-//            "                \"vehicleId\": \"VEH002\",\n" +
-//            "                \"vehicleCapacity\": 1500,\n" +
-//            "                \"loadOutDate\": \"2025-01-16 00:00:00\",\n" +
-//            "                \"loadoutSource\": \"ORDER\",\n" +
-//            "                \"caseShortage\": 5,\n" +
-//            "                \"pieceShortage\": 20,\n" +
-//            "                \"otherShortage\": 2,\n" +
-//            "                \"deliveryStartDate\": \"2025-01-16 07:00:00\",\n" +
-//            "                \"deliveryEndDate\": \"2025-01-16 19:00:00\",\n" +
-//            "                \"settlementDate\": \"2025-01-17 23:59:59\",\n" +
-//            "                \"shortageUpdated\": 1,\n" +
-//            "                \"invoiceCreationStartDate\": \"2025-01-16 08:00:00\",\n" +
-//            "                \"invoiceCreationEndDate\": \"2025-01-16 18:00:00\"\n" +
-//            "            },\n" +
-//            "            \"loadoutDetailsList\": [\n" +
-//            "                {\n" +
-//            "                    \"invoiceNumber\": \"INV003\",\n" +
-//            "                    \"loadNumber\": \"LOAD002\",\n" +
-//            "                    \"loadOutStatus\": \"IN_PROGRESS\",\n" +
-//            "                    \"outletCode\": \"OUT003\",\n" +
-//            "                    \"presellerId\": \"PS003\",\n" +
-//            "                    \"routeCode\": \"ROUTE002\",\n" +
-////            "                    \"salesInfo\": \"Express delivery\",\n" +
-//            "                    \"totalAmount\": 8500.75,\n" +
-//            "                    \"totalCaseQty\": 60,\n" +
-//            "                    \"totalCaseLeftQty\": 55,\n" +
-//            "                    \"totalPieceQty\": 300,\n" +
-//            "                    \"totalPieceLeftQty\": 280,\n" +
-//            "                    \"totalOtherQty\": 30,\n" +
-//            "                    \"totalOtherLeftQty\": 28,\n" +
-//            "                    \"returnCaseQty\": 5,\n" +
-//            "                    \"returnPieceQty\": 20,\n" +
-//            "                    \"returnOtherQty\": 2,\n" +
-//            "                    \"invSerNo\": 1,\n" +
-//            "                    \"loadoutItems\": [\n" +
-//            "                        {\n" +
-//            "                            \"skuCode\": \"SKU005\",\n" +
-//            "                            \"batchCode\": \"BATCH005\",\n" +
-//            "                            \"batchId\": \"B005\",\n" +
-//            "                            \"caseQty\": 60,\n" +
-//            "                            \"caseQtyLeft\": 55,\n" +
-//            "                            \"pieceQty\": 300,\n" +
-//            "                            \"pieceQtyLeft\": 280,\n" +
-//            "                            \"otherQty\": 30,\n" +
-//            "                            \"otherQtyLeft\": 28,\n" +
-//            "                            \"amount\": 8500.75,\n" +
-//            "                            \"mrp\": 28.33,\n" +
-//            "                            \"itemType\": \"NORMAL\"\n" +
-//            "                        }\n" +
-//            "                    ]\n" +
-//            "                }\n" +
-//            "            ]\n" +
-//            "        }\n" +
             "    ],\n" +
             "    \"appId\": \"integration\",\n" +
             "    \"retryCount\": 0,\n" +
             "    \"preserveOnFailure\": true,\n" +
             "    \"ignoreS3Log\": false,\n" +
-            "    \"topicName\": \"unnati-dataintegration\"\n" +
+            "    \"topicName\": \"cokesauat-dataintegration\"\n" +
             "}";
     @Test
     public void testDataStreamJobWithFewObjects() throws Exception {
@@ -274,11 +205,11 @@ public class DataStreamJobTest {
 
         // Create a few sample StreamingRawData objects
         StreamingRawData data1 = createStreamingDataObject(Map.of("groupId", "req-1"));
-        StreamingRawData data2 = createStreamingDataObject(Map.of("groupId", "req-2"));
-        StreamingRawData data3 = createStreamingDataObject(Map.of("groupId", "req-3"));
+//        StreamingRawData data2 = createStreamingDataObject(Map.of("groupId", "req-2"));
+//        StreamingRawData data3 = createStreamingDataObject(Map.of("groupId", "req-3"));
 
         // Create a source from the sample data
-        DataStream<StreamingRawData> source = env.fromData(data1, data2, data3);
+        DataStream<StreamingRawData> source = env.fromData(data1);
 
         // For testing, we bypass Kafka and directly use the processor.
         // Prepare dummy commonProperties (if needed by StreamingRawDataProcessor)
