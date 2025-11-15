@@ -29,6 +29,18 @@ public class CategoryInfoService extends AbstractCDMService<CategoryInfo> {
         }
     }
 
+    public List<com.salescode.dim.jooq.generated.tables.pojos.CategoryInfo> findByCategoryCodeAndCategoryValueAndFeature(String var1, String var2, String var3){
+        return getDslContext()
+                        .selectFrom(CK_CATEGORY_INFO)
+                        .where(
+                                CK_CATEGORY_INFO.CATEGORY_CODE.eq(var1)
+                                        .and(CK_CATEGORY_INFO.CATEGORY_VALUE.eq(var2))
+                                        .and(CK_CATEGORY_INFO.FEATURE.eq(var3))
+                        )
+                        .fetchInto(com.salescode.dim.jooq.generated.tables.pojos.CategoryInfo.class);
+
+    }
+
     public List<List<CategoryInfo>> getDataToSaveList(List<CategoryInfo> categoryInfoList) {
         List<List<CategoryInfo>> result = new ArrayList<>();
         List<String> categoryIds = categoryInfoList.stream()
