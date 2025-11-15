@@ -58,7 +58,10 @@ public class SequenceInfoService extends AbstractCDMService<SequenceInfo>{
     private final MetaDataService metaDataService;
 
 
-
+    public SequenceInfoService(){
+        this.sequenceInfoRepository= new SequenceInfoRepository(getDslContext());
+        this.metaDataService=new MetaDataService();
+    }
 
 	public SequenceInfoService(SequenceInfoRepository sequenceInfoRepository, MetaDataService metaDataService) {
 		this.sequenceInfoRepository = sequenceInfoRepository;
