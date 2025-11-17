@@ -1,4 +1,4 @@
 [submodule "bundle"]
 	path = bundle
 	url = https://applicatetech.git.beanstalkapp.com/data-integration-bundles.git
-	branch = vistaar-flink-changes-samarth
+	branch = CokePh-rss
