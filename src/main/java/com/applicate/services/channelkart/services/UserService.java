@@ -64,7 +64,7 @@ public class UserService extends AbstractCDMService<User> {
         enrichmentInfoRegistry = new EnrichmentInfoRegistry(getDslContext());
         dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry,etlRegistry);
     }
-    @Cacheable(cacheName = "dataintegration-user")
+//    @Cacheable(cacheName = "dataintegration-user")
     public User findByLoginId(String loginid) {
         com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
                 .where(CK_USER.LOGINID.eq(loginid))
@@ -535,15 +535,15 @@ public class UserService extends AbstractCDMService<User> {
         return findByMobileSafely(mobile).orElse(Collections.emptyList());
     }
 
-    public Optional<List<User>> findByMobileSafelyLimit(String mobile, int page, int limit) {
+    public Optional<List<com.salescode.dim.jooq.generated.tables.pojos.User>> findByMobileSafelyLimit(String mobile, int page, int limit) {
         int offset = page * limit;
 
-        List<User> users = getDslContext()
+        List<com.salescode.dim.jooq.generated.tables.pojos.User> users = getDslContext()
                 .selectFrom(CK_USER)
                 .where(CK_USER.MOBILE.eq(mobile))
                 .limit(limit)
                 .offset(offset)
-                .fetchInto(User.class);
+                .fetchInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
 
         return users.isEmpty() ? Optional.empty() : Optional.of(users);
     }
