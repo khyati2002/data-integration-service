@@ -88,7 +88,7 @@ pipeline {
 
                     withAWS(region: 'ap-south-1', credentials: 'dev_ui_build') {
                         // Ensure Terragrunt is installed on your Jenkins agent
-//                         sh 'terragrunt run-all apply --terragrunt-non-interactive -no-color'
+                        sh 'terragrunt run-all apply --terragrunt-non-interactive -no-color'
                         sh 'pwd'
                         sh 'ls -larth'
                     }
