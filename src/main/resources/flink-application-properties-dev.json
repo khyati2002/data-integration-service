@@ -19,7 +19,8 @@
       "insights.topic": "${insights.topic}",
       "publish.success.enabled": "${publish.success.enabled}",
       "failure.topic": "${failure.topic}",
-      "success.topic": "${success.topic}"
+      "success.topic": "${success.topic}",
+      "env": "${env}"
     }
   },
   {
