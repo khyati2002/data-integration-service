@@ -3,6 +3,7 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.IdGenerator;
+import com.salescode.dim.jooq.generated.Tables;
 import com.salescode.dim.jooq.generated.tables.pojos.Productmetadata;
 import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.ProductDetails;
@@ -229,5 +230,15 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
         }
     }
 
+    public ProductDetails findByBatchCode(String batchCode) {
+        return getDslContext().selectFrom(Tables.CK_PRODUCTDETAILS)
+                .where(Tables.CK_PRODUCTDETAILS.BATCH_CODE.eq(batchCode))
+                .fetchOneInto(ProductDetails.class);
+    }
 
+    public List<ProductDetails> findByEanCode(String eanCode) {
+        return getDslContext().selectFrom(Tables.CK_PRODUCTDETAILS)
+                .where(Tables.CK_PRODUCTDETAILS.EAN_NUMBER.eq(eanCode))
+                .fetchInto(ProductDetails.class);
+    }
 }
