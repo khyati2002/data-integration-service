@@ -10,13 +10,9 @@ import java.io.Serializable;
 public class CacheUpdateEvent implements Serializable {
 
     private static final long serialVersionUID = 7271540090699595148L;
-
     private String lob;
-
     private String domainName;
-
     private String key;
-
     private boolean clearAll;
 
     @Override

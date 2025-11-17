@@ -1,8 +1,4 @@
-/*
- * Copyright (c) 2021. All rights reserved.
- * APPLICATE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- */
+
 package com.applicate.services.channelkart.cache;
 
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
@@ -12,23 +8,15 @@ import org.apache.commons.lang3.ObjectUtils;
 
 public class AppCacheEvent<T>  {
 
-
     @Getter
     private String key;
-
     @Getter
     private Object data;
-
     @Getter
     private CacheOperationsConstant type;
-
-
     @Getter
     private String lob;
-
-
     private Class<?> handlerClass;
-
     public AppCacheEvent(String key, T data, CacheOperationsConstant type, String lob, Class<?> handlerClass) {
         this.key = key;
         this.data = data;
@@ -46,9 +34,7 @@ public class AppCacheEvent<T>  {
         return (Class<E>) handlerClass;
     }
 
-    /**
-     * Simple pure-java replacement for Spring's ResolvableType
-     */
+
     @Getter
     public static class ResolvedTypeInfo {
         private final Class<?> eventClass;
@@ -93,7 +79,6 @@ public class AppCacheEvent<T>  {
             this.lob = lob;
             return this;
         }
-
         @SuppressWarnings("unchecked")
         public <T> AppCacheEvent<T> build() {
             if (ObjectUtils.isEmpty(this.lob)) {

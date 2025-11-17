@@ -34,32 +34,22 @@ public class DistributedCache {
 
     private static final Logger logger = LoggerFactory.getLogger(DistributedCache.class);
     private static DistributedCache INSTANCE;
-
     private static final String UPDATE_PUBSUB_TOPIC = "change-publisher";
-
     private Map<String, RMap<String, Object>> cmc = new ConcurrentHashMap<>();
 
     @Getter
     private static RedissonClient redissonClient;
-
     private static final String DEFAULT_CACHE_NAME = AbstractDataSourceConstants.DEFAULT;
-
     @Getter
     private RedissonClient redisson;
-
     private static String cacheStore = "datastore";
     @Setter
     private PropertyRegistry propertyRegistry;
-
     boolean isFistLevelCacheEnabled;
     @Setter
     private String environment;
-
-
     private final Map<String, Consumer<CacheUpdateEvent>> changeEventSubscribers = new HashMap<>();
-
     private boolean localCacheMap = false;
-
     private static final int MAX_CACHE_MAP_SIZE = 5000;
 
     private DistributedCache(Properties properties) {

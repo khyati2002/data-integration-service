@@ -11,18 +11,11 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AppCacheEventPublisher {
-
     private static final Logger logger = LoggerFactory.getLogger(AppCacheEventPublisher.class);
-
     private static AppCacheEventPublisher instance;
-
-
     private final DistributedCache distributedCache;
-
     private final List<RegisterCacheEvent> registries;
-
     private final List<CacheEventListener> listeners = new CopyOnWriteArrayList<>();
-
 
     public AppCacheEventPublisher(DistributedCache distributedCache,
                                   List<RegisterCacheEvent> registries) {
@@ -45,36 +38,28 @@ public class AppCacheEventPublisher {
         }
     }
 
-
     public void publishEvent(AppCacheEvent.Builder builder, Function<Object> function) {
 
         if (builder == null) {
             throw new IllegalArgumentException("Builder cannot be null");
         }
-
         AppCacheEvent<?> event = builder.build();
-
         if (StringUtils.isBlank(event.getKey())) {
             throw new IllegalArgumentException("Event key cannot be null/blank");
         }
-
         Class<?> clazz = event.getHandlerClass();
         if (clazz == null && lookUp(event.getKey()).isPresent()) {
             clazz = (Class<?>) lookUp(event.getKey()).orElse(null);
         }
-
         if (clazz != null) {
             register(event.getKey(), clazz);
             builder.setHandlerClass(clazz);
-
             if (logger.isDebugEnabled()) {
                 logger.debug("Publishing event for {}, operation: {}",
                         event.getKey(), event.getType().name());
             }
-
             notifyListeners(builder.build());
         }
-
         function.invoke();
     }
 
@@ -113,5 +98,4 @@ public class AppCacheEventPublisher {
     public static synchronized void setInstance(AppCacheEventPublisher publisher) {
         instance = publisher;
     }
-
 }

@@ -11,18 +11,11 @@ import java.util.Map;
 public class StoreKey implements Serializable{
 
     private static final long serialVersionUID = 1L;
-
-
     private String key;
-
     private Map<String,String> attributes;
-
     private String lob;
-
     private String domain;
-
     private String blobKey;
-
     private long lastModified;
 
 }
