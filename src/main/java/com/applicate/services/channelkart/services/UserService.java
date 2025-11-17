@@ -229,7 +229,7 @@ public class UserService extends AbstractCDMService<User> {
     private void fillUserDetails(List<User> userList) {
         for(User user : userList) {
             if (user.getVerified() == null) {
-                user.setVerified(false);
+                user.setVerified(Byte.valueOf("0"));
             }
 
             if (user.getPassword() == null) {
@@ -291,8 +291,8 @@ public class UserService extends AbstractCDMService<User> {
                     user.setPassword(savedList.get(user.getLoginid()).getPassword());
                 }
             }
-            if (savedList.get(user.getLoginid()) != null && User.of(savedList.get(user.getLoginid())).getVerified()) {
-                user.setVerified(true);
+            if (savedList.get(user.getLoginid()) != null && User.of(savedList.get(user.getLoginid())).getVerified().equals(Byte.valueOf("0"))) {
+                user.setVerified(0b);
             }
             super.addHash(user);
             if (savedList.get(user.getLoginid()) == null) {
