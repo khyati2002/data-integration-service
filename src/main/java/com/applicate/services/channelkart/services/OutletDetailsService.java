@@ -54,8 +54,6 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
     private ETLRegistry etlRegistry;
     private final DistributedCache distributedCache;
-    final Map<String, Properties> applicationProperties = PropertyLoader.loadApplicationProperties(null);
-
 
     public OutletDetailsService() throws IOException {
         distributedCache = DistributedCache.getInstance();
