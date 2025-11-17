@@ -1,11 +1,16 @@
 package com.salescode.dim;
 
 import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
+import com.amazonaws.services.kinesisanalytics.runtime.models.PropertyGroup;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -32,12 +37,28 @@ public class PropertyLoader {
             LOG.info("Loading application properties from '{}'", LOCAL_APPLICATION_PROPERTIES_RESOURCE);
             URL resource = Objects.requireNonNull(PropertyLoader.class.getClassLoader()
                                                                      .getResource(LOCAL_APPLICATION_PROPERTIES_RESOURCE));
-            appProperties = KinesisAnalyticsRuntime.getApplicationProperties(resource.getPath());
+            appProperties = getApplicationProperties(resource.getPath());
             return overrideWithPropertiesFile(appProperties);
         } else {
             LOG.info("Loading application properties from Amazon Managed Service for Apache Flink");
             return KinesisAnalyticsRuntime.getApplicationProperties();
         }
+    }
+    public static Map<String, Properties> getApplicationProperties(String filename) throws IOException {
+        Map<String, Properties> appProperties = new HashMap();
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            for(JsonNode elem : mapper.readTree(new FileInputStream("/Users/salescode/Documents/office projects/data-integration-service/target/classes/flink-application-properties-dev.json"))) {
+                PropertyGroup propertyGroup = (PropertyGroup)mapper.treeToValue(elem, PropertyGroup.class);
+                Properties properties = new Properties();
+                properties.putAll(propertyGroup.properties);
+                appProperties.put(propertyGroup.groupID, properties);
+            }
+        } catch (FileNotFoundException var8) {
+        }
+
+        return appProperties;
     }
 
 

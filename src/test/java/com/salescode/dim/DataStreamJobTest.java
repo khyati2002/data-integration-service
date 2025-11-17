@@ -5,6 +5,7 @@ import com.applicate.services.channelkart.utils.JSONUtils;
 import lombok.SneakyThrows;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -38,65 +39,44 @@ public class DataStreamJobTest {
 
 
     public static String rawStreamingData = "{\n" +
-            "    \"requestId\": \"8a318b6b-95ca-49ff-8310-d90ec102827a\",\n" +
-            "    \"groupId\": \"2025-05-02\",\n" +
-            "    \"lob\": \"cktestitcloyalty\",\n" +
-            "    \"loginId\": \"integration_user\",\n" +
-            "    \"batchNumber\": 0,\n" +
+            "    \"requestId\": \"3e42bc9e-7f91-4f07-8d16-9193352dfd93\",\n" +
+            "    \"groupId\": \"ProductDetails_20251117\",\n" +
+            "    \"fileId\": null,\n" +
+            "    \"lob\": \"cokemrcdemo\",\n" +
+            "    \"submittedBy\": null,\n" +
             "    \"transformerInfo\": [\n" +
             "        {\n" +
-            "            \"skipPreprocessing\": false,\n" +
-            "            \"skipPersist\": false,\n" +
-            "            \"entityName\": \"OutletDetails\",\n" +
-            "            \"transformerId\": \"unnati_csp_outlet_master_mdm1\",\n" +
-            "            \"preprocessValidationExcludeGroup\": \"outlet_validation_exclude\",\n" +
-            "            \"messageLevelHash\": null,\n" +
-            "            \"messageHashSupported\": false,\n" +
-            "            \"messageLevelKey\": null,\n" +
-            "            \"cachedArtifact\": null,\n" +
-            "            \"operationType\": \"insert\"\n" +
+            "            \"entityName\": \"ProductDetails\",\n" +
+            "            \"transformerId\": \"productdetails\",\n" +
+            "            \"operationType\": \"insert\",\n" +
+            "            \"skipPreprocessing\": \"false\"\n" +
             "        }\n" +
             "    ],\n" +
-            "    \"features\":  [{\n" +
-            "    \"UID\": \"EGAU-SL-54327\",\n" +
-            "    \"CREATIONDATE\": \"1746770380797\",\n" +
-            "    \"DISTRICT\": \"EDIS\",\n" +
-            "    \"Branch\": \"EGAU\",\n" +
-            "    \"CUSTName\": \"BABUL STORES\",\n" +
-            "    \"OwnerName\": \"BABUL STORES\",\n" +
-            "    \"ChannelType\": \"Rural Wholesale\",\n" +
-            "    \"OutletType\": \"Dual (FMCG + Tobacco)\",\n" +
-            "    \"LoyaltyType\": \"SWD Others\",\n" +
-            "    \"OutletLat\": \"26.424693999999999\",\n" +
-            "    \"OutletLong\": \"90.973511000000002\",\n" +
-            "    \"TYPE\": \"LOYALTY\",\n" +
-            "    \"OutletName\": \"BABUL STORES\",\n" +
-            "    \"supplierMapping\": [\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"GA2799DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"GA2799\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING CO\"\n" +
-            "      },\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"NG2949DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"NG2949\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING COOOOOO\"\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }\n" +
-            "    ],\n" +
-            "    \"appId\": \"integration\",\n" +
-            "    \"retryCount\": 0,\n" +
+            "    \"topicName\": \"alsafisauat-dataintegration-ProductDetails\",\n" +
             "    \"preserveOnFailure\": true,\n" +
+            "    \"features\": [\n" +
+            "        {\n" +
+            "            \"CATEGORY_CODE\": \"\",\n" +
+            "            \"UOM\": \"L\",\n" +
+            "            \"SUB_CATEGORY_CODE\": \"Laban\",\n" +
+            "            \"SKU_CODE\": \"27/98\",\n" +
+            "            \"BRAND_CODE\": \"0845\",\n" +
+            "            \"CATEGORY\": \"\",\n" +
+            "            \"SUB_CATEGORY\": \"001\",\n" +
+            "            \"PACK_SIZE\": \"019\",\n" +
+            "            \"PACK_SIZE_DESC\": \"180ml\",\n" +
+            "            \"SKU_NAME\": \"2798 Activia Laban 180ml x 6 (1 FREE) FF SL40\",\n" +
+            "            \"CONVERSION_UNIT\": \"L\",\n" +
+            "            \"BRAND\": \"ACTIVIA\"\n" +
+            "        }\n" +
+            "    ],\n" +
+            "    \"loginId\": \"integration_user\",\n" +
+            "    \"offset\": null,\n" +
+            "    \"retryCount\": null,\n" +
             "    \"ignoreS3Log\": false,\n" +
-            "    \"topicName\": \"unnati-dataintegration\"\n" +
-            "}";
+            "    \"headersMap\": null\n" +
+            "}"
+            ;
     @Test
     public void testDataStreamJobWithFewObjects() throws Exception {
         // Clear previously collected values (if any)
@@ -140,7 +120,7 @@ public class DataStreamJobTest {
     }
 
     @SneakyThrows
-    private StreamingRawData createStreamingDataObject(Map<String, String> map) {
+    private StreamingRawData createStreamingDataObject(Map<String, String> map) throws JsonProcessingException {
         return JSONUtils.getObjectMapper()
                         .readValue(StringSubstitutor.replace(rawStreamingData, map, "%(", ")"), StreamingRawData.class);
     }
