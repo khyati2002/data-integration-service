@@ -52,4 +52,7 @@ public class StringUtils {
 			return output;
 		}
 	}
+	public static boolean isNotBlank(String input) {
+		return input != null && !input.isBlank()	;
+	}
 }

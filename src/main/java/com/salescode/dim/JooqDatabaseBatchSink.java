@@ -1,43 +1,30 @@
 package com.salescode.dim;
 
+import com.applicate.services.channelkart.cache.DistributedCache;
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.services.CommonDataModelService;
 import com.applicate.services.channelkart.services.ServiceLocator;
-import com.applicate.services.channelkart.utils.JSONUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salescode.dim.cache.CacheManager;
-import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.jooq.generated.tables.records.CkIntegrationHistoryRecord;
-import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.kafka.FailurePublisher;
 import com.salescode.dim.kafka.InsightsPublisher;
 import com.salescode.dim.kafka.SuccessPublisher;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
-import com.salescode.dim.utils.EventListenerDTO;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.flink.api.common.operators.MailboxExecutor;
 import org.apache.flink.api.connector.sink2.Sink;
 import org.apache.flink.api.connector.sink2.SinkWriter;
-import org.apache.flink.util.concurrent.Executors;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.flink.api.java.tuple.Tuple2;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.tables.CkIntegrationHistory.CK_INTEGRATION_HISTORY;
@@ -99,7 +86,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
             this.batchSize = batchSize;
             this.batchIntervalMs = batchIntervalMs;
             this.lastBatchTime = System.currentTimeMillis();
-            CacheManager.getInstance(properties);
+            DistributedCache.getInstance(properties);
             this.serviceLocator = ServiceLocator.getInstance(dslContext);
             serviceLocator.registerSubClasses();
             this.baseUrl = properties.getProperty("api.base.url");

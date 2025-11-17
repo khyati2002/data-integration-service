@@ -3,13 +3,10 @@ package com.applicate.services.channelkart.client.properties;
 import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
+import com.applicate.services.channelkart.utils.StringUtils;
 import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -30,6 +27,15 @@ public class PropertyRegistry {
 		}
 	  return instance;
 	}
+
+	public List<String> getAsList(PropertyDefinition definition) {
+		String value = getValue(definition);
+		return Arrays.stream(value.split(","))
+					   .map(String::trim)
+					   .filter(StringUtils::isNotBlank)
+					   .collect(Collectors.toList());
+	}
+
 
 	public static PropertyRegistry getInstance(){
 		if(instance == null){

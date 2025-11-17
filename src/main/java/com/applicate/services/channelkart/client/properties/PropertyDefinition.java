@@ -545,7 +545,7 @@ public enum PropertyDefinition {
 
 	CHECK_DD_USER_WHILE_STOCK("pass.stock.check.for.dd.user",Constants.FALSE,"does not apply stock check for dd users."),
 	SHORT_TOKEN_LENGTH("short.token.length", "10", "Based on this length new short tokens will be created. The value should be in the range of 10 - 100"),
-
+	IGNORE_CACHE_DOMAIN_WHILE_CLEARING("ignore.cache.domain.while.clearing", "bulk-order-update", "Defines cache domains to ignore while clearing cache"),
 	TOKEN_CACHE_TTL("token.cache.ttl", "24", "Distributed cache token ttl in hours "),
 	LEADERBOARD_KPI_NAME("leaderboard.kpi.name","kpi_rewards","Kpi name for leaderboard can be configured here"),
 	LEADERBOARD_KPI_NAME_V2("leaderboard.kpi.name.v2","kpi_rewards_2","Kpi name for leaderboard v2"),
