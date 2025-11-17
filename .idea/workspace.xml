@@ -5,11 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9571c45-c3b9-4037-ac14-a5877b8e109a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/salescode/dim/StreamingRawDataKryoSerializationTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/salescode/dim/DataStreamJobTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/salescode/dim/DataStreamJobTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/salescode/dim/StreamingRawDataTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/bundle/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/enrichment/CategoryOutletEnrichmentCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/enrichment/CategoryProductEnrichmentCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/enrichment/CreditOutletEnrichmentCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/enrichment/NewOutletMappingEnrichment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/enrichment/ParentMappingEnrichmentCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/enrichment/ProductDetailsEnrichmentDefault.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/enrichment/ProductMetadataEnrichmentCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/enrichment/SecondaryProductEnrichmentCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/CreditOutletTransformerCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/MdmSupplierTransformerCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/OutletRouteTransformerCokeSa.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/OutletTransformerCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/PricingElementTransformerCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/PricingTransformerCokeSA.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/ProductDetailsTransformerCokeSa.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/SeparateFreeItemsAndCouponValue.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/TIStockDeductTransformer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/TaxMasterGenCokeSa.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokesa/transformer/UserTransformerCokeSA.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,29 +61,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.FlinkTestCaseWithSimpleSource.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.DataStreamJobTest.testDataStreamJobWithFewObjects.executor&quot;: &quot;Debug&quot;,
-    &quot;Makefile Target.init.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dim-save-2&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/gauravgupta/Documents/dim/src/test/resources&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;settings.editor.splitter.proportion&quot;: &quot;0.24793388&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.FlinkTestCaseWithSimpleSource.executor": "Run",
+    "JUnit.DataStreamJobTest.testDataStreamJobWithFewObjects.executor": "Debug",
+    "Makefile Target.init.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "standard-deployment",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/gauravgupta/Documents/dim/src/test/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.splitter.proportion": "0.24793388",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
