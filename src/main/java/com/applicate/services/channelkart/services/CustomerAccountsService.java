@@ -1,6 +1,8 @@
 package com.applicate.services.channelkart.services;
 
-import com.salescode.dim.cache.Cacheable;
+import com.applicate.services.channelkart.cache.AppCacheManager;
+import com.applicate.services.channelkart.utils.SecurityContextUtils;
+import com.salescode.dim.cache.CacheKeys;
 import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
 import com.salescode.dim.jooq.impl.User;
 
@@ -13,7 +15,7 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccount>
         return getAdminInfo().getLoginid();
     }
 
-    @Cacheable
+//    @Cacheable    //not cached in channelkart
     public User getAdminInfo() {
         com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().select()
                 .from(CK_CUSTOMER_ACCOUNT)
@@ -27,17 +29,17 @@ public class CustomerAccountsService extends AbstractCDMService<CustomerAccount>
         return inUser + " > " + getAdminLoginId();
     }
 
-    @Cacheable
+//    @Cacheable    //not cached in channelkart
     public String getTimeZone() {
         return getDslContext().select(CK_CUSTOMER_ACCOUNT.TIME_ZONE)
                 .from(CK_CUSTOMER_ACCOUNT)
                 .fetchOneInto(String.class);
     }
 
-    @Cacheable
     public CustomerAccount getCustomerAccountInfo() {
-        return getDslContext().selectFrom(CK_CUSTOMER_ACCOUNT)
-                .fetchOneInto(CustomerAccount.class);
-
+        String lob = SecurityContextUtils.getLob();
+        AppCacheManager cacheManager = AppCacheManager.getInstance();
+        return cacheManager.withCache(CacheKeys.CUSTOMER_ACCOUNT_INFO_CACHE_DOMAIN,lob, k ->getDslContext().selectFrom(CK_CUSTOMER_ACCOUNT)
+                                                                                                    .fetchOneInto(CustomerAccount.class));
     }
 }

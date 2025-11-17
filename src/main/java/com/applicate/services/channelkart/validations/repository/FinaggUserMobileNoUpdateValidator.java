@@ -18,7 +18,7 @@ public class FinaggUserMobileNoUpdateValidator extends AbstractValidationRule<Us
 	@Override
 	public OperationResult.StepResult apply(User user) {
 		if (user.getDesignation().contains("retailer")) {
-			Optional<com.salescode.dim.jooq.generated.tables.pojos.User> u = Optional.ofNullable(userService.findByLoginId(user.getLoginid()));
+			Optional<com.salescode.dim.jooq.generated.tables.pojos.User> u = Optional.ofNullable(userService.findByLoginId(user.getLoginid(), true));
 			if (u.isPresent() && u.get().getMobile() != null && !u.get().getMobile().isEmpty() && !u.get().getMobile().equalsIgnoreCase(user.getMobile())) {
 				Optional<HierarchyMetadata> suppliers = user.getImmediateParent().stream().filter(sup -> getuserSubscription(user.getLoginid() ,sup.getParent())).findFirst();
 				if (suppliers.isPresent()) {

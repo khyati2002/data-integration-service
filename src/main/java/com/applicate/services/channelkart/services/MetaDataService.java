@@ -23,7 +23,7 @@ public class MetaDataService extends AbstractCDMService<Metadata> {
 		}
 	}
 
-	@Cacheable(cacheName = "dataintegration-metadata1")
+//	@Cacheable(cacheName = "dataintegration-metadata1")  //not cached in channelkart
 	public Metadata fetchByValueFromDB(String domainName,String domainType) {
 		return this.metaDataRepository.findByDomainNameAndDomainType(domainName, domainType).orElse(null);
 	}

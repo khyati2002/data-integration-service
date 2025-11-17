@@ -1,51 +1,37 @@
 package com.applicate.services.channelkart.services;
 
-import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.cache.DistributedCache;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.JSONUtils;
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
-import com.esotericsoftware.minlog.Log;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.salescode.dim.DataStreamJob;
-import com.salescode.dim.PreProcessOperationResult;
 import com.salescode.dim.PreProcessPipelineService;
-import com.salescode.dim.cache.CacheManager;
-import com.salescode.dim.cache.Cacheable;
+import com.salescode.dim.PropertyLoader;
+import com.salescode.dim.cache.CacheKeys;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.etl.validation.service.DataValidationService;
 import com.salescode.dim.etl.validation.service.ValidationExcludeGroupRegistry;
 import com.salescode.dim.etl.validation.service.ValidationInfoRegistry;
-import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
-import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import com.salescode.dim.jooq.generated.tables.pojos.OutletDetailsHierarchymetadata;
 import com.salescode.dim.jooq.generated.tables.records.CkOutletDetailsRecord;
-import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonMappingException;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.util.RawValue;
-import org.checkerframework.checker.units.qual.C;
-import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -67,9 +53,12 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private final ValidationExcludeGroupRegistry validationExcludeGroupRegistry;
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
     private ETLRegistry etlRegistry;
+    private final DistributedCache distributedCache;
+    final Map<String, Properties> applicationProperties = PropertyLoader.loadApplicationProperties(null);
 
 
-    public OutletDetailsService(){
+    public OutletDetailsService() throws IOException {
+        distributedCache = DistributedCache.getInstance();
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
         etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
         userService = new UserService();
@@ -85,14 +74,18 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         supplierInfoService = new SupplierInfoService(getDslContext());
     }
 
-    @Cacheable(cacheName = "dataintegration-outlets")
-    public OutletDetails findByOutletCode(String outletcode) {
-        com.salescode.dim.jooq.generated.tables.pojos.OutletDetails outletDetails = getDslContext().select(CK_OUTLET_DETAILS.asterisk()
-                        .except(CK_OUTLET_DETAILS.COORDINATE))
-                .from(CK_OUTLET_DETAILS).where(CK_OUTLET_DETAILS.OUTLETCODE.eq(outletcode))
-                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class);
-        return OutletDetails.of(outletDetails);
+    public OutletDetails findByOutletCode(String outletCode, boolean cache) {
+        if (outletCode == null) {
+            return null;
+        }
+        Function<String, OutletDetails> loader = (String oc) -> {
+            com.salescode.dim.jooq.generated.tables.pojos.OutletDetails outletDetails = getDslContext().select(CK_OUTLET_DETAILS.asterisk().except(CK_OUTLET_DETAILS.COORDINATE)).from(CK_OUTLET_DETAILS).where(CK_OUTLET_DETAILS.OUTLETCODE.eq(oc)).fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class);
+
+            return OutletDetails.of(outletDetails);
+        };
+        return cache ? distributedCache.withCache(SecurityContextUtils.getLob(), CacheKeys.OUTLETS_CACHE_DOMAIN, outletCode, loader) : loader.apply(outletCode);
     }
+
 
     private List<User> preProcessUser(List<User> userList) {
 //        userList.parallelStream().forEach(user -> {
@@ -279,7 +272,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
             postBatchSave(outletDetails);
         }
         LOG.info("Batch save successful");
-        CacheManager.getInstance().evictAll("dataintegration-outlets");
+        DistributedCache.getInstance().evictAll(CacheKeys.OUTLETS_CACHE_DOMAIN);
         return outletDetails;
     }
 

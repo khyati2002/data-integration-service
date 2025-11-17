@@ -1,30 +1,38 @@
 package com.applicate.services.channelkart.services;
 
-import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.cache.DistributedCache;
 import com.applicate.services.channelkart.repository.HierarchyMetadataRepository;
-import com.applicate.services.channelkart.utils.CdmDiffUtil;
-import com.salescode.dim.cache.CacheManager;
-import com.salescode.dim.cache.Cacheable;
-import com.salescode.dim.jooq.generated.tables.records.CkHierarchyMetadataRecord;
+import com.applicate.services.channelkart.utils.SecurityContextUtils;
+import com.salescode.dim.cache.CacheKeys;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
-import org.jooq.DSLContext;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_HIERARCHY_METADATA;
 
 public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetadata> {
     private static HierarchyMetadataRepository hierarchyMetadataRepository;
+    private final DistributedCache distributedCache;
 
     public HierarchyMetadataService() {
         hierarchyMetadataRepository = new HierarchyMetadataRepository(getDslContext());
+        distributedCache = DistributedCache.getInstance();
     }
 
-    @Cacheable(cacheName = "dataintegration-hierarchymetadatas")
     public List<HierarchyMetadata> findByImmediateParent(String loginId) {
-        return hierarchyMetadataRepository.findByImmediateParent(loginId);
+        return findByImmediateParent(loginId, true);
     }
+
+    public List<HierarchyMetadata> findByImmediateParent(String loginId, boolean cache) {
+        if (loginId == null) {
+            return Collections.emptyList();
+        }
+        Function<String, List<HierarchyMetadata>> loader = (String id) -> hierarchyMetadataRepository.findByImmediateParent(id);
+        return cache ? distributedCache.withCache(SecurityContextUtils.getLob(), CacheKeys.HIERARCHY_METADATA_CACHE_DOMAIN, loginId, loader) : loader.apply(loginId);
+    }
+
 
     public HierarchyMetadata findByHierarchy(String hierarchy) {
         return hierarchyMetadataRepository.findByHierarchy(hierarchy);
@@ -48,7 +56,7 @@ public class HierarchyMetadataService extends AbstractCDMService<HierarchyMetada
             ).execute();
         }
 
-        CacheManager.getInstance().evictAll("dataintegration-hierarchymetadatas");
+        DistributedCache.getInstance().evictAll(CacheKeys.HIERARCHY_METADATA_CACHE_DOMAIN);
         return hierarchyMetadataList;
     }
 

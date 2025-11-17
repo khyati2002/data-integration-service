@@ -1,36 +1,33 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.cache.DistributedCache;
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
-import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.models.enums.RoleName;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
+import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.salescode.dim.JooqDatabaseBatchSink;
-import com.salescode.dim.cache.CacheManager;
-import com.salescode.dim.cache.Cacheable;
+import com.salescode.dim.cache.CacheKeys;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.event.EventPublisher;
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
-import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
 import com.salescode.dim.jooq.generated.tables.pojos.UserRoles;
 import com.salescode.dim.jooq.generated.tables.pojos.Userdesignation;
 import com.salescode.dim.jooq.generated.tables.records.CkUserRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.Location;
-import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.flink.shaded.zookeeper3.org.apache.zookeeper.Op;
 import org.jooq.impl.DSL;
-import scala.tools.ant.sabbus.Use;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.*;
@@ -48,8 +45,10 @@ public class UserService extends AbstractCDMService<User> {
     private final DataEnrichmentService dataEnrichmentService;
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
     private final ETLRegistry etlRegistry;
+    private final DistributedCache distributedCache;
     public UserService(){
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
+        distributedCache = DistributedCache.getInstance();
         etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
         locationService = new LocationService();
         userParentService = new UserParentService();
@@ -59,26 +58,29 @@ public class UserService extends AbstractCDMService<User> {
         enrichmentInfoRegistry = new EnrichmentInfoRegistry(getDslContext());
         dataEnrichmentService = new DataEnrichmentService(enrichmentInfoRegistry,etlRegistry);
     }
-    @Cacheable(cacheName = "dataintegration-user")
-    public User findByLoginId(String loginid) {
-        com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
-                .where(CK_USER.LOGINID.eq(loginid))
-                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
-        if(user == null){
+
+    public User findByLoginId(String loginId, boolean cache) {
+        if (loginId == null) {
             return null;
         }
-        return User.of(user);
+        Function<String, User> loader = (String id) -> {
+            com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER).where(CK_USER.LOGINID.eq(id)).fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
+            return user == null ? null : User.of(user);
+        };
+        return cache ? distributedCache.withCache(SecurityContextUtils.getLob(), CacheKeys.USER_CACHE_DOMAIN, loginId, loader) : loader.apply(loginId);
     }
 
 
-
-    @Cacheable(cacheName = "dataintegration-user")
-    public User findByLoginIdParent(String loginid) {
-        com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER)
-                .where(CK_USER.LOGINID.eq(loginid))
-                .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
-        return User.of(user);
-        //  return new User();
+    public User findByLoginIdParent(String loginId, boolean cache) {
+        if (loginId == null) {
+            return null;
+        }
+        Function<String, User> loader = (String id) -> {
+            com.salescode.dim.jooq.generated.tables.pojos.User user = getDslContext().selectFrom(CK_USER).where(CK_USER.LOGINID.eq(id)).fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.User.class);
+            return User.of(user);
+        };
+        return cache ? distributedCache.withCache(SecurityContextUtils.getLob(), CacheKeys.USER_CACHE_DOMAIN,
+                loginId, loader) : loader.apply(loginId);
     }
 
     private void populateBatchLocation(List<User> userList) {
@@ -349,7 +351,7 @@ public class UserService extends AbstractCDMService<User> {
                             .collect(Collectors.toList())
             ).execute();
         }
-        CacheManager.getInstance().evictAll("dataintegration-user");
+        DistributedCache.getInstance().evictAll(CacheKeys.USER_CACHE_DOMAIN);
         if(!saveItemsList.get(0).isEmpty() || !saveItemsList.get(1).isEmpty()){
             postBatchSave(userList);
         }

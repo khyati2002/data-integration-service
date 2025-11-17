@@ -1,6 +1,7 @@
 package com.salescode.dim.cache;
 
 
+import com.applicate.services.channelkart.cache.DistributedCache;
 import org.redisson.api.RLock;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
@@ -16,7 +17,7 @@ public class RedisIdleEvictionManager {
     private static final Logger logger = LoggerFactory.getLogger(RedisIdleEvictionManager.class);
     private static final String LOCK_PREFIX = "fileIdLock:";
     private static RedisIdleEvictionManager redisIdleEvictionManager;
-    private final RedissonClient redisson = CacheManager.getRedissonClient();
+    private final RedissonClient redisson = DistributedCache.getRedissonClient();
 
     public static RedisIdleEvictionManager getInstance() {
         if (redisIdleEvictionManager == null) {

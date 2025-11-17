@@ -6,17 +6,17 @@
 package com.applicate.services.channelkart.services;
 
 
+import com.applicate.services.channelkart.cache.DistributedCache;
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.IdGenerator;
-import com.salescode.dim.cache.CacheManager;
+import com.salescode.dim.cache.CacheKeys;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.jooq.generated.tables.records.CkTargetResultsRecord;
-import com.salescode.dim.jooq.generated.tables.records.CkTargetsRecord;
 import com.salescode.dim.jooq.impl.TargetResults;
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
@@ -24,7 +24,6 @@ import com.salescode.dim.scanner.ExternalRegistryScanner;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.salescode.dim.jooq.generated.Tables.CK_TARGETS;
 import static com.salescode.dim.jooq.generated.Tables.CK_TARGET_RESULTS;
 
 public class TargetResultsService extends AbstractCDMService<TargetResults> {
@@ -54,7 +53,7 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
                                 CkTargetResultsRecord targetsRecord = getDslContext().newRecord(CK_TARGET_RESULTS, target);
                                 targetsRecord.setChanged(true);
                                 return targetsRecord;
-                            }) // Convert to jOOQ Records
+                            }) // Convert to jOOQ Recordsib
                             .collect(Collectors.toList())).execute();
         }
         if (!saveItemsList.get(1).isEmpty()) {
@@ -69,7 +68,7 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
                             .collect(Collectors.toList())
             ).execute();
         }
-        CacheManager.getInstance().evictAll("dataintegration-user");
+        DistributedCache.getInstance().evictAll(CacheKeys.USER_CACHE_DOMAIN);
         return targets;
     }
 
@@ -130,7 +129,7 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
     private void populateUserAndOutlet(TargetResults tr) {
         String user = tr.getLoginId();
         if (user != null) {
-            User tempUser = userService.findByLoginId(user);
+            User tempUser = userService.findByLoginId(user, true);
             if (tempUser != null) {
                 if (tempUser.getLocationHierarchy() != null) {
                     tr.setLocationHierarchy(tempUser.getLocationHierarchy());

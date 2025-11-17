@@ -1,5 +1,6 @@
 package com.salescode.dim;
 
+import com.applicate.services.channelkart.cache.DistributedCache;
 import com.applicate.services.channelkart.client.properties.PropertyRegistry;
 import com.applicate.services.channelkart.client.properties.PropertyService;
 import com.applicate.services.channelkart.models.CommonDataModel;
@@ -7,7 +8,6 @@ import com.applicate.services.channelkart.services.MetaDataService;
 import com.applicate.services.channelkart.services.ServiceLocator;
 import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
-import com.salescode.dim.cache.CacheManager;
 import com.salescode.dim.cache.RedisIdleEvictionManager;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
@@ -23,19 +23,13 @@ import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import com.salescode.dim.utils.InsightsUtils;
 import com.salescode.dis.insights.dto.event.FileProgressEvent;
-import com.salescode.dis.insights.dto.file.progress.FileProgressRequest;
 import com.salescode.dis.insights.enums.ProgressStage;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.configuration.ConfigOption;
-import org.apache.flink.configuration.ConfigOptions;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.configuration.TaskManagerOptions;
-import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.functions.async.ResultFuture;
 import org.apache.flink.streaming.api.functions.async.RichAsyncFunction;
-import org.apache.flink.util.Collector;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -115,8 +109,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
 
         // Initialize pipeline service
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
-
-        CacheManager.getInstance(properties);
+        DistributedCache.getInstance(properties);
         SecurityContextUtils.getInstance(properties);
         ServiceLocator serviceLocator = ServiceLocator.getInstance(dslContext);
         serviceLocator.registerSubClasses();

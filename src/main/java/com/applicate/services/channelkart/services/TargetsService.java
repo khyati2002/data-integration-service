@@ -1,10 +1,11 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.cache.DistributedCache;
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.IdGenerator;
-import com.salescode.dim.cache.CacheManager;
+import com.salescode.dim.cache.CacheKeys;
 import com.salescode.dim.etl.OperationResult;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
@@ -79,7 +80,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
     private void populateUserAndOutlet(TargetResults tr) {
         String user = tr.getLoginId();
         if (user != null) {
-            User tempUser = userService.findByLoginId(user);
+            User tempUser = userService.findByLoginId(user, true);
             if (tempUser != null) {
                 if (tempUser.getLocationHierarchy() != null)
                     tr.setLocationHierarchy(tempUser.getLocationHierarchy());
@@ -159,7 +160,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
     private void setUserInfo(TargetResults tempObj) {
         String user = tempObj.getLoginId();
         if (user != null) {
-            User tempUser = userService.findByLoginId(user);
+            User tempUser = userService.findByLoginId(user, true);
             if (tempUser != null) {
                 if (tempUser.getLocationHierarchy() != null) {
                     tempObj.setLocationHierarchy(tempUser.getLocationHierarchy());
@@ -196,7 +197,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                             .collect(Collectors.toList())
             ).execute();
         }
-        CacheManager.getInstance().evictAll("dataintegration-user");
+        DistributedCache.getInstance().evictAll(CacheKeys.USER_CACHE_DOMAIN);
         if (!saveItemsList.get(0).isEmpty() || !saveItemsList.get(1).isEmpty()) {
             postBatchSave(targetsList);
         }

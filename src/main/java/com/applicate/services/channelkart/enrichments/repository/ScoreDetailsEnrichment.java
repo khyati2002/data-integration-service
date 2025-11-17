@@ -25,12 +25,12 @@ public class ScoreDetailsEnrichment extends AbstractEnrichment<ScoreDetails> {
 		log.info("<<< Enrichment for LoyaltyScore started >>>");
 		try {
 			if (score.getOutletCode() != null && score.getLoginId() == null) {
-				OutletDetails outlet= outletDetailsService.findByOutletCode(score.getOutletCode());
+				OutletDetails outlet= outletDetailsService.findByOutletCode(score.getOutletCode(), true);
 				score.setLocationHierarchy(getLocationHierarchyIfExists(outlet));
 				score.setLoginId((outlet.getUserName() == null)?null : outlet.getUserName().getLoginid());
 			} else if ((score.getLoginId() != null && score.getOutletCode() != null)
 					|| (score.getLoginId() != null && score.getOutletCode() == null)) {
-				User user= userService.findByLoginId(score.getLoginId());
+				User user= userService.findByLoginId(score.getLoginId(), true);
 				score.setLocationHierarchy((user.getLocationHierarchy() == null)?null:user.getLocationHierarchy());
 			} else {
 			//	AuditLogger.log("Enrichment for LoyaltyScore", "<<<< LoginId and outletCode both can't be Null >>>>", AuditLogger.Status.FAILURE, "ScoreDetails", AuditLogger.Operations.UPDATE.toString(), null);

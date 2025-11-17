@@ -125,7 +125,7 @@ public class LocationService extends AbstractCDMService<Location> {
                     res.add(locationRes);
                 } else {
                     saveRecursiveLocationHierarchies(dataObj.get(i), columnList);
-                    Location locdata = locationRepository.findByLocationHierarchy(hierarchyStr);
+                    Location locdata = locationRepository.findByLocationHierarchy(hierarchyStr, true);
                     res.add(locdata);
                 }
 
@@ -144,7 +144,7 @@ public class LocationService extends AbstractCDMService<Location> {
             String hierarchyStr =formHierarchyUsingColumns(location, columnsList, delimiter);
             if(StringUtils.isNotBlank(hierarchyStr)) {
                 synchronized (lock1) {
-                    Location locdata = locationRepository.findByLocationHierarchy(hierarchyStr);
+                    Location locdata = locationRepository.findByLocationHierarchy(hierarchyStr, true);
                     if(locdata == null) {
                         Location finalLocation = createNewLocationObj(location, columnsList);
                         finalLocation.setLocationHierarchy(hierarchyStr);
