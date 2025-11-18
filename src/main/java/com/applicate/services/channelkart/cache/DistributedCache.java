@@ -41,6 +41,7 @@ public class DistributedCache {
     private static RedissonClient redissonClient;
     private static final String DEFAULT_CACHE_NAME = AbstractDataSourceConstants.DEFAULT;
     @Getter
+    @Setter
     private RedissonClient redisson;
     private static String cacheStore = "datastore";
     @Setter
@@ -94,6 +95,7 @@ public class DistributedCache {
         if(INSTANCE == null){
             INSTANCE = new DistributedCache(properties);
         }
+      INSTANCE.setRedisson(redissonClient);
         return INSTANCE;
     }
     public static DistributedCache getInstance() {
