@@ -32,6 +32,7 @@ import scala.tools.ant.sabbus.Use;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.salescode.dim.jooq.generated.Tables.*;
 import static com.salescode.dim.jooq.generated.Tables.CK_USERDESIGNATION;
@@ -411,24 +412,43 @@ public class UserService extends AbstractCDMService<User> {
 
     public List<Userdesignation> setDesignation(List<User> userList) {
         return userList.stream()
-                .map(user -> {
-                    Userdesignation userdesignation = new Userdesignation();
-
-                    // Set the user ID
-                    userdesignation.setLoginId(user.getLoginid());
-
-                    // Ensure designation is not null before joining
+                .flatMap(user -> {
                     if (user.getDesignation() != null) {
-                        userdesignation.setDesignation(user.getDesignation().stream()
-                                .collect(Collectors.joining(" ")));
+                        return user.getDesignation().stream()
+                                .map(designation -> {
+                                    Userdesignation userdesignation = new Userdesignation();
+                                    userdesignation.setLoginId(user.getLoginid());
+                                    userdesignation.setDesignation(designation);
+                                    return userdesignation;
+                                });
                     } else {
-                        userdesignation.setDesignation(null); // Or set a default value if needed
+                        return Stream.empty();
                     }
-
-                    return userdesignation;
                 })
                 .collect(Collectors.toList());
     }
+
+
+//    public List<Userdesignation> setDesignation(List<User> userList) {
+//        return userList.stream()
+//                .map(user -> {
+//                    Userdesignation userdesignation = new Userdesignation();
+//
+//                    // Set the user ID
+//                    userdesignation.setLoginId(user.getLoginid());
+//
+//                    // Ensure designation is not null before joining
+//                    if (user.getDesignation() != null) {
+//                        userdesignation.setDesignation(user.getDesignation().stream()
+//                                .collect(Collectors.joining(" ")));
+//                    } else {
+//                        userdesignation.setDesignation(null); // Or set a default value if needed
+//                    }
+//
+//                    return userdesignation;
+//                })
+//                .collect(Collectors.toList());
+//    }
 
     public void saveDesignation(List<Userdesignation> userDesignation) {
         BatchInsertUtil.saveBatchWithDuplicateCheck(

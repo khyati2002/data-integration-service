@@ -3,11 +3,16 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.IdGenerator;
+import com.applicate.services.channelkart.utils.NullUtils;
+import com.salescode.dim.etl.transformation.service.DataTransformationService;
 import com.salescode.dim.jooq.generated.tables.pojos.Productmetadata;
 import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.ProductDetails;
 import com.salescode.dim.jooq.impl.ProductMetaData;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -228,6 +233,64 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
             metaDataList.get(i).setLocationHierarchy(savedList.get(i).getLocationHierarchy());
         }
     }
+
+    public String fetchTaxGroupCode(Map<String, Object> inputMap, String sourceSuffix) {
+        Condition condition;
+        if (NullUtils.isNotNull(inputMap.get("ITEM_ID")) && !ObjectUtils.isEmpty(inputMap.get("ITEM_ID"))) {
+            String itemId = inputMap.get("ITEM_ID").toString();
+            condition = CK_PRODUCTDETAILS.ITEM_ID.eq(itemId.trim() + sourceSuffix);
+        } else if (NullUtils.isNotNull(inputMap.get("BATCH_CODE")) && !ObjectUtils.isEmpty(inputMap.get("BATCH_CODE"))) {
+            String batchCode = inputMap.get("BATCH_CODE").toString();
+            condition = CK_PRODUCTDETAILS.BATCH_CODE.eq(batchCode.trim());
+        } else {
+            throw new DataTransformationService.TransformationException("producthierarchycode and itemCode both cannot be empty, please provide one of them");
+        }
+
+        // Use jOOQ DSL to build and execute the query safely
+        Result<Record1<JSON>> result = getDslContext()
+                .select(DSL.field("JSON_EXTRACT(extended_attributes, '$.taxgroupcode')", JSON.class).as("taxgroupcode"))
+                .from(CK_PRODUCTDETAILS)
+                .where(condition)
+                .fetch();
+
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            JSON taxGroupJson = result.get(0).get("taxgroupcode", JSON.class);
+            if (taxGroupJson != null) {
+                return taxGroupJson.data();
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public Map<String, Object> findProductDetailsBySkuCode(String skuCode) {
+        Result<Record4<String, String, String, String>> result = getDslContext().select(
+                        CK_PRODUCTDETAILS.BATCH_CODE,
+                        CK_PRODUCTDETAILS.CATEGORY.as("category"),
+                        CK_PRODUCTDETAILS.BRAND,
+                        CK_PRODUCTDETAILS.SKU_DESCRIPTION.as("sku_description")
+                )
+                .from(CK_PRODUCTDETAILS)
+                .where(CK_PRODUCTDETAILS.SKU_CODE.eq(skuCode))
+                .fetch();
+
+        if (result.isEmpty()) {
+            return null;
+        }
+
+        Record4<String, String, String, String> record = result.get(0);
+
+        Map<String, Object> productMap = new HashMap<>();
+        productMap.put("batch_code", record.get(CK_PRODUCTDETAILS.BATCH_CODE));
+        productMap.put("category", record.get("category"));
+        productMap.put("brand", record.get(CK_PRODUCTDETAILS.BRAND));
+        productMap.put("sku_description", record.get("sku_description"));
+
+        return productMap;
+    }
+
 
 
 }

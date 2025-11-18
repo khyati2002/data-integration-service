@@ -2,8 +2,10 @@ package com.salescode.dim;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.utils.JSONUtils;
+import com.salescode.dim.utils.LocalDateTimeKryoSerializer;
 import lombok.SneakyThrows;
 import org.apache.commons.text.StringSubstitutor;
+import org.apache.flink.api.common.ExecutionConfig;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -13,6 +15,7 @@ import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -36,67 +39,44 @@ class CollectSink<T> implements SinkFunction<T> {
 
 public class DataStreamJobTest {
 
-
     public static String rawStreamingData = "{\n" +
-            "    \"requestId\": \"8a318b6b-95ca-49ff-8310-d90ec102827a\",\n" +
-            "    \"groupId\": \"2025-05-02\",\n" +
-            "    \"lob\": \"cktestitcloyalty\",\n" +
-            "    \"loginId\": \"integration_user\",\n" +
-            "    \"batchNumber\": 0,\n" +
+            "    \"requestId\": \"c07dcdac-e4c6-4da4-b609-b79fc14fba4f\",\n" +
+            "    \"groupId\": \"Asia/Calcutta~2022-01-01 00:00:00~2024-07-15 05:44:00~https://uatxdintegration.cci.vxceed.net/IntegrationService.svc_WarehouseBatchStockC2_100002.xml\",\n" +
+            "    \"fileId\": \"4d7a1a5a511269ea4f1e9f2ac6235091\",\n" +
+            "    \"lob\": \"kbpluat\",\n" +
+            "    \"submittedBy\": \"integration_user\",\n" +
             "    \"transformerInfo\": [\n" +
             "        {\n" +
-            "            \"skipPreprocessing\": false,\n" +
-            "            \"skipPersist\": false,\n" +
-            "            \"entityName\": \"OutletDetails\",\n" +
-            "            \"transformerId\": \"unnati_csp_outlet_master_mdm1\",\n" +
-            "            \"preprocessValidationExcludeGroup\": \"outlet_validation_exclude\",\n" +
-            "            \"messageLevelHash\": null,\n" +
-            "            \"messageHashSupported\": false,\n" +
-            "            \"messageLevelKey\": null,\n" +
-            "            \"cachedArtifact\": null,\n" +
-            "            \"operationType\": \"insert\"\n" +
+            "            \"entityName\": \"Stock\",\n" +
+            "            \"transformerId\": \"kgpl_stock_transformer_new\",\n" +
+            "            \"operationType\": \"insert\",\n" +
+            "            \"preprocessValidationExcludeGroup\": \"\",\n" +
+            "            \"skipPreprocessing\": \"false\"\n" +
             "        }\n" +
             "    ],\n" +
-            "    \"features\":  [{\n" +
-            "    \"UID\": \"EGAU-SL-54327\",\n" +
-            "    \"CREATIONDATE\": \"1746770380797\",\n" +
-            "    \"DISTRICT\": \"EDIS\",\n" +
-            "    \"Branch\": \"EGAU\",\n" +
-            "    \"CUSTName\": \"BABUL STORES\",\n" +
-            "    \"OwnerName\": \"BABUL STORES\",\n" +
-            "    \"ChannelType\": \"Rural Wholesale\",\n" +
-            "    \"OutletType\": \"Dual (FMCG + Tobacco)\",\n" +
-            "    \"LoyaltyType\": \"SWD Others\",\n" +
-            "    \"OutletLat\": \"26.424693999999999\",\n" +
-            "    \"OutletLong\": \"90.973511000000002\",\n" +
-            "    \"TYPE\": \"LOYALTY\",\n" +
-            "    \"OutletName\": \"BABUL STORES\",\n" +
-            "    \"supplierMapping\": [\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"GA2799DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"GA2799\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING CO\"\n" +
-            "      },\n" +
-            "      {\n" +
-            "        \"CustID\": \"C651/20-21\",\n" +
-            "        \"SIFYID\": \"NG2949DMM333C651/20-21\",\n" +
-            "        \"WDDest\": \"NG2949\",\n" +
-            "        \"UID\": \"EGAU-SL-54327\",\n" +
-            "        \"RCSID\": \"181203463573\",\n" +
-            "        \"WDName\": \"HARISH TRADING COOOOOO\"\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }\n" +
-            "    ],\n" +
-            "    \"appId\": \"integration\",\n" +
-            "    \"retryCount\": 0,\n" +
+            "    \"topicName\": null,\n" +
             "    \"preserveOnFailure\": true,\n" +
-            "    \"ignoreS3Log\": false,\n" +
-            "    \"topicName\": \"unnati-dataintegration\"\n" +
+            "    \"features\": [\n" +
+            "        {\n" +
+            "            \"hierarchycode\": \"_15_N\",\n" +
+            "            \"productiondate\": \"2024-01-20T00:00:00\",\n" +
+            "            \"itemcode\": \"KW00111001_NONPROMO_15\",\n" +
+            "            \"subhierarchycode\": \"\",\n" +
+            "            \"mrp\": 15,\n" +
+            "            \"itemtypecode\": 1,\n" +
+            "            \"expiredate\": \"2025-12-31T00:00:00\",\n" +
+            "            \"tenantcode\": 100002,\n" +
+            "            \"stockquantity\": 3000,\n" +
+            "            \"stockquantity1\": 200\n" +
+            "        }\n" +
+            "    ],\n" +
+            "    \"loginId\": \"applicate\",\n" +
+            "    \"offset\": null,\n" +
+            "    \"retryCount\": null,\n" +
+            "    \"ignoreS3Log\": true,\n" +
+            "    \"headersMap\": null\n" +
             "}";
+
     @Test
     public void testDataStreamJobWithFewObjects() throws Exception {
         // Clear previously collected values (if any)
@@ -104,6 +84,8 @@ public class DataStreamJobTest {
 
         // Set up a local Flink streaming environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        ExecutionConfig config = env.getConfig();
+        config.addDefaultKryoSerializer(LocalDateTime.class, new LocalDateTimeKryoSerializer());
         env.setParallelism(1); // Simplify testing with one parallel instance
 
         // Create a few sample StreamingRawData objects

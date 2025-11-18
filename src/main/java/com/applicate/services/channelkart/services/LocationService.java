@@ -4,9 +4,11 @@ import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.repository.LocationRepository;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.JSONUtils;
+import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import com.salescode.dim.jooq.generated.tables.records.CkLocationRecord;
 import com.salescode.dim.jooq.impl.Location;
+import com.salescode.dim.utils.CacheUtility;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
@@ -16,6 +18,7 @@ import org.apache.kafka.common.errors.ResourceNotFoundException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_LOCATION;
@@ -30,6 +33,7 @@ public class LocationService extends AbstractCDMService<Location> {
 
     private static MetaDataService metadataService;
     private static LocationRepository locationRepository;
+    private static final String CACHE_DOMAIN= "locations";
     public LocationService(){
             metadataService = new MetaDataService();
             locationRepository = new LocationRepository(getDslContext());
@@ -242,5 +246,21 @@ public class LocationService extends AbstractCDMService<Location> {
 
         return loc;
     }
+
+    public Location findByLocationHierarchy(String locationHierarchy) {
+        return findByLocationHierarchy(locationHierarchy,true);
+    }
+
+    public Location findByLocationHierarchy(String locationHierarchy, boolean cached) {
+        if (!cached) {
+            return locationRepository.findByLocationHierarchy(locationHierarchy);
+        }
+        String lob = SecurityContextUtils.getLob();
+        String cacheKey = lob + ":" + CACHE_DOMAIN + ":" + locationHierarchy;
+
+        // Use CacheUtility to cache the result
+        return CacheUtility.withCache(cacheKey, () -> locationRepository.findByLocationHierarchy(locationHierarchy));
+    }
+
 
 }

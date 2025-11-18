@@ -11,6 +11,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSet
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -22,7 +23,7 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
     private transient List<AuthRole> roles;
     private List<SupplierMetadata> supplierMetaData;
     private List<HierarchyMetadata> immediateParent;
-    private transient Set<String> designation;
+    private Set<String> designation;
     @Getter(value = AccessLevel.NONE)
     private Location locationHierarchy;
 
@@ -67,6 +68,10 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
         sb.append(", ").append(locationHierarchy);
         sb.append(")");
         return sb.toString();
+    }
+
+    public void setDesignation(Set<String> designation) {
+        this.designation = designation != null ? (Set)designation.stream().map(String::toLowerCase).collect(Collectors.toSet()) : null;
     }
 }
 

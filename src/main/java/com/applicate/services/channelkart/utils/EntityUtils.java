@@ -4,6 +4,10 @@ import com.applicate.services.channelkart.models.CommonDataModel;
 import com.salescode.dim.utils.ReflectionUtils;
 import org.jooq.DSLContext;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,5 +55,18 @@ public class EntityUtils {
             return candidates.stream().filter(e -> e.getPackage().getName().contains(".impl")).findFirst()
                     .orElse(candidates.get(0));
         });
+    }
+
+    public static <T> T deepClone(T src) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(src);
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return (T)ois.readObject();
+        } catch (Exception var5) {
+            throw new RuntimeException("Could not clone object:" + String.valueOf(src));
+        }
     }
 }

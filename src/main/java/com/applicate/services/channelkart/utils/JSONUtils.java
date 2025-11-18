@@ -118,4 +118,47 @@ public class JSONUtils {
 	public static Stream<JsonNode> stream(JsonNode nodes) {
 		return StreamSupport.stream(nodes.spliterator(), false);
 	}
+
+	public static com.fasterxml.jackson.databind.JsonNode toJsonNode(Map<?, ?> input) {
+		return (com.fasterxml.jackson.databind.JsonNode)OBJECT_MAPPER.convertValue(input, com.fasterxml.jackson.databind.JsonNode.class);
+	}
+
+	public static Map<String, Object> toMap(Object input) {
+		return (Map)getObjectMapper().convertValue(input, OBJECT_VALUE_MAP_REFERENCE);
+	}
+
+	public static <T> T convert(Object node, Class<T> clazz) {
+		return getObjectMapper().convertValue(node, clazz);
+	}
+
+	public static com.fasterxml.jackson.databind.JsonNode mergeJsons(com.fasterxml.jackson.databind.JsonNode source, com.fasterxml.jackson.databind.JsonNode destination) throws IOException {
+		com.fasterxml.jackson.databind.node.ObjectNode destinationNode = destination.deepCopy();
+		Iterator<String> fieldNames = source.fieldNames();
+		while (fieldNames.hasNext()) {
+			String fieldName = fieldNames.next();
+			com.fasterxml.jackson.databind.JsonNode jsonNode = destinationNode.get(fieldName);
+			if (jsonNode != null && jsonNode.isObject()) {
+				com.fasterxml.jackson.databind.JsonNode value = mergeJsons(source.get(fieldName), jsonNode);
+				destinationNode.set(fieldName, value);
+			} else {
+				if (destinationNode instanceof com.fasterxml.jackson.databind.node.ObjectNode) {
+					com.fasterxml.jackson.databind.JsonNode value = source.get(fieldName);
+					destinationNode.set(fieldName, value);
+				}
+			}
+		}
+		return destinationNode;
+	}
+
+	public static org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode toObjectNode(Map<?, ?> input) {
+		try {
+			String json = OBJECT_MAPPER.writeValueAsString(input);
+			return (org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode) OBJECT_MAPPER.readTree(json);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to convert Map to ObjectNode", e);
+		}
+	}
+
+
+
 }
