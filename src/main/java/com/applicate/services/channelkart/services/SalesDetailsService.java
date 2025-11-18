@@ -2,8 +2,6 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
-import com.salescode.dim.cache.CacheManager;
-import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
@@ -48,14 +46,12 @@ public class SalesDetailsService extends AbstractCDMService<SalesDetails> {
         preProcessPipelineService = new PreProcessPipelineService(dataValidationService, dataEnrichmentService);
     }
 
-    @Cacheable(cacheName = "dataintegration-sales-details")
     public SalesDetails findById(String id) {
-        SalesDetails salesDetails = getDslContext()
+        return getDslContext()
                 .select(CK_SALES_DETAILS.asterisk())
                 .from(CK_SALES_DETAILS)
                 .where(CK_SALES_DETAILS.ID.eq(id))
                 .fetchOneInto(SalesDetails.class);
-        return salesDetails;
     }
 
     private List<ProductDetails> preProcessProductDetails(List<ProductDetails> productDetailsList) {
@@ -183,7 +179,6 @@ public class SalesDetailsService extends AbstractCDMService<SalesDetails> {
         }
 
         LOG.info("Batch save successful");
-        CacheManager.getInstance().evictAll("dataintegration-sales-details");
         return salesDetailsList;
     }
 

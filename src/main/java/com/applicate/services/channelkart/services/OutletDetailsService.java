@@ -53,10 +53,8 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
     private final ValidationExcludeGroupRegistry validationExcludeGroupRegistry;
     private final EnrichmentInfoRegistry enrichmentInfoRegistry;
     private ETLRegistry etlRegistry;
-    private final DistributedCache distributedCache;
 
-    public OutletDetailsService() throws IOException {
-        distributedCache = DistributedCache.getInstance();
+    public OutletDetailsService()   {
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance();
         etlRegistry = ETLRegistry.getInstance(externalRegistryScanner);
         userService = new UserService();
@@ -81,7 +79,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
 
             return OutletDetails.of(outletDetails);
         };
-        return cache ? distributedCache.withCache(SecurityContextUtils.getLob(), CacheKeys.OUTLETS_CACHE_DOMAIN, outletCode, loader) : loader.apply(outletCode);
+        return cache ? DistributedCache.getInstance().withCache(SecurityContextUtils.getLob(), CacheKeys.OUTLETS_CACHE_DOMAIN, outletCode, loader) : loader.apply(outletCode);
     }
 
 

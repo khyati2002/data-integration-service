@@ -72,6 +72,10 @@ public class UserService extends AbstractCDMService<User> {
         return cache ? distributedCache.withCache(SecurityContextUtils.getLob(), CacheKeys.USER_CACHE_DOMAIN, loginId, loader) : loader.apply(loginId);
     }
 
+    public User findByLoginId(String loginId) {
+    return findByLoginId(loginId, true);
+    }
+
 
     public User findByLoginIdParent(String loginId, boolean cache) {
         if (loginId == null) {
@@ -338,7 +342,7 @@ public class UserService extends AbstractCDMService<User> {
             List<UpdatableRecord<?>> records = saveItemsList.get(0).stream()
                     .map(user -> {
                         var rec = getDslContext().newRecord(CK_USER, user);
-                        rec.changed(CK_USER.SM_CODE, false);
+                        rec.changed(CK_USER.ID, false);
                         return rec;
                     })
                     .collect(Collectors.toList());

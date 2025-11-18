@@ -30,7 +30,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.*;
@@ -85,7 +84,6 @@ public class SalesService extends AbstractCDMService<Sales> {
         microOutletDetailsService = new MicroOutletDetailsService();
     }
 
-    @Cacheable(cacheName = "dataintegration-sales")
     public Sales findByInvoiceNumber(String invoiceNumber) {
        return getDslContext()
                 .select(CK_SALES.asterisk())

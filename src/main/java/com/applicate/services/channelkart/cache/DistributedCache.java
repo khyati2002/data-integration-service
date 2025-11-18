@@ -91,16 +91,18 @@ public class DistributedCache {
     }
 
     public static DistributedCache getInstance(Properties properties) {
-        if(INSTANCE == null){
+        if (INSTANCE == null) {
             INSTANCE = new DistributedCache(properties);
         }
-      INSTANCE.setRedisson(redissonClient);
+        INSTANCE.setRedisson(redissonClient);
         return INSTANCE;
     }
+
     public static DistributedCache getInstance() {
-        if(INSTANCE == null){
+        if (INSTANCE == null) {
             throw new RuntimeException("DistributedCache not initialized. Call getInstance(Properties properties) first.");
         }
+        INSTANCE.setRedisson(redissonClient);
         return INSTANCE;
     }
 
