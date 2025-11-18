@@ -6,8 +6,6 @@ import com.applicate.services.channelkart.client.properties.PropertyRegistry;
 import com.applicate.services.channelkart.utils.GlobalLock;
 import com.applicate.services.channelkart.utils.SecurityContextUtils;;
 import io.netty.buffer.Unpooled;
-import io.opentelemetry.instrumentation.annotations.SpanAttribute;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.SerializationUtils;
@@ -87,6 +85,7 @@ public class DistributedCache {
                         .setAddress(redisUrl);
             }
             redissonClient = Redisson.create(config);
+
             subscribeForChangeEvents();
         }
     }
@@ -172,7 +171,7 @@ public class DistributedCache {
             logger.debug("Cleared first level cache for key {}", event.getKey());
     }
 
-    @WithSpan
+      
     public void publishChangeEvent(CacheUpdateEvent e) {
         if (redisson != null) {
             RTopic topic = redisson.getTopic(env() + "-" + UPDATE_PUBSUB_TOPIC);
@@ -246,7 +245,7 @@ public class DistributedCache {
         }
     }
 
-    @WithSpan
+      
     public void putAllBatch(String lob, String domainName, Map<String, Object> entries, long ttl, TimeUnit timeUnit, boolean localCacheMap) {
         String cacheName = getCacheName(lob, domainName);
         if (redisson != null) {
@@ -294,7 +293,7 @@ public class DistributedCache {
         logger.error("Could not get object from cacheName:{}, key:{}", cacheName, key, e);
     }
 
-    @WithSpan
+      
     public void removeStream(String lob, String domainName) {
         String cacheName = getCacheName(lob, domainName);
         if (redisson != null) {
@@ -337,7 +336,7 @@ public class DistributedCache {
         return domainName + ":" + key;
     }
 
-    @WithSpan
+      
     @SuppressWarnings("unchecked")
     public <T> T getValueByKey(String domainName, String key, Supplier<T> valueSupplier) {
         String lookupKey = makeGlobalDomainKey(domainName, key);
@@ -351,14 +350,14 @@ public class DistributedCache {
         return (T) value;
     }
 
-    @WithSpan
+      
     @SuppressWarnings("unchecked")
     public <T> T getValueByKey(String domainName, String key) {
         String lookupKey = makeGlobalDomainKey(domainName, key);
         return (T) redisson.getBucket(lookupKey).get();
     }
 
-    @WithSpan
+      
     public <T> void putValueByKey(String domainName, Map<String, T> keyValuePairs) {
         keyValuePairs.forEach((key, value) -> {
             String keyName = makeGlobalDomainKey(domainName, key);
@@ -366,7 +365,7 @@ public class DistributedCache {
         });
     }
 
-    @WithSpan
+      
     public Object get(String lob, String domainName, String key, boolean isRaw, boolean isFistLevelCacheEnabled, boolean localCacheMap) {
         String cacheName = getCacheName(lob, domainName);
         if (redisson != null) {
@@ -393,7 +392,7 @@ public class DistributedCache {
         logger.error("Exception happened while accessing the cacheName:{}", cacheName, e);
     }
 
-    @WithSpan
+      
     public Map<String, Object> get(String lob, String domainName) {
         String cacheName = getCacheName(lob, domainName);
         HashMap<String, Object> dataMap = new HashMap<>();
@@ -413,7 +412,7 @@ public class DistributedCache {
         return get(getCacheName(cacheName));
     }
 
-    @WithSpan
+      
     public Map<String, Object> get(String cacheName) {
         HashMap<String, Object> dataMap = new HashMap<>();
         if (redisson != null) {
@@ -428,12 +427,12 @@ public class DistributedCache {
         return dataMap;
     }
 
-    @WithSpan
+      
     public void clearCache(String lob, String domainName, String key) {
         clearCache(lob, domainName, key, localCacheMap);
     }
 
-    @WithSpan
+      
     public void clearCache(String lob, String domainName, String key, boolean localCacheMap) {
         String cacheName = getCacheName(lob, domainName);
         if (redisson != null) {
@@ -463,7 +462,7 @@ public class DistributedCache {
         }
     }
 
-    @WithSpan
+      
     public void clearCache(String lob, String domainName) {
         String cacheName = getCacheName(lob, domainName);
         if (redisson != null) {
@@ -478,7 +477,7 @@ public class DistributedCache {
         }
     }
 
-    @WithSpan
+      
     @SuppressWarnings("unchecked")
     public <V> V withCache(String lob, String key, Function<String, V> function) {
         V cached = (V) get(lob, null, key, false);
@@ -491,9 +490,9 @@ public class DistributedCache {
         return cached;
     }
 
-    @WithSpan
+      
     @SuppressWarnings("unchecked")
-    public <V> V withCache(String lob, @SpanAttribute("cacheDomain") String domain, @SpanAttribute("cacheKey") String key, Function<String, V> function) {
+    public <V> V withCache(String lob,String domain,String key, Function<String, V> function) {
         V cached = (V) get(lob, domain, key, false);
         if (cached == null) {
             cached = function.apply(key);
@@ -504,7 +503,7 @@ public class DistributedCache {
         return cached;
     }
 
-    @WithSpan
+      
     @SuppressWarnings("unchecked")
     public <V> V withExpiringCache(String lob, String domain, String key, long ttl, TimeUnit unit, Function<String, V> function) {
         V cached = (V) get(lob, domain, key, false, false, false);
@@ -522,7 +521,7 @@ public class DistributedCache {
         return lob == null || ("default".equalsIgnoreCase(lob) || "root".equalsIgnoreCase(lob));
     }
 
-    @WithSpan
+      
     public List<String> getAllKeys() {
         List<String> keyList = new ArrayList<>();
         if (redisson != null) {
@@ -544,7 +543,7 @@ public class DistributedCache {
         return keyList;
     }
 
-    @WithSpan
+      
     public List<StoreKey> getStreams(String lob) {
         String cacheName = getCacheName(lob, cacheStore);
         List<StoreKey> storeKeys = new ArrayList<>();
@@ -559,7 +558,7 @@ public class DistributedCache {
         return storeKeys;
     }
 
-    @WithSpan
+      
     public void deleteKey(List<String> keys) {
         if (redisson != null) {
             redisson.getKeys().delete(keys.toArray(new String[0]));
@@ -570,7 +569,7 @@ public class DistributedCache {
         });
     }
 
-    @WithSpan
+      
     public void deleteRedisCacheMap(List<String> keys) {
         if (keys.isEmpty()) {
             keys.addAll(getAllKeys());
@@ -627,7 +626,7 @@ public class DistributedCache {
         }
     }
 
-    @WithSpan
+      
     public boolean deleteAll() {
         try {
             if (redisson != null) {
@@ -654,7 +653,7 @@ public class DistributedCache {
         }
     }
 
-    @WithSpan
+      
     public String getCacheName(String lob, String domainName) {
         String cacheName = isDefaultDataSource(lob) ? DEFAULT_CACHE_NAME : lob;
         cacheName = domainName == null ? cacheName : cacheName + ":" + domainName;
@@ -662,13 +661,13 @@ public class DistributedCache {
         return cacheName;
     }
 
-    @WithSpan
+      
     public String getCacheName(String domainName) {
         String lob = SecurityContextUtils.getLob();
         return getCacheName(lob, domainName);
     }
 
-    @WithSpan
+      
     public void publishCacheEvent(String lob, String key, CacheOperationsConstant operation, Object data) {
         AppCacheEvent.Builder builder = new AppCacheEvent.Builder(operation, null)
                                                 .setKey(key)
@@ -677,7 +676,7 @@ public class DistributedCache {
         AppCacheEventPublisher.get().publishEvent(builder, () -> null);
     }
 
-    @WithSpan
+      
     public void count(String name) {
         if (redisson != null) {
             String key = env() + ":" + SecurityContextUtils.getLob() + ":" + name;
@@ -685,7 +684,7 @@ public class DistributedCache {
         }
     }
 
-    @WithSpan
+      
     public Long getCount(String name) {
         if (redisson != null) {
             String key = env() + ":" + SecurityContextUtils.getLob() + ":" + name;
@@ -694,7 +693,7 @@ public class DistributedCache {
         return 0L;
     }
 
-    @WithSpan
+      
     public Long getCount(String lob, String name) {
         if (redisson != null) {
             String key = env() + ":" + lob + ":" + name;
@@ -703,28 +702,28 @@ public class DistributedCache {
         return 0L;
     }
 
-    @WithSpan
+      
     public void addChangeEventListener(String domain, Consumer<CacheUpdateEvent> consumer) {
         changeEventSubscribers.put(domain, consumer);
     }
 
-    @WithSpan
+      
     public <T> void putKeyValue(String key, T value) {
         redisson.getBucket(key).set(value);
     }
 
-    @WithSpan
+      
     public boolean removeByKey(String key) {
         return redisson.getBucket(key).delete();
     }
 
     @SuppressWarnings("unchecked")
-    @WithSpan
+      
     public <T> T getValue(String key) {
         return (T) redisson.getBucket(key).get();
     }
 
-    @WithSpan
+      
     public <T> T withLock(String lockable, Supplier<T> supplier) {
         RLock lock = redisson.getLock(lockable);
         lock.lock();
@@ -768,7 +767,7 @@ public class DistributedCache {
         }
     }
 
-    @WithSpan
+      
     public RMapCache<String, Object> getCache(String name, int expireAfterMinutes) {
         return (RMapCache<String, Object>) cmc.computeIfAbsent(name, n -> {
             if (redisson != null) {
@@ -778,7 +777,7 @@ public class DistributedCache {
         });
     }
 
-    @WithSpan
+      
     public void evictAll(String cacheName) {
         cacheName = getCacheName(cacheName);
         if (redisson != null) {
