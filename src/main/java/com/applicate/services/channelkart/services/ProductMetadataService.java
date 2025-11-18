@@ -54,7 +54,7 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 
 		DSLContext dsl = getDslContext();
 
-		Map<String, Productmetadata> existingBatchCodeMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.BATCH_CODE.in(batchCodes)).fetch().stream().collect(Collectors.toMap(rec -> rec.get(CK_PRODUCTMETADATA.BATCH_CODE), rec -> rec.into(Productmetadata.class), (a, b) -> a));
+		Map<String, Productmetadata> existingBatchCodeMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.ID.in(batchCodes)).fetch().stream().collect(Collectors.toMap(rec -> rec.get(CK_PRODUCTMETADATA.ID), rec -> rec.into(Productmetadata.class), (a, b) -> a));
 
 		for (ProductMetaData product : productMetadataList) {
 			Productmetadata existing = existingBatchCodeMap.get(product.getBatchCode());
