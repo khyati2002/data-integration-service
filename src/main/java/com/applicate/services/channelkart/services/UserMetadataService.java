@@ -4,6 +4,7 @@ import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.jooq.generated.tables.records.CkUserMetadataRecord;
 import com.salescode.dim.jooq.impl.UserMetadata;
+import org.jooq.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +72,9 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
 
 					// Handle location field with SRID 4326
 					if (userMetadata.getLatitude() != null && userMetadata.getLongitude() != null) {
-						Object pointValue = getDslContext().select(field("ST_GeomFromText({0}, 4326)", String.format("POINT(%s %s)", userMetadata.getLongitude(), userMetadata.getLatitude()))).fetchOne(0);
-						record.set(CK_USER_METADATA.LOCATION, pointValue);
+						Field<Object> location = field("ST_SRID(POINT(?, ?), 4326)", Object.class, userMetadata.getLongitude(), userMetadata.getLatitude());
+						record.set(CK_USER_METADATA.LOCATION, location);
+
 					}
 
 					return record;
@@ -89,8 +91,10 @@ public class UserMetadataService extends AbstractCDMService<UserMetadata> {
 
 					// Handle location field with SRID 4326
 					if (userMetadata.getLatitude() != null && userMetadata.getLongitude() != null) {
-						Object pointValue = getDslContext().select(field("ST_GeomFromText({0}, 4326)", String.format("POINT(%s %s)", userMetadata.getLongitude(), userMetadata.getLatitude()))).fetchOne(0);
-						record.set(CK_USER_METADATA.LOCATION, pointValue);
+						Field<Object> location = field("ST_SRID(POINT(?, ?), 4326)", Object.class, userMetadata.getLongitude(), userMetadata.getLatitude());
+						record.set(CK_USER_METADATA.LOCATION, location);
+
+
 					}
 
 					return record;
