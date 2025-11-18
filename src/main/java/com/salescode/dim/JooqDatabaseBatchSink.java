@@ -80,7 +80,7 @@ public class JooqDatabaseBatchSink implements Sink<Tuple2<StreamingRawData, Map<
         public JooqDatabaseBatchSinkWriter(Properties properties, int batchSize, long batchIntervalMs) throws SQLException, ClassNotFoundException {
             System.setProperty("sun.net.maxDatagramSockets","4096");
             ExternalRegistryScanner.getInstance(properties);
-            HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 5);
+            HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 1);
             this.dslContext = DatabaseConnectionUtil.createPooledDSLContext(hikariDataSource);
             this.batchBuffer = new ArrayList<>();
             this.batchSize = batchSize;

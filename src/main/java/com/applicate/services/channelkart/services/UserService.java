@@ -24,6 +24,8 @@ import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.flink.shaded.zookeeper3.org.apache.zookeeper.Op;
+import org.jooq.UpdatableRecord;
 import org.jooq.impl.DSL;
 
 import java.util.*;
@@ -333,11 +335,15 @@ public class UserService extends AbstractCDMService<User> {
         preBatchSave(userList);
         List<List<User>> saveItemsList = getItemsToSaveList(userList);
         if (!saveItemsList.get(0).isEmpty()) {
-            getDslContext().batchInsert(
-                    saveItemsList.get(0).stream()
-                            .map(user -> getDslContext().newRecord(CK_USER, user)) // Convert to jOOQ Records
-                            .collect(Collectors.toList())
-            ).execute();
+            List<UpdatableRecord<?>> records = saveItemsList.get(0).stream()
+                    .map(user -> {
+                        var rec = getDslContext().newRecord(CK_USER, user);
+                        rec.changed(CK_USER.SM_CODE, false);
+                        return rec;
+                    })
+                    .collect(Collectors.toList());
+
+            getDslContext().batchInsert(records).execute();
         }
 
         if (!saveItemsList.get(1).isEmpty()) {
