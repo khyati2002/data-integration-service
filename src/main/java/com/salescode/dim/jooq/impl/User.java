@@ -1,5 +1,7 @@
 package com.salescode.dim.jooq.impl;
 
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
 import com.salescode.dim.jooq.generated.tables.pojos.SupplierMetadata;
 import lombok.AccessLevel;
@@ -8,6 +10,7 @@ import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -53,6 +56,12 @@ public class User extends com.salescode.dim.jooq.generated.tables.pojos.User imp
     @JsonSetter("userAccountId")
     public void setUserAccountId(String userAccountId) {
         setUseraccountid(userAccountId);
+    }
+
+    @JsonIgnore
+    @Transient
+    public boolean isActive() {
+        return getActiveStatus() != null && getActiveStatus().equals(ActiveStatus.ACTIVE);
     }
 
 
