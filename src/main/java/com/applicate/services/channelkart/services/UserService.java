@@ -335,7 +335,7 @@ public class UserService extends AbstractCDMService<User> {
             List<UpdatableRecord<?>> records = saveItemsList.get(0).stream()
                     .map(user -> {
                         var rec = getDslContext().newRecord(CK_USER, user);
-                        rec.changed(CK_USER.SM_CODE, false);
+                        rec.changed(CK_USER.ID, false);
                         return rec;
                     })
                     .collect(Collectors.toList());
