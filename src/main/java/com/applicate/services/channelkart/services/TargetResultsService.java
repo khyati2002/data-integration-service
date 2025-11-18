@@ -8,6 +8,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.cache.CacheManager;
@@ -114,6 +115,7 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
         List<TargetResults> preparedTargets = new ArrayList<>();
         targets.forEach(entry -> {
             if (entry.getId() == null)   entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));
+            if (entry.getActiveStatus() == null)   entry.setActiveStatus(ActiveStatus.ACTIVE);
             populateUserAndOutlet(entry);
             preparedTargets.add(entry);
         });

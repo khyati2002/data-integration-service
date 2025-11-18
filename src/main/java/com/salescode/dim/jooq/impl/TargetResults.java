@@ -4,6 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSetter;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import java.time.LocalDateTime;
 
 import java.io.Serializable;
 
@@ -22,6 +27,20 @@ public class TargetResults extends com.salescode.dim.jooq.generated.tables.pojos
 
     private TargetResults(com.salescode.dim.jooq.generated.tables.pojos.TargetResults targetsResults) {
         super(targetsResults);
+    }
+
+    @Override
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    public void setCreationTime(LocalDateTime creationTime) {
+        super.setCreationTime(creationTime);
+    }
+
+    @Override
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    public void setLastModifiedTime(LocalDateTime lastModifiedTime) {
+        super.setLastModifiedTime(lastModifiedTime);
     }
 
     @JsonSetter("loginId")
