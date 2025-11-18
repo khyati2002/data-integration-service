@@ -11,11 +11,7 @@ import java.util.stream.Collectors;
 
 public class TempMasterMappingService extends AbstractCDMService<TempMasterMapping> {
 
-    private  TempMasterMappingRepository tempMasterMappingRepository;
-
-    public TempMasterMappingService() {
-        // default constructor
-    }
+    private  final TempMasterMappingRepository tempMasterMappingRepository;
 
     public TempMasterMappingService(TempMasterMappingRepository repository) {
         super();

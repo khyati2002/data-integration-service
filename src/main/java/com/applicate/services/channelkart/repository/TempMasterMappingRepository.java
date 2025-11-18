@@ -1,6 +1,7 @@
 package com.applicate.services.channelkart.repository;
 
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.services.ServiceLocator;
 import com.salescode.dim.jooq.impl.TempMasterMapping;
 import org.jooq.DSLContext;
 
@@ -11,10 +12,7 @@ import java.util.List;
 
 public class TempMasterMappingRepository {
 
-    private  DSLContext dsl;
-
-    public TempMasterMappingRepository() {
-    }
+    private final DSLContext dsl;
 
     public TempMasterMappingRepository(DSLContext dsl) {
         this.dsl = dsl;
