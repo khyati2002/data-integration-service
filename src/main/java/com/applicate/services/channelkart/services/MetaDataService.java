@@ -6,7 +6,10 @@
 package com.applicate.services.channelkart.services;
 
 
+import com.applicate.services.channelkart.cache.DistributedCache;
 import com.applicate.services.channelkart.repository.MetaDataRepository;
+import com.applicate.services.channelkart.utils.SecurityContextUtils;
+import com.salescode.dim.cache.CacheKeys;
 import com.salescode.dim.cache.Cacheable;
 import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import org.jooq.DSLContext;
@@ -23,10 +26,17 @@ public class MetaDataService extends AbstractCDMService<Metadata> {
 		}
 	}
 
-//	@Cacheable(cacheName = "dataintegration-metadata1")  //not cached in channelkart
-	public Metadata fetchByValueFromDB(String domainName,String domainType) {
-		return this.metaDataRepository.findByDomainNameAndDomainType(domainName, domainType).orElse(null);
+	public Metadata fetchByValueFromDB(String domainName, String domainType) {
+		return DistributedCache.getInstance().withCache(
+				SecurityContextUtils.getLob(),
+				CacheKeys.METADATA_CACHE_DOMAIN,
+				domainName + ":" + domainType,
+				k -> metaDataRepository.findByDomainNameAndDomainType(domainName, domainType).orElse(null)
+		);
 	}
+
+
+
 	public Metadata fetchByValue(String domainName, String domainType, boolean cached) {
 
 		return this.fetchByValueFromDB(domainName, domainType);
