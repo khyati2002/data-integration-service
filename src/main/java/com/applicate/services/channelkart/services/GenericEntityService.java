@@ -20,6 +20,12 @@ import static com.salescode.dim.jooq.generated.Tables.CK_GENERIC_OBJECT;
 public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 	private static final Logger LOG = LoggerFactory.getLogger(GenericEntityService.class);
 
+
+
+	public List<GenericEntity> findByNameAndKey1(String name,String key1){
+		return getDslContext().selectFrom(CK_GENERIC_OBJECT).where(CK_GENERIC_OBJECT.KEY1.eq(key1)).and(CK_GENERIC_OBJECT.NAME.eq(name)).fetchInto(GenericEntity.class);
+	}
+
 	public List<List<GenericEntity>> getItemsToSaveList(List<GenericEntity> genericEntityList) {
 		List<List<GenericEntity>> result = new ArrayList<>();
 		List<String> outletCodes = genericEntityList.stream().map(GenericEntity::getId).collect(Collectors.toList());
