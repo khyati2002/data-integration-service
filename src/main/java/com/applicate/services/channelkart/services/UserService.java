@@ -354,9 +354,7 @@ public class UserService extends AbstractCDMService<User> {
             getDslContext().batchUpdate(
                     saveItemsList.get(1).stream()
                             .map(user -> {
-                                CkUserRecord record = getDslContext().newRecord(CK_USER, user);
-                                record.changed(CK_USER.ID, false); // Avoid updating primary key
-                                return record;
+                                return getDslContext().newRecord(CK_USER, user);
                             })
                             .collect(Collectors.toList())
             ).execute();
@@ -460,8 +458,7 @@ public class UserService extends AbstractCDMService<User> {
         if (StringUtils.isBlank(hierarchy)) {
             return hierarchy;
         }
-        String normalizedHierarchy = NORMALIZED_CHARECTORS + Arrays.asList(hierarchy.split(","))
-                .stream().map(h -> Arrays.asList(h.split(" > "))).flatMap(List::stream)
+        String normalizedHierarchy = NORMALIZED_CHARECTORS + Arrays.stream(hierarchy.split(",")).map(h -> Arrays.asList(h.split(" > "))).flatMap(List::stream)
                 .collect(Collectors.toSet()).stream()
                 .collect(Collectors.joining(NORMALIZED_JOINING_CHARECTORS)) + NORMALIZED_CHARECTORS;
         return removeSpecialCharacters(normalizedHierarchy);
