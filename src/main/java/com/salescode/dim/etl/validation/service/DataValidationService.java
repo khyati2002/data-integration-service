@@ -75,14 +75,17 @@ public class DataValidationService {
 
         Set<String> excludedValidationsIds = StringUtils.isNotBlank(preprocessValidationExcludeGroup) ? validationExcludeGroupRegistry.getObjectIdListByKey(preprocessValidationExcludeGroup) : Collections.emptySet();
 
-        List<ValidationResult> allResults = validationRules.parallelStream()
-                .filter(rule -> !excludedValidationsIds.contains(rule.getId()))
-                .map(rule -> validateWithRule(currentDataModels, rule))
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+        OperationResult result = OperationResult.of(OperationResult.Status.OK, currentDataModels);
+        if(excludedValidationsIds!=null) {
+            List<ValidationResult> allResults = validationRules.parallelStream()
+                                                        .filter(rule -> !excludedValidationsIds.contains(rule.getId()))
+                                                        .map(rule -> validateWithRule(currentDataModels, rule))
+                                                        .flatMap(List::stream)
+                                                        .collect(Collectors.toList());
 
-        OperationResult result = evaluateResults(allResults);
-        result.getOperationResultData().addAll(currentDataModels);
+            result = evaluateResults(allResults);
+            result.getOperationResultData().addAll(currentDataModels);
+        }
         return result;
     }
 

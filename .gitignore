@@ -37,3 +37,4 @@ lib/bundle.jar
 
 .terragrunt-cache
 .terraform.lock.hcl
+src/main/resources/META-INF/git.properties
