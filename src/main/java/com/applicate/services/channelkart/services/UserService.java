@@ -2,7 +2,6 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
-import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.models.enums.RoleName;
 import com.applicate.services.channelkart.utils.BatchInsertUtil;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
@@ -14,23 +13,19 @@ import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.event.EventPublisher;
-import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
-import com.salescode.dim.jooq.generated.tables.pojos.CustomerAccount;
-import com.salescode.dim.jooq.generated.tables.pojos.UserRoles;
-import com.salescode.dim.jooq.generated.tables.pojos.Userdesignation;
+import com.salescode.dim.jooq.generated.tables.pojos.*;
 import com.salescode.dim.jooq.generated.tables.records.CkUserRecord;
 import com.salescode.dim.jooq.impl.HierarchyMetadata;
 import com.salescode.dim.jooq.impl.Location;
-import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.flink.shaded.zookeeper3.org.apache.zookeeper.Op;
 import org.jooq.impl.DSL;
 import scala.tools.ant.sabbus.Use;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.*;
@@ -323,6 +318,30 @@ public class UserService extends AbstractCDMService<User> {
         result.add(itemsToInsert);
         result.add(itemsToUpdate);
         return result;
+    }
+
+    public ConcurrentHashMap<String, User> getUser(List<String> loginIdList) {
+        return new ConcurrentHashMap<>(
+                getDslContext()
+                        .selectFrom(CK_USER)
+                        .where(CK_USER.LOGINID.in(loginIdList))
+                        .fetch()
+                        .intoMap(CK_USER.LOGINID, record -> convertToUser(record))
+        );
+    }
+
+    private User convertToUser(CkUserRecord record)
+    {
+        User user = new User();
+        user.setLoginId(record.getLoginid());
+        String hierarchy = record.getHierarchy();
+        String id = record.getId();
+        List<HierarchyMetadata> immediateParent = getDslContext().selectFrom(CK_HIERARCHY_METADATA).where(CK_HIERARCHY_METADATA.HIERARCHY.eq(hierarchy)).fetch().into(HierarchyMetadata.class);
+        user.setImmediateParent(immediateParent);
+        user.setHierarchy(hierarchy);
+        user.setNormalizedHierarchy(record.getNormalizedHierarchy());
+        user.setId(id);
+        return user;
     }
 
     @Override

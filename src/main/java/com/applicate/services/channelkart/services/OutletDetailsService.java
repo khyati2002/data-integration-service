@@ -106,21 +106,7 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         List<User> userList = outletDetailsList.stream()
                 .map(OutletDetails::getUserName)
                 .collect(Collectors.toList());
-
-        for(int i=0;i<userList.size();i++){
-            userList.get(i).setReqId(outletDetailsList.get(i).getReqId());
-            userList.get(i).setLocationHierarchy(outletDetailsList.get(i).getLocation());
-        }
-
-        List<User> preProcessedUserList = preProcessUser(userList);
-        Collection<User> savedUserList = userService.batchSave(userList);
-        ConcurrentHashMap<String, User> userMap = new ConcurrentHashMap<>();
-
-        // Populate ConcurrentHashMap from savedUserList
-        savedUserList.parallelStream()
-                .forEach(user -> userMap.put(user.getLoginid(), user));
-
-        return userMap;
+        return userService.getUser(userList.stream().map(User::getLoginid).collect(Collectors.toList()));
     }
 
     private List<Location> populateLocation(List<OutletDetails> outletDetailsList){
@@ -167,15 +153,10 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         ConcurrentHashMap<String,User> savedUserList = populateUser(outletDetailsList);
 
         for (int i = 0; i < outletDetailsList.size(); i++) {
-            String outletCode = outletDetailsList.get(i).getOutletcode();
-            outletDetailsList.get(i).setLoginid(outletCode);
-            outletDetailsList.get(i).setUserName(savedUserList.get(outletCode));
-            outletDetailsList.get(i).setLocation(savedUserList.get(outletCode).getLocation());
-            outletDetailsList.get(i).setLocationHierarchy(savedUserList.get(outletCode).getLocationHierarchy());
-            outletDetailsList.get(i).setHierarchy(savedUserList.get(outletCode).getHierarchy());
-            outletDetailsList.get(i).setNormalizedHierarchy(savedUserList.get(outletCode).getNormalizedHierarchy());
-            outletDetailsList.get(i).setImmediateParent(savedUserList.get(outletCode).getImmediateParent());
-            setOutletSupplier(outletDetailsList.get(i));
+            String loginId = outletDetailsList.get(i).getUserName().getLoginid();
+            outletDetailsList.get(i).setHierarchy(savedUserList.get(loginId).getHierarchy());
+            outletDetailsList.get(i).setNormalizedHierarchy(savedUserList.get(loginId).getNormalizedHierarchy());
+            outletDetailsList.get(i).setImmediateParent(savedUserList.get(loginId).getImmediateParent());
         }
         return savedUserList;
     }
