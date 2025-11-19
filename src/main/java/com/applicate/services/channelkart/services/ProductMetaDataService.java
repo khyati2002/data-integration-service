@@ -20,23 +20,6 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 	private static final Logger LOG = LoggerFactory.getLogger(ProductMetaDataService.class);
 
 	/**
-	 * Fetches loginId for a given batchCode.
-	 * Queries CK_PRODUCTMETADATA table and returns the first matching loginId.
-	 */
-	public String getLoginId(String batchCode) {
-		if (batchCode == null || batchCode.isBlank()) {
-			throw new IllegalArgumentException("Batch code cannot be null or empty");
-		}
-
-		return getDslContext()
-				.select(CK_PRODUCTMETADATA.LOGINID)
-				.from(CK_PRODUCTMETADATA)
-				.where(CK_PRODUCTMETADATA.BATCH_CODE.eq(batchCode))
-				.limit(1)
-				.fetchOneInto(String.class);
-	}
-
-	/**
 	 * Prepares two lists: items to insert and items to update.
 	 * - Builds IDs based on skuCode-loginId-channel.
 	 * - Loads existing records in bulk for comparison.
