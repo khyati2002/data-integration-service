@@ -4,6 +4,7 @@ import com.salescode.dim.jooq.generated.tables.pojos.Producttag;
 import org.jooq.DSLContext;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_PRODUCTTAG;
 
@@ -97,7 +98,7 @@ public class ProductTagRepository {
         }
         List<String> ids = productTags.stream()
                 .map(Producttag::getId)
-                .toList();
+                .collect(Collectors.toList());
         return dsl.deleteFrom(CK_PRODUCTTAG)
                 .where(CK_PRODUCTTAG.ID.in(ids))
                 .execute();
