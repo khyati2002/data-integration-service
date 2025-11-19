@@ -1,5 +1,6 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.component.model.LoadSequenceGenerator;
 import com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException;
 import com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException.ErrorType;
 import com.salescode.dim.jooq.impl.Loadout;
@@ -28,8 +29,9 @@ public class LoadoutService extends AbstractCDMService<Loadout> {
     
     public LoadoutService() {
         // Initialize modular components
+        LoadSequenceGenerator sequenceGenerator = new LoadSequenceGenerator(getDslContext());
         this.validationService = new LoadoutValidationService();
-        this.hierarchyService = new LoadoutHierarchyService( validationService);
+        this.hierarchyService = new LoadoutHierarchyService(sequenceGenerator, validationService);
         this.loadoutBatchProcessor = new LoadoutBatchProcessor(getDslContext(), hierarchyService);
         this.loadoutDetailsBatchProcessor = new LoadoutDetailsBatchProcessor(getDslContext(), hierarchyService);
         this.loadoutItemsBatchProcessor = new LoadoutItemsBatchProcessor(getDslContext(), hierarchyService, validationService);
@@ -42,8 +44,7 @@ public class LoadoutService extends AbstractCDMService<Loadout> {
      * @param loadoutCollection collection of Loadout entities to save
      * @return the saved loadout collection
      * @throws LoadoutBatchSaveException if any error occurs during the batch save operation
-     * 
-     * <p>Requirements: 1.1, 1.2, 1.3, 6.4, 7.1, 7.2, 7.3, 7.4</p>
+     *
      */
     @Override
     public Collection<Loadout> batchSave(Collection<Loadout> loadoutCollection) throws LoadoutBatchSaveException {

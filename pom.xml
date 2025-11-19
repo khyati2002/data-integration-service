@@ -426,7 +426,11 @@ under the License.
                                     <name>BOOLEAN</name>
                                     <includeExpression>(?i).*\.changed</includeExpression>
                                 </forcedType>
-
+                                <forcedType>
+                                    <userType>java.util.List&lt;java.lang.String&gt;</userType>
+                                    <converter>com.salescode.dim.jooq.RouteConverter</converter>
+                                    <includeExpression>dms_van_loadout\.route_code</includeExpression>
+                                </forcedType>
                             </forcedTypes>
                         </database>
                         <generate>

@@ -1,5 +1,6 @@
 package com.applicate.services.channelkart.services;
 
+import com.applicate.services.channelkart.component.model.LoadSequenceGenerator;
 import com.salescode.dim.jooq.impl.Loadout;
 import com.salescode.dim.jooq.impl.LoadoutDetails;
 import com.salescode.dim.jooq.impl.LoadoutItems;
@@ -27,54 +28,52 @@ import java.util.stream.Collectors;
  *   <li>Prepare entire entity hierarchy with proper IDs and references</li>
  * </ul>
  * 
- * @see SequenceInfoService
+ * @see LoadSequenceGenerator
  * @see LoadoutValidationService
  */
 public class LoadoutHierarchyService {
 
     private static final Logger logger = LoggerFactory.getLogger(LoadoutHierarchyService.class);
+    private static final String LOADOUT_SEQUENCE_NAME = "loadNumber";
     
-//    private final SequenceInfoService sequenceInfoService;
+    private final LoadSequenceGenerator sequenceGenerator;
     private final LoadoutValidationService validationService;
     
-    public LoadoutHierarchyService( LoadoutValidationService validationService) {
-//        this.sequenceInfoService = sequenceInfoService;
+    public LoadoutHierarchyService(LoadSequenceGenerator sequenceGenerator, LoadoutValidationService validationService) {
+        if (sequenceGenerator == null) {
+            throw new IllegalArgumentException("LoadSequenceGenerator cannot be null");
+        }
+        if (validationService == null) {
+            throw new IllegalArgumentException("LoadoutValidationService cannot be null");
+        }
+        this.sequenceGenerator = sequenceGenerator;
         this.validationService = validationService;
     }
 
     /**
-     * Generates loadNumber using the sequence service (getNextLoadVal equivalent).
-     * Calls the sequence service to get the next value for the loadNumber sequence.
+     * Generates loadNumber using the database routine getNextLoadVal.
+     * Calls the LoadSequenceGenerator to get the next value for the loadNumber sequence.
      * 
      * @return the generated loadNumber as a string
      * @throws LoadoutBatchSaveException if sequence generation fails or returns null
-     * 
-     * <p>Requirements: 5.1, 5.2, 5.3</p>
+     *
      */
     public String generateLoadNumber() {
-        logger.debug("Generating new loadNumber from sequence service");
+        logger.debug("Generating new loadNumber using getNextLoadVal routine");
         
         try {
-//            Integer nextValue = sequenceInfoService.getSequenceNumber("Loadout", "loadNumber");
-            Integer nextValue = 0;
-
-            if (nextValue == null) {
-                throw new com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException(
-                    "Sequence service returned null value for loadNumber",
-                    com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException.ErrorType.SEQUENCE_GENERATION_ERROR,
-                    "entity=Loadout, field=loadNumber"
-                );
-            }
+            String generatedLoadNumber = sequenceGenerator.getGeneratedSequenceNumber(LOADOUT_SEQUENCE_NAME, "LN", null);
+            logger.debug("Generated loadNumber: {}", generatedLoadNumber);
+            return generatedLoadNumber;
             
-            String loadNumber = String.valueOf(nextValue);
-            logger.debug("Generated loadNumber: {}", loadNumber);
-            return loadNumber;
-            
+        } catch (com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException e) {
+            // Re-throw our custom exception with context
+            throw e;
         } catch (Exception e) {
             throw new com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException(
-                "Unable to generate loadNumber from sequence service: " + e.getMessage(),
+                "Unable to generate loadNumber from database routine: " + e.getMessage(),
                 com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException.ErrorType.SEQUENCE_GENERATION_ERROR,
-                "entity=Loadout, field=loadNumber",
+                "entity=Loadout, field=loadNumber, sequenceName=" + LOADOUT_SEQUENCE_NAME,
                 e
             );
         }
@@ -88,8 +87,7 @@ public class LoadoutHierarchyService {
      * @param loadouts collection of Loadout entities to process
      * @throws LoadoutBatchSaveException if loadNumber generation fails
      * @throws IllegalArgumentException if a loadout has null DmsLoadout object
-     * 
-     * <p>Requirements: 5.1, 5.2, 5.3</p>
+     *
      */
     public void ensureLoadNumbers(Collection<Loadout> loadouts) {
         logger.debug("Ensuring all {} loadouts have loadNumbers", loadouts.size());
@@ -137,8 +135,7 @@ public class LoadoutHierarchyService {
      * @param invoiceNumber the invoiceNumber from the LoadoutDetails
      * @return composite ID in format "loadNumber-invoiceNumber"
      * @throws IllegalArgumentException if loadNumber or invoiceNumber is null or empty
-     * 
-     * <p>Requirements: 3.1, 3.2</p>
+     *
      */
     public String generateLoadoutDetailsId(String loadNumber, String invoiceNumber) {
         if (StringUtils.isBlank(loadNumber)) {
@@ -160,8 +157,7 @@ public class LoadoutHierarchyService {
      * Sets the ID field for each LoadoutDetails entity using the composite format.
      * 
      * @param loadoutDetails collection of LoadoutDetails entities to process
-     * 
-     * <p>Requirements: 3.1</p>
+     *
      */
     public void generateLoadoutDetailsCompositeIds(Collection<LoadoutDetails> loadoutDetails) {
         if (loadoutDetails == null || loadoutDetails.isEmpty()) {
@@ -184,8 +180,7 @@ public class LoadoutHierarchyService {
      * @param details collection of LoadoutDetails entities to process
      * @param loadNumber the parent loadNumber to use for all details
      * @throws IllegalArgumentException if any LoadoutDetails has null or empty invoiceNumber
-     * 
-     * <p>Requirements: 3.1, 3.2</p>
+     *
      */
     public void setLoadoutDetailsIds(Collection<LoadoutDetails> details, String loadNumber) {
         if (details == null) {
@@ -224,8 +219,7 @@ public class LoadoutHierarchyService {
      * 
      * @param item the LoadoutItems entity to create key for
      * @return composite key string for uniqueness checking
-     * 
-     * <p>Requirements: 4.2, 4.3</p>
+     *
      */
     public String createLoadoutItemsCompositeKey(LoadoutItems item) {
         return String.join("|", 
@@ -243,8 +237,7 @@ public class LoadoutHierarchyService {
      * 
      * @param items collection of LoadoutItems to group
      * @return map of composite key to LoadoutItems entity
-     * 
-     * <p>Requirements: 4.2, 4.3</p>
+     *
      */
     public Map<String, LoadoutItems> groupLoadoutItemsByCompositeKey(Collection<LoadoutItems> items) {
         if (items == null) return Map.of();
@@ -267,8 +260,7 @@ public class LoadoutHierarchyService {
      * 
      * @param items collection of LoadoutItems to set parent references for
      * @param loadoutDetailsId the parent LoadoutDetails ID to set
-     * 
-     * <p>Requirements: 7.2, 7.3</p>
+     *
      */
     public void setLoadoutItemsParentReferences(Collection<LoadoutItems> items, String loadoutDetailsId) {
         if (items == null) return;
@@ -286,8 +278,7 @@ public class LoadoutHierarchyService {
      * @param loadout the root Loadout entity to prepare
      * @throws IllegalArgumentException if validation fails or required fields are missing
      * @throws LoadoutBatchSaveException if loadNumber generation fails
-     * 
-     * <p>Requirements: 3.1, 3.2, 4.1, 7.1, 7.2, 7.3</p>
+     *
      */
     public void prepareEntityHierarchy(Loadout loadout) {
         logger.trace("Preparing entity hierarchy for loadout");
@@ -327,7 +318,6 @@ public class LoadoutHierarchyService {
             try {
                 setLoadoutDetailsIds(loadout.getLoadoutDetailsList(), loadNumber);
             } catch (IllegalArgumentException e) {
-                logger.error("Failed to set LoadoutDetails IDs for loadNumber={}", loadNumber, e);
                 throw new IllegalArgumentException("Failed to prepare LoadoutDetails for loadNumber=" + loadNumber + ": " + e.getMessage(), e);
             }
             
@@ -338,10 +328,9 @@ public class LoadoutHierarchyService {
                     logger.debug("Processing {} LoadoutItems for LoadoutDetails ID={}", detail.getLoadoutItems().size(), detail.getId());
                     
                     try {
-                        validationService.validateLoadoutItemsCollection(detail.getLoadoutItems());
                         setLoadoutItemsParentReferences(detail.getLoadoutItems(), detail.getId());
+                        validationService.validateLoadoutItemsCollection(detail.getLoadoutItems());
                     } catch (IllegalArgumentException e) {
-                        logger.error("Failed to process LoadoutItems for LoadoutDetails at index {} (ID={})", detailIndex, detail.getId(), e);
                         throw new IllegalArgumentException("Failed to prepare LoadoutItems for LoadoutDetails ID=" + detail.getId() + ": " + e.getMessage(), e);
                     }
                 }

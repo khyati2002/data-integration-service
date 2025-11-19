@@ -346,8 +346,6 @@ public class LoadoutDetailsBatchProcessor {
         }
 
         try {
-            // Generate composite IDs for all LoadoutDetails
-            hierarchyService.generateLoadoutDetailsCompositeIds(loadoutDetails);
 
             // Extract composite IDs for querying existing records
             Set<String> compositeIds = loadoutDetails.stream()
