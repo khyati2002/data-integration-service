@@ -15,9 +15,12 @@ import com.salescode.dim.jooq.generated.tables.pojos.Metadata;
 import com.salescode.dim.utils.ReflectionUtils;
 import jakarta.activation.DataHandler;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -144,6 +147,43 @@ public class EntityUtils {
             return (T) ois.readObject();
         } catch (Exception e) {
             throw new RuntimeException("Could not clone object:" + src);
+        }
+    }
+
+    public Field findField(Class<?> clazz, String fieldName) {
+        Class<?> c = clazz;
+        Field tempfield = null;
+        while (c != null) {
+            for (Field field : org.reflections.ReflectionUtils.getAllFields(c)) {
+                if (field.getName().equals(fieldName)) {
+                    tempfield = field;
+                    break;
+                }
+            }
+            c = c.getSuperclass();
+        }
+        return tempfield;
+    }
+
+    public <T> List<?> findDataByQuery(Class<T> clazz, String query, boolean isNative) {
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
+
+        // Run raw SQL using JOOQ
+        Result<Record> result = dslContext.fetch(query);
+
+        if (clazz == Map.class) {
+            // Convert to list of maps (column alias -> value)
+            return result.stream()
+                    .map(Record::intoMap)
+                    .collect(Collectors.toList());
+        } else if (clazz == List.class || clazz == Record.class) {
+            // Return raw records
+            return result;
+        } else {
+            // Convert into the provided POJO class
+            return result.into(clazz);
         }
     }
 
