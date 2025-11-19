@@ -91,7 +91,7 @@ public class StreamingRawDataProcessor extends RichAsyncFunction<StreamingRawDat
         // Create connection & DSLContext using the utility
 //        this.connection = DatabaseConnectionUtil.createConnection(properties);
 //        this.dslContext = DatabaseConnectionUtil.createDSLContext(connection);
-        HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 4);
+        HikariDataSource hikariDataSource = DatabaseConnectionUtil.initConnectionPool(properties, 1);
         this.dslContext = DatabaseConnectionUtil.createPooledDSLContext(hikariDataSource);
 
         ExternalRegistryScanner externalRegistryScanner = ExternalRegistryScanner.getInstance(properties);

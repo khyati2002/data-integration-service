@@ -51,21 +51,26 @@ pipeline {
         stage('Setup LOB Environment') {
             steps {
                 script {
-                    // Ensure Node.js is available in your Jenkins agent environment
+                    // Checkout the branch properly first
+                    sh "git checkout ${branchName} || git checkout -b ${branchName}"
+
                     sh "npm init -y"
                     sh "node scripts/setup-lob.js --lob '${params.LOB_NAME}' --env '${params.ENV}' --region '${params.REGION}' --terragrunt-inputs '${params.TERRAGRUNT_INPUTS}' --flink-properties '${params.FLINK_PROPERTIES}'"
-                    
-                    // Commit the generated files
-                    sh "git add environments/${params.ENV}/${params.REGION}/${params.LOB_NAME}/"
-                    sh "git commit -m 'feat: Add/Update LOB ${params.LOB_NAME}'"
-                    // Push the commit to the remote repository
-                    withCredentials([gitUsernamePassword(credentialsId: 'applicate_git')]) {
-                        sh """
-                            git remote -v
-                            REPO_HOST=\$(echo "${BUNDLE_REPO_URL}" | cut -d'/' -f3)
-                            REPO_PATH=\$(echo "${BUNDLE_REPO_URL}" | cut -d'/' -f4-)
-                            git push  dis HEAD:${branchName}
-                        """
+
+                    // Add all files in the LOB directory (recursive)
+                    sh "git add -A environments/${params.ENV}/${params.REGION}/${params.LOB_NAME}/"
+
+                    // Check if there are changes to commit
+                    def hasChanges = sh(script: "git diff --cached --quiet", returnStatus: true)
+                    if (hasChanges != 0) {
+                        sh "git commit -m 'feat: Add/Update LOB ${params.LOB_NAME}'"
+
+                        // Push the commit
+                        withCredentials([gitUsernamePassword(credentialsId: 'applicate_git')]) {
+                            sh "git push origin ${branchName}"
+                        }
+                    } else {
+                        echo "No changes to commit for LOB ${params.LOB_NAME}"
                     }
                 }
             }
@@ -83,7 +88,7 @@ pipeline {
 
                     withAWS(region: 'ap-south-1', credentials: 'dev_ui_build') {
                         // Ensure Terragrunt is installed on your Jenkins agent
-//                         sh 'terragrunt run-all apply --terragrunt-non-interactive -no-color'
+                        sh 'terragrunt run-all apply --terragrunt-non-interactive -no-color'
                         sh 'pwd'
                         sh 'ls -larth'
                     }
