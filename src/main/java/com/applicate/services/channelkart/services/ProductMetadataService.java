@@ -43,8 +43,7 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 			product.setActiveStatus(ActiveStatus.ACTIVE);
 		}
 
-		// Fetch saved data by batchCode
-		List<String> batchCodes = productMetadataList.stream().map(ProductMetaData::getBatchCode).filter(Objects::nonNull).collect(Collectors.toList());
+		List<String> batchCodes = productMetadataList.stream().map(ProductMetaData::getId).filter(Objects::nonNull).collect(Collectors.toList());
 
 		if (batchCodes.isEmpty()) {
 			result.add(itemsToInsert);
@@ -54,10 +53,10 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 
 		DSLContext dsl = getDslContext();
 
-		Map<String, Productmetadata> existingBatchCodeMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.BATCH_CODE.in(batchCodes)).fetch().stream().collect(Collectors.toMap(rec -> rec.get(CK_PRODUCTMETADATA.BATCH_CODE), rec -> rec.into(Productmetadata.class), (a, b) -> a));
+		Map<String, Productmetadata> existingBatchCodeMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.ID.in(batchCodes)).fetch().stream().collect(Collectors.toMap(rec -> rec.get(CK_PRODUCTMETADATA.ID), rec -> rec.into(Productmetadata.class), (a, b) -> a));
 
 		for (ProductMetaData product : productMetadataList) {
-			Productmetadata existing = existingBatchCodeMap.get(product.getBatchCode());
+			Productmetadata existing = existingBatchCodeMap.get(product.getId());
 			ProductMetaData existingDomain = null;
 			if (existing != null) {
 				existingDomain = new ProductMetaData(existing);
@@ -65,13 +64,16 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 			fillAttributes(product, existingDomain);
 			fillCommonAttributes(product);
 
-			if (existing == null) {
+			if (existingBatchCodeMap.get(product.getId())==null) {
 				product.setVersion(0);
 				product.setOperationPerformed(ActionType.INSERT);
+            	String casePtr = String.format("%.8f", product.getCasePtr()) ;
 				itemsToInsert.add(product);
 			} else {
 				product.setVersion(existing.getVersion() + 1);
 				product.setOperationPerformed(ActionType.UPDATE);
+				String casePtr = String.format("%.8f", product.getCasePtr());
+
 				itemsToUpdate.add(product);
 			}
 		}

@@ -423,6 +423,13 @@ under the License.
                                     <converter>com.salescode.dim.jooq.DoubleToFloatConverter</converter>
                                     <includeExpression>ck_target_results\.achieved</includeExpression>
                                 </forcedType>
+                                <forcedType>
+
+                                    <userType>java.lang.Float</userType>
+                                    <converter>com.salescode.dim.jooq.BigDecimalToFloatConverter</converter>
+                                    <includeExpression>ck_productmetadata\.case_ptr</includeExpression>
+
+                                </forcedType>
                             </forcedTypes>
                         </database>
                         <generate>
