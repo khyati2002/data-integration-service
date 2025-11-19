@@ -50,3 +50,4 @@ generate-project-jar:
 	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
 	mvn clean install -f jooq/pom.xml -s settings.xml; \
 	mvn clean compile install -DskipTests=true -s settings.xml
+
