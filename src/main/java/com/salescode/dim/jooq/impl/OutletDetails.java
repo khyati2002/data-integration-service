@@ -44,6 +44,9 @@ public class OutletDetails extends com.salescode.dim.jooq.generated.tables.pojos
     public Location getLocationHierarchyAsLocation() {
         return this.location;
     }
+    public void setLocationHierarchy(Location locationHierarchy) {
+        this.location = locationHierarchy;
+    }
 
 
     @JsonSetter("outletCode")
