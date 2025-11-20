@@ -1,160 +1,114 @@
 package com.applicate.services.channelkart.services;
 
-import com.salescode.dim.jooq.generated.tables.records.CkProductmetadataRecord;
+import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.utils.IdGenerator;
+
+import com.salescode.dim.jooq.generated.tables.pojos.Productmetadata;
+import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.ProductMetaData;
+import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.salescode.dim.jooq.generated.tables.CkProductmetadata.CK_PRODUCTMETADATA;
+import static com.salescode.dim.jooq.generated.Tables.CK_PRODUCTMETADATA;
 
-/**
- * Service class to handle batch operations for ProductMetaData.
- * Includes lookup of loginId and optimized batch save processing.
- */
 public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ProductMetaDataService.class);
+	private final LocationService locationService;
 
-	/**
-	 * Prepares two lists: items to insert and items to update.
-	 * - Builds IDs based on skuCode-loginId-channel.
-	 * - Loads existing records in bulk for comparison.
-	 * - Compares hash to determine update vs no-op.
-	 * - Marks changed items accordingly.
-	 */
-	private List<List<ProductMetaData>> getItemsToSaveList(List<ProductMetaData> productList) {
+	public ProductMetaDataService() {
+		this.locationService = new LocationService();
+	}
 
+	public List<List<ProductMetaData>> getDataToSaveList(List<ProductMetaData> productMetadataList) {
 		List<List<ProductMetaData>> result = new ArrayList<>();
-
-		for (ProductMetaData product : productList) {
-			if (product.getSkuCode() == null || product.getSkuCode().isBlank()) {
-				throw new IllegalStateException("SKU code cannot be null or blank.");
-			}
-			if (product.getLoginid() == null || product.getLoginid().isBlank()) {
-				throw new IllegalStateException("Login ID cannot be null or blank before save().");
-			}
-			if (product.getChannel() == null || product.getChannel().isBlank()) {
-				throw new IllegalStateException("Channel cannot be null or blank.");
-			}
-		}
-
-		List<String> ids = productList.stream()
-				.map(p -> {
-					String id = String.join("-",
-							p.getSkuCode(),
-							p.getLoginid(),
-							p.getChannel()
-					);
-					p.setId(id);
-					return id;
-				})
-				.collect(Collectors.toList());
-
-		Map<String, com.salescode.dim.jooq.generated.tables.pojos.Productmetadata> savedMap =
-				getDslContext().selectFrom(CK_PRODUCTMETADATA)
-						.where(CK_PRODUCTMETADATA.ID.in(ids))
-						.fetch()
-						.intoMap(CK_PRODUCTMETADATA.ID,
-								r -> r.into(com.salescode.dim.jooq.generated.tables.pojos.Productmetadata.class));
-
 		List<ProductMetaData> itemsToInsert = new ArrayList<>();
 		List<ProductMetaData> itemsToUpdate = new ArrayList<>();
 
-		for (ProductMetaData product : productList) {
+		if (productMetadataList == null || productMetadataList.isEmpty()) {
+			result.add(itemsToInsert);
+			result.add(itemsToUpdate);
+			return result;
+		}
 
+		for (ProductMetaData product : productMetadataList) {
+			product.setId(new IdGenerator(product.getClass().getSimpleName()).getId(product));
+			product.setActiveStatus(ActiveStatus.ACTIVE);
+		}
+
+		List<String> batchCodes = productMetadataList.stream().map(ProductMetaData::getId).filter(Objects::nonNull).collect(Collectors.toList());
+
+		if (batchCodes.isEmpty()) {
+			result.add(itemsToInsert);
+			result.add(itemsToUpdate);
+			return result;
+		}
+
+		DSLContext dsl = getDslContext();
+
+		Map<String, Productmetadata> existingBatchCodeMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.ID.in(batchCodes)).fetch().stream().collect(Collectors.toMap(rec -> rec.get(CK_PRODUCTMETADATA.ID), rec -> rec.into(Productmetadata.class), (a, b) -> a));
+
+		for (ProductMetaData product : productMetadataList) {
+			Productmetadata existing = existingBatchCodeMap.get(product.getId());
+			ProductMetaData existingDomain = null;
+			if (existing != null) {
+				existingDomain = new ProductMetaData(existing);
+			}
+			fillAttributes(product, existingDomain);
 			fillCommonAttributes(product);
 
-			var existing = savedMap.get(product.getId());
-
-			if (existing == null) {
-				product.setChanged((byte) 1);
+			if (existingBatchCodeMap.get(product.getId())==null) {
+				product.setVersion(0);
+				product.setOperationPerformed(ActionType.INSERT);
+				String casePtr = String.format("%.8f", product.getCasePtr()) ;
 				itemsToInsert.add(product);
 			} else {
-				product.setChanged((byte) 1);
+				product.setVersion(existing.getVersion() + 1);
+				product.setOperationPerformed(ActionType.UPDATE);
+				String casePtr = String.format("%.8f", product.getCasePtr());
+
 				itemsToUpdate.add(product);
 			}
 		}
 
 		result.add(itemsToInsert);
 		result.add(itemsToUpdate);
-
 		return result;
 	}
 
-
-	/**
-	 * Batch saves ProductMetaData — performs insert or update based on batch_code and hash.
-	 */
 	@Override
-	public Collection<ProductMetaData> batchSave(Collection<ProductMetaData> inputList) {
+	public Collection<ProductMetaData> batchSave(Collection<ProductMetaData> productMetadataList) {
+		LOG.info("Size of list is {}", productMetadataList.size());
 
-		if (inputList == null || inputList.isEmpty()) {
-			return Collections.emptyList();
+		List<List<ProductMetaData>> saveItemsList = getDataToSaveList(new ArrayList<>(productMetadataList));
+		DSLContext dsl = getDslContext();
+
+		// Inserts
+		if (!saveItemsList.get(0).isEmpty()) {
+			dsl.batchInsert(saveItemsList.get(0).stream().map(prod -> dsl.newRecord(CK_PRODUCTMETADATA, prod)).collect(Collectors.toList())).execute();
 		}
 
-		List<ProductMetaData> productList = new ArrayList<>(inputList);
-		List<List<ProductMetaData>> items = getItemsToSaveList(productList);
-
-		List<ProductMetaData> itemsToInsert = items.get(0);
-		List<ProductMetaData> itemsToUpdate = items.get(1);
-
-		if (!itemsToInsert.isEmpty()) {
-			for (ProductMetaData p : itemsToInsert) {
-				applyDefaults(p);
-			}
-			getDslContext().batchInsert(
-					itemsToInsert.stream()
-							.map(p -> getDslContext().newRecord(CK_PRODUCTMETADATA, p))
-							.collect(Collectors.toList())
-			).execute();
+		// Updates
+		if (!saveItemsList.get(1).isEmpty()) {
+			dsl.batchUpdate(saveItemsList.get(1).stream().map(prod -> dsl.newRecord(CK_PRODUCTMETADATA, prod)).collect(Collectors.toList())).execute();
 		}
 
-		if (!itemsToUpdate.isEmpty()) {
-			for (ProductMetaData p : itemsToUpdate) {
-				applyDefaults(p);
-			}
-			getDslContext().batchUpdate(
-					itemsToUpdate.stream()
-							.map(p -> {
-								CkProductmetadataRecord rec =
-										getDslContext().newRecord(CK_PRODUCTMETADATA);
-
-								rec.from(p);
-								rec.setId(p.getId());
-								rec.changed(CK_PRODUCTMETADATA.ID, false);
-
-								return rec;
-							})
-							.collect(Collectors.toList())
-			).execute();
-		}
-
-		LOG.info("Batch saved {} ProductMetaData records ({} inserts, {} updates).",
-				productList.size(), itemsToInsert.size(), itemsToUpdate.size());
-
-		return productList;
+		LOG.info("Batch save successful for ProductMetadata");
+		return productMetadataList;
 	}
 
-	private void applyDefaults(ProductMetaData p) {
-		if (p.getBasePrice() == null) p.setBasePrice(BigDecimal.ZERO);
-		if (p.getCasePtr() == null) p.setCasePtr(BigDecimal.ZERO);
-		if (p.getGst() == null) p.setGst(BigDecimal.ZERO);
-		if (p.getTaxAmount() == null) p.setTaxAmount(BigDecimal.ZERO);
-		if (p.getOtherUnitPtr() == null) p.setOtherUnitPtr(BigDecimal.ZERO);
-		if (p.getMrp() == null) p.setMrp(BigDecimal.ZERO);
-		if (p.getCaseMrp() == null) p.setCaseMrp(BigDecimal.ZERO);
-		if (p.getOtherUnitMrp() == null) p.setOtherUnitMrp(BigDecimal.ZERO);
-		if (p.getCaseToOtherUnitQuantity() == null) p.setCaseToOtherUnitQuantity(BigDecimal.ZERO);
-		if (p.getCaseToPieceQuantity() == null) p.setCaseToPieceQuantity(BigDecimal.ZERO);
-		if (p.getOtherUnitToPieceQuantity() == null) p.setOtherUnitToPieceQuantity(BigDecimal.ZERO);
-		if (p.getPieceToOtherUnitQuantity() == null) p.setPieceToOtherUnitQuantity(BigDecimal.ZERO);
-		if (p.getSsp() == null) p.setSsp(BigDecimal.ZERO);
-		if (p.getPriority() == null) p.setPriority(0);
-		if (p.getSchemePrice() == null) p.setSchemePrice(BigDecimal.ZERO);
-	}
+	private void populateBatchLocation(List<ProductMetaData> metaDataList) {
+		List<Location> locations = metaDataList.stream().map(ProductMetaData::getLocation).collect(Collectors.toList());
 
+		List<Location> savedLocations = locationService.findLocationOrPersistLocation(locations);
+
+		for (int i = 0; i < metaDataList.size(); i++) {
+			metaDataList.get(i).setLocationHierarchy(savedLocations.get(i).getLocationHierarchy());
+		}
+	}
 }
