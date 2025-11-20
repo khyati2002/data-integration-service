@@ -1,21 +1,34 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.repository.TempMasterMappingRepository;
+import com.applicate.services.channelkart.utils.IdGenerator;
+import com.salescode.dim.cache.CacheManager;
+import com.salescode.dim.jooq.generated.tables.records.CkGenericObjectRecord;
+import com.salescode.dim.jooq.generated.tables.records.CkOutletDetailsRecord;
+import com.salescode.dim.jooq.generated.tables.records.CkTempMasterMappingRecord;
+import com.salescode.dim.jooq.impl.GenericEntity;
+import com.salescode.dim.jooq.impl.OutletDetails;
 import com.salescode.dim.jooq.impl.TempMasterMapping;
+import com.salescode.dim.jooq.impl.User;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.salescode.dim.jooq.generated.Tables.*;
+import static com.salescode.dim.jooq.generated.Tables.CK_GENERIC_OBJECT;
+import static org.apache.flink.optimizer.Optimizer.LOG;
 
 
 public class TempMasterMappingService extends AbstractCDMService<TempMasterMapping> {
 
     private  final TempMasterMappingRepository tempMasterMappingRepository;
 
-    public TempMasterMappingService(TempMasterMappingRepository repository) {
+    public TempMasterMappingService() {
         super();
-        this.tempMasterMappingRepository = repository;
+        this.tempMasterMappingRepository = new TempMasterMappingRepository(getDslContext());
     }
 
     public List<TempMasterMapping> findByLoginIdAndFeature(String userLoginId, String featureName) {
@@ -46,5 +59,94 @@ public class TempMasterMappingService extends AbstractCDMService<TempMasterMappi
     public TempMasterMapping refreshUsingJooq(TempMasterMapping cdmObject) {
         return tempMasterMappingRepository.refreshUsingJooq(cdmObject);
     }
+
+    @Override
+    public Collection<TempMasterMapping> batchSave(Collection<TempMasterMapping> tempMasterList) {
+        LOG.info("Size of list is " + tempMasterList.size());
+        List<TempMasterMapping> tempMasterMapping = new ArrayList<>(tempMasterList);
+        List<List<TempMasterMapping>> saveItemsList = getItemsToSaveList(tempMasterMapping);
+        saveItemsList.get(0).forEach(masterMapping -> {
+            masterMapping.setActiveStatus(ActiveStatus.ACTIVE);
+//            masterMapping.setRangeKey(0L);
+//            masterMapping.setTimestamp(new Date().toInstant().toEpochMilli());
+//            masterMapping.setChanged((byte) 1);
+        });
+
+        saveItemsList.get(1).forEach(masterMapping -> {
+            masterMapping.setActiveStatus(ActiveStatus.ACTIVE);
+//            masterMapping.setRangeKey(0L);
+//            masterMapping.setTimestamp(new Date().toInstant().toEpochMilli());
+//            masterMapping.setChanged((byte) 1);
+
+        });
+        if (!saveItemsList.get(0).isEmpty()) {
+            getDslContext().batchInsert(saveItemsList.get(0).stream().map(loginId -> getDslContext().newRecord(CK_TEMP_MASTER_MAPPING, loginId)).collect(Collectors.toList())).execute();
+        }
+        if (!saveItemsList.get(1).isEmpty()) {
+            getDslContext().batchUpdate(saveItemsList.get(1).stream().map(loginId -> {
+                CkTempMasterMappingRecord record = getDslContext().newRecord(CK_TEMP_MASTER_MAPPING, loginId);
+                return record;
+            }).collect(Collectors.toList())).execute();
+        }
+
+        LOG.info("Batch save successful");
+        return tempMasterMapping;
+    }
+
+    public List<List<TempMasterMapping>> getItemsToSaveList(List<TempMasterMapping> tempMasterList) {
+        List<List<TempMasterMapping>> result = new ArrayList<>();
+
+        List<String> ids = tempMasterList.stream()
+                .map(t -> t.getExtendedAttributes().get("OutletCode").toString().replace("\"", "") + "-" + t.getUserLoginId() + "-" + t.getParent() + "-" + t.getFeature())
+                .collect(Collectors.toList());
+
+        Map<String, TempMasterMapping> savedList = getDslContext().selectFrom(CK_TEMP_MASTER_MAPPING).where(CK_TEMP_MASTER_MAPPING.ID.in(ids)).fetch().intoMap(CK_TEMP_MASTER_MAPPING.ID, record -> convertToTempMasterMapping(record));
+
+        List<TempMasterMapping> itemsToInsert = new ArrayList<>();
+        List<TempMasterMapping> itemsToUpdate = new ArrayList<>();
+        for (TempMasterMapping masterMapping : tempMasterList) {
+            fillAttributes(masterMapping, savedList.get(masterMapping.getId()));
+            fillCommonAttributes(masterMapping);
+            if (masterMapping.getId() == null) {
+//                masterMapping.setId(new IdGenerator(masterMapping.getClass().getSimpleName()).getId(masterMapping));
+
+                String id = masterMapping.getExtendedAttributes().get("OutletCode").toString().replace("\"", "")
+                        + "-" + masterMapping.getUserLoginId()
+                        + "-" + masterMapping.getParent()
+                        + "-" + masterMapping.getFeature();
+                masterMapping.setId(id);
+            }
+
+            if (savedList.get(masterMapping.getId()) == null) {
+                itemsToInsert.add(masterMapping);
+//                loginId.setRangeKey(0L);
+//                loginId.setTimestamp(new Date().toInstant().toEpochMilli());
+                masterMapping.setOperationPerformed(ActionType.INSERT);
+            } else {
+                TempMasterMapping existingOutlet = savedList.get(masterMapping.getId());
+                masterMapping.setOperationPerformed(ActionType.UPDATE);
+//                loginId.setRangeKey(0L);
+                masterMapping.setChanged(true);
+//                loginId.setTimestamp(new Date().toInstant().toEpochMilli());
+                itemsToUpdate.add(masterMapping);
+            }
+        }
+        result.add(itemsToInsert);
+        result.add(itemsToUpdate);
+        return result;
+    }
+
+    private TempMasterMapping convertToTempMasterMapping(CkTempMasterMappingRecord record) {
+        TempMasterMapping entity = new TempMasterMapping();
+        entity.setId(record.getId());
+        entity.setUserLoginId(record.getUserloginid());
+        entity.setFeature(record.getFeature());
+        entity.setParent(record.getParent());
+        entity.setChanged(true);
+        entity.setActiveStatus(record.getActiveStatus());
+        entity.setExtendedAttributes((record.getExtendedAttributes()));
+        return entity;
+    }
+
 
 }

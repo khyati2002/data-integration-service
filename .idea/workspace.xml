@@ -6,11 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="c1e1f503-e826-4a5a-9eb5-1bd370fe1c97" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/bundle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/repository/TempMasterMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/repository/TempMasterMappingRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/salescode/dim/jooq/impl/TempMasterMapping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/salescode/dim/jooq/impl/TempMasterMapping.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/git.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/git.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/salescode/dim/DataStreamJobTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/salescode/dim/DataStreamJobTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +52,10 @@
     "git-widget-placeholder": "cokeph-flink-rs",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/salescode/data-integration-service",
-    "settings.editor.selected.configurable": "preferences.keymap"
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "advanced.settings"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -96,223 +99,190 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>47</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>50</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>67</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>75</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>76</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>87</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>89</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>152</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>149</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>145</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>141</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>60</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>160</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>158</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.java</url>
-          <line>70</line>
-          <option name="timeStamp" value="23" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.java</url>
-          <line>181</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.java</url>
-          <line>184</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.java</url>
-          <line>74</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.java</url>
-          <line>72</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/etl/transformation/service/DataTransformationService.java</url>
-          <line>33</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/etl/transformation/service/DataTransformationService.java</url>
-          <line>50</line>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/etl/transformation/service/DataTransformationService.java</url>
-          <line>66</line>
-          <option name="timeStamp" value="44" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/etl/transformation/service/DataTransformationService.java</url>
-          <line>93</line>
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/etl/transformation/service/DataTransformationService.java</url>
-          <line>173</line>
-          <option name="timeStamp" value="46" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.java</url>
-          <line>48</line>
-          <option name="timeStamp" value="47" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>43</line>
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>57</line>
-          <option name="timeStamp" value="49" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.java</url>
-          <line>78</line>
-          <option name="timeStamp" value="53" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/StreamingRawDataProcessor.java</url>
-          <line>120</line>
-          <option name="timeStamp" value="54" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/JooqDatabaseBatchSink.java</url>
-          <line>102</line>
-          <option name="timeStamp" value="55" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.java</url>
-          <line>192</line>
-          <option name="timeStamp" value="59" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.java</url>
-          <line>189</line>
-          <option name="timeStamp" value="60" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/StreamingRawDataProcessor.java</url>
-          <line>280</line>
-          <option name="timeStamp" value="61" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/StreamingRawDataProcessor.java</url>
-          <line>285</line>
-          <option name="timeStamp" value="62" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/StreamingRawDataProcessor.java</url>
-          <line>238</line>
-          <option name="timeStamp" value="63" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/StreamingRawDataProcessor.java</url>
-          <line>137</line>
-          <option name="timeStamp" value="64" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/etl/transformation/service/DataTransformationService.java</url>
-          <line>231</line>
-          <option name="timeStamp" value="65" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/enrichment/OutletMasterMappingEnrichment.java</url>
-          <line>52</line>
-          <option name="timeStamp" value="69" />
+          <line>61</line>
+          <option name="timeStamp" value="229" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>92</line>
+          <option name="timeStamp" value="230" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>135</line>
+          <option name="timeStamp" value="231" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>147</line>
+          <option name="timeStamp" value="232" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>139</line>
+          <option name="timeStamp" value="233" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>141</line>
+          <option name="timeStamp" value="234" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>142</line>
+          <option name="timeStamp" value="235" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>143</line>
+          <option name="timeStamp" value="236" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>146</line>
+          <option name="timeStamp" value="237" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>145</line>
+          <option name="timeStamp" value="238" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>144</line>
+          <option name="timeStamp" value="239" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/AbstractCDMService.java</url>
+          <line>67</line>
+          <option name="timeStamp" value="240" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/AbstractCDMService.java</url>
+          <line>70</line>
+          <option name="timeStamp" value="241" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/AbstractCDMService.java</url>
+          <line>72</line>
+          <option name="timeStamp" value="243" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/AbstractCDMService.java</url>
+          <line>73</line>
+          <option name="timeStamp" value="244" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/AbstractCDMService.java</url>
+          <line>76</line>
+          <option name="timeStamp" value="246" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/AbstractCDMService.java</url>
+          <line>79</line>
+          <option name="timeStamp" value="247" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/AbstractCDMService.java</url>
+          <line>80</line>
+          <option name="timeStamp" value="248" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/AbstractCDMService.java</url>
+          <line>84</line>
+          <option name="timeStamp" value="249" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>102</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="250" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>112</line>
+          <option name="timeStamp" value="251" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>98</line>
+          <option name="timeStamp" value="252" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>116</line>
+          <option name="timeStamp" value="253" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>140</line>
+          <option name="timeStamp" value="254" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>82</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="257" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>85</line>
+          <option name="timeStamp" value="258" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/jooq/jooq/3.16.23/jooq-3.16.23.jar!/org/jooq/impl/DefaultDSLContext.class</url>
+          <line>3362</line>
+          <option name="timeStamp" value="259" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/jooq/jooq/3.16.23/jooq-3.16.23.jar!/org/jooq/impl/DefaultDSLContext.class</url>
+          <line>3363</line>
+          <option name="timeStamp" value="260" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/jooq/jooq/3.16.23/jooq-3.16.23.jar!/org/jooq/impl/DefaultDSLContext.class</url>
+          <line>3364</line>
+          <option name="timeStamp" value="261" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/jooq/jooq/3.16.23/jooq-3.16.23.jar!/org/jooq/impl/AbstractRecord.class</url>
+          <line>648</line>
+          <option name="timeStamp" value="262" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/org/jooq/jooq/3.16.23/jooq-3.16.23.jar!/org/jooq/impl/AbstractRecord.class</url>
+          <line>649</line>
+          <option name="timeStamp" value="263" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/bundle/target/classes/com/applicate/cokeph/transformer/CokephOutletDetailsTransformer.class</url>
-          <line>45</line>
-          <properties class="com.applicate.cokeph.transformer.CokephOutletDetailsTransformer">
+          <url>file://$PROJECT_DIR$/src/main/java/com/applicate/services/channelkart/services/TempMasterMappingService.java</url>
+          <line>63</line>
+          <properties class="com.applicate.services.channelkart.services.TempMasterMappingService" method="batchSave">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
-          <option name="timeStamp" value="58" />
+          <option name="timeStamp" value="255" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/salescode/dim/etl/registry/ETLRegistry.java</url>
-          <line>38</line>
-          <properties class="com.salescode.dim.etl.registry.ETLRegistry" method="getEnrichment">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="67" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/../data-integration-bundles/src/main/java/com/applicate/cokeph/enrichment/OutletMasterMappingEnrichment.java</url>
-          <line>19</line>
+          <url>file://$PROJECT_DIR$/bundle/src/main/java/com/applicate/cokeph/enrichment/OutletMasterMappingEnrichment.java</url>
+          <line>21</line>
           <properties class="com.applicate.cokeph.enrichment.OutletMasterMappingEnrichment" method="apply">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
-          <option name="timeStamp" value="68" />
+          <option name="timeStamp" value="256" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="JUnit">
+        <watch expression="masterMapping" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
