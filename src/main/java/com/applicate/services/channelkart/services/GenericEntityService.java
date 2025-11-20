@@ -23,7 +23,7 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 	private static GenericEntityRepository entityRepository;
 
 	public GenericEntityService() {
-		this.entityRepository = new GenericEntityRepository(getDslContext());
+		entityRepository = new GenericEntityRepository(getDslContext());
 	}
 
 	public List<List<GenericEntity>> getItemsToSaveList(List<GenericEntity> genericEntityList) {
