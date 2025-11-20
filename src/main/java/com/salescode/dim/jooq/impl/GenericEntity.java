@@ -9,17 +9,20 @@ import java.time.format.DateTimeFormatter;
 
 public class GenericEntity extends GenericObject {
 
-	private LocalDateTime date;
+	// No shadow field here!
+	// The parent class already defines `LocalDateTime date` with getters & setters.
 
 	@JsonSetter("date")
-	public void setDate(String date) {
-
+	public void setDateFromJson(String date) {
+		if (date == null) {
+			super.setDate(null);
+			return;
+		}
 
 		ZonedDateTime zonedDateTime = ZonedDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME);
 		LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
-		setDate(localDateTime);
 
+		// Use the parent class setter (no overloads!)
+		super.setDate(localDateTime);
 	}
-
-
 }
