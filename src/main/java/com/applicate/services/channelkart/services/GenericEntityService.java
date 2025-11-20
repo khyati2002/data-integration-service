@@ -20,7 +20,11 @@ import static com.salescode.dim.jooq.generated.Tables.CK_GENERIC_OBJECT;
 
 public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 	private static final Logger LOG = LoggerFactory.getLogger(GenericEntityService.class);
-	private GenericEntityRepository entityRepository;
+	private static GenericEntityRepository entityRepository;
+
+	public GenericEntityService() {
+		this.entityRepository = new GenericEntityRepository(getDslContext());
+	}
 
 	public List<List<GenericEntity>> getItemsToSaveList(List<GenericEntity> genericEntityList) {
 		List<List<GenericEntity>> result = new ArrayList<>();
