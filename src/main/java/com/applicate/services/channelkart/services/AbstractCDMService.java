@@ -1,6 +1,8 @@
 package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
+import com.applicate.services.channelkart.utils.CdmDiffUtil;
+import com.applicate.services.channelkart.utils.EntityUtils;
 import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.salescode.dim.jooq.impl.OutletDetails;
 import lombok.Getter;
@@ -70,6 +72,9 @@ public abstract class AbstractCDMService<T extends CommonDataModel> implements C
         for (Field field : fields) {
             field.setAccessible(true);
             try {
+                if (field.getName().equals("rowid")) {
+                    continue; // Skip copying "rowid" field
+                }
                 Object targetValue = field.get(target);
                 Object sourceValue = field.get(source);
 
