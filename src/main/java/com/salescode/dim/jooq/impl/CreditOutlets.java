@@ -31,6 +31,10 @@ public class CreditOutlets extends CommonDataModel {
     @Size(max = 200, message = "Outlet name cannot exceed 200 characters")
     private String outletName;
 
+    private Integer maxInvoiceCount;
+
+    private BigDecimal totalCredit;
+
 
     @DecimalMin(value = "0.0", message = "Base credit limit cannot be negative")
     private BigDecimal baseCreditLimit;
