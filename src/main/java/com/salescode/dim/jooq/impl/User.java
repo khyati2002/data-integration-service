@@ -1,13 +1,12 @@
 package com.salescode.dim.jooq.impl;
 
 import com.salescode.dim.jooq.generated.tables.pojos.AuthRole;
-import com.salescode.dim.jooq.generated.tables.pojos.SupplierMetadata;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonSetter;
-
+import com.salescode.dim.jooq.impl.SupplierMetadata;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
