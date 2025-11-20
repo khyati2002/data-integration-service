@@ -92,4 +92,13 @@ public class DeliveryPJPService extends AbstractCDMService<DeliveryPjp> {
         LOG.info("DeliveryPJP batch save successful");
         return deliveryPjps;
     }
+
+    public String getLoginIdByOutletcode(String outletcode){
+        return getDslContext().select(CK_DELIVERY_PJP.LOGINID)
+                .from(CK_DELIVERY_PJP)
+                .where(CK_DELIVERY_PJP.OUTLETCODE.eq(outletcode))
+                .limit(1)
+                .fetchOneInto(String.class);
+    }
+
 }
