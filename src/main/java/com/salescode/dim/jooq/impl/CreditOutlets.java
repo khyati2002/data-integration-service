@@ -78,6 +78,10 @@ public class CreditOutlets extends CommonDataModel {
         this.activeStatus = value.activeStatus;
         this.outletCode=value.outletCode;
         this.outletName = value.outletName;
+        this.totalCredit=value.totalCredit;
+        this.createdBy= value.createdBy;
+        this.modifiedBy= value.modifiedBy;
+        this.maxInvoiceCount= value.maxInvoiceCount;
         this.baseCreditLimit=value.baseCreditLimit;
         this.currentCreditLimit=value.currentCreditLimit;
         this.creditDays=value.creditDays;
