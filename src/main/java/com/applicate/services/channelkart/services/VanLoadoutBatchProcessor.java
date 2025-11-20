@@ -3,6 +3,9 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException;
 import com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException.ErrorType;
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.salescode.dim.jooq.generated.enums.DmsVanLoadoutActiveStatus;
+import com.salescode.dim.jooq.generated.tables.pojos.DmsVanLoadout;
+import com.salescode.dim.jooq.generated.tables.records.DmsVanLoadoutRecord;
 import com.salescode.dim.jooq.impl.VanLoadout;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
@@ -64,7 +67,7 @@ public class VanLoadoutBatchProcessor {
         
         try {
             // Using proper JOOQ DSL with table constants
-            List<com.salescode.dim.jooq.generated.tables.pojos.DmsVanLoadout> existingPojos = 
+            List<com.salescode.dim.jooq.generated.tables.pojos.DmsVanLoadout> existingPojos =
                 dslContext
                     .selectFrom(DMS_VAN_LOADOUT)
                     .where(DMS_VAN_LOADOUT.LOAD_NUMBER.in(loadNumbers))
@@ -129,11 +132,11 @@ public class VanLoadoutBatchProcessor {
             List<com.salescode.dim.jooq.generated.tables.records.DmsVanLoadoutRecord> records = 
                 newVanLoadouts.stream()
                     .map(vanLoadout -> {
-                        com.salescode.dim.jooq.generated.tables.records.DmsVanLoadoutRecord vanLoadoutRecord =
+                        DmsVanLoadoutRecord vanLoadoutRecord =
                             dslContext.newRecord(DMS_VAN_LOADOUT);
                         
                         // Map ALL fields from DmsVanLoadout POJO
-                        com.salescode.dim.jooq.generated.tables.pojos.DmsVanLoadout dmsVanLoadout = vanLoadout.getDmsVanLoadout();
+                        DmsVanLoadout dmsVanLoadout = vanLoadout.getDmsVanLoadout();
                         if (dmsVanLoadout != null) {
                             // Set loadNumber as the primary key (id)
                             vanLoadoutRecord.setId(dmsVanLoadout.getLoadNumber());
@@ -142,7 +145,7 @@ public class VanLoadoutBatchProcessor {
                         
                         // Map common fields from the vanLoadout entity to the JOOQ vanLoadoutRecord
                         vanLoadoutRecord.setVersion(vanLoadout.getVersion());
-                        vanLoadoutRecord.setActiveStatus(vanLoadout.getActiveStatus());
+                        vanLoadoutRecord.setActiveStatus(DmsVanLoadoutActiveStatus.valueOf(vanLoadout.getActiveStatus().getStatus().toUpperCase(Locale.ROOT)));
                         vanLoadoutRecord.setCreationTime(vanLoadout.getCreationTime());
                         vanLoadoutRecord.setLastModifiedTime(vanLoadout.getLastModifiedTime());
                         vanLoadoutRecord.setCreatedBy(vanLoadout.getCreatedBy());
@@ -235,13 +238,13 @@ public class VanLoadoutBatchProcessor {
             // Convert to JOOQ update queries using proper JOOQ DSL
             List<org.jooq.Query> updateQueries = existingVanLoadouts.stream()
                 .map(vanLoadout -> {
-                    com.salescode.dim.jooq.generated.tables.pojos.DmsVanLoadout dmsVanLoadout = vanLoadout.getDmsVanLoadout();
+                    DmsVanLoadout dmsVanLoadout = vanLoadout.getDmsVanLoadout();
                     
                     return dslContext
                         .update(DMS_VAN_LOADOUT)
                         // Update common fields
                         .set(DMS_VAN_LOADOUT.VERSION, vanLoadout.getVersion())
-                        .set(DMS_VAN_LOADOUT.ACTIVE_STATUS, vanLoadout.getActiveStatus())
+                        .set(DMS_VAN_LOADOUT.ACTIVE_STATUS, DmsVanLoadoutActiveStatus.valueOf(vanLoadout.getActiveStatus().getStatus().toUpperCase(Locale.ROOT)))
                         .set(DMS_VAN_LOADOUT.LAST_MODIFIED_TIME, vanLoadout.getLastModifiedTime())
                         .set(DMS_VAN_LOADOUT.MODIFIED_BY, vanLoadout.getModifiedBy())
                         // Update ALL DMS-specific fields from DmsVanLoadout POJO

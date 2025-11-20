@@ -2,6 +2,7 @@ package com.salescode.dim.jooq.impl;
 
 import com.applicate.services.channelkart.models.CommonDataModel;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.salescode.dim.jooq.generated.enums.DmsLoadoutActiveStatus;
 import com.salescode.dim.jooq.generated.tables.pojos.DmsLoadout;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -54,7 +56,7 @@ public class Loadout extends CommonDataModel {
 
     @Override
     public ActiveStatus getActiveStatus() {
-        return dmsLoadout != null ? dmsLoadout.getActiveStatus() : null;
+        return dmsLoadout != null ? ActiveStatus.valueOf(dmsLoadout.getActiveStatus().getLiteral().toLowerCase(Locale.ROOT)) : null;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class Loadout extends CommonDataModel {
         if (dmsLoadout == null) {
             dmsLoadout = new DmsLoadout();
         }
-        dmsLoadout.setActiveStatus(activeStatus);
+        dmsLoadout.setActiveStatus(DmsLoadoutActiveStatus.valueOf(activeStatus.getStatus().toUpperCase(Locale.ROOT)));
     }
 
     @Override

@@ -3,6 +3,10 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException;
 import com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException.ErrorType;
 import com.applicate.services.channelkart.models.enums.ActionType;
+import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.salescode.dim.jooq.generated.enums.DmsLoadoutActiveStatus;
+import com.salescode.dim.jooq.generated.tables.pojos.DmsLoadout;
+import com.salescode.dim.jooq.generated.tables.records.DmsLoadoutRecord;
 import com.salescode.dim.jooq.impl.Loadout;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
@@ -130,11 +134,11 @@ public class LoadoutBatchProcessor {
             List<com.salescode.dim.jooq.generated.tables.records.DmsLoadoutRecord> records = 
                 newLoadouts.stream()
                     .map(loadout -> {
-                        com.salescode.dim.jooq.generated.tables.records.DmsLoadoutRecord dmsLoadoutRecord =
+                        DmsLoadoutRecord dmsLoadoutRecord =
                             dslContext.newRecord(DMS_LOADOUT);
                         
                         // Map ALL DMS-specific fields from DmsLoadout POJO
-                        com.salescode.dim.jooq.generated.tables.pojos.DmsLoadout dmsLoadout = loadout.getDmsLoadout();
+                        DmsLoadout dmsLoadout = loadout.getDmsLoadout();
                         if (dmsLoadout != null) {
                             // Set loadNumber as the primary key (id)
                             dmsLoadoutRecord.setId(dmsLoadout.getLoadNumber());
@@ -143,7 +147,7 @@ public class LoadoutBatchProcessor {
                         
                         // Map common fields from the loadout entity to the JOOQ dmsLoadoutRecord
                         dmsLoadoutRecord.setVersion(loadout.getVersion());
-                        dmsLoadoutRecord.setActiveStatus(loadout.getActiveStatus());
+                        dmsLoadoutRecord.setActiveStatus(DmsLoadoutActiveStatus.valueOf(loadout.getActiveStatus().getStatus().toUpperCase(Locale.ROOT)));
                         dmsLoadoutRecord.setCreationTime(loadout.getCreationTime());
                         dmsLoadoutRecord.setLastModifiedTime(loadout.getLastModifiedTime());
                         dmsLoadoutRecord.setCreatedBy(loadout.getCreatedBy());
@@ -246,7 +250,7 @@ public class LoadoutBatchProcessor {
                         .update(DMS_LOADOUT)
                         // Update common fields
                         .set(DMS_LOADOUT.VERSION, loadout.getVersion())
-                        .set(DMS_LOADOUT.ACTIVE_STATUS, loadout.getActiveStatus())
+                        .set(DMS_LOADOUT.ACTIVE_STATUS, DmsLoadoutActiveStatus.valueOf(loadout.getActiveStatus().getStatus().toUpperCase(Locale.ROOT)))
                         .set(DMS_LOADOUT.LAST_MODIFIED_TIME, loadout.getLastModifiedTime())
                         .set(DMS_LOADOUT.MODIFIED_BY, loadout.getModifiedBy())
                         // Update ALL DMS-specific fields from DmsLoadout POJO

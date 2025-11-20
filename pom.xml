@@ -411,6 +411,7 @@ under the License.
                                     <userType>com.applicate.services.channelkart.models.enums.ActiveStatus</userType>
                                     <converter>com.salescode.dim.jooq.ActiveStatusConverter</converter>
                                     <includeExpression>ACTIVE_STATUS</includeExpression>
+                                    <excludeExpression>(dms_.*)\.active_status</excludeExpression>
                                 </forcedType>
                                 <forcedType>
                                     <userType>org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode</userType>
