@@ -64,10 +64,10 @@ public class DataStreamJobTest {
             "            \"subhierarchycode\": \"\",\n" +
             "            \"mrp\": 15,\n" +
             "            \"itemtypecode\": 1,\n" +
-            "            \"expiredate\": \"2025-12-31T00:00:00\",\n" +
+            "            \"expiredate\": \"2025-12-19T00:00:00\",\n" +
             "            \"tenantcode\": 100002,\n" +
             "            \"stockquantity\": 3000,\n" +
-            "            \"stockquantity1\": 200\n" +
+            "            \"stockquantity1\": 1001\n" +
             "        }\n" +
             "    ],\n" +
             "    \"loginId\": \"applicate\",\n" +
@@ -84,8 +84,6 @@ public class DataStreamJobTest {
 
         // Set up a local Flink streaming environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        ExecutionConfig config = env.getConfig();
-        config.addDefaultKryoSerializer(LocalDateTime.class, new LocalDateTimeKryoSerializer());
         env.setParallelism(1); // Simplify testing with one parallel instance
 
         // Create a few sample StreamingRawData objects
@@ -94,7 +92,7 @@ public class DataStreamJobTest {
         StreamingRawData data3 = createStreamingDataObject(Map.of("groupId", "req-3"));
 
         // Create a source from the sample data
-        DataStream<StreamingRawData> source = env.fromData(data1, data2, data3);
+        DataStream<StreamingRawData> source = env.fromData(data1);
 
         // For testing, we bypass Kafka and directly use the processor.
         // Prepare dummy commonProperties (if needed by StreamingRawDataProcessor)

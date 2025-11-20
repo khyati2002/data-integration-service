@@ -139,14 +139,14 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
             getDslContext().batchInsert(saveItemsList.get(0).stream()
                     .map(product -> getDslContext().newRecord(CK_PRODUCTDETAILS, product))
                     .collect(Collectors.toList())).execute();
-            saveProductMetadata(saveItemsList.get(0),true);
+//            saveProductMetadata(saveItemsList.get(0),true);
         }
 
         if (!saveItemsList.get(1).isEmpty()) {
             getDslContext().batchUpdate(saveItemsList.get(1).stream()
                     .map(product -> getDslContext().newRecord(CK_PRODUCTDETAILS, product))
                     .collect(Collectors.toList())).execute();
-            saveProductMetadata(saveItemsList.get(1),false);
+//            saveProductMetadata(saveItemsList.get(1),false);
         }
         LOG.info("Batch save for product details is successful");
         return productDetailsList;

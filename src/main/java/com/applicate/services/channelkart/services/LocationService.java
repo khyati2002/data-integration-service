@@ -247,20 +247,8 @@ public class LocationService extends AbstractCDMService<Location> {
         return loc;
     }
 
-    public Location findByLocationHierarchy(String locationHierarchy) {
-        return findByLocationHierarchy(locationHierarchy,true);
+    public Location findByLocationHierarchy(String hierarchy) {
+        return locationRepository.findByLocationHierarchy(hierarchy);
     }
-
-    public Location findByLocationHierarchy(String locationHierarchy, boolean cached) {
-        if (!cached) {
-            return locationRepository.findByLocationHierarchy(locationHierarchy);
-        }
-        String lob = SecurityContextUtils.getLob();
-        String cacheKey = lob + ":" + CACHE_DOMAIN + ":" + locationHierarchy;
-
-        // Use CacheUtility to cache the result
-        return CacheUtility.withCache(cacheKey, () -> locationRepository.findByLocationHierarchy(locationHierarchy));
-    }
-
 
 }
