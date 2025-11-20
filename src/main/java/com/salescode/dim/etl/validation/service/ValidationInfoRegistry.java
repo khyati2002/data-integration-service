@@ -61,10 +61,15 @@ public class ValidationInfoRegistry implements RefreshableRegistry, Serializable
     public void init() {
         // Load all active validation rules and group by type
         Map<String, List<ValidationRule>> rules = dsl.selectFrom(CK_VALIDATION_RULE)
-                                                     .where(CK_VALIDATION_RULE.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
-                                                     .fetchInto(ValidationRule.class)
-                                                     .stream()
-                                                     .collect(Collectors.groupingBy(ValidationRule::getType));
+                .where(CK_VALIDATION_RULE.ACTIVE_STATUS.eq(ActiveStatus.ACTIVE))
+                .fetchInto(ValidationRule.class)
+                .stream()
+                .collect(Collectors.groupingBy(rule -> {
+                    String type = rule.getType();
+                    // Remove "ev-" prefix if present
+                    return type.startsWith("ev-") ? type.substring(3) : type;
+                }));
+
 
         // Populate the cache
         validationCache.putAll(rules);
