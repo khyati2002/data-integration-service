@@ -6,6 +6,7 @@ import com.salescode.dim.jooq.generated.tables.pojos.DeliveryPjp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -97,8 +98,10 @@ public class DeliveryPJPService extends AbstractCDMService<DeliveryPjp> {
         return getDslContext().select(CK_DELIVERY_PJP.LOGINID)
                 .from(CK_DELIVERY_PJP)
                 .where(CK_DELIVERY_PJP.OUTLETCODE.eq(outletcode))
+                .and(CK_DELIVERY_PJP.PJP_DATE.cast(LocalDate.class).eq(LocalDate.now()))
+                .orderBy(CK_DELIVERY_PJP.CREATION_TIME.desc())
                 .limit(1)
-                .fetchOneInto(String.class);
+                .fetchOne(CK_DELIVERY_PJP.LOGINID);
     }
 
 }
