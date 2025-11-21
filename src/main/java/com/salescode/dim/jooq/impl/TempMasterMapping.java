@@ -12,19 +12,19 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TempMasterMapping extends com.salescode.dim.jooq.generated.tables.pojos.TempMasterMapping implements Serializable {
 
-    private String userloginid;
+    //private String userloginid;
 
     private String parent;
 
     private String feature;
 
-    public String getUserLoginId() {
-        return userloginid;
-    }
-
-    public void setUserLoginId(String userLoginId) {
-        this.userloginid = userLoginId;
-    }
+//    public String getUserLoginId() {
+//        return userloginid;
+//    }
+//
+//    public void setUserLoginId(String userLoginId) {
+//        this.userloginid = userLoginId;
+//    }
 
     public String getParent() {
         return parent;
@@ -42,17 +42,17 @@ public class TempMasterMapping extends com.salescode.dim.jooq.generated.tables.p
         this.feature = feature;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        TempMasterMapping that = (TempMasterMapping) o;
-        return Objects.equals(userloginid, that.userloginid) && Objects.equals(parent, that.parent) && Objects.equals(feature, that.feature);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), userloginid, parent, feature);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        if (!super.equals(o)) return false;
+//        TempMasterMapping that = (TempMasterMapping) o;
+//        return Objects.equals(userloginid, that.userloginid) && Objects.equals(parent, that.parent) && Objects.equals(feature, that.feature);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(super.hashCode(), userloginid, parent, feature);
+//    }
 }

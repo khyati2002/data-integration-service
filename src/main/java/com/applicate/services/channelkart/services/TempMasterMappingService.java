@@ -69,15 +69,14 @@ public class TempMasterMappingService extends AbstractCDMService<TempMasterMappi
             masterMapping.setActiveStatus(ActiveStatus.ACTIVE);
 //            masterMapping.setRangeKey(0L);
 //            masterMapping.setTimestamp(new Date().toInstant().toEpochMilli());
-//            masterMapping.setChanged((byte) 1);
+            masterMapping.setChanged(Boolean.TRUE);
         });
 
         saveItemsList.get(1).forEach(masterMapping -> {
             masterMapping.setActiveStatus(ActiveStatus.ACTIVE);
 //            masterMapping.setRangeKey(0L);
 //            masterMapping.setTimestamp(new Date().toInstant().toEpochMilli());
-//            masterMapping.setChanged((byte) 1);
-
+            masterMapping.setChanged(Boolean.TRUE);
         });
         if (!saveItemsList.get(0).isEmpty()) {
             getDslContext().batchInsert(saveItemsList.get(0).stream().map(loginId -> getDslContext().newRecord(CK_TEMP_MASTER_MAPPING, loginId)).collect(Collectors.toList())).execute();
@@ -97,7 +96,7 @@ public class TempMasterMappingService extends AbstractCDMService<TempMasterMappi
         List<List<TempMasterMapping>> result = new ArrayList<>();
 
         List<String> ids = tempMasterList.stream()
-                .map(t -> t.getExtendedAttributes().get("OutletCode").toString().replace("\"", "") + "-" + t.getUserLoginId() + "-" + t.getParent() + "-" + t.getFeature())
+                .map(t -> t.getExtendedAttributes().get("OutletCode").toString().replace("\"", "") + "-" + t.getUserloginid() + "-" + t.getParent() + "-" + t.getFeature())
                 .collect(Collectors.toList());
 
         Map<String, TempMasterMapping> savedList = getDslContext().selectFrom(CK_TEMP_MASTER_MAPPING).where(CK_TEMP_MASTER_MAPPING.ID.in(ids)).fetch().intoMap(CK_TEMP_MASTER_MAPPING.ID, record -> convertToTempMasterMapping(record));
@@ -111,7 +110,7 @@ public class TempMasterMappingService extends AbstractCDMService<TempMasterMappi
 //                masterMapping.setId(new IdGenerator(masterMapping.getClass().getSimpleName()).getId(masterMapping));
 
                 String id = masterMapping.getExtendedAttributes().get("OutletCode").toString().replace("\"", "")
-                        + "-" + masterMapping.getUserLoginId()
+                        + "-" + masterMapping.getUserloginid()
                         + "-" + masterMapping.getParent()
                         + "-" + masterMapping.getFeature();
                 masterMapping.setId(id);
@@ -139,7 +138,7 @@ public class TempMasterMappingService extends AbstractCDMService<TempMasterMappi
     private TempMasterMapping convertToTempMasterMapping(CkTempMasterMappingRecord record) {
         TempMasterMapping entity = new TempMasterMapping();
         entity.setId(record.getId());
-        entity.setUserLoginId(record.getUserloginid());
+        entity.setUserloginid(record.getUserloginid());
         entity.setFeature(record.getFeature());
         entity.setParent(record.getParent());
         entity.setChanged(true);

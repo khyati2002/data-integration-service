@@ -57,7 +57,7 @@ public class TempMasterMappingRepository {
     public TempMasterMapping refreshUsingJooq(TempMasterMapping cdmObject) {
         TempMasterMapping dbRecord = dsl
                 .selectFrom(CK_TEMP_MASTER_MAPPING)
-                .where(CK_TEMP_MASTER_MAPPING.USERLOGINID.eq(cdmObject.getUserLoginId()))
+                .where(CK_TEMP_MASTER_MAPPING.USERLOGINID.eq(cdmObject.getUserloginid()))
                 .and(CK_TEMP_MASTER_MAPPING.PARENT.eq(cdmObject.getParent()))
                 .and(CK_TEMP_MASTER_MAPPING.FEATURE.eq(cdmObject.getFeature()))
                 .fetchOneInto(TempMasterMapping.class);

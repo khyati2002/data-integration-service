@@ -91,7 +91,7 @@ public class DataStreamJobTest {
             "\t\t\t\t\t\"tenant_code\": \"1215\",\n" +
             "\t\t\t\t\t\"outlet_code\": \"0505380464\",\n" +
             "\t\t\t\t\t\"is_active\": \"1\",\n" +
-            "\t\t\t\t\t\"distributor_code\": \"0503558429\",\n" +
+            "\t\t\t\t\t\"distributor_code\": \"0502148945\",\n" +
             "\t\t\t\t\t\"distributor_outlet_code\": \"0505380464\"\n" +
             "\t\t\t\t}\n" +
             "\t\t\t],\n" +
