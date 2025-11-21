@@ -54,7 +54,13 @@ public class TargetsService extends AbstractCDMService<Targets> {
 
         targets.forEach(target -> {
             if (target.getTargetcondition() == null)   target.setTargetcondition(0d);
-            if (target.getId() == null)   target.setId(new IdGenerator(target.getClass().getSimpleName()).getId(target));
+
+            if (target.getId() == null && target.getTargetId() != null) {
+                target.setId(target.getTargetId());
+            } else if (target.getId() == null) {
+                target.setId(new IdGenerator(target.getClass().getSimpleName()).getId(target));
+            }
+
             try {
                 if (target.getVersion() == null) {
                     preparedTargets.addAll(prepareTargets(target));
@@ -63,7 +69,13 @@ public class TargetsService extends AbstractCDMService<Targets> {
                         target.getTargetResults().forEach(entry -> {
                             populateUserAndOutlet(entry);
                             entry.setTargetId(target.getTargetId());
-                            if (entry.getId() == null) entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));;
+
+                            if (entry.getId() == null && target.getTargetId() != null) {
+                                entry.setId(target.getTargetId());
+                            } else if (entry.getId() == null) {
+                                entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));
+                            }
+
                             if (entry.getAchieved() == null) entry.setAchieved(0F);
                         });
                     }
@@ -104,9 +116,6 @@ public class TargetsService extends AbstractCDMService<Targets> {
 //        }
         populateCDMDataInTrResults(target);
         fillCommonAttributes(target);
-        if (target.getTargetResults() != null && !target.getTargetResults().isEmpty()) {
-            target.getTargetResults().stream().filter(sd -> sd.getId() == null).forEach(sd -> sd.setId(UUID.randomUUID().toString()));
-        }
         return target;
     }
 
@@ -140,17 +149,19 @@ public class TargetsService extends AbstractCDMService<Targets> {
         targetsM.forEach(tr -> {
             if (targets.getTargetResults() != null) {
                 TargetResults tempObj = targets.getTargetResults().get(0);
-                if (tempObj.getAchieved() != 0) {
-//                    tempObj.setTarget(targets);
-                    if (tempObj.getTargetId() == null) tempObj.setTargetId(targets.getTargetId());
-                    if (tempObj.getId() == null) tempObj.setId(targets.getId());
-                    setUserInfo(tempObj);
-                    String outlet = tempObj.getOutletCode();
-                    if (outlet != null) {
-                        tempObj.setOutletCode(outlet);
-                    }
-                } else {
-                    targets.setTargetResults(null);
+
+                if (tempObj.getTargetId() == null) tempObj.setTargetId(targets.getTargetId());
+
+                if (tempObj.getId() == null && targets.getTargetId() != null) {
+                    tempObj.setId(targets.getTargetId());
+                } else if (tempObj.getId() == null) {
+                    tempObj.setId(targets.getId());
+                }
+
+                setUserInfo(tempObj);
+                String outlet = tempObj.getOutletCode();
+                if (outlet != null) {
+                    tempObj.setOutletCode(outlet);
                 }
             }
         });
@@ -208,7 +219,9 @@ public class TargetsService extends AbstractCDMService<Targets> {
     public void postBatchSave(List<Targets> targetsList) {
         List<TargetResults> targetResults = new ArrayList<>();
         targetsList.forEach(target -> {
-            targetResults.addAll(target.getTargetResults());
+            if(target.getTargetResults() != null) {
+                targetResults.addAll(target.getTargetResults());
+            }
         });
         targetResultsService.batchSave(targetResults);
     }
@@ -263,6 +276,4 @@ public class TargetsService extends AbstractCDMService<Targets> {
             throw new RuntimeException("Pre save enrichment error");
         }
     }
-
-
 }
