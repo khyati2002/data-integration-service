@@ -50,7 +50,7 @@ public class ProductDetails extends com.salescode.dim.jooq.generated.tables.pojo
     }
 
     @JsonSetter("fileName_c")
-    public void isFilename_c(String fileName_c) {
+    public void setFileName_c(String fileName_c) {
         super.setFileNameC(fileName_c);
     }
 
