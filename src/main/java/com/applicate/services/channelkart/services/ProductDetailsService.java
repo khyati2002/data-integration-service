@@ -2,6 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
+import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.jooq.generated.tables.pojos.Productmetadata;
 import com.salescode.dim.jooq.impl.Location;
@@ -65,16 +66,25 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
         for (ProductDetails product : productDetailsList) {
             fillAttributes(product, ProductDetails.of(savedList.get(product.getBatchCode())));
             fillCommonAttributes(product);
+            super.addHash(product);
 
             if (savedList.get(product.getBatchCode()) == null) {
                 product.setVersion(0);
                 product.setOperationPerformed(ActionType.INSERT);
+                product.setChanged(true);
                 itemsToInsert.add(product);
             } else {
                 ProductDetails existingProduct = ProductDetails.of(savedList.get(product.getBatchCode()));
+                product.setId(existingProduct.getId());
                 product.setVersion(existingProduct.getVersion() + 1);
-                product.setOperationPerformed(ActionType.UPDATE);
-                itemsToUpdate.add(product);
+                if (!Objects.equals(product.getHash(), existingProduct.getHash())) {
+                    product.setChanges(CdmDiffUtil.getChanges(product, existingProduct));
+                    product.setOperationPerformed(ActionType.UPDATE);
+                    product.setChanged(true);
+                    itemsToUpdate.add(product);
+                }
+                //product.setOperationPerformed(ActionType.UPDATE);
+                //itemsToUpdate.add(product);
             }
         }
 
@@ -134,14 +144,14 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
             getDslContext().batchInsert(saveItemsList.get(0).stream()
                     .map(product -> getDslContext().newRecord(CK_PRODUCTDETAILS, product))
                     .collect(Collectors.toList())).execute();
-            saveProductMetadata(saveItemsList.get(0),true);
+//            saveProductMetadata(saveItemsList.get(0),true);
         }
 
         if (!saveItemsList.get(1).isEmpty()) {
             getDslContext().batchUpdate(saveItemsList.get(1).stream()
                     .map(product -> getDslContext().newRecord(CK_PRODUCTDETAILS, product))
                     .collect(Collectors.toList())).execute();
-            saveProductMetadata(saveItemsList.get(1),false);
+//            saveProductMetadata(saveItemsList.get(1),false);
         }
         LOG.info("Batch save for product details is successful");
         return productDetailsList;
