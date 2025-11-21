@@ -18,7 +18,6 @@ import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,10 +53,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
         List<Targets> preparedTargets = new ArrayList<>();
 
         targets.forEach(target -> {
-            if (target.getTarget() == null) {
-                target.setTarget(BigDecimal.ZERO);
-            }
-            if (target.getTargetcondition() == null) target.setTargetcondition(0d);
+            if (target.getTargetcondition() == null)   target.setTargetcondition(0d);
 
             if (target.getId() == null && target.getTargetId() != null) {
                 target.setId(target.getTargetId());
@@ -69,12 +65,10 @@ public class TargetsService extends AbstractCDMService<Targets> {
                 if (target.getVersion() == null) {
                     preparedTargets.addAll(prepareTargets(target));
                 } else {
-                    if (target.getTargetResults() != null && !target.getTargetResults().isEmpty()) {
+                    if (target.getTarget() != null && !target.getTargetResults().isEmpty()) {
                         target.getTargetResults().forEach(entry -> {
                             populateUserAndOutlet(entry);
-                            if(entry.getTargetId() == null) {
-                                entry.setTargetId(target.getTargetId());
-                            }
+                            entry.setTargetId(target.getTargetId());
 
                             if (entry.getId() == null && target.getTargetId() != null) {
                                 entry.setId(target.getTargetId());
@@ -153,9 +147,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
         List<Targets> targetsM = List.of(targets);
 
         targetsM.forEach(tr -> {
-            if(tr.getTarget() == null) tr.setTarget(BigDecimal.ZERO);
-
-            if (targets.getTargetResults() != null && !targets.getTargetResults().isEmpty()) {
+            if (targets.getTargetResults() != null) {
                 TargetResults tempObj = targets.getTargetResults().get(0);
 
                 if (tempObj.getTargetId() == null) tempObj.setTargetId(targets.getTargetId());
@@ -165,8 +157,6 @@ public class TargetsService extends AbstractCDMService<Targets> {
                 } else if (tempObj.getId() == null) {
                     tempObj.setId(targets.getId());
                 }
-
-                if(tempObj.getAchieved() == null) tempObj.setAchieved(0F);
 
                 setUserInfo(tempObj);
                 String outlet = tempObj.getOutletCode();
