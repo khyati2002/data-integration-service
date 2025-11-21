@@ -145,7 +145,7 @@ public class VanLoadoutBatchProcessor {
                         
                         // Map common fields from the vanLoadout entity to the JOOQ vanLoadoutRecord
                         vanLoadoutRecord.setVersion(vanLoadout.getVersion());
-                        vanLoadoutRecord.setActiveStatus(DmsVanLoadoutActiveStatus.valueOf(vanLoadout.getActiveStatus().getStatus().toUpperCase(Locale.ROOT)));
+                        vanLoadoutRecord.setActiveStatus(dmsVanLoadout.getActiveStatus());
                         vanLoadoutRecord.setCreationTime(vanLoadout.getCreationTime());
                         vanLoadoutRecord.setLastModifiedTime(vanLoadout.getLastModifiedTime());
                         vanLoadoutRecord.setCreatedBy(vanLoadout.getCreatedBy());
@@ -244,7 +244,7 @@ public class VanLoadoutBatchProcessor {
                         .update(DMS_VAN_LOADOUT)
                         // Update common fields
                         .set(DMS_VAN_LOADOUT.VERSION, vanLoadout.getVersion())
-                        .set(DMS_VAN_LOADOUT.ACTIVE_STATUS, DmsVanLoadoutActiveStatus.valueOf(vanLoadout.getActiveStatus().getStatus().toUpperCase(Locale.ROOT)))
+                        .set(DMS_VAN_LOADOUT.ACTIVE_STATUS, dmsVanLoadout.getActiveStatus())
                         .set(DMS_VAN_LOADOUT.LAST_MODIFIED_TIME, vanLoadout.getLastModifiedTime())
                         .set(DMS_VAN_LOADOUT.MODIFIED_BY, vanLoadout.getModifiedBy())
                         // Update ALL DMS-specific fields from DmsVanLoadout POJO

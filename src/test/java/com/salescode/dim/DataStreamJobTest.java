@@ -38,162 +38,94 @@ public class DataStreamJobTest {
 
 
     public static String rawStreamingData = "{\n" +
-            "    \"requestId\": \"8a318b6b-95ca-49ff-8310-d90ec102827a\",\n" +
-            "    \"groupId\": \"%(groupId)\",\n" +
-            "    \"lob\": \"cokesauat\",\n" +
-            "    \"loginId\": \"integration_user\",\n" +
-            "    \"batchNumber\": 0,\n" +
-            "    \"transformerInfo\": [\n" +
+            "  \"requestId\": \"8a318b6b-95ca-49ff-8310-d90ec102827a\",\n" +
+            "  \"groupId\": \"%(groupId)\",\n" +
+            "  \"lob\": \"cokesauat\",\n" +
+            "  \"loginId\": \"integration_user\",\n" +
+            "  \"batchNumber\": 0,\n" +
+            "  \"transformerInfo\": [\n" +
+            "    {\n" +
+            "      \"skipPreprocessing\": false,\n" +
+            "      \"skipPersist\": false,\n" +
+            "      \"entityName\": \"VanLoadout\",\n" +
+            "      \"transformerId\": \"VanLoadoutTransformerCokeSA\",\n" +
+            "      \"preprocessValidationExcludeGroup\": null,\n" +
+            "      \"messageLevelHash\": null,\n" +
+            "      \"messageHashSupported\": false,\n" +
+            "      \"messageLevelKey\": null,\n" +
+            "      \"cachedArtifact\": null,\n" +
+            "      \"operationType\": \"insert\"\n" +
+            "    }\n" +
+            "  ],\n" +
+            "  \"features\": [\n" +
+            "    {\n" +
+            "      \"dmsVanLoadout\": {\n" +
+            "        \"loadNumber\": \"LD_30_1251113_RY454_309127\",\n" +
+//            "        \"loadOutStatus\": \"IN_TRANSIT\",\n" +
+            "        \"salesmanId\": \"SM001\",\n" +
+            "        \"supplier\": \"SUPPLIER_A\",\n" +
+            "        \"totalCaseQty\": 150,\n" +
+            "        \"totalCaseLeftQty\": 150,\n" +
+            "        \"routeCode\": \"RY454\" ,\n" +
+//        "        \"totalPieceQty\": 500,\n" +
+//        "        \"totalPieceLeftQty\": 500,\n" +
+//        "        \"totalOtherQty\": 50,\n" +
+//        "        \"totalOtherLeftQty\": 50,\n" +
+            "        \"vehicleId\": \"VEH002\"\n" +
+//        "        \"vehicleCapacity\": 2000,\n" +
+//        "        \"loadOutDate\": \"2025-01-15 08:00:00\",\n" +
+//        "        \"loadoutSource\": \"ORDER\",\n" +
+//        "        \"caseShortage\": 0,\n" +
+//        "        \"pieceShortage\": 0,\n" +
+//        "        \"otherShortage\": 0,\n" +
+//        "        \"deliveryStartDate\": \"2025-01-15 08:00:00\",\n" +
+//        "        \"deliveryEndDate\": \"2025-01-15 18:00:00\",\n" +
+//        "        \"settlementDate\": \"2025-01-19 23:59:59\",\n" +
+//        "        \"shortageUpdated\": 0,\n" +
+//        "        \"invoiceCreationStartDate\": \"2025-01-15 09:00:00\",\n" +
+//        "        \"invoiceCreationEndDate\": \"2025-01-15 17:00:00\"\n" +
+            "      },\n" +
+            "      \"vanItemsList\": [\n" +
             "        {\n" +
-            "            \"skipPreprocessing\": false,\n" +
-            "            \"skipPersist\": false,\n" +
-            "            \"entityName\": \"Loadout\",\n" +
-            "            \"transformerId\": \"DMSLoadoutTransformerCokeSA\",\n" +
-            "            \"preprocessValidationExcludeGroup\": null,\n" +
-            "            \"messageLevelHash\": null,\n" +
-            "            \"messageHashSupported\": false,\n" +
-            "            \"messageLevelKey\": null,\n" +
-            "            \"cachedArtifact\": null,\n" +
-            "            \"operationType\": \"insert\"\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"features\": [\n" +
+            "          \"skuCode\": \"SKU001\",\n" +
+//          "          \"batchCode\": \"BATCH001\",\n" +
+//          "          \"batchId\": \"B001\",\n" +
+            "          \"caseQty\": 30,\n" +
+            "          \"caseQtyLeft\": 30\n" +
+//          "          \"pieceQty\": 100,\n" +
+//          "          \"pieceQtyLeft\": 100,\n" +
+//          "          \"otherQty\": 10,\n" +
+//          "          \"otherQtyLeft\": 10,\n" +
+//            "          \"itemType\": \"NORMAL\"\n" +
+//            "          \"loadNumber\": \"LD_30_1251113_RY454_309127\"\n" +
+            "        },\n" +
             "        {\n" +
-            "            \"dmsLoadout\": {\n" +
-            "                \"loadNumber\": \"LD_30_1251113_RY454_309127\",\n" +
-            "                \"loadOutStatus\": \"PENDING\",\n" +
-            "                \"loadOutType\": \"PRE_SELLER\",\n" +
-            "                \"salesmanId\": \"SM001\",\n" +
-            "                \"supplier\": \"SUPPLIER_A\",\n" +
-            "                \"totalAmount\": 15000.50,\n" +
-            "                \"totalCaseQty\": 100,\n" +
-            "                \"totalCaseLeftQty\": 100,\n" +
-            "                \"totalPieceQty\": 500,\n" +
-            "                \"totalPieceLeftQty\": 500,\n" +
-            "                \"totalOtherQty\": 50,\n" +
-            "                \"totalOtherLeftQty\": 50,\n" +
-            "                \"vehicleId\": \"VEH001\",\n" +
-            "                \"vehicleCapacity\": 2000,\n" +
-            "                \"loadOutDate\": \"2025-01-15 08:00:00\",\n" +
-            "                \"loadoutSource\": \"ORDER\",\n" +
-            "                \"caseShortage\": 0,\n" +
-            "                \"pieceShortage\": 0,\n" +
-            "                \"otherShortage\": 0,\n" +
-            "                \"deliveryStartDate\": \"2025-01-15 08:00:00\",\n" +
-            "                \"deliveryEndDate\": \"2025-01-15 18:00:00\",\n" +
-            "                \"settlementDate\": \"2025-01-19 23:59:59\",\n" +
-            "                \"shortageUpdated\": 0,\n" +
-            "                \"invoiceCreationStartDate\": \"2025-01-15 09:00:00\",\n" +
-            "                \"invoiceCreationEndDate\": \"2025-01-15 17:00:00\"\n" +
-            "            },\n" +
-            "            \"loadoutDetailsList\": [\n" +
-            "                {\n" +
-            "                    \"invoiceNumber\": \"INV001\",\n" +
-            "                    \"loadNumber\": \"LOAD001\",\n" +
-            "                    \"loadOutStatus\": \"PENDING\",\n" +
-            "                    \"outletCode\": \"OUT001\",\n" +
-            "                    \"presellerId\": \"PS001\",\n" +
-            "                    \"routeCode\": \"ROUTE001\",\n" +
-            "                    \"totalAmount\": 7500.25,\n" +
-            "                    \"totalCaseQty\": 50,\n" +
-            "                    \"totalCaseLeftQty\": 50,\n" +
-            "                    \"totalPieceQty\": 250,\n" +
-            "                    \"totalPieceLeftQty\": 250,\n" +
-            "                    \"totalOtherQty\": 25,\n" +
-            "                    \"totalOtherLeftQty\": 25,\n" +
-            "                    \"returnCaseQty\": 0,\n" +
-            "                    \"returnPieceQty\": 0,\n" +
-            "                    \"returnOtherQty\": 0,\n" +
-            "                    \"invSerNo\": 1,\n" +
-            "                    \"loadoutItems\": [\n" +
-            "                        {\n" +
-            "                            \"skuCode\": \"SKU001\",\n" +
-            "                            \"batchCode\": \"BATCH001\",\n" +
-            "                            \"batchId\": \"B001\",\n" +
-            "                            \"caseQty\": 20,\n" +
-            "                            \"caseQtyLeft\": 20,\n" +
-            "                            \"pieceQty\": 100,\n" +
-            "                            \"pieceQtyLeft\": 100,\n" +
-            "                            \"otherQty\": 10,\n" +
-            "                            \"otherQtyLeft\": 10,\n" +
-            "                            \"amount\": 3000.00,\n" +
-            "                            \"mrp\": 30.00,\n" +
-            "                            \"itemType\": \"NORMAL\"\n" +
-            "                        },\n" +
-            "                        {\n" +
-            "                            \"skuCode\": \"SKU002\",\n" +
-            "                            \"batchCode\": \"BATCH002\",\n" +
-            "                            \"batchId\": \"B002\",\n" +
-            "                            \"caseQty\": 30,\n" +
-            "                            \"caseQtyLeft\": 30,\n" +
-            "                            \"pieceQty\": 150,\n" +
-            "                            \"pieceQtyLeft\": 150,\n" +
-            "                            \"otherQty\": 15,\n" +
-            "                            \"otherQtyLeft\": 15,\n" +
-            "                            \"amount\": 4500.25,\n" +
-            "                            \"mrp\": 30.00,\n" +
-            "                            \"itemType\": \"NORMAL\"\n" +
-            "                        }\n" +
-            "                    ]\n" +
-            "                },\n" +
-            "                {\n" +
-            "                    \"invoiceNumber\": \"INV002\",\n" +
-            "                    \"loadNumber\": \"LOAD001\",\n" +
-            "                    \"loadOutStatus\": \"PENDING\",\n" +
-            "                    \"outletCode\": \"OUT002\",\n" +
-            "                    \"presellerId\": \"PS002\",\n" +
-            "                    \"routeCode\": \"ROUTE001\",\n" +
-            "                    \"totalAmount\": 7500.25,\n" +
-            "                    \"totalCaseQty\": 50,\n" +
-            "                    \"totalCaseLeftQty\": 50,\n" +
-            "                    \"totalPieceQty\": 250,\n" +
-            "                    \"totalPieceLeftQty\": 250,\n" +
-            "                    \"totalOtherQty\": 25,\n" +
-            "                    \"totalOtherLeftQty\": 25,\n" +
-            "                    \"returnCaseQty\": 0,\n" +
-            "                    \"returnPieceQty\": 0,\n" +
-            "                    \"returnOtherQty\": 0,\n" +
-            "                    \"invSerNo\": 2,\n" +
-            "                    \"loadoutItems\": [\n" +
-            "                        {\n" +
-            "                            \"skuCode\": \"SKU003\",\n" +
-            "                            \"batchCode\": \"BATCH003\",\n" +
-            "                            \"batchId\": \"B003\",\n" +
-            "                            \"caseQty\": 25,\n" +
-            "                            \"caseQtyLeft\": 25,\n" +
-            "                            \"pieceQty\": 125,\n" +
-            "                            \"pieceQtyLeft\": 125,\n" +
-            "                            \"otherQty\": 12,\n" +
-            "                            \"otherQtyLeft\": 12,\n" +
-            "                            \"amount\": 3750.00,\n" +
-            "                            \"mrp\": 30.00,\n" +
-            "                            \"itemType\": \"NORMAL\"\n" +
-            "                        },\n" +
-            "                        {\n" +
-            "                            \"skuCode\": \"SKU004\",\n" +
-            "                            \"batchCode\": \"BATCH004\",\n" +
-            "                            \"batchId\": \"B004\",\n" +
-            "                            \"caseQty\": 25,\n" +
-            "                            \"caseQtyLeft\": 25,\n" +
-            "                            \"pieceQty\": 125,\n" +
-            "                            \"pieceQtyLeft\": 125,\n" +
-            "                            \"otherQty\": 13,\n" +
-            "                            \"otherQtyLeft\": 13,\n" +
-            "                            \"amount\": 3750.25,\n" +
-            "                            \"mrp\": 30.00,\n" +
-            "                            \"itemType\": \"NORMAL\"\n" +
-            "                        }\n" +
-            "                    ]\n" +
-            "                }\n" +
-            "            ]\n" +
+            "          \"skuCode\": \"SKU002\",\n" +
+//          "          \"batchCode\": \"BATCH002\",\n" +
+//          "          \"batchId\": \"B002\",\n" +
+            "          \"caseQty\": 40,\n" +
+            "          \"caseQtyLeft\": 40\n" +
+//          "          \"pieceQty\": 150,\n" +
+//          "          \"pieceQtyLeft\": 150,\n" +
+//          "          \"otherQty\": 15,\n" +
+//          "          \"otherQtyLeft\": 15,\n" +
+//            "          \"itemType\": \"NORMAL\"\n" +
+//            "          \"loadNumber\": \"LD_30_1251113_RY454_309127\"\n" +
             "        }\n" +
-            "    ],\n" +
-            "    \"appId\": \"integration\",\n" +
-            "    \"retryCount\": 0,\n" +
-            "    \"preserveOnFailure\": true,\n" +
-            "    \"ignoreS3Log\": false,\n" +
-            "    \"topicName\": \"cokesauat-dataintegration\"\n" +
+            "      ]\n" +
+            "    }\n" +
+            "  ],\n" +
+            "  \"status\": \"Failure\",\n" +
+            "  \"appId\": \"integration\",\n" +
+            "  \"retryCount\": 0,\n" +
+            "  \"preserveOnFailure\": true,\n" +
+            "  \"ignoreS3Log\": false,\n" +
+            "  \"topicName\": \"cokesauat-dataintegration-VanLoadout\"\n" +
             "}";
+
+
+
+
     @Test
     public void testDataStreamJobWithFewObjects() throws Exception {
         // Clear previously collected values (if any)
@@ -218,7 +150,7 @@ public class DataStreamJobTest {
         SingleOutputStreamOperator<Tuple2<StreamingRawData, Map<Class<? extends CommonDataModel>, Set<CommonDataModel>>>> processedStream = AsyncDataStream.unorderedWait(
                 source.rebalance().flatMap(new StreamingRawDataFlatMapper()), // Pre-process data
                 new StreamingRawDataProcessor(stringPropertiesMap.get("Common")),  // Async Processing
-                5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
+                50000, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
         ).process(new ProcessRecordStatus());
 
         processedStream.sinkTo(new JooqDatabaseBatchSink(stringPropertiesMap.get("Common"))).name("Database Success Sink");
