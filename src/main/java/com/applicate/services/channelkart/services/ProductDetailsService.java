@@ -164,10 +164,12 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 
 		if (!saveItemsList.get(0).isEmpty()) {
 			getDslContext().batchInsert(saveItemsList.get(0).stream().map(product -> getDslContext().newRecord(CK_PRODUCTDETAILS, product)).collect(Collectors.toList())).execute();
+			saveProductMetadata(saveItemsList.get(0), true);
 		}
 
 		if (!saveItemsList.get(1).isEmpty()) {
 			getDslContext().batchUpdate(saveItemsList.get(1).stream().map(product -> getDslContext().newRecord(CK_PRODUCTDETAILS, product)).collect(Collectors.toList())).execute();
+			saveProductMetadata(saveItemsList.get(1), false);
 		}
 		LOG.info("Batch save for product details is successful");
 		return productDetailsList;
@@ -185,7 +187,43 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 			return "";
 		}
 	}
-	
+
+	public void saveProductMetadata(Collection<ProductDetails> productDetailsList, boolean insert) {
+
+		for (ProductDetails pd : productDetailsList) {
+			List<ProductMetaData> metaList = pd.getProductMetaData();
+			if (metaList == null || metaList.isEmpty()) {
+				continue;
+			}
+			IdGenerator generator = new IdGenerator(metaList.get(0).getClass().getSimpleName());
+			Map<String, Productmetadata> existingMetaMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.BATCH_CODE.eq(pd.getBatchCode())).fetch().map(rec -> rec.into(Productmetadata.class))   // convert record to POJO
+					.stream().collect(Collectors.toMap(Productmetadata::getId, m -> m));
+
+			if (metaList.isEmpty()) {
+				continue;
+			}
+			for (Productmetadata meta : metaList) {
+				if (existingMetaMap.get(meta.getId()) == null) {
+					meta.setId(generator.getId(meta));
+				}
+				Productmetadata existing = existingMetaMap.get(meta.getId());
+				if (existing == null) {
+					meta.setVersion(0);
+				} else {
+					meta.setVersion(existing.getVersion() + 1);
+				}
+			}
+			populateBatchLocation(metaList);
+			if (insert) {
+				getDslContext().batchInsert(metaList.stream().map(m -> getDslContext().newRecord(CK_PRODUCTMETADATA, m)).collect(Collectors.toList())).execute();
+			} else {
+				getDslContext().batchUpdate(metaList.stream().map(m -> getDslContext().newRecord(CK_PRODUCTMETADATA, m)).collect(Collectors.toList())).execute();
+			}
+
+			LOG.info("Batch save for product metadata is successful");
+		}
+	}
+
 	private void populateBatchLocation(List<ProductMetaData> metaDataList) {
 		List<Location> locationList = metaDataList.stream().map(ProductMetaData::getLocation).collect(Collectors.toList());
 		List<Location> savedList = locationService.findLocationOrPersistLocation(locationList);
