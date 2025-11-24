@@ -5,7 +5,6 @@ import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.IdGenerator;
 
 import com.salescode.dim.jooq.generated.tables.pojos.Productmetadata;
-import com.salescode.dim.jooq.impl.Location;
 import com.salescode.dim.jooq.impl.ProductMetaData;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
@@ -39,6 +38,7 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 		for (ProductMetaData product : productMetadataList) {
 			product.setId(new IdGenerator(product.getClass().getSimpleName()).getId(product));
 			product.setActiveStatus(ActiveStatus.ACTIVE);
+			product.setChanged((byte)1);
 		}
 
 		List<String> batchCodes = productMetadataList.stream().map(ProductMetaData::getId).filter(Objects::nonNull).collect(Collectors.toList());
@@ -48,9 +48,7 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 			result.add(itemsToUpdate);
 			return result;
 		}
-
-		DSLContext dsl = getDslContext();
-
+		
 		Map<String, Productmetadata> existingBatchCodeMap = getDslContext().selectFrom(CK_PRODUCTMETADATA).where(CK_PRODUCTMETADATA.ID.in(batchCodes)).fetch().stream().collect(Collectors.toMap(rec -> rec.get(CK_PRODUCTMETADATA.ID), rec -> rec.into(Productmetadata.class), (a, b) -> a));
 
 		for (ProductMetaData product : productMetadataList) {
@@ -65,12 +63,10 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 			if (existingBatchCodeMap.get(product.getId())==null) {
 				product.setVersion(0);
 				product.setOperationPerformed(ActionType.INSERT);
-				String casePtr = String.format("%.8f", product.getCasePtr()) ;
 				itemsToInsert.add(product);
 			} else {
-				product.setVersion(existing.getVersion() + 1);
+				product.setVersion((existing != null ? existing.getVersion() : 0) + 1);
 				product.setOperationPerformed(ActionType.UPDATE);
-				String casePtr = String.format("%.8f", product.getCasePtr());
 
 				itemsToUpdate.add(product);
 			}
@@ -100,15 +96,5 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 
 		LOG.info("Batch save successful for ProductMetadata");
 		return productMetadataList;
-	}
-
-	private void populateBatchLocation(List<ProductMetaData> metaDataList) {
-		List<Location> locations = metaDataList.stream().map(ProductMetaData::getLocation).collect(Collectors.toList());
-
-		List<Location> savedLocations = locationService.findLocationOrPersistLocation(locations);
-
-		for (int i = 0; i < metaDataList.size(); i++) {
-			metaDataList.get(i).setLocationHierarchy(savedLocations.get(i).getLocationHierarchy());
-		}
 	}
 }
