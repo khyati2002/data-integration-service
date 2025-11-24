@@ -6,6 +6,7 @@ import com.salescode.dis.insights.dto.TopicStatsResponse;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.*;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 @Service
+@Profile("kafka")
 public class KafkaStatsService {
 
     private final AdminClient kafkaAdminClient;
