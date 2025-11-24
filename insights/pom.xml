@@ -84,6 +84,11 @@
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.google.cloud.hosted.kafka</groupId>
+			<artifactId>managed-kafka-auth-login-handler</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>

@@ -354,3 +354,22 @@ sse:
   cleanup:
     initial-delay: 1   # minutes
     interval: 5        # minutes
+
+---
+# Configuration for 'gcp' profile (Google Cloud Platform Kafka with SSL/SASL)
+spring:
+  config:
+    activate:
+      on-profile: gcp
+
+  kafka:
+    security:
+      protocol: SASL_SSL
+    sasl:
+      mechanism: OAUTHBEARER
+      login:
+        callback:
+          handler:
+            class: com.google.cloud.hosted.kafka.auth.GcpLoginCallbackHandler
+      jaas:
+        config: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required;
