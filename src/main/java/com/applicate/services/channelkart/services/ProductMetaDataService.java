@@ -10,6 +10,7 @@ import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,7 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 				product.setVersion(0);
 				product.setOperationPerformed(ActionType.INSERT);
 				itemsToInsert.add(product);
+				applyDefaults(product);
 			} else {
 				product.setVersion((existing != null ? existing.getVersion() : 0) + 1);
 				product.setOperationPerformed(ActionType.UPDATE);
@@ -96,5 +98,23 @@ public class ProductMetaDataService extends AbstractCDMService<ProductMetaData> 
 
 		LOG.info("Batch save successful for ProductMetadata");
 		return productMetadataList;
+	}
+
+	private void applyDefaults(ProductMetaData p) {
+		if (p.getBasePrice() == null) p.setBasePrice(BigDecimal.ZERO);
+		if (p.getCasePtr() == null) p.setCasePtr(BigDecimal.ZERO);
+		if (p.getGst() == null) p.setGst(BigDecimal.ZERO);
+		if (p.getTaxAmount() == null) p.setTaxAmount(BigDecimal.ZERO);
+		if (p.getOtherUnitPtr() == null) p.setOtherUnitPtr(BigDecimal.ZERO);
+		if (p.getMrp() == null) p.setMrp(BigDecimal.ZERO);
+		if (p.getCaseMrp() == null) p.setCaseMrp(BigDecimal.ZERO);
+		if (p.getOtherUnitMrp() == null) p.setOtherUnitMrp(BigDecimal.ZERO);
+		if (p.getCaseToOtherUnitQuantity() == null) p.setCaseToOtherUnitQuantity(BigDecimal.ZERO);
+		if (p.getCaseToPieceQuantity() == null) p.setCaseToPieceQuantity(BigDecimal.ZERO);
+		if (p.getOtherUnitToPieceQuantity() == null) p.setOtherUnitToPieceQuantity(BigDecimal.ZERO);
+		if (p.getPieceToOtherUnitQuantity() == null) p.setPieceToOtherUnitQuantity(BigDecimal.ZERO);
+		if (p.getSsp() == null) p.setSsp(BigDecimal.ZERO);
+		if (p.getPriority() == null) p.setPriority(0);
+		if (p.getSchemePrice() == null) p.setSchemePrice(BigDecimal.ZERO);
 	}
 }
