@@ -432,6 +432,11 @@ under the License.
                                     <converter>com.salescode.dim.jooq.RouteConverter</converter>
                                     <includeExpression>dms_van_loadout\.route_code</includeExpression>
                                 </forcedType>
+                                <forcedType>
+                                    <userType>com.salescode.dim.jooq.impl.SalesInfo</userType>
+                                    <converter>com.salescode.dim.jooq.SalesInfoConverter</converter>
+                                    <includeExpression>sales_info</includeExpression>
+                                </forcedType>
                             </forcedTypes>
                         </database>
                         <generate>
