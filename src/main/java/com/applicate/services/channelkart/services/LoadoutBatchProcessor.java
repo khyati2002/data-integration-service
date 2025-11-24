@@ -147,7 +147,7 @@ public class LoadoutBatchProcessor {
                         
                         // Map common fields from the loadout entity to the JOOQ dmsLoadoutRecord
                         dmsLoadoutRecord.setVersion(loadout.getVersion());
-                        dmsLoadoutRecord.setActiveStatus(DmsLoadoutActiveStatus.valueOf(loadout.getActiveStatus().getStatus().toUpperCase(Locale.ROOT)));
+                        dmsLoadoutRecord.setActiveStatus(dmsLoadout.getActiveStatus());
                         dmsLoadoutRecord.setCreationTime(loadout.getCreationTime());
                         dmsLoadoutRecord.setLastModifiedTime(loadout.getLastModifiedTime());
                         dmsLoadoutRecord.setCreatedBy(loadout.getCreatedBy());
@@ -250,7 +250,7 @@ public class LoadoutBatchProcessor {
                         .update(DMS_LOADOUT)
                         // Update common fields
                         .set(DMS_LOADOUT.VERSION, loadout.getVersion())
-                        .set(DMS_LOADOUT.ACTIVE_STATUS, DmsLoadoutActiveStatus.valueOf(loadout.getActiveStatus().getStatus().toUpperCase(Locale.ROOT)))
+                        .set(DMS_LOADOUT.ACTIVE_STATUS, dmsLoadout.getActiveStatus())
                         .set(DMS_LOADOUT.LAST_MODIFIED_TIME, loadout.getLastModifiedTime())
                         .set(DMS_LOADOUT.MODIFIED_BY, loadout.getModifiedBy())
                         // Update ALL DMS-specific fields from DmsLoadout POJO
@@ -356,7 +356,7 @@ public class LoadoutBatchProcessor {
                     // Update existing loadout with new data while preserving database fields
                     Loadout existingLoadout = existingLoadoutsMap.get(loadNumber);
                     AbstractCDMService.fillAttributes(loadout, existingLoadout); // Copy non-null fields from input to existing
-                    existingLoadouts.add(existingLoadout);
+                    existingLoadouts.add(loadout);
                 } else {
                     newLoadouts.add(loadout);
                 }

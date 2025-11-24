@@ -390,14 +390,14 @@ public class LoadoutItemsBatchProcessor {
                 if (existingLoadoutItemsMap.containsKey(compositeKey)) {
                     // Update existing LoadoutItems with new data while preserving database fields
                     LoadoutItems existingLoadoutItem = existingLoadoutItemsMap.get(compositeKey);
-                    AbstractCDMService.fillAttributes(existingLoadoutItem, loadoutItem); // Copy non-null fields from input to existing
+                    AbstractCDMService.fillAttributes(loadoutItem, existingLoadoutItem); // Copy non-null fields from input to existing
                     
                     // Fill common attributes and increment version for existing entities
                     fillLoadoutItemsCommonAttributes(existingLoadoutItem);
                     Integer currentVersion = existingLoadoutItem.getVersion();
                     existingLoadoutItem.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
                     
-                    existingLoadoutItems.add(existingLoadoutItem);
+                    existingLoadoutItems.add(loadoutItem);
                 } else {
                     // Fill common attributes for new entities
                     fillLoadoutItemsCommonAttributes(loadoutItem);

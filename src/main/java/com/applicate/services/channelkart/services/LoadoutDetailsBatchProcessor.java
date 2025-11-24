@@ -365,8 +365,8 @@ public class LoadoutDetailsBatchProcessor {
                 if (existingLoadoutDetailsMap.containsKey(compositeId)) {
                     // Update existing LoadoutDetails with new data while preserving database fields
                     LoadoutDetails existingLoadoutDetail = existingLoadoutDetailsMap.get(compositeId);
-                    AbstractCDMService.fillAttributes(existingLoadoutDetail, loadoutDetail); // Copy non-null fields from input to existing
-                    existingLoadoutDetails.add(existingLoadoutDetail);
+                    AbstractCDMService.fillAttributes(loadoutDetail, existingLoadoutDetail); // Copy non-null fields from input to existing
+                    existingLoadoutDetails.add(loadoutDetail);
                 } else {
                     newLoadoutDetails.add(loadoutDetail);
                 }
