@@ -346,7 +346,7 @@ public class VanLoadoutBatchProcessor {
                     // Update existing van loadout with new data while preserving database fields
                     VanLoadout existingVanLoadout = existingVanLoadoutsMap.get(loadNumber);
                     AbstractCDMService.fillAttributes(vanLoadout, existingVanLoadout); // Copy non-null fields from input to existing
-                    existingVanLoadouts.add(existingVanLoadout);
+                    existingVanLoadouts.add(vanLoadout);
                 } else {
                     newVanLoadouts.add(vanLoadout);
                 }

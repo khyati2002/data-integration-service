@@ -407,14 +407,14 @@ public class VanItemsBatchProcessor {
                 if (existingVanItemsMap.containsKey(compositeKey)) {
                     // Update existing VanItems with new data while preserving database fields
                     VanItems existingVanItem = existingVanItemsMap.get(compositeKey);
-                    AbstractCDMService.fillAttributes(existingVanItem, vanItem); // Copy non-null fields from input to existing
+                    AbstractCDMService.fillAttributes(vanItem,existingVanItem); // Copy non-null fields from input to existing
                     
                     // Fill common attributes and increment version for existing entities
-                    fillVanItemsCommonAttributes(existingVanItem);
+                    fillVanItemsCommonAttributes(vanItem);
                     Integer currentVersion = existingVanItem.getVersion();
-                    existingVanItem.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
+                    vanItem.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
                     
-                    existingVanItems.add(existingVanItem);
+                    existingVanItems.add(vanItem);
                 } else {
                     // Fill common attributes for new entities
                     fillVanItemsCommonAttributes(vanItem);
