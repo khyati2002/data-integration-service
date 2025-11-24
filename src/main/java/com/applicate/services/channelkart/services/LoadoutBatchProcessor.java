@@ -355,7 +355,7 @@ public class LoadoutBatchProcessor {
                 if (existingLoadoutsMap.containsKey(loadNumber)) {
                     // Update existing loadout with new data while preserving database fields
                     Loadout existingLoadout = existingLoadoutsMap.get(loadNumber);
-                    AbstractCDMService.fillAttributes(existingLoadout, loadout); // Copy non-null fields from input to existing
+                    AbstractCDMService.fillAttributes(loadout, existingLoadout); // Copy non-null fields from input to existing
                     existingLoadouts.add(existingLoadout);
                 } else {
                     newLoadouts.add(loadout);
