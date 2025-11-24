@@ -3,12 +3,14 @@ package com.salescode.dis.insights.kafka;
 import com.salescode.dis.insights.dto.TopicStatsResponse;
 import com.salescode.dis.insights.service.KafkaStatsService;
 import com.salescode.dis.insights.sse.SSEService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Profile("kafka")
 public class KafkaStatsBroadcaster {
 
     private final KafkaStatsService kafkaStatsService;

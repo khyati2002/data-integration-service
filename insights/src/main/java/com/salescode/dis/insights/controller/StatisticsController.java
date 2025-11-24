@@ -4,6 +4,7 @@ import com.salescode.dis.insights.dto.TopicStatsResponse;
 import com.salescode.dis.insights.service.KafkaStatsService;
 import com.salescode.dis.insights.sse.SSEService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -12,6 +13,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
+@Profile("kafka")
 public class StatisticsController {
 
     private final KafkaStatsService kafkaService;
