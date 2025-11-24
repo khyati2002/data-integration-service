@@ -9,6 +9,7 @@ import com.salescode.dis.insights.orders.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/orders")
 @Validated
+@Profile("kafka")
 public class OrderController {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
