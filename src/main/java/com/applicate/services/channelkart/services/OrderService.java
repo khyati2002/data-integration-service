@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_ORDERS;
 
-public class OrdersService extends AbstractCDMService<Order> {
-    private static final Logger LOG = LoggerFactory.getLogger(OrdersService.class);
+public class OrderService extends AbstractCDMService<Order> {
+    private static final Logger LOG = LoggerFactory.getLogger(OrderService.class);
 
     public List<List<Order>> getItemsToSaveList(List<Order> OrdersList) {
         List<List<Order>> result = new ArrayList<>();
