@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProductDetails extends com.salescode.dim.jooq.generated.tables.pojos.Productdetails implements Serializable {
+public class ProductDetails extends Productdetails implements Serializable {
 
 
     private List<ProductMetaData> productMetaData;
@@ -50,7 +50,7 @@ public class ProductDetails extends com.salescode.dim.jooq.generated.tables.pojo
     }
 
     @JsonSetter("fileName_c")
-    public void isFilename_c(String fileName_c) {
+    public void setFileName_c(String fileName_c) {
         super.setFileNameC(fileName_c);
     }
 
