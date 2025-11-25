@@ -1,12 +1,11 @@
+// 4. Main Caching Aspect
 package com.salescode.dim.cache;
 
-import com.applicate.services.channelkart.utils.SecurityContextUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.redisson.api.RMapCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,18 +28,17 @@ public class CachingAspect {
 
         Cacheable cacheableAnnotation = method.getAnnotation(Cacheable.class);
         String cacheName = cacheableAnnotation.cacheName();
-        cacheName = String.join(":",cacheName,SecurityContextUtils.getLob());
         int maximumSize = cacheableAnnotation.maximumSize();
         int expireAfterMinutes = cacheableAnnotation.expireAfterMinutes();
 
-        RMapCache<String, Object> cache = cacheManager.getCache(cacheName,expireAfterMinutes);
+        Cache<String, Object> cache = cacheManager.getCache(cacheName, maximumSize, expireAfterMinutes);
 
         String key = generateCacheKey(pjp);
 
         logger.info("Checking cache for method: {}", method.getName());
 
         // Try to get from cache
-        Object cachedResult = cache.get(key);
+        Object cachedResult = cache.getIfPresent(key);
         if (cachedResult != null) {
             logger.info("Cache hit for key: {}", key);
             return cachedResult;
@@ -86,7 +84,7 @@ public class CachingAspect {
                 // Evict based on the method call
                 String key = generateCacheKey(pjp);
                 logger.info("Evicting specific key: {} in cache: {}", key, cacheName);
-                cacheManager.getCache(cacheName, 100).remove(key);
+                cacheManager.getCache(cacheName, 100, 10).invalidate(key);
             }
         }, asyncExecutor);
 

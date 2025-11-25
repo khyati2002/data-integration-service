@@ -18,14 +18,9 @@
 
 package com.salescode.dim;
 
-import com.applicate.services.channelkart.models.CommonDataModel;
-import com.salescode.dim.cache.CacheEvictionFunction;
-import com.salescode.dim.jooq.impl.OutletDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SerializationSchema;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
@@ -93,13 +88,6 @@ public class DataStreamJob {
         Properties inout0Properties = mergeProperties(applicationProperties.get("InOut0"), commonProperties);
         ConfigValidator.validate(inout0Properties, "input.topic", "failure.topic");
 
-        boolean clearCache = Boolean.parseBoolean(inout0Properties.getProperty("clearCache", "true"));
-        // Create lob topics if not exists
-        if(clearCache) {
-            String cachePattern = "dataintegration"; // Matches any cache name containing "dataintegration"
-            env.fromElements(cachePattern).flatMap(new CacheEvictionFunction(inout0Properties));
-        }
-
         // cktestitcloyalty-dataintegration
         // cktestitcloyalty-dataintegration-failure or cktestitcloyalty-int-failure-streams
         // cktestitcloyalty-dataintegration-event
@@ -108,16 +96,11 @@ public class DataStreamJob {
         String lobFailureTopic = getLobFailureTopic(inout0Properties);
         String lobEventTopic = getLobEventTopic(inout0Properties);
         String lobOutTopic = String.join("-", lobTopic, "out");     // cktestitcloyalty-dataintegration-out (for testing only)
-        String lobSuccessTopic = getLobSuccessTopic(inout0Properties);
-        String insightsTopic = getInsightsTopic(inout0Properties);
 
         // Create lob topics if not exists
         KafkaTopicCreator.createTopicIfNotExists(lobTopic, bootstrapServers);
         KafkaTopicCreator.createTopicIfNotExists(lobFailureTopic, bootstrapServers);
         KafkaTopicCreator.createTopicIfNotExists(lobEventTopic, bootstrapServers);
-        KafkaTopicCreator.createTopicIfNotExists(lobSuccessTopic, bootstrapServers);
-        KafkaTopicCreator.createTopicIfNotExists(insightsTopic, bootstrapServers);
-
         if(isLocal(env)) {
             KafkaTopicCreator.clearAndRecreateTopic(lobOutTopic, bootstrapServers);
             env.setParallelism(1);
@@ -146,7 +129,7 @@ public class DataStreamJob {
         env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka source").name("Entity Bifurcation")
            .sinkTo(kafkaSink);
 
- //        for each entity, read from respective topic and process
+        // for each entity, read from respective topic and process
         for (String entityName : entityNames) {
             String entityTopic = entityTopicMap.get(entityName);
             KafkaSource<StreamingRawData> kafkaSourceEntity = FlinkJobSource.createKafkaSource(inout0Properties, new JsonDeserializationSchema<>(StreamingRawData.class), entityTopic);
@@ -156,9 +139,6 @@ public class DataStreamJob {
                             new StreamingRawDataProcessor(commonProperties),  // Async Processing
                             5, TimeUnit.SECONDS  // Timeout to prevent blocking indefinitely
                     ).process(new ProcessRecordStatus());
-
-
-
 
            processedStream.sinkTo(new JooqDatabaseBatchSink(inout0Properties)).name("Database Success Sink");
 
@@ -175,6 +155,7 @@ public class DataStreamJob {
 
         env.execute("Flink Java API Skeleton");
     }
+
     public static String getLobEventTopic(Properties inout0Properties) {
         return String.join("-", inout0Properties.getProperty("lob")
                                                 .trim(), inout0Properties.getProperty("event.topic", "event").trim());
@@ -196,15 +177,6 @@ public class DataStreamJob {
         } else {
             KafkaTopicCreator.createTopicIfNotExists(lobEntityTopic.getValue(), bootstrapServers);
         }
-    }
-
-    public static String getLobSuccessTopic(Properties inout0Properties){
-        return String.join("-", inout0Properties.getProperty("lob")
-                .trim(), inout0Properties.getProperty("success.topic").trim());
-    }
-
-    public static String getInsightsTopic(Properties inout0Properties){
-        return inout0Properties.getProperty("insights.topic");
     }
 
 }

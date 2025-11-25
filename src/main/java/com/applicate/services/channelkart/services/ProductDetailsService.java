@@ -1,6 +1,4 @@
 package com.applicate.services.channelkart.services;
-
-import com.applicate.services.channelkart.repository.ProductDetailsRepository;
 import com.salescode.dim.jooq.generated.tables.pojos.Productdetails;
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,6 +9,8 @@ import java.util.Map;
 public class ProductDetailsService extends AbstractCDMService<Productdetails> {
 
     ProductDetailsRepository productDetailsRepository ;
+public class ProductDetailsService {
+    private final ProductDetailsRepo productDetailsRepo;
 
     public ProductDetailsService(){
         if(productDetailsRepository==null)
@@ -20,10 +20,15 @@ public class ProductDetailsService extends AbstractCDMService<Productdetails> {
 
     public boolean checkIfBatchCodeExists(String batchCode){
         return productDetailsRepository.existsByBatchCode(batchCode);
+    public ProductDetailsService(ProductDetailsRepo productDetailsRepo) {
+        this.productDetailsRepo = productDetailsRepo;
     }
 
     public Productdetails findByBatchCode(String batchCode){
         return productDetailsRepository.findByBatchCode(batchCode);
+    @Cacheable
+    public Productdetails findByBatchCode(String batchCode) {
+        return this.productDetailsRepo.findByBatchCode(batchCode);
     }
 
     public List<String> findSKUCodesByCondition(String whereClause) {
@@ -55,4 +60,8 @@ public class ProductDetailsService extends AbstractCDMService<Productdetails> {
         }
     }
 
+    @Cacheable
+    public List<Productdetails> findByEanCode(String eanCode) {
+        return this.productDetailsRepo.findByEanCode(eanCode);
+    }
 }

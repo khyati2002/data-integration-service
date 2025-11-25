@@ -42,7 +42,6 @@ under the License.
         <jooq.version>3.16.23</jooq.version>
         <com.bazaarvoice.jolt.version>0.1.1</com.bazaarvoice.jolt.version>
         <aspectj.version>1.9.6</aspectj.version>
-        <insights-common.version>0.0.9-SNAPSHOT</insights-common.version>
     </properties>
 
     <repositories>
@@ -56,11 +55,6 @@ under the License.
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
-        <repository>
-            <id>salescode-dis-insights</id>
-            <name>salescode-dis-insights</name>
-            <url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
         </repository>
     </repositories>
 
@@ -120,13 +114,6 @@ under the License.
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-scala_2.12</artifactId>
             <version>${flink.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.salescode.dis</groupId>
-            <artifactId>insights-common</artifactId>
-            <version>${insights-common.version}</version>
-            <classifier>sb3</classifier>
         </dependency>
 
         <!-- Add logging framework, to produce console output when running in the IDE. -->
@@ -279,11 +266,6 @@ under the License.
             <artifactId>aspectjrt</artifactId>
             <version>${aspectj.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.locationtech.jts</groupId>
-            <artifactId>jts-core</artifactId>
-            <version>1.16.0</version>
-        </dependency>
 
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -334,25 +316,6 @@ under the License.
 
         <plugins>
 
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>4.0.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>${project.basedir}/src/main/resources/META-INF/git.properties</generateGitPropertiesFilename>
-                </configuration>
-            </plugin>
-
-
-
             <!-- Load external properties -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -399,8 +362,8 @@ under the License.
                     </jdbc>
                     <generator>
                         <database>
-                            <!--                            <outputSchemaToDefault>true</outputSchemaToDefault>-->
-                            <!--                            <inputCatalog>${input.schema}</inputCatalog>-->
+<!--                            <outputSchemaToDefault>true</outputSchemaToDefault>-->
+<!--                            <inputCatalog>${input.schema}</inputCatalog>-->
 
                             <!-- Using MySQL dialect -->
                             <name>org.jooq.meta.mysql.MySQLDatabase</name>
@@ -416,12 +379,7 @@ under the License.
                                 <forcedType>
                                     <userType>org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode</userType>
                                     <converter>com.salescode.dim.jooq.JsonNodeConverter</converter>
-                                    <includeExpression>(.*attributes)|domain_values|ck_generic_object\.payload|ck_targets\.product_value|ck_targets\.outlet_value|ck_targets\.user_value|ck_scheme_calculation\.slab_info</includeExpression>
-                                </forcedType>
-                                <forcedType>
-                                    <userType>java.lang.Float</userType>
-                                    <converter>com.salescode.dim.jooq.DoubleToFloatConverter</converter>
-                                    <includeExpression>ck_target_results\.achieved</includeExpression>
+                                    <includeExpression>(.*attributes)|domain_values|ck_generic_object\.payload|ck_scheme_calculation\.slab_info</includeExpression>
                                 </forcedType>
                             </forcedTypes>
                         </database>
@@ -587,7 +545,5 @@ under the License.
 
             </plugins>
         </pluginManagement>
-
-
     </build>
 </project>
