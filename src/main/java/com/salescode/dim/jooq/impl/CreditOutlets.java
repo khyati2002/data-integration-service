@@ -57,6 +57,8 @@ public class CreditOutlets extends CommonDataModel {
 
     private BigDecimal availableCredit;
 
+    private BigDecimal usedCredit;
+
 
     private String lob;
 
@@ -88,6 +90,7 @@ public class CreditOutlets extends CommonDataModel {
         this.invoiceCount=value.invoiceCount;
         this.creditDayCode=value.creditDayCode;
         this.availableCredit=value.availableCredit;
+        this.usedCredit=value.usedCredit;
         this.lob = value.lob;
         this.hash=value.hash;
     }
