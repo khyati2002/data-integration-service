@@ -2,7 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
-import com.applicate.services.channelkart.utils.IdGenerator;
+import com.applicate.services.channelkart.utils.IDGenerator;
 import com.salescode.dim.jooq.generated.tables.records.CkGenericObjectRecord;
 import com.salescode.dim.jooq.impl.GenericEntity;
 import org.slf4j.Logger;
@@ -22,9 +22,53 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 
 
 
-	public List<GenericEntity> findByNameAndKey1(String name,String key1){
+	public List<GenericEntity> findByNameAndKeys(String name,String key1){
 		return getDslContext().selectFrom(CK_GENERIC_OBJECT).where(CK_GENERIC_OBJECT.KEY1.eq(key1)).and(CK_GENERIC_OBJECT.NAME.eq(name)).fetchInto(GenericEntity.class);
 	}
+
+	public List<GenericEntity> findByName(String name){
+		return getDslContext().selectFrom(CK_GENERIC_OBJECT).where(CK_GENERIC_OBJECT.NAME.eq(name)).fetchInto(GenericEntity.class);
+	}
+	public List<GenericEntity> findByNameAndKeys(String name,String key1,String key2){
+		return getDslContext().selectFrom(CK_GENERIC_OBJECT).where(CK_GENERIC_OBJECT.KEY1.eq(key1)).and(CK_GENERIC_OBJECT.KEY2.eq(key2)).and(CK_GENERIC_OBJECT.NAME.eq(name)).fetchInto(GenericEntity.class);
+	}
+
+
+
+
+	/**
+	 * Deletes multiple GenericEntity records in batch.
+	 *
+	 * @param genericEntityList Collection of GenericEntity objects to delete
+	 * @return Number of records deleted
+	 */
+	public int deleteInBatch(Collection<GenericEntity> genericEntityList) {
+		if (genericEntityList == null || genericEntityList.isEmpty()) {
+			LOG.warn("deleteInBatch called with empty or null list");
+			return 0;
+		}
+
+		List<String> idsToDelete = genericEntityList.stream()
+				.map(GenericEntity::getId)
+				.filter(id -> id != null)
+				.collect(Collectors.toList());
+
+		if (idsToDelete.isEmpty()) {
+			LOG.warn("No valid IDs found for deletion");
+			return 0;
+		}
+
+		LOG.info("Deleting {} GenericEntity records", idsToDelete.size());
+
+		int deletedCount = getDslContext()
+				.deleteFrom(CK_GENERIC_OBJECT)
+				.where(CK_GENERIC_OBJECT.ID.in(idsToDelete))
+				.execute();
+
+		LOG.info("Successfully deleted {} records", deletedCount);
+		return deletedCount;
+	}
+
 
 	public List<List<GenericEntity>> getItemsToSaveList(List<GenericEntity> genericEntityList) {
 		List<List<GenericEntity>> result = new ArrayList<>();
@@ -38,7 +82,7 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 			fillAttributes(loginId, savedList.get(loginId.getId()));
 			fillCommonAttributes(loginId);
 			if (loginId.getId() == null)
-				loginId.setId(new IdGenerator(loginId.getClass().getSimpleName()).getId(loginId));
+				loginId.setId(new IDGenerator().getIdWithMetaData(loginId,null));
 
 			if (savedList.get(loginId.getId()) == null) {
 				itemsToInsert.add(loginId);

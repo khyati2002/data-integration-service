@@ -34,6 +34,11 @@ public class LocationService extends AbstractCDMService<Location> {
             metadataService = new MetaDataService();
             locationRepository = new LocationRepository(getDslContext());
     }
+
+
+    public Location findByLocationHierarchy(String locationHierarchy){
+        return locationRepository.findByLocationHierarchy(locationHierarchy);
+    }
     public String[] getLocationColumns() {
 
         Metadata metadata = metadataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE);

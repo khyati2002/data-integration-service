@@ -3,6 +3,7 @@ package com.applicate.services.channelkart.repository;
 import com.salescode.dim.jooq.generated.tables.pojos.Stock;
 import org.jooq.DSLContext;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -21,6 +22,13 @@ public class StockRepository {
                 .where(CK_STOCK.SKU_CODE.eq(skuCode))
                 .and(CK_STOCK.SUPPLIER.eq(supplier))
                 .fetchOptionalInto(Stock.class);
+    }
+    public List<Stock> findBySkuCodesAndSupplier(List<String> skuCode, String supplier) {
+        return dsl.select(CK_STOCK.BATCH_CODE, CK_STOCK.QTY)
+                .from(CK_STOCK)
+                .where(CK_STOCK.BATCH_CODE.in(skuCode))
+                .and(CK_STOCK.SUPPLIER.eq(supplier))
+                .fetchInto(Stock.class);
     }
 
 
