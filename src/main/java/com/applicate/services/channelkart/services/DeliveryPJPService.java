@@ -95,13 +95,18 @@ public class DeliveryPJPService extends AbstractCDMService<DeliveryPjp> {
     }
 
     public String getLoginIdByOutletcode(String outletcode){
-        return getDslContext().select(CK_DELIVERY_PJP.LOGINID)
-                .from(CK_DELIVERY_PJP)
-                .where(CK_DELIVERY_PJP.OUTLETCODE.eq(outletcode))
-                .and(CK_DELIVERY_PJP.PJP_DATE.cast(LocalDate.class).eq(LocalDate.now()))
-                .orderBy(CK_DELIVERY_PJP.CREATION_TIME.desc())
-                .limit(1)
-                .fetchOne(CK_DELIVERY_PJP.LOGINID);
+        try{
+            return getDslContext().select(CK_DELIVERY_PJP.LOGINID)
+                    .from(CK_DELIVERY_PJP)
+                    .where(CK_DELIVERY_PJP.OUTLETCODE.eq(outletcode))
+                    .and(CK_DELIVERY_PJP.PJP_DATE.cast(LocalDate.class).eq(LocalDate.now()))
+                    .orderBy(CK_DELIVERY_PJP.CREATION_TIME.desc())
+                    .limit(1)
+                    .fetchOne(CK_DELIVERY_PJP.LOGINID);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }
