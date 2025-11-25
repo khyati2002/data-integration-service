@@ -12,7 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.salescode.dim.jooq.generated.Tables.CK_PRODUCTMETADATA;
@@ -26,6 +30,53 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 		this.locationService = new LocationService();
 	}
 
+	private void applyDefaultNumericValues(ProductMetaData product) {
+
+		if (product.getPieceToOtherUnitQuantity() == null)
+			product.setPieceToOtherUnitQuantity(BigDecimal.ZERO);
+
+		if (product.getGst() == null)
+			product.setGst(BigDecimal.ZERO);
+
+		if (product.getTaxAmount() == null)
+			product.setTaxAmount(BigDecimal.ZERO);
+
+		if (product.getCaseToOtherUnitQuantity() == null)
+			product.setCaseToOtherUnitQuantity(BigDecimal.ZERO);
+
+		if (product.getOtherUnitToPieceQuantity() == null)
+			product.setOtherUnitToPieceQuantity(BigDecimal.ZERO);
+
+		if (product.getSchemePrice() == null)
+			product.setSchemePrice(BigDecimal.ZERO);
+
+		if (product.getSsp() == null)
+			product.setSsp(BigDecimal.ZERO);
+
+		if (product.getCasePtr() == null)
+			product.setCasePtr((float) 0);
+
+		if (product.getPackPtr() == null)
+			product.setPackPtr(BigDecimal.ZERO);
+
+		if (product.getOtherUnitPtr() == null)
+			product.setOtherUnitPtr(BigDecimal.ZERO);
+
+		if (product.getBasePrice() == null)
+			product.setBasePrice(BigDecimal.ZERO);
+
+		if (product.getCaseMrp() == null)
+			product.setCaseMrp(BigDecimal.ZERO);
+
+		if (product.getMrp() == null)
+			product.setMrp(BigDecimal.ZERO);
+
+		if (product.getOtherUnitMrp() == null)
+			product.setOtherUnitMrp((double) 0);
+
+		if (product.getCaseToPieceQuantity() == null)
+			product.setCaseToPieceQuantity(BigDecimal.ZERO);
+	}
 	public List<List<ProductMetaData>> getDataToSaveList(List<ProductMetaData> productMetadataList) {
 		List<List<ProductMetaData>> result = new ArrayList<>();
 		List<ProductMetaData> itemsToInsert = new ArrayList<>();
@@ -70,28 +121,7 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 				product.setVersion(0);
 				product.setChanged(Boolean.TRUE);
 				product.setPriority(1);
-
-				if (product.getPieceToOtherUnitQuantity() == null)
-					product.setPieceToOtherUnitQuantity(BigDecimal.ZERO);
-
-				if (product.getGst() == null)
-					product.setGst(BigDecimal.ZERO);
-
-				if (product.getTaxAmount() == null)
-					product.setTaxAmount(BigDecimal.ZERO);
-
-				if (product.getOtherUnitToPieceQuantity() == null)
-					product.setOtherUnitToPieceQuantity(BigDecimal.ZERO);
-
-				if (product.getCaseToOtherUnitQuantity() == null)
-					product.setCaseToOtherUnitQuantity(BigDecimal.ZERO);
-
-				if (product.getSchemePrice() == null)
-					product.setSchemePrice(BigDecimal.ZERO);
-
-				if (product.getSsp() == null)
-					product.setSsp(BigDecimal.ZERO);
-
+				applyDefaultNumericValues(product);
 				product.setOperationPerformed(ActionType.INSERT);
 				product.setFkProductmetadata(product.getBatchCode());
 
@@ -103,28 +133,7 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 				product.setChanged(Boolean.TRUE);
 				product.setPriority(1);
 				product.setFkProductmetadata(product.getBatchCode());
-
-				if (product.getPieceToOtherUnitQuantity() == null)
-					product.setPieceToOtherUnitQuantity(BigDecimal.ZERO);
-
-				if (product.getGst() == null)
-					product.setGst(BigDecimal.ZERO);
-
-				if (product.getTaxAmount() == null)
-					product.setTaxAmount(BigDecimal.ZERO);
-
-				if (product.getCaseToOtherUnitQuantity() == null)
-					product.setCaseToOtherUnitQuantity(BigDecimal.ZERO);
-
-				if (product.getOtherUnitToPieceQuantity() == null)
-					product.setOtherUnitToPieceQuantity(BigDecimal.ZERO);
-
-				if (product.getSchemePrice() == null)
-					product.setSchemePrice(BigDecimal.ZERO);
-
-				if (product.getSsp() == null)
-					product.setSsp(BigDecimal.ZERO);
-
+				applyDefaultNumericValues(product);
 				itemsToUpdate.add(product);
 			}
 
