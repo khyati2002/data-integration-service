@@ -1,5 +1,6 @@
 package com.applicate.services.channelkart.repository;
 
+import com.salescode.dim.cache.Cacheable;
 import org.jooq.DSLContext;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class ProductDetailsRepository {
 		this.dsl = dsl;
 	}
 
+	@Cacheable(cacheName = "dataintegration-productdetails")
 	public List<String> checkIfBatchCodeExists(String batchCode) {
 		return dsl.select(CK_PRODUCTDETAILS.BATCH_CODE).from(CK_PRODUCTDETAILS).where(CK_PRODUCTDETAILS.BATCH_CODE.eq(batchCode)).fetch(CK_PRODUCTDETAILS.BATCH_CODE);
 	}
