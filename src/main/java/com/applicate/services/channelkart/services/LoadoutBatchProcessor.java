@@ -121,14 +121,7 @@ public class LoadoutBatchProcessor {
         logger.debug("Preparing to batch insert {} new loadouts", newLoadouts.size());
         
         try {
-            // Fill common attributes for new entities
-            for (Loadout loadout : newLoadouts) {
-                cdmService.fillCommonAttributes(loadout);
-                if (loadout.getVersion() == null) {
-                    loadout.setVersion(INITIAL_VERSION);
-                }
-                loadout.setOperationPerformed(ActionType.INSERT);
-            }
+
 
             // Convert to JOOQ records for batch insert using proper JOOQ DSL
             List<com.salescode.dim.jooq.generated.tables.records.DmsLoadoutRecord> records = 
@@ -232,14 +225,7 @@ public class LoadoutBatchProcessor {
         logger.debug("Preparing to batch update {} existing loadouts", existingLoadouts.size());
         
         try {
-            // Fill common attributes and increment version for existing entities
-            for (Loadout loadout : existingLoadouts) {
-                cdmService.fillCommonAttributes(loadout);
-                // Increment version for existing records
-                Integer currentVersion = loadout.getVersion();
-                loadout.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
-                loadout.setOperationPerformed(ActionType.UPDATE);
-            }
+
 
             // Convert to JOOQ update queries using proper JOOQ DSL
             List<org.jooq.Query> updateQueries = existingLoadouts.stream()
@@ -356,8 +342,20 @@ public class LoadoutBatchProcessor {
                     // Update existing loadout with new data while preserving database fields
                     Loadout existingLoadout = existingLoadoutsMap.get(loadNumber);
                     AbstractCDMService.fillAttributes(loadout, existingLoadout); // Copy non-null fields from input to existing
+
+                    cdmService.fillCommonAttributes(loadout);
+                    // Increment version for existing records
+                    Integer currentVersion = existingLoadout.getVersion();
+                    loadout.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
+                    loadout.setOperationPerformed(ActionType.UPDATE);
+                    
                     existingLoadouts.add(loadout);
                 } else {
+                    cdmService.fillCommonAttributes(loadout);
+                    if (loadout.getVersion() == null) {
+                        loadout.setVersion(INITIAL_VERSION);
+                    }
+                    loadout.setOperationPerformed(ActionType.INSERT);
                     newLoadouts.add(loadout);
                 }
             }

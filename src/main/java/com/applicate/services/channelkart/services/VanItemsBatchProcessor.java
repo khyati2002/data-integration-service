@@ -413,7 +413,7 @@ public class VanItemsBatchProcessor {
                     fillVanItemsCommonAttributes(vanItem);
                     Integer currentVersion = existingVanItem.getVersion();
                     vanItem.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
-                    
+
                     existingVanItems.add(vanItem);
                 } else {
                     // Fill common attributes for new entities
@@ -421,6 +421,7 @@ public class VanItemsBatchProcessor {
                     if (vanItem.getVersion() == null) {
                         vanItem.setVersion(INITIAL_VERSION);
                     }
+
                     newVanItems.add(vanItem);
                 }
             }

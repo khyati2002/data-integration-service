@@ -393,10 +393,10 @@ public class LoadoutItemsBatchProcessor {
                     AbstractCDMService.fillAttributes(loadoutItem, existingLoadoutItem); // Copy non-null fields from input to existing
                     
                     // Fill common attributes and increment version for existing entities
-                    fillLoadoutItemsCommonAttributes(existingLoadoutItem);
+                    fillLoadoutItemsCommonAttributes(loadoutItem);
                     Integer currentVersion = existingLoadoutItem.getVersion();
                     existingLoadoutItem.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
-                    
+
                     existingLoadoutItems.add(loadoutItem);
                 } else {
                     // Fill common attributes for new entities

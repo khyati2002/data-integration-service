@@ -170,13 +170,7 @@ public class LoadoutDetailsBatchProcessor {
         logger.debug("Preparing to batch insert {} new LoadoutDetails", newLoadoutDetails.size());
         
         try {
-            // Fill common attributes for new entities
-            for (LoadoutDetails loadoutDetail : newLoadoutDetails) {
-                fillLoadoutDetailsCommonAttributes(loadoutDetail);
-                if (loadoutDetail.getVersion() == null) {
-                    loadoutDetail.setVersion(INITIAL_VERSION);
-                }
-            }
+
 
             // Convert to JOOQ records for batch insert using proper JOOQ DSL
             List<com.salescode.dim.jooq.generated.tables.records.DmsLoadoutDetailsRecord> records = 
@@ -263,13 +257,7 @@ public class LoadoutDetailsBatchProcessor {
         logger.debug("Preparing to batch update {} existing LoadoutDetails", existingLoadoutDetails.size());
         
         try {
-            // Fill common attributes and increment version for existing entities
-            for (LoadoutDetails loadoutDetail : existingLoadoutDetails) {
-                fillLoadoutDetailsCommonAttributes(loadoutDetail);
-                // Increment version for existing records
-                Integer currentVersion = loadoutDetail.getVersion();
-                loadoutDetail.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
-            }
+
 
             // Convert to JOOQ update queries using proper JOOQ DSL
             List<org.jooq.Query> updateQueries = existingLoadoutDetails.stream()
@@ -366,8 +354,18 @@ public class LoadoutDetailsBatchProcessor {
                     // Update existing LoadoutDetails with new data while preserving database fields
                     LoadoutDetails existingLoadoutDetail = existingLoadoutDetailsMap.get(compositeId);
                     AbstractCDMService.fillAttributes(loadoutDetail, existingLoadoutDetail); // Copy non-null fields from input to existing
+
+                    fillLoadoutDetailsCommonAttributes(loadoutDetail);
+                    Integer currentVersion = existingLoadoutDetail.getVersion();
+                    loadoutDetail.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
+
                     existingLoadoutDetails.add(loadoutDetail);
                 } else {
+                    fillLoadoutDetailsCommonAttributes(loadoutDetail);;
+                    if (loadoutDetail.getVersion() == null) {
+                        loadoutDetail.setVersion(INITIAL_VERSION);
+                    }
+
                     newLoadoutDetails.add(loadoutDetail);
                 }
             }

@@ -118,14 +118,7 @@ public class VanLoadoutBatchProcessor {
         logger.debug("Preparing to batch insert {} new van loadouts", newVanLoadouts.size());
         
         try {
-            // Fill common attributes for new entities
-            for (VanLoadout vanLoadout : newVanLoadouts) {
-                cdmService.fillCommonAttributes(vanLoadout);
-                if (vanLoadout.getVersion() == null) {
-                    vanLoadout.setVersion(INITIAL_VERSION);
-                }
-                vanLoadout.setOperationPerformed(ActionType.INSERT);
-            }
+
 
             // Convert to JOOQ records for batch insert using proper JOOQ DSL
             List<com.salescode.dim.jooq.generated.tables.records.DmsVanLoadoutRecord> records = 
@@ -225,14 +218,7 @@ public class VanLoadoutBatchProcessor {
         logger.debug("Preparing to batch update {} existing van loadouts", existingVanLoadouts.size());
         
         try {
-            // Fill common attributes and increment version for existing entities
-            for (VanLoadout vanLoadout : existingVanLoadouts) {
-                cdmService.fillCommonAttributes(vanLoadout);
-                // Increment version for existing records
-                Integer currentVersion = vanLoadout.getVersion();
-                vanLoadout.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
-                vanLoadout.setOperationPerformed(ActionType.UPDATE);
-            }
+
 
             // Convert to JOOQ update queries using proper JOOQ DSL
             List<org.jooq.Query> updateQueries = existingVanLoadouts.stream()
@@ -345,9 +331,19 @@ public class VanLoadoutBatchProcessor {
                     // Update existing van loadout with new data while preserving database fields
                     VanLoadout existingVanLoadout = existingVanLoadoutsMap.get(loadNumber);
                     AbstractCDMService.fillAttributes(vanLoadout, existingVanLoadout); // Copy non-null fields from input to existing
-                    vanLoadout.setVersion(existingVanLoadout.getVersion());
+                    cdmService.fillCommonAttributes(vanLoadout);
+                    Integer currentVersion = existingVanLoadout.getVersion();
+                    vanLoadout.setVersion(currentVersion != null ? currentVersion + 1 : INITIAL_VERSION);
+                    vanLoadout.setOperationPerformed(ActionType.UPDATE);
+
                     existingVanLoadouts.add(vanLoadout);
                 } else {
+                    cdmService.fillCommonAttributes(vanLoadout);
+                    if(vanLoadout.getVersion()==null){
+                        vanLoadout.setVersion(INITIAL_VERSION);
+                    }
+                    vanLoadout.setOperationPerformed(ActionType.INSERT);
+
                     newVanLoadouts.add(vanLoadout);
                 }
             }
