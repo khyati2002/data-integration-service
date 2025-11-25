@@ -50,7 +50,7 @@ public class ProductDetails extends com.salescode.dim.jooq.generated.tables.pojo
     }
 
     @JsonSetter("fileName_c")
-    public void isFilename_c(String fileName_c) {
+    public void setFileName_c(String fileName_c) {
         super.setFileNameC(fileName_c);
     }
 
@@ -92,6 +92,14 @@ public class ProductDetails extends com.salescode.dim.jooq.generated.tables.pojo
     @JsonSetter("mCode")
     public void setMCode(String mCode) {
         super.setMCode(mCode);
+    }
+
+    public List<ProductMetaData> getProductMetaData() {
+        return productMetaData;
+    }
+
+    public void setProductMetaData(List<ProductMetaData> productMetaData) {
+        this.productMetaData = productMetaData;
     }
 
 
