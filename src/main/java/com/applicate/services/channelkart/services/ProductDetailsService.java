@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class ProductDetailsService extends AbstractCDMService<Productdetails> {
 
-    ProductDetailsRepository productDetailsRepository ;
+    private static ProductDetailsRepository productDetailsRepository ;
 
     public ProductDetailsService(){
         if(productDetailsRepository==null)

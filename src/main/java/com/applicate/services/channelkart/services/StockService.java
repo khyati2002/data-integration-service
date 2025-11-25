@@ -11,8 +11,8 @@ public class StockService extends AbstractCDMService<Stock> {
 
     private final StockRepository stockRepository;
 
-    public StockService(StockRepository stockRepository) {
-        this.stockRepository = stockRepository;
+    public StockService() {
+        this.stockRepository = new StockRepository(getDslContext());
     }
 
     public Stock findBySkuCodeAndSupplier(String skuCode, String supplier) {

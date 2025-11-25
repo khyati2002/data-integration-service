@@ -27,7 +27,7 @@ public class SchemeFreeProductInfoService extends AbstractCDMService<SchemeFreep
     }
 
     public List<SchemeFreeproductinfo> findBySchemeId(String schemeId) {
-        List<SchemeFreeproductinfo> schemeFreeproductinfoList = getDslContext().select(CK_SCHEME_FREEPRODUCTINFO.asterisk()).where(CK_SCHEME_FREEPRODUCTINFO.SCHEME_ID.eq(schemeId)).fetchInto(SchemeFreeproductinfo.class);
+        List<SchemeFreeproductinfo> schemeFreeproductinfoList = getDslContext().selectFrom(CK_SCHEME_FREEPRODUCTINFO).where(CK_SCHEME_FREEPRODUCTINFO.SCHEME_ID.eq(schemeId)).fetchInto(SchemeFreeproductinfo.class);
         if (schemeFreeproductinfoList == null ) {
             return null;
         }
