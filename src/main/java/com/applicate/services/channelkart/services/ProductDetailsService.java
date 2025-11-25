@@ -111,8 +111,6 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
                 super.addHash(product);
 
                 itemsToInsert.add(product);
-                applyDefaults(product);
-
             } else {
                 product.setId(existing.getId());
                 product.setVersion(existing.getVersion() + 1);
@@ -127,6 +125,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
                     itemsToUpdate.add(product);
                 }
             }
+            applyDefaults(product);
         }
 
         result.add(itemsToInsert);
