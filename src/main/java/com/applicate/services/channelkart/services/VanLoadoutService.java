@@ -3,14 +3,20 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.component.model.LoadSequenceGenerator;
 import com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException;
 import com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException.ErrorType;
+import com.salescode.dim.jooq.generated.tables.pojos.DmsVanLoadout;
 import com.salescode.dim.jooq.impl.VanItems;
 import com.salescode.dim.jooq.impl.VanLoadout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+
+import static com.salescode.dim.jooq.generated.tables.DmsVanLoadout.DMS_VAN_LOADOUT;
+
 
 /**
  * Service for managing VanLoadout entities with hierarchical batch save operations.
@@ -290,5 +296,16 @@ public class VanLoadoutService extends AbstractCDMService<VanLoadout> {
      */
     private String getLoadNumber(VanLoadout vanLoadout) {
         return vanLoadout.getDmsVanLoadout() != null ? vanLoadout.getDmsVanLoadout().getLoadNumber() : "unknown";
+    }
+
+    public DmsVanLoadout getExistingVanLoadout(String supplier, LocalDateTime activityDate, String routeCode, String salesmanId){
+        return getDslContext()
+                .selectFrom(DMS_VAN_LOADOUT)
+                .where(DMS_VAN_LOADOUT.SUPPLIER.eq(supplier))
+                .and(DMS_VAN_LOADOUT.DELIVERY_START_DATE.eq(activityDate))
+                .and(DMS_VAN_LOADOUT.ROUTE_CODE.eq(Collections.singletonList(routeCode)))
+                .and(DMS_VAN_LOADOUT.SALESMAN_ID.eq(salesmanId))
+                .fetchOneInto(DmsVanLoadout.class);
+
     }
 }
