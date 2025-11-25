@@ -1,8 +1,4 @@
 # Set Java 11 as the default Java version for all targets
-JAVA_HOME := $(shell /usr/libexec/java_home -v 11 2>/dev/null || echo "/usr/lib/jvm/java-11-openjdk-amd64")
-export JAVA_HOME
-export PATH := $(JAVA_HOME)/bin:$(PATH)
-
 init:
 	echo "Initializing"; \
 	echo "Using Java version: $$(java -version 2>&1 | head -n 1)"; \
