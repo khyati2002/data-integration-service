@@ -1,25 +1,30 @@
+JAVA_HOME := $(shell /usr/libexec/java_home -v 11 2>/dev/null || echo "/usr/lib/jvm/java-11-openjdk-amd64")
+export JAVA_HOME
+export PATH := $(JAVA_HOME)/bin:$(PATH)
+
 init:
 	@if [ -d "./bundle/target/" ]; then \
-		echo "Directory exists, skipping install."; \
-		exit 0; \
+	   echo "Directory exists, skipping install."; \
+	   exit 0; \
 	else \
-	  	echo "Initializing"; \
-	  	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
-		mvn clean install -f jooq/pom.xml -s settings.xml; \
-		mvn clean install -DskipTests=true -s settings.xml; \
-		mvn clean install -f bundle/pom.xml -s settings.xml; \
+	   echo "Initializing"; \
+	   echo "Using Java version: $$(java -version 2>&1 | head -n 1)"; \
+	   export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
+	   mvn clean install -f jooq/pom.xml -s settings.xml; \
+	   mvn clean install -DskipTests=true -s settings.xml; \
+	   mvn clean install -f bundle/pom.xml -s settings.xml; \
 	fi
 
 setup-submodule:
 	@if [ -z "$(BRANCH)" ]; then \
-		echo "Error: BRANCH is not set."; \
-		exit 1; \
+	   echo "Error: BRANCH is not set."; \
+	   exit 1; \
 	elif [ "$(BRANCH)" = "main" ]; then \
-		echo "Skipping submodule setup for main branch."; \
+	   echo "Skipping submodule setup for main branch."; \
 	else \
-		echo "Adding submodule with branch: $(BRANCH)"; \
-		git submodule add -b $(BRANCH) https://applicatetech.git.beanstalkapp.com/data-integration-bundles.git bundle; \
-		git submodule update --init --recursive; \
+	   echo "Adding submodule with branch: $(BRANCH)"; \
+	   git submodule add -b $(BRANCH) https://applicatetech.git.beanstalkapp.com/data-integration-bundles.git bundle; \
+	   git submodule update --init --recursive; \
 	fi
 
 remove-submodule:
@@ -29,9 +34,8 @@ remove-submodule:
 	[ -d ".git/modules/bundle" ] && rm -rf .git/modules/bundle || true
 	[ -d "bundle" ] && rm -rf bundle || true
 
-
-
 generate-bundle:
+	@echo "Using Java version: $$(java -version 2>&1 | head -n 1)"
 	@export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
 	mvn clean install -f bundle/pom.xml -s settings.xml
 	@mkdir -p lib
@@ -39,6 +43,7 @@ generate-bundle:
 	@cp bundle/target/bundle.jar lib/bundle.jar
 
 generate-dis-jar:
+	@echo "Using Java version: $$(java -version 2>&1 | head -n 1)"
 	mvn clean compile install -DskipTests=true
 
 generate-all: remove-submodule setup-submodule init generate-bundle generate-dis-jar
@@ -47,6 +52,7 @@ generate-bundle-only: init generate-bundle
 
 generate-project-jar:
 	@echo "Generating project JAR with AWS CodeArtifact authentication..."
+	@echo "Using Java version: $$(java -version 2>&1 | head -n 1)"
 	export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain salescode --domain-owner 008136251604 --region ap-south-1 --query authorizationToken --output text`; \
 	mvn clean install -f jooq/pom.xml -s settings.xml; \
 	mvn clean compile install -DskipTests=true -s settings.xml

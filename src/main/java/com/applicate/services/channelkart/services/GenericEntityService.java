@@ -2,7 +2,7 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.models.enums.ActionType;
 import com.applicate.services.channelkart.models.enums.ActiveStatus;
-import com.applicate.services.channelkart.utils.IDGenerator;
+import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.jooq.generated.tables.records.CkGenericObjectRecord;
 import com.salescode.dim.jooq.impl.GenericEntity;
 import org.slf4j.Logger;
@@ -82,7 +82,7 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 			fillAttributes(loginId, savedList.get(loginId.getId()));
 			fillCommonAttributes(loginId);
 			if (loginId.getId() == null)
-				loginId.setId(new IDGenerator().getIdWithMetaData(loginId,null));
+				loginId.setId(new IdGenerator(loginId.getClass().getSimpleName()).getId(loginId));
 
 			if (savedList.get(loginId.getId()) == null) {
 				itemsToInsert.add(loginId);

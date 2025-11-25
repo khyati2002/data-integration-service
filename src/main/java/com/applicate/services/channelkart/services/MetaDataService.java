@@ -31,7 +31,7 @@ public class MetaDataService extends AbstractCDMService<Metadata> {
 
 		return this.fetchByValueFromDB(domainName, domainType);
 	}
-	public List<Metadata> O(String domainName){
+	public List<Metadata> findByDomainName(String domainName){
 		return metaDataRepository.findByDomainName(domainName);
 	}
 
