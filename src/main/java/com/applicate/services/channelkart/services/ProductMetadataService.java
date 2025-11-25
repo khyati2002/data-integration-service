@@ -11,6 +11,7 @@ import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,15 +68,21 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 			if (existingBatchCodeMap.get(product.getId())==null) {
 				product.setVersion(0);
 				product.setChanged(Boolean.TRUE);
-				product.setPriority(1);
+				product.setPriority(0);
+				product.setGst(BigDecimal.valueOf(0));
+				product.setTaxAmount(BigDecimal.valueOf(0));
 				product.setOperationPerformed(ActionType.INSERT);
+				product.setOtherUnitToPieceQuantity(BigDecimal.valueOf(0));
 				String casePtr = String.format("%.8f", product.getCasePtr()) ;
 				itemsToInsert.add(product);
 			} else {
 				product.setVersion(existing.getVersion() + 1);
 				product.setOperationPerformed(ActionType.UPDATE);
 				product.setChanged(Boolean.TRUE);
-				product.setPriority(1);
+				product.setGst(BigDecimal.valueOf(0));
+				product.setTaxAmount(BigDecimal.valueOf(0));
+				product.setOtherUnitToPieceQuantity(BigDecimal.valueOf(0));
+				product.setPriority(0);
 				String casePtr = String.format("%.8f", product.getCasePtr());
 				itemsToUpdate.add(product);
 			}
