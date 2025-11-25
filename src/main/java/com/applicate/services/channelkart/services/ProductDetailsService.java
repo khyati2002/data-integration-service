@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -59,6 +60,18 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 
 	}
 
+	private void applyDefaultNumericValues(ProductDetails product) {
+
+		if (product.getPieceToOtherUnitQuantity() == null) product.setPieceToOtherUnitQuantity(BigDecimal.ZERO);
+		if (product.getCaseToOtherUnitQuantity() == null) product.setCaseToOtherUnitQuantity(BigDecimal.ZERO);
+		if (product.getOtherUnitToPieceQuantity() == null) product.setOtherUnitToPieceQuantity(BigDecimal.ZERO);
+		if (product.getCaseMrp() == null) product.setCaseMrp(BigDecimal.ZERO);
+		if (product.getMrp() == null) product.setMrp(BigDecimal.ZERO);
+		if (product.getOtherUnitMrp() == null) product.setOtherUnitMrp(BigDecimal.ZERO);
+		if (product.getCaseToPieceQuantity() == null) product.setCaseToPieceQuantity(BigDecimal.ZERO);
+		if (product.getPieceToVolume() == null) product.setPieceToVolume(BigDecimal.ZERO);
+	}
+
 	public List<List<ProductDetails>> getDataToSaveList(List<ProductDetails> productDetailsList) {
 		List<List<ProductDetails>> result = new ArrayList<>();
 
@@ -66,6 +79,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 			productDetails.setId(new IdGenerator(productDetails.getClass().getSimpleName()).getId(productDetails));
 			productDetails.setChanged(false);
 			productDetails.setPriority(0);
+			applyDefaultNumericValues(productDetails);
 			productDetails.setActiveStatus(ActiveStatus.ACTIVE);
 			fillBatchCode(productDetails);
 			processFileNames(productDetails);
@@ -90,7 +104,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 			if (savedList.get(product.getBatchCode()) == null) {
 				product.setVersion(0);
 				product.setOperationPerformed(ActionType.INSERT);
-				product.setChanged(true);
+				product.setChanged(false);
 				itemsToInsert.add(product);
 			} else {
 				ProductDetails existingProduct = ProductDetails.of(savedList.get(product.getBatchCode()));
