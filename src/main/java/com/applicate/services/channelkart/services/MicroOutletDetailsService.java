@@ -25,7 +25,7 @@ public class MicroOutletDetailsService extends AbstractCDMService<MicroOutletDet
         fillCommonAttributes(cdmObject);
 
         var rec = getDslContext().newRecord(CK_OUTLET_DETAILS, cdmObject);
-        rec.store(); // INSERT with all POJO fields except geometry (leave null)
+        rec.store();
 
         GeometryFactory gf = new GeometryFactory();
         Point zeroPoint = gf.createPoint(new Coordinate(0.0, 0.0));

@@ -1,0 +1,10 @@
+{
+    "bootstrap.servers": "164.52.202.184:9092",
+    "jdbc.password": "Uat12Oct#25#",
+    "jdbc.url": "jdbc:mysql://uat-rds.cluster-ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/db___LOB__",
+    "jdbc.user": "ckuatadmin",
+    "redisUrl": "redis://uat-elasticache-redis-cluster.zymj1k.0001.aps1.cache.amazonaws.com:6379",
+    "s3_bucket_name": "salescode-dev-uat",
+    "subnet_ids" : "subnet-0312e019dcce81453",
+    "security_ids" : "sg-075dffa383968f83a"
+}
