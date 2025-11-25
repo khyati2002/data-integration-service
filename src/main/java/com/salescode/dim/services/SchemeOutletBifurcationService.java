@@ -12,6 +12,7 @@ import com.salescode.dim.repository.SchemeOutletBifurcationRepo;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.jooq.DSLContext;
 import org.jooq.InsertSetMoreStep;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,6 +141,15 @@ public class SchemeOutletBifurcationService extends AbstractCDMService<SchemeOut
         logger.info("SchemeOutletBifurcations saved!!!");
         logger.info("Time taken for schemeOutletBifurcations : {}", System.currentTimeMillis() - currentTime);
 
+    }
+
+    public void expireBudget(String promoCode,String supplier){
+        dsl.update(CK_SCHEME_OUTLET_BIFURCATIONS)
+                .set(CK_SCHEME_OUTLET_BIFURCATIONS.ACTIVE_STATUS, ActiveStatus.INACTIVE)
+                .set(CK_SCHEME_OUTLET_BIFURCATIONS.LAST_MODIFIED_TIME, DSL.currentLocalDateTime())
+                .where(CK_SCHEME_OUTLET_BIFURCATIONS.SCHEME_ID.eq(promoCode))
+                .and(CK_SCHEME_OUTLET_BIFURCATIONS.LOGIN_ID.eq(supplier))
+                .execute();
     }
     public List<SchemeOutletBifurcations> updateWithIds(List<SchemeOutletBifurcations> bifurcations){
         JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();

@@ -63,6 +63,13 @@ public class SchemeCalculationService extends AbstractCDMService<SchemeCalculati
 //        schemeMustBuyGroupService = new SchemeMustBuyGroupService(dsl);
     }
 
+    public String getSchemeType(String promoCode){
+        return dsl.select(CK_SCHEME_CALCULATION.SCHEME_TYPE)
+                .from(CK_SCHEME_CALCULATION)
+                .where(CK_SCHEME_CALCULATION.SCHEME_ID.eq(promoCode))
+                .fetchOneInto(String.class);
+    }
+
     private BiFunction<SchemeCalculation, DSLContext, InsertSetMoreStep<?>> schemeCalculationBiFunctionMapper = (ros, dslContext) -> {
         return (InsertSetMoreStep<CkSchemeCalculationRecord>)
                 dslContext.insertInto(CK_SCHEME_CALCULATION)

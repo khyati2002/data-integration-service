@@ -85,6 +85,12 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         supplierInfoService = new SupplierInfoService(getDslContext());
     }
 
+
+    /**
+     * Finds outlet codes by dynamic AND/OR conditions.
+     */
+
+
     @Cacheable(cacheName = "dataintegration-outlets")
     public OutletDetails findByOutletCode(String outletcode) {
         com.salescode.dim.jooq.generated.tables.pojos.OutletDetails outletDetails = getDslContext().select(CK_OUTLET_DETAILS.asterisk()
@@ -92,6 +98,14 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
                 .from(CK_OUTLET_DETAILS).where(CK_OUTLET_DETAILS.OUTLETCODE.eq(outletcode))
                 .fetchOneInto(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class);
         return OutletDetails.of(outletDetails);
+    }
+
+    public List<com.salescode.dim.jooq.generated.tables.pojos.OutletDetails> findByOutletCodeIn(List<String> outletcode) {
+        List<com.salescode.dim.jooq.generated.tables.pojos.OutletDetails> outletDetails = getDslContext().select(CK_OUTLET_DETAILS.asterisk()
+                        .except(CK_OUTLET_DETAILS.COORDINATE))
+                .from(CK_OUTLET_DETAILS).where(CK_OUTLET_DETAILS.OUTLETCODE.in(outletcode))
+                .fetchInto(com.salescode.dim.jooq.generated.tables.pojos.OutletDetails.class);
+        return outletDetails;
     }
 
     private List<User> preProcessUser(List<User> userList) {
@@ -145,6 +159,30 @@ public class OutletDetailsService extends AbstractCDMService<OutletDetails> {
         }
         outletDetails.setExtendedAttributes(extendedAttributes);
 
+    }
+
+    /**
+     * Executes a dynamic query to fetch outlet codes based on provided SQL condition.
+     *
+     * @param whereClause The WHERE clause condition (without the "WHERE" keyword)
+     * @return List of outlet codes matching the criteria
+     */
+    public List<String> findOutletCodesByCondition(String whereClause) {
+        if (StringUtils.isBlank(whereClause)) {
+            LOG.warn("WHERE clause is empty. Returning empty list.");
+            return Collections.emptyList();
+        }
+
+        String query = "SELECT outletcode FROM ck_outlet_details WHERE " + whereClause;
+
+        try {
+            return getDslContext()
+                    .fetch(query)
+                    .map(record -> record.get("outletcode", String.class));
+        } catch (Exception e) {
+            LOG.error("Error executing query: {}", query, e);
+            throw new RuntimeException("Failed to fetch outlet codes", e);
+        }
     }
 
     private List<OutletDetailsHierarchymetadata> setOutletHierarchyMetadata(List<OutletDetails> outletDetailsMap) {

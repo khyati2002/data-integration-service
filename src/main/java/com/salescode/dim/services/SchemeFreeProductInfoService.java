@@ -7,6 +7,7 @@ import com.salescode.dim.jooq.generated.tables.pojos.SchemeFreeproductinfo;
 import com.salescode.dim.repository.SchemeFreeProductInfoRepo;
 import com.salescode.dim.repository.SchemeFreeProductInfoRepoImpl;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,13 @@ public class SchemeFreeProductInfoService extends AbstractCDMService<SchemeFreep
         return schemeFreeproductinfoList;
     }
 
+    public ObjectNode findExtendedByBatchCode(String batchCode) {
+        return  dsl.select(CK_SCHEME_FREEPRODUCTINFO.EXTENDED_ATTRIBUTES)
+                .from(CK_SCHEME_FREEPRODUCTINFO)
+                .where(CK_SCHEME_FREEPRODUCTINFO.BATCH_CODE.eq(batchCode))
+                .fetchOneInto(ObjectNode.class);
+    }
+
     public void sfpSave(List<SchemeFreeproductinfo> bifurcations) {
         JsonNode metadata = metaDataService.fetchByValue(DOMAIN_NAME, DOMAIN_TYPE).getDomainValues();
         if (bifurcations != null) {
@@ -58,6 +66,13 @@ public class SchemeFreeProductInfoService extends AbstractCDMService<SchemeFreep
                         .map(sfp -> dsl.newRecord(CK_SCHEME_FREEPRODUCTINFO, sfp))
                         .collect(Collectors.toList())
         ).execute();
+    }
+
+    public void setExtendedAttributesByPromoCode(String batchCode, ObjectNode extendedAttributes){
+        dsl.update(CK_SCHEME_FREEPRODUCTINFO)
+                .set(CK_SCHEME_FREEPRODUCTINFO.EXTENDED_ATTRIBUTES, extendedAttributes)
+                .where(CK_SCHEME_FREEPRODUCTINFO.BATCH_CODE.eq(batchCode))
+                .execute();
     }
 
 
