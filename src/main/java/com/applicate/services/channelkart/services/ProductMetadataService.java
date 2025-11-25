@@ -65,37 +65,69 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 			fillAttributes(product, existingDomain);
 			fillCommonAttributes(product);
 
-			if (existingBatchCodeMap.get(product.getId())==null) {
+			if (existingBatchCodeMap.get(product.getId()) == null) {
+
 				product.setVersion(0);
 				product.setChanged(Boolean.TRUE);
 				product.setPriority(1);
-				product.setPieceToOtherUnitQuantity(BigDecimal.valueOf(0));
-				product.setGst(BigDecimal.valueOf(0));
-				product.setTaxAmount(BigDecimal.valueOf(0));
+
+				if (product.getPieceToOtherUnitQuantity() == null)
+					product.setPieceToOtherUnitQuantity(BigDecimal.ZERO);
+
+				if (product.getGst() == null)
+					product.setGst(BigDecimal.ZERO);
+
+				if (product.getTaxAmount() == null)
+					product.setTaxAmount(BigDecimal.ZERO);
+
+				if (product.getOtherUnitToPieceQuantity() == null)
+					product.setOtherUnitToPieceQuantity(BigDecimal.ZERO);
+
+				if (product.getCaseToOtherUnitQuantity() == null)
+					product.setCaseToOtherUnitQuantity(BigDecimal.ZERO);
+
+				if (product.getSchemePrice() == null)
+					product.setSchemePrice(BigDecimal.ZERO);
+
+				if (product.getSsp() == null)
+					product.setSsp(BigDecimal.ZERO);
+
 				product.setOperationPerformed(ActionType.INSERT);
-				product.setOtherUnitToPieceQuantity(BigDecimal.valueOf(0));
 				product.setFkProductmetadata(product.getBatchCode());
-				product.setCaseToOtherUnitQuantity(BigDecimal.valueOf(0));
-				product.setSchemePrice(BigDecimal.valueOf(0));
-				product.setSsp(BigDecimal.valueOf(0));
-				String casePtr = String.format("%.8f", product.getCasePtr()) ;
+
 				itemsToInsert.add(product);
-			} else {
+			}
+			else {
 				product.setVersion(existing.getVersion() + 1);
 				product.setOperationPerformed(ActionType.UPDATE);
-				product.setPieceToOtherUnitQuantity(BigDecimal.valueOf(0));
 				product.setChanged(Boolean.TRUE);
-				product.setCaseToOtherUnitQuantity(BigDecimal.valueOf(0));
-				product.setGst(BigDecimal.valueOf(0));
-				product.setTaxAmount(BigDecimal.valueOf(0));
-				product.setOtherUnitToPieceQuantity(BigDecimal.valueOf(0));
 				product.setPriority(1);
-				product.setSchemePrice(BigDecimal.valueOf(0));
 				product.setFkProductmetadata(product.getBatchCode());
-				product.setSsp(BigDecimal.valueOf(0));
-				String casePtr = String.format("%.8f", product.getCasePtr());
+
+				if (product.getPieceToOtherUnitQuantity() == null)
+					product.setPieceToOtherUnitQuantity(BigDecimal.ZERO);
+
+				if (product.getGst() == null)
+					product.setGst(BigDecimal.ZERO);
+
+				if (product.getTaxAmount() == null)
+					product.setTaxAmount(BigDecimal.ZERO);
+
+				if (product.getCaseToOtherUnitQuantity() == null)
+					product.setCaseToOtherUnitQuantity(BigDecimal.ZERO);
+
+				if (product.getOtherUnitToPieceQuantity() == null)
+					product.setOtherUnitToPieceQuantity(BigDecimal.ZERO);
+
+				if (product.getSchemePrice() == null)
+					product.setSchemePrice(BigDecimal.ZERO);
+
+				if (product.getSsp() == null)
+					product.setSsp(BigDecimal.ZERO);
+
 				itemsToUpdate.add(product);
 			}
+
 		}
 
 		result.add(itemsToInsert);
