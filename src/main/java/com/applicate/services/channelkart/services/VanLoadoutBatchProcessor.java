@@ -3,7 +3,6 @@ package com.applicate.services.channelkart.services;
 import com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException;
 import com.applicate.services.channelkart.exceptions.LoadoutBatchSaveException.ErrorType;
 import com.applicate.services.channelkart.models.enums.ActionType;
-import com.salescode.dim.jooq.generated.enums.DmsVanLoadoutActiveStatus;
 import com.salescode.dim.jooq.generated.tables.pojos.DmsVanLoadout;
 import com.salescode.dim.jooq.generated.tables.records.DmsVanLoadoutRecord;
 import com.salescode.dim.jooq.impl.VanLoadout;
@@ -243,7 +242,7 @@ public class VanLoadoutBatchProcessor {
                     return dslContext
                         .update(DMS_VAN_LOADOUT)
                         // Update common fields
-                        .set(DMS_VAN_LOADOUT.VERSION, vanLoadout.getVersion())
+                        .set(DMS_VAN_LOADOUT.VERSION, dmsVanLoadout.getVersion())
                         .set(DMS_VAN_LOADOUT.ACTIVE_STATUS, dmsVanLoadout.getActiveStatus())
                         .set(DMS_VAN_LOADOUT.LAST_MODIFIED_TIME, vanLoadout.getLastModifiedTime())
                         .set(DMS_VAN_LOADOUT.MODIFIED_BY, vanLoadout.getModifiedBy())
@@ -346,6 +345,7 @@ public class VanLoadoutBatchProcessor {
                     // Update existing van loadout with new data while preserving database fields
                     VanLoadout existingVanLoadout = existingVanLoadoutsMap.get(loadNumber);
                     AbstractCDMService.fillAttributes(vanLoadout, existingVanLoadout); // Copy non-null fields from input to existing
+                    vanLoadout.setVersion(existingVanLoadout.getVersion());
                     existingVanLoadouts.add(vanLoadout);
                 } else {
                     newVanLoadouts.add(vanLoadout);

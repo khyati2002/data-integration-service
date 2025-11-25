@@ -299,13 +299,18 @@ public class VanLoadoutService extends AbstractCDMService<VanLoadout> {
     }
 
     public DmsVanLoadout getExistingVanLoadout(String supplier, LocalDateTime activityDate, String routeCode, String salesmanId){
-        return getDslContext()
-                .selectFrom(DMS_VAN_LOADOUT)
-                .where(DMS_VAN_LOADOUT.SUPPLIER.eq(supplier))
-                .and(DMS_VAN_LOADOUT.DELIVERY_START_DATE.eq(activityDate))
-                .and(DMS_VAN_LOADOUT.ROUTE_CODE.eq(Collections.singletonList(routeCode)))
-                .and(DMS_VAN_LOADOUT.SALESMAN_ID.eq(salesmanId))
-                .fetchOneInto(DmsVanLoadout.class);
+        try{
+            return getDslContext()
+                    .selectFrom(DMS_VAN_LOADOUT)
+                    .where(DMS_VAN_LOADOUT.SUPPLIER.eq(supplier))
+                    .and(DMS_VAN_LOADOUT.DELIVERY_START_DATE.eq(activityDate))
+                    .and(DMS_VAN_LOADOUT.ROUTE_CODE.eq(Collections.singletonList(routeCode)))
+                    .and(DMS_VAN_LOADOUT.SALESMAN_ID.eq(salesmanId))
+                    .fetchOneInto(DmsVanLoadout.class);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 }

@@ -36,7 +36,6 @@ class CollectSink<T> implements SinkFunction<T> {
 
 public class DataStreamJobTest {
 
-
     public static String rawStreamingData = "{\n" +
             "  \"requestId\": \"8a318b6b-95ca-49ff-8310-d90ec102827a\",\n" +
             "  \"groupId\": \"%(groupId)\",\n" +
@@ -60,18 +59,19 @@ public class DataStreamJobTest {
             "  \"features\": [\n" +
             "    {\n" +
             "      \"dmsVanLoadout\": {\n" +
-            "        \"loadNumber\": \"LD_30_1251113_RY454_309127\",\n" +
+            "        \"loadNumber\": \"LD_30_1251113_RY455_309127\",\n" +
 //            "        \"loadOutStatus\": \"IN_TRANSIT\",\n" +
-            "        \"salesmanId\": \"SM001\",\n" +
-            "        \"supplier\": \"SUPPLIER_A\",\n" +
-            "        \"totalCaseQty\": 150,\n" +
-            "        \"totalCaseLeftQty\": 150,\n" +
-            "        \"routeCode\": \"RY454\" ,\n" +
+            "        \"salesmanId\": \"309127\",\n" +
+            "        \"supplier\": \"30\",\n" +
+            "        \"totalCaseQty\": 880,\n" +
+            "        \"totalCaseLeftQty\": 880,\n" +
+            "        \"routeCode\": \"RY455\" ,\n" +
+            "         \"activityDate\": \"1251113\" ,\n"+
 //        "        \"totalPieceQty\": 500,\n" +
 //        "        \"totalPieceLeftQty\": 500,\n" +
 //        "        \"totalOtherQty\": 50,\n" +
 //        "        \"totalOtherLeftQty\": 50,\n" +
-            "        \"vehicleId\": \"VEH002\"\n" +
+            "        \"vehicleId\": \"VEH191\"\n" +
 //        "        \"vehicleCapacity\": 2000,\n" +
 //        "        \"loadOutDate\": \"2025-01-15 08:00:00\",\n" +
 //        "        \"loadoutSource\": \"ORDER\",\n" +
@@ -87,11 +87,11 @@ public class DataStreamJobTest {
             "      },\n" +
             "      \"vanItemsList\": [\n" +
             "        {\n" +
-            "          \"skuCode\": \"SKU001\",\n" +
+            "          \"skuCode\": \"SKU101\",\n" +
 //          "          \"batchCode\": \"BATCH001\",\n" +
 //          "          \"batchId\": \"B001\",\n" +
-            "          \"caseQty\": 30,\n" +
-            "          \"caseQtyLeft\": 30\n" +
+            "          \"caseQty\": 199,\n" +
+            "          \"caseQtyLeft\": 199\n" +
 //          "          \"pieceQty\": 100,\n" +
 //          "          \"pieceQtyLeft\": 100,\n" +
 //          "          \"otherQty\": 10,\n" +
@@ -100,11 +100,11 @@ public class DataStreamJobTest {
 //            "          \"loadNumber\": \"LD_30_1251113_RY454_309127\"\n" +
             "        },\n" +
             "        {\n" +
-            "          \"skuCode\": \"SKU002\",\n" +
+            "          \"skuCode\": \"SKU102\",\n" +
 //          "          \"batchCode\": \"BATCH002\",\n" +
 //          "          \"batchId\": \"B002\",\n" +
-            "          \"caseQty\": 40,\n" +
-            "          \"caseQtyLeft\": 40\n" +
+            "          \"caseQty\": 121,\n" +
+            "          \"caseQtyLeft\": 121\n" +
 //          "          \"pieceQty\": 150,\n" +
 //          "          \"pieceQtyLeft\": 150,\n" +
 //          "          \"otherQty\": 15,\n" +
