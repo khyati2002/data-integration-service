@@ -1,2 +1,2 @@
-export BRANCH=vistaar-flink-changes-samarth
+export BRANCH=CokePh-stocks
 make generate-all
