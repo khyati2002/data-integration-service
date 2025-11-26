@@ -72,7 +72,7 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 			product.setMrp(BigDecimal.ZERO);
 
 		if (product.getOtherUnitMrp() == null)
-			product.setOtherUnitMrp((double) 0);
+			product.setOtherUnitMrp(BigDecimal.ZERO);
 
 		if (product.getCaseToPieceQuantity() == null)
 			product.setCaseToPieceQuantity(BigDecimal.ZERO);
