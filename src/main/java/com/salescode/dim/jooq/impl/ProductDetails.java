@@ -39,9 +39,17 @@ public class ProductDetails extends Productdetails implements Serializable {
         return new ProductDetails(productdetails);
     }
 
+    public String getFileName_a() {
+        return super.getFileNameA();
+    }
+
     @JsonSetter("fileName_a")
     public void setFileName_a(String fileName_a) {
         super.setFileNameA(fileName_a);
+    }
+
+    public String getFileName_b() {
+        return super.getFileNameB();
     }
 
     @JsonSetter("fileName_b")
@@ -49,14 +57,26 @@ public class ProductDetails extends Productdetails implements Serializable {
         super.setFileNameB(fileName_b);
     }
 
+    public String getFileName_c() {
+        return super.getFileNameC();
+    }
+
     @JsonSetter("fileName_c")
     public void setFileName_c(String fileName_c) {
         super.setFileNameC(fileName_c);
     }
 
+    public String getFileName_f() {
+        return super.getFileNameF();
+    }
+
     @JsonSetter("fileName_f")
     public void setFileName_f(String fileName_f) {
         super.setFileNameF(fileName_f);
+    }
+
+    public String getFileName_l() {
+        return super.getFileNameL();
     }
 
     @JsonSetter("fileName_l")
