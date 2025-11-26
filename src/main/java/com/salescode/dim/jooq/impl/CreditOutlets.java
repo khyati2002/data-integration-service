@@ -93,6 +93,7 @@ public class CreditOutlets extends CommonDataModel {
         this.usedCredit=value.usedCredit;
         this.lob = value.lob;
         this.hash=value.hash;
+        this.version=value.version;
     }
 
     public static CreditOutlets of(CreditOutlets creditOutlets) {

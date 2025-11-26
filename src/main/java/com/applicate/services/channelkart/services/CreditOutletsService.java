@@ -2,9 +2,7 @@ package com.applicate.services.channelkart.services;
 
 
 import com.applicate.services.channelkart.models.enums.ActionType;
-import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.esotericsoftware.minlog.Log;
-import com.salescode.dim.jooq.generated.tables.records.CreditOutletsRecord;
 import com.salescode.dim.jooq.impl.CreditOutlets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,30 +21,41 @@ public class CreditOutletsService extends AbstractCDMService<CreditOutlets> {
     @Override
     public Collection<CreditOutlets> batchSave(Collection<CreditOutlets> creditOutletsList){
         try{
-            LOG.info("Size of list is "  + creditOutletsList.size());
+            LOG.info("Size of list is {}", creditOutletsList.size());
 
             List<CreditOutlets> creditOutlets = new ArrayList<>(creditOutletsList);
             List<List<CreditOutlets>> saveItemsList = getItemsToSaveList(creditOutlets);
-            if (!saveItemsList.get(0).isEmpty()) {
+
+            List<CreditOutlets> inserts=saveItemsList.get(0);
+            List<CreditOutlets> updates=saveItemsList.get(1);
+
+            LOG.info("items to be added: {}", inserts.size());
+            LOG.info("items to be updated: {}", updates.size());
+
+            if (!inserts.isEmpty()) {
                 getDslContext().batchInsert(
-                        saveItemsList.get(0).stream()
+                        inserts.stream()
                                 .map(creditOutlet -> getDslContext().newRecord(CREDIT_OUTLETS, creditOutlet))
                                 .collect(Collectors.toList())
                 ).execute();
             }
-            if (!saveItemsList.get(1).isEmpty()) {
+            if (!updates.isEmpty()) {
+                updates.removeIf(creditOutlet ->{
+                    if(creditOutlet.getId()==null){
+                        LOG.warn("Skipping update for {} because ID is missing", creditOutlet.getOutletCode());
+                        return true;
+                    }
+                    return false;
+                });
                 getDslContext().batchUpdate(
-                        saveItemsList.get(1).stream()
-                                .map(creditOutlet -> {
-                                    CreditOutletsRecord record = getDslContext().newRecord(CREDIT_OUTLETS, creditOutlet);
-                                    return record;
-                                })
+                        updates.stream()
+                                .map(creditOutlet -> getDslContext().newRecord(CREDIT_OUTLETS, creditOutlet))
                                 .collect(Collectors.toList())
                 ).execute();
             }
 
             LOG.info("Batch save successful");
-            return creditOutletsList;
+             return creditOutletsList;
         } catch (Exception e) {
             Log.error(e.getMessage());
             throw new RuntimeException(e);
@@ -65,31 +74,29 @@ public class CreditOutletsService extends AbstractCDMService<CreditOutlets> {
                 .from(CREDIT_OUTLETS)
                 .where(CREDIT_OUTLETS.OUTLET_CODE.in(creditOutletCodes))
                 .fetch()
-                .intoMap(CREDIT_OUTLETS.OUTLET_CODE, record -> record.into(CreditOutlets.class));
+                .intoMap(CREDIT_OUTLETS.OUTLET_CODE, CreditOutlets.class );
+
         List<CreditOutlets> itemsToInsert = new ArrayList<>();
         List<CreditOutlets> itemsToUpdate = new ArrayList<>();
-        for (CreditOutlets creditOutlet : creditOutletsList) {
-            fillAttributes(creditOutlet,CreditOutlets.of(savedList.get(creditOutlet.getOutletCode())));
-            fillCommonAttributes(creditOutlet);
-            new AttributeUpdateOverrideManager().overrideAttributes(creditOutlet,savedList.get(creditOutlet.getOutletCode()));
 
-            super.addHash(creditOutlet);
-            if (savedList.get(creditOutlet.getOutletCode()) == null) {
+        for (CreditOutlets creditOutlet : creditOutletsList) {
+            CreditOutlets existingOutlet = savedList.get(creditOutlet.getOutletCode());
+
+            if (existingOutlet == null) {
                 creditOutlet.setVersion(0);
-                creditOutlet.setChanged(true);
-                itemsToInsert.add(creditOutlet);
+                fillCommonAttributes(creditOutlet);
                 creditOutlet.setOperationPerformed(ActionType.INSERT);
+
+                itemsToInsert.add(creditOutlet);
             } else {
-                CreditOutlets existingOutlet = CreditOutlets.of(savedList.get(creditOutlet.getOutletCode()));
+                fillAttributes(creditOutlet,existingOutlet);
+                fillCommonAttributes(creditOutlet);
                 creditOutlet.setId(existingOutlet.getId());
                 creditOutlet.setVersion(existingOutlet.getVersion() + 1);
+                creditOutlet.setOperationPerformed(ActionType.UPDATE);
 
+                itemsToUpdate.add(creditOutlet);
 
-                if (!Objects.equals(creditOutlet.getHash(), existingOutlet.getHash())) {
-                    creditOutlet.setChanges(CdmDiffUtil.getChanges(creditOutlet,existingOutlet));
-                    creditOutlet.setOperationPerformed(ActionType.UPDATE);
-                    itemsToUpdate.add(creditOutlet);
-                }
             }
         }
         result.add(itemsToInsert);
