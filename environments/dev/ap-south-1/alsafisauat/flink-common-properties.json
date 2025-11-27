@@ -1,0 +1,29 @@
+{
+    "Common": {
+      "INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES": "10",
+      "bootstrap.servers": "164.52.202.184:9092",
+      "cacheClustered": "false",
+      "entities": "OutletDetails,OutletMetadata,Targets,ScoreDetails,GenericEntity",
+      "group.id": "dataintegration",
+      "input.topic": "dataintegration",
+      "insights.enabled": "true",
+      "insights.topic": "file-progress-updates",
+      "jdbc.password": "eNTIELFoRnARmEDh",
+      "jdbc.url": "jdbc:mysql://dev-serverless-cluster.cluster-ck9zclkriezk.ap-south-1.rds.amazonaws.com:3306/db_alsafisauat",
+      "jdbc.user": "ckuatadmin",
+      "lob": "alsafisauat",
+      "publishConsumedMetrics.topic": "file-progress-updates",
+      "redisUrl": "redis://dev-elasticache-redis-cluster.zymj1k.0001.aps1.cache.amazonaws.com:6379",
+      "flink.parallelism": "2",
+      "flink.checkpointing_interval_ms": "60000"
+    },
+    "default": {
+      "sun.net.maxDatagramSockets": "2048"
+    },
+    "InOut0": {
+      "acks": "1",
+      "event.topic": "dataintegration-event",
+      "failure.topic": "int-failure-streams-dis",
+      "stream.name": "dataintegration-alsafisauat"
+    }
+  }
