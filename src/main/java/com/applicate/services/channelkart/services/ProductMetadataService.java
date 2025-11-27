@@ -91,7 +91,7 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 		// Pre-process incoming products
 		for (ProductMetaData product : productMetadataList) {
 			product.setId(new IdGenerator(product.getClass().getSimpleName()).getId(product));
-			product.setChanged(Boolean.TRUE);
+			product.setChanged((byte)1);
 			product.setActiveStatus(ActiveStatus.ACTIVE);
 		}
 
@@ -119,7 +119,7 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 			if (existingBatchCodeMap.get(product.getId()) == null) {
 
 				product.setVersion(0);
-				product.setChanged(Boolean.TRUE);
+				product.setChanged((byte)1);
 				product.setPriority(1);
 				applyDefaultNumericValues(product);
 				product.setOperationPerformed(ActionType.INSERT);
@@ -130,7 +130,7 @@ public class ProductMetadataService extends AbstractCDMService<ProductMetaData> 
 			else {
 				product.setVersion(existing.getVersion() + 1);
 				product.setOperationPerformed(ActionType.UPDATE);
-				product.setChanged(Boolean.TRUE);
+				product.setChanged((byte)1);
 				product.setPriority(1);
 				product.setFkProductmetadata(product.getBatchCode());
 				applyDefaultNumericValues(product);

@@ -77,7 +77,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 
 		for (ProductDetails productDetails : productDetailsList) {
 			productDetails.setId(new IdGenerator(productDetails.getClass().getSimpleName()).getId(productDetails));
-			productDetails.setChanged(false);
+			productDetails.setChanged((byte)1);
 			productDetails.setPriority(0);
 			applyDefaultNumericValues(productDetails);
 			productDetails.setActiveStatus(ActiveStatus.ACTIVE);
@@ -104,7 +104,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 			if (savedList.get(product.getBatchCode()) == null) {
 				product.setVersion(0);
 				product.setOperationPerformed(ActionType.INSERT);
-				product.setChanged(false);
+				product.setChanged((byte)1);
 				itemsToInsert.add(product);
 			} else {
 				ProductDetails existingProduct = ProductDetails.of(savedList.get(product.getBatchCode()));
@@ -113,7 +113,7 @@ public class ProductDetailsService extends AbstractCDMService<ProductDetails> {
 				if (!Objects.equals(product.getHash(), existingProduct.getHash())) {
 					product.setChanges(CdmDiffUtil.getChanges(product, existingProduct));
 					product.setOperationPerformed(ActionType.UPDATE);
-					product.setChanged(true);
+					product.setChanged((byte)1);
 					itemsToUpdate.add(product);
 				}
 			}
