@@ -15,6 +15,7 @@ import com.salescode.dim.jooq.impl.Targets;
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
@@ -58,7 +59,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                 if (target.getVersion() == null) {
                     preparedTargets.addAll(prepareTargets(target));
                 } else {
-                    if (target.getTarget() != null && !target.getTargetResults().isEmpty()) {
+                    if (target.getTarget() != null && !ObjectUtils.isEmpty(target.getTargetResults())) {
                         target.getTargetResults().forEach(entry -> {
                             populateUserAndOutlet(entry);
                             entry.setTargetId(target.getTargetId());
@@ -207,9 +208,11 @@ public class TargetsService extends AbstractCDMService<Targets> {
     public void postBatchSave(List<Targets> targetsList) {
         List<TargetResults> targetResults = new ArrayList<>();
         targetsList.forEach(target -> {
-            targetResults.addAll(target.getTargetResults());
+            if(!ObjectUtils.isEmpty(target.getTargetResults())) {
+                targetResults.addAll(target.getTargetResults());
+            }
         });
-        targetResultsService.batchSave(targetResults);
+        if(!targetResults.isEmpty()) targetResultsService.batchSave(targetResults);
     }
 
 
