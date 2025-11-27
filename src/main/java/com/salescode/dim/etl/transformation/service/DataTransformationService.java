@@ -170,8 +170,10 @@ public class DataTransformationService implements Serializable {
             throw new IllegalArgumentException("Transformer implementation not found: " + transformerInfo.getImplementation());
         }
 
-        transformerInstance.setTransformerInfo(transformerInfo);
-        return transformerInstance.transform(input);
+        synchronized (transformerInstance) {
+            transformerInstance.setTransformerInfo(transformerInfo);
+            return transformerInstance.transform(input);
+        }
     }
 
     /**
