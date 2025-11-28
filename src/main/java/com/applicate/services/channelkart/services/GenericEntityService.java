@@ -65,38 +65,95 @@ public class GenericEntityService extends AbstractCDMService<GenericEntity> {
 		return entity;
 	}
 
-
 	@Override
 	public Collection<GenericEntity> batchSave(Collection<GenericEntity> genericEntityList) {
-		LOG.info("Size of list is " + genericEntityList.size());
+
+		LOG.info("Entering batchSave() with list size = {}",
+				genericEntityList != null ? genericEntityList.size() : null);
+
 		List<GenericEntity> genericEntity = new ArrayList<>(genericEntityList);
+
+		LOG.info("Converting collection to list…");
+
 		List<List<GenericEntity>> saveItemsList = getItemsToSaveList(genericEntity);
+
+		LOG.info("Items split into: insertList size = {}, updateList size = {}",
+				saveItemsList.get(0).size(), saveItemsList.get(1).size());
+
+		// Add logs for each record before mutation
+		LOG.info("Sample insert item before mutation: {}",
+				saveItemsList.get(0).isEmpty() ? "NONE" : saveItemsList.get(0).get(0));
+
+		LOG.info("Sample update item before mutation: {}",
+				saveItemsList.get(1).isEmpty() ? "NONE" : saveItemsList.get(1).get(0));
+
+		long now = new Date().toInstant().toEpochMilli();
+
 		saveItemsList.get(0).forEach(loginId -> {
 			loginId.setActiveStatus(ActiveStatus.ACTIVE);
 			loginId.setRangeKey(0L);
-			loginId.setTimestamp(new Date().toInstant().toEpochMilli());
-			loginId.setChanged(1==1);
+			loginId.setTimestamp(now);
+			loginId.setChanged(true);
 		});
+
+		LOG.info("Insert list mutated. First element after mutation: {}",
+				saveItemsList.get(0).isEmpty() ? "NONE" : saveItemsList.get(0).get(0));
 
 		saveItemsList.get(1).forEach(loginId -> {
 			loginId.setActiveStatus(ActiveStatus.ACTIVE);
 			loginId.setRangeKey(0L);
-			loginId.setTimestamp(new Date().toInstant().toEpochMilli());
-			loginId.setChanged(1==1);
-
+			loginId.setTimestamp(now);
+			loginId.setChanged(true);
 		});
+
+		LOG.info("Update list mutated. First element after mutation: {}",
+				saveItemsList.get(1).isEmpty() ? "NONE" : saveItemsList.get(1).get(0));
+
+		// -------------------------
+		// INSERT BLOCK
+		// -------------------------
 		if (!saveItemsList.get(0).isEmpty()) {
-			getDslContext().batchInsert(saveItemsList.get(0).stream().map(loginId -> getDslContext().newRecord(CK_GENERIC_OBJECT, loginId)).collect(Collectors.toList())).execute();
-		}
-		if (!saveItemsList.get(1).isEmpty()) {
-			getDslContext().batchUpdate(saveItemsList.get(1).stream().map(loginId -> {
-				CkGenericObjectRecord record = getDslContext().newRecord(CK_GENERIC_OBJECT, loginId);
-				return record;
-			}).collect(Collectors.toList())).execute();
+			LOG.info("Starting batchInsert with {} items", saveItemsList.get(0).size());
+			try {
+				getDslContext().batchInsert(
+						saveItemsList.get(0)
+								.stream()
+								.map(loginId -> getDslContext().newRecord(CK_GENERIC_OBJECT, loginId))
+								.collect(Collectors.toList())
+				).execute();
+				LOG.info("Batch insert SUCCESS");
+			} catch (Exception e) {
+				LOG.error("Batch insert FAILED. Error: {}", e.getMessage(), e);
+				// Log all insert items for debugging
+				saveItemsList.get(0).forEach(item -> LOG.error("Insert item: {}", item));
+				throw e;
+			}
 		}
 
-		LOG.info("Batch save successful");
+		// -------------------------
+		// UPDATE BLOCK
+		// -------------------------
+		if (!saveItemsList.get(1).isEmpty()) {
+			LOG.info("Starting batchUpdate with {} items", saveItemsList.get(1).size());
+			try {
+				getDslContext().batchUpdate(
+						saveItemsList.get(1)
+								.stream()
+								.map(loginId -> getDslContext().newRecord(CK_GENERIC_OBJECT, loginId))
+								.collect(Collectors.toList())
+				).execute();
+				LOG.info("Batch update SUCCESS");
+			} catch (Exception e) {
+				LOG.error("Batch update FAILED. Error: {}", e.getMessage(), e);
+				// Log update items fully
+				saveItemsList.get(1).forEach(item -> LOG.error("Update item: {}", item));
+				throw e;
+			}
+		}
+
+		LOG.info("Batch save completed successfully");
 		return genericEntity;
 	}
+
 
 }
