@@ -2,7 +2,6 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
-import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.cache.CacheManager;
@@ -63,7 +62,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
                         target.getTargetResults().forEach(entry -> {
                             populateUserAndOutlet(entry);
                             entry.setTargetId(target.getTargetId());
-                            if (entry.getId() == null) entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));;
+                            if (entry.getId() == null) entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));
                             if (entry.getAchieved() == null) entry.setAchieved(0F);
                         });
                     }
@@ -141,7 +140,6 @@ public class TargetsService extends AbstractCDMService<Targets> {
             if (targets.getTargetResults() != null) {
                 TargetResults tempObj = targets.getTargetResults().get(0);
                 if (tempObj.getAchieved() != 0) {
-//                    tempObj.setTarget(targets);
                     if (tempObj.getTargetId() == null) tempObj.setTargetId(targets.getTargetId());
                     if (tempObj.getId() == null) tempObj.setId(targets.getId());
                     setUserInfo(tempObj);
@@ -207,9 +205,7 @@ public class TargetsService extends AbstractCDMService<Targets> {
 
     public void postBatchSave(List<Targets> targetsList) {
         List<TargetResults> targetResults = new ArrayList<>();
-        targetsList.forEach(target -> {
-            targetResults.addAll(target.getTargetResults());
-        });
+        targetsList.forEach(target -> targetResults.addAll(target.getTargetResults()));
         targetResultsService.batchSave(targetResults);
     }
 
@@ -234,9 +230,6 @@ public class TargetsService extends AbstractCDMService<Targets> {
             fillAttributes(target, Targets.of(savedList.get(target.getId())));
             fillTargetCommonAttributes(target);
             new AttributeUpdateOverrideManager().overrideAttributes(target, savedList.get(target.getId()));
-            if (target.getActiveStatus() == null) {
-                target.setActiveStatus(ActiveStatus.ACTIVE);
-            }
             super.addHash(target);
             preSaveEnrichment(target);
             if (savedList.get(target.getId()) == null) {

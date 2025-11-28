@@ -8,7 +8,6 @@ package com.applicate.services.channelkart.services;
 
 import com.applicate.services.channelkart.enrichments.EnrichmentPhase;
 import com.applicate.services.channelkart.models.enums.ActionType;
-import com.applicate.services.channelkart.models.enums.ActiveStatus;
 import com.applicate.services.channelkart.utils.CdmDiffUtil;
 import com.applicate.services.channelkart.utils.IdGenerator;
 import com.salescode.dim.cache.CacheManager;
@@ -17,7 +16,6 @@ import com.salescode.dim.etl.enrichment.service.DataEnrichmentService;
 import com.salescode.dim.etl.enrichment.service.EnrichmentInfoRegistry;
 import com.salescode.dim.etl.registry.ETLRegistry;
 import com.salescode.dim.jooq.generated.tables.records.CkTargetResultsRecord;
-import com.salescode.dim.jooq.generated.tables.records.CkTargetsRecord;
 import com.salescode.dim.jooq.impl.TargetResults;
 import com.salescode.dim.jooq.impl.User;
 import com.salescode.dim.scanner.ExternalRegistryScanner;
@@ -25,7 +23,6 @@ import com.salescode.dim.scanner.ExternalRegistryScanner;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.salescode.dim.jooq.generated.Tables.CK_TARGETS;
 import static com.salescode.dim.jooq.generated.Tables.CK_TARGET_RESULTS;
 
 public class TargetResultsService extends AbstractCDMService<TargetResults> {
@@ -115,7 +112,6 @@ public class TargetResultsService extends AbstractCDMService<TargetResults> {
         List<TargetResults> preparedTargets = new ArrayList<>();
         targets.forEach(entry -> {
             if (entry.getId() == null)   entry.setId(new IdGenerator(entry.getClass().getSimpleName()).getId(entry));
-            if (entry.getActiveStatus() == null)   entry.setActiveStatus(ActiveStatus.ACTIVE);
             populateUserAndOutlet(entry);
             preparedTargets.add(entry);
         });
