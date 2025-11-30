@@ -51,8 +51,6 @@ public class CreditOutlets extends CommonDataModel {
     private Integer invoiceCount;
 
 
-    @Min(value = 1, message = "Credit day code must be 1 or 2")
-    @Max(value = 2, message = "Credit day code must be 1 or 2")
     private Integer creditDayCode; // 1: first open invoice date, 2: next month's 1st PJP date
 
     private BigDecimal availableCredit;
