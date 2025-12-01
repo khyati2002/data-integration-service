@@ -1,0 +1,81 @@
+name: Update Flink Application on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - '*'  # Matches all branches
+
+jobs:
+  update-flink-config:
+    # Only run if PR was merged (not just closed)
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Extract LOB from branch names
+        id: extract_lob
+        run: |
+          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          TARGET_BRANCH="${{ github.event.pull_request.base.ref }}"
+          
+          echo "Source branch: $SOURCE_BRANCH"
+          echo "Target branch: $TARGET_BRANCH"
+          
+          # Check if source branch ends with -test and target branch is without -test
+          if [[ "$SOURCE_BRANCH" == *-test ]] && [[ "$TARGET_BRANCH" != *-test ]]; then
+            # Extract LOB by removing -test suffix from source branch
+            LOB="${SOURCE_BRANCH%-test}"
+            
+            # Verify that LOB matches target branch
+            if [[ "$LOB" == "$TARGET_BRANCH" ]]; then
+              echo "lob=$LOB" >> $GITHUB_OUTPUT
+              echo "should_trigger=true" >> $GITHUB_OUTPUT
+              echo "✅ Valid merge pattern detected: $SOURCE_BRANCH → $TARGET_BRANCH"
+              echo "📦 LOB identified: $LOB"
+            else
+              echo "should_trigger=false" >> $GITHUB_OUTPUT
+              echo "⚠️ Branch names don't match expected pattern"
+            fi
+          else
+            echo "should_trigger=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ Not a {lob}-test → {lob} merge pattern"
+          fi
+
+      - name: Call Flink Update API
+        if: steps.extract_lob.outputs.should_trigger == 'true'
+        run: |
+          LOB="${{ steps.extract_lob.outputs.lob }}"
+          APPLICATION_NAME="dataintegration-${LOB}"
+          API_URL="https://integ-agent-uat.salescode.ai/api/flink/update-config/${APPLICATION_NAME}"
+          
+          echo "🚀 Triggering Flink update for application: $APPLICATION_NAME"
+          echo "📡 API URL: $API_URL"
+          
+          # Make API call
+          RESPONSE=$(curl -X POST \
+            -H "Content-Type: application/json" \
+            -w "\n%{http_code}" \
+            -s \
+            "$API_URL")
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "Response Code: $HTTP_CODE"
+          echo "Response Body: $BODY"
+          
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "Successfully triggered Flink application update"
+          else
+            echo "Failed to trigger Flink application update"
+            exit 1
+          fi
+
+      - name: Notify Status
+        if: steps.extract_lob.outputs.should_trigger == 'true'
+        run: |
+          LOB="${{ steps.extract_lob.outputs.lob }}"
+          echo "✨ Flink application 'dataintegration-${LOB}' has been updated"
+          echo "📋 PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
+          echo "👤 Merged by: ${{ github.event.pull_request.merged_by.login }}"
