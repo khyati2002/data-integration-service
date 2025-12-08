@@ -20,6 +20,7 @@ public class OutletDetailsTransformerTest {
         transformer = new OutletDetailsTransformer();
     }
     
+    // Tests for outlet_address to storeaddresss mapping (my implementation)
     @Test
     public void testOutletAddressToStoreaddresssMapping() {
         // Arrange
@@ -147,5 +148,107 @@ public class OutletDetailsTransformerTest {
                      extendedAttributes.get("storeaddresss"));
         
         logger.info("Test passed: outlet_address mapped correctly with existing extended attributes");
+    }
+    
+    // Tests for outlet_id to storeid mapping (from remote branch)
+    @Test
+    public void testFieldMappingOutletIdToStoreid() {
+        // Arrange
+        Map<String, Object> input = new HashMap<>();
+        input.put("outlet_id", "STORE123");
+        input.put("uid", "UID456");
+        input.put("type", "LOYALTY");
+        input.put("custname", "Test Store");
+        input.put("ownername", "Test Owner");
+        
+        // Act
+        Map<String, Object> result = transformer.transform(input);
+        
+        // Assert
+        assertEquals("STORE123", result.get("storeid"));
+        assertNull(result.get("outletCode")); // Should not be set when outlet_id is present
+        
+        // Verify userName mapping
+        @SuppressWarnings("unchecked")
+        Map<String, Object> userName = (Map<String, Object>) result.get("userName");
+        assertNotNull(userName);
+        assertEquals("STORE123", userName.get("loginId"));
+        assertEquals("STORE123", userName.get("userAccountId"));
+    }
+    
+    @Test
+    public void testFieldMappingOutletAddressToStoreaddresssAlternative() {
+        // Arrange
+        Map<String, Object> input = new HashMap<>();
+        input.put("outlet_address", "123 Main Street, City, State");
+        input.put("uid", "UID456");
+        input.put("type", "LOYALTY");
+        input.put("custname", "Test Store");
+        input.put("ownername", "Test Owner");
+        
+        // Act
+        Map<String, Object> result = transformer.transform(input);
+        
+        // Assert - Check if it's in extendedAttributes (my implementation) or direct field (remote implementation)
+        @SuppressWarnings("unchecked")
+        Map<String, Object> extendedAttributes = (Map<String, Object>) result.get("extendedAttributes");
+        if (extendedAttributes != null && extendedAttributes.containsKey("storeaddresss")) {
+            assertEquals("123 Main Street, City, State", extendedAttributes.get("storeaddresss"));
+        } else {
+            assertEquals("123 Main Street, City, State", result.get("storeaddresss"));
+        }
+    }
+    
+    @Test
+    public void testFallbackToUidWhenOutletIdNotPresent() {
+        // Arrange
+        Map<String, Object> input = new HashMap<>();
+        input.put("uid", "UID456");
+        input.put("type", "LOYALTY");
+        input.put("custname", "Test Store");
+        input.put("ownername", "Test Owner");
+        
+        // Act
+        Map<String, Object> result = transformer.transform(input);
+        
+        // Assert
+        assertEquals("UID456", result.get("outletCode"));
+        assertNull(result.get("storeid")); // Should not be set when outlet_id is not present
+        
+        // Verify userName mapping
+        @SuppressWarnings("unchecked")
+        Map<String, Object> userName = (Map<String, Object>) result.get("userName");
+        assertNotNull(userName);
+        assertEquals("UID456", userName.get("loginId"));
+        assertEquals("UID456", userName.get("userAccountId"));
+    }
+    
+    @Test
+    public void testBothOutletIdAndOutletAddressMapping() {
+        // Arrange
+        Map<String, Object> input = new HashMap<>();
+        input.put("outlet_id", "STORE123");
+        input.put("outlet_address", "123 Main Street, City, State");
+        input.put("uid", "UID456");
+        input.put("type", "LOYALTY");
+        input.put("custname", "Test Store");
+        input.put("ownername", "Test Owner");
+        
+        // Act
+        Map<String, Object> result = transformer.transform(input);
+        
+        // Assert
+        assertEquals("STORE123", result.get("storeid"));
+        
+        // Check if storeaddresss is in extendedAttributes (my implementation) or direct field (remote implementation)
+        @SuppressWarnings("unchecked")
+        Map<String, Object> extendedAttributes = (Map<String, Object>) result.get("extendedAttributes");
+        if (extendedAttributes != null && extendedAttributes.containsKey("storeaddresss")) {
+            assertEquals("123 Main Street, City, State", extendedAttributes.get("storeaddresss"));
+        } else {
+            assertEquals("123 Main Street, City, State", result.get("storeaddresss"));
+        }
+        
+        assertNull(result.get("outletCode")); // Should not be set when outlet_id is present
     }
 }
