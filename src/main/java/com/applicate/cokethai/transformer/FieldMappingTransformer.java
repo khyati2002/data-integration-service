@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.apache.commons.collections.MapUtils.getString;
-
+//Checking a commit 
 /**
  * Transformer to convert mapped field names to actual field names.
  * Handles conversion of:
