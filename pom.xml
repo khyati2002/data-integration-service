@@ -1,232 +1,597 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.0-M3</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.salescode</groupId>
-	<artifactId>dis</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>dis</name>
-	<description>Salescode data integration with flink</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
-	<properties>
-		<java.version>11</java.version>
-		<flink.version>1.20.0</flink.version>
-		<log4j2.version>2.19.0</log4j2.version>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-            </exclusions>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-streaming-java -->
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-streaming-java</artifactId>
-			<version>1.20.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-files -->
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-connector-files</artifactId>
-			<version>1.20.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-json</artifactId>
-			<version>1.20.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-jdbc -->
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-connector-jdbc</artifactId>
-			<version>3.2.0-1.19</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-s3-fs-hadoop -->
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-s3-fs-hadoop</artifactId>
-			<version>1.20.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-json</artifactId>
-			<version>1.20.0</version> <!-- Replace with your Flink version -->
-		</dependency>
+    <groupId>com.salescode</groupId>
+    <artifactId>dim</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka -->
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-connector-kafka</artifactId>
-			<version>3.3.0-1.20</version>
-		</dependency>
-        <!-- <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency> -->
-		<!-- AWS SDK for S3 -->
-		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>s3</artifactId>
-			<version>2.29.2</version>
-		</dependency>
+    <name>dim</name>
 
-		<!-- SnakeYAML -->
-		<!-- <dependency>
-			<groupId>org.yaml</groupId>
-			<artifactId>snakeyaml</artifactId>
-			<version>2.3</version>
-		</dependency> -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <buildDirectory>${project.basedir}/target</buildDirectory>
+        <jar.finalName>${project.name}-${project.version}</jar.finalName>
+        <target.java.version>11</target.java.version>
+        <maven.compiler.source>${target.java.version}</maven.compiler.source>
+        <maven.compiler.target>${target.java.version}</maven.compiler.target>
+        <flink.version>1.20.0</flink.version>
+        <kafka.connector.version>3.2.0-1.19</kafka.connector.version>
+        <kda.runtime.version>1.2.0</kda.runtime.version>
+        <log4j.version>2.17.2</log4j.version>
+        <awaitility.version>3.0.0</awaitility.version>
+        <jooq.version>3.16.23</jooq.version>
+        <com.bazaarvoice.jolt.version>0.1.1</com.bazaarvoice.jolt.version>
+        <aspectj.version>1.9.6</aspectj.version>
+        <insights-common.version>0.0.9-SNAPSHOT</insights-common.version>
+    </properties>
 
-		<!-- Spring Boot Configuration Processor (optional) -->
-		<!-- <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency> -->
+    <repositories>
+        <repository>
+            <id>apache.snapshots</id>
+            <name>Apache Development Snapshot Repository</name>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>salescode-dis-insights</id>
+            <name>salescode-dis-insights</name>
+            <url>https://salescode-008136251604.d.codeartifact.ap-south-1.amazonaws.com/maven/dis-insights/</url>
+        </repository>
+    </repositories>
 
-        <!-- Lombok -->
-        <!-- <dependency>
+    <dependencies>
+        <!-- Apache Flink dependencies -->
+        <!-- These dependencies are provided, because they should not be packaged into the JAR file. -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-java</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-clients</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-runtime-web</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Library to retrieve runtime application properties in Managed Service for Apache Flink  -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-kinesisanalytics-runtime</artifactId>
+            <version>${kda.runtime.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Flink Kafka connector -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-kafka</artifactId>
+            <version>${kafka.connector.version}</version>
+        </dependency>
+
+        <!-- Flink Connector base -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-base</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-json</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-scala_2.12</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.salescode.dis</groupId>
+            <artifactId>insights-common</artifactId>
+            <version>${insights-common.version}</version>
+            <classifier>sb3</classifier>
+        </dependency>
+
+        <!-- Add logging framework, to produce console output when running in the IDE. -->
+        <!-- These dependencies are excluded from the application JAR by default. -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+            <!--			<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.locationtech.jts</groupId>
+            <artifactId>jts-core</artifactId>
+            <version>1.19.0</version> <!-- or latest stable -->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+            <!--			<scope>runtime</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+            <!--			<scope>runtime</scope>-->
+        </dependency>
+
+        <!--	lombok		-->
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.34</version>
-            <scope>provided</scope>
-        </dependency> -->
+            <version>1.18.34</version> <!-- Use the latest version -->
+        </dependency>
 
-		<!-- <dependency>
-			<groupId>org.jooq</groupId>
-			<artifactId>jooq-meta</artifactId>
-			<version>3.15.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jooq</groupId>
-			<artifactId>jooq-codegen</artifactId>
-			<version>3.15.0</version>
-		</dependency> -->
-		<dependency>
-			<groupId>org.jooq</groupId>
-			<artifactId>jooq</artifactId>
-			<version>3.15.0</version>
-		</dependency>  
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
 
-		<!-- JOOQ Meta Dependency (Optional, for code generation) -->
-		<!-- <dependency>
-			<groupId>org.jooq</groupId>
-			<artifactId>jooq-meta</artifactId>
-			<version>3.15.0</version>
-		</dependency> -->
+        <!-- Hibernate Validator (Actual Implementation) -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>8.0.1.Final</version>
+        </dependency>
 
-		<!-- MySQL Driver Dependency (since you're using MySQL) -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.32</version>
-		</dependency>
+        <!--	test dependencies	-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-test-utils</artifactId>
+            <version>${flink.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>${awaitility.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility-proxy</artifactId>
+            <version>${awaitility.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.12.4</version>
+            <scope>test</scope>
+        </dependency>
 
 
-		<!-- <dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.17.1</version>
-		</dependency> 
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>2.17.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>2.0.16</version>
-		</dependency> -->
+        <!--    jooq generated classes  -->
 
-	</dependencies>
+        <!-- jOOQ runtime: for writing queries -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
 
-<build>
-    <plugins>
-        <!-- Maven Shade Plugin for creating a Fat JAR -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>3.2.4</version>
-            <executions>
-                <execution>
-				    <id>shade-jar-with-dependencies</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>shade</goal>
-                    </goals>
-                    <configuration>
-                        <createDependencyReducedPom>false</createDependencyReducedPom>
-						<mainClass>com.salescode.dis.FlinkApplication</mainClass>
-						<excludes>
-							<exclude>
-								<groupId>ch.qos.logback</groupId>
-								<artifactId>logback-classic</artifactId>
-							</exclude>
-							<exclude>
-								<groupId>ch.qos.logback</groupId>
-								<artifactId>logback-core</artifactId>
-							</exclude>
-						</excludes>
-                        <!-- <transformers>
-                            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                <mainClass>com.salescode.dis.FlinkApplication</mainClass>
-                            </transformer>
-                        </transformers> -->
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
+        <!-- jOOQ code generation: generates Java classes from your database schema -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
 
+        <!-- jOOQ meta: required for code generation -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+
+        <!-- MySQL JDBC driver -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.salescode.dim</groupId>
+            <artifactId>jooq</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10.2</version>
+        </dependency>
+
+        <!--   JOLT Transformations    -->
+        <dependency>
+            <groupId>com.bazaarvoice.jolt</groupId>
+            <artifactId>jolt-core</artifactId>
+            <version>${com.bazaarvoice.jolt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bazaarvoice.jolt</groupId>
+            <artifactId>json-utils</artifactId>
+            <version>${com.bazaarvoice.jolt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+
+        <!--<dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+            <scope>test</scope>
+        </dependency>-->
+
+        <!-- AspectJ -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+
+        <!-- Caffeine cache -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.1.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.25.2</version>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+        <directory>${buildDirectory}</directory>
+        <finalName>${jar.finalName}</finalName>
+
+        <resources>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>lib/*.jar</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.basedir}/src/main/resources/META-INF/git.properties</generateGitPropertiesFilename>
+                </configuration>
+            </plugin>
+
+
+            <!-- Load external properties -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>src/main/resources/application.properties</file>
+                                <file>src/main/resources/jenkins_application.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <!-- jOOQ Code Generation Plugin -->
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>${jooq.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-jooq</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <!-- Reference the external jOOQ configuration file -->
+                    </execution>
+                </executions>
+                <configuration>
+                    <jdbc>
+                        <driver>${jdbc.driver}</driver>
+                        <url>${jdbc.url}</url>
+                        <user>${jdbc.user}</user>
+                        <password>${jdbc.password}</password>
+                    </jdbc>
+                    <generator>
+                        <database>
+                            <!--                            <outputSchemaToDefault>true</outputSchemaToDefault>-->
+                            <!--                            <inputCatalog>${input.schema}</inputCatalog>-->
+
+                            <!-- Using MySQL dialect -->
+                            <name>org.jooq.meta.mysql.MySQLDatabase</name>
+                            <includes>${schema.includePattern}</includes>
+                            <excludes>${schema.excludePattern}</excludes>
+                            <inputSchema>${input.schema}</inputSchema>
+                            <forcedTypes>
+                                <forcedType>
+                                    <userType>com.applicate.services.channelkart.models.enums.ActiveStatus</userType>
+                                    <converter>com.salescode.dim.jooq.ActiveStatusConverter</converter>
+                                    <includeExpression>ACTIVE_STATUS</includeExpression>
+                                </forcedType>
+                                <forcedType>
+                                    <userType>org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode</userType>
+                                    <converter>com.salescode.dim.jooq.JsonNodeConverter</converter>
+                                    <includeExpression>(.*attributes)|domain_values|ck_generic_object\.payload|ck_targets\.product_value|ck_targets\.outlet_value|ck_targets\.user_value|ck_scheme_calculation\.slab_info</includeExpression>
+                                </forcedType>
+                                <forcedType>
+                                    <userType>java.lang.Float</userType>
+                                    <converter>com.salescode.dim.jooq.DoubleToFloatConverter</converter>
+                                    <includeExpression>ck_target_results\.achieved</includeExpression>
+                                </forcedType>
+                                <forcedType>
+                                    <name>BOOLEAN</name>
+                                    <includeExpression>(?i).*\.changed</includeExpression>
+                                </forcedType>
+
+                            </forcedTypes>
+                        </database>
+                        <generate>
+                            <pojos>true</pojos>
+                            <records>true</records>
+                        </generate>
+                        <target>
+                            <packageName>${target.package}</packageName>
+                            <directory>${target.directory}</directory>
+                        </target>
+
+                        <strategy>
+                            <name>com.salescode.dim.jooq.codegen.CustomGeneratorStrategy</name>
+                        </strategy>
+
+                    </generator>
+                </configuration>
+            </plugin>
+
+
+            <!--     Add generated code in sources     -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.basedir}/target/generated-sources/jooq</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Java Compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${target.java.version}</source>
+                    <target>${target.java.version}</target>
+                    <annotationProcessorPaths>
+                        <!-- Include Lombok annotation processor -->
+                        <annotationProcessorPath>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.34</version> <!-- Use the latest version -->
+                        </annotationProcessorPath>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <!--        For  Java’s module system restricting reflective access during Kryo serialization. In this case, Kryo (via Chill) is trying to access internal fields of an Arrays$ArrayList, which by default isn’t allowed in Java 9+ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M7</version>
+                <configuration>
+                    <argLine>--add-opens java.base/java.util=ALL-UNNAMED</argLine>
+                    <argLine>--add-opens com.fasterxml.jackson.databind.node/com.fasterxml.jackson.databind.node=ALL-UNNAMED</argLine>
+                </configuration>
+            </plugin>
+
+            <!-- AspectJ Maven Plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.4</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjrt</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjtools</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <showWeaveInfo/>
+                    <forceAjcCompile>true</forceAjcCompile>
+                    <sources/>
+                    <weaveDirectories>
+                        <weaveDirectory>${project.build.directory}/classes</weaveDirectory>
+                    </weaveDirectories>
+                    <source>${maven.compiler.target}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <!-- We use the maven-shade plugin to create a fat jar that contains all necessary dependencies. -->
+            <!-- Change the value of <mainClass>...</mainClass> if your program entry point changes. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <!-- Run shade goal on package phase -->
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org.apache.flink:flink-shaded-force-shading</exclude>
+                                    <exclude>org.apache.flink:force-shading</exclude>
+                                    <exclude>com.google.code.findbugs:jsr305</exclude>
+                                    <exclude>org.slf4j:*</exclude>
+                                    <exclude>log4j:*</exclude>
+                                    <exclude>org.apache.logging.log4j:*</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <filters>
+                                <filter>
+                                    <!-- Do not copy the signatures in the META-INF folder.
+                                    Otherwise, this might cause SecurityExceptions when using the JAR. -->
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.salescode.dim.DataStreamJob</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+
+
+            </plugins>
+        </pluginManagement>
+
+
+    </build>
 </project>

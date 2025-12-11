@@ -1,1 +1,0 @@
-org.springframework.boot.env.EnvironmentPostProcessor=com.salescode.dis.config.S3YamlPropertyLoader

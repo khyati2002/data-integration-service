@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.salescode.dim</groupId>
+    <artifactId>bundle</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <build>
+        <finalName>bundle</finalName>
+    </build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <buildDirectory>${project.basedir}/target</buildDirectory>
+        <jar.finalName>${project.name}-${project.version}</jar.finalName>
+        <target.java.version>11</target.java.version>
+        <maven.compiler.source>${target.java.version}</maven.compiler.source>
+        <maven.compiler.target>${target.java.version}</maven.compiler.target>
+        <flink.version>1.20.0</flink.version>
+        <kafka.connector.version>3.2.0-1.19</kafka.connector.version>
+        <kda.runtime.version>1.2.0</kda.runtime.version>
+        <log4j.version>2.17.2</log4j.version>
+        <awaitility.version>3.0.0</awaitility.version>
+        <jooq.version>3.16.23</jooq.version>
+        <com.bazaarvoice.jolt.version>0.1.1</com.bazaarvoice.jolt.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.salescode</groupId>
+            <artifactId>dim</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-java</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-clients</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-runtime-web</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Library to retrieve runtime application properties in Managed Service for Apache Flink  -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-kinesisanalytics-runtime</artifactId>
+            <version>${kda.runtime.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Flink Kafka connector -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-kafka</artifactId>
+            <version>${kafka.connector.version}</version>
+        </dependency>
+
+        <!-- Flink Connector base -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-base</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-json</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version> <!-- Use the latest version -->
+        </dependency>
+    </dependencies>
+</project>

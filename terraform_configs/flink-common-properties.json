@@ -1,0 +1,29 @@
+{
+    "Common": {
+      "INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES": "10",
+      "bootstrap.servers": "__BOOTSTRAP.SERVERS__",
+      "cacheClustered": "false",
+      "entities": "OutletDetails,OutletMetadata,Targets,ScoreDetails,GenericEntity",
+      "group.id": "dataintegration",
+      "input.topic": "dataintegration",
+      "insights.enabled": "true",
+      "insights.topic": "file-progress-updates",
+      "jdbc.password": "__JDBC.PASSWORD__",
+      "jdbc.url": "__JDBC.URL__",
+      "jdbc.user": "__JDBC.USER__",
+      "lob": "__LOB__",
+      "publishConsumedMetrics.topic": "file-progress-updates",
+      "redisUrl": "__REDISURL__",
+      "flink.parallelism": "2",
+      "flink.checkpointing_interval_ms": "60000"
+    },
+    "default": {
+      "sun.net.maxDatagramSockets": "2048"
+    },
+    "InOut0": {
+      "acks": "1",
+      "event.topic": "dataintegration-event",
+      "failure.topic": "int-failure-streams-dis",
+      "stream.name": "dataintegration-__LOB__"
+    }
+  }

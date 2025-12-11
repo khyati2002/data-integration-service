@@ -1,0 +1,46 @@
+[
+  {
+    "PropertyGroupId": "Common",
+    "PropertyMap": {
+      "bootstrap.servers": "${bootstrap.servers}",
+      "group.id": "${group.id}",
+      "lob": "${lob}",
+      "jdbc.driver": "${jdbc.driver}",
+      "jdbc.url": "${jdbc.url}",
+      "jdbc.user": "${jdbc.user}",
+      "jdbc.password": "${jdbc.password}",
+      "schema.includePattern": "${schema.includePattern}",
+      "schema.excludePattern": "${schema.excludePattern}",
+      "entities": "${entities}",
+      "redisUrl": "${redisUrl}",
+      "cacheClustered": "${cacheClustered}",
+      "INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES": "${INSIGHTS_INTEGRATION_IDLE_EVICTION_TTL_MINUTES}",
+      "insights.enabled": "${insights.enabled}",
+      "insights.topic": "${insights.topic}",
+      "publish.success.enabled": "${publish.success.enabled}",
+      "failure.topic": "${failure.topic}",
+      "success.topic": "${success.topic}"
+    }
+  },
+  {
+    "PropertyGroupId": "InOut0",
+    "PropertyMap": {
+      "input.topic": "${input.topic}",
+      "failure.topic": "${failure.topic}",
+      "success.topic": "${success.topic}",
+      "output.topic" : "${output.topic}",
+      "event.topic" : "${event.topic}"
+    }
+  },
+  {
+    "PropertyGroupId": "AuthProperties",
+    "PropertyMap": {
+      "sasl.mechanism": "AWS_MSK_IAM",
+      "sasl.client.callback.handler.class": "software.amazon.msk.auth.iam.IAMClientCallbackHandler",
+      "sasl.jaas.config": "software.amazon.msk.auth.iam.IAMLoginModule required;",
+      "security.protocol": "SASL_SSL",
+      "ssl.truststore.location": "/usr/lib/jvm/java-11-amazon-corretto/lib/security/cacerts",
+      "ssl.truststore.password": "changeit"
+    }
+  }
+]
