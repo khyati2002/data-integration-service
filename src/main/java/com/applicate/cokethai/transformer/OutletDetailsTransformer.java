@@ -29,10 +29,20 @@ public class OutletDetailsTransformer extends AbstractTransformer<Map<String, Ob
         Map<String, Object> output = new LinkedHashMap<>();
         Map<String, Object> userName = new LinkedHashMap<>();
         Map<String, Object> extendedAttributes = new LinkedHashMap<>();
+        
+        // Handle field mappings: outlet_id -> storeid
         String uid = getString(responseEnvelope, "uid");
-        output.put("outletCode", uid);
-        userName.put("loginId", uid);
-        userName.put("userAccountId", uid);
+        String outletId = getString(responseEnvelope, "outlet_id");
+        if (outletId != null && !outletId.isEmpty()) {
+            output.put("storeid", outletId);
+            userName.put("loginId", outletId);
+            userName.put("userAccountId", outletId);
+        } else {
+            // Fallback to uid if outlet_id is not present
+            output.put("outletCode", uid);
+            userName.put("loginId", uid);
+            userName.put("userAccountId", uid);
+        }
         String type = getString(responseEnvelope, "type");
         output.put("outletCategory", type);
         extendedAttributes.put("loyaltyFlag", type);
@@ -53,6 +63,22 @@ public class OutletDetailsTransformer extends AbstractTransformer<Map<String, Ob
         output.put("outletType", getString(responseEnvelope, "outlettype"));
         output.put("channel", getString(responseEnvelope, "channeltype"));
         output.put("outletClass", getString(responseEnvelope, "loyaltytype"));
+        
+        // Handle outlet_address to storeaddresss mapping
+        String outletAddress = getString(responseEnvelope, "outlet_address");
+        if (outletAddress != null && !outletAddress.trim().isEmpty()) {
+            // Add storeaddresss to extendedAttributes since it's not a standard field
+            Map<String, Object> outputExtendedAttributes = (Map<String, Object>) output.get("extendedAttributes");
+            if (outputExtendedAttributes == null) {
+                outputExtendedAttributes = new LinkedHashMap<>();
+                output.put("extendedAttributes", outputExtendedAttributes);
+            }
+            outputExtendedAttributes.put("storeaddresss", outletAddress);
+            logger.info("Mapped outlet_address '{}' to storeaddresss", outletAddress);
+        } else {
+            logger.warn("outlet_address field is null or empty, storeaddresss mapping skipped");
+        }
+        
         output.put("userName", userName);
         Map<String, Object> location = new LinkedHashMap<>();
         Map<String, Object> locationHierarchy = new LinkedHashMap<>();
@@ -64,6 +90,13 @@ public class OutletDetailsTransformer extends AbstractTransformer<Map<String, Ob
         locationHierarchy.put(DISTRICT, getString(responseEnvelope, DISTRICT));
         userName.put("locationHierarchy", locationHierarchy);
         output.put("location", location);
+        
+        // Handle field mappings: outlet_address -> storeaddresss
+        String outletAddress = getString(responseEnvelope, "outlet_address");
+        if (outletAddress != null && !outletAddress.isEmpty()) {
+            output.put("storeaddresss", outletAddress);
+        }
+        
         output.put("activeStatus", ACTIVE);
         output.put("activeStatusReason", ACTIVE);
         userName.put("activeStatus", ACTIVE);
